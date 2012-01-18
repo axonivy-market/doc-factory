@@ -1,0 +1,472 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="ivy.addons.dynamicdialog">
+	<title>DynamicDialog</title>
+	<sect1 xml:id="ivy.addons.dynamicdialog.purpose">
+		<title>Purpose</title>
+		<para>The main purpose of DynamicDialog is to provide a GUI to a business object. This
+			business object may contain simple attributes ( <code>String</code> – <code>Date</code>
+			– <code>Number</code> – ...) or more complex attributes that are other business objects. </para>
+		<mediaobject>
+			<imageobject>
+				<imagedata fileref="images/DynamicDialog/Purpose.png"/>
+			</imageobject>
+		</mediaobject>
+		<para>In the above picture, <code>firstName</code> is a simple attribute and
+			<code>address</code> is an aggregation of other attributes.</para>
+		<para>DynamicDialog GUI creation is driven by the business object. Parameters that give
+			specific behaviors, come from the CMS.</para>
+		<para>DynamicDialog can be launch directly from a process, but in most cases DynamicDialog
+			is encapsulated into another RDC. Using it directly from processes is useful to simulate
+			processes that need some quickly created forms.</para>
+		<para>It's possible to give specific implementation through RD methods that are invoked by
+			DynamicDialog when defined events occur.</para>
+		<para>DynamicDialog needs a lot of CMS entries to provide its parameters. It is difficult to
+			manages all these entries without error. DynamicDialog manager provides a user interface
+			to edit all the CMS entries needed by DynamicDialog without opening the CMS editor.</para>
+		<mediaobject>
+			<imageobject>
+				<imagedata fileref="images/DynamicDialog/PurposeManager.png"/>
+			</imageobject>
+		</mediaobject>
+	</sect1>
+	<sect1 xml:id="ivy.addons.dynamicdialog.using">
+		<title>Using DynamicDialog</title>
+		<sect2 xml:id="ivy.addons.dynamicdialog.create.insert">
+			<title>Insert the component</title>
+			<para> In most cases, DynamicDialog is encapsulated into a RDC. Use the <emphasis
+					role="bold">RichDialog Selection Dialog</emphasis> to search DynamicDialog and
+				insert it into a RDC.</para>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/DynamicDialog/RichDialogSelectionDialog.png"/>
+				</imageobject>
+			</mediaobject>
+		</sect2>
+		<sect2 xml:id="ivy.addons.dynamicdialog.create.start">
+			<title>Use the RD Start</title>
+			<para>To create the GUI, DynamicDialogs needs to receive a business object and a CMS
+				context. CMS context is a list of CMS prefixes (one or more) that are used to search
+				the CMS for the needed parameters. <link
+					linkend="ivy.addons.dynamicdialog.cmscontext"
+					endterm="ivy.addons.dynamicdialog.cmscontext.title"/></para>
+			<para>DynamicDialog adds to the received CMS context an URI that is corresponding to the
+				fully qualified class name transformed to an CMS uri. Class <code>foo.bar.Baz</code>
+				is transformed to the CMS uri <code>/foo/bar/Baz</code>. When no specific CMS
+				context is needed it can be empty <code>[]</code>. In that case, DynamicDialog only
+				uses the entry corresponding to the class name.</para>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/DynamicDialog/StartMethod.png"/>
+				</imageobject>
+			</mediaobject>
+			<para> In the above print screen the business object used is <code>in.contact</code>.
+				This object is the <code>SimpleContact</code> defined in the first figure. </para>
+			<para>As we can see on that figure, the uri <code>/SimpleContact</code> references a
+				content tree that reproduces the business object tree into the CMS. For each
+				attributes the corresponding node into the CMS may contain different parameters that
+				are grouped in some folder (<code>parameters</code> – <code>plainString</code> –
+					<code>texts</code> – <code>values</code>).</para>
+		</sect2>
+		<sect2 xml:id="ivy.addons.dynamicdialog.create.binding">
+			<title>Data binding</title>
+			<para>The simple way to set values into the GUI and get back from the GUI is to use data
+				binding through the value bean attribute. This attribute is of type
+					<code>CompositeObject</code> that is the base class of all Ivy business objects.
+				To create binding without error, a cast to the business object class is mandatory.</para>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/DynamicDialog/Binding.png"/>
+				</imageobject>
+			</mediaobject>
+			<para>When the data class contains a lot of attributes, using data binding is not always
+				a good idea. In that case, <code>getValue</code> and <code>setValue</code> methods
+				of the RD interface can be used. It is also possible to directly use
+					<code>getDDValue</code> and <code>setDDValue</code> Java methods but they are
+				not visible from everywhere.</para>
+		</sect2>
+		<sect2 xml:id="ivy.addons.dynamicdialog.create.invoke">
+			<title>Invoke RD methods</title>
+			<para>In the CMS it's possible to define a RD method name that is invoked when a
+				specific event happens like focus gained action or value change action. The RD
+				method should be defined in the RD that encapsulates DynamicDialog or one of the
+				children of that RD.</para>
+			<para>The prototype of the RD method is <code>methodName(DynamicDialogPanel,
+				String)</code>. The String received is the fully qualified name that identify the
+				component that is the source of the event into DynamicDialog. Because a RD may
+				contain multiple DynamicDialog, the reference of the <code>DynamicDialogPanel</code>
+				that invokes that RD method is given into the first parameter.</para>
+			<para>The DynamicDialogPanel has two very useful methods (<code>getFieldComponent</code>
+				- <code>getComponent</code>). These methods can be used to retrieve a reference (by
+				its fully qualified name or a partially relative name) on a specific component.</para>
+			<variablelist>
+				<varlistentry>
+					<term>
+						<emphasis role="bold">Example</emphasis>
+					</term>
+					<listitem>
+						<para>The CMS node
+								<code>/SimpleContact/lastName/parameters/valueChangedMethod</code>
+							is defined with the value <code>lastNameChanged</code>.</para>
+						<para>The RD method <code>lastNameChanged</code> is invoked by DynamicDialog
+							with the fully qualified name <code>/Object/lastName</code>.</para>
+						<para>It's possible to get a reference to the corresponding component with
+							that qualified name.</para>
+						<para>To get a reference to the component that represents the first name the
+							name used could be <code>/Object/lastName/../firstName</code>.</para>
+						<para>For the zip code, <code>/Object/lastName/../address/zip</code></para>
+					</listitem>
+				</varlistentry>
+			</variablelist>
+			<para>In the following figure, the RD data class defines two attributes that can receive
+				the parameters of the RD method. </para>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/DynamicDialog/InvokeMethod.png"/>
+				</imageobject>
+			</mediaobject>
+		</sect2>
+		<sect2 xml:id="ivy.addons.dynamicdialog.create.xml">
+			<title>Generate an XML file</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/DynamicDialog/Serialisation.png"/>
+				</imageobject>
+			</mediaobject>
+			<para>DynamicDialog provides a useful XML serialization method to produce an XML file
+				without writing too much code. The XML produced contains all the values typed into
+				DynamicDialog with the corresponding labels.</para>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/DynamicDialog/Xml.png"/>
+				</imageobject>
+			</mediaobject>
+			<para>In this figure, the <code>title</code> element value and the
+				<code>description</code> attribute value are 001. It's possible in the business
+				object to define an attribute that have the same name of another one with the suffix
+					<code>Description</code>, like <code>titleDescription</code>, to permit to have
+				a XML generated with the chosen value into the attribute <code>description</code>
+				into</para>
+			<para> the CMS. In the case of this <code>title</code> element, the attribute
+					<code>description</code> should receive the value <code>Sir</code>.</para>
+		</sect2>
+	</sect1>
+	<sect1 xml:id="ivy.addons.dynamicdialog.dynamicdialogmanager">
+		<title>DynamicDialog manager</title>
+		<sect2 xml:id="ivy.addons.dynamicdialog.dynamicdialogmanager.launch">
+			<title>Launch the manager</title>
+			<para>To launch the manager a process should be created in the project. That process
+				should only start DynamicDialogManager RDC.</para>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/DynamicDialog/LaunchManager.png"/>
+				</imageobject>
+			</mediaobject>
+		</sect2>
+		<sect2 xml:id="ivy.addons.dynamicdialog.dynamicdialogmanager.items">
+			<title>Dialog items</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/DynamicDialog/ManagerItems.png"/>
+				</imageobject>
+			</mediaobject>
+			<orderedlist numeration="arabic">
+				<listitem>
+					<para>Select the data class that needs to receive parameters for DynamicDialog.</para>
+					<para>When a DynamicDialog field receives the focus, the manager selects
+						automatically <code>Controlled by DynamicDialog</code> and the whole manager
+						RDC is updated to edit the data class used by that DynamicDialog.</para>
+					<para>The button permits to switch between a <code>ComboBox</code> and
+							<code>LookupTextField</code> for the data class selection.</para>
+				</listitem>
+				<listitem>
+					<para>Show in a tree the whole data class attribute encapsulation.</para>
+					<para>The tooltip shows the fully qualified name of the type used by each
+						attribute.</para>
+				</listitem>
+				<listitem>
+					<para>List all the context used through the CMS context mechanism in a user
+						friendly format.</para>
+					<para>The tooltip shows the corresponding CMS uri.</para>
+					<para>When the bullet is grey, there are no parameters for that CMS
+					context.</para>
+				</listitem>
+				<listitem>
+					<para>Show in a table tree all the parameters that the selected attribute can
+						receive.</para>
+					<para>The values can be modified directly in that view.</para>
+				</listitem>
+				<listitem>
+					<para>Switch the visibility of the advanced parameters.</para>
+				</listitem>
+				<listitem>
+					<para>Contextual help of the current parameter.</para>
+				</listitem>
+				<listitem>
+					<para>Button bar</para>
+					<orderedlist>
+						<listitem>
+							<para>Login as <code>Developer</code></para>
+						</listitem>
+						<listitem>
+							<para>Refresh (rebuild) DynamicDialog that is in use.</para>
+						</listitem>
+					</orderedlist>
+				</listitem>
+			</orderedlist>
+		</sect2>
+	</sect1>
+	<sect1 xml:id="ivy.addons.dynamicdialog.visualdebug">
+		<title>Visual debugging</title>
+		<para>When the <code>Visual RichDialog Debugging</code> is active, DynamicDialog exposes its
+			layout.</para>
+		<mediaobject>
+			<imageobject>
+				<imagedata fileref="images/DynamicDialog/VisualDebug.png"/>
+			</imageobject>
+		</mediaobject>
+	</sect1>
+	<sect1 xml:id="ivy.addons.dynamicdialog.validation">
+		<title>Old style DynamicDialog validation</title>
+		<para>Old style DynamicDialog validation doesn't use Ivy/ULC validation mechanism. Its own
+			mechanism uses the CMS to get information to check.</para>
+		<para>A validation is directly done on the field if the attribute is of type Date or Number.</para>
+		<para>In other case, it's possible to define the CMS uri of the validation to use with
+				<code>parameters/validation</code>.</para>
+		<para>The CMS content for that validation can contain :</para>
+		<table>
+			<title>Validation Configuration Properties</title>
+			<tgroup cols="2">
+				<tbody>
+					<row>
+						<entry>
+							<para>length</para>
+						</entry>
+						<entry>
+							<para>max length of the value</para>
+						</entry>
+					</row>
+					<row>
+						<entry>
+							<para>allowedChars</para>
+						</entry>
+						<entry>
+							<para>regular expression that defines the accepted chars in the field.
+								The expression is used while the field is edited. </para>
+						</entry>
+					</row>
+					<row>
+						<entry>
+							<para>validationXXX</para>
+						</entry>
+						<entry>
+							<para>regular expressions that define the content of the field when the
+								edition is finished, when it the focus is lost.</para>
+						</entry>
+					</row>
+				</tbody>
+			</tgroup>
+		</table>
+		<table>
+			<title>Example Validation Values</title>
+			<tgroup cols="2">
+				<tbody>
+					<row>
+						<entry>
+							<para>length</para>
+						</entry>
+						<entry>
+							<para>not defined</para>
+						</entry>
+					</row>
+					<row>
+						<entry>
+							<para>allowedChars</para>
+						</entry>
+						<entry>
+							<para>^[0-9.]*$</para>
+						</entry>
+					</row>
+					<row>
+						<entry>
+							<para>validation001</para>
+						</entry>
+						<entry>
+							<para>^[0-9]{1,2}.[0-9]{1,2}.[0-9]{4} </para>
+						</entry>
+					</row>
+				</tbody>
+			</tgroup>
+		</table>
+	</sect1>
+	<sect1 xml:id="ivy.addons.dynamicdialog.values">
+		<title>List of values</title>
+		<para>For components with a choice of values, it's possible to fill the CMS with key – value
+			pairs. These key - value pairs are defined on the node defining the DyanmicDialog
+			attribute.</para>
+		<para>The CMS string values <code>key001</code> / <code>value001</code> define the first
+			entry. The sequence number should have 3 digits. It's not possible to have an hole in
+			the set (<code>001</code> to <code>007</code> defined but not <code>005</code>).</para>
+		<table>
+			<title>Example Key/Value Pairs</title>
+			<tgroup cols="2">
+				<tbody>
+					<row>
+						<entry>
+							<para>
+								<code>key001</code>
+							</para>
+						</entry>
+						<entry>
+							<para>
+								<code>Mr</code>
+							</para>
+						</entry>
+					</row>
+					<row>
+						<entry>
+							<para>
+								<code>value001</code>
+							</para>
+						</entry>
+						<entry>
+							<para>
+								<code>Sir</code>
+							</para>
+						</entry>
+					</row>
+					<row>
+						<entry>
+							<para>
+								<code>key002</code>
+							</para>
+						</entry>
+						<entry>
+							<para>
+								<code>Mrs</code>
+							</para>
+						</entry>
+					</row>
+					<row>
+						<entry>
+							<para>
+								<code>value002</code>
+							</para>
+						</entry>
+						<entry>
+							<para>
+								<code>Madam</code>
+							</para>
+						</entry>
+					</row>
+				</tbody>
+			</tgroup>
+		</table>
+	</sect1>
+	<sect1 xml:id="ivy.addons.dynamicdialog.states">
+		<title>States</title>
+		<para>Two different icons can be displayed next to fields. That icons indicates the state of
+			the field.</para>
+		<table>
+			<title>Field State Icons</title>
+			<tgroup cols="2">
+				<tbody>
+					<row>
+						<entry>
+							<para> </para>
+						</entry>
+						<entry>
+							<para>no icon is displayed, the value that is inside the field is valid
+								and the field is not mandatory</para>
+						</entry>
+					</row>
+					<row>
+						<entry>
+							<inlinemediaobject>
+								<imageobject>
+									<imagedata fileref="images/DynamicDialog/Star.png"/>
+								</imageobject>
+							</inlinemediaobject>
+						</entry>
+						<entry>
+							<para>the star icon is displayed, the value is mandatory and is valid or
+								has never been filled</para>
+						</entry>
+					</row>
+					<row>
+						<entry>
+							<inlinemediaobject>
+								<imageobject>
+									<imagedata fileref="images/DynamicDialog/Cross.png"/>
+								</imageobject>
+							</inlinemediaobject>
+						</entry>
+						<entry>
+							<para>the error icon is displayed, the value is not valid or a mandatory
+								field that was edited is actually empty</para>
+						</entry>
+					</row>
+				</tbody>
+			</tgroup>
+		</table>
+	</sect1>
+	<sect1 xml:id="ivy.addons.dynamicdialog.cmscontext">
+		<title xml:id="ivy.addons.dynamicdialog.cmscontext.title">CMS context</title>
+		<para>This mechanism allows to address some kind of inheritence into the CMS to search
+			resources in in multiple paths. If the value is not found in the first path, the second
+			is searched and so on.</para>
+		<para>The CMS context APIs provide methods to search resources in CMS.</para>
+		<para>The CMS context mechanism needs to receive a list of uri prefixes and one uri
+			suffixes. The list of uri prefixes is called "CMS context".</para>
+		<para>The CMS context APIs search into the CMS for each prefix when a value is required. The
+			search is done with the suffix concatened to the prefix until a value is found. The list
+			of uri prefixes is read from the bottom.</para>
+		<orderedlist numeration="arabic">
+			<listitem>
+				<para> CMS context : <simplelist type="vert" columns="1">
+						<member><code>/foo/default</code></member>
+						<member><code>/foo/bar</code></member>
+						<member><code>/foo/baz</code></member>
+					</simplelist></para>
+			</listitem>
+			<listitem>
+				<para>Suffix <code>value</code></para>
+			</listitem>
+			<listitem>
+				<para>These uri are read as follow : <simplelist type="vert" columns="1">
+						<member><code>/foo/baz/value</code></member>
+						<member><code>/foo/bar/value</code></member>
+						<member><code>/foo/default/value</code></member>
+					</simplelist></para>
+			</listitem>
+		</orderedlist>
+		<para>When the CMS context is constructed, the node <code>cmsContext</code> is searched.
+			When its value is found, the value is added to the CMS context just before the current
+			prefix. That prefix can be relative or absolute.</para>
+		<orderedlist numeration="arabic">
+			<listitem>
+				<para> CMS context : <simplelist type="vert" columns="1">
+						<member><code>/foo/bar</code> contains <code>cmsContext=/foo/default</code></member>
+						<member><code>/foo/baz</code> contains
+						<code>cmsContext=../commonbaz</code></member>
+					</simplelist></para>
+			</listitem>
+			<listitem>
+				<para>CMS context used : <simplelist type="vert" columns="1">
+						<member><code>/foo/default</code></member>
+						<member><code>/foo/bar</code></member>
+						<member><code>/foo/commonbaz</code></member>
+						<member><code>/foo/baz</code></member>
+					</simplelist></para>
+			</listitem>
+		</orderedlist>
+		<para>When an entry of the CMS context does not exists the APIs add an <code>X</code> before
+			that prefix. It is possible to see sometimes in the History view a CMS context like this
+			:</para>
+		<simplelist type="vert" columns="1">
+			<member><code>/foo/default</code></member>
+			<member><code>/foo/bar</code></member>
+			<member><code>X/foo/commonbaz</code></member>
+			<member><code>/foo/baz</code></member>
+		</simplelist>
+	</sect1>
+</chapter>

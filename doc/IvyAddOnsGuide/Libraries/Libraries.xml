@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="ivy.addons.libraries">
+	<title>Libraries</title>
+	<para> The IvyAddOns project contains (executable) libraries that can be used outside of
+		Xpert.ivy (e.g. on the client or from within other applications) to communicate or otherwise
+		interact with Xpert.ivy. The purpose and usage of those libraries is explained in this
+		chapter. </para>
+	<sect1 xml:id="ivy.addons.libraries.processstarter">
+		<title>IvyProcessStarter.jar</title>
+		<sect2>
+			<title>Purpose</title>
+			<para> Normally Xpert.ivy Applications are started by clicking on a Link in a Web
+				browser. However, often afterwards the browser is not needed anymore and, in fact,
+				wouldn't really have been required in the first place, were it not for the reason
+				that there is no other way to start an Xpert.ivy application. </para>
+			<para> With the <filename>IvyProcessStarter.jar</filename>, which is located in the
+				IvyAddOns <filename>lib/</filename> folder (switch to the Java or Resource
+				perspective to see it), one can start Xpert.ivy applications with a single click
+				from the desktop, without having to use a browser. The following image shows three
+				common ways to do so on a windows desktop: either from the start menu (1), from the
+				quick start tool bar (2) or with a short cut icon on the desktop. </para>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/Libraries/processShortcuts.png"/>
+				</imageobject>
+			</mediaobject>
+			<para> Once such a Shortcut is installed, the user simply clicks on it and the linked
+				Xpert.ivy application starts directly (via Java) without the need of having to open
+				a browser beforehand. </para>
+			<note>
+				<para>Although the screenshots in this section show Windows desktops only, similar
+					usage is possible on other operating systems by using the similar mechanisms and
+					the same <filename>IvyProcessStarter.jar</filename>. Usage within shellscripts
+					is also possible (see section Command line arguments below).</para>
+			</note>
+		</sect2>
+		<sect2>
+			<title>Usage and Installation</title>
+			<para> Copy the <filename>IvyProcessStarter.jar</filename> from the <emphasis
+					role="italic">IvyAddOns</emphasis> project to the client machine (e.g. to
+					<filename>C:/Programme/ProcessStarter</filename>). </para>
+			<para> Right-click on the JAR and select <emphasis role="italic">Send to... > Desktop
+					(create shortcut)</emphasis>. As a result of this, a shortcut icon will be
+				created on the Desktop. </para>
+			<para> Right-click on the shortcut icon and select <emphasis role="italic"
+				>Properties</emphasis>. Configure the shortcut as depticted on the following image: <mediaobject>
+					<imageobject>
+						<imagedata fileref="images/Libraries/processShortcutConfiguration.png"/>
+					</imageobject>
+				</mediaobject> Once you've clicked on <emphasis role="italic">Ok</emphasis> you can
+				double click the created shortcut to start the application referred by the
+					<filename>*.ivp</filename> link. The created shortcut can be duplicated and
+				copied to the start menu or the quick start toolbar. You may also select another
+				symbol for the shortcut (check your OS documentation about how to do this). </para>
+			<tip>
+				<para>Use double quotes around your (windows) path names that you use to execute the
+					shortcut (e.g. for the location of <filename>java.exe</filename> or the location
+					of the <filename>IvyProcessStarter.jar</filename>) to prevent problems with
+					special characters or spaces inside the file path.</para>
+				<para>Use <filename>javaw.exe</filename> instead of <filename>java.exe</filename> to
+					prevent the (temporary) opening of a command window during the startup
+				process.</para>
+			</tip>
+		</sect2>
+		<sect2>
+			<title>Command line arguments</title>
+			<para>Here's the help that is output when <command>java -jar
+				IvyProcessStarter.jar</command> is invoked from the command line. You should not use
+				any of the possible switches for a shortcut as described above.
+				<screen>
+Usage:
+    	<command>StartJnlpLink [-help] [-debug] &lt;link></command>
+Purpose:
+    Retrieves the JNLP file at the given link location and starts it with the system's default application for '.jnlp' files.
+Arguments:
+    	<command>&lt;link></command> must be a HTTP-URL that points to the contents of a valid JNLP file (e.g. an URL to a ../ivy/pro/../myProcessStart.ivp)
+Switches:
+    	<command>-debug</command> prints some verbose debug output
+    	<command>-help</command> prints this text
+				</screen></para>
+		</sect2>
+	</sect1>
+</chapter>

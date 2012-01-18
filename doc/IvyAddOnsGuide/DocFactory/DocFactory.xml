@@ -1,0 +1,471 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter version="5.0" xml:id="ivy.addons.docfactory" xmlns="http://docbook.org/ns/docbook"
+  xmlns:ns6="http://www.w3.org/1999/xlink" xmlns:ns5="http://www.w3.org/1998/Math/MathML"
+  xmlns:ns4="http://www.w3.org/2000/svg" xmlns:ns3="http://www.w3.org/1999/xhtml"
+  xmlns:ns="http://docbook.org/ns/docbook">
+  <title>DocFactory</title>
+  <sect1 xml:id="ivy.addons.docfactory.purpose">
+    <title>Purpose</title>
+    <para>A Document Factory is a system that allows generating automatically documents like serial
+      letters with the help of documents models like Microsoft Office Templates (.dot or .dotx
+      files).</para>
+    <para>The document Factory system in the Ivy Add-ons project is open and can be extended. At the
+      moment it is only implemented with the commercial Java API Aspose (www.aspose.com). You can
+      add your own implementation with another API. <link linkend="ivy.addons.docfactory.docfactory"
+        >Read more</link> in the doc factory section below.</para>
+    <para>This solution works with Microsoft Office Templates. Each template contains fixed text and
+      dynamic merges fields. A Merge field is a placeholder for text information. Each merge field
+      has a name and will be filled with the information you provide to the document Factory system.
+      For example a merge field could be the address or the name of a correspondent for a letter.</para>
+    <table>
+      <title>Terms and Definitions used in the DocFactory chapter</title>
+      <tgroup cols="2">
+        <tbody>
+          <row>
+            <entry>Document Factory</entry>
+            <entry>The document Factory System implemented in the Ivy Add-ons Project</entry>
+          </row>
+          <row>
+            <entry>Template</entry>
+            <entry>A Microsoft Office template (document model)</entry>
+          </row>
+          <row>
+            <entry>Merge field</entry>
+            <entry>Placeholder for text information in the template</entry>
+          </row>
+          <row>
+            <entry>Document</entry>
+            <entry>If not defined, this is a letter or document generated with the help of a
+              template after the mail merging operation</entry>
+          </row>
+          <row>
+            <entry>Mail merging</entry>
+            <entry>Document generation with the replacement of the merge fields with the
+              corresponding information</entry>
+          </row>
+          <row>
+            <entry>Format</entry>
+            <entry>The format in which the serial document has to be saved (doc, txt, html…)</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+  </sect1>
+  <sect1 xml:id="ivy.addons.docfactory.mailmerge">
+    <title>Mail Merging</title>
+    <para>Using templates allows for automatical generation of huge quantities of serial letters to
+      different correspondents. It is widely used as a consistent way to unify the letter
+      correspondence in companies or administrations. The mechanism of mail merging can be resumed
+      with the following picture:</para>
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="images/DocFactory/mailMerge.png"/>
+      </imageobject>
+    </mediaobject>
+    <para>At the heart of the mechanism lies a Merge Mail Engine. This Engine receives some Data
+      from a Data Source (DB, XML …) and replaces merge fields in the template with the
+      corresponding information. It saves each letter as a separate document or in a document
+      containing all the letters. The data should be in the form of a Data Set (list of
+      correspondents’ addresses for example).</para>
+    <para>In our Document Factory, the Mail Merge Engine is provided by the commercial Aspose Words
+      Java API. You can extend and create your own implementation of the document Factory with other
+      engines.</para>
+  </sect1>
+  <sect1 xml:id="ivy.addons.docfactory.callables">
+    <title>Callable Processes for generating Serial Letters</title>
+    <para>Two Callable Processes are available from the AddOns project and at your disposal, to
+      cover a maximum of your needs in the letter production. They use three kinds of Java Objects
+      to perform their task.</para>
+    <sect2>
+      <title>Java Classes: TemplateMergeField, DocumentTemplate and FileOperationMessage</title>
+      <para>The Java classes of those objects are located in the package
+          <code>ch.ivyteam.ivy.addons.docfactory</code>.</para>
+      <sect3>
+        <title>TemplateMergeField</title>
+        <para>The <code>TemplateMergeField</code> class is the representation of a merge field in a
+          template. It has two fields: a name and a value, both a String. It is used to provide
+          information to the Mail merge Engine to fill the corresponding merge fields in the
+          template.</para>
+        <table>
+          <title><code>TemplateMergeField</code> attributes</title>
+          <tgroup cols="3">
+            <thead>
+              <row>
+                <entry>Field</entry>
+                <entry>Type</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>mergeFieldName</entry>
+                <entry>String</entry>
+                <entry>Name of the merge field. If the <code>mergeFieldName</code> is in the form of
+                  “Image:ImageName” or “Image_ImageName” where “Image:” or “Image_” is constant,
+                  then this indicates that an image should be placed into the respective merge
+                  field.</entry>
+              </row>
+              <row>
+                <entry>mergeFieldValue</entry>
+                <entry>String</entry>
+                <entry>The value of the merge field. If image merge fields are used (see above) then
+                  this indicates the path to the image, for example:
+                    <code>file:///Icons/warning48.png</code> or <code>
+                C:/Icons/warning48.png</code></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+        <para>There is one constructor: <code>public TemplateMergeField(String mergeFieldName,
+            String mergeFieldValue)</code>.</para>
+      </sect3>
+      <sect3>
+        <title>FileOperationMessage</title>
+        <para>The <code>FileOperationMessage</code> class is a convenience class to return the
+          result of mail merging and File generation. It contains three variables:</para>
+        <table>
+          <title><code>FileOperationMessage</code> attributes</title>
+          <tgroup cols="3">
+            <thead>
+              <row>
+                <entry>Field</entry>
+                <entry>Type</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>message</entry>
+                <entry>String</entry>
+                <entry>The text message to return (like “File generation successful” or “An error
+                  occurred”…)</entry>
+              </row>
+              <row>
+                <entry>type</entry>
+                <entry>int</entry>
+                <entry>Number indicating which kind of message it is (SUCCESS, ERROR OR
+                  INFORMATION). The possible return values are available as static final constants
+                  on this class.</entry>
+              </row>
+              <row>
+                <entry>files</entry>
+                <entry>List&lt;java.io.File&gt;</entry>
+                <entry>All the Files produced during the mail merge operation. They can be used for
+                  further actions like printing, editing, downloading….</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+        <para>There are two constructors: The default constructor <code>public
+            FileOperationMessage()</code>and <code>public FileOperationMessage(String message,
+            List&lt;File&gt; files, int type)</code></para>
+      </sect3>
+      <sect3>
+        <title>DocumentTemplate</title>
+        <para>The <code>DocumentTemplate</code> class represents a whole letter or document to be
+          generated. It contains all the necessary information to be able to generate a new document
+          with a mail merge engine. The information is placed into the following variables:</para>
+        <table>
+          <title><code>DocumentTemplate</code> attributes</title>
+          <tgroup cols="3">
+            <thead>
+              <row>
+                <entry>Field</entry>
+                <entry>Type</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>templatePath</entry>
+                <entry>String</entry>
+                <entry>File path of the template to use for the mail merging. This path is server
+                  side.</entry>
+              </row>
+              <row>
+                <entry>outputPath</entry>
+                <entry>String</entry>
+                <entry>The path of the folder where to store the produced document after mail
+                  merging.</entry>
+              </row>
+              <row>
+                <entry>outputName</entry>
+                <entry>String</entry>
+                <entry>The name of the File or produced document.</entry>
+              </row>
+              <row>
+                <entry>outputFormat</entry>
+                <entry>String</entry>
+                <entry>The desired Format of the document (doc, docx…).</entry>
+              </row>
+              <row>
+                <entry>mergeFields</entry>
+                <entry>List&lt;TemplateMergeField></entry>
+                <entry>The list of the Merge Fields: each merge field should be present into the
+                  template. The values of the merge fields are going to be inserted into the
+                  corresponding template’s merge fields. </entry>
+              </row>
+              <row>
+                <entry>data</entry>
+                <entry>CompositeObject (like an Ivy DataClass)</entry>
+                <entry>The DocumentTemplate object accepts a DataClass as alternative to a List of
+                  TemplateMergeFields. Each attribute of the dataclass will be linked with a
+                  template merge field with the same name. The String value from the attributll be
+                  taken to fill the corresponding mergefield.</entry>
+              </row>
+              <row>
+                <entry>documentFactory</entry>
+                <entry>BaseDocFactory</entry>
+                <entry>This is the Engine responsible of the mail merging. See last section of this
+                  chapter.</entry>
+              </row>
+              <row>
+                <entry>fileOperationMessage</entry>
+                <entry>FileOperationMessage</entry>
+                <entry>The FileOperationMessage returned by the mail merging operation.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+        <para>There are three constructors: The default constructor <code>public
+          DocumentTemplate()</code>, <code>public DocumentTemplate(String _templatePath, String
+            _outputPath, String _outputName, String _outputFormat, List&lt;TemplateMergeField>
+            _mergeFields)</code> and <code>public DocumentTemplate(String _templatePath, String
+            _outputPath, String _outputName, String _outputFormat, CompositeObject _data)</code>
+        </para>
+      </sect3>
+    </sect2>
+    <sect2>
+      <title>Callable Processes</title>
+      <para>Two callable processes are available to ease usage of the document factory. They are
+        located in the IvyAddOns <emphasis>Functional Processes</emphasis> folder:</para>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="images/DocFactory/callables.png"/>
+        </imageobject>
+      </mediaobject>
+      <sect3>
+        <title>writeSerialLetterToOneCorrespondent</title>
+        <para>The Callable named <code>writeSerialLetterToOneCorrespondent</code> contains two
+          callable subcess starts. </para>
+        <para>The first one (writeSerialLetterToOneCorrespondant) allows writing a single document
+          with a template by providing a single list of <code>TemplateMergeField</code> objects.
+          Here is the description of this callable that you can find in the ivy process mod file:</para>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="images/DocFactory/callable1.png"/>
+          </imageobject>
+        </mediaobject>
+        <para>The second one (writeDocumentWithOneDataClass) allows writing a single document with a
+          template by providing a <code>CompositeObject (DataClass)</code> . Here is the description
+          of this callable that you can find in the ivy process mod file:</para>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="images/DocFactory/callable3.png"/>
+          </imageobject>
+        </mediaobject>
+      </sect3>
+      <sect3>
+        <title>writeSerialLetterToOneCorrespondent</title>
+        <para>The callable named <code>writeSerialLetterToManyCorrespondents</code> allows writing
+          more than one document with a list of <code>DocumentTemplate</code> objects. Each
+            <code>DocumentTemplate</code> object is going to produce a document. Here is the
+          description of this callable that you can find in the ivy process mod file:</para>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="images/DocFactory/callable2.png"/>
+          </imageobject>
+        </mediaobject>
+      </sect3>
+    </sect2>
+  </sect1>
+  <sect1 xml:id="ivy.addons.docfactory.demos">
+    <title>Demos</title>
+    <para>A demo is available in the <emphasis>IvyDemos</emphasis> project that demonstrate the
+      usage of the DocFactory.</para>
+    <para>To be able to make the demo works, two default templates have been included into the CMS
+      of the ivy demo project. They are located under “/docfactory/templatecache/myTemplate” and
+      “/docfactory/templatecache/myTemplateWithDynamicPicture” as MS World documents (.doc format).</para>
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="images/DocFactory/demoTemplates.png"/>
+      </imageobject>
+    </mediaobject>
+    <para>You can use the cms designer “Export to File” option, to save them as doc Files and to be
+      able to look into them:</para>
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="images/DocFactory/exportTemplate.png"/>
+      </imageobject>
+    </mediaobject>
+    <para>They both contain three text fields (Name, Firstname, Address). All the documents produced
+      are going to be saved into the “ivy_RIA_files” designer or server directory. The second one
+      contains also a picture field, to illustrate the use of dynamic image merge fields.</para>
+    <para>The demo shows how to generate serial documents. All the serial documents are going to be
+      generated into the <filename>ivy_RIA_files</filename> directory of your Server or Designer
+      installation.</para>
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="images/DocFactory/theDemo.png"/>
+      </imageobject>
+    </mediaobject>
+    <para>The following result is produced:</para>
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="images/DocFactory/demoResults.png"/>
+      </imageobject>
+    </mediaobject>
+    <para>A new button is also available to illustrate the use of a Dataclass as input parameter. A
+      Panel is used to fill the Person Dataclass. This Dataclass contains three attributes (name,
+      firstname, address) that are going to be used to fill the template. </para>
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="images/DocFactory/newDemo1.png"/>
+      </imageobject>
+    </mediaobject>
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="images/DocFactory/newDemo2.png"/>
+      </imageobject>
+    </mediaobject>
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="images/DocFactory/newDemo3.png"/>
+      </imageobject>
+    </mediaobject>
+  </sect1>
+  <sect1 xml:id="ivy.addons.docfactory.docfactory">
+    <title>The Document Factory Object</title>
+    <para>The Document Factory Object in this Ivy Addons implementation is made with the help of the
+      commercial Aspose Java API. To be able to allow developing other Document Factories that work
+      the same way as this one, a DocumentFactory implementation should always extend the abstract
+      class <code>ch.ivyteam.ivy.addons.docfactory.BaseDocFactory</code> and must provide a default
+      constructor (no arguments).</para>
+    <para>This Class declares all the public methods a document factory should implement. For
+      example it declares the <code>generateDocument(..)</code> method that takes a
+        <code>DocumentTemplate</code> as parameter and returns a <code>FileOperationMessage</code>
+      as result.</para>
+    <para>The <code>AsposeDocFactory</code> is the provided default implementation of this
+        <code>BaseDocFactory</code>. It is easy to get an instance of an AsposeDocFactory: The
+      public static method <code>BaseDocFactory.getInstance()</code> returns such an object.</para>
+    <para>If you want to use your own implementation class of the BaseDocFactory, you have to set a
+      special Java System property on the server that gives the exact qualified name of your
+      document factory class. The name of this property has to be “document.factory” and its value
+      has to be “com.acme.docfactory.MyDocFactory”, for example, to name your own implementation.
+      The getInstance() method of the BaseDocFactory will then return an instance of your document
+      factory class.</para>
+    <table>
+      <title>Overview of the abstract <code>BaseDocFactory</code> methods</title>
+      <tgroup cols="4">
+        <thead>
+          <row>
+            <entry>Method</entry>
+            <entry>Arguments</entry>
+            <entry>Return Type</entry>
+            <entry>Description</entry>
+          </row>
+        </thead>
+        <tbody>
+          <row>
+            <entry>generateBlankDocument</entry>
+            <entry>String outputName, String outputPath, String outputFormat</entry>
+            <entry>FileOperationMessage</entry>
+            <entry>Creates a blank document (for testing purposes).</entry>
+          </row>
+          <row>
+            <entry>generateDocument</entry>
+            <entry>String templatePath, String fileName, String outputPath, String _outputFormat,
+              List&lt;TemplateMergeField&gt; list</entry>
+            <entry>FileOperationMessage</entry>
+            <entry>Creates a blank document (for testing purposes).</entry>
+          </row>
+          <row>
+            <entry>generateDocument</entry>
+            <entry>DocumentTemplate documentTemplate</entry>
+            <entry>FileOperationMessage</entry>
+            <entry>Creates one document.</entry>
+          </row>
+          <row>
+            <entry>generateTxt</entry>
+            <entry>String templatePath, List&lt;TemplateMergeField&gt; list</entry>
+            <entry>String</entry>
+            <entry>Creates a text string that is the result of the mail merge.</entry>
+          </row>
+          <row>
+            <entry>generateHTML</entry>
+            <entry>String templatePath, List&lt;TemplateMergeField&gt; list</entry>
+            <entry>String</entry>
+            <entry>Creates an HTML String that is the result of the mail merge.</entry>
+          </row>
+          <row>
+            <entry>generateFilesForHTML</entry>
+            <entry>String templatePath, List&lt;TemplateMergeField&gt; list</entry>
+            <entry>ArrayList&lt;java.io.File&gt;</entry>
+            <entry>Generates a list of Files that can be used for HTML representation.</entry>
+          </row>
+          <row>
+            <entry>generateDocuments</entry>
+            <entry>List&lt;DocumentTemplate&gt; list</entry>
+            <entry>FileOperationMessage</entry>
+            <entry>Generates one or more documents.</entry>
+          </row>
+          <row>
+            <entry>generateDocuments</entry>
+            <entry>String templatePath, String outputPath,String outputFormat,
+              List&lt;List&lt;TemplateMergeField&gt;&gt; list</entry>
+            <entry>FileOperationMessage</entry>
+            <entry>Generates one or more documents each one can be saved in a different destination
+              folder.</entry>
+          </row>
+          <row>
+            <entry>generateDocumentsWithDifferentDestination</entry>
+            <entry>String templatePath, String outputFormat,
+              List&lt;List&lt;TemplateMergeField&gt;&gt; list</entry>
+            <entry>FileOperationMessage</entry>
+            <entry>Generates a list of Files that can be used for HTML representation.</entry>
+          </row>
+          <row>
+            <entry>generateDocumentsWithDifferentDestination</entry>
+            <entry>List&lt;DocumentTemplate&gt; list</entry>
+            <entry>List&lt;FileOperationMessage&gt;</entry>
+            <entry>Generates one or more documents. One FileOperationMessage for each
+            document.</entry>
+          </row>
+          <row>
+            <entry>generateMultipleDocumentsInOne</entry>
+            <entry>String templatePath, String outputName, String outputPath, String outputFormat,
+              List&lt;List&lt;TemplateMergeField&gt;&gt; list</entry>
+            <entry>FileOperationMessage</entry>
+            <entry>Generates multiple documents appended in one File.</entry>
+          </row>
+          <row>
+            <entry>generateMultipleDocumentsInOne</entry>
+            <entry>String templatePath, String outputName, String outputPath, String outputFormat,
+              List&lt;DocumentTemplate&gt; templates</entry>
+            <entry>FileOperationMessage</entry>
+            <entry>Generates multiple documents appended in one File.</entry>
+          </row>
+          <row>
+            <entry>getTemplateFields</entry>
+            <entry>String templatePath</entry>
+            <entry>ArrayList&lt;String&gt;</entry>
+            <entry>Returns the list of the Merge Fields names in a template.</entry>
+          </row>
+          <row>
+            <entry>getFactoryClass</entry>
+            <entry>-</entry>
+            <entry>Class</entry>
+            <entry>Get the Class of the current BaseDocFactory implementation class</entry>
+          </row>
+          <row>
+            <entry>isFormatSupported</entry>
+            <entry>String format</entry>
+            <entry>boolean</entry>
+            <entry>This method should check if the format denoted by the String param is supported
+              by your document Factory.</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+  </sect1>
+</chapter>

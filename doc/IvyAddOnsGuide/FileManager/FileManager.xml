@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter version="5.0" xml:id="ivy.addons.filemanager" xmlns="http://docbook.org/ns/docbook"
+  xmlns:ns6="http://www.w3.org/1999/xlink" xmlns:ns5="http://www.w3.org/1998/Math/MathML"
+  xmlns:ns4="http://www.w3.org/2000/svg" xmlns:ns3="http://www.w3.org/1999/xhtml"
+  xmlns:ns="http://docbook.org/ns/docbook">
+  <title>File Management System</title>
+  <sect1 xml:id="ivy.addons.filemanager.introduction">
+    <title>Introduction</title>
+    <para>The aim of this document is to provide a small description of the file management system
+      that has been developed for our Ivy RIAs applications. This file management system eases the
+      integration of File exchange, communication, edition and creation in your Ivy RIAs
+      applications. </para>
+  </sect1>
+  <sect1 xml:id="ivy.addons.filemanager.overview">
+    <title>File management system overview</title>
+    <para>The file management system is a set of Java Classes, Ivy Data Classes and Rich Dialogs
+      that interoperates to be able to perform actions on files located on a Server just as they
+      were located on the user's computer. You will find all those rich dialogs under
+        <ns:code>ch.ivyteam.ivy.ivyaddons.filemanager</ns:code>. </para>
+    <ns:warning>
+      <para> The File Management System needs Java 6 at client side as a prerequisite. </para>
+    </ns:warning>
+    <para> All the files are going to be located on a File server. This Server can be the same
+      machine as the Ivy Server's one, or can be a remote file Server. The Users are then going to
+      share the same files among an application. They will be able to edit, print, copy, zip or
+      download those files. They will also be able to upload some Files from their computer to the
+      server.</para>
+    <para>The file management system doesn't work with Ivy File Objects. It works with java.io.File
+      objects and moreover with
+      <ns:code>ch.ivyteam.ivy.addons.filemanager.DocumentOnServer</ns:code> Objects. A
+      DocumentOnServer is just a DataClass representing a java.io.File within the file management
+      system and contains some informations like the File size, the date and time of creation and
+      last modification or if it is already edited (locked) by someone.</para>
+  </sect1>
+  <sect1 xml:id="ivy.addons.filemanager.thefilemanagerRDC">
+    <title>The FileManager RDC</title>
+    <para>The FileManager Rich Dialog is the most important Rich Dialog of the file management
+      system. </para>
+    <para>It is visually composed by two main areas: a menu at the top and a split pane at the
+      bottom. The split pane is divided in two regions: the folder explorer (RTree) and a RTable
+      that lists the files contained into the selected folder. The top level Folder is given in the
+      start method of the Filemanager Rich Dialog. The user cannot see the files and directories
+      over this directory. The table displays some informations about the files: the name, the size,
+      the Ivy User who created the File (by upload or by copy), the date and time of creation). It
+      shows also in a tool tip the Ivy User who has last modified the file. It also shows a little
+      Lock as icon if the file is currently edited, with the Ivy User name who is working with the
+      file. If the user opens a file that is already edited by a third person, his changes are not
+      going to be kept.</para>
+    <mediaobject>
+      <imageobject><imagedata fileref="images/FileManager/FileManager01.png"/></imageobject>
+    </mediaobject>
+    <para>All those files' informations are stored in a database.</para>
+    <sect2>
+      <title>FileManager RDC Initialization</title>
+      <para>This section describes how to start and use the FileManager. </para>
+      <ns:warning>
+        <para> The ivy users must have at least the two following rights:
+            <ns:emphasis>ExternalDatabaseConfigurationReadMaxConnections</ns:emphasis> and
+            <ns:emphasis>ExternalDatabaseConfigurationReadDatabaseConnectionConfiguration</ns:emphasis></para>
+      </ns:warning>
+      <para>There are two major informations to provide the FileManager: the <ns:emphasis>server
+          path</ns:emphasis> representing the top directory that will be displayed, and the
+          <ns:emphasis>database informations</ns:emphasis> to be able to retrieve the files
+        informations.</para>
+      <sect3>
+        <title>The Server path</title>
+        <para>The server path is provided as parameter in the start methods of the RDC. This
+          parameter can be an empty String. In such a case nothing is going to be displayed and the
+          user will not be able to do anything. You can set the server Path dynamically at a delayed
+          time with the <ns:code>setServerPath(String _serverPath)</ns:code> method. </para>
+        <para>If you provide a path like "Test/dir1/", the directories and theirs files are going to
+          be located at the root of the Ivy Server installation directory. If the path is like
+          "/test/dir1/...", the directories and theirs files are going to be located at the root of
+          the drive. You can also provide a path like "C:/test/...".</para>
+        <para>You can connect to a file share server path with for example
+            <ns:emphasis>"//ServerShareName/dir1/"</ns:emphasis>. In such a case the file sharing
+          must be configured so that the Ivy Server User can connect to it. </para>
+      </sect3>
+      <sect3>
+        <title>The database information</title>
+        <para>You can use the IvySystem DB to store the informations on the files, or you can use an
+          external Database System.</para>
+        <para>If your table is located on the Ivy System Database you just have initialize the
+          FileManager with its <ns:code>startWithServerPathAndUseIvySystemDB(String
+          _serverPath)</ns:code> start method. It is the easiest way to use the FileManager.</para>
+        <para>If you use an external database you have to provide more informations:<itemizedlist>
+            <listitem>
+              <para>First you have to configure an Ivy Database Configuration in your project (see
+                the Ivy Documentation related to this point).</para>
+            </listitem>
+            <listitem>
+              <para>The Table that is going to keep the informations about the files has to be
+                created with the following SQL CREATE Statement:</para>
+              <para><ns:code>CREATE TABLE UploadedFiles ( FileId INT NOT NULL AUTO_INCREMENT,
+                  FileName VARCHAR(255) NOT NULL, FilePath VARCHAR(750) NOT NULL, CreationUserId
+                  VARCHAR (200) NULL, CreationDate VARCHAR (10) NULL, CreationTime VARCHAR (8) NULL,
+                  FileSize VARCHAR (20) NULL, Locked TINYINT NULL, LockingUserId VARCHAR (200) NULL,
+                  ModificationUserId VARCHAR (200) NULL, ModificationDate VARCHAR (10) NULL,
+                  ModificationTime VARCHAR (8) NULL, Description VARCHAR(1024) NULL, PRIMARY
+                  KEY(FileId) )</ns:code></para>
+              <para><emphasis role="italic">Please adapt this query to your db engine.</emphasis></para>
+              <ns:warning>
+                <para>If you run your database engine on a case sensitive system, please make sure
+                  that the column names are written in camel case (first letter of each word in
+                  uppercase, ex: FileName). In older versions of the FileManager the recommended
+                  case was the uppercase for the whole names. If you use a table from a previous
+                  version on such a case sensitive system, please rename your table's column names
+                  with the right camel case. </para>
+              </ns:warning>
+            </listitem>
+            <listitem>
+              <para>Then use one of the following start methods:</para>
+            </listitem>
+          </itemizedlist></para>
+        <table>
+          <title><code>FileManager Start methods</code> using an Ivy database configuration</title>
+          <tgroup cols="3">
+            <thead>
+              <row>
+                <entry>Start method name</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry><ns:code>startWithServerPathAndIvyDbConnectionNameAndDbTableName</ns:code></entry>
+                <entry>Starts with serverPath / IvyDBConnectionName / DBTableName. The server path
+                  is the root directory in the server file system where the documents are going to
+                  be uploaded and found. The IvyDBConnectionName is the name of the Ivy Database
+                  Connection configuration, used to store the files informations. (Per default
+                  "FileManager"). The DBTableName is the Table name where the files informations are
+                  going to be stored. Per Default "UPLOADEDFILES"</entry>
+              </row>
+              <row>
+                <entry><ns:code>startWithServerPathAndIvyDbConnectionNameAndDbTableNameAndDBSchemaName</ns:code></entry>
+                <entry>If you use a PostGreSQL database, you can provide a schema name also. If no
+                  Schema is provided, the default used will be "public".</entry>
+              </row>
+              <row>
+                <entry><ns:code>startWithServerPath</ns:code></entry>
+                <entry>This start method only takes the serverPath as Parameter. In this case you
+                  have to obligatory provide a database configuration named "FileManager" and your
+                  table has to be named "UPLOADEDFILES".</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+        <ns:warning>
+          <para>For the moment only three kinds of external databases were tested: MS SQL, MySQL and
+            PostGRESQL. It should work fine with others DB Engines.</para>
+        </ns:warning>
+      </sect3>
+    </sect2>
+    <sect2>
+      <title>Important methods</title>
+      <para>In this section we won't have a look at all the filemanger's methods. please refer to
+        the Ivy Interface documentation for that purpose.</para>
+      <table>
+        <title><code>FileManager Start methods</code> using an Ivy database configuration</title>
+        <tgroup cols="3">
+          <thead>
+            <row>
+              <entry>Method name</entry>
+              <entry>Description</entry>
+            </row>
+          </thead>
+          <tbody>
+            <row>
+              <entry><ns:code>setServerPath(String _newServerPath)</ns:code></entry>
+              <entry>Set the server path. Use it if you want to reset the RD with a new Path on the
+                server. The RDTree and the documentsList will to be rebuilt. The serverPath is the
+                root directory that contains all the directories that can be selected. The user
+                cannot navigate outside the serverPath.</entry>
+            </row>
+            <row>
+              <entry><ns:code>refresh</ns:code></entry>
+              <entry>It refreshes all the directories and reselect the root directory.</entry>
+            </row>
+            <row>
+              <entry><ns:code>setIsRecursive(boolean _isRecursive)</ns:code></entry>
+              <entry>Set how the files are searched in the Db and the FileSystem. If true the files
+                are searched recursively under the selected directory. If false, just the files
+                directly under the directory are shown.</entry>
+            </row>
+            <row>
+              <entry><ns:code>editFile(java.io.File _fileToEdit)</ns:code></entry>
+              <entry>Tries to open a selected file in edit mode. If the file is locked, the user
+                will be informed that the File is going to be open in "Read only" modus. Read only
+                doesn't mean, that the user cannot edit and save the file on his computer, but that
+                the changes are not going to be uploaded on the server. If the File cannot be edited
+                on the User's computer (like a PDF if no PDF Editor is installed), the file will be
+                open in read only modus. </entry>
+            </row>
+            <row>
+              <entry><ns:code>addDocuments(List&lt;DocumentOnServer>) </ns:code></entry>
+              <entry>Add a list of documents into the Db and into the documents table list. It
+                doesn't check if the files are really presents on the server. This check is
+                performed with the next refresh action. </entry>
+            </row>
+            <row>
+              <entry><ns:code>addFiles(List&lt;java.io.File>) </ns:code></entry>
+              <entry>Add a list of Files into the Db and into the documents table list. It doesn't
+                check if the files are really presents on the server. This check is performed with
+                the next refresh action.</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+    </sect2>
+    <sect2>
+      <title>Other Informations on the FileManager RDC</title>
+      <itemizedlist>
+        <listitem>
+          <para><emphasis role="bold">The first thing to keep in mind is that when a user is editing
+              a File, nobody else can edit it at the mean time.</emphasis> To unlock the file after
+            edition the user has to unlock it manually with the <ns:emphasis>"unlock"
+            button</ns:emphasis>:</para>
+          <para><inlinemediaobject><imageobject><imagedata fileref="images/FileManager/unlock.png"
+              /></imageobject></inlinemediaobject></para>
+          <para>After unlocking the file, if the file is still opened at client side, the future
+            changes are not going to be uploaded and saved on the server.</para>
+          <para>To avoid keeping the lock on files after closing the application, the FileManager
+            unlocks automatically the edited files from the user when it is closed. </para>
+          <ns:warning>
+            <para>If the application crashes for some reasons, the FileManager cannot unlock the
+              Files. The only way to unlock them is that the user reopens the application and
+              unlocks the edited files properly.</para>
+          </ns:warning>
+        </listitem>
+        <listitem>
+          <para>An another interesting capabillity is the <ns:emphasis><emphasis role="bold">Drag
+                and Drop</emphasis></ns:emphasis> from Files from one Folder to another one and from
+            the client file system into the FileManager.</para>
+          <para>Drag one or more files from the files table an drop them on the destination
+            directory: </para>
+          <para><inlinemediaobject><imageobject><imagedata fileref="images/FileManager/FilesDnD.png"
+                /></imageobject></inlinemediaobject></para>
+          <para>Drag one or more files from the client file system: </para>
+          <para><inlinemediaobject><imageobject><imagedata
+                  fileref="images/FileManager/FilesDnDFromOS01.png"
+            /></imageobject></inlinemediaobject></para>
+          <para>The files are automatically uploaded: </para>
+          <para><inlinemediaobject><imageobject><imagedata
+                  fileref="images/FileManager/FilesDnDFromOS02.png"
+            /></imageobject></inlinemediaobject></para>
+          <para> There is for the moment no possibility to drag and drop files <emphasis role="bold"
+              >to</emphasis> the client file system.</para>
+        </listitem>
+        <listitem>
+          <para>The user can change the way the files are listed with the following button:</para>
+          <para><inlinemediaobject><imageobject><imagedata fileref="images/FileManager/switch.png"
+              /></imageobject></inlinemediaobject></para>
+          <para>Using this button the user can list <emphasis role="bold">ALL</emphasis> the files
+            contained into the selected directory and its subdirectories, or just the files
+            contained directly under the selected directory (default behavior).</para>
+        </listitem>
+      </itemizedlist>
+    </sect2>
+  </sect1>
+  <sect1 xml:id="ivy.addons.filemanager.otherRDCs">
+    <title>Other Framework Dialogs</title>
+    <para>Beside the FileManager Rich Dialog you will find a collection of other rich dialogs that
+      can be usefull in your applications. This documentation doesn't describes those rich dialogs
+      in details. We just provide a short overview of them. Please read their Ivy Interfaces'
+      documentation for more informations. </para>
+    <para>Those Rich dialogs can be devided in two groups:<itemizedlist>
+        <listitem>
+          <para>The first Group contains two Rich Dialogs responsible for the Actions upon the
+            Files. The major Rich Dialog in this Group is the
+            <ns:emphasis>DesktopHandler</ns:emphasis>. This RDC is used as interface between the
+            visual rich dialogs and the Java Classes developed to be able to perform actions on the
+            files. This Rich Dialog was named "DesktopHandler" because it allows executing the
+            methods contained in the <ns:code>java.awt.Desktop</ns:code> java Class. This
+            DesktopHandler contains the other invisible Rich Dialog of this collection: the
+              <ns:emphasis>FileEditorChecker</ns:emphasis>. This Rich Dialog is responsible for the
+            persistency of the changes in a File edition. There should be no reason to have to
+            implement directly this last rich dialog into your applications.</para>
+        </listitem>
+        <listitem>
+          <para>The Second Group contains 7 Rich Dialogs other than the FileManager:<ns:orderedlist>
+              <listitem>
+                <para>The <ns:emphasis>FileActionOptionPane</ns:emphasis>: it should be used as
+                  Synchronous "popup" Window to perform an action (edit, print, download) on a given
+                  File. It contains a DesktopHandler to be able to edit or print the File.</para>
+              </listitem>
+              <listitem>
+                <para>The <ns:emphasis>SimpleFileActionChooserPane</ns:emphasis>: this Rich Dialog
+                  doesn't contain a DesktopHandler. He cannot perform the edit or print actions from
+                  itself. With this Rich Dialog you just choose upon "edit" or "print". It returns
+                  "edit" if the user presses on the "Edit" button or "print" if the user presses on
+                  the "Print" one. Else it returns "cancel". The Rich Dialog that calls this
+                  SimpleFileActionChooserPane should then contains a DesktopHandler to perform the
+                  choosed action.</para>
+              </listitem>
+              <listitem>
+                <para>The <ns:emphasis>FileListChooserPane</ns:emphasis> is just composed by a
+                  ComboBox. It should be inserted into a parent Rich Dialog. It is started with a
+                  server folder path and lists all the Files contained into this folder. It
+                  communicates with its parent Rich Dialog through a fired Event
+                  fileSelectionChanged@SUBSCRIBERS whenever the selection was changed. The object
+                  sent by this event is a DocumentOnServer.
+                  (ch.ivyteam.ivy.addons.filemanager.DocumentOnServer dataclass) </para>
+              </listitem>
+              <listitem>
+                <para>The <ns:emphasis>SimpleFileChooserDialog</ns:emphasis>: it contains a
+                  FileListChooserPane and returns the selected java.io.File. It contains also a
+                  DesktopHandler to be able to open the selected File. The user can then preview the
+                  File that he is about to select.</para>
+              </listitem>
+              <listitem>
+                <para>The <ns:emphasis>FileNameDialog</ns:emphasis> allows giving a Filename and
+                  optionally to choose an extension and a future place to store a created File on
+                  the server. This can be usefull in processes that create files and where the user
+                  should choose the name of the created file.</para>
+              </listitem>
+              <listitem>
+                <para>The <ns:emphasis>FileUploadPreparer</ns:emphasis>: in some processes a user
+                  has to choose some Files to upload on the server at a time when the place where to
+                  store the File is not known. With the FileUploadPreparer you can then select the
+                  Files to upload, and then upload them later by calling its
+                    <ns:code>uploadPreparedFiles</ns:code> method.</para>
+              </listitem>
+              <listitem>
+                <para>The <ns:emphasis>FileListTable</ns:emphasis>: This RDC is like a very
+                  simplified FileManager in the form of a RTable. It displays files contained into a
+                  folder on the File Server. The user can edit or delete the displayed files. He can
+                  also be used to upload some files. This RDC supports the files drag and drop from
+                  the client file system.</para>
+              </listitem>
+            </ns:orderedlist></para>
+        </listitem>
+      </itemizedlist></para>
+  </sect1>
+</chapter>

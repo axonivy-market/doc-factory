@@ -1,0 +1,309 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="ivy.samplechapter">
+    <info>
+        <title>Sample Chapter</title>
+    </info>
+    <sect1 xml:id="ivy.samplechapter.bookorganisation">
+        <title>Organisation of the book</title>
+        <para>The xml file <filename>ivy4DesignerGuide.xml</filename> is the index file of the
+                <emphasis role="bold">book</emphasis>. Each <emphasis role="bold">chapter</emphasis>
+            is provided in a separate file that is included in that book. A <emphasis role="bold"
+                >chapter</emphasis> may have up to two sublevels. These sections and subsections are
+            depicted by <emphasis role="bold">sect1</emphasis> and <emphasis role="bold"
+            >sect2</emphasis> elements.</para>
+        <para>Chapters, sections and subsections should have an <emphasis role="bold"
+            >xml:id</emphasis> attribute that will be used for cross-reference links within the
+            book. The id should follow the pattern:
+            <replaceable>ivy.chapterid.sectionid</replaceable>
+        </para>
+        <para>File mychapter.xml:</para>
+        <screen>
+         chapter    xmls:id="ivy.mychapter"
+             
+             sect1    xmls:id="ivy.mychapter.sectionX"
+                 
+                 sect2    xmls:id="ivy.mychapter.sectionN"
+                 sect2    xmls:id="ivy.mychapter.sectionU"
+             
+             sect1    xmls:id="ivy.mychapter.sectionK"
+                 
+                 sect2    xmls:id="ivy.mychapter.sectionE"
+        </screen>
+    </sect1>
+    <sect1 xml:id="ivy.samplechapter.convention">
+        <title>Conventions to be used </title>
+        <para>This section covers the conventions used in our book.</para>
+        <sect2 xml:id="ivy.samplechapter.typo">
+            <title>Typographic Conventions</title>
+            <variablelist>
+                <varlistentry>
+                    <term><code>Constant width</code></term>
+                    <listitem>
+                        <para>Used to indicate source code: e.g. Java or IvyScript class names,
+                            properties or methods. In the docbook xml you have to use the
+                            &lt;code>&lt;/code> tag.</para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term><emphasis role="italic">Italics</emphasis></term>
+                    <listitem>
+                        <para>Used to introduce first-time used expressions, URL’s, email addresses,
+                            filenames and directory paths. Also used for names of Roles. In docbook
+                            you have to use the following tags: <variablelist>
+                                <varlistentry>
+                                    <term><emphasis role="italic">first timer</emphasis></term>
+                                    <listitem>
+                                        <para>&lt;emphasis role="italic"><emphasis role="italic"
+                                                >first timer</emphasis>&lt;emphasis></para>
+                                    </listitem>
+                                </varlistentry>
+                                <varlistentry>
+                                    <term><uri>URL</uri></term>
+                                    <listitem>
+                                        <para>&lt;uri><uri>URL</uri>&lt;/uri></para>
+                                    </listitem>
+                                </varlistentry>
+                                <varlistentry>
+                                    <term><filename>filename, directory</filename></term>
+                                    <listitem>
+                                        <para>&lt;filename><filename>filename</filename>&lt;/filename></para>
+                                    </listitem>
+                                </varlistentry>
+                            </variablelist></para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>this is <emphasis role="bold">important</emphasis></term>
+                    <listitem>
+                        <para>The element <emphasis role="bold">emphasis</emphasis> is used to
+                            highlight terms in a text</para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term><command>this is a command</command></term>
+                    <listitem>
+                        <para>A <emphasis role="bold">command</emphasis> element is used for
+                            commands, command output, and options</para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term><replaceable>ivy Server </replaceable></term>
+                    <listitem>
+                        <para>A <emphasis role="bold">replacable</emphasis> element is used for
+                            replaceable items in code and text</para>
+                    </listitem>
+                </varlistentry>
+            </variablelist>
+            <sect3>
+                <title>Examples:</title>
+                <para>Given that a valid format is ensured, you can access the value of a
+                        <code>RDatePicker</code> from the specialized attributes
+                    <code>valueAsDate</code>. Note that the return value is a e.g.
+                        <code>Date.INVALID</code> if the user input does not represent a valid
+                    value. </para>
+                <para>A combo box generates an <emphasis role="italic">Action</emphasis> event if an
+                    option is selected. </para>
+                <para>If the box has not been checked also anonymous users (which own the <emphasis
+                        role="italic">Everybody</emphasis> role by default) may start the process.
+                </para>
+            </sect3>
+        </sect2>
+        <sect2 xml:id="ivy.samplechapter.icons">
+            <title>Icons</title>
+            <note>
+                <para>The <emphasis role="bold">note</emphasis> designates a note relating to the
+                    surrounding text.</para>
+            </note>
+            <tip>
+                <para>The <emphasis role="bold">tip</emphasis> designates a helpful tip relating to
+                    the surrounding text.</para>
+            </tip>
+            <warning>
+                <para>The <emphasis role="bold">warning</emphasis> designates a warning relating to
+                    the surrounding text.</para>
+            </warning>
+        </sect2>
+        <sect2 xml:id="ivy.samplechapter.screen">
+            <title>Screen</title>
+            <para>Use a <emphasis role="bold">screen</emphasis> to show keybord input. e.g. script
+                samples</para>
+            <screen>
+out.x=in.y;
+        </screen>
+        </sect2>
+        <sect2 xml:id="ivy.samplechapter.sidebar">
+            <title>Sidebar</title>
+            <sidebar xml:id="ivy.sidebar-1">
+                <title>Sidebar</title>
+                <para>In a <emphasis role="bold">sidebar</emphasis> you can give some background
+                    information ...</para>
+            </sidebar>
+        </sect2>
+    </sect1>
+    <sect1 xml:id="ivy.samplechapter.links">
+        <title>Links</title>
+        <para><link linkend="ivy.samplechapter.icons">See this ! </link>This is a cross-reference
+                <emphasis role="bold">link</emphasis> to an item in the book (section, chapter,
+            figure ..) adressed by its id</para>
+        <para><link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://www.xml.com">click
+                hier !</link> A <emphasis role="bold">link</emphasis> to any url in the www</para>
+    </sect1>
+    <sect1 xml:id="ivy.samplechapter.images">
+        <title>Images</title>
+        <para>This is an image inserted using the <emphasis role="bold">imagedata</emphasis>
+            elements:</para>
+        <mediaobject>
+            <imageobject><imagedata fileref="images/go.gif"/></imageobject>
+        </mediaobject>
+        <para>Put the image in a <emphasis role="bold">figure</emphasis> element, give it a
+                <emphasis role="bold">title</emphasis> and an id. The figure will appear in the
+                <emphasis role="bold">List of Figures</emphasis></para>
+        <figure xmlns:id="samplechapter.images.figure1">
+            <title>Lake in Fagaras</title>
+            <mediaobject>
+                <imageobject>
+                    <imagedata fileref="images/lake.jpeg" scale="50"/>
+                </imageobject>
+            </mediaobject>
+        </figure>
+    </sect1>
+    <sect1 xml:id="ivy.samplechapter.lists">
+        <title>Lists</title>
+        <para>This is an <emphasis role="bold">itemizedlist</emphasis></para>
+        <itemizedlist>
+            <listitem>
+                <para>
+                    <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://www.xml.com"
+                        >http://www.xml.com</link>
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://www.xml.org"
+                        >http://www.xml.org</link>
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://www.w3c.org"
+                        >http://www.w3c.org</link>
+                </para>
+            </listitem>
+        </itemizedlist>
+        <para>This is a <emphasis role="bold">variablelist</emphasis>
+        </para>
+        <variablelist>
+            <varlistentry>
+                <term>Constructor: <code>public TemplateMergeField(String mergeFieldName, String mergeFieldValue)</code></term>
+                <listitem>
+                    <para>The file is unchanged in the working directory, and no changes to that
+                        file have been committed to the repository since its working revision. An
+                            <command>svn commit</command> of the file will do nothing, and an
+                            <command>svn update</command> of the file will do nothing.</para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>Field mergeFieldName</term>
+                <listitem>
+                    <para>The file has been changed in the working directory, and no changes to that
+                        file have been committed to the repository since you last updated. There are
+                        local changes that have not been committed to the repository, thus an
+                            <command>svn commit</command> of the file will succeed in publishing
+                        your changes, and an <command>svn update</command> of the file will do
+                        nothing.</para>
+                </listitem>
+            </varlistentry>
+        </variablelist>
+        <para>This is an <emphasis role="bold">orderedlist</emphasis>:</para>
+        <orderedlist>
+            <listitem>
+                <para> red </para>
+            </listitem>
+            <listitem>
+                <para> green </para>
+            </listitem>
+            <listitem>
+                <para> blue </para>
+            </listitem>
+        </orderedlist>
+    </sect1>
+    <sect1 xml:id="ivy.samplechapter.tables">
+        <title>Tables</title>
+        <sect2 xml:id="ivy.samplechapter.htmltable">
+            <title>Docbook 5 supports HTML tables</title>
+            <para>The table should have a caption that will appear in the<emphasis role="bold"> List
+                    of Tables</emphasis></para>
+            <table frame="border">
+                <caption>HTML Table</caption>
+                <thead>
+                    <tr>
+                        <th align="left">Person Name</th>
+                        <th align="left">Age</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Jane</td>
+                        <td>26</td>
+                    </tr>
+                    <tr>
+                        <td>Bart </td>
+                        <td>24</td>
+                    </tr>
+                    <tr>
+                        <td>Alexander</td>
+                        <td>22</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <emphasis role="italic">They are all students of the computer science
+                                department</emphasis>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </sect2>
+        <sect2 xml:id="ivy.samplechapter.docbooktable">
+            <title>Docbook has special table elements </title>
+            <para>The table must have a title that will appear in the<emphasis role="bold"> List of
+                    Tables</emphasis></para>
+            <table>
+                <title>Docbook table </title>
+                <tgroup cols="2">
+                    <thead>
+                        <row>
+                            <entry>Schema</entry>
+                            <entry>Access method</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry><literal>file:///</literal></entry>
+                            <entry>Direct repository access (on local disk)</entry>
+                        </row>
+                        <row>
+                            <entry><literal>http://</literal></entry>
+                            <entry>Access via WebDAV protocol to Subversion-aware Apache
+                            server</entry>
+                        </row>
+                        <row>
+                            <entry><literal>https://</literal></entry>
+                            <entry>Same as <literal>http://</literal>, but with SSL
+                            encryption.</entry>
+                        </row>
+                        <row>
+                            <entry><literal>svn://</literal></entry>
+                            <entry>Access via custom protocol to an <literal>svnserve</literal>
+                                server</entry>
+                        </row>
+                        <row>
+                            <entry><literal>svn+ssh://</literal></entry>
+                            <entry>Same as <literal>svn://</literal>, but through an SSH
+                            tunnel.</entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table>
+        </sect2>
+    </sect1>
+</chapter>

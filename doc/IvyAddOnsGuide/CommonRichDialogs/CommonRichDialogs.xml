@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="ivy.addons.commonrd">
+	<title>Common Rich Dialogs</title>
+	<sect1 xml:id="ivy.addons.commonrd.purpose">
+		<title>Purpose</title>
+		<para> Many applications need to query user input or give feedback during their runtime.
+			Often such in- or output is requested or presented by using modal dialogs that are
+			opened over the application UI. The <emphasis role="italic">Common Rich
+			Dialogs</emphasis> that are contained in the <emphasis role="italic"
+			>IvyAddOns</emphasis> project provide a general and customizable implementation of such
+			often-used user-interaction dialogs. </para>
+		<mediaobject>
+			<imageobject>
+				<imagedata fileref="images/CommonRichDialogs/commonRichDialogsOverview.png"/>
+			</imageobject>
+		</mediaobject>
+		<tip>
+			<para>Please have a look at the <emphasis>Common Rich Dialog</emphasis> demo in the
+					<emphasis role="italic">IvyDemos</emphasis> project to see a demonstration of
+				the utility dialogs that are described in this chapter. Check out the process logic
+				of the Common Rich Dialogs to learn more about their implementation and to adapt
+				them to your own needs.</para>
+		</tip>
+	</sect1>
+	<sect1 xml:id="ivy.addons.commonrd.dialogtypes">
+		<title>Dialog Types</title>
+		<sect2 xml:id="ivy.addons.commonrd.dialogtypes.error">
+			<title>Error Dialog</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/CommonRichDialogs/errorDialog.png"/>
+				</imageobject>
+			</mediaobject>
+			<para>Displays a Java Exception error to the user (Throwable instance that was e.g.
+				caught with <code>try/catch</code>) . The error's stacktrace can be viewed in an own
+				sub dialog and can be copied to the clipboard (e.g. to be pasted into a mail). The
+				appearance of buttons can be configured.</para>
+			<table>
+				<title>Start Methods of ErrorDialog</title>
+				<tgroup cols="2">
+					<tbody>
+						<row>
+							<entry>
+								<code>showError(Throwable,Boolean,Boolean):Boolean</code>
+							</entry>
+							<entry>Displays the message of the given Throwable and optionally
+								displays Detail and Copy buttons.</entry>
+						</row>
+					</tbody>
+				</tgroup>
+			</table>
+		</sect2>
+		<sect2 xml:id="ivy.addons.commonrd.dialogtypes.login">
+			<title>Login Dialog</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/CommonRichDialogs/loginDialog.png"/>
+				</imageobject>
+			</mediaobject>
+			<para>Logs in a session user.</para>
+			<table>
+				<title>Start Methods of LoginDialog</title>
+				<tgroup cols="2">
+					<tbody>
+						<row>
+							<entry>
+								<code>login():Boolean</code>
+							</entry>
+							<entry>Asks user for name and password and logs him/her into the current
+								session.</entry>
+						</row>
+						<row>
+							<entry>
+								<code>loginAndSelectSessionLanguage():Boolean</code>
+							</entry>
+							<entry>Same as <code>login()</code> but additionally shows a combo box
+								that allows the user to select from a list of available application
+								languages.</entry>
+						</row>
+					</tbody>
+				</tgroup>
+			</table>
+		</sect2>
+		<sect2 xml:id="ivy.addons.commonrd.dialogtypes.message">
+			<title>Message Dialog</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/CommonRichDialogs/messageDialog.png"/>
+				</imageobject>
+			</mediaobject>
+			<para>Displays a message to the user. The title of the dialog can be optionally
+				configured.</para>
+			<table>
+				<title>Start Methods of MessageDialog</title>
+				<tgroup cols="2">
+					<tbody>
+						<row>
+							<entry>
+								<code>showMessage(String):void</code>
+							</entry>
+							<entry>Displays the given String to the user.</entry>
+						</row>
+						<row>
+							<entry>
+								<code>showMessage(String,String):void</code>
+							</entry>
+							<entry>Displays the given String to the user and sets the provide title
+								on the dialog.</entry>
+						</row>
+					</tbody>
+				</tgroup>
+			</table>
+		</sect2>
+		<sect2 xml:id="ivy.addons.commonrd.dialogtypes.multilineinput">
+			<title>Multi-line Input Dialog</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/CommonRichDialogs/multiLineInputDialog.png"/>
+				</imageobject>
+			</mediaobject>
+			<para>Asks the user for a longer text input. The question and initial input value can be
+				provided, as well as the buttons that should be displayed. In the most customizable
+				start method, the buttons that will be displayed can be configured to a great
+				extent.</para>
+			<table>
+				<title>Start Methods of MultiLineInputDialog</title>
+				<tgroup cols="2">
+					<tbody>
+						<row>
+							<entry>
+								<code>askInput(String,String,List&lt;String>):String,String</code>
+							</entry>
+							<entry>Displays the given question to the user and presents the given
+								initial input value. For each String in the provided List, a button
+								is created with the String as Text. When the user clicks on a button
+								then the dialog closes and returns both the input and the String of
+								the clicked button.</entry>
+						</row>
+						<row>
+							<entry>
+								<code>askInput(String,String,List&lt;String>,String):String,String</code>
+							</entry>
+							<entry>Same as
+									<code>askInput(String,String,List&lt;String>):String,String</code>
+								but additionally allows to define one of the provided buttons as
+								default button. This button will be invoked when the user hits enter
+								(outside the focus of the input text area).</entry>
+						</row>
+						<row>
+							<entry>
+								<code>askInputWithCustomButtons(String,String,List&lt;String>,
+									List&lt;String>,List&lt;String>,String):String,String</code>
+							</entry>
+							<entry>Same as
+									<code>askInput(String,String,List&lt;String>,String):String,String</code>
+								but additionally allows to further customize the displayed buttons
+								with action commands and icons.</entry>
+						</row>
+					</tbody>
+				</tgroup>
+			</table>
+		</sect2>
+		<sect2 xml:id="ivy.addons.commonrd.dialogtypes.question">
+			<title>Question Dialog</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/CommonRichDialogs/questionDialog.png"/>
+				</imageobject>
+			</mediaobject>
+			<para>Asks the user a question that he or she can answer with a click on a button. The question 
+				the answer buttons that will be displayed can be provided.</para>
+			<table>
+				<title>Start Methods of QuestionDialog</title>
+				<tgroup cols="2">
+					<tbody>
+						<row>
+							<entry>
+								<code>askQuestion(String,String,List&lt;String>):String</code>
+							</entry>
+							<entry>Displays the given question with the given icon (uri) to the user.
+								For each String in the provided List, a button
+								is created with the String as Text. When the user clicks on a button
+								then the dialog closes and returns the String of the clicked button.</entry>
+						</row>
+						<row>
+							<entry>
+								<code>askQuestion(String,String,List&lt;String>,String):String</code>
+							</entry>
+							<entry>Same as
+								<code>askQuestion(String,String,List&lt;String>):String</code>
+								but additionally allows to define one of the provided buttons as
+								default button. This button will be invoked when the user hits enter.</entry>
+						</row>
+						<row>
+							<entry>
+								<code>askQuestionWithTitle(String,String,String,List&lt;String>):String</code>
+							</entry>
+							<entry>Same as
+								<code>askQuestion(String,String,List&lt;String>):String</code>
+								but additionally allows to provide the title of the displayed dialog.</entry>
+						</row>
+						<row>
+							<entry>
+								<code>askQuestionWithTitle(String,String,String,List&lt;String>,String):String</code>
+							</entry>
+							<entry>Same as
+								<code>askQuestionWithTitle(String,String,String,List&lt;String>):String</code>
+								but additionally allows to define one of the provided buttons as
+								default button. This button will be invoked when the user hits enter.</entry>
+						</row>
+						<row>
+							<entry>
+								<code>askQuestionWithTitleAndCustomButtons(String,String,String,
+									List&lt;String>,List&lt;String>,List&lt;String>,String):String</code>
+							</entry>
+							<entry>Same as
+								<code>askQuestionWithTitle(String,String,String,List&lt;String>,String):String</code>
+								but additionally allows to customize the displayed buttons with individual
+								icon (uris) and action commands.</entry>
+						</row>
+					</tbody>
+				</tgroup>
+			</table>
+		</sect2>
+		<sect2 xml:id="ivy.addons.commonrd.dialogtypes.singlelineinput">
+			<title>Single-line Input Dialog</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/CommonRichDialogs/singleLineInputDialog.png"/>
+				</imageobject>
+			</mediaobject>
+			<para>Asks the user for a single line input. The question and initial input value can be
+				provided, as well as the buttons that should be displayed. In the most customizable
+				start method, the buttons that will be displayed can be configured to a great
+				extent.</para>
+			<para>
+				This dialog is completely identical to <link linkend="ivy.addons.commonrd.dialogtypes.multilineinput">Multi-line Input Dialog</link>
+				with the only difference that a TextField instead of a TextArea is displayed for input. See Multi-line Input Dialog for a 
+				detailed description of the available start methods.
+			</para>
+		</sect2>
+	</sect1>
+</chapter>
