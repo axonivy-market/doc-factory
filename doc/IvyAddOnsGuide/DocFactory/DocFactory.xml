@@ -71,8 +71,60 @@
       Java API. You can extend and create your own implementation of the document Factory with other
       engines.</para>
   </sect1>
+  <sect1 xml:id="ivy.addons.docfactory.mailmergeWithRegions">
+    <title>Mail Merging with Regions</title>
+    <ns:warning>
+      <para>The mail merge with regions described here is specific to the Aspose engine. If you extend this current DocFactory by using another engine you have to refer to its specifical documentation.</para>
+    </ns:warning>
+    <para>If you want to dynamically grow portions inside the document, use mail merge with regions.
+      To specify a mail merge region in the document you need to insert two mail merge fields to
+      mark the beginning and end of the mail merge region. All document content that is included
+      inside a mail merge region automatically will be repeated for every record in the data source
+      (in most cases this is a table). </para>
+    <para>To mark the beginning of a mail merge region, insert a MERGEFIELD with the name
+      TableStart:MyTable, where MyTable corresponds to the name of the table. To mark the end of the
+      mail merge region insert another MERGEFIELD with the name TableEnd:MyTable. Between these
+      marking fields, place merge fields that correspond to the fields of your data source (table
+      columns). </para>
+    <para>These merge fields will be populated with data from the first row of the data source, then
+      the whole region will be repeated, and the new fields will be populated with data from the
+      second row, and so on. </para>
+    <para>Follow these simple rules when marking a region: <itemizedlist>
+        <listitem>
+          <para>TableStart and TableEnd fields must be inside the same section in the
+          document.</para>
+        </listitem>
+        <listitem>
+          <para>If used inside a table,TableStart and TableEnd must be inside the same row in the
+            table.</para>
+        </listitem>
+        <listitem>
+          <para>Mail merge regions can be nested inside each other.</para>
+        </listitem>
+        <listitem>
+          <para>Mail merge regions should be well formed (there is always a pair of matching
+            TableStart and TableEnd with the same table name).</para>
+        </listitem>
+      </itemizedlist></para>
+    <para>The following picture shows a template with a mail merge region:</para>
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="images/DocFactory/templateWithMailMergeRegion.png"/>
+      </imageobject>
+    </mediaobject>
+    <para>The following picture shows the result of the mail merge with regions:</para>
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="images/DocFactory/resultMailMergeWithRegions.png"/>
+      </imageobject>
+    </mediaobject>
+    <para>We have provided some callables subprocesses to ease the use of mail merge and mail merge
+      with regions. Please refer to the <link linkend="ivy.addons.docfactory.docfactory">next
+        section.</link>
+    </para>
+  </sect1>
   <sect1 xml:id="ivy.addons.docfactory.callables">
-    <title>Callable Processes for generating Serial Letters</title>
+    <title>Callable Processes for generating Serial Letters and documents</title>
     <para>Two Callable Processes are available from the AddOns project and at your disposal, to
       cover a maximum of your needs in the letter production. They use three kinds of Java Objects
       to perform their task.</para>
@@ -161,10 +213,11 @@
             List&lt;File&gt; files, int type)</code></para>
       </sect3>
       <sect3>
-        <title>DocumentTemplate</title>
+        <title xml:id="ivy.addons.docfactory.documentTemplate">DocumentTemplate</title>
         <para>The <code>DocumentTemplate</code> class represents a whole letter or document to be
           generated. It contains all the necessary information to be able to generate a new document
-          with a mail merge engine. The information is placed into the following variables:</para>
+          with a mail merge engine. The information is placed into the following variables, each of
+          them can be accessed through get/set methods:</para>
         <table>
           <title><code>DocumentTemplate</code> attributes</title>
           <tgroup cols="3">
@@ -224,15 +277,66 @@
                 <entry>FileOperationMessage</entry>
                 <entry>The FileOperationMessage returned by the mail merging operation.</entry>
               </row>
+              <row>
+                <entry>tablesNamesAndFieldsmap*</entry>
+                <entry>java.util.HashMap&lt;String, java.util.List&lt;CompositeObject>></entry>
+                <entry>This parameter is used for mail merge with regions. This object consists of
+                  key/values pairs, where the keys (String) are the table starts names and the lists
+                  of CompositeObjects contain the datas. Each CompositeObject (Ivy DataClass)
+                  represents a row in a table. The value of the dataclass attributes whose names
+                  match mergefields' names of the table will used to fill these mergefields.</entry>
+              </row>
+              <row>
+                <entry>tablesNamesAndFieldsHashtable*</entry>
+                <entry>java.util.Hashtable&lt;String, Recordset></entry>
+                <entry>This parameter is used for mail merge with regions. This object consists of
+                  key/values pairs, where the keys (String) are the table starts names and the
+                  recordsets contain the datas for the corresponding tables. Each Record represents
+                  a row in a table. A Record's value will be inserted in the mergefield that
+                  corresponds to its field's name.</entry>
+              </row>
             </tbody>
           </tgroup>
         </table>
-        <para>There are three constructors: The default constructor <code>public
-          DocumentTemplate()</code>, <code>public DocumentTemplate(String _templatePath, String
-            _outputPath, String _outputName, String _outputFormat, List&lt;TemplateMergeField>
-            _mergeFields)</code> and <code>public DocumentTemplate(String _templatePath, String
-            _outputPath, String _outputName, String _outputFormat, CompositeObject _data)</code>
-        </para>
+        <para>* The two attributes tablesNamesAndFieldsmap and tablesNamesAndFieldsHashtable cannot
+          be used together to perform mail merge with regions. If one is set, then the other one is
+          cleared. So you have to decide if you use Recordsets or List of CompositeObjects to fill
+          your merge regions.</para>
+        <para>There are several constructors: <itemizedlist>
+            <listitem>
+              <para>The default constructor <code>public DocumentTemplate()</code>,</para>
+            </listitem>
+            <listitem>
+              <para><code>public DocumentTemplate(String _templatePath, String _outputPath, String
+                  _outputName, String _outputFormat, List&lt;TemplateMergeField>
+                _mergeFields)</code></para>
+            </listitem>
+            <listitem>
+              <para><code>public DocumentTemplate(String _templatePath, String _outputPath, String
+                  _outputName, String _outputFormat, List&lt;TemplateMergeField> _mergeFields,
+                  Hashtable&lt;String , Recordset> _tablesNamesAndFieldsHashtable)</code></para>
+            </listitem>
+            <listitem>
+              <para><code>public DocumentTemplate(String _templatePath, String _outputPath, String
+                  _outputName, String _outputFormat, List&lt;TemplateMergeField> _mergeFields,
+                  HashMap&lt;String , java.util.List&lt;CompositeObject>>
+                _tablesNamesAndFieldsmap)</code></para>
+            </listitem>
+            <listitem>
+              <para><code>public DocumentTemplate(String _templatePath, String _outputPath, String
+                  _outputName, String _outputFormat, CompositeObject _data)</code></para>
+            </listitem>
+            <listitem>
+              <para><code>public DocumentTemplate(String _templatePath, String _outputPath, String
+                  _outputName, String _outputFormat, CompositeObject _data, HashMap&lt;String ,
+                  java.util.List&lt;CompositeObject>> _tablesNamesAndFieldsmap)</code></para>
+            </listitem>
+            <listitem>
+              <para><code>public DocumentTemplate(String _templatePath, String _outputPath, String
+                  _outputName, String _outputFormat, CompositeObject _data, Hashtable&lt;String ,
+                  Recordset> _tablesNamesAndFieldsHashtable)</code></para>
+            </listitem>
+          </itemizedlist></para>
       </sect3>
     </sect2>
     <sect2>
@@ -246,7 +350,7 @@
       </mediaobject>
       <sect3>
         <title>writeSerialLetterToOneCorrespondent</title>
-        <para>The Callable named <code>writeSerialLetterToOneCorrespondent</code> contains two
+        <para>The Callable named <code>writeSerialLetterToOneCorrespondent</code> contains seven
           callable subcess starts. </para>
         <para>The first one (writeSerialLetterToOneCorrespondant) allows writing a single document
           with a template by providing a single list of <code>TemplateMergeField</code> objects.
@@ -264,13 +368,24 @@
             <imagedata fileref="images/DocFactory/callable3.png"/>
           </imageobject>
         </mediaobject>
+        <para>The other ones (writeDocumentWithMailMergeTable) allows writing a single document with
+          a template that can contain merge mail with regions (tables) . Here is the description of
+          this callable that you can find in the ivy process mod file:</para>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="images/DocFactory/callable4.png"/>
+          </imageobject>
+        </mediaobject>
       </sect3>
       <sect3>
-        <title>writeSerialLetterToOneCorrespondent</title>
+        <title>writeSerialLetterToManyCorrespondents</title>
         <para>The callable named <code>writeSerialLetterToManyCorrespondents</code> allows writing
           more than one document with a list of <code>DocumentTemplate</code> objects. Each
-            <code>DocumentTemplate</code> object is going to produce a document. Here is the
-          description of this callable that you can find in the ivy process mod file:</para>
+            <code>DocumentTemplate</code> object is going to produce a document. Merge mail with
+          regions is now supported, because the DocumentTemplate Object encapsulates the necessary
+          parameters to perform such a merge (see the <link
+            linkend="ivy.addons.docfactory.documentTemplate">DocumentTemplate documentation</link>).
+          Here is the description of this callable that you can find in the ivy process mod file:</para>
         <mediaobject>
           <imageobject>
             <imagedata fileref="images/DocFactory/callable2.png"/>
@@ -283,30 +398,35 @@
     <title>Demos</title>
     <para>A demo is available in the <emphasis>IvyDemos</emphasis> project that demonstrate the
       usage of the DocFactory.</para>
-    <para>To be able to make the demo works, two default templates have been included into the CMS
-      of the ivy demo project. They are located under “/docfactory/templatecache/myTemplate” and
-      “/docfactory/templatecache/myTemplateWithDynamicPicture” as MS World documents (.doc format).</para>
+    <para>To be able to make the demo works, three default templates have been included into the CMS
+      of the ivy demo project. They are located under “/docfactory/templatecache/myTemplate”,
+      “/docfactory/templatecache/myTemplateWithDynamicPicture” and
+      “/docfactory/templatecache/myTemplateWithTable” as MS World documents (.doc format).</para>
     <mediaobject>
       <imageobject>
         <imagedata fileref="images/DocFactory/demoTemplates.png"/>
       </imageobject>
     </mediaobject>
     <para>You can use the cms designer “Export to File” option, to save them as doc Files and to be
-      able to look into them:</para>
-    <mediaobject>
-      <imageobject>
-        <imagedata fileref="images/DocFactory/exportTemplate.png"/>
-      </imageobject>
-    </mediaobject>
+      able to look into them.</para>
     <para>They both contain three text fields (Name, Firstname, Address). All the documents produced
       are going to be saved into the “ivy_RIA_files” designer or server directory. The second one
-      contains also a picture field, to illustrate the use of dynamic image merge fields.</para>
-    <para>The demo shows how to generate serial documents. All the serial documents are going to be
-      generated into the <filename>ivy_RIA_files</filename> directory of your Server or Designer
-      installation.</para>
+      contains also a picture field, to illustrate the use of dynamic image merge fields, and the
+      third one contains a merge mail region (table). </para>
+    <para>The demo shows how to generate serial documents and the template with merge regions is
+      used. All the serial documents are going to be generated into the
+      <filename>ivy_RIA_files</filename> directory of your Server or Designer installation. </para>
     <mediaobject>
       <imageobject>
         <imagedata fileref="images/DocFactory/theDemo.png"/>
+      </imageobject>
+    </mediaobject>
+    <para>The data for mail merge with regions is put into a Recordset that is used in an Hashtable
+      to be inserted into the "reporting" region of the template. Here is the code for this
+      operation: </para>
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="images/DocFactory/recordsetCode.png"/>
       </imageobject>
     </mediaobject>
     <para>The following result is produced:</para>
@@ -444,6 +564,34 @@
               List&lt;DocumentTemplate&gt; templates</entry>
             <entry>FileOperationMessage</entry>
             <entry>Generates multiple documents appended in one File.</entry>
+          </row>
+          <row>
+            <entry>generateDocumentWithRegions</entry>
+            <entry>String _templatePath, String _outputName, String _outputPath, String
+              _outputFormat, List&gt;TemplateMergeField> _mergefields, HashMap&gt;String,
+              List&gt;CompositeObject>> _tablesNamesAndFieldsmap</entry>
+            <entry>FileOperationMessage</entry>
+            <entry>Method to generate one document with merge mail. Mail Merge with regions
+              supported..</entry>
+          </row>
+          <row>
+            <entry>generateDocumentWithRegions</entry>
+            <entry>String _templatePath, String _outputName, String _outputPath, String
+              _outputFormat, List&gt;TemplateMergeField> _mergefields, Hashtable&gt;String,
+              Recordset> _hashtable</entry>
+            <entry>FileOperationMessage</entry>
+            <entry>Method to generate one document with merge mail. Mail Merge with regions
+              supported.</entry>
+          </row>
+          <row>
+            <entry>generateDocumentWithRegions</entry>
+            <entry>String _templatePath, String _outputName, String _outputPath, String
+              _outputFormat, List&gt;TemplateMergeField> _mergefields, List&gt;String> _tablesNames,
+              List&gt;List&gt;String>> _tables_fieldsNames, List&gt;List&gt;List&gt;Object>>>
+              tables_rowsValues</entry>
+            <entry>FileOperationMessage</entry>
+            <entry>Method to generate one document with merge mail. Mail Merge with regions
+              supported.</entry>
           </row>
           <row>
             <entry>getTemplateFields</entry>
