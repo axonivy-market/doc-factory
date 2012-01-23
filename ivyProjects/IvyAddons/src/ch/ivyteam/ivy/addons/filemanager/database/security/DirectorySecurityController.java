@@ -56,7 +56,7 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 		}
 		if(_dirTableName==null || _dirTableName.trim().length()==0)
 		{//if ivy table name not set used default
-			this.dirTableName="FileManagerDirectory";
+			this.dirTableName="filemanagerdirectory";
 		}else{
 			this.dirTableName=_dirTableName.trim();
 			this.dirTableNameSpace = this.dirTableName;

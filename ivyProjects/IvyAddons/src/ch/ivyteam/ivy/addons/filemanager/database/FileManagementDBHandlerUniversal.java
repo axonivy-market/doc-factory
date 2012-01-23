@@ -45,7 +45,7 @@ import ch.ivyteam.ivy.addons.filemanager.database.security.AbstractDirectorySecu
 public class FileManagementDBHandlerUniversal extends AbstractFileManagementHandler{
 	private String ivyDBConnectionName = null; // the user friendly connection name to Database in Ivy
 	private String tableName = null; // the table name to use in queries
-	private String schemaName = null;// the DB Schema name if needed (eg. by PostGreSQL)
+	private String schemaName = "";// the DB Schema name if needed (eg. by PostGreSQL)
 	private String tableNameSpace = null; // equals to tableName if schemaName == null, else schemaName.tableName
 	IExternalDatabase database=null;
 	/**
@@ -73,7 +73,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		}
 		if(_tableName==null || _tableName.trim().length()==0)
 		{//if ivy table name not settled used default
-			this.tableName="UploadedFiles";
+			this.tableName="uploadedfiles";
 		}else{
 			this.tableName=_tableName.trim();
 		}
@@ -98,7 +98,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		}
 		if(_tableName==null || _tableName.trim().length()==0)
 		{//if ivy table name not set used default
-			this.tableName="UploadedFiles";
+			this.tableName="uploadedfiles";
 		}else{
 			this.tableName=_tableName.trim();
 			this.tableNameSpace = this.tableName;
@@ -141,11 +141,16 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 			connection = getDatabase().getAndLockConnection();
 			Connection jdbcConnection=connection.getDatabaseConnection();
 			PreparedStatement stmt = null;
-			try{			
+			try{
+				
 				if(!jdbcConnection.getMetaData().getTables(null, null, this.tableNameSpace, null).next()){
 					Ivy.log().info("Files table does not exists, executes "+jdbcConnection.nativeSQL(createFileTable));
 					stmt = jdbcConnection.prepareStatement(jdbcConnection.nativeSQL(createFileTable));
 					stmt.execute();
+				}
+				if(jdbcConnection.getMetaData().getDatabaseProductName().toLowerCase().contains("postgre") && this.schemaName.trim().equals(""))
+				{
+					this.tableNameSpace = "\""+this.tableNameSpace+"\"";
 				}
 			}
 			finally{

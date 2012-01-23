@@ -1286,7 +1286,9 @@ By clicking on the OK button, the RDC gives the choosed path back, else, empty s
     </startMethod>
     <startMethod>
         <name>start</name>
-        <description></description>
+        <description>Starts the filemanager. Note that you will be able to store the filecontent in the database.&#xD;
+&#xD;
+</description>
         <inputParameter>
             <name>serverPath</name>
             <description>The entry Path of the FileManager</description>
