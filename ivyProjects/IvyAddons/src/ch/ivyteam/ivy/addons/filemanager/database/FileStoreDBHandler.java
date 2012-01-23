@@ -85,13 +85,13 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 		}
 		if(_tableName==null || _tableName.trim().length()==0)
 		{//if ivy table name not settled used default
-			this.tableName="UploadedFiles";
+			this.tableName="uploadedfiles";
 		}else{
 			this.tableName=_tableName.trim();
 		}
 		this.tableNameSpace = this.tableName;
 
-		this.dirTableName="FileManagerDirectory";
+		this.dirTableName="filemanagerdirectory";
 		this.dirTableNameSpace=this.dirTableName;
 		makeSecurityController();
 		checkTablesExists();
@@ -118,21 +118,21 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 		}
 		if(_fileTableName==null || _fileTableName.trim().length()==0)
 		{//if ivy table name not set used default
-			this.tableName="UploadedFiles";
+			this.tableName="uploadedfiles";
 		}else{
 			this.tableName=_fileTableName.trim();
 			this.tableNameSpace = this.tableName;
 		}
 		if(_dirTableName==null || _dirTableName.trim().length()==0)
 		{//if ivy table name not set used default
-			this.dirTableName="FileManagerDirectory";
+			this.dirTableName="filemanagerdirectory";
 		}else{
 			this.dirTableName=_dirTableName.trim();
 			this.dirTableNameSpace = this.dirTableName;
 		}
 		if(_fileContentTableName==null || _fileContentTableName.trim().length()==0)
 		{
-			this.fileContentTableName="FileManagerContent";
+			this.fileContentTableName="filemanagercontent";
 		}else
 		{
 			this.fileContentTableName = _fileContentTableName.trim();
@@ -173,21 +173,21 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 		}
 		if(_fileTableName==null || _fileTableName.trim().length()==0)
 		{//if ivy table name not set used default
-			this.tableName="UploadedFiles";
+			this.tableName="uploadedfiles";
 		}else{
 			this.tableName=_fileTableName.trim();
 			this.tableNameSpace = this.tableName;
 		}
 		if(_dirTableName==null || _dirTableName.trim().length()==0)
 		{//if ivy table name not set used default
-			this.dirTableName="FileManagerDirectory";
+			this.dirTableName="filemanagerdirectory";
 		}else{
 			this.dirTableName=_dirTableName.trim();
 			this.dirTableNameSpace = this.dirTableName;
 		}
 		if(_fileContentTableName==null || _fileContentTableName.trim().length()==0)
 		{
-			this.fileContentTableName="FileManagerContent";
+			this.fileContentTableName="filemanagercontent";
 		}else
 		{
 			this.fileContentTableName = _fileContentTableName.trim();
