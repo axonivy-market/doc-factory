@@ -14,23 +14,21 @@
   <sect1 xml:id="ivy.addons.filemanager.overview">
     <title>File management system overview</title>
     <para>The file management system is a set of Java Classes, Ivy Data Classes and Rich Dialogs
-      that interoperates to be able to perform actions on files located on a Server just as they
-      were located on the user's computer. You will find all those rich dialogs under
-        <ns:code>ch.ivyteam.ivy.ivyaddons.filemanager</ns:code>. </para>
+      that interoperates to be able to perform actions on files located on a Server File System or
+      in a database just as they were located on the user's computer. You will find all those rich
+      dialogs under <ns:code>ch.ivyteam.ivy.ivyaddons.filemanager</ns:code>. </para>
     <ns:warning>
       <para> The File Management System needs Java 6 at client side as a prerequisite. </para>
     </ns:warning>
-    <para> All the files are going to be located on a File server. This Server can be the same
-      machine as the Ivy Server's one, or can be a remote file Server. The Users are then going to
-      share the same files among an application. They will be able to edit, print, copy, zip or
-      download those files. They will also be able to upload some Files from their computer to the
-      server.</para>
+    <para>The Users are then going to share the same files among an application. They will be able
+      to edit, print, copy, zip or download those files. They will also be able to upload some Files
+      from their computer to the server.</para>
     <para>The file management system doesn't work with Ivy File Objects. It works with java.io.File
       objects and moreover with
       <ns:code>ch.ivyteam.ivy.addons.filemanager.DocumentOnServer</ns:code> Objects. A
       DocumentOnServer is just a DataClass representing a java.io.File within the file management
-      system and contains some informations like the File size, the date and time of creation and
-      last modification or if it is already edited (locked) by someone.</para>
+      system and contains some informations like the File size, a short description, the date and
+      time of creation and last modification or if it is already edited (locked) by someone.</para>
   </sect1>
   <sect1 xml:id="ivy.addons.filemanager.thefilemanagerRDC">
     <title>The FileManager RDC</title>
@@ -78,77 +76,237 @@
       </sect3>
       <sect3>
         <title>The database information</title>
-        <para>You can use the IvySystem DB to store the informations on the files, or you can use an
-          external Database System.</para>
-        <para>If your table is located on the Ivy System Database you just have initialize the
-          FileManager with its <ns:code>startWithServerPathAndUseIvySystemDB(String
-          _serverPath)</ns:code> start method. It is the easiest way to use the FileManager.</para>
-        <para>If you use an external database you have to provide more informations:<itemizedlist>
-            <listitem>
-              <para>First you have to configure an Ivy Database Configuration in your project (see
-                the Ivy Documentation related to this point).</para>
-            </listitem>
-            <listitem>
-              <para>The Table that is going to keep the informations about the files has to be
-                created with the following SQL CREATE Statement:</para>
-              <para><ns:code>CREATE TABLE UploadedFiles ( FileId INT NOT NULL AUTO_INCREMENT,
-                  FileName VARCHAR(255) NOT NULL, FilePath VARCHAR(750) NOT NULL, CreationUserId
-                  VARCHAR (200) NULL, CreationDate VARCHAR (10) NULL, CreationTime VARCHAR (8) NULL,
-                  FileSize VARCHAR (20) NULL, Locked TINYINT NULL, LockingUserId VARCHAR (200) NULL,
-                  ModificationUserId VARCHAR (200) NULL, ModificationDate VARCHAR (10) NULL,
-                  ModificationTime VARCHAR (8) NULL, Description VARCHAR(1024) NULL, PRIMARY
-                  KEY(FileId) )</ns:code></para>
-              <para><emphasis role="italic">Please adapt this query to your db engine.</emphasis></para>
-              <ns:warning>
-                <para>If you run your database engine on a case sensitive system, please make sure
-                  that the column names are written in camel case (first letter of each word in
-                  uppercase, ex: FileName). In older versions of the FileManager the recommended
-                  case was the uppercase for the whole names. If you use a table from a previous
-                  version on such a case sensitive system, please rename your table's column names
-                  with the right camel case. </para>
-              </ns:warning>
-            </listitem>
-            <listitem>
-              <para>Then use one of the following start methods:</para>
-            </listitem>
-          </itemizedlist></para>
-        <table>
-          <title><code>FileManager Start methods</code> using an Ivy database configuration</title>
-          <tgroup cols="3">
-            <thead>
-              <row>
-                <entry>Start method name</entry>
-                <entry>Description</entry>
-              </row>
-            </thead>
-            <tbody>
-              <row>
-                <entry><ns:code>startWithServerPathAndIvyDbConnectionNameAndDbTableName</ns:code></entry>
-                <entry>Starts with serverPath / IvyDBConnectionName / DBTableName. The server path
-                  is the root directory in the server file system where the documents are going to
-                  be uploaded and found. The IvyDBConnectionName is the name of the Ivy Database
-                  Connection configuration, used to store the files informations. (Per default
-                  "FileManager"). The DBTableName is the Table name where the files informations are
-                  going to be stored. Per Default "UPLOADEDFILES"</entry>
-              </row>
-              <row>
-                <entry><ns:code>startWithServerPathAndIvyDbConnectionNameAndDbTableNameAndDBSchemaName</ns:code></entry>
-                <entry>If you use a PostGreSQL database, you can provide a schema name also. If no
-                  Schema is provided, the default used will be "public".</entry>
-              </row>
-              <row>
-                <entry><ns:code>startWithServerPath</ns:code></entry>
-                <entry>This start method only takes the serverPath as Parameter. In this case you
-                  have to obligatory provide a database configuration named "FileManager" and your
-                  table has to be named "UPLOADEDFILES".</entry>
-              </row>
-            </tbody>
-          </tgroup>
-        </table>
-        <ns:warning>
-          <para>For the moment only three kinds of external databases were tested: MS SQL, MySQL and
-            PostGRESQL. It should work fine with others DB Engines.</para>
-        </ns:warning>
+        <sect4>
+          <title>The files are stored on a server File System</title>
+          <para>You can use the IvySystem DB to store the informations on the files, or you can use
+            an external Database System.</para>
+          <para>If your table is located on the Ivy System Database you just have initialize the
+            FileManager with its <ns:code>startWithServerPathAndUseIvySystemDB(String
+            _serverPath)</ns:code> start method. It is the easiest way to use the FileManager.</para>
+          <para>If you use an external database you have to provide more informations:<itemizedlist>
+              <listitem>
+                <para>First you have to configure an Ivy Database Configuration in your project (see
+                  the Ivy Documentation related to this point).</para>
+              </listitem>
+              <listitem>
+                <para>The Table that is going to keep the informations about the files has to be
+                  created with the following SQL CREATE Statement:</para>
+                <para>
+                  <literallayout> <ns:code>
+CREATE TABLE uploadedfiles ( 
+FileId             INT NOT NULL AUTO_INCREMENT,
+FileName           VARCHAR(255) NOT NULL, 
+FilePath           VARCHAR(750) NOT NULL, 
+CreationUserId     VARCHAR (200) NULL, 
+CreationDate       VARCHAR (10) NULL, 
+CreationTime       VARCHAR (8) NULL, 
+FileSize           VARCHAR (20) NULL, 
+Locked             TINYINT NULL, 
+LockingUserId      VARCHAR (200) NULL, 
+ModificationUserId VARCHAR (200) NULL, 
+ModificationDate   VARCHAR (10)   NULL, 
+ModificationTime   VARCHAR (8) NULL, 
+Description        VARCHAR(1024) NULL, 
+PRIMARY KEY(FileId) 
+);
+                  </ns:code>
+                </literallayout>
+                </para>
+                <para><emphasis role="italic">Please adapt this query to your db engine.</emphasis></para>
+                <ns:warning>
+                  <para>If you run your database engine on a case sensitive system, please make sure
+                    that the column names are written in camel case (first letter of each word in
+                    uppercase, ex: FileName). In older versions of the FileManager the recommended
+                    case was the uppercase for the whole names. If you use a table from a previous
+                    version on such a case sensitive system, please rename your table's column names
+                    with the right camel case. </para>
+                </ns:warning>
+              </listitem>
+              <listitem>
+                <para>Then use one of the following start methods:</para>
+              </listitem>
+            </itemizedlist></para>
+          <table>
+            <title><code>FileManager Start methods</code> using an Ivy database configuration</title>
+            <tgroup cols="3">
+              <thead>
+                <row>
+                  <entry>Start method name</entry>
+                  <entry>Description</entry>
+                </row>
+              </thead>
+              <tbody>
+                <row>
+                  <entry><ns:code>startWithServerPathAndIvyDbConnectionNameAndDbTableName</ns:code></entry>
+                  <entry>Starts with serverPath / IvyDBConnectionName / DBTableName. The server path
+                    is the root directory in the server file system where the documents are going to
+                    be uploaded and found. The IvyDBConnectionName is the name of the Ivy Database
+                    Connection configuration, used to store the files informations. (Per default
+                    "FileManager"). The DBTableName is the Table name where the files informations
+                    are going to be stored. Per Default "uploadedfiles"</entry>
+                </row>
+                <row>
+                  <entry><ns:code>startWithServerPathAndIvyDbConnectionNameAndDbTableNameAndDBSchemaName</ns:code></entry>
+                  <entry>If you use a PostGreSQL database, you can provide a schema name also. If no
+                    Schema is provided, the default used will be "public".</entry>
+                </row>
+                <row>
+                  <entry><ns:code>startWithServerPath</ns:code></entry>
+                  <entry>This start method only takes the serverPath as Parameter. In this case you
+                    have to obligatory provide a database configuration named "FileManager" and your
+                    table has to be named "uploadedfiles".</entry>
+                </row>
+              </tbody>
+            </tgroup>
+          </table>
+          <ns:warning>
+            <para>For the moment only three kinds of external databases were tested: MS SQL, MySQL
+              and PostGRESQL. It should work fine with others DB Engines.</para>
+          </ns:warning>
+        </sect4>
+        <sect4>
+          <title> The files' content is stored in a database as BLOB or VARBINARY field (depending
+            on your database vendor) </title>
+          <para><emphasis role="bold">This feature is not supported within the Ivy System
+            Database.</emphasis> You must store the files informations in an external database.</para>
+          <para> Instead of having all the files and directory structure stored in a file system,
+            you can store all of these informations in a database. For that you will need 3 tables: <itemizedlist>
+              <listitem>
+                <para> the files meta informations table (per default uploadedfiles), </para>
+              </listitem>
+              <listitem>
+                <para> the file content table (per default filemanagercontent),</para>
+              </listitem>
+              <listitem>
+                <para> the directory structure table (per default filemanagerdirectory),</para>
+              </listitem>
+            </itemizedlist></para>
+          <para>
+            <literallayout>Here are 3 the tables structures using MS SQL:
+            <ns:code>
+CREATE TABLE uploadedfiles ( 
+FileId             INT NOT NULL AUTO_INCREMENT,
+FileName           VARCHAR(255) NOT NULL, 
+FilePath           VARCHAR(750) NOT NULL, 
+CreationUserId     VARCHAR (200) NULL, 
+CreationDate       VARCHAR (10) NULL, 
+CreationTime       VARCHAR (8) NULL, 
+FileSize           VARCHAR (20) NULL, 
+Locked             TINYINT NULL, 
+LockingUserId      VARCHAR (200) NULL, 
+ModificationUserId VARCHAR (200) NULL, 
+ModificationDate   VARCHAR (10)   NULL, 
+ModificationTime   VARCHAR (8) NULL, 
+Description        VARCHAR(1024) NULL, 
+PRIMARY KEY(FileId) 
+);
+
+CREATE TABLE filemanagercontent (
+id             INT IDENTITY NOT NULL,
+file_id        INT UNIQUE NOT NULL,
+file_content   VARBINARY (max) NULL,
+PRIMARY KEY (id)
+);
+
+CREATE TABLE filemanagerdirectory (
+id INT IDENTITY NOT NULL,
+dir_name             VARCHAR (255) NOT NULL,
+dir_path             VARCHAR (750) UNIQUE NOT NULL,
+creation_user_id     VARCHAR (200) NULL,
+creation_date        DATE NULL,
+creation_time        TIME NULL,
+modification_user_id VARCHAR (200) NULL,
+modification_date    DATE NULL,
+modification_time    TIME NULL,
+is_protected         BIT DEFAULT ((0)) NOT NULL,
+cmdr                 VARCHAR (2048) NULL,
+cod                  VARCHAR (2048) NULL,
+cud                  VARCHAR (2048) NULL,
+cdd                  VARCHAR (2048) NULL,
+cwf                  VARCHAR (2048) NULL,
+cdf                  VARCHAR (2048) NULL,
+PRIMARY KEY (id)
+);
+            </ns:code>
+            </literallayout>
+          </para>
+          <para><emphasis role="italic">Please adapt this query to your db engine.</emphasis></para>
+          <para>To be able to start the filemanager with the filecontent stored in the database, you
+            have to use the start method corresponding to the following parameters:</para>
+          <table>
+            <title><code>FileManager Start method</code> enabling the file storage in database</title>
+            <tgroup cols="3">
+              <thead>
+                <row>
+                  <entry>Parameter name</entry>
+                  <entry>Parameter type</entry>
+                  <entry>Description</entry>
+                </row>
+              </thead>
+              <tbody>
+                <row>
+                  <entry>serverPath</entry>
+                  <entry>String</entry>
+                  <entry>The entry Path of the FileManager</entry>
+                </row>
+                <row>
+                  <entry>useIvySystemDB</entry>
+                  <entry>Boolean</entry>
+                  <entry>If true, the files informations are going to be stored in the Ivy System
+                    Database. In such a case the file content storage in the database is not
+                    supported. If false you will use a separate external database (see
+                    ivyDBConnectionName, schemaName, FileTableName, DirTableName parameters)</entry>
+                </row>
+                <row>
+                  <entry>ivyDBConnectionName</entry>
+                  <entry>String</entry>
+                  <entry>If use of external DB, this is the user friendly Ivy connection to the
+                  DB.</entry>
+                </row>
+                <row>
+                  <entry>schemaName</entry>
+                  <entry>String</entry>
+                  <entry>If use of external DB with engine that supports Schemas like
+                  PostGreSQL</entry>
+                </row>
+                <row>
+                  <entry>fileTableName</entry>
+                  <entry>String</entry>
+                  <entry>The name of the table that stores the informations relative to the
+                  files</entry>
+                </row>
+                <row>
+                  <entry>fileContentTableName</entry>
+                  <entry>String</entry>
+                  <entry>The name of the table that stores the file content</entry>
+                </row>
+                <row>
+                  <entry>dirTableName</entry>
+                  <entry>String</entry>
+                  <entry>The name of the table that stores the informations relative to the
+                    directories (only necessary if the files content is stored in the fileTable (see
+                    storeFilesInDB parameter)</entry>
+                </row>
+                <row>
+                  <entry>storeFilesInDB</entry>
+                  <entry>Boolean</entry>
+                  <entry>If true, the file content will be also stored in the fileTable. If the
+                    "useIvySystemDB" parameter is true, the "storeFilesInDB will always be
+                  false."</entry>
+                </row>
+                <row>
+                  <entry>activateSecurity</entry>
+                  <entry>Boolean</entry>
+                  <entry>If true, the security on the directories will be taken (See the section
+                    about this feature to get mor informations). The security Informations are
+                    stored in the dirTable. This only works for the moment with storeFilesInDB
+                    parameter to true. Parameter storeFilesInDB to false implies this parameter to
+                    false also.</entry>
+                </row>
+              </tbody>
+            </tgroup>
+          </table>
+        </sect4>
       </sect3>
     </sect2>
     <sect2>
