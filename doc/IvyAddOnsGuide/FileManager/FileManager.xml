@@ -48,7 +48,7 @@
       <imageobject><imagedata fileref="images/FileManager/FileManager01.png"/></imageobject>
     </mediaobject>
     <para>All those files' informations are stored in a database.</para>
-    <sect2>
+    <sect2 xml:id="ivy.addons.filemanager.initialization">
       <title>FileManager RDC Initialization</title>
       <para>This section describes how to start and use the FileManager. </para>
       <ns:warning>
@@ -309,7 +309,38 @@ PRIMARY KEY (id)
         </sect4>
       </sect3>
     </sect2>
-    <sect2>
+    <sect2 xml:id="ivy.addons.filemanager.security">
+      <title>Security manager</title>
+      <para> If the files content are stored in the database, you can activate the security embedded
+        in the filemanager. For this purpose you have to use the start method described in the
+        precedent paragraph. </para>
+      <para> The security is based on the Ivy Roles. The filemanager security administrator has all
+        the roles and can manage the security of the other roles. This role is set in the following
+        global variable: </para>
+      <mediaobject>
+        <imageobject><imagedata fileref="images/FileManager/globalVariable_admin.png"
+        /></imageobject>
+      </mediaobject>
+      <para> If the current Ivy user has the administrator role, he will see the following button
+        above the directories Tree: </para>
+      <mediaobject>
+        <imageobject><imagedata fileref="images/FileManager/adminButton.png"/></imageobject>
+      </mediaobject>
+      <para> The security manager appears as described on the following picture: </para>
+      <mediaobject>
+        <imageobject><imagedata fileref="images/FileManager/adminPanel.png"/></imageobject>
+      </mediaobject>
+      <para> The following picture shows some of the possible results of the security settings: </para>
+      <mediaobject>
+        <imageobject><imagedata fileref="images/FileManager/securityResult.png"/></imageobject>
+      </mediaobject>
+      <para>The security is controlled by a securityController java Object. This Controller can be
+        obtained with the new FileManager <code>getFileManagerSecurityController()</code> method.
+        The returned Object is a
+          <code>ch.ivyteam.ivy.addons.filemanager.database.security.AbstractDirectorySecurityController</code>.
+        Its API is public and well documented. </para>
+    </sect2>
+    <sect2 xml:id="ivy.addons.filemanager.methods">
       <title>Important methods</title>
       <para>In this section we won't have a look at all the filemanger's methods. please refer to
         the Ivy Interface documentation for that purpose.</para>
@@ -365,7 +396,7 @@ PRIMARY KEY (id)
         </tgroup>
       </table>
     </sect2>
-    <sect2>
+    <sect2 xml:id="ivy.addons.filemanager.miscellaneous">
       <title>Other Informations on the FileManager RDC</title>
       <itemizedlist>
         <listitem>
