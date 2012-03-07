@@ -108,18 +108,12 @@ public class CaseManagedTeamHelper {
 	 */
 	public static String getCaseManagedTeams(final ICase wfCase) throws Exception
     {
-        try {
-            return Ivy.session().getSecurityContext().executeAsSystemUser(new Callable<String>(){
-                public String call() throws Exception {
-                	String customVarCharField5 = wfCase.getCustomVarCharField5();
-                	return customVarCharField5 != null? customVarCharField5: "";   
-                }
-            });
-
-        } catch (Exception e)
-        {
-        	throw new Exception("Error during getting the managed teams on case " + wfCase.getIdentifier(), e);
-        }
+        return Ivy.session().getSecurityContext().executeAsSystemUser(new Callable<String>(){
+            public String call() throws Exception {
+            	String customVarCharField5 = wfCase.getCustomVarCharField5();
+            	return customVarCharField5 != null? customVarCharField5: "";   
+            }
+        });
     }
 	
 	
@@ -133,27 +127,21 @@ public class CaseManagedTeamHelper {
 	 */
 	public static List<String> getCaseManagedTeamsAsList(final ICase wfCase) throws Exception
     {
-        try {
-            return Ivy.session().getSecurityContext().executeAsSystemUser(new Callable<List<String>>(){
-                public List<String> call() throws Exception {
-                	String propValue = "";
-    	            String propValueArray[] = null;
-                	List<String> managedTeams = new ArrayList<String>();
-                	
-                	propValue = wfCase.getCustomVarCharField5();
-    	            if (propValue != null && propValue.length() > 0)
-    	            {
-    	              propValueArray = propValue.split(",");
-    	              managedTeams = Arrays.asList(propValueArray);
-    	            }
-                	return managedTeams;   
-                }
-            });
-
-        } catch (Exception e)
-        {
-        	throw new Exception("Error during getting the managed teams on case " + wfCase.getIdentifier(), e);
-        }
+        return Ivy.session().getSecurityContext().executeAsSystemUser(new Callable<List<String>>(){
+            public List<String> call() throws Exception {
+            	String propValue = "";
+	            String propValueArray[] = null;
+            	List<String> managedTeams = new ArrayList<String>();
+            	
+            	propValue = wfCase.getCustomVarCharField5();
+	            if (propValue != null && propValue.length() > 0)
+	            {
+	              propValueArray = propValue.split(",");
+	              managedTeams = Arrays.asList(propValueArray);
+	            }
+            	return managedTeams;   
+            }
+        });
     }
 	
 	
@@ -170,18 +158,12 @@ public class CaseManagedTeamHelper {
 	 */
 	private static String getTaskManagedTeam(final ITask wfTask) throws Exception
 	{
-        try {
-            return Ivy.session().getSecurityContext().executeAsSystemUser(new Callable<String>(){
-                public String call() throws Exception {
-                	String customVarCharField5 = wfTask.getCustomVarCharField5();
-                	return customVarCharField5 != null? customVarCharField5: "";   
-                }
-            });
-
-        } catch (Exception e)
-        {
-        	throw new Exception("Error during getting the managed teams on task " + wfTask.getIdentifier(), e);
-        }		
+	    return Ivy.session().getSecurityContext().executeAsSystemUser(new Callable<String>(){
+	        public String call() throws Exception {
+	        	String customVarCharField5 = wfTask.getCustomVarCharField5();
+	        	return customVarCharField5 != null? customVarCharField5: "";   
+	        }
+	    });	
 	}
 	
 	
@@ -214,9 +196,6 @@ public class CaseManagedTeamHelper {
 	 */
 	  public static List<String> getSessionUserManagedTeamsAsList(final IUser user) throws EnvironmentNotAvailableException, PersistencyException, Exception
 	  {
-	    
-	    try
-	    {
 	      return Ivy.session().getSecurityContext().executeAsSystemUser(new Callable<List<String>>()
 	        {
 	          public List<String> call() throws Exception
@@ -240,11 +219,6 @@ public class CaseManagedTeamHelper {
 	            return managedTeams;
 	          }
 	        });
-	    }
-	    catch (Exception e)
-	    {
-	    	throw new Exception("Error during getting the managed teams on user " + Ivy.session().getSessionUserName(), e);
-	    }
 	  }
 	
 	  
@@ -259,9 +233,6 @@ public class CaseManagedTeamHelper {
 	   */
 	  public static String getSessionUserManagedTeamsAsString(final IUser user) throws EnvironmentNotAvailableException, PersistencyException, Exception
 	  {
-	    
-	    try
-	    {
 	      return Ivy.session().getSecurityContext().executeAsSystemUser(new Callable<String>()
 	        {
 	          public String call() throws Exception
@@ -276,11 +247,6 @@ public class CaseManagedTeamHelper {
 	            return managedTeams != null? managedTeams: "";
 	          }
 	        });
-	    }
-	    catch (Exception e)
-	    {
-	    	throw new Exception("Error during getting the managed teams on user " + Ivy.session().getSessionUserName(), e);
-	    }
 	  }
  
 	  
@@ -291,18 +257,14 @@ public class CaseManagedTeamHelper {
 	   * 					from which data has to be set
 	   * @param managedTeams 
 	   * 					a list of managed teams as a string value comma separated to set
-	   * @return 
-	   * 					true if operation successful; otherwise false
+	   *
+	   * 
 	   * @throws EnvironmentNotAvailableException
-	   * @throws PersistencyException
 	   * @throws Exception
 	   */
-	  public static Boolean setSessionUserManagedTeamsAsString(final IUser user, final String managedTeams) throws EnvironmentNotAvailableException, PersistencyException, Exception
+	  public static void setSessionUserManagedTeamsAsString(final IUser user, final String managedTeams) throws EnvironmentNotAvailableException, Exception
 	  {
-	    
-	    try
-	    {
-	      return Ivy.session().getSecurityContext().executeAsSystemUser(new Callable<Boolean>()
+	      Ivy.session().getSecurityContext().executeAsSystemUser(new Callable<Boolean>()
 	        {
 	          public Boolean call() throws Exception
 	          {
@@ -312,12 +274,7 @@ public class CaseManagedTeamHelper {
 	        	  Ivy.log().debug("User {0} has now <{1}> as managed teams value.", user.getName(), teams);
 	        	  return true;
 	          }
-	        });
-	    }
-	    catch (Exception e)
-	    {
-	    	throw new Exception("Error during setting the managed teams on user " + Ivy.session().getSessionUserName(), e);
-	    }
+	        });	   
 	  }
 	  
 	  
@@ -330,45 +287,98 @@ public class CaseManagedTeamHelper {
 	   * 				true if user is team manager on the task AND on the case, otherwise false.
 	 * @throws Exception 
 	   */
-	  public static Boolean isSessionUserTeamManagerOnWfTask(ITask wfTask) throws Exception
+	  public static Boolean isSessionUserTeamManagerOnWfTask(final ITask wfTask) throws Exception
 	  {
-		  Boolean result = false;		  
-		  List<String> sessionUserManagedTeams = null;
-		  String wfTaskManagedTeam = null;
-		  List<String> wfCaseManagedTeams = null;
-		  
-		  if (Ivy.session().isSessionUserUnknown())
-			  return result;
-		  
-		  // get the list of managed teams of the user
-		  sessionUserManagedTeams = getSessionUserManagedTeamsAsList();		  
-		  if (sessionUserManagedTeams.isEmpty())
-			  return result;
+		  return Ivy.session().getSecurityContext().executeAsSystemUser(new Callable<Boolean>()
+	        {
+	          public Boolean call() throws Exception
+	          {
+	    		  Boolean result = false;		  
+	    		  List<String> sessionUserManagedTeams = null;
+	    		  String wfTaskManagedTeam = null;
+	    		  List<String> wfCaseManagedTeams = null;
+	    		  
+	    		  if (Ivy.session().isSessionUserUnknown())
+	    			  return result;
+	    		  
+	    		  // get the list of managed teams of the user
+	    		  sessionUserManagedTeams = getSessionUserManagedTeamsAsList();		  
+	    		  if (sessionUserManagedTeams.isEmpty())
+	    			  return result;
 
-		  // get the managed team on task
-		  wfTaskManagedTeam = getTaskManagedTeam(wfTask);
-		  if (wfTaskManagedTeam.length() < 0)
-			  return result;
-		  
-		  // get the managed teams on case
-		  wfCaseManagedTeams = getCaseManagedTeamsAsList(wfTask.getCase());
-		  if (wfCaseManagedTeams.isEmpty())
-			  return result;
-		  
-		  
-		  // run through session user managed teams and find out if he is manager on the task AND on its case
-		  for (String sessionUserManagedTeam: sessionUserManagedTeams)
-		  {
-			  if (wfTaskManagedTeam.equals(sessionUserManagedTeam) && 
-					  	wfCaseManagedTeams.contains(sessionUserManagedTeam))
-			  {
-				  // the session user is manager on task AND on case
-				  result = true;
-				  break;
-			  }
-		  }
-		  
-		  return result;
+	    		  // get the managed team on task
+	    		  wfTaskManagedTeam = getTaskManagedTeam(wfTask);
+	    		  if (wfTaskManagedTeam.length() < 0)
+	    			  return result;
+	    		  
+	    		  // get the managed teams on case
+	    		  wfCaseManagedTeams = getCaseManagedTeamsAsList(wfTask.getCase());
+	    		  if (wfCaseManagedTeams.isEmpty())
+	    			  return result;
+	    		  	    		  
+	    		  // run through session user managed teams and find out if he is manager on the task AND on its case
+	    		  for (String sessionUserManagedTeam: sessionUserManagedTeams)
+	    		  {
+	    			  if (wfTaskManagedTeam.equals(sessionUserManagedTeam) && 
+	    					  	wfCaseManagedTeams.contains(sessionUserManagedTeam))
+	    			  {
+	    				  // the session user is manager on task AND on case
+	    				  result = true;
+	    				  break;
+	    			  }
+	    		  }
+	    		  
+	    		  return result;
+	          }
+	        });
+	  }
+	  
+	  
+	  
+	  /**
+	   * It true if the session user is team manager on that case
+	   * 
+	   * @param wfCase on which check has to be done. 
+	   * @return true if the session user is team manager on that case
+	   * @throws Exception
+	   */
+	  public static Boolean isSessionUserTeamManagerOnWfCase(final ICase wfCase) throws Exception
+	  {
+		  return Ivy.session().getSecurityContext().executeAsSystemUser(new Callable<Boolean>()
+	        {
+	          public Boolean call() throws Exception
+	          {
+	    		  Boolean result = false;		  
+	    		  List<String> sessionUserManagedTeams = null;
+	    		  List<String> wfCaseManagedTeams = null;
+	    		  
+	    		  if (Ivy.session().isSessionUserUnknown())
+	    			  return result;
+	    		  
+	    		  // get the list of managed teams of the user
+	    		  sessionUserManagedTeams = getSessionUserManagedTeamsAsList();		  
+	    		  if (sessionUserManagedTeams.isEmpty())
+	    			  return result;
+	    		  
+	    		  // get the managed teams on case
+	    		  wfCaseManagedTeams = getCaseManagedTeamsAsList(wfCase);
+	    		  if (wfCaseManagedTeams.isEmpty())
+	    			  return result;
+	    		  
+	    		  // run through session user managed teams and find out if he is manager on the task AND on its case
+	    		  for (String sessionUserManagedTeam: sessionUserManagedTeams)
+	    		  {
+	    			  if (wfCaseManagedTeams.contains(sessionUserManagedTeam))
+	    			  {
+	    				  // the session user is manager on case
+	    				  result = true;
+	    				  break;
+	    			  }
+	    		  }
+	    		  
+	    		  return result;
+	          }
+	        });
 	  }
 	  
 	  /** 
