@@ -1,0 +1,153 @@
+<!--
+============================================================================
+=== This is the build file for IvyAddOns
+===
+=== Before starting the build
+=== - check the ant.properties file and modify the global properties if necessary
+===
+=== Author Reto Weiss
+=============================================================================-->
+<project name="IvyAddOns" default="all">
+	<description>
+		Builds IvyAddOns Xpert.ivy project and user guide
+	</description>
+
+	<taskdef resource="net/sf/antcontrib/antlib.xml">
+		<classpath>
+			<fileset dir="${basedir}/build/antlibs">
+				<include name="**/*.jar"/>
+			</fileset>
+		</classpath>
+	</taskdef>
+
+	<property file="ant.properties" />	
+
+	<!--
+	======================================================================
+	 Builds all targets
+	======================================================================
+	-->
+	<target name="all" depends="ivyProject, userGuide" description="Builds all"/>
+	
+	<!--
+	======================================================================
+	 Builds ivyProject
+	======================================================================
+	-->
+	<target name="ivyProject" depends="zipIvyProject" description="Builds the IvyAddOns ivy project"/>
+	
+	<!--
+	======================================================================
+	 Builds User Guide
+	======================================================================
+	-->
+	<target name="userGuide" description="Builds the IvyAddOns user guide"/>
+
+	<!--
+	======================================================================
+	 Zip ivyProjects
+	======================================================================
+	-->
+	<target name="zipIvyProject" depends="javac">
+		<mkdir dir="${dir.build.output}"/>
+		<zip destfile="${dir.build.output}/IvyAddOns.zip">
+			<fileset dir="${dir.ivyProjects.IvyAddOns}"/>
+		</zip>
+	</target>
+
+	<!--
+	======================================================================
+	 javac
+	======================================================================
+	-->
+	<target name="javac" depends="ivyDataClasses">
+		<mkdir dir="${dir.ivyProjects.IvyAddOns}/classes"/>
+		<javac destdir="${dir.ivyProjects.IvyAddOns}/classes" memoryMaximumSize="768M" fork="yes" executable="${tools.java.compiler}" includeAntRuntime="no" debug="${build.debug}" verbose="true">
+			<classpath>
+				<pathelement path="${classpath.ivy.server}" />
+				<fileset dir="${dir.ivyProjects.IvyAddOns}">
+					<include name="lib/**/*.jar"/>
+				</fileset>   								
+			</classpath>
+			<src>
+				<dirset dir="${dir.ivyProjects.IvyAddOns}">
+					<include name="src*"/>
+				</dirset>
+			</src>
+		</javac>
+	</target>
+
+	<!--
+	======================================================================
+	 ivyDataClasses
+	======================================================================
+	-->
+	<target name="ivyDataClasses" depends="installIvyServer">
+		<java fork="true" jvm="${tools.java.runtime}" dir="${dir.ivy.server}" classname="ch.ivyteam.ivy.scripting.dataclass.DataClassBuilderWorkspaceDir" failonerror="true" classpath="${classpath.ivy.server}" >
+			<arg value="-workspaceDirectory"/>
+			<arg value="${dir.ivyProjects}"/>
+			<jvmarg value="-Djava.library.path=${dir.ivy.server}/bin"/>
+		</java>
+	</target>
+	
+	<!--
+	======================================================================
+	 Install ivy server
+	======================================================================
+	-->
+	<target name="installIvyServer" depends="checkIvyServerInstallation" unless="check.ivy.server">
+		<mkdir dir="${dir.build}"/>
+		<if>
+			<contains string="${os.name}" substring="linux" casesensitive="false"/>
+			<then>
+				<if>
+					<os arch="amd64" />
+					<then>
+						<property name="installer.os.suffix" value="Linux_x64" />
+					</then>
+					<else>
+						<property name="installer.os.suffix" value="Linux_x86" />
+					</else>
+				</if>
+			</then>
+		</if>
+		<if>
+			<contains string="${os.name}" substring="windows" casesensitive="false"/>
+			<then>
+				<if>
+					<os arch="amd64" />
+					<then>
+						<property name="installer.os.suffix" value="Windows_x64" />
+					</then>
+					<else>
+						<property name="installer.os.suffix" value="Windows_x86" />
+					</else>
+				</if>
+			</then>
+		</if>
+
+		<tempfile property="temp.response.xml.file" destdir="${java.io.tmpdir}" prefix="response" suffix=".xml" deleteonexit="true" />
+		<get dest="${temp.response.xml.file}" src="${url.ivy.server.build}/api/xml" />
+		<loadfile property="response.xml.content" srcFile="${temp.response.xml.file}" />
+		<delete file="${temp.response.xml.file}" />
+
+		<propertyregex regexp="(ivy([^&lt;>]*)XpertIvyServer([^&lt;>]*)${installer.os.suffix}\.zip)" property="path.ivy.server" input="${response.xml.content}" select="\1" />
+
+		<get dest="${dir.build}/XpertIvyServer.zip" src="${url.ivy.server.build}/artifact/${path.ivy.server}"/>
+		<unzip dest="${dir.ivy.server}" src="${dir.build}/XpertIvyServer.zip"/>
+	</target>
+
+	<!--
+	======================================================================
+	 Check ivy server installation
+	======================================================================
+	-->
+	<target name="checkIvyServerInstallation">
+		<available file="${dir.ivy.server}" property="check.ivy.server"/>
+	</target>
+
+</project>
+	
+	
+	
+	
