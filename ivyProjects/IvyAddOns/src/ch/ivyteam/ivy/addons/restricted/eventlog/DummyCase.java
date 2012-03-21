@@ -2,6 +2,7 @@ package ch.ivyteam.ivy.addons.restricted.eventlog;
 
 import java.util.Date;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import ch.ivyteam.ivy.application.IApplication;
 import ch.ivyteam.ivy.application.IProcessModel;
@@ -682,5 +683,15 @@ class DummyCase implements ICase
 	public void setBusinessCalendar(IBusinessCalendar arg0)
 	{
 		throw new PersistencyException(new NoSuchMethodException("setBusinessCalendar(IBusinessCalendar)"));	
+	}
+
+	@Override
+	public String getActiveEnvironment() {
+		throw new PersistencyException(new NoSuchMethodException("getActiveEnvironment()"));	
+	}
+
+	@Override
+	public void setActiveEnvironment(String environmentName) throws NoSuchElementException {
+		throw new PersistencyException(new NoSuchMethodException("setActiveEnvironment(String environmentName)"));	
 	}
 }
