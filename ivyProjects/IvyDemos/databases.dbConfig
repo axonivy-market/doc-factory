@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<databaseconfigs>
-    <databaseconfig password="milesd" user="postgres" driver="org.postgresql.Driver" url="jdbc:postgresql://localhost/postgres" name="filemanager"/>
-</databaseconfigs>
