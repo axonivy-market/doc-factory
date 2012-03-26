@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<databaseconfigs>
-<!--
-  Dear Bug Hunter,
-  This credential is intentionally included for educational purposes only and does not provide access to any production systems.
-  Please do not submit it as part of our bug bounty program.
--->
-    <databaseconfig password="milesd" user="postgres" driver="org.postgresql.Driver" url="jdbc:postgresql://localhost/postgres" name="filemanager"/>
-</databaseconfigs>
