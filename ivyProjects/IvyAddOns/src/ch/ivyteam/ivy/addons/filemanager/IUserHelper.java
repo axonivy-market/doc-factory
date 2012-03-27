@@ -33,6 +33,10 @@ public class IUserHelper {
 			public Boolean call() throws Exception 
 			{
 				IUser user = Ivy.session().getWorkflowContext().getSecurityContext().findUser(usern);
+				if(user==null)
+				{
+					return false;
+				}
 				java.util.List<ISession> sessions = Ivy.session().getWorkflowContext().getSecurityContext().getSessions();
 				boolean found = false;
 				for(ISession session:sessions){
