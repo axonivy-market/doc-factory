@@ -36,3 +36,6 @@ ivyFile File #field
 ivyFile 'ivy File to be able to edit the corresponding File in case of DB storage.' #fieldComment
 javaFile java.io.File #field
 javaFile 'java io File, edit a physically stored File' #fieldComment
+versionnumber Number #field
+versionnumber 'if versioning is activated, this is the document version number.' #fieldComment
+versionnumber PERSISTENT #fieldModifier

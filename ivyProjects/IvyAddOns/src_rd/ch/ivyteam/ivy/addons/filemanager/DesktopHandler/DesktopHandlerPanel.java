@@ -78,7 +78,7 @@ implements IRichDialogPanel
 			fileEditedTable.setName("fileEditedTable");
 			fileEditedTable.setAutoResizeMode(ULCTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
 			fileEditedTable.setSortable(true);
-			fileEditedTable.setModelConfiguration("{/showTableheader true /autoTableheader false /showtooltip false /showIcons false /version \"2.0\"/columns {{/result \"result=entry.serverFile.getName()\"/version \"2.0\"/tooltip \"\"/icon \"\"/header \"File name\"/field \"\"}{/result \"result=entry.serverFile.getPath()\"/version \"2.0\"/tooltip \"\"/icon \"\"/header \"File path\"/field \"\"}}/emptyTableText \"No Files currently edited\"}");
+			fileEditedTable.setModelConfiguration("{/showTableheader true /autoTableheader false /showtooltip false /showIcons false /version \"3.0\"/emptyTableText \"No Files currently edited\"/columns {{/result \"result=entry.serverFile.getName()\"/version \"3.0\"/tooltip \"\"/icon \"\"/header \"ivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/fileName\\\")\"/field \"\"}{/result \"result=entry.serverFile.getPath()\"/version \"3.0\"/tooltip \"\"/icon \"\"/header \"ivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/serverPath\\\")\"/field \"\"}}}");
 			fileEditedTable.setRowHeight(22);
 			fileEditedTable.setComponentPopupMenu(getPopupMenu());
 			fileEditedTable.setStyleProperties("{/fill \"BOTH\"/weightY \"1\"/weightX \"1\"}");

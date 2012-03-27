@@ -1,5 +1,5 @@
 # Xpert.ivy RichDialog Event-Mapping Data
-# 2012-01-18 14:15:33 | 4.3.0.38259 | 1.0
+# 2012-03-20 09:37:07 | 4.3.0.39108 | 1.0
 ~.cancelButton@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/121ECCB8283CD1EF
 ~.copyMenuItem@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11ED95C2B7BDD5B8
 ~.delete2Button@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11D438D57924C5D9
@@ -9,6 +9,7 @@
 ~.deleteDirectoryMenuItem@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11EB53CBAE7DBC6A
 ~.deleteMenuItem@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11D438D57924C5D9
 ~.desktopHandlerPanel@RD_EVENT[fileCoupleModifiedReported]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11E8D090292C69A8
+~.desktopHandlerPanel@RD_EVENT[forceDocsUnlock]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/1363052217DFA004 # FileManagerProcess.mod/forceUnlockDocuments
 ~.desktopHandlerPanel@RD_EVENT[isFileEditableReported]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/12470C7BEA8F153A
 ~.desktopHandlerPanel@RD_EVENT[osUserNameChanged]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11E454BBE55F1836
 ~.desktopHandlerPanel@RD_EVENT[unlockFiles]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11E44AB51B132D31
@@ -27,11 +28,13 @@
 ~.filesTable@LIST_SELECTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11D42EE9868EE3A0
 ~.makeNewDirAtRoot2Button@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11EB17DDCC0AC783
 ~.makeNewDirButton@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11EB17DDCC0AC783
+~.makeVersionMenuItem@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/1357982F0F8F987F
 ~.newCopy2Button@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11ED95C2B7BDD5B8
 ~.newCopyButton@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11ED95C2B7BDD5B8
 ~.newDirAtRootMenuItem@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11EB17DDCC0AC783
 ~.newVersionMenuItem@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/12BDA703390C87EE
 ~.okButton@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/121ECCB3C821D160
+~.openVersionsMenuItem@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/1357751E3DC4EFAF
 ~.ordnersTree@KEY[ctrl-v]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11ED95E211BB06C2
 ~.ordnersTree@TREE_SELECTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11D4DCC4107AFD90
 ~.pasteButton@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11ED95E211BB06C2
@@ -96,6 +99,7 @@
 ~@RD_METHODCALL[_renameFile()]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/12BDDCBC2845D8CB
 ~@RD_METHODCALL[addDocuments(List<ch.ivyteam.ivy.addons.filemanager.DocumentOnServer>)]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11E8B995CB02EF34
 ~@RD_METHODCALL[addFiles(List<java.io.File>)]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11F7F17163AD1939
+~@RD_METHODCALL[copyAllToNewDestination(String,Boolean,Boolean)]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/13543AADBB5ACA78
 ~@RD_METHODCALL[deleteDirectory(String)]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11EB5375A466CA8F
 ~@RD_METHODCALL[deleteFiles(List<java.io.File>)]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11ED8D735F06B96F
 ~@RD_METHODCALL[downloadToTemp()]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11DA9E1658C4C90F

@@ -53,7 +53,7 @@ import com.ulcjava.base.shared.FileChooserConfig;
  * 
  * The source path on the Server is determined by an intern private String variable. <br>
  * The server path variable is given at the instantiation within the constructor, or can be later changed with the setServerPath method.
- * For security purposes, if the server path is set to null or points to the root of the server, it takes automatically a default value (“uploadedFiles”).
+ * For security purposes, if the server path is set to null or points to the root of the server, it takes automatically a default value.
  * 
  */
 public class FileDownloadHandler<T extends ULCComponent & IRichDialogPanel> {
@@ -61,6 +61,8 @@ public class FileDownloadHandler<T extends ULCComponent & IRichDialogPanel> {
 	private T ulcPane = null;
 	private String errorMethodeName, downloadSuccessMethodeName, progressMethodName;
 	private FileOperationMessage fileOperationMessage;
+	private String downloadTitle="";
+	private String chooseButton="";
 	final ULCPollingTimer timer =new ULCPollingTimer(100,null);
 	
 	public FileDownloadHandler(){
@@ -110,15 +112,17 @@ public class FileDownloadHandler<T extends ULCComponent & IRichDialogPanel> {
             serverPath = path;
         formatServerPath();
 		this.fileOperationMessage = new FileOperationMessage();
+		this.downloadTitle =Ivy.cms().co("/ch/ivyteam/ivy/addons/filemanager/download/label/chooseDirectory");
+		this.chooseButton = Ivy.cms().co("/ch/ivyteam/ivy/addons/filemanager/download/label/chooseButton");
 		timer.setRepeats(false);
 	}
 	
 	/**
-	 * download a File directly to the client. The parameter is just the String name of the choosen File to download.<br>
-	 * If the FileDownloadHandler was instanciated with a parent RD reference and callbackmethods names,<br>
+	 * Downloads a File directly to the client. The parameter is just the String name of the choosen File to download.<br>
+	 * If the FileDownloadHandler was instantiated with a parent RD reference and callbackmethods names,<br>
 	 * it will be able to communicate with its parent RD<br>
 	 * No progress is shown for one File download.<br>
-	 * @param final String choosedFileName : the choosen filename to download<br>
+	 * @param final String choosedFileName : the chosen filename to download<br>
 	 * This File has to be in the actual serverPath.<br>
 	 * 
 	 * 
@@ -129,10 +133,10 @@ public class FileDownloadHandler<T extends ULCComponent & IRichDialogPanel> {
 		fileOperationMessage.emptyFileList();
 		
 		final FileChooserConfig fcConfig = new FileChooserConfig();
-		fcConfig.setDialogTitle("Choose a place to save the file on your computer");
+		fcConfig.setDialogTitle(this.downloadTitle);
 		
 		fcConfig.setMultiSelectionEnabled(false); // We accept just one file at time
-		fcConfig.setApproveButtonText("Choose");
+		fcConfig.setApproveButtonText(this.chooseButton);
 
 		fcConfig.setSelectedFile(choosedFileName);
 		try {
@@ -221,10 +225,10 @@ public class FileDownloadHandler<T extends ULCComponent & IRichDialogPanel> {
 		fileOperationMessage.emptyFileList();
 		
 		final FileChooserConfig fcConfig = new FileChooserConfig();
-		fcConfig.setDialogTitle("Choose a place to save the file on your computer");
+		fcConfig.setDialogTitle(this.downloadTitle);
 		
 		fcConfig.setMultiSelectionEnabled(false); // We accept just one file at time
-		fcConfig.setApproveButtonText("Choose");
+		fcConfig.setApproveButtonText(this.chooseButton);
 
 		fcConfig.setSelectedFile(file.getName());
 		try {
@@ -313,10 +317,10 @@ public class FileDownloadHandler<T extends ULCComponent & IRichDialogPanel> {
 		fileOperationMessage.emptyFileList();
 		
 		FileChooserConfig fcConfig = new FileChooserConfig();
-		fcConfig.setDialogTitle("Choose a place to save the file on your computer");
+		fcConfig.setDialogTitle(this.downloadTitle);
 		
 		fcConfig.setMultiSelectionEnabled(false); // We accept just one file at time
-		fcConfig.setApproveButtonText("Choose");
+		fcConfig.setApproveButtonText(this.chooseButton);
 
 		fcConfig.setSelectedFile(choosedFileName);
 		try {
@@ -395,10 +399,10 @@ public class FileDownloadHandler<T extends ULCComponent & IRichDialogPanel> {
 		ClientContext.setFileTransferMode(ClientContext.SYNCHRONOUS_MODE);
     	final FileChooserConfig fcConfig = new FileChooserConfig();
     	
-		fcConfig.setDialogTitle("Choose a place to save the files on your computer");
+		fcConfig.setDialogTitle(this.downloadTitle);
 		fcConfig.setFileSelectionMode(FileChooserConfig.DIRECTORIES_ONLY);
 		fcConfig.setMultiSelectionEnabled(false); // We accept just one directory at time
-		fcConfig.setApproveButtonText("Choose");
+		fcConfig.setApproveButtonText(this.chooseButton);
 		ClientContext.chooseFile(new IFileChooseHandler(){
 
 			public void onFailure(int reason, String description) {
@@ -492,10 +496,10 @@ public class FileDownloadHandler<T extends ULCComponent & IRichDialogPanel> {
     	ClientContext.setFileTransferMode(ClientContext.SYNCHRONOUS_MODE);
     	final FileChooserConfig fcConfig = new FileChooserConfig();
     	
-		fcConfig.setDialogTitle("Choose a directory on your computer");
+		fcConfig.setDialogTitle(this.downloadTitle);
 		fcConfig.setFileSelectionMode(FileChooserConfig.DIRECTORIES_ONLY);
 		fcConfig.setMultiSelectionEnabled(false); // We accept just one directory at time
-		fcConfig.setApproveButtonText("Choose directory");
+		fcConfig.setApproveButtonText(this.chooseButton);
 		ClientContext.chooseFile(new IFileChooseHandler(){
 
 			public void onFailure(int reason, String description) {

@@ -1,6 +1,6 @@
 [Ivy]
-[>Created: Sun Oct 24 12:27:44 CEST 2010]
-125FE16732F8F94A 3.13.1 #module
+[>Created: Mon Mar 26 18:35:42 EDT 2012]
+125FE16732F8F94A 3.17 #module
 >Proto >Proto Collection #zClass
 Fs0 FileNameDialogProcess Big #zClass
 Fs0 RD #cInfo
@@ -88,15 +88,6 @@ Fs0 @RichDialog f69 '' #zField
 Fs0 @PushWFArc f70 '' #zField
 Fs0 @PushWFArc f71 '' #zField
 >Proto Fs0 Fs0 FileNameDialogProcess #zField
-Fs0 f0 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<elementInfo>
-    <language>
-        <name>start()</name>
-        <nameStyle>7,5,7,9
-</nameStyle>
-    </language>
-</elementInfo>
-' #txt
 Fs0 f0 guid 121ECD37DFCFCA97 #txt
 Fs0 f0 type ch.ivyteam.ivy.addons.filemanager.FileNameDialog.FileNameDialogData #txt
 Fs0 f0 method start() #txt
@@ -111,17 +102,17 @@ out.path="";
 Fs0 f0 outParameterDecl '<> result;
 ' #txt
 Fs0 f0 embeddedRdInitializations '* ' #txt
-Fs0 f0 62 38 20 20 13 0 #rect
-Fs0 f0 @|RichDialogInitStartIcon #fIcon
-Fs0 f3 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+Fs0 f0 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
-        <name>start(String,String)</name>
-        <nameStyle>20,5,7,9
+        <name>start()</name>
+        <nameStyle>7,5,7,9
 </nameStyle>
     </language>
 </elementInfo>
 ' #txt
+Fs0 f0 62 38 20 20 13 0 #rect
+Fs0 f0 @|RichDialogInitStartIcon #fIcon
 Fs0 f3 guid 121ECE5545BFE8AE #txt
 Fs0 f3 type ch.ivyteam.ivy.addons.filemanager.FileNameDialog.FileNameDialogData #txt
 Fs0 f3 method start(String,String) #txt
@@ -141,6 +132,15 @@ Fs0 f3 outParameterMapAction 'result.path=in.path;
 result.fileName=in.fileName;
 ' #txt
 Fs0 f3 embeddedRdInitializations '* ' #txt
+Fs0 f3 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>start(String,String)</name>
+        <nameStyle>20,5,7,9
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
 Fs0 f3 270 38 20 20 -52 -29 #rect
 Fs0 f3 @|RichDialogInitStartIcon #fIcon
 Fs0 f4 type ch.ivyteam.ivy.addons.filemanager.FileNameDialog.FileNameDialogData #txt
@@ -245,7 +245,9 @@ WinTitle</name>
 Fs0 f12 54 100 36 24 19 10 #rect
 Fs0 f12 @|RichDialogProcessStepIcon #fIcon
 Fs0 f13 expr in #txt
-Fs0 f13 271 227 90 122 #arcP
+Fs0 f13 274 224 90 112 #arcP
+Fs0 f13 1 184 112 #addKink
+Fs0 f13 0 0.8277725384656309 0 0 #arcLabel
 Fs0 f14 targetDisplay TOP #txt
 Fs0 f14 richDialogId ch.ivyteam.ivy.addons.commondialogs.QuestionDialog #txt
 Fs0 f14 startMethod askQuestion(String,String,List<String>,String) #txt
@@ -437,15 +439,6 @@ Fs0 f27 @|RichDialogProcessStartIcon #fIcon
 Fs0 f28 type ch.ivyteam.ivy.addons.filemanager.FileNameDialog.FileNameDialogData #txt
 Fs0 f28 843 347 26 26 14 0 #rect
 Fs0 f28 @|RichDialogProcessEndIcon #fIcon
-Fs0 f30 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<elementInfo>
-    <language>
-        <name>start(String,String,String)</name>
-        <nameStyle>27,5,7,9
-</nameStyle>
-    </language>
-</elementInfo>
-' #txt
 Fs0 f30 guid 121ED05774D8A16C #txt
 Fs0 f30 type ch.ivyteam.ivy.addons.filemanager.FileNameDialog.FileNameDialogData #txt
 Fs0 f30 method start(String,String,String) #txt
@@ -465,6 +458,15 @@ Fs0 f30 outParameterMapAction 'result.fileName=in.fileName;
 result.path=in.path;
 ' #txt
 Fs0 f30 embeddedRdInitializations '* ' #txt
+Fs0 f30 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>start(String,String,String)</name>
+        <nameStyle>27,5,7,9
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
 Fs0 f30 318 118 20 20 13 0 #rect
 Fs0 f30 @|RichDialogInitStartIcon #fIcon
 Fs0 f31 expr out #txt
@@ -533,16 +535,6 @@ Fs0 f39 expr out #txt
 Fs0 f39 280 364 280 388 #arcP
 Fs0 f11 expr out #txt
 Fs0 f11 280 412 280 451 #arcP
-Fs0 f40 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<elementInfo>
-    <language>
-        <name>startWithOptionalFileTypChooser
-(String,String,String,List&lt;String&gt;)</name>
-        <nameStyle>67,5,7,9
-</nameStyle>
-    </language>
-</elementInfo>
-' #txt
 Fs0 f40 guid 121F73311F8DBA8E #txt
 Fs0 f40 type ch.ivyteam.ivy.addons.filemanager.FileNameDialog.FileNameDialogData #txt
 Fs0 f40 method startWithOptionalFileTypChooser(String,String,String,List<String>) #txt
@@ -564,6 +556,16 @@ result.filename=in.fileName;
 result.choosedExtension=in.fileExtension;
 ' #txt
 Fs0 f40 embeddedRdInitializations '* ' #txt
+Fs0 f40 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>startWithOptionalFileTypChooser
+(String,String,String,List&lt;String&gt;)</name>
+        <nameStyle>67,5,7,9
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
 Fs0 f40 494 430 20 20 -142 11 #rect
 Fs0 f40 @|RichDialogInitStartIcon #fIcon
 Fs0 f42 actionDecl 'ch.ivyteam.ivy.addons.filemanager.FileNameDialog.FileNameDialogData out;
@@ -741,15 +743,6 @@ Fs0 f51 1 1024 312 #addKink
 Fs0 f51 1 0.36906732753654475 0 0 #arcLabel
 Fs0 f20 expr out #txt
 Fs0 f20 1166 312 874 312 #arcP
-Fs0 f21 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<elementInfo>
-    <language>
-        <name>startWithoutPlaceChooser(String,String,List&lt;String&gt;)</name>
-        <nameStyle>52,5,7,9
-</nameStyle>
-    </language>
-</elementInfo>
-' #txt
 Fs0 f21 guid 1253F552852B3926 #txt
 Fs0 f21 type ch.ivyteam.ivy.addons.filemanager.FileNameDialog.FileNameDialogData #txt
 Fs0 f21 method startWithoutPlaceChooser(String,String,List<String>) #txt
@@ -771,6 +764,15 @@ result.fileName=in.fileName;
 result.choosedExtension=in.fileExtension;
 ' #txt
 Fs0 f21 embeddedRdInitializations '* ' #txt
+Fs0 f21 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>startWithoutPlaceChooser(String,String,List&lt;String&gt;)</name>
+        <nameStyle>52,5,7,9
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
 Fs0 f21 494 550 20 20 -249 15 #rect
 Fs0 f21 @|RichDialogInitStartIcon #fIcon
 Fs0 f47 actionDecl 'ch.ivyteam.ivy.addons.filemanager.FileNameDialog.FileNameDialogData out;
@@ -800,16 +802,6 @@ Fs0 f48 expr out #txt
 Fs0 f48 514 560 590 560 #arcP
 Fs0 f52 expr out #txt
 Fs0 f52 608 548 608 452 #arcP
-Fs0 f53 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<elementInfo>
-    <language>
-        <name>startWithoutFileExtensionsChooser
-AndWithoutPathChooser(String,String)</name>
-        <nameStyle>70,5,7,9
-</nameStyle>
-    </language>
-</elementInfo>
-' #txt
 Fs0 f53 guid 1253F7515B957202 #txt
 Fs0 f53 type ch.ivyteam.ivy.addons.filemanager.FileNameDialog.FileNameDialogData #txt
 Fs0 f53 method startWithoutFileExtensionsChooserAndWithoutPathChooser(String,String) #txt
@@ -829,6 +821,16 @@ Fs0 f53 outParameterMapAction 'result.path=in.path;
 result.filename=in.fileName;
 ' #txt
 Fs0 f53 embeddedRdInitializations '* ' #txt
+Fs0 f53 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>startWithoutFileExtensionsChooser
+AndWithoutPathChooser(String,String)</name>
+        <nameStyle>70,5,7,9
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
 Fs0 f53 446 30 20 20 12 -27 #rect
 Fs0 f53 @|RichDialogInitStartIcon #fIcon
 Fs0 f55 actionDecl 'ch.ivyteam.ivy.addons.filemanager.FileNameDialog.FileNameDialogData out;
@@ -857,17 +859,6 @@ Fs0 f54 374 40 280 218 #arcP
 Fs0 f54 1 328 40 #addKink
 Fs0 f54 2 280 88 #addKink
 Fs0 f54 1 0.5268200010923928 0 0 #arcLabel
-Fs0 f57 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<elementInfo>
-    <language>
-        <name>startWithOptionalFileTypChooser
-AndDBInformations
-(String,String,String,List&lt;String&gt;,String,String,String)</name>
-        <nameStyle>106,5,7,9
-</nameStyle>
-    </language>
-</elementInfo>
-' #txt
 Fs0 f57 guid 1274D8A3B60D9FA9 #txt
 Fs0 f57 type ch.ivyteam.ivy.addons.filemanager.FileNameDialog.FileNameDialogData #txt
 Fs0 f57 method startWithOptionalFileTypChooserAndDBInformations(String,String,String,List<String>,String,String,String) #txt
@@ -892,17 +883,19 @@ result.filename=in.fileName;
 result.choosedExtension=in.fileExtension;
 ' #txt
 Fs0 f57 embeddedRdInitializations '* ' #txt
-Fs0 f57 382 494 20 20 -193 -7 #rect
-Fs0 f57 @|RichDialogInitStartIcon #fIcon
-Fs0 f59 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+Fs0 f57 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
-        <name>startwithPathesAndDBInformations(String,String,String,String,String)</name>
-        <nameStyle>68,5,7,9
+        <name>startWithOptionalFileTypChooser
+AndDBInformations
+(String,String,String,List&lt;String&gt;,String,String,String)</name>
+        <nameStyle>106,5,7,9
 </nameStyle>
     </language>
 </elementInfo>
 ' #txt
+Fs0 f57 382 494 20 20 -193 -7 #rect
+Fs0 f57 @|RichDialogInitStartIcon #fIcon
 Fs0 f59 guid 1274D8B72E48486B #txt
 Fs0 f59 type ch.ivyteam.ivy.addons.filemanager.FileNameDialog.FileNameDialogData #txt
 Fs0 f59 method startwithPathesAndDBInformations(String,String,String,String,String) #txt
@@ -925,21 +918,21 @@ Fs0 f59 outParameterMapAction 'result.choosedFileName=in.fileName;
 result.choosedPath=in.path;
 ' #txt
 Fs0 f59 embeddedRdInitializations '* ' #txt
+Fs0 f59 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>startwithPathesAndDBInformations(String,String,String,String,String)</name>
+        <nameStyle>68,5,7,9
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
 Fs0 f59 318 78 20 20 13 0 #rect
 Fs0 f59 @|RichDialogInitStartIcon #fIcon
 Fs0 f60 expr out #txt
 Fs0 f60 318 88 280 218 #arcP
 Fs0 f60 1 280 88 #addKink
 Fs0 f60 1 0.3098082972691463 0 0 #arcLabel
-Fs0 f61 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<elementInfo>
-    <language>
-        <name>startWithPathesAndFileExtAndDBInformations(String,String,String,String,String,String)</name>
-        <nameStyle>85,5,7,9
-</nameStyle>
-    </language>
-</elementInfo>
-' #txt
 Fs0 f61 guid 1274D8BD45D7E8F2 #txt
 Fs0 f61 type ch.ivyteam.ivy.addons.filemanager.FileNameDialog.FileNameDialogData #txt
 Fs0 f61 method startWithPathesAndFileExtAndDBInformations(String,String,String,String,String,String) #txt
@@ -962,6 +955,15 @@ Fs0 f61 outParameterMapAction 'result.path=in.path;
 result.fileName=in.fileName;
 ' #txt
 Fs0 f61 embeddedRdInitializations '* ' #txt
+Fs0 f61 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>startWithPathesAndFileExtAndDBInformations(String,String,String,String,String,String)</name>
+        <nameStyle>85,5,7,9
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
 Fs0 f61 318 158 20 20 13 0 #rect
 Fs0 f61 @|RichDialogInitStartIcon #fIcon
 Fs0 f62 expr out #txt
@@ -999,15 +1001,6 @@ Fs0 f64 expr out #txt
 Fs0 f64 1240 106 1077 120 #arcP
 Fs0 f64 1 1240 120 #addKink
 Fs0 f64 1 0.42354265956062037 0 0 #arcLabel
-Fs0 f65 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<elementInfo>
-    <language>
-        <name>startWithPathesAndFileExtAndUseIvySystemDb(String,String,String)</name>
-        <nameStyle>64,5,7,9
-</nameStyle>
-    </language>
-</elementInfo>
-' #txt
 Fs0 f65 guid 12BDD7853BA6CE72 #txt
 Fs0 f65 type ch.ivyteam.ivy.addons.filemanager.FileNameDialog.FileNameDialogData #txt
 Fs0 f65 method startWithPathesAndFileExtAndUseIvySystemDb(String,String,String) #txt
@@ -1026,6 +1019,15 @@ Fs0 f65 outParameterMapAction 'result.path=in.path;
 result.fileName=in.fileName;
 ' #txt
 Fs0 f65 embeddedRdInitializations '* ' #txt
+Fs0 f65 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>startWithPathesAndFileExtAndUseIvySystemDb(String,String,String)</name>
+        <nameStyle>64,5,7,9
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
 Fs0 f65 318 190 20 20 13 0 #rect
 Fs0 f65 @|RichDialogInitStartIcon #fIcon
 Fs0 f66 expr out #txt
@@ -1038,6 +1040,7 @@ Fs0 f67 @|AlternativeIcon #fIcon
 Fs0 f68 expr out #txt
 Fs0 f68 1184 226 1184 242 #arcP
 Fs0 f19 expr in #txt
+Fs0 f19 outCond in.ivyConnectionName.trim().length()>0 #txt
 Fs0 f19 1184 270 1184 300 #arcP
 Fs0 f69 targetWindow NEW:card: #txt
 Fs0 f69 targetDisplay TOP #txt
@@ -1057,6 +1060,7 @@ Fs0 f69 responseActionCode 'if(result.choosedPath.trim().length()>2){
 Fs0 f69 windowConfiguration '{/title "<%=in.windowTitle%>"/width 780 /height 400 /centered true /resizable true /maximized false /close_after_last_rd true }' #txt
 Fs0 f69 isAsynch false #txt
 Fs0 f69 isInnerRd true #txt
+Fs0 f69 userContext '* ' #txt
 Fs0 f69 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>

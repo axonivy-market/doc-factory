@@ -1607,7 +1607,7 @@ public abstract class FileHandler
 	}
 
 	/**
-	 * get the foleder Name with a given path
+	 * get the folder Name with a given path
 	 * @param _p the path
 	 * @return the folder name corresponding to the given path
 	 */

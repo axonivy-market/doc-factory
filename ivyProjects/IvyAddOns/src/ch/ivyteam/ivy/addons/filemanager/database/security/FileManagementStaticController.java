@@ -165,6 +165,17 @@ public abstract class FileManagementStaticController {
 				doc.setLocked(rec.getField("Locked").toString());
 				doc.setLockingUserID(rec.getField("LockingUserId").toString());
 				doc.setDescription(rec.getField("Description").toString());
+				try{
+					doc.setVersionnumber(Integer.parseInt(rec.getField("versionnumber").toString()));
+				}catch(Exception ex)
+				{
+					doc.setVersionnumber(1);
+				}
+				try{
+					doc.setExtension(doc.getFilename().substring(doc.getFilename().lastIndexOf(".")+1));
+				}catch(Exception ex){
+					//Ignore the Exception here
+				}
 				al.add(doc);
 			}
 		}

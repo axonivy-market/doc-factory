@@ -20,6 +20,7 @@ import java.util.Scanner;
 import java.util.concurrent.Callable;
 
 import ch.ivyteam.db.jdbc.DatabaseUtil;
+import ch.ivyteam.ivy.addons.filemanager.DirectoryHelper;
 import ch.ivyteam.ivy.addons.filemanager.DocumentOnServer;
 import ch.ivyteam.ivy.addons.filemanager.FileHandler;
 import ch.ivyteam.ivy.addons.filemanager.FolderOnServer;
@@ -61,6 +62,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 	private String dirTableNameSpace = null; // equals to dirTableName if schemaName == null, else schemaName.dirTableName
 	private boolean securityActivated = false;
 	private AbstractDirectorySecurityController securityController = null; // the file security controller if the security is activated.
+	
 	/**
 	 * @throws Exception 
 	 * 
@@ -70,145 +72,146 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 	}
 
 	/**
-	 * 
-	 * @param _ivyDBConnectionName
-	 * @param _tableName
+	 * Creates a new FileStoreHandler with possibility to overrides the ivy global variables settings for the two given parameters.<br />
+	 * The other variables (security activated, database schema and directories table name) will be set with the corresponding global variables.
+	 * @param _ivyDBConnectionName: String, if null or empty, the corresponding ivy global variable will be taken.
+	 * @param _tableName: String, if null or empty, the corresponding ivy global variable will be taken.
 	 * @throws Exception 
 	 */
 	public FileStoreDBHandler(String _ivyDBConnectionName, String _tableName) throws Exception {
 		super();
-		if(_ivyDBConnectionName==null || _ivyDBConnectionName.trim().length()==0)
-		{//if ivy user friendly name of database configuration not settled used default
-			this.ivyDBConnectionName = "filemanager";
-		}else{
-			this.ivyDBConnectionName = _ivyDBConnectionName.trim();
-		}
-		if(_tableName==null || _tableName.trim().length()==0)
-		{//if ivy table name not settled used default
-			this.tableName="uploadedfiles";
-		}else{
-			this.tableName=_tableName.trim();
-		}
-		this.tableNameSpace = this.tableName;
-
-		this.dirTableName="filemanagerdirectory";
-		this.dirTableNameSpace=this.dirTableName;
-		makeSecurityController();
-		checkTablesExists();
+		initializeVariables(_ivyDBConnectionName,_tableName,null,null,null,null);
+		
+		//makeSecurityController();
+		//checkTablesExists();
 	}
 
 
 	/**
-	 * 
-	 * @param _ivyDBConnectionName
-	 * @param _fileTableName
-	 * @param _fileContentTableName
-	 * @param _dirTableName
-	 * @param _schemaName
+	 * Creates a new FileStoreHandler with possibility to overrides the ivy global variables settings for the five given parameters.<br />
+	 * The other variable (security activated) will be set with the corresponding global variables.
+	 * @param _ivyDBConnectionName: String, if null or empty, the corresponding ivy global variable will be taken.
+	 * @param _fileTableName: String, if null or empty, the corresponding ivy global variable will be taken.
+	 * @param _fileContentTableName: String, if null or empty, the corresponding ivy global variable will be taken.
+	 * @param _dirTableName: String, if null or empty, the corresponding ivy global variable will be taken.
+	 * @param _schemaName: String, if null or empty, the corresponding ivy global variable will be taken.
 	 * @throws Exception
 	 */
 	public FileStoreDBHandler(String _ivyDBConnectionName, String _fileTableName, String _fileContentTableName, String _dirTableName, 
 			String _schemaName) throws Exception {
 		super();
-		if(_ivyDBConnectionName==null || _ivyDBConnectionName.trim().length()==0)
-		{//if ivy user friendly name of database configuration not set used default
-			this.ivyDBConnectionName = "filemanager";
-		}else{
-			this.ivyDBConnectionName = _ivyDBConnectionName.trim();
-		}
-		if(_fileTableName==null || _fileTableName.trim().length()==0)
-		{//if ivy table name not set used default
-			this.tableName="uploadedfiles";
-		}else{
-			this.tableName=_fileTableName.trim();
-			this.tableNameSpace = this.tableName;
-		}
-		if(_dirTableName==null || _dirTableName.trim().length()==0)
-		{//if ivy table name not set used default
-			this.dirTableName="filemanagerdirectory";
-		}else{
-			this.dirTableName=_dirTableName.trim();
-			this.dirTableNameSpace = this.dirTableName;
-		}
-		if(_fileContentTableName==null || _fileContentTableName.trim().length()==0)
-		{
-			this.fileContentTableName="filemanagercontent";
-		}else
-		{
-			this.fileContentTableName = _fileContentTableName.trim();
-			this.fileContentTableNameSpace = this.fileContentTableName;
-		}
-		if(_schemaName!=null && _schemaName.trim().length()>0)
-		{//set the schema name variable
-
-			this.schemaName = _schemaName.trim();
-			//since the schema name is for now only use in PostGreSQL, 
-			//we escape the schema and table name to be able to support non lower case schemas
-			this.tableNameSpace="\""+this.schemaName+"\""+"."+"\""+this.tableName+"\"";
-			this.dirTableNameSpace="\""+this.schemaName+"\""+"."+"\""+this.dirTableName+"\"";
-			this.fileContentTableNameSpace="\""+this.schemaName+"\""+"."+"\""+this.fileContentTableName+"\"";
-		}
-		makeSecurityController();
-		checkTablesExists();
+		initializeVariables(_ivyDBConnectionName,_fileTableName,_fileContentTableName,_dirTableName,_schemaName,null);
+		//makeSecurityController();
+		//checkTablesExists();
 	}
 
 	/**
-	 * 
-	 * @param _ivyDBConnectionName
-	 * @param _fileTableName
-	 * @param _fileContentTableName
-	 * @param _dirTableName
-	 * @param _schemaName
-	 * @param _securityActivated
+	 * * Creates a new FileStoreHandler with possibility to overrides the ivy global variables settings for the six given parameters.
+	 * @param _ivyDBConnectionName: String, if null or empty, the corresponding ivy global variable will be taken.
+	 * @param _fileTableName:String, if null or empty, the corresponding ivy global variable will be taken.
+	 * @param _fileContentTableName:String, if null or empty, the corresponding ivy global variable will be taken.
+	 * @param _dirTableName:String, if null or empty, the corresponding ivy global variable will be taken.
+	 * @param _schemaName:String, if null or empty, the corresponding ivy global variable will be taken.
+	 * @param _securityActivated: Boolean, set the security activation.
 	 * @throws Exception
 	 */
 	public FileStoreDBHandler(String _ivyDBConnectionName, String _fileTableName, String _fileContentTableName, String _dirTableName, 
 			String _schemaName, boolean _securityActivated) throws Exception {
 		super();
+		initializeVariables(_ivyDBConnectionName,_fileTableName,_fileContentTableName,_dirTableName,_schemaName,_securityActivated);
+		//makeSecurityController();
+		//checkTablesExists();
+	}
+	
+	/**
+	 * 
+	 * @param _ivyDBConnectionName
+	 * @param _tableName
+	 * @param _fileContentTableName
+	 * @param _dirTableName
+	 * @param _schemaName
+	 * @param _securityActivated
+	 */
+	private void initializeVariables(String _ivyDBConnectionName, String _tableName, String _fileContentTableName, String _dirTableName, 
+			String _schemaName, Boolean _securityActivated)
+	{
 		if(_ivyDBConnectionName==null || _ivyDBConnectionName.trim().length()==0)
-		{//if ivy user friendly name of database configuration not set used default
-			this.ivyDBConnectionName = "filemanager";
+		{//if ivy user friendly name of database configuration not settled used default
+			this.ivyDBConnectionName = Ivy.var().get("xivy_addons_fileManager_ivyDatabaseConnectionName").trim();
 		}else{
 			this.ivyDBConnectionName = _ivyDBConnectionName.trim();
 		}
-		if(_fileTableName==null || _fileTableName.trim().length()==0)
-		{//if ivy table name not set used default
-			this.tableName="uploadedfiles";
+		
+		if(_tableName==null || _tableName.trim().length()==0)
+		{//if ivy table name not settled used default
+			this.tableName=Ivy.var().get("xivy_addons_fileManager_fileMetaDataTableName").trim();
 		}else{
-			this.tableName=_fileTableName.trim();
-			this.tableNameSpace = this.tableName;
+			this.tableName=_tableName.trim();
 		}
+		
+		if(_fileContentTableName==null || _fileContentTableName.trim().length()==0)
+		{//if ivy file content table name not settled used default
+			this.fileContentTableName=Ivy.var().get("xivy_addons_fileManager_fileContentTableName").trim();
+		}else{
+			this.fileContentTableName=_fileContentTableName.trim();
+		}
+		
 		if(_dirTableName==null || _dirTableName.trim().length()==0)
-		{//if ivy table name not set used default
-			this.dirTableName="filemanagerdirectory";
+		{//if ivy directories table name not settled used default
+			this.dirTableName=Ivy.var().get("xivy_addons_fileManager_directoriesTableName").trim();
 		}else{
 			this.dirTableName=_dirTableName.trim();
-			this.dirTableNameSpace = this.dirTableName;
 		}
-		if(_fileContentTableName==null || _fileContentTableName.trim().length()==0)
-		{
-			this.fileContentTableName="filemanagercontent";
-		}else
-		{
-			this.fileContentTableName = _fileContentTableName.trim();
-			this.fileContentTableNameSpace = this.fileContentTableName;
+		
+		if(_schemaName==null)
+		{//if DB schema name not settled used default
+			if(Ivy.var().get("xivy_addons_fileManager_databaseSchemaName")!=null)
+			{
+				this.schemaName=Ivy.var().get("xivy_addons_fileManager_databaseSchemaName").trim();
+			}
+		}else{
+			this.schemaName=_schemaName.trim();
 		}
-		if(_schemaName!=null && _schemaName.trim().length()>0)
-		{//set the schema name variable
-
-			this.schemaName = _schemaName.trim();
-			//since the schema name is for now only use in PostGreSQL, 
-			//we escape the schema and table name to be able to support non lower case schemas
+		
+		if(this.schemaName!=null && this.schemaName.trim().length()>0)
+		{
 			this.tableNameSpace="\""+this.schemaName+"\""+"."+"\""+this.tableName+"\"";
 			this.dirTableNameSpace="\""+this.schemaName+"\""+"."+"\""+this.dirTableName+"\"";
 			this.fileContentTableNameSpace="\""+this.schemaName+"\""+"."+"\""+this.fileContentTableName+"\"";
+		}else{
+			this.tableNameSpace=this.tableName;
+			this.dirTableNameSpace=this.dirTableName;
+			this.fileContentTableNameSpace=this.fileContentTableName;
 		}
-
-		this.securityActivated=_securityActivated;
-		makeSecurityController();
-		checkTablesExists();
+		
+		if(_securityActivated==null)
+		{
+			if(Ivy.var().get("xivy_addons_fileManager_activateSecurity")!=null || 
+					Ivy.var().get("xivy_addons_fileManager_activateSecurity").trim().length()>0)
+			{
+				this.securityActivated=Ivy.var().get("xivy_addons_fileManager_activateSecurity").trim().compareTo("1")==0?true:false;
+			}else{
+				this.securityActivated=false;
+			}
+		}else{
+			this.securityActivated=_securityActivated;
+		}
+		
+		
+		
+		this.makeSecurityController();
+		
+		/*
+		this.fileVersioningActivated= (Ivy.var().get("xivy_addons_fileManager_activateFileVersioning")!=null && 
+				Ivy.var().get("xivy_addons_fileManager_activateFileVersioning").compareTo("1")==0);
+		
+		if(this.fileVersioningActivated)
+		{
+			this.fileVersioningController = new FileVersioningController(this.ivyDBConnectionName, this.tableName, this.fileContentTableName, null, null, this.schemaName);
+		}*/
 	}
 
+	@SuppressWarnings("unused")
 	private void checkTablesExists() throws Exception{
 
 		String createFileTable="CREATE TABLE "+this.tableNameSpace+" (" +
@@ -410,8 +413,19 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 		if(!_destinationPath.trim().equals("")){
 			_destinationPath=formatPathForDirectory(_destinationPath);
 		}
-		//check if a directory with the same path already exists
-		if(this.directoryExists(_destinationPath+_newDirectoryName.trim()))
+		return this.createDirectory(_destinationPath+_newDirectoryName.trim());
+	}
+	
+	@Override
+	public ReturnedMessage createDirectory(String _newDirectoryPath) throws Exception
+	{
+		if(_newDirectoryPath==null ||  _newDirectoryPath.trim().equals(""))
+		{
+			throw new IllegalArgumentException("One of the parameters in "+this.getClass().getName()+", method createDirectory(String _newDirectoryPath) is not set.");
+		}
+		ReturnedMessage message = new ReturnedMessage();
+		message.setFiles(List.create(java.io.File.class));
+		if(this.directoryExists(_newDirectoryPath.trim()))
 		{//already exists
 			message.setType(FileHandler.INFORMATION_MESSAGE);
 			message.setText("The directory to create already exists.");
@@ -419,7 +433,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 		}
 		if(this.securityActivated)
 		{
-			this.securityController.createIndestructibleDirectory(_destinationPath+_newDirectoryName.trim(), null);
+			this.securityController.createIndestructibleDirectory(_newDirectoryPath.trim(), null);
 			message.setType(FileHandler.SUCCESS_MESSAGE);
 			message.setText("The directory was successfuly created.");
 			return message;
@@ -428,7 +442,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 		String base = "INSERT INTO "+this.dirTableNameSpace+
 		" (dir_name, dir_path, creation_user_id, creation_date, creation_time, modification_user_id, modification_date," +
 		"modification_time,is_protected, cmdr, cod, cud, cdd, cwf, cdf) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-		Ivy.log().info("Test 4 CreateDirectory: "+base);
+		
 		java.util.Date d = new java.util.Date();
 
 		IExternalDatabaseRuntimeConnection connection=null;
@@ -438,8 +452,8 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 			PreparedStatement stmt = null;
 			try{
 				stmt = jdbcConnection.prepareStatement(base);
-				stmt.setString(1, _newDirectoryName.trim());
-				stmt.setString(2, escapeBackSlash(_destinationPath+_newDirectoryName.trim()));
+				stmt.setString(1,DirectoryHelper.getDirectoryNameFromPath(_newDirectoryPath));
+				stmt.setString(2, escapeBackSlash(_newDirectoryPath.trim()));
 				stmt.setString(3, Ivy.session().getSessionUserName());
 				stmt.setDate(4, new java.sql.Date(d.getTime()));
 				stmt.setTime(5, new java.sql.Time(d.getTime()));
@@ -454,7 +468,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 				stmt.setString(14, "");
 				stmt.setString(15, "");
 				int i =  stmt.executeUpdate();
-				Ivy.log().info("Test 5 CreateDirectory: "+i);
+				
 				if(i>0)
 				{//Creation successful
 					message.setType(FileHandler.SUCCESS_MESSAGE);
@@ -947,6 +961,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 	 */
 	public ArrayList<FolderOnServer> getListDirectoriesUnderPath(String rootPath) throws Exception
 	{
+		Ivy.log().info("SECURITY ?: "+this.securityActivated);
 		if(this.securityActivated){
 			return this.securityController.getListDirectoriesUnderPath(rootPath, null);
 		}
@@ -969,6 +984,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 				stmt = jdbcConnection.prepareStatement(base);
 				//Select the root
 				stmt.setString(1, rootPath);
+				Ivy.log().info(base+" => "+rootPath);
 				rset=executeStatement(stmt);
 				recordList=rset.toList();
 				if(recordList.size()==1)
@@ -1330,6 +1346,29 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 							fos.close();
 						}
 					}
+				}else
+				{//May be we had the files on the file Set before.... we try to find it on the file set
+					java.io.File f = new java.io.File(path);
+					if(f.isFile() && docu.getFileID().trim().length()>0)
+					{
+						FileInputStream is = null;
+						try{
+							Ivy.log().info("We found the file");
+							String query2 ="INSERT INTO "+this.fileContentTableNameSpace+" (file_id, file_content) VALUES (?,?)";
+							stmt = jdbcConnection.prepareStatement(query2);
+							is = new FileInputStream ( f );   
+							stmt.setInt(1, Integer.parseInt(docu.getFileID().trim()));
+							stmt.setBinaryStream (2, is, (int) f.length() ); 
+							stmt.executeUpdate();
+							
+						}finally{
+							if(is!=null)
+							{
+								is.close();
+							}
+						}
+						doc=this.getDocumentOnServerWithJavaFile(docu);
+					}
 				}
 			}catch(Exception ex){
 				Ivy.log().error("Exception " +ex.getMessage(),ex);
@@ -1342,7 +1381,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 				database.giveBackAndUnlockConnection(connection);
 			}
 		}
-
+		
 
 		return doc;
 	}
@@ -1463,6 +1502,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 			{
 				query="SELECT * FROM "+this.tableNameSpace+" WHERE FilePath LIKE ? AND FilePath NOT LIKE ?";
 			}
+			
 			PreparedStatement stmt = null;
 			try{
 				stmt = jdbcConnection.prepareStatement(query);
@@ -1474,6 +1514,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 					stmt.setString(1, folderPath+"%");
 					stmt.setString(2, folderPath+"%/%");
 				}
+				Ivy.log().info(query +" => "+folderPath);
 				rset=executeStatement(stmt);
 				recordList=rset.toList();
 			}finally{
@@ -1504,6 +1545,12 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 					doc.setExtension(doc.getFilename().substring(doc.getFilename().lastIndexOf(".")+1));
 				}catch(Exception ex){
 					//Ignore the Exception here
+				}
+				try{
+					doc.setVersionnumber(Integer.parseInt(rec.getField("versionnumber").toString()));
+				}catch(Exception ex)
+				{
+					doc.setVersionnumber(1);
 				}
 				al.add(doc);
 			}
@@ -1569,6 +1616,12 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 						doc.setLocked(rec.getField("Locked").toString());
 						doc.setLockingUserID(rec.getField("LockingUserId").toString());
 						doc.setDescription(rec.getField("Description").toString());
+						try{
+							doc.setVersionnumber(Integer.parseInt(rec.getField("versionnumber").toString()));
+						}catch(Exception ex)
+						{
+							doc.setVersionnumber(1);
+						}
 						try{
 							doc.setExtension(doc.getFilename().substring(doc.getFilename().lastIndexOf(".")+1));
 						}catch(Exception ex){
@@ -2062,15 +2115,22 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 				stmt.setString(11, time);
 				stmt.setString(12, "");
 				stmt.executeUpdate();
-				ResultSet rs = stmt.getGeneratedKeys();
+				ResultSet rs=null;
+				try{
+					rs = stmt.getGeneratedKeys();
+				}catch(SQLFeatureNotSupportedException fex)
+				{//The JDBC Driver doesn't accept the PreparedStatement.RETURN_GENERATED_KEYS
+					//ignore
+				}
 
-				if ( rs.next() ) {
+				if ( rs!=null && rs.next() ) {
 					// Retrieve the auto generated key(s).
 					insertedId = rs.getInt(1);
 				}
 
 				if(!flag || insertedId<=0)
-				{
+				{//The JDBC Driver doesn't accept the PreparedStatement.RETURN_GENERATED_KEYS
+					//we have to get the inserted Id manually....
 					try{
 						insertedId=this.getDocIdWithPath(escapeBackSlash(_destinationPath+_file.getName()));
 					}catch(Exception ex){
@@ -3080,6 +3140,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 				stmt.setString(1, newName+ext);
 				stmt.setString(2,escapeBackSlash( newPath));
 				stmt.setString(3,escapeBackSlash( document.getPath()));
+				Ivy.log().debug(query+" "+newName+ext+" "+newPath+" "+document.getPath());
 				stmt.executeUpdate();
 			}finally{
 				DatabaseUtil.close(stmt);
@@ -3876,6 +3937,10 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 	 */
 	public void setSecurityOn(boolean securityOn) {
 		this.securityActivated = securityOn;
+		if(this.securityActivated && this.securityController==null)
+		{
+			this.makeSecurityController();
+		}
 	}
 
 	/**
@@ -4008,4 +4073,22 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 	throws Exception {
 		return this.securityController;
 	}
+
+	/**
+	 * @param fileVersioningController the fileVersioningController to set
+	 
+	public void setFileVersioningController(FileVersioningController fileVersioningController) {
+		this.fileVersioningController = fileVersioningController;
+	}
+
+	
+	public FileVersioningController getFileVersioningController() {
+		return fileVersioningController;
+	}
+	*/
+	@Override
+	public int getFile_content_storage_type() {
+		return AbstractFileManagementHandler.FILE_STORAGE_DATABASE;
+	}
+
 }

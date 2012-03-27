@@ -33,30 +33,25 @@ public abstract class AbstractFileManagementHandler {
 	 * Flag indicating that the files' content is stored in files on the file system
 	 */
 	public static final int FILE_STORAGE_FILESYSTEM=1;
+	
 	/**
 	 * Flag indicating that the files' content is stored in a database
 	 */
 	public static final int FILE_STORAGE_DATABASE=2;
+	
 	/**
 	 * variable indicating what kind of file storage has been chosen: File System or Database.
 	 */
 	public static int file_content_storage_type = FILE_STORAGE_FILESYSTEM;
 	
 	/**
-	 * 
-	 * @return
+	 * Returns the file content storage type.<br />
+	 * @see AbstractFileManagementHandler.FILE_STORAGE_FILESYSTEM <br />
+	 * @see AbstractFileManagementHandler.FILE_STORAGE_DATABASE
+	 * @return AbstractFileManagementHandler.FILE_STORAGE_FILESYSTEM if the files are stored physically on the fileSystem,<br />
+	 * else returns AbstractFileManagementHandler.FILE_STORAGE_DATABASE.
 	 */
-	public static int getFile_content_storage_type() {
-		return file_content_storage_type;
-	}
-
-	/**
-	 * 
-	 * @param fileContentStorageType
-	 */
-	public static void setFile_content_storage_type(int fileContentStorageType) {
-		file_content_storage_type = fileContentStorageType;
-	}
+	public abstract int getFile_content_storage_type() ;
 
 	/**
 	 * get the Class Object of the current AbstractFileManagementHandler implementation Class
@@ -98,7 +93,7 @@ public abstract class AbstractFileManagementHandler {
 	/**
 	 * Insert a  DocumentOnServer Object into the File indexation storing System
 	 * @param _document: DocumentOnServer that has to be inserted into the File properties storing system
-	 * @return 1 if successfull
+	 * @return 1 if successful
 	 * @throws Exception 
 	 */
 	public abstract int insertOneDocument(DocumentOnServer _document) throws Exception;
@@ -497,9 +492,23 @@ public abstract class AbstractFileManagementHandler {
 	 * @param _destinationPath
 	 * @param _newDirectoryName
 	 * @return a ch.ivyteam.ivy.addons.filemanager.ReturnedMessage containing the type of result <br>
-	 * (ch.ivyteam.ivy.addons.filemanager.ReturnedMessage.SUCCESS_MESSAGE / ERROR_MESSAGE / INFORMATION_MESSAGE);
+	 * (ch.ivyteam.ivy.addons.filemanager.ReturnedMessage.SUCCESS_MESSAGE / ERROR_MESSAGE / INFORMATION_MESSAGE);<br>
+	 * If an error occurs, the type of the returnedMessage will be ch.ivyteam.ivy.addons.filemanager.ReturnedMessage.ERROR,<br />
+	 * If the directory to create already exists,  the type of the returnedMessage will be ch.ivyteam.ivy.addons.filemanager.ReturnedMessage.INFORMATION,<br />
+	 * If success  the type of the returnedMessage will be ch.ivyteam.ivy.addons.filemanager.ReturnedMessage.SUCCESS,<br />
 	 */
 	public abstract ReturnedMessage createDirectory(String _destinationPath, String _newDirectoryName) throws Exception;
+	
+	/**
+	 * Creates a new directory
+	 * @param _destinationPath
+	 * @return a ch.ivyteam.ivy.addons.filemanager.ReturnedMessage containing the type of result <br>
+	 * (ch.ivyteam.ivy.addons.filemanager.ReturnedMessage.SUCCESS_MESSAGE / ERROR_MESSAGE / INFORMATION_MESSAGE);<br>
+	 * If an error occurs, the type of the returnedMessage will be ch.ivyteam.ivy.addons.filemanager.ReturnedMessage.ERROR,<br />
+	 * If the directory to create already exists,  the type of the returnedMessage will be ch.ivyteam.ivy.addons.filemanager.ReturnedMessage.INFORMATION,<br />
+	 * If success  the type of the returnedMessage will be ch.ivyteam.ivy.addons.filemanager.ReturnedMessage.SUCCESS,<br />
+	 */
+	public abstract ReturnedMessage createDirectory(String _newDirectoryPath) throws Exception;
 	
 	/**
 	 * tells if a directory denoted by the given path exists.

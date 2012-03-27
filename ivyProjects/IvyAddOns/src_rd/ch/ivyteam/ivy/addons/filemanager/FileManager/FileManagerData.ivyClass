@@ -51,7 +51,6 @@ selectedDocuments List<ch.ivyteam.ivy.addons.filemanager.DocumentOnServer> #fiel
 selectedDocuments 'List of selected Documents on the server in the table, used in inner method' #fieldComment
 selectedDocumentsForParent List<ch.ivyteam.ivy.addons.filemanager.DocumentOnServer> #field
 selectedDocumentsForParent 'List of selected Documents on the server in the table, reflect always the selected documents, used in the documentSelected RDEvent @SUBSC' #fieldComment
-selectedDocumentsForParent PERSISTENT #fieldModifier
 clientPathSeparator String #field
 clientPathSeparator 'the system path separator on the client (/ on UNIX,\ on Windows)' #fieldComment
 ListOfFileCoupleToUnlock List<ch.ivyteam.ivy.addons.filemanager.FileCouple> #field
@@ -149,7 +148,6 @@ sqlSearchConditions List<String> #field
 sqlSearchConditions '(see getDocumentsWithSQLConditions(List<String>)' #fieldComment
 dirTableName String #field
 dirTableName 'Name of the table that stores the Infos about the directories in case of File content storage in DB.' #fieldComment
-dirTableName PERSISTENT #fieldModifier
 activateSecurity Boolean #field
 activateSecurity 'if true the security Management on the directories will be in action. It works only if the files are stored in DB.' #fieldComment
 IvySystemDB boolean #field
@@ -165,3 +163,7 @@ fileListingButtonIconUri24 String #field
 fileListingButtonIconUri24 'Rollover file listing/admin button icon Uri' #fieldComment
 isUserFileManagerAdmin boolean #field
 isUserFileManagerAdmin 'If true, the user has the role to be fileManager Admin. He has the possibility to manage the rights on the directories. I will see the admin button on top of the directories.' #fieldComment
+activateFileVersioning boolean #field
+activateFileVersioning 'If True the UI will be adapted to be able to create new Files versions.' #fieldComment
+fileVersioningController ch.ivyteam.ivy.addons.filemanager.database.versioning.FileVersioningController #field
+fileVersioningController 'controller for file versioning, if this feature is activated.' #fieldComment

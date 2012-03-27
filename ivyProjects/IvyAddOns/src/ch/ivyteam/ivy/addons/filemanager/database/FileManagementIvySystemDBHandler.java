@@ -1361,9 +1361,22 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 		{
 			throw new IllegalArgumentException("One of the parameters in "+this.getClass().getName()+", method createDirectory(String destinationPath, String newDirectoryName) is not set.");
 		}
+		
+		return this.createDirectory(formatPathForDirectory(destinationPath)+newDirectoryName.trim());
+		
+	}
+	
+	@Override
+	public ReturnedMessage createDirectory(String _newDirectoryPath) throws Exception
+	{
+		if(_newDirectoryPath==null ||  _newDirectoryPath.trim().equals(""))
+		{
+			throw new IllegalArgumentException("One of the parameters in "+this.getClass().getName()+", method createDirectory(String _newDirectoryPath) is not set.");
+		}
 		ReturnedMessage message = new ReturnedMessage();
 		message.setFiles(List.create(java.io.File.class));
-		java.io.File dir = new java.io.File(formatPathForDirectory(destinationPath)+newDirectoryName.trim());
+		
+		java.io.File dir = new java.io.File(formatPathForDirectory(_newDirectoryPath));
 		if(dir.isDirectory())
 		{//already exists
 			message.setType(FileHandler.INFORMATION_MESSAGE);
@@ -1383,6 +1396,7 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 			}
 		}
 		return message;
+		
 	}
 	
 	@Override
@@ -2203,6 +2217,11 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 	public ReturnedMessage deleteDirectoryAsAdministrator(String directoryPath)
 			throws Exception {
 		return this.deleteDirectory(directoryPath);
+	}
+
+	@Override
+	public int getFile_content_storage_type() {
+		return AbstractFileManagementHandler.FILE_STORAGE_FILESYSTEM;
 	}
 	
 	

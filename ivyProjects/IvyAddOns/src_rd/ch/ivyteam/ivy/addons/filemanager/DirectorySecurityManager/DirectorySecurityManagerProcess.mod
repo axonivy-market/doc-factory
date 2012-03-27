@@ -1,5 +1,5 @@
 [Ivy]
-[>Created: Tue Oct 25 21:56:48 EDT 2011]
+[>Created: Sat Mar 03 22:10:12 EST 2012]
 132D1B65FEDF11D7 3.17 #module
 >Proto >Proto Collection #zClass
 Ds0 DirectorySecurityManagerProcess Big #zClass
@@ -401,7 +401,7 @@ Ds0 f33 actionTable 'out=in;
 ' #txt
 Ds0 f33 actionCode 'import ch.ivyteam.ivy.addons.filemanager.database.security.DirectorySecurityController;
 if(in.#dirTableName==null || in.dirTableName.trim().equalsIgnoreCase("")){
-		in.dirTableName="FileManagerDirectory";
+		in.dirTableName=ivy.var.xivy_addons_fileManager_directoriesTableName.trim();
 	}
 out.securityController = new DirectorySecurityController(in.ivyConnectionName,in.dirTableName,in.schemaName);
 panel.actionsGridBagLayoutPane.enabled=false;' #txt
