@@ -1,5 +1,5 @@
 [Ivy]
-[>Created: Thu Nov 03 10:42:03 EDT 2011]
+[>Created: Tue Mar 20 09:35:28 EDT 2012]
 125F850DA67753A5 3.17 #module
 >Proto >Proto Collection #zClass
 Ds0 DesktopHandlerProcess Big #zClass
@@ -244,7 +244,8 @@ Ds0 f2 actionDecl 'ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandl
 ' #txt
 Ds0 f2 actionTable 'out=in;
 ' #txt
-Ds0 f2 actionCode 'import ch.ivyteam.ivy.addons.filemanager.ulcextensionhandler.UserSystemPropertiesHandler;
+Ds0 f2 actionCode 'import com.ulcjava.base.application.border.ULCTitledBorder;
+import ch.ivyteam.ivy.addons.filemanager.ulcextensionhandler.UserSystemPropertiesHandler;
 import ch.ivyteam.ivy.addons.filemanager.FileHandler;
 import ch.ivyteam.ivy.addons.filemanager.ulcextensionhandler.DesktopHandler;
 
@@ -261,7 +262,13 @@ import ch.ivyteam.ivy.addons.filemanager.ulcextensionhandler.UserTempDirectoryMa
 in.userTempDirectoryManager = new UserTempDirectoryManager(in.clientApplicationTempDir,panel,"_newTempDirCreated","");
 
 
-' #txt
+try{
+	ULCTitledBorder b = panel.ScrollPane.getBorder() as ULCTitledBorder;
+	b.setTitle(ivy.cms.co("/ch/ivyteam/ivy/addons/filemanager/DesktopHandler/labels/border"));
+}catch(Throwable t)
+{
+		
+}' #txt
 Ds0 f2 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
 Ds0 f2 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
@@ -1162,20 +1169,36 @@ Ds0 f94 actionDecl 'ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHand
 ' #txt
 Ds0 f94 actionTable 'out=in;
 ' #txt
-Ds0 f94 actionCode 'import ch.ivyteam.ivy.addons.filemanager.FileHandler;
+Ds0 f94 actionCode 'import ch.ivyteam.ivy.addons.filemanager.database.AbstractFileManagementHandler;
+import ch.ivyteam.ivy.addons.filemanager.FileHandler;
 import ch.ivyteam.ivy.addons.filemanager.DocumentOnServer;
 import ch.ivyteam.ivy.addons.filemanager.FileCouple;
 
 
 List <FileCouple> fcToRemove= new List<FileCouple>();
 List <FileCouple> fcStillEdited= new List<FileCouple>();
-
+List<DocumentOnServer> notEditedDocs = new List<DocumentOnServer>(); //this list is used to find the still marked as edited but not really edited anymore
+for(DocumentOnServer doc: in.FilesToUnlock)
+{
+	boolean found = false;
+	for(FileCouple fc : in.editedFileList)
+	{
+		if(AbstractFileManagementHandler.formatPath(fc.serverSidePath).equals(doc.path))
+			{
+					found=true;
+					break;
+			}
+	}
+	if(!found){
+		notEditedDocs.add(doc);
+	}
+}
 for(FileCouple fc : in.editedFileList)
 {
 	boolean found = false;
 	for(DocumentOnServer doc: in.FilesToUnlock)
 	{
-			if(fc.serverSidePath.equals(doc.path))
+			if(AbstractFileManagementHandler.formatPath(fc.serverSidePath).equals(doc.path))
 			{
 					found=true;
 					fcToRemove.add(fc);
@@ -1199,16 +1222,20 @@ for(FileCouple fc : in.editedFileList)
 in.editedFileList.clear();
 in.editedFileList.addAll(fcStillEdited);
 panel.fileEditorCheckerPanel.setFileCouplesList(in.editedFileList);
-panel.fireUnlockFiles(fcToRemove);' #txt
+panel.fireUnlockFiles(fcToRemove);
+if(!notEditedDocs.isEmpty()){
+	panel.fireForceDocsUnlock(notEditedDocs);
+}' #txt
 Ds0 f94 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
 Ds0 f94 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
         <name>Removes the given documents from
 the fileCoupleChecking System
-Sends unLockFiles@SUBSC</name>
+Fires unLockFiles@SUBSC
+fireForceDocsUnlock@SUBSC</name>
         <nameStyle>33,0,7,9
-53,0,7,9
+79,0,7,9
 </nameStyle>
     </language>
 </elementInfo>

@@ -21,6 +21,7 @@ import ch.xpertline.ulc.server.headless.ULCXJava6Desktop;
  * - the methods are declared in the public rich dialog interface.
  *
  */
+@SuppressWarnings("deprecation")
 public class DesktopHandler<T extends IRichDialogPanel> {
 	/** The parent Rich Dialog where the DesktopHandler object is used*/
 	protected T parentRD;
@@ -82,7 +83,7 @@ public class DesktopHandler<T extends IRichDialogPanel> {
 	 * @param isFileEditableCallbackMethod: Callback method to indicate if a File is editable
 	 * @param isFilePrintableCallbackMethod: Callback method to indicate if a File is printable 
 	 */
-    public DesktopHandler(T parent, String _errorMethodName,String _isFileEditableCallbackMethod, String _isFilePrintableCallbackMethod, boolean _useJava6){
+	public DesktopHandler(T parent, String _errorMethodName,String _isFileEditableCallbackMethod, String _isFilePrintableCallbackMethod, boolean _useJava6){
     	this.parentRD=parent;
     	this.errorMethodName=_errorMethodName!=null?_errorMethodName:"";
     	this.isFileEditableCallbackMethod = _isFileEditableCallbackMethod!=null?_isFileEditableCallbackMethod:"";

@@ -48,74 +48,90 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 	private String schemaName = "";// the DB Schema name if needed (eg. by PostGreSQL)
 	private String tableNameSpace = null; // equals to tableName if schemaName == null, else schemaName.tableName
 	IExternalDatabase database=null;
+	
 	/**
-	 * Default constructor
+	 * Creates a new FileManagementDBHandlerUniversal.<br />
+	 * The parameters for the Ivy Database Connection name, the files table name and the eventual database schema name<br />
+	 * are going to be set with the corresponding ivy global variables values.
 	 * @throws Exception 
 	 */
 	public FileManagementDBHandlerUniversal() throws Exception{
 		this(null,null);
 	}
 
-	
+
 	/**
-	 * Constructor 
-	 * @param _ivyDBConnectionName: the name of the database connection name as it is in Ivy Database configuration
-	 * @param _tableName
+	 * Creates a new FileManagementDBHandlerUniversal with possibility to overrides the ivy global variables settings for the two given parameters.<br />
+	 * The schema name will be set with the corresponding global variable.
+	 * @param _ivyDBConnectionName: String, if null or empty, the corresponding ivy global variable will be taken.
+	 * @param _tableName: String, if null or empty, the corresponding ivy global variable will be taken.
 	 * @throws Exception 
 	 */
 	public FileManagementDBHandlerUniversal(String _ivyDBConnectionName, String _tableName) throws Exception {
 		super();
 		if(_ivyDBConnectionName==null || _ivyDBConnectionName.trim().length()==0)
 		{//if ivy user friendly name of database configuration not settled used default
-			this.ivyDBConnectionName = "filemanager";
+			this.ivyDBConnectionName = Ivy.var().get("xivy_addons_fileManager_ivyDatabaseConnectionName").trim();
 		}else{
 			this.ivyDBConnectionName = _ivyDBConnectionName.trim();
 		}
 		if(_tableName==null || _tableName.trim().length()==0)
 		{//if ivy table name not settled used default
-			this.tableName="uploadedfiles";
+			this.tableName=Ivy.var().get("xivy_addons_fileManager_fileMetaDataTableName").trim();
 		}else{
 			this.tableName=_tableName.trim();
 		}
-		this.tableNameSpace = this.tableName;
 		
-		checkTablesExists();
+		if(Ivy.var().get("xivy_addons_fileManager_databaseSchemaName")!=null)
+		{
+			this.schemaName=Ivy.var().get("xivy_addons_fileManager_databaseSchemaName").trim();
+		}
+		if(this.schemaName!=null && this.schemaName.length()>0)
+		{
+			this.tableNameSpace="\""+this.schemaName+"\""+"."+"\""+this.tableName+"\"";
+		}else{
+			this.tableNameSpace = this.tableName;
+		}
+
+		//checkTablesExists();
 	}
 
 	/**
-	 * Constructor with the database connection name as it is in Ivy Database configuration and callback methods.
-	 * @param ivyDBConnectionName: the name of the database connection name as it is in Ivy Database configuration
-	 * @throws Exception 
-	 * @throws EnvironmentNotAvailableException 
+	 * Creates a new FileManagementDBHandlerUniversal with possibility to overrides the ivy global variables settings for the 3 given parameters.
+	 * @param _ivyDBConnectionName: String, if null or empty, the corresponding ivy global variable will be taken.
+	 * @param _tableName: String, if null or empty, the corresponding ivy global variable will be taken.
+	 * @param _schemaName: String, if null or empty, the corresponding ivy global variable will be taken.
+	 * @throws Exception
 	 */
 	public FileManagementDBHandlerUniversal(String _ivyDBConnectionName, String _tableName, String _schemaName) throws Exception{
 		super();
 		if(_ivyDBConnectionName==null || _ivyDBConnectionName.trim().length()==0)
 		{//if ivy user friendly name of database configuration not set used default
-			this.ivyDBConnectionName = "filemanager";
+			this.ivyDBConnectionName = Ivy.var().get("xivy_addons_fileManager_ivyDatabaseConnectionName").trim();
 		}else{
 			this.ivyDBConnectionName = _ivyDBConnectionName.trim();
 		}
 		if(_tableName==null || _tableName.trim().length()==0)
 		{//if ivy table name not set used default
-			this.tableName="uploadedfiles";
+			this.tableName=Ivy.var().get("xivy_addons_fileManager_fileMetaDataTableName").trim();
 		}else{
 			this.tableName=_tableName.trim();
 			this.tableNameSpace = this.tableName;
 		}
 		if(_schemaName!=null && _schemaName.trim().length()>0)
 		{//set the schema name variable
-			
+
 			this.schemaName = _schemaName.trim();
 			//since the schema name is for now only use in PostGreSQL, 
 			//we escape the schema and table name to be able to support non lower case schemas
 			this.tableNameSpace="\""+this.schemaName+"\""+"."+"\""+this.tableName+"\"";
 		}
-		
-		checkTablesExists();
+
+		//checkTablesExists();
 
 	}
-	
+
+	@SuppressWarnings("unused")
 	private void checkTablesExists() throws Exception{
 
 		String createFileTable="CREATE TABLE "+this.tableNameSpace+" (" +
@@ -142,7 +158,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 			Connection jdbcConnection=connection.getDatabaseConnection();
 			PreparedStatement stmt = null;
 			try{
-				
+
 				if(!jdbcConnection.getMetaData().getTables(null, null, this.tableNameSpace, null).next()){
 					Ivy.log().info("Files table does not exists, executes "+jdbcConnection.nativeSQL(createFileTable));
 					stmt = jdbcConnection.prepareStatement(jdbcConnection.nativeSQL(createFileTable));
@@ -285,7 +301,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		StringBuilder query=new StringBuilder("");
 
 		query.append("SELECT * FROM "+this.tableNameSpace+" WHERE ");
-		
+
 		if(_conditions==null || _conditions.isEmpty())
 		{
 			return al;
@@ -497,7 +513,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 						try{
 							n = Integer.parseInt(kvp.getValue().toString());
 						}catch(Exception ex){
-							
+
 						}
 						stmt.setInt(i, n);
 					}
@@ -929,7 +945,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		}
 		return insertedId;
 	}
-	
+
 	@Override
 	public int insertFile(java.io.File _file,String _destinationPath, String _user)throws Exception {
 		int insertedId = -1;
@@ -1141,7 +1157,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 
 		return insertedIDs;
 	}
-	
+
 	@Override
 	public int insertFiles(List<java.io.File> _files, String _destinationPath, String _user) throws Exception{
 		int insertedIDs = -1;
@@ -1265,7 +1281,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 				database.giveBackAndUnlockConnection(connection);
 			}
 		}
-		FileHandler.deleteFiles(_files);
+		//FileHandler.deleteFiles(_files);
 		return deletedFiles;
 	}
 
@@ -1607,9 +1623,22 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		{
 			throw new IllegalArgumentException("One of the parameters in "+this.getClass().getName()+", method createDirectory(String destinationPath, String newDirectoryName) is not set.");
 		}
+
+		return this.createDirectory(formatPathForDirectory(destinationPath)+newDirectoryName.trim());
+
+	}
+
+	@Override
+	public ReturnedMessage createDirectory(String _newDirectoryPath) throws Exception
+	{
+		if(_newDirectoryPath==null ||  _newDirectoryPath.trim().equals(""))
+		{
+			throw new IllegalArgumentException("One of the parameters in "+this.getClass().getName()+", method createDirectory(String _newDirectoryPath) is not set.");
+		}
 		ReturnedMessage message = new ReturnedMessage();
 		message.setFiles(List.create(java.io.File.class));
-		java.io.File dir = new java.io.File(formatPathForDirectory(destinationPath)+newDirectoryName.trim());
+
+		java.io.File dir = new java.io.File(formatPathForDirectory(_newDirectoryPath));
 		if(dir.isDirectory())
 		{//already exists
 			message.setType(FileHandler.INFORMATION_MESSAGE);
@@ -1629,6 +1658,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 			}
 		}
 		return message;
+
 	}
 
 	@Override
@@ -1654,10 +1684,10 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		}
 		return message;
 	}
-	
+
 	@Override
 	public ReturnedMessage deleteDirectoryAsAdministrator(String directoryPath)
-			throws Exception {
+	throws Exception {
 		return this.deleteDirectory(directoryPath);
 	}
 
@@ -1721,7 +1751,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 	@Override
 	public ReturnedMessage deleteDocumentOnServers(
 			List<DocumentOnServer> documents) throws Exception {
-		
+
 		if(documents==null)
 		{
 			throw new IllegalArgumentException("The 'documents' parameter in "+this.getClass().getName()+", method deleteDocumentOnServers(List<DocumentOnServer> documents) is not set.");
@@ -1741,7 +1771,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 				Ivy.log().error(_ex.getMessage()+ " In method deleteDocumentOnServers(List<DocumentOnServer> documents) from "+this.getClass().getName());
 			}
 		}
-		
+
 		return message;
 	}
 
@@ -1760,7 +1790,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		fillRDTree(entryPath, RDTree);
 		return RDTree;
 	}
-	
+
 	@Override
 	public boolean directoryExists(String _dirPath) throws Exception
 	{
@@ -1974,9 +2004,9 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 			String fileDestinationPath) throws Exception {
 		ReturnedMessage message = new ReturnedMessage();
 		message.setFiles(List.create(java.io.File.class));
-		
+
 		message.setType(FileHandler.SUCCESS_MESSAGE);
-		
+
 		if(document==null || document.getPath()==null || document.getPath().trim().equals(""))
 		{
 			message.setType(FileHandler.ERROR_MESSAGE);
@@ -1988,7 +2018,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		{
 			fileDestinationPath=FileHandler.getFileDirectoryPath(new java.io.File(document.getPath()));
 		}
-		
+
 		String date = new Date().format("dd.MM.yyyy");
 		String time = new Time().format();
 		String user = Ivy.session().getSessionUserName();
@@ -2125,7 +2155,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		}
 		return message;
 	}
-	
+
 	@Override
 	public ReturnedMessage setFileDescription(DocumentOnServer document,
 			String description) throws Exception {
@@ -2144,7 +2174,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 			try{
 				id=Integer.parseInt(document.getFileID());
 			}catch(Exception ex){
-				
+
 			}
 		}
 		if(id<=0 && document.getPath()!=null){
@@ -2153,7 +2183,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 				try{
 					id=Integer.parseInt(doc.getFileID());
 				}catch(Exception ex){
-					
+
 				}
 			}
 		}
@@ -2166,7 +2196,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		{
 			description="";
 		}
-		
+
 		IExternalDatabaseRuntimeConnection connection=null;
 		try {
 			connection = getDatabase().getAndLockConnection();
@@ -2194,7 +2224,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 
 		return message;
 	}
-	
+
 	@Override
 	public ReturnedMessage moveDocumentOnServer(DocumentOnServer doc, String destination) throws Exception
 	{
@@ -2296,7 +2326,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		message.getDocumentOnServers().addAll(pasteDocs);
 		return message;
 	}
-	
+
 	@Override
 	public ReturnedMessage zipDocumentOnServers(
 			List<DocumentOnServer> documents, String dirPath, String zipName,
@@ -2304,17 +2334,17 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		ReturnedMessage message = new ReturnedMessage();
 		message.setFiles(List.create(java.io.File.class));
 		message.setDocumentOnServers(List.create(DocumentOnServer.class));
-		
+
 		if(dirPath == null || dirPath.trim().length()<=0 || documents==null || documents.size()==0)
 		{
 			throw new IllegalArgumentException("One of the parameter is not set in zipDocumentOnServers(List<DocumentOnServer> documents, String dirPath, String zipName,boolean checkIfExists) in "+ this.getClass());
 		}
-		
+
 		dirPath=formatPathForDirectory(dirPath);
 		zipName = zipName.endsWith(".zip")?zipName:zipName+".zip";
 		java.io.File zip = new java.io.File(dirPath+zipName);
 		boolean exists = zip.isFile();
-		
+
 		if(checkIfExists && exists){
 			message.setType(FileHandler.ERROR_MESSAGE);
 			message.setText(Ivy.cms().co("/ch/ivyteam/ivy/addons/filemanager/fileManagement/messages/error/zipfileAlreadyExistsCannotCreateIt"));
@@ -2325,7 +2355,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 			_files.add(zip);
 			this.deleteFiles(_files);
 		}
-		
+
 		ArrayList<java.io.File> zipFiles = new ArrayList<java.io.File>();
 		for(DocumentOnServer doc: documents)
 		{
@@ -2340,14 +2370,14 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		}else{
 			this.insertFile(zip, Ivy.session().getSessionUserName());
 			message.setType(FileHandler.ERROR_MESSAGE);
-		
+
 		}
 		return message;
 	}
-	
+
 	@Override
 	public boolean deleteFile(String _filepath) throws Exception{
-		
+
 		if(_filepath==null || _filepath.trim().equals(""))
 		{
 			return false;
@@ -2441,21 +2471,21 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 
 	@Override
 	public boolean documentOnServerExists(DocumentOnServer document, String path)
-			throws Exception {
+	throws Exception {
 		if(document== null || document.getFilename()==null || document.getFilename().trim().equals("") || path==null || path.trim().equals(""))
 		{
 			return false;
 		}
 		path=formatPathForDirectory(path);
 		java.io.File f = new java.io.File(path+document.getFilename().trim());
-		
+
 		return f.isFile();
 	}
 
 
 	@Override
 	public ReturnedMessage setFileDescription(String path, String description)
-			throws Exception {
+	throws Exception {
 		ReturnedMessage message = new ReturnedMessage();
 		message.setType(FileHandler.SUCCESS_MESSAGE);
 		message.setFiles(List.create(java.io.File.class));
@@ -2465,12 +2495,12 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 			message.setText("Unable to set the description. One of the parameter is invalid in setFileDescription(String path, String description) in class "+this.getClass().getName());
 			return message;
 		}
-		
+
 		if(description == null)
 		{
 			description="";
 		}
-		
+
 		IExternalDatabaseRuntimeConnection connection=null;
 		try {
 			connection = getDatabase().getAndLockConnection();
@@ -2527,9 +2557,14 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 
 	@Override
 	public AbstractDirectorySecurityController getSecurityController()
-			throws Exception {
-		
+	throws Exception {
+
 		return null;
+	}
+
+	@Override
+	public int getFile_content_storage_type() {
+		return AbstractFileManagementHandler.FILE_STORAGE_FILESYSTEM;
 	}
 
 }

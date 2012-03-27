@@ -1,5 +1,5 @@
 [Ivy]
-[>Created: Mon Jun 20 07:28:27 CEST 2011]
+[>Created: Tue Mar 13 08:21:18 EDT 2012]
 125FDB0198DDACE8 3.17 #module
 >Proto >Proto Collection #zClass
 Fs0 FileListTableProcess Big #zClass
@@ -122,18 +122,9 @@ Fs0 @PushWFArc f118 '' #zField
 Fs0 @PushWFArc f112 '' #zField
 Fs0 @RichDialogProcessStep f120 '' #zField
 Fs0 @PushWFArc f121 '' #zField
-Fs0 @Alternative f53 '' #zField
-Fs0 @PushWFArc f54 '' #zField
-Fs0 @PushWFArc f119 '' #zField
 Fs0 @RichDialogProcessEnd f122 '' #zField
 Fs0 @PushWFArc f124 '' #zField
-Fs0 @RichDialog f125 '' #zField
-Fs0 @PushWFArc f126 '' #zField
 Fs0 @RichDialogProcessStep f128 '' #zField
-Fs0 @PushWFArc f129 '' #zField
-Fs0 @RichDialogProcessStep f127 '' #zField
-Fs0 @PushWFArc f131 '' #zField
-Fs0 @PushWFArc f130 '' #zField
 Fs0 @RichDialogProcessStep f56 '' #zField
 Fs0 @RichDialogProcessStep f34 '' #zField
 Fs0 @PushWFArc f8 '' #zField
@@ -294,6 +285,8 @@ Fs0 @PushWFArc f37 '' #zField
 Fs0 @RichDialogProcessStep f253 '' #zField
 Fs0 @PushWFArc f254 '' #zField
 Fs0 @PushWFArc f252 '' #zField
+Fs0 @PushWFArc f255 '' #zField
+Fs0 @PushWFArc f54 '' #zField
 >Proto Fs0 Fs0 FileListTableProcess #zField
 Fs0 f0 guid 11F6A40F8EC16E70 #txt
 Fs0 f0 type ch.ivyteam.ivy.addons.filemanager.FileListTable.FileListTableData #txt
@@ -644,7 +637,8 @@ Fs0 f31 actionDecl 'ch.ivyteam.ivy.addons.filemanager.FileListTable.FileListTabl
 ' #txt
 Fs0 f31 actionTable 'out=in;
 ' #txt
-Fs0 f31 actionCode panel.refreshWithCheck(); #txt
+Fs0 f31 actionCode 'panel.refreshWithCheck();
+in.uploadManager.setServerPath(in.path);' #txt
 Fs0 f31 type ch.ivyteam.ivy.addons.filemanager.FileListTable.FileListTableData #txt
 Fs0 f31 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
@@ -1672,22 +1666,6 @@ Fs0 f121 .xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 </elementInfo>
 ' #txt
 Fs0 f121 2222 224 2263 276 #arcP
-Fs0 f53 type ch.ivyteam.ivy.addons.filemanager.FileListTable.FileListTableData #txt
-Fs0 f53 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<elementInfo>
-    <language>
-        <name>Success ?</name>
-        <nameStyle>9,9
-</nameStyle>
-    </language>
-</elementInfo>
-' #txt
-Fs0 f53 2210 330 28 28 -79 -6 #rect
-Fs0 f53 @|AlternativeIcon #fIcon
-Fs0 f54 expr out #txt
-Fs0 f54 2180 300 2217 337 #arcP
-Fs0 f119 expr out #txt
-Fs0 f119 2262 300 2230 336 #arcP
 Fs0 f122 type ch.ivyteam.ivy.addons.filemanager.FileListTable.FileListTableData #txt
 Fs0 f122 2211 483 26 26 14 0 #rect
 Fs0 f122 @|RichDialogProcessEndIcon #fIcon
@@ -1696,47 +1674,6 @@ Fs0 f124 2202 160 2211 496 #arcP
 Fs0 f124 1 2088 160 #addKink
 Fs0 f124 2 2088 496 #addKink
 Fs0 f124 1 0.4059138568666363 0 0 #arcLabel
-Fs0 f125 targetWindow NEW:card: #txt
-Fs0 f125 targetDisplay TOP #txt
-Fs0 f125 richDialogId ch.ivyteam.ivy.addons.commondialogs.QuestionDialog #txt
-Fs0 f125 startMethod askQuestion(String,String,List<String>,String) #txt
-Fs0 f125 type ch.ivyteam.ivy.addons.filemanager.FileListTable.FileListTableData #txt
-Fs0 f125 requestActionDecl '<String icon, String question, List<String> buttons, String defaultButton> param;' #txt
-Fs0 f125 requestMappingAction 'param.icon="/ch/ivyteam/ivy/addons/icons/close/48";
-param.question=in.returnedMessage.text;
-param.buttons=[ivy.cms.co("/ch/ivyteam/ivy/addons/filemanager/fileManagement/buttonLabels/ok")];
-param.defaultButton=ivy.cms.co("/ch/ivyteam/ivy/addons/filemanager/fileManagement/buttonLabels/ok");
-' #txt
-Fs0 f125 responseActionDecl 'ch.ivyteam.ivy.addons.filemanager.FileListTable.FileListTableData out;
-' #txt
-Fs0 f125 responseMappingAction 'out=in;
-' #txt
-Fs0 f125 windowConfiguration '{/title "Error"/width 0 /height 0 /centered true /resizable true /maximized false /close_after_last_rd true }' #txt
-Fs0 f125 isAsynch false #txt
-Fs0 f125 isInnerRd true #txt
-Fs0 f125 isDialog true #txt
-Fs0 f125 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<elementInfo>
-    <language>
-        <name>Show Error Message</name>
-        <nameStyle>18,7,9
-</nameStyle>
-    </language>
-</elementInfo>
-' #txt
-Fs0 f125 2286 332 36 24 20 -2 #rect
-Fs0 f125 @|RichDialogIcon #fIcon
-Fs0 f126 expr in #txt
-Fs0 f126 .xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<elementInfo>
-    <language>
-        <name>No</name>
-        <nameStyle>2,9
-</nameStyle>
-    </language>
-</elementInfo>
-' #txt
-Fs0 f126 2238 344 2286 344 #arcP
 Fs0 f128 actionDecl 'ch.ivyteam.ivy.addons.filemanager.FileListTable.FileListTableData out;
 ' #txt
 Fs0 f128 actionTable 'out=in;
@@ -1751,41 +1688,6 @@ Fs0 f128 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 ' #txt
 Fs0 f128 2206 388 36 24 20 -2 #rect
 Fs0 f128 @|RichDialogProcessStepIcon #fIcon
-Fs0 f129 expr in #txt
-Fs0 f129 outCond in.tmpBoolean #txt
-Fs0 f129 .xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<elementInfo>
-    <language>
-        <name>Yes</name>
-        <nameStyle>3,9
-</nameStyle>
-    </language>
-</elementInfo>
-' #txt
-Fs0 f129 2224 358 2224 388 #arcP
-Fs0 f127 actionDecl 'ch.ivyteam.ivy.addons.filemanager.FileListTable.FileListTableData out;
-' #txt
-Fs0 f127 actionTable 'out=in;
-' #txt
-Fs0 f127 actionCode panel.refresh(); #txt
-Fs0 f127 type ch.ivyteam.ivy.addons.filemanager.FileListTable.FileListTableData #txt
-Fs0 f127 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<elementInfo>
-    <language>
-        <name>refresh</name>
-        <nameStyle>7,9
-</nameStyle>
-    </language>
-</elementInfo>
-' #txt
-Fs0 f127 2286 484 36 24 20 -2 #rect
-Fs0 f127 @|RichDialogProcessStepIcon #fIcon
-Fs0 f131 expr out #txt
-Fs0 f131 2304 356 2304 484 #arcP
-Fs0 f131 0 0.7382613346780561 0 0 #arcLabel
-Fs0 f130 expr out #txt
-Fs0 f130 2286 496 2237 496 #arcP
-Fs0 f130 0 0.49999999999999994 0 0 #arcLabel
 Fs0 f56 actionDecl 'ch.ivyteam.ivy.addons.filemanager.FileListTable.FileListTableData out;
 ' #txt
 Fs0 f56 actionTable 'out=in;
@@ -2498,15 +2400,29 @@ Fs0 f188 actionDecl 'ch.ivyteam.ivy.addons.filemanager.FileListTable.FileListTab
 ' #txt
 Fs0 f188 actionTable 'out=in;
 ' #txt
-Fs0 f188 actionCode '//boolean b =in.fileManagementHandler.lockFile(in.selectedFile,ivy.session.getSessionUserName());
-boolean b =in.fileManagementHandler.lockDocument(in.selectedDocumentOnServer,ivy.session.getSessionUserName());
-if(in.selectedDocumentOnServer.getJavaFile()==null){
-	in.selectedDocumentOnServer = in.fileManagementHandler.getDocumentOnServerWithJavaFile(in.selectedDocumentOnServer);
-}
-if(b){
-	panel.desktopHandlerPanel.openDocumentOnServerAndCheckForChanges(in.selectedDocumentOnServer);
+Fs0 f188 actionCode 'import ch.ivyteam.ivy.addons.filemanager.DocumentOnServer;
+boolean b =false;
+if(in.#selectedFile!=null){
+	DocumentOnServer doc = new DocumentOnServer();
+	try{
+		doc = in.fileManagementHandler.getDocumentOnServerWithJavaFile(in.selectedFile.getPath());
+		b =in.fileManagementHandler.lockFile(in.selectedFile,ivy.session.getSessionUserName());
+	
+	}catch(Throwable t){
+			
+	}
+	if(doc != null && doc.getJavaFile()!=null && b)
+	{
+		panel.desktopHandlerPanel.openDocumentOnServerAndCheckForChanges(doc);
+	
+	}else if(b){
+		panel.desktopHandlerPanel.editFile(in.selectedFile);
+	}else
+	{
+		panel.desktopHandlerPanel.openFile(in.selectedFile);
+	}
 }else{
-	panel.desktopHandlerPanel.openFile(in.selectedDocumentOnServer.getJavaFile());
+	ivy.log.error("Trying to edit a null java.io.File in the FileListTable RDC with the editFile(java.io.File file) method.");
 }
 panel.refresh();' #txt
 Fs0 f188 type ch.ivyteam.ivy.addons.filemanager.FileListTable.FileListTableData #txt
@@ -3581,6 +3497,10 @@ Fs0 f254 expr out #txt
 Fs0 f254 1920 90 1920 116 #arcP
 Fs0 f252 expr out #txt
 Fs0 f252 1920 140 1920 172 #arcP
+Fs0 f255 expr out #txt
+Fs0 f255 2174 300 2218 388 #arcP
+Fs0 f54 expr out #txt
+Fs0 f54 2267 300 2229 388 #arcP
 >Proto Fs0 .rdData2UIAction 'panel.enablerTextField.visible=false;
 panel.fileListTable.listData=in.documentsInDb;
 panel.ToolbarFlowLayoutPane.visible=in.isToolbarVisible;
@@ -3686,20 +3606,8 @@ Fs0 f117 out f112 tail #connect
 Fs0 f112 head f111 in #connect
 Fs0 f111 out f121 tail #connect
 Fs0 f121 head f120 mainIn #connect
-Fs0 f113 mainOut f54 tail #connect
-Fs0 f54 head f53 in #connect
-Fs0 f120 mainOut f119 tail #connect
-Fs0 f119 head f53 in #connect
 Fs0 f117 out f124 tail #connect
 Fs0 f124 head f122 mainIn #connect
-Fs0 f126 head f125 mainIn #connect
-Fs0 f53 out f129 tail #connect
-Fs0 f129 head f128 mainIn #connect
-Fs0 f53 out f126 tail #connect
-Fs0 f125 mainOut f131 tail #connect
-Fs0 f131 head f127 mainIn #connect
-Fs0 f127 mainOut f130 tail #connect
-Fs0 f130 head f122 mainIn #connect
 Fs0 f34 mainOut f8 tail #connect
 Fs0 f8 head f1 mainIn #connect
 Fs0 f56 mainOut f134 tail #connect
@@ -3860,3 +3768,7 @@ Fs0 f35 mainOut f254 tail #connect
 Fs0 f254 head f253 mainIn #connect
 Fs0 f253 mainOut f252 tail #connect
 Fs0 f252 head f251 mainIn #connect
+Fs0 f113 mainOut f255 tail #connect
+Fs0 f255 head f128 mainIn #connect
+Fs0 f120 mainOut f54 tail #connect
+Fs0 f54 head f128 mainIn #connect

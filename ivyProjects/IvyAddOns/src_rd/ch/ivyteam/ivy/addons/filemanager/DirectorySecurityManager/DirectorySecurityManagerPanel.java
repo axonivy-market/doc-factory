@@ -156,7 +156,7 @@ private RScrollPane getTreeScrollPane() {
 		treeScrollPane = new RScrollPane();
 		treeScrollPane.setName("treeScrollPane");
 		treeScrollPane.setStyleProperties("{/fill \"BOTH\"/weightY \"1\"/weightX \"1\"}");
-		treeScrollPane.setCornerRadius(10);
+		treeScrollPane.setCornerRadius(0);
 		treeScrollPane.setViewPortView(getRolesTree());
 	}
 	return treeScrollPane;
@@ -202,7 +202,7 @@ private RGridBagLayoutPane getActionsGridBagLayoutPane() {
 		actionsGridBagLayoutPane = new RGridBagLayoutPane();
 		actionsGridBagLayoutPane.setName("actionsGridBagLayoutPane");
 		actionsGridBagLayoutPane.setStyleProperties("{/fill \"BOTH\"/insetsLeft \"20\"/weightY \"1\"/weightX \"1\"}");
-		actionsGridBagLayoutPane.setCornerRadius(10);
+		actionsGridBagLayoutPane.setCornerRadius(0);
 		actionsGridBagLayoutPane.setBorder(BorderFactory.createTitledBorder(null, "", ULCTitledBorder.DEFAULT_JUSTIFICATION, ULCTitledBorder.DEFAULT_POSITION, new Font("Tahoma", Font.PLAIN, 11), new Color(23, 64, 140)));
 		actionsGridBagLayoutPane.add(Filler1, new com.ulcjava.base.application.GridBagConstraints(1, 6, 1, 1, -1, -1, com.ulcjava.base.application.GridBagConstraints.CENTER, com.ulcjava.base.application.GridBagConstraints.NONE, new com.ulcjava.base.application.util.Insets(0,0,0,0), 0, 0));
 		actionsGridBagLayoutPane.add(getCodCheckBox(), new com.ulcjava.base.application.GridBagConstraints(0, 1, 1, 1, -1, -1, com.ulcjava.base.application.GridBagConstraints.CENTER, com.ulcjava.base.application.GridBagConstraints.NONE, new com.ulcjava.base.application.util.Insets(0,0,0,0), 0, 0));

@@ -4,6 +4,7 @@
 It allows performing client side advanced actions like file editing/opening/printing, ...&#xD;
 It uses the FileEditorChecker for the edition mechanism.</description>
     <tags>JDIC, File edit, print, email</tags>
+    <autoScreenshot>true</autoScreenshot>
     <method>
         <name>printFiles</name>
         <description>Print a list o Files on the user default printer</description>
@@ -584,6 +585,21 @@ The overlying program can then traces the changes.</description>
             <name>fileCouple</name>
             <description></description>
             <parameterType>ch.ivyteam.ivy.addons.filemanager.FileCouple</parameterType>
+            <nullPermitted>true</nullPermitted>
+        </attachment>
+    </firedEvent>
+    <firedEvent>
+        <name>forceDocsUnlock</name>
+        <description>This event is used to ask a parent panel to force unlocking some documents.&#xD;
+Typically this is used if a user had a system crash. His still edited docs are still marked as edited in the DB.&#xD;
+If you open the FileManager again, it is unpossible to unlock these files because the DesktopHandler &#xD;
+cannot find them in its edited files.&#xD;
+This helps for a second problem: a user after system crash is not logged in. Its files cannot be unlocked.&#xD;
+</description>
+        <attachment>
+            <name>documentsOnServerList</name>
+            <description></description>
+            <parameterType>List&lt;ch.ivyteam.ivy.addons.filemanager.DocumentOnServer&gt;</parameterType>
             <nullPermitted>true</nullPermitted>
         </attachment>
     </firedEvent>

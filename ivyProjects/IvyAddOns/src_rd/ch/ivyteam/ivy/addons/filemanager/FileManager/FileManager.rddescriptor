@@ -1003,6 +1003,30 @@ This callback method is used when the files are stored in the database and not i
             <nullPermitted>false</nullPermitted>
         </outputParameter>
     </method>
+    <method>
+        <name>copyAllToNewDestination</name>
+        <description>Copies all the sub directories and contained files from the root serverpath to a new path.&#xD;
+If you set the first boolean parameter to true, then the fileManager will points to the new directory after that.&#xD;
+If you redirect the FileManager to the new destination it will try to delete the old destination if the second parameter is set to true</description>
+        <inputParameter>
+            <name>destPath</name>
+            <description>The directory destination where all the directories and files contained unde rthe server path should be copied.</description>
+            <parameterType>String</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </inputParameter>
+        <inputParameter>
+            <name>redirectServerPathToDestination</name>
+            <description>If true, the FileManager will be redirected to the new destination.</description>
+            <parameterType>Boolean</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </inputParameter>
+        <inputParameter>
+            <name>eraseOldPath</name>
+            <description>If you redirect the FileManager to the new destination it will try to delete the old destination if this parameter is set to true</description>
+            <parameterType>Boolean</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </inputParameter>
+    </method>
     <startMethod>
         <name>startAsPathChooser</name>
         <description>start the RDC as Path chooser. The user will be able to make a new directory, no actions on Files are possible.&#xD;
@@ -1286,9 +1310,7 @@ By clicking on the OK button, the RDC gives the choosed path back, else, empty s
     </startMethod>
     <startMethod>
         <name>start</name>
-        <description>Starts the filemanager. Note that you will be able to store the filecontent in the database.&#xD;
-&#xD;
-</description>
+        <description></description>
         <inputParameter>
             <name>serverPath</name>
             <description>The entry Path of the FileManager</description>
