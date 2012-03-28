@@ -6,10 +6,9 @@
   <title>File Management System</title>
   <sect1 xml:id="ivy.addons.filemanager.introduction">
     <title>Introduction</title>
-    <para>The aim of this document is to provide a small description of the file management system
-      that has been developed for our Ivy RIAs applications. This file management system eases the
-      integration of File exchange, communication, edition and creation in your Ivy RIAs
-      applications. </para>
+    <para>The goal of this document is to provide a small description of the file management system
+      that has been developed for our Ivy RIAs applications. This file management system allows
+      sharing, editing, versioning ... files in the Ivy RIA Applications.</para>
   </sect1>
   <sect1 xml:id="ivy.addons.filemanager.overview">
     <title>File management system overview</title>
@@ -58,8 +57,10 @@
       </ns:warning>
       <para>There are two major informations to provide the FileManager: the <ns:emphasis>server
           path</ns:emphasis> representing the top directory that will be displayed, and the
-          <ns:emphasis>database informations</ns:emphasis> to be able to retrieve the files
+          <ns:emphasis>database informations</ns:emphasis> to be able to store the files
         informations.</para>
+      <para>These parameters can be given to the file manager through start methods or with the use
+        of global variables. You will find these indications in next two sub paragraphs.</para>
       <sect3>
         <title>The Server path</title>
         <para>The server path is provided as parameter in the start methods of the RDC. This
@@ -75,52 +76,24 @@
           must be configured so that the Ivy Server User can connect to it. </para>
       </sect3>
       <sect3>
-        <title>The database information</title>
+        <title>The database settings</title>
         <sect4>
-          <title>The files are stored on a server File System</title>
-          <para>You can use the IvySystem DB to store the informations on the files, or you can use
-            an external Database System.</para>
-          <para>If your table is located on the Ivy System Database you just have initialize the
-            FileManager with its <ns:code>startWithServerPathAndUseIvySystemDB(String
-            _serverPath)</ns:code> start method. It is the easiest way to use the FileManager.</para>
+          <title>If the files are stored on a server File System...</title>
+          <para>You can use the IvySystem DB to store the informations about the files, or you can
+            use an external Database System.</para>
+          <para>If your table is located on the Ivy System Database you can start the FileManager
+            with its <ns:code>startWithServerPathAndUseIvySystemDB(String _serverPath)</ns:code>
+            start method. It is the easiest way to use the FileManager. You can also set the
+              <ns:code>xivy_addons_fileManager_activateUseOfIvySystemDatabase global variable to
+              "1".</ns:code></para>
           <para>If you use an external database you have to provide more informations:<itemizedlist>
               <listitem>
                 <para>First you have to configure an Ivy Database Configuration in your project (see
                   the Ivy Documentation related to this point).</para>
               </listitem>
               <listitem>
-                <para>The Table that is going to keep the informations about the files has to be
-                  created with the following SQL CREATE Statement:</para>
-                <para>
-                  <literallayout> <ns:code>
-CREATE TABLE uploadedfiles ( 
-FileId             INT NOT NULL AUTO_INCREMENT,
-FileName           VARCHAR(255) NOT NULL, 
-FilePath           VARCHAR(750) NOT NULL, 
-CreationUserId     VARCHAR (200) NULL, 
-CreationDate       VARCHAR (10) NULL, 
-CreationTime       VARCHAR (8) NULL, 
-FileSize           VARCHAR (20) NULL, 
-Locked             TINYINT NULL, 
-LockingUserId      VARCHAR (200) NULL, 
-ModificationUserId VARCHAR (200) NULL, 
-ModificationDate   VARCHAR (10)   NULL, 
-ModificationTime   VARCHAR (8) NULL, 
-Description        VARCHAR(1024) NULL, 
-PRIMARY KEY(FileId) 
-);
-                  </ns:code>
-                </literallayout>
-                </para>
-                <para><emphasis role="italic">Please adapt this query to your db engine.</emphasis></para>
-                <ns:warning>
-                  <para>If you run your database engine on a case sensitive system, please make sure
-                    that the column names are written in camel case (first letter of each word in
-                    uppercase, ex: FileName). In older versions of the FileManager the recommended
-                    case was the uppercase for the whole names. If you use a table from a previous
-                    version on such a case sensitive system, please rename your table's column names
-                    with the right camel case. </para>
-                </ns:warning>
+                <para>You have to create the "UploadedFiles" Table. Please refer to the database
+                  definition section.</para>
               </listitem>
               <listitem>
                 <para>Then use one of the following start methods:</para>
@@ -161,7 +134,7 @@ PRIMARY KEY(FileId)
           </table>
           <ns:warning>
             <para>For the moment only three kinds of external databases were tested: MS SQL, MySQL
-              and PostGRESQL. It should work fine with others DB Engines.</para>
+              and PostGRESQL.</para>
           </ns:warning>
         </sect4>
         <sect4>
@@ -181,58 +154,12 @@ PRIMARY KEY(FileId)
                 <para> the directory structure table (per default filemanagerdirectory),</para>
               </listitem>
             </itemizedlist></para>
-          <para>
-            <literallayout>Here are 3 the tables structures using MS SQL:
-            <ns:code>
-CREATE TABLE uploadedfiles ( 
-FileId             INT NOT NULL AUTO_INCREMENT,
-FileName           VARCHAR(255) NOT NULL, 
-FilePath           VARCHAR(750) NOT NULL, 
-CreationUserId     VARCHAR (200) NULL, 
-CreationDate       VARCHAR (10) NULL, 
-CreationTime       VARCHAR (8) NULL, 
-FileSize           VARCHAR (20) NULL, 
-Locked             TINYINT NULL, 
-LockingUserId      VARCHAR (200) NULL, 
-ModificationUserId VARCHAR (200) NULL, 
-ModificationDate   VARCHAR (10)   NULL, 
-ModificationTime   VARCHAR (8) NULL, 
-Description        VARCHAR(1024) NULL, 
-PRIMARY KEY(FileId) 
-);
-
-CREATE TABLE filemanagercontent (
-id             INT IDENTITY NOT NULL,
-file_id        INT UNIQUE NOT NULL,
-file_content   VARBINARY (max) NULL,
-PRIMARY KEY (id)
-);
-
-CREATE TABLE filemanagerdirectory (
-id INT IDENTITY NOT NULL,
-dir_name             VARCHAR (255) NOT NULL,
-dir_path             VARCHAR (750) UNIQUE NOT NULL,
-creation_user_id     VARCHAR (200) NULL,
-creation_date        DATE NULL,
-creation_time        TIME NULL,
-modification_user_id VARCHAR (200) NULL,
-modification_date    DATE NULL,
-modification_time    TIME NULL,
-is_protected         BIT DEFAULT ((0)) NOT NULL,
-cmdr                 VARCHAR (2048) NULL,
-cod                  VARCHAR (2048) NULL,
-cud                  VARCHAR (2048) NULL,
-cdd                  VARCHAR (2048) NULL,
-cwf                  VARCHAR (2048) NULL,
-cdf                  VARCHAR (2048) NULL,
-PRIMARY KEY (id)
-);
-            </ns:code>
-            </literallayout>
-          </para>
-          <para><emphasis role="italic">Please adapt this query to your db engine.</emphasis></para>
+          <para>Please refer to the database definition section.</para>
           <para>To be able to start the filemanager with the filecontent stored in the database, you
-            have to use the start method corresponding to the following parameters:</para>
+            have to use the start method corresponding to the following parameters, or you can set
+            the <ns:code>xivy_addons_fileManager_activateFileContentInDatabase global variable to
+              "1".</ns:code>
+          </para>
           <table>
             <title><code>FileManager Start method</code> enabling the file storage in database</title>
             <tgroup cols="3">
@@ -313,7 +240,8 @@ PRIMARY KEY (id)
       <title>Security manager</title>
       <para> If the files content are stored in the database, you can activate the security embedded
         in the filemanager. For this purpose you have to use the start method described in the
-        precedent paragraph. </para>
+        precedent paragraph, or you can set the <ns:code>xivy_addons_fileManager_activateSecurity
+          global variable to "1". </ns:code></para>
       <para> The security is based on the Ivy Roles. The filemanager security administrator has all
         the roles and can manage the security of the other roles. This role is set in the following
         global variable: </para>
@@ -339,6 +267,224 @@ PRIMARY KEY (id)
         The returned Object is a
           <code>ch.ivyteam.ivy.addons.filemanager.database.security.AbstractDirectorySecurityController</code>.
         Its API is public and well documented. </para>
+      <important>
+        <para>New created directories will inherit their parent's rights automatically.</para>
+      </important>
+    </sect2>
+    <sect2 xml:id="ivy.addons.filemanager.versioning">
+      <title>File Versioning</title>
+      <para>A new feature has been also added to the filemanager: the possibility to create files
+        versions. A prerequesite is that the files content is stored in the database.</para>
+      <para>To be able to activate this feature you have to <ns:code>set the
+          xivy_addons_fileManager_activateFileVersioning to "1".</ns:code></para>
+      <para> For this feature you will need a more complete database structure (Please refer to the
+        database definition section.): <itemizedlist>
+          <listitem>
+            <para> The files meta informations table (per default uploadedfiles),<emphasis
+                role="bold"> with a new field (versionnumber (int))</emphasis></para>
+          </listitem>
+          <listitem>
+            <para> The file content table (per default filemanagercontent),</para>
+          </listitem>
+          <listitem>
+            <para> The directory structure table (per default filemanagerdirectory),</para>
+          </listitem>
+          <listitem>
+            <para> The file versions table (per default file_versions),</para>
+          </listitem>
+          <listitem>
+            <para> The file versions content table (per default file_version_content),</para>
+          </listitem>
+        </itemizedlist></para>
+      <para>
+        <literallayout>
+        If you start the fileManager and activate the versioning feature, a new information will be shown:
+        <inlinemediaobject><imageobject><imagedata fileref="images/FileManager/fileversioning1.png"/></imageobject></inlinemediaobject>
+        
+        With the context menu you can create a new version of the selected file or you can open the
+        existing versions.
+        <inlinemediaobject><imageobject><imagedata fileref="images/FileManager/fileversioning2.png"/></imageobject></inlinemediaobject>
+        
+        The old files versions can be opened but you cannot edit their content in the file manager. 
+        <inlinemediaobject><imageobject><imagedata fileref="images/FileManager/fileversioning3.png"/></imageobject></inlinemediaobject>
+      </literallayout>
+      </para>
+    </sect2>
+    <sect2 xml:id="ivy.addons.filemanager.dbstructure">
+      <title>The database definition</title>
+      <para>Here are the tables SQL CREATE scripts for creating the file manager database tables.</para>
+      <para><emphasis role="bold">The uploadedFiles Table.</emphasis> This is historically the first
+        and only needed table if you use the file manager with the file system and without file
+        content database storage, security, or versioning.</para>
+      <ns:warning>
+        <para>If you run your database engine on a case sensitive system, please make sure that the
+          column names in this table are written in camel case (first letter of each word in
+          uppercase, ex: FileName), as it is shown here. In older versions of the FileManager the
+          recommended case was the uppercase for the whole names. If you use a table from a previous
+          version on such a case sensitive system, please rename your table's column names with the
+          right camel case. If you run your server on a case insensitive system you don't have to
+          worry about that point.</para>
+      </ns:warning>
+      <literallayout>
+        First for an MS SQL Engine:
+      <ns:code>
+          CREATE TABLE uploadedfiles
+          (
+          FileId             INT IDENTITY NOT NULL,
+          FileName           VARCHAR (255) NULL,
+          FilePath           VARCHAR (750) NULL,
+          CreationUserId     VARCHAR (64) NULL,
+          CreationDate       VARCHAR (10) NULL,
+          CreationTime       VARCHAR (8) NULL,
+          FileSize           VARCHAR (20) NULL,
+          Locked             TINYINT NULL,
+          LockingUserId      VARCHAR (64) NULL,
+          ModificationUserId VARCHAR (64) NULL,
+          ModificationDate   VARCHAR (10) NULL,
+          ModificationTime   VARCHAR (8) NULL,
+          Description        VARCHAR (1024) NULL,
+          versionnumber      INT NULL,  //COMMENT this field is only needed if you start the fileManager with the versioning.
+          PRIMARY KEY (FileId)
+          )
+      </ns:code>
+        And for an MYSQL DB Engine:
+        <ns:code>
+          CREATE TABLE IF NOT EXISTS `uploadedfiles` (
+          `FileId` bigint(20) NOT NULL AUTO_INCREMENT,
+          `FileName` varchar(255) DEFAULT NULL,
+          `FilePath` varchar(750) DEFAULT NULL,
+          `CreationUserId` varchar(64) DEFAULT NULL,
+          `CreationDate` varchar(10) DEFAULT NULL,
+          `CreationTime` varchar(8) DEFAULT NULL,
+          `FileSize` varchar(20) DEFAULT NULL,
+          `Locked` tinyint(1) DEFAULT NULL,
+          `LockingUserId` varchar(64) DEFAULT NULL,
+          `ModificationUserId` varchar(64) DEFAULT NULL,
+          `ModificationDate` varchar(10) DEFAULT NULL,
+          `ModificationTime` varchar(8) DEFAULT NULL,
+          `Description` varchar(1024) DEFAULT NULL,
+          `versionnumber` int(11) DEFAULT '1', //COMMENT this field is only needed if you start the fileManager with the versioning.
+          PRIMARY KEY (`fileid`) 
+          ) ENGINE=InnoDB AUTO_INCREMENT=1 ;
+        </ns:code>
+      </literallayout>
+      <para><emphasis role="bold">The directories and file content tables.</emphasis> Both are
+        necessary if you store the file content in the database.</para>
+      <literallayout>
+        First for an MS SQL Engine:
+        <ns:code>
+          CREATE TABLE directories
+          (
+          id                   INT IDENTITY NOT NULL,
+          dir_name             VARCHAR (255) NOT NULL,
+          dir_path             VARCHAR (750) UNIQUE NOT NULL,
+          creation_user_id     VARCHAR (200) NULL,
+          creation_date        DATE NULL,
+          creation_time        TIME NULL,
+          modification_user_id VARCHAR (200) NULL,
+          modification_date    DATE NULL,
+          modification_time    TIME NULL,
+          is_protected         BIT DEFAULT ((0)) NOT NULL,
+          cmdr                 VARCHAR (2048) NULL,
+          cod                  VARCHAR (2048) NULL,
+          cud                  VARCHAR (2048) NULL,
+          cdd                  VARCHAR (2048) NULL,
+          cwf                  VARCHAR (2048) NULL,
+          cdf                  VARCHAR (2048) NULL,
+          PRIMARY KEY (id)
+          )
+          
+          CREATE TABLE filecontent
+          (
+          id           INT IDENTITY NOT NULL,
+          file_id      INT UNIQUE NOT NULL,
+          file_content VARBINARY (max) NULL,
+          PRIMARY KEY (id)
+          )
+        </ns:code>
+        And for an MYSQL DB Engine:
+        <ns:code>
+          CREATE TABLE IF NOT EXISTS `directories` (
+          `id` bigint(20) NOT NULL AUTO_INCREMENT,
+          `dir_name` varchar(255) NOT NULL,
+          `dir_path` varchar(750) NOT NULL,
+          `creation_user_id` varchar(200) DEFAULT NULL,
+          `creation_date` date DEFAULT NULL,
+          `creation_time` time DEFAULT NULL,
+          `modification_user_id` varchar(200) DEFAULT NULL,
+          `modification_date` date DEFAULT NULL,
+          `modification_time` time DEFAULT NULL,
+          `is_protected` tinyint(1) NOT NULL DEFAULT '0',
+          `cmdr` varchar(2048) DEFAULT NULL,
+          `cod` varchar(2048) DEFAULT NULL,
+          `cud` varchar(2048) DEFAULT NULL,
+          `cdd` varchar(2048) DEFAULT NULL,
+          `cwf` varchar(2048) DEFAULT NULL,
+          `cdf` varchar(2048) DEFAULT NULL,
+          PRIMARY KEY (`id`),
+          UNIQUE KEY `dir_path` (`dir_path`)
+          ) ENGINE=InnoDB AUTO_INCREMENT=1 ;
+          
+          CREATE TABLE IF NOT EXISTS `filecontent` (
+          `id` bigint(20) NOT NULL AUTO_INCREMENT,
+          `file_id` bigint(20) NOT NULL,
+          `file_content` longblob,
+          PRIMARY KEY (`id`)
+          ) ENGINE=InnoDB AUTO_INCREMENT=1 ;
+        </ns:code>
+      </literallayout>
+      <para><emphasis role="bold">The file versioning tables.</emphasis> Both are necessary if you
+        use the file versioning feature.</para>
+      <literallayout>
+        First for an MS SQL Engine:
+        <ns:code>
+          CREATE TABLE file_versions
+          (
+          versionid      BIGINT IDENTITY NOT NULL,
+          file_id        INT NOT NULL,
+          version_number INT NULL,
+          fvc_id         INT NULL,
+          file_name      NVARCHAR (255) NOT NULL,
+          cdate          DATE NULL,
+          ctime          TIME NULL,
+          cuser          NVARCHAR (255) NULL,
+          PRIMARY KEY (versionid)
+          )
+          
+          CREATE TABLE file_version_content
+          (
+          fvcid      BIGINT IDENTITY NOT NULL,
+          version_id BIGINT NULL,
+          content    VARBINARY (max) NULL,
+          PRIMARY KEY (fvcid)
+          )
+        </ns:code>
+        And for an MYSQL DB Engine:
+        <ns:code>
+          CREATE TABLE IF NOT EXISTS `file_versions` (
+          `versionid` bigint(20) NOT NULL AUTO_INCREMENT,
+          `file_id` bigint(20) NOT NULL,
+          `version_number` int(11) NOT NULL,
+          `fvc_id` bigint(20) DEFAULT NULL,
+          `file_name` varchar(255) NOT NULL,
+          `cdate` date DEFAULT NULL,
+          `ctime` time DEFAULT NULL,
+          `cuser` varchar(255) DEFAULT NULL,
+          PRIMARY KEY (`versionid`)
+          ) ENGINE=InnoDB AUTO_INCREMENT=1 ;
+          
+          CREATE TABLE IF NOT EXISTS `file_version_content` (
+          `fvcid` bigint(20) NOT NULL AUTO_INCREMENT,
+          `version_id` bigint(20) NOT NULL,
+          `content` longblob,
+          PRIMARY KEY (`fvcid`)
+          ) ENGINE=InnoDB AUTO_INCREMENT=1 ;
+        </ns:code>
+      </literallayout>
+      <para>Here is the representation of the tables relationships within a My SQL database server:
+              <inlinemediaobject><imageobject><imagedata fileref="images/FileManager/database.png"
+          /></imageobject></inlinemediaobject>
+      </para>
     </sect2>
     <sect2 xml:id="ivy.addons.filemanager.methods">
       <title>Important methods</title>
@@ -466,7 +612,7 @@ PRIMARY KEY (id)
             implement directly this last rich dialog into your applications.</para>
         </listitem>
         <listitem>
-          <para>The Second Group contains 7 Rich Dialogs other than the FileManager:<ns:orderedlist>
+          <para>The Second Group contains 7 Rich Dialogs other than the FileManager.<ns:orderedlist>
               <listitem>
                 <para>The <ns:emphasis>FileActionOptionPane</ns:emphasis>: it should be used as
                   Synchronous "popup" Window to perform an action (edit, print, download) on a given
@@ -519,5 +665,10 @@ PRIMARY KEY (id)
             </ns:orderedlist></para>
         </listitem>
       </itemizedlist></para>
+    <ns:warning>
+      <para>These Richdialogs do not support the new features like storing the file content in the
+        database, file versioning or the security. For the moment, only the FIleManager RDC support
+        these features.</para>
+    </ns:warning>
   </sect1>
 </chapter>
