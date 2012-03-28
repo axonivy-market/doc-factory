@@ -2,6 +2,7 @@
 <richDialogDescriptor>
     <description>This RDC allows to give a Filename and optionally choose an extension and a future place to store the created File on the server.&#xD;
 This can be very handy in processes that create files and where the user should choose the name of the created file.</description>
+    <autoScreenshot>true</autoScreenshot>
     <method>
         <name>_close</name>
         <description>Called from the CTRL + W or ESCAPE Key event</description>

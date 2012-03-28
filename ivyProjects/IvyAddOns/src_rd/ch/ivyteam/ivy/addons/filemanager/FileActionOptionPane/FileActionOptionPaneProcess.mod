@@ -1,6 +1,6 @@
 [Ivy]
-[>Created: Mon Oct 11 12:59:51 CEST 2010]
-125F9B9E8C5A4087 3.13 #module
+[>Created: Wed Mar 28 10:09:25 EDT 2012]
+125F9B9E8C5A4087 3.17 #module
 >Proto >Proto Collection #zClass
 Fs0 FileActionOptionPaneProcess Big #zClass
 Fs0 RD #cInfo
@@ -166,7 +166,10 @@ if(in.ivyDbName.trim().equals("")){
 }
 out.panelId = System.nanoTime();
 
-' #txt
+if(ivy.var.xivy_addons_fileManager_activateUseOfIvySystemDatabase.equals("1"))
+{
+		out.startIvySystemDb=true;
+}' #txt
 Fs0 f4 type ch.ivyteam.ivy.addons.filemanager.FileActionOptionPane.FileActionOptionPaneData #txt
 Fs0 f4 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
