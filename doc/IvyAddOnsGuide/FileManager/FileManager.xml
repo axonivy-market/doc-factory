@@ -268,7 +268,11 @@
           <code>ch.ivyteam.ivy.addons.filemanager.database.security.AbstractDirectorySecurityController</code>.
         Its API is public and well documented. </para>
       <important>
-        <para>New created directories will inherit their parent's rights automatically.</para>
+        <para>New created directories will inherit their parent's rights automatically. </para>
+        <para>If a new Root directory is created, then the role everybody will be able to open the
+          directory, to write and delete the files. For example if you start the filemanager with
+          files/meetings and the root directory "files" does not exist, then it will be
+          automatically created with the above listed rights. </para>
       </important>
     </sect2>
     <sect2 xml:id="ivy.addons.filemanager.versioning">
@@ -319,7 +323,7 @@
       <ns:warning>
         <para>If you run your database engine on a case sensitive system, please make sure that the
           column names in this table are written in camel case (first letter of each word in
-          uppercase, ex: FileName), as it is shown here. In older versions of the FileManager the
+          uppercase, ex: FileName), as it is shown here. In early versions of the FileManager the
           recommended case was the uppercase for the whole names. If you use a table from a previous
           version on such a case sensitive system, please rename your table's column names with the
           right camel case. If you run your server on a case insensitive system you don't have to
