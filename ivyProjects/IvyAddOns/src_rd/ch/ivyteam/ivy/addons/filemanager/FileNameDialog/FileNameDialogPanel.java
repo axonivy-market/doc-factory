@@ -115,8 +115,7 @@ private RTextField getFileNameTextField() {
 		fileNameTextField.setEventDeliveryMode(UlcEventCategories.VALUE_CHANGED_EVENT_CATEGORY, UlcEventConstants.ASYNCHRONOUS_MODE);
 		fileNameTextField.setEventDeliveryMode(UlcEventCategories.KEY_EVENT_CATEGORY, UlcEventConstants.ASYNCHRONOUS_MODE);
 		fileNameTextField.setStyleProperties("{/font {/name \"Dialog\"/size \"12\"/style \"PLAIN\"}/insetsBottom \"5\"/insetsTop \"5\"/fill \"HORIZONTAL\"/insetsRight \"5\"/insetsLeft \"5\"/weightX \"1\"}");
-		fileNameTextField.setMandatory(true);
-		fileNameTextField.setValidation("StringWordsSpaceSeparated");
+		fileNameTextField.setMandatory(false);
 		fileNameTextField.setName("fileNameTextField");
 	}
 	return fileNameTextField;
