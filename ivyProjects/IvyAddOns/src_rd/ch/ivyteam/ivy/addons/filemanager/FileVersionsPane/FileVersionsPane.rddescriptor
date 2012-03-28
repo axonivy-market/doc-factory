@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<richDialogDescriptor>
+    <autoScreenshot>true</autoScreenshot>
+    <startMethod>
+        <name>start</name>
+        <description>Default Rich Dialog start
+This method can not be changed or deleted!</description>
+    </startMethod>
+    <startMethod>
+        <name>start</name>
+        <description>Starts and dipslay the versions created for the DocumentOnServer denoted&#xD;
+by the given id.&#xD;
+Parameter: The id of the file whose versions will be displayed</description>
+        <inputParameter>
+            <name>documentOnServerId</name>
+            <description>The id of the file whose versions will be displayed</description>
+            <parameterType>Number</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </inputParameter>
+        <outputParameter>
+            <name>selectedFileVersion</name>
+            <description>The selected FIleVersion Object if needed</description>
+            <parameterType>ch.ivyteam.ivy.addons.filemanager.FileVersion</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </outputParameter>
+    </startMethod>
+    <startMethod>
+        <name>start</name>
+        <description>Starts and displays the versions created for the given DocumentOnServer.&#xD;
+Parameter: The DocumentOnServer whose versions will be displayed</description>
+        <inputParameter>
+            <name>parentDocumentOnServer</name>
+            <description>The DocumentOnServer whose versions will be displayed</description>
+            <parameterType>ch.ivyteam.ivy.addons.filemanager.DocumentOnServer</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </inputParameter>
+        <outputParameter>
+            <name>selectedFileVersion</name>
+            <description>The selected FileVersion Object if needed</description>
+            <parameterType>ch.ivyteam.ivy.addons.filemanager.FileVersion</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </outputParameter>
+    </startMethod>
+    <startMethod>
+        <name>start</name>
+        <description>Starts and dipslay the versions created for the DocumentOnServer denoted&#xD;
+by the given id.&#xD;
+Parameter: &#xD;
+1. The id of the file whose versions will be displayed&#xD;
+2. The FileVersioningController object that is responsible to control the file Versioning.</description>
+        <inputParameter>
+            <name>parentFileId</name>
+            <description>The id of the file whose versions will be displayed</description>
+            <parameterType>Number</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </inputParameter>
+        <inputParameter>
+            <name>fileVersioningController</name>
+            <description>The FileVersioningController object taht is responsible to control the file Versioning.</description>
+            <parameterType>ch.ivyteam.ivy.addons.filemanager.database.versioning.FileVersioningController</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </inputParameter>
+        <outputParameter>
+            <name>selectedFileVersion</name>
+            <description>The selected FIleVersion Object if needed</description>
+            <parameterType>ch.ivyteam.ivy.addons.filemanager.FileVersion</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </outputParameter>
+    </startMethod>
+    <startMethod>
+        <name>start</name>
+        <description>Starts and displays the versions created for the given DocumentOnServer.&#xD;
+Parameter: &#xD;
+1. The DocumentOnServer whose versions will be displayed&#xD;
+2. The FileVersioningController object that is responsible to control the file Versioning.</description>
+        <inputParameter>
+            <name>parentDocumentOnServer</name>
+            <description>The DocumentOnServer whose versions will be displayed</description>
+            <parameterType>ch.ivyteam.ivy.addons.filemanager.DocumentOnServer</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </inputParameter>
+        <inputParameter>
+            <name>fileVersioningController</name>
+            <description>The FileVersioningController object taht is responsible to control the file Versioning.</description>
+            <parameterType>ch.ivyteam.ivy.addons.filemanager.database.versioning.FileVersioningController</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </inputParameter>
+        <outputParameter>
+            <name>selectedFileVersion</name>
+            <description>The selected FIleVersion Object if needed</description>
+            <parameterType>ch.ivyteam.ivy.addons.filemanager.FileVersion</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </outputParameter>
+    </startMethod>
+    <property>
+        <name>guid</name>
+        <value>13577559B1217425</value>
+        <readOnly>true</readOnly>
+    </property>
+    <property>
+        <name>version</name>
+        <value>1</value>
+        <readOnly>true</readOnly>
+    </property>
+    <property>
+        <name>binary</name>
+        <value>false</value>
+        <readOnly>true</readOnly>
+    </property>
+</richDialogDescriptor>

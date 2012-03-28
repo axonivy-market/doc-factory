@@ -1,0 +1,10 @@
+# Xpert.ivy RichDialog Event-Mapping Data
+# 2012-02-13 11:47:45 | 4.2.0.38102 | 1.0
+~.Table@LIST_SELECTION[]--->ch.ivyteam.ivy.process.ProcessStart:13577559B1E4552F/1357795FE332E016 # FileVersionsPaneProcess.mod/selectionChanged
+~@RD_METHODCALL[start(ch.ivyteam.ivy.addons.filemanager.DocumentOnServer,ch.ivyteam.ivy.addons.filemanager.database.versioning.FileVersioningController)]--->ch.ivyteam.ivy.process.ProcessStart:13577559B1E4552F/1357786AA0B2C228
+~@RD_METHODCALL[start(ch.ivyteam.ivy.addons.filemanager.DocumentOnServer)]--->ch.ivyteam.ivy.process.ProcessStart:13577559B1E4552F/135776F54AAF5D45
+~@RD_METHODCALL[start(Number)]--->ch.ivyteam.ivy.process.ProcessStart:13577559B1E4552F/135776F4A7177632
+~.Table@VALUE_CHANGED[]--->ch.ivyteam.ivy.process.ProcessStart:13577559B1E4552F/1357795FE332E016 # FileVersionsPaneProcess.mod/selectionChanged
+~@RD_METHODCALL[start()]--->ch.ivyteam.ivy.process.ProcessStart:13577559B1E4552F/13577559B37213E0
+~.Table@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:13577559B1E4552F/135779417C8E8B2E # FileVersionsPaneProcess.mod/openSelectedVersion
+~@RD_METHODCALL[start(Number,ch.ivyteam.ivy.addons.filemanager.database.versioning.FileVersioningController)]--->ch.ivyteam.ivy.process.ProcessStart:13577559B1E4552F/1357786A11BD08CA

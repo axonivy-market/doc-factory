@@ -1,0 +1,1 @@
+{/value ""/description "This is the name of the DB Schema where the file manager\'s table are located.\nMost of the DB Engines like PostgreSQL support this feature.\nDefault is an empty String: no Schema will be predefined and the default one will be used if\napplicable.\n"/environments * }

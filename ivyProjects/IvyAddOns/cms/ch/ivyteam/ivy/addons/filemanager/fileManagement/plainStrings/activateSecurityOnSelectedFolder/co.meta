@@ -1,0 +1,4 @@
+co: name={activateSecurityOnSelectedFolder} description={} changed={2012-01-24 20:07:11 CET} changedby={ec} visualorder={0} guid={13511195EC256B4F} parentguid={} typeguid={E6AFEA2034301F66} id={} parentid={} typeid={}
+val: guid={1351119C5DFBB0B0} datatype={} isdefault={false} langid={fr} description={} validfrom={2012-01-24 20:03:16 CET} validto={} changed={2012-01-24 20:07:11 CET} changedby={ec} properties={} id={}
+val: guid={1351119D11635201} datatype={} isdefault={false} langid={de} description={} validfrom={2012-01-24 20:03:19 CET} validto={} changed={2012-01-24 20:07:11 CET} changedby={ec} properties={} id={}
+val: guid={13511195ECC4BF9A} datatype={} isdefault={true} langid={en} description={} validfrom={2012-01-24 20:02:49 CET} validto={} changed={2012-01-24 20:07:11 CET} changedby={ec} properties={} id={}
