@@ -1,5 +1,5 @@
 [Ivy]
-[>Created: Tue Mar 13 08:21:18 EDT 2012]
+[>Created: Tue Mar 27 12:02:31 EDT 2012]
 125FDB0198DDACE8 3.17 #module
 >Proto >Proto Collection #zClass
 Fs0 FileListTableProcess Big #zClass
@@ -366,6 +366,7 @@ import ch.ivyteam.ivy.addons.filemanager.database.AbstractFileManagementHandler;
 import ch.ivyteam.ivy.addons.filemanager.DocumentOnServer;
 import com.ulcjava.base.application.ULCListSelectionModel;
 import ch.ivyteam.ivy.addons.filemanager.FileHandler;
+import ch.ivyteam.ivy.addons.filemanager.database.FileManagementIvySystemDBHandler;
 
 import ch.ivyteam.ivy.event.SystemEventCategory;
 
@@ -395,12 +396,17 @@ if(in.#DbTableName==null || in.DbTableName.trim().equalsIgnoreCase("")){
 try{
 	if(in.#fileManagementHandler==null)
 	{//will not be played if we start with IvySystemDB
-		if(in.schemaName.trim().equalsIgnoreCase(""))
-		{//no schemata setted
-			in.fileManagementHandler=AbstractFileManagementHandler.getInstance([in.ivyConnexionDBName, in.DbTableName]);
-		}else
-		{//start within a schemata
-			in.fileManagementHandler=AbstractFileManagementHandler.getInstance([in.ivyConnexionDBName, in.DbTableName, in.schemaName]);
+		if(ivy.var.xivy_addons_fileManager_activateUseOfIvySystemDatabase.equals("1"))
+		{
+			in.fileManagementHandler = new FileManagementIvySystemDBHandler();
+		}else{
+			if(in.schemaName.trim().equalsIgnoreCase(""))
+			{//no schemata setted
+				in.fileManagementHandler=AbstractFileManagementHandler.getInstance([in.ivyConnexionDBName, in.DbTableName]);
+			}else
+			{//start within a schemata
+				in.fileManagementHandler=AbstractFileManagementHandler.getInstance([in.ivyConnexionDBName, in.DbTableName, in.schemaName]);
+			}
 		}
 	}
 }catch(Throwable t){

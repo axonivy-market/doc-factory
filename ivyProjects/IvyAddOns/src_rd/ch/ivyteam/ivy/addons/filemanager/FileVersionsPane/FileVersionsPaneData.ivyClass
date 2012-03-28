@@ -1,0 +1,7 @@
+FileVersionsPaneData #class
+ch.ivyteam.ivy.addons.filemanager.FileVersionsPane #namespace
+errorUtil ch.ivyteam.ivy.addons.filemanager.ErrorUtil #field
+fileVersionsList List<ch.ivyteam.ivy.addons.filemanager.FileVersion> #field
+fileVersioningController ch.ivyteam.ivy.addons.filemanager.database.versioning.FileVersioningController #field
+selectedFileVersion ch.ivyteam.ivy.addons.filemanager.FileVersion #field
+parentDocumentOnServer ch.ivyteam.ivy.addons.filemanager.DocumentOnServer #field
