@@ -1027,6 +1027,18 @@ If you redirect the FileManager to the new destination it will try to delete the
             <nullPermitted>false</nullPermitted>
         </inputParameter>
     </method>
+    <method>
+        <name>getFileVersioningController</name>
+        <description>If the file Versioning is activated (See related global Variable), &#xD;
+returns the FileVersioningController java Object.&#xD;
+Else returns null.</description>
+        <outputParameter>
+            <name>fileVersioningController</name>
+            <description></description>
+            <parameterType>ch.ivyteam.ivy.addons.filemanager.database.versioning.FileVersioningController</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </outputParameter>
+    </method>
     <startMethod>
         <name>startAsPathChooser</name>
         <description>start the RDC as Path chooser. The user will be able to make a new directory, no actions on Files are possible.&#xD;

@@ -1,5 +1,5 @@
 # Xpert.ivy RichDialog Event-Mapping Data
-# 2012-03-20 09:37:07 | 4.3.0.39108 | 1.0
+# 2012-04-02 11:05:55 | 4.3.0.39177 | 1.0
 ~.cancelButton@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/121ECCB8283CD1EF
 ~.copyMenuItem@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11ED95C2B7BDD5B8
 ~.delete2Button@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11D438D57924C5D9
@@ -9,7 +9,7 @@
 ~.deleteDirectoryMenuItem@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11EB53CBAE7DBC6A
 ~.deleteMenuItem@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11D438D57924C5D9
 ~.desktopHandlerPanel@RD_EVENT[fileCoupleModifiedReported]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11E8D090292C69A8
-~.desktopHandlerPanel@RD_EVENT[forceDocsUnlock]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/1363052217DFA004 # FileManagerProcess.mod/forceUnlockDocuments
+~.desktopHandlerPanel@RD_EVENT[forceDocsUnlock]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/1363052217DFA004
 ~.desktopHandlerPanel@RD_EVENT[isFileEditableReported]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/12470C7BEA8F153A
 ~.desktopHandlerPanel@RD_EVENT[osUserNameChanged]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11E454BBE55F1836
 ~.desktopHandlerPanel@RD_EVENT[unlockFiles]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11E44AB51B132D31
@@ -112,6 +112,7 @@
 ~@RD_METHODCALL[getFileManagementHandler()]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11F5FC4BC829D19A
 ~@RD_METHODCALL[getFileManagerSecurityController()]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/132C7453DFBBB4F0
 ~@RD_METHODCALL[getFileUploadMaxSize()]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/130AC89BFE7CC2A1
+~@RD_METHODCALL[getFileVersioningController()]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/13673969FBBCE730
 ~@RD_METHODCALL[getIsRecursive()]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11ED3C35BD2F9DBA
 ~@RD_METHODCALL[getLastFileUploaded()]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11D6BB6133451C6F
 ~@RD_METHODCALL[getSelectedDirectoryPath()]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11E8C4DEA7966282
