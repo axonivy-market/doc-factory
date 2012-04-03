@@ -268,11 +268,14 @@
           <code>ch.ivyteam.ivy.addons.filemanager.database.security.AbstractDirectorySecurityController</code>.
         Its API is public and well documented. </para>
       <important>
-        <para>New created directories will inherit their parent's rights automatically. </para>
+        <para>New created directories will have the same rights as their direct parent directory. If
+          the rights on the parent directory are changed after the child directory creation, the
+          child directory rights remain unchanged.</para>
         <para>If a new Root directory is created, then the role everybody will be able to open the
           directory, to write and delete the files. For example if you start the filemanager with
           files/meetings and the root directory "files" does not exist, then it will be
-          automatically created with the above listed rights. </para>
+          automatically created with the above listed rights. The directory "meetings" will be
+          created with the "files" same rights.</para>
       </important>
     </sect2>
     <sect2 xml:id="ivy.addons.filemanager.versioning">
@@ -300,8 +303,11 @@
             <para> The file versions content table (per default file_version_content),</para>
           </listitem>
         </itemizedlist></para>
-      <para>
-        <literallayout>
+      <para>The File Versioning system is controlled through a FileVersioningController java object
+        (ch.ivyteam.ivy.addons.filemanager.database.versioning.FileVersioningController.java). You
+        can get a reference on this object by calling the FileManager's
+        getFileVersioningController() method. Its public API is
+        documented.<literallayout>
         If you start the fileManager and activate the versioning feature, a new information will be shown:
         <inlinemediaobject><imageobject><imagedata fileref="images/FileManager/fileversioning1.png"/></imageobject></inlinemediaobject>
         
@@ -311,180 +317,29 @@
         
         The old files versions can be opened but you cannot edit their content in the file manager. 
         <inlinemediaobject><imageobject><imagedata fileref="images/FileManager/fileversioning3.png"/></imageobject></inlinemediaobject>
-      </literallayout>
-      </para>
+      </literallayout></para>
     </sect2>
     <sect2 xml:id="ivy.addons.filemanager.dbstructure">
       <title>The database definition</title>
-      <para>Here are the tables SQL CREATE scripts for creating the file manager database tables.</para>
-      <para><emphasis role="bold">The uploadedFiles Table.</emphasis> This is historically the first
-        and only needed table if you use the file manager with the file system and without file
-        content database storage, security, or versioning.</para>
+      <para>The DDL for MS SQL, MySQL and PostGreSQL has been included into the IvyAddons cms under:
+        /ch/ivyteam/ivy/addons/filemanager/techData/createTablesDDL.
+              <inlinemediaobject><imageobject><imagedata fileref="images/FileManager/DDLinCMS.png"
+          /></imageobject></inlinemediaobject></para>
+      <para><emphasis role="bold">The uploadedFiles Table.</emphasis> is historically the first and
+        only needed table if you use the file manager with the file system and without file content
+        database storage, security, or versioning.</para>
       <ns:warning>
         <para>If you run your database engine on a case sensitive system, please make sure that the
-          column names in this table are written in camel case (first letter of each word in
-          uppercase, ex: FileName), as it is shown here. In early versions of the FileManager the
-          recommended case was the uppercase for the whole names. If you use a table from a previous
-          version on such a case sensitive system, please rename your table's column names with the
-          right camel case. If you run your server on a case insensitive system you don't have to
-          worry about that point.</para>
+          column names in the uploadedfiles table are written in camel case (first letter of each
+          word in uppercase, ex: FileName), as it is shown on the picture above. In early versions
+          of the FileManager the recommended case was the uppercase for the whole names. If you use
+          a table from an early version on such a case sensitive system, please rename your table's
+          column names with the right camel case. If you run your server on a case insensitive
+          system you don't have to worry about that point. All the other tables are newer and do not
+          need any camel case.</para>
       </ns:warning>
       <literallayout>
-        First for an MS SQL Engine:
-      <ns:code>
-          CREATE TABLE uploadedfiles
-          (
-          FileId             INT IDENTITY NOT NULL,
-          FileName           VARCHAR (255) NULL,
-          FilePath           VARCHAR (750) NULL,
-          CreationUserId     VARCHAR (64) NULL,
-          CreationDate       VARCHAR (10) NULL,
-          CreationTime       VARCHAR (8) NULL,
-          FileSize           VARCHAR (20) NULL,
-          Locked             TINYINT NULL,
-          LockingUserId      VARCHAR (64) NULL,
-          ModificationUserId VARCHAR (64) NULL,
-          ModificationDate   VARCHAR (10) NULL,
-          ModificationTime   VARCHAR (8) NULL,
-          Description        VARCHAR (1024) NULL,
-          versionnumber      INT NULL,  //COMMENT this field is only needed if you start the fileManager with the versioning.
-          PRIMARY KEY (FileId)
-          )
-      </ns:code>
-        And for an MYSQL DB Engine:
-        <ns:code>
-          CREATE TABLE IF NOT EXISTS `uploadedfiles` (
-          `FileId` bigint(20) NOT NULL AUTO_INCREMENT,
-          `FileName` varchar(255) DEFAULT NULL,
-          `FilePath` varchar(750) DEFAULT NULL,
-          `CreationUserId` varchar(64) DEFAULT NULL,
-          `CreationDate` varchar(10) DEFAULT NULL,
-          `CreationTime` varchar(8) DEFAULT NULL,
-          `FileSize` varchar(20) DEFAULT NULL,
-          `Locked` tinyint(1) DEFAULT NULL,
-          `LockingUserId` varchar(64) DEFAULT NULL,
-          `ModificationUserId` varchar(64) DEFAULT NULL,
-          `ModificationDate` varchar(10) DEFAULT NULL,
-          `ModificationTime` varchar(8) DEFAULT NULL,
-          `Description` varchar(1024) DEFAULT NULL,
-          `versionnumber` int(11) DEFAULT '1', //COMMENT this field is only needed if you start the fileManager with the versioning.
-          PRIMARY KEY (`fileid`) 
-          ) ENGINE=InnoDB AUTO_INCREMENT=1 ;
-        </ns:code>
-      </literallayout>
-      <para><emphasis role="bold">The directories and file content tables.</emphasis> Both are
-        necessary if you store the file content in the database.</para>
-      <literallayout>
-        First for an MS SQL Engine:
-        <ns:code>
-          CREATE TABLE directories
-          (
-          id                   INT IDENTITY NOT NULL,
-          dir_name             VARCHAR (255) NOT NULL,
-          dir_path             VARCHAR (750) UNIQUE NOT NULL,
-          creation_user_id     VARCHAR (200) NULL,
-          creation_date        DATE NULL,
-          creation_time        TIME NULL,
-          modification_user_id VARCHAR (200) NULL,
-          modification_date    DATE NULL,
-          modification_time    TIME NULL,
-          is_protected         BIT DEFAULT ((0)) NOT NULL,
-          cmdr                 VARCHAR (2048) NULL,
-          cod                  VARCHAR (2048) NULL,
-          cud                  VARCHAR (2048) NULL,
-          cdd                  VARCHAR (2048) NULL,
-          cwf                  VARCHAR (2048) NULL,
-          cdf                  VARCHAR (2048) NULL,
-          PRIMARY KEY (id)
-          )
-          
-          CREATE TABLE filecontent
-          (
-          id           INT IDENTITY NOT NULL,
-          file_id      INT UNIQUE NOT NULL,
-          file_content VARBINARY (max) NULL,
-          PRIMARY KEY (id)
-          )
-        </ns:code>
-        And for an MYSQL DB Engine:
-        <ns:code>
-          CREATE TABLE IF NOT EXISTS `directories` (
-          `id` bigint(20) NOT NULL AUTO_INCREMENT,
-          `dir_name` varchar(255) NOT NULL,
-          `dir_path` varchar(750) NOT NULL,
-          `creation_user_id` varchar(200) DEFAULT NULL,
-          `creation_date` date DEFAULT NULL,
-          `creation_time` time DEFAULT NULL,
-          `modification_user_id` varchar(200) DEFAULT NULL,
-          `modification_date` date DEFAULT NULL,
-          `modification_time` time DEFAULT NULL,
-          `is_protected` tinyint(1) NOT NULL DEFAULT '0',
-          `cmdr` varchar(2048) DEFAULT NULL,
-          `cod` varchar(2048) DEFAULT NULL,
-          `cud` varchar(2048) DEFAULT NULL,
-          `cdd` varchar(2048) DEFAULT NULL,
-          `cwf` varchar(2048) DEFAULT NULL,
-          `cdf` varchar(2048) DEFAULT NULL,
-          PRIMARY KEY (`id`),
-          UNIQUE KEY `dir_path` (`dir_path`)
-          ) ENGINE=InnoDB AUTO_INCREMENT=1 ;
-          
-          CREATE TABLE IF NOT EXISTS `filecontent` (
-          `id` bigint(20) NOT NULL AUTO_INCREMENT,
-          `file_id` bigint(20) NOT NULL,
-          `file_content` longblob,
-          PRIMARY KEY (`id`)
-          ) ENGINE=InnoDB AUTO_INCREMENT=1 ;
-        </ns:code>
-      </literallayout>
-      <para><emphasis role="bold">The file versioning tables.</emphasis> Both are necessary if you
-        use the file versioning feature.</para>
-      <literallayout>
-        First for an MS SQL Engine:
-        <ns:code>
-          CREATE TABLE file_versions
-          (
-          versionid      BIGINT IDENTITY NOT NULL,
-          file_id        INT NOT NULL,
-          version_number INT NULL,
-          fvc_id         INT NULL,
-          file_name      NVARCHAR (255) NOT NULL,
-          cdate          DATE NULL,
-          ctime          TIME NULL,
-          cuser          NVARCHAR (255) NULL,
-          PRIMARY KEY (versionid)
-          )
-          
-          CREATE TABLE file_version_content
-          (
-          fvcid      BIGINT IDENTITY NOT NULL,
-          version_id BIGINT NULL,
-          content    VARBINARY (max) NULL,
-          PRIMARY KEY (fvcid)
-          )
-        </ns:code>
-        And for an MYSQL DB Engine:
-        <ns:code>
-          CREATE TABLE IF NOT EXISTS `file_versions` (
-          `versionid` bigint(20) NOT NULL AUTO_INCREMENT,
-          `file_id` bigint(20) NOT NULL,
-          `version_number` int(11) NOT NULL,
-          `fvc_id` bigint(20) DEFAULT NULL,
-          `file_name` varchar(255) NOT NULL,
-          `cdate` date DEFAULT NULL,
-          `ctime` time DEFAULT NULL,
-          `cuser` varchar(255) DEFAULT NULL,
-          PRIMARY KEY (`versionid`)
-          ) ENGINE=InnoDB AUTO_INCREMENT=1 ;
-          
-          CREATE TABLE IF NOT EXISTS `file_version_content` (
-          `fvcid` bigint(20) NOT NULL AUTO_INCREMENT,
-          `version_id` bigint(20) NOT NULL,
-          `content` longblob,
-          PRIMARY KEY (`fvcid`)
-          ) ENGINE=InnoDB AUTO_INCREMENT=1 ;
-        </ns:code>
-      </literallayout>
+   </literallayout>
       <para>Here is the representation of the tables relationships within a My SQL database server:
               <inlinemediaobject><imageobject><imagedata fileref="images/FileManager/database.png"
           /></imageobject></inlinemediaobject>
@@ -671,7 +526,7 @@
       </itemizedlist></para>
     <ns:warning>
       <para>These Richdialogs do not support the new features like storing the file content in the
-        database, file versioning or the security. For the moment, only the FIleManager RDC support
+        database, file versioning or the security. For the moment, only the FileManager RDC support
         these features.</para>
     </ns:warning>
   </sect1>
