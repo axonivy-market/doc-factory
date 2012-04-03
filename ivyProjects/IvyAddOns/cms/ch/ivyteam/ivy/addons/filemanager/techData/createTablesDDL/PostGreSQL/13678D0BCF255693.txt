@@ -1,0 +1,136 @@
+CREATE SEQUENCE uploadedfiles_sequence
+	INCREMENT 1
+	MINVALUE 1
+	MAXVALUE 9223372036854775807
+	START 1
+	CACHE 1;
+
+CREATE TABLE UploadedFiles
+(
+	FileId integer NOT NULL DEFAULT nextval('uploadedfiles_sequence'::regclass),
+	FileName character varying(255),
+	FilePath character varying(750),
+	CreationUserId character varying(64),
+	CreationDate character varying(10),
+	CreationTime character varying(8),
+	FileSize character varying(20),
+	Locked integer,
+	LockingUserId character varying(64),
+	ModificationUserId character varying(64),
+	ModificationDate character varying(10),
+	ModificationTime character varying(8),
+	Description character varying(1024),
+	versionnumber integer, /*This field is only needed if you use the fileManager with the versioning.*/
+	CONSTRAINT uploadedfiles_pkey PRIMARY KEY (fileid)
+	)
+	WITH (
+	OIDS=FALSE
+);
+
+CREATE SEQUENCE directories_sequence
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+  
+CREATE TABLE directories
+  (
+  id integer NOT NULL DEFAULT nextval('directories_sequence'::regclass),
+  dir_name character varying(255) NOT NULL,
+  dir_path character varying(750) NOT NULL,
+  creation_user_id character varying(200),
+  creation_date date,
+  creation_time time without time zone,
+  modification_user_id character varying(200),
+  modification_date date,
+  modification_time time without time zone,
+  is_protected smallint NOT NULL DEFAULT 0,
+  cmdr character varying(2048),
+  cod character varying(2048),
+  cud character varying(2048),
+  cdd character varying(2048),
+  cwf character varying(2048),
+  cdf character varying(2048),
+  CONSTRAINT directories_pkey PRIMARY KEY (id),
+  CONSTRAINT directories_dir_path_key UNIQUE (dir_path)
+  )
+  WITH (
+  OIDS=FALSE
+);
+  
+CREATE SEQUENCE filecontent_sequence
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+  
+CREATE TABLE filecontent
+  (
+  id integer NOT NULL DEFAULT nextval('filecontent_sequence'::regclass),
+  file_id integer NOT NULL,
+  file_content bytea,
+  CONSTRAINT filecontent_pkey PRIMARY KEY (id),
+  CONSTRAINT filecontent_file_id_fkey FOREIGN KEY (file_id)
+	REFERENCES UploadedFiles (fileid) MATCH SIMPLE
+	ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT fk_filecontent_file_id FOREIGN KEY (file_id)
+	REFERENCES UploadedFiles (fileid) MATCH SIMPLE
+	ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT filecontent_file_id_key UNIQUE (file_id)
+  )
+  WITH (
+  OIDS=FALSE
+);
+
+CREATE SEQUENCE fileversions_sequence
+        INCREMENT 1
+        MINVALUE 1
+        MAXVALUE 9223372036854775807
+        START 1
+        CACHE 1;
+        
+CREATE TABLE file_versions
+(
+  versionid integer NOT NULL DEFAULT nextval('fileversions_sequence'::regclass),
+  file_id integer NOT NULL,
+  version_number integer NOT NULL,
+  fvc_id integer,
+  file_name character varying(255),
+  cdate date,
+  ctime time without time zone,
+  cuser character varying(255),
+  CONSTRAINT file_versions_pkey PRIMARY KEY (versionid),
+  CONSTRAINT file_versions_file_id_fkey FOREIGN KEY (file_id)
+      REFERENCES UploadedFiles (fileid) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT fk_file_versions_file_id FOREIGN KEY (file_id)
+      REFERENCES UploadedFiles (fileid) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+WITH (
+  OIDS=FALSE
+);
+
+CREATE SEQUENCE fileversioncontent_sequence
+        INCREMENT 1
+        MINVALUE 1
+        MAXVALUE 9223372036854775807
+        START 1
+        CACHE 1;
+        
+CREATE TABLE file_version_content
+(
+  fvcid integer NOT NULL DEFAULT nextval('fileversioncontent_sequence'::regclass),
+  version_id integer NOT NULL,
+  content bytea,
+  CONSTRAINT file_version_content_pkey PRIMARY KEY (fvcid),
+  CONSTRAINT file_version_content_version_id_fkey FOREIGN KEY (version_id)
+      REFERENCES file_versions (versionid) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT file_version_content_version_id_key UNIQUE (version_id)
+)
+WITH (
+  OIDS=FALSE
+);
