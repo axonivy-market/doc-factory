@@ -1,0 +1,64 @@
+CREATE TABLE IF NOT EXISTS `uploadedfiles` (
+    `FileId` bigint(20) NOT NULL AUTO_INCREMENT,
+    `FileName` varchar(255) DEFAULT NULL,
+    `FilePath` varchar(750) DEFAULT NULL,
+    `CreationUserId` varchar(64) DEFAULT NULL,
+    `CreationDate` varchar(10) DEFAULT NULL,
+    `CreationTime` varchar(8) DEFAULT NULL,
+    `FileSize` varchar(20) DEFAULT NULL,
+    `Locked` tinyint(1) DEFAULT NULL,
+    `LockingUserId` varchar(64) DEFAULT NULL,
+    `ModificationUserId` varchar(64) DEFAULT NULL,
+    `ModificationDate` varchar(10) DEFAULT NULL,
+    `ModificationTime` varchar(8) DEFAULT NULL,
+    `Description` varchar(1024) DEFAULT NULL,
+    `versionnumber` int(11) DEFAULT '1', /*This field is only needed if you use the fileManager with the versioning.*/
+     PRIMARY KEY (`fileid`) 
+) ENGINE=InnoDB AUTO_INCREMENT=1 ;
+
+CREATE TABLE IF NOT EXISTS `directories` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `dir_name` varchar(255) NOT NULL,
+  `dir_path` varchar(750) NOT NULL,
+  `creation_user_id` varchar(200) DEFAULT NULL,
+  `creation_date` date DEFAULT NULL,
+  `creation_time` time DEFAULT NULL,
+  `modification_user_id` varchar(200) DEFAULT NULL,
+  `modification_date` date DEFAULT NULL,
+  `modification_time` time DEFAULT NULL,
+  `is_protected` tinyint(1) NOT NULL DEFAULT '0',
+  `cmdr` varchar(2048) DEFAULT NULL,
+  `cod` varchar(2048) DEFAULT NULL,
+  `cud` varchar(2048) DEFAULT NULL,
+  `cdd` varchar(2048) DEFAULT NULL,
+  `cwf` varchar(2048) DEFAULT NULL,
+  `cdf` varchar(2048) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `dir_path` (`dir_path`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 ;
+  
+  CREATE TABLE IF NOT EXISTS `filecontent` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `file_id` bigint(20) NOT NULL,
+  `file_content` longblob,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 ;
+
+CREATE TABLE IF NOT EXISTS `file_versions` (
+  `versionid` bigint(20) NOT NULL AUTO_INCREMENT,
+  `file_id` bigint(20) NOT NULL,
+  `version_number` int(11) NOT NULL,
+  `fvc_id` bigint(20) DEFAULT NULL,
+  `file_name` varchar(255) NOT NULL,
+  `cdate` date DEFAULT NULL,
+  `ctime` time DEFAULT NULL,
+  `cuser` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`versionid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 ;
+  
+  CREATE TABLE IF NOT EXISTS `file_version_content` (
+  `fvcid` bigint(20) NOT NULL AUTO_INCREMENT,
+  `version_id` bigint(20) NOT NULL,
+  `content` longblob,
+  PRIMARY KEY (`fvcid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 ;

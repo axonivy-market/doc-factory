@@ -1,0 +1,75 @@
+CREATE TABLE dbo.uploadedfiles
+	(
+	FileId             INT IDENTITY NOT NULL,
+	FileName           VARCHAR (255) NULL,
+	FilePath           VARCHAR (750) NULL,
+	CreationUserId     VARCHAR (64) NULL,
+	CreationDate       VARCHAR (10) NULL,
+	CreationTime       VARCHAR (8) NULL,
+	FileSize           VARCHAR (20) NULL,
+	Locked             TINYINT NULL,
+	LockingUserId      VARCHAR (64) NULL,
+	ModificationUserId VARCHAR (64) NULL,
+	ModificationDate   VARCHAR (10) NULL,
+	ModificationTime   VARCHAR (8) NULL,
+	Description        VARCHAR (1024) NULL,
+	versionnumber      INT NULL, /*This field is only needed if you use the fileManager with the versioning.*/
+	CONSTRAINT PK__uploaded__6F0F98BF5D95E53A PRIMARY KEY (FileId)
+	)
+GO
+
+CREATE TABLE dbo.directories
+	(
+	id                   INT IDENTITY NOT NULL,
+	dir_name             VARCHAR (255) NOT NULL,
+	dir_path             VARCHAR (750) NOT NULL,
+	creation_user_id     VARCHAR (200) NULL,
+	creation_date        DATE NULL,
+	creation_time        TIME NULL,
+	modification_user_id VARCHAR (200) NULL,
+	modification_date    DATE NULL,
+	modification_time    TIME NULL,
+	is_protected         BIT DEFAULT ((0)) NOT NULL,
+	cmdr                 VARCHAR (2048) NULL,
+	cod                  VARCHAR (2048) NULL,
+	cud                  VARCHAR (2048) NULL,
+	cdd                  VARCHAR (2048) NULL,
+	cwf                  VARCHAR (2048) NULL,
+	cdf                  VARCHAR (2048) NULL,
+	CONSTRAINT PK__director__3213E83F6166761E PRIMARY KEY (id),
+	CONSTRAINT UQ__director__89DC233C6442E2C9 UNIQUE (dir_path)
+	)
+GO
+
+CREATE TABLE dbo.filecontent
+	(
+	id           INT IDENTITY NOT NULL,
+	file_id      INT NOT NULL,
+	file_content VARBINARY (max) NULL,
+	CONSTRAINT PK__filecont__3213E83F690797E6 PRIMARY KEY (id),
+	CONSTRAINT UQ__filecont__07D884C76BE40491 UNIQUE (file_id)
+	)
+GO
+
+CREATE TABLE dbo.file_versions
+	(
+	versionid      BIGINT IDENTITY NOT NULL,
+	file_id        INT NOT NULL,
+	version_number INT NULL,
+	fvc_id         INT NULL,
+	file_name      NVARCHAR (255) NOT NULL,
+	cdate          DATE NULL,
+	ctime          TIME NULL,
+	cuser          NVARCHAR (255) NULL,
+	CONSTRAINT PK__file_ver__E77790D86FB49575 PRIMARY KEY (versionid)
+	)
+GO
+
+CREATE TABLE dbo.file_version_content
+	(
+	fvcid      BIGINT IDENTITY NOT NULL,
+	version_id BIGINT NULL,
+	content    VARBINARY (max) NULL,
+	CONSTRAINT PK__file_ver__CF42316873852659 PRIMARY KEY (fvcid)
+	)
+GO

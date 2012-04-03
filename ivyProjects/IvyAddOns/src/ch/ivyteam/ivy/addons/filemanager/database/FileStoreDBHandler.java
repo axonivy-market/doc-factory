@@ -1323,13 +1323,23 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 					}catch(Exception ex){
 						//Ignore the Exception here
 					}
-					Blob bl = rst.getBlob("file_content");
+					Blob bl = null;
+					byte[] byt = null;
+					try{
+						bl = rst.getBlob("file_content");
+					}catch(Throwable t){
+						try{
+							byt = rst.getBytes("file_content");
+						}catch(Throwable t2){
+							
+						}
+					}
 
 					//we create a temp file on the server 
 					String tmpPath="tmp/"+System.nanoTime()+"/"+doc.getFilename();
 					File ivyFile = new File(tmpPath,true);
 					ivyFile.createNewFile();
-					byte[] allBytesInBlob = bl.getBytes(1, (int) bl.length());
+					byte[] allBytesInBlob = bl!=null?bl.getBytes(1, (int) bl.length()):byt;
 
 					FileOutputStream fos=null;
 					//DataOutputStream dos =null;
@@ -1433,13 +1443,23 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 					}catch(Exception ex){
 						//Ignore the Exception here
 					}
-					Blob bl = rst.getBlob("file_content");
+					Blob bl = null;
+					byte[] byt = null;
+					try{
+						bl = rst.getBlob("file_content");
+					}catch(Throwable t){
+						try{
+							byt = rst.getBytes("file_content");
+						}catch(Throwable t2){
+							
+						}
+					}
 
 					//we create a temp file on the server 
 					String tmpPath="tmp/"+System.nanoTime()+"/"+doc.getFilename();
 					File ivyFile = new File(tmpPath,true);
 					ivyFile.createNewFile();
-					byte[] allBytesInBlob = bl.getBytes(1, (int) bl.length());
+					byte[] allBytesInBlob = bl!=null?bl.getBytes(1, (int) bl.length()):byt;
 					FileOutputStream fos=null;
 					//DataOutputStream dos =null;
 					try{

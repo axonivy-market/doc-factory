@@ -589,9 +589,19 @@ public class FileVersioningController {
 					fv.setFilename(rst.getString("file_name"));
 					String vname = FileHandler.getFileNameWithoutExt(rst.getString("file_name"))+
 						"#"+rst.getInt("version_number")+"."+FileHandler.getFileExtension(rst.getString("file_name"));					
-					Blob bl = rst.getBlob("content");
+					Blob bl = null;
+					byte[] byt = null;
+					try{
+						bl = rst.getBlob("content");
+					}catch(Throwable t){
+						try{
+							byt = rst.getBytes("content");
+						}catch(Throwable t2){
+							
+						}
+					}
 
-					byte[] allBytesInBlob = bl.getBytes(1, (int) bl.length());
+					byte[] allBytesInBlob = bl!=null?bl.getBytes(1, (int) bl.length()):byt;
 
 					FileOutputStream fos=null;
 					try{
@@ -628,9 +638,19 @@ public class FileVersioningController {
 					fv.setFilename(rst.getString("filename"));
 					String vname = FileHandler.getFileNameWithoutExt(rst.getString("filename"))+
 						"#"+rst.getInt("versionnumber")+"."+FileHandler.getFileExtension(rst.getString("filename"));					
-					Blob bl = rst.getBlob("file_content");
+					Blob bl = null;
+					byte[] byt = null;
+					try{
+						bl = rst.getBlob("file_content");
+					}catch(Throwable t){
+						try{
+							byt = rst.getBytes("file_content");
+						}catch(Throwable t2){
+							
+						}
+					}
 
-					byte[] allBytesInBlob = bl.getBytes(1, (int) bl.length());
+					byte[] allBytesInBlob = bl!=null?bl.getBytes(1, (int) bl.length()):byt;
 
 					FileOutputStream fos=null;
 					try{
@@ -712,12 +732,22 @@ public class FileVersioningController {
 					fv.setUser(rst.getString("cuser"));
 					fv.setFilename(rst.getString("file_name"));
 
-					Blob bl = rst.getBlob("content");
+					Blob bl = null;
+					byte[] byt = null;
+					try{
+						bl = rst.getBlob("content");
+					}catch(Throwable t){
+						try{
+							byt = rst.getBytes("content");
+						}catch(Throwable t2){
+							
+						}
+					}
 
 					String tmpPath="tmp/"+System.nanoTime()+"/"+rst.getString("file_name");
 					File ivyFile = new File(tmpPath,true);
 					ivyFile.createNewFile();
-					byte[] allBytesInBlob = bl.getBytes(1, (int) bl.length());
+					byte[] allBytesInBlob = bl!=null?bl.getBytes(1, (int) bl.length()):byt;
 
 					FileOutputStream fos=null;
 					try{
