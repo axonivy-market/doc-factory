@@ -16,8 +16,8 @@ import com.ulcjava.base.application.event.IActionListener;
 import com.ulcjava.base.application.util.Insets;
 
 /**
- * This is the implementation of list that use a table and a view to edit the detail. This component is used to represent attribute of type
- * Ivy List.
+ * This is the implementation of list that use a table and a view to edit the detail. This component is used
+ * to represent attribute of type Ivy List.
  * @see List
  * 
  * @author Patrick Joly, TI-Informatique
@@ -361,7 +361,12 @@ public class MasterDetail extends Table
     getCollapsiblePane().setCollapsed(!detailVisible);
   }
 
-  private boolean isDetailVisible()
+  /**
+   * Returns whether the detail part of this master/detail component is visible.
+   * 
+   * @return true if the detail part is visible; false otherwise
+   */
+  public boolean isDetailVisible()
   {
     return detailVisible;
   }

@@ -243,13 +243,21 @@ public final class ParameterTreeHelper
             ComponentParameterFactory.TEXT_FIELD, ComponentParameterFactory.TEXT_FIELD_LIST,
             ComponentParameterFactory.TEXT_AREA, ComponentParameterFactory.DATE_PICKER,
             ComponentParameterFactory.LOOKUP_TEXT_FIELD, ComponentParameterFactory.RADIO_BUTTONS,
-            ComponentParameterFactory.COMBO_BOX, ComponentParameterFactory.LAZY_FIELD}, cmsPath, cmsContext,
+            ComponentParameterFactory.COMBO_BOX, ComponentParameterFactory.LAZY_FIELD, ComponentParameterFactory.LABEL}, cmsPath, cmsContext,
                 cms));
         break;
       case COMPLEX:
         parameters.add(getTreeItem(KnownParameters.WIDGET_PARAMETER, new String[] {
             ComponentParameterFactory.TASK_PANE, ComponentParameterFactory.GRID_BAG_LAYOUT_PANE,
-            ComponentParameterFactory.TABBED_PANE}, cmsPath, cmsContext, cms));
+            ComponentParameterFactory.TABBED_PANE, ComponentParameterFactory.SEPARATOR_PANE}, cmsPath,
+                cmsContext, cms));
+        if (showAdvanced)
+        {
+          parameters.add(getTreeItem(KnownParameters.DEFAULT_CONTAINER_WIDGET_PARAMETER, new String[] {
+              ComponentParameterFactory.TASK_PANE, ComponentParameterFactory.GRID_BAG_LAYOUT_PANE,
+              ComponentParameterFactory.TABBED_PANE, ComponentParameterFactory.SEPARATOR_PANE}, cmsPath,
+                  cmsContext, cms));
+        }
         break;
       case LIST:
         parameters.add(getTreeItem(KnownParameters.WIDGET_PARAMETER, new String[] {
@@ -301,6 +309,8 @@ public final class ParameterTreeHelper
                   cmsContext, cms));
           parameters.add(getTreeItem(KnownParameters.CELL_FORMAT_PARAMETER, Type.STRING, cmsPath, cmsContext,
                   cms));
+          parameters.add(getTreeItem(KnownParameters.USE_DESCRIPTION_ATTRIBUTE_IN_CELL, Type.TRISTATE, cmsPath,
+                  cmsContext, cms));
           parameters.add(getTreeItem(KnownParameters.VALIDATION_PARAMETER, Type.STRING, cmsPath, cmsContext,
                   cms));
           parameters.add(getTreeItem(KnownParameters.OLD_STYLE_VALIDATION_PARAMETER, Type.TRISTATE, cmsPath,
@@ -346,13 +356,21 @@ public final class ParameterTreeHelper
         case SIMPLE:
           methods.add(getTreeItem(KnownParameters.BUTTON_ACTION_METHOD_PARAMETER, Type.STRING, cmsPath,
                   cmsContext, cms));
-          methods.add(getTreeItem(KnownParameters.DEFAULT_VALUE_METHOD_PARAMETER, Type.STRING, cmsPath,
-                  cmsContext, cms));
           break;
         case LIST:
           methods.add(getTreeItem(KnownParameters.ROW_SELECTION_METHOD_PARAMETER, Type.STRING, cmsPath,
                   cmsContext, cms));
           methods.add(getTreeItem(KnownParameters.PRE_INSERT_METHOD, Type.STRING, cmsPath, cmsContext, cms));
+          break;
+      }
+      switch (TypeCategory.getCategory(clazz))
+      {
+        case COMPLEX:
+          break;
+        case SIMPLE:
+        case LIST:
+          methods.add(getTreeItem(KnownParameters.DEFAULT_VALUE_METHOD_PARAMETER, Type.STRING, cmsPath,
+                  cmsContext, cms));
           break;
       }
       switch (TypeCategory.getCategory(clazz))
@@ -517,6 +535,10 @@ public final class ParameterTreeHelper
                   cmsContext, cms));
           styles.add(getTreeItem(KnownParameters.LABEL_FILLER_STYLE_PARAMETER, Type.STRING, cmsPath,
                   cmsContext, cms));
+          styles.add(getTreeItem(KnownParameters.SEPARATOR_LABEL_STYLE_PARAMETER, Type.STRING, cmsPath,
+                  cmsContext, cms));
+          styles.add(getTreeItem(KnownParameters.SEPARATOR_FILLER_STYLE_PARAMETER, Type.STRING, cmsPath,
+                  cmsContext, cms));
           break;
         case SIMPLE:
         case LIST:
@@ -654,16 +676,36 @@ public final class ParameterTreeHelper
     List<String> items;
     List<String> result;
     Tree node;
+    Tree root;
     EncapsulationTreeNodeValue value;
     TypeCategoryEnum type;
     Object object;
     boolean isInList;
+    boolean containsRoot;
 
     items = new ArrayList<String>();
     result = new ArrayList<String>();
 
+    node = selectedNode;
+    do
+    {
+      root = node;
+      object = node.getValue();
+
+      if (object instanceof EncapsulationTreeNodeValue)
+      {
+        value = (EncapsulationTreeNodeValue) object;
+        type = TypeCategory.getCategory(value.getClazz());
+        if (type == TypeCategoryEnum.LIST)
+        {
+          break;
+        }
+      }
+      node = node.getParent();
+    } while (node != null);
+
     selectedItem = null;
-    for (Tree currentNode : selectedNode.getRoot())
+    for (Tree currentNode : root)
     {
       object = currentNode.getValue();
 
@@ -676,15 +718,20 @@ public final class ParameterTreeHelper
           item = "";
           isInList = false;
           node = currentNode;
+          containsRoot = false;
           do
           {
+            if (node == root)
+            {
+              containsRoot = true;
+            }
             object = node.getValue();
 
             if (object instanceof EncapsulationTreeNodeValue)
             {
               value = (EncapsulationTreeNodeValue) object;
               type = TypeCategory.getCategory(value.getClazz());
-              if (type == TypeCategoryEnum.LIST)
+              if (type == TypeCategoryEnum.LIST && !containsRoot)
               {
                 isInList = true;
                 break;
@@ -733,11 +780,12 @@ public final class ParameterTreeHelper
           by = by + "../";
         }
 
-        for (String s : items)
+        for (int j = 0; j < items.size(); j++)
         {
-          if (s.startsWith(replace))
+          if (items.get(j).startsWith(replace))
           {
-            result.add(s.replaceFirst(replace, by));
+            result.add(items.get(j).replaceFirst(replace, by));
+            items.set(j, "");
           }
         }
       }
@@ -1317,11 +1365,11 @@ public final class ParameterTreeHelper
       {
         ContentObject contentObject = (ContentObject) object;
         baseURI = "/" + contentObject.getClass().getPackage().getName().replaceAll("\\.", "/") + "/help";
-        
+
         subPath = contentObject.getNodeSubPath();
         subPath = subPath.replaceAll("[0-9]*$", "");
         uri = baseURI + "/texts/" + subPath;
-        
+
         content = cms.co(uri);
 
         content = content.replace("<br />", "<br /><br />");

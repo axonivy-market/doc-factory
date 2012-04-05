@@ -58,6 +58,9 @@ public final class ComponentFactory
       case LAZY_FIELD:
         component = new LazyField(panel, parentContainer, (LazyFieldParameters) parameters, index);
         break;
+      case LABEL:
+        component = new Label(panel, parentContainer, (LabelParameters) parameters, index);
+        break;
     }
 
     return component;
@@ -90,6 +93,10 @@ public final class ComponentFactory
 
     switch (type)
     {
+      case SEPARATOR_PANE:
+        container = new SeparatorPane(panel, parentContainer, (SeparatorPaneParameters) parameters,
+                index);
+        break;
       case GRID_BAG_LAYOUT_PANE:
         container = new GridBagLayoutPane(panel, parentContainer, (GridBagLayoutPaneParameters) parameters,
                 index);

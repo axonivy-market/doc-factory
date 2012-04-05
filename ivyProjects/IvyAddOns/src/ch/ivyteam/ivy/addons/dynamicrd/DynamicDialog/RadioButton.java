@@ -50,13 +50,13 @@ public class RadioButton extends FieldComponentWithList
   }
 
   @Override
-  public final ULCComponent getLastMainComponent()
+  public final RRadioButton getLastMainComponent()
   {
     return radioButtons != null ? radioButtons[radioButtons.length - 1] : null;
   }
 
   @Override
-  public final ULCComponent getMainComponent()
+  public final RRadioButton getMainComponent()
   {
     return radioButtons != null ? radioButtons[0] : null;
   }

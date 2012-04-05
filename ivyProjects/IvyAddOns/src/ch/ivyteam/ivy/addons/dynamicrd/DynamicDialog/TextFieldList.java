@@ -34,12 +34,12 @@ public class TextFieldList extends FieldComponentWithList
   }
 
   @Override
-  public final ULCComponent getLastMainComponent()
+  public final RTextField getLastMainComponent()
   {
     return getMainComponent();
   }
 
-  private RTextField getLookupTextField()
+  private RTextField getTextField()
   {
     if (textField == null)
     {
@@ -58,7 +58,7 @@ public class TextFieldList extends FieldComponentWithList
   }
 
   @Override
-  public final ULCComponent getMainComponent()
+  public final RTextField getMainComponent()
   {
     return textField;
   }
@@ -152,7 +152,7 @@ public class TextFieldList extends FieldComponentWithList
   @Override
   protected final ULCComponent getFieldComponent()
   {
-    return getLookupTextField();
+    return getTextField();
   }
 
   @Override

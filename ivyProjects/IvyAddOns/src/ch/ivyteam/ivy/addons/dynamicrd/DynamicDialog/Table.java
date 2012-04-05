@@ -1,5 +1,6 @@
 package ch.ivyteam.ivy.addons.dynamicrd.DynamicDialog;
 
+import java.lang.reflect.Method;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.SortedMap;
@@ -8,6 +9,8 @@ import java.util.TreeMap;
 import ch.ivyteam.ivy.addons.dynamicrd.DynamicDialog.internal.TreeNode;
 import ch.ivyteam.ivy.addons.dynamicrd.DynamicDialog.internal.VisualDebugGridBagLayoutPane;
 import ch.ivyteam.ivy.addons.util.AddonsRuntimeException;
+import ch.ivyteam.ivy.addons.util.DataClassInstanceExplorer;
+import ch.ivyteam.ivy.addons.util.ExploreHandler;
 import ch.ivyteam.ivy.addons.widgets.RTableWithExcelExport;
 import ch.ivyteam.ivy.persistence.PersistencyException;
 import ch.ivyteam.ivy.richdialog.widgets.components.ModelConfigurationProps;
@@ -16,16 +19,14 @@ import ch.ivyteam.ivy.richdialog.widgets.components.RTable;
 import ch.ivyteam.ivy.richdialog.widgets.components.customrenderers.RBooleanCellWidget;
 import ch.ivyteam.ivy.richdialog.widgets.components.customrenderers.RComboBoxCellWidget;
 import ch.ivyteam.ivy.richdialog.widgets.components.customrenderers.RTableEditorWrapper;
-import ch.ivyteam.ivy.richdialog.widgets.components.customrenderers.RTableRendererWrapper;
 import ch.ivyteam.ivy.richdialog.widgets.components.customrenderers.RTextFieldCellWidget;
 import ch.ivyteam.ivy.richdialog.widgets.containers.RGridBagLayoutPane;
 import ch.ivyteam.ivy.richdialog.widgets.containers.RScrollPane;
 import ch.ivyteam.ivy.scripting.objects.List;
 
-import com.ulcjava.base.application.BorderFactory;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import com.ulcjava.base.application.GridBagConstraints;
 import com.ulcjava.base.application.IEditorComponent;
-import com.ulcjava.base.application.IRendererComponent;
 import com.ulcjava.base.application.ULCComponent;
 import com.ulcjava.base.application.ULCContainer;
 import com.ulcjava.base.application.ULCListSelectionModel;
@@ -34,7 +35,6 @@ import com.ulcjava.base.application.event.ActionEvent;
 import com.ulcjava.base.application.event.IActionListener;
 import com.ulcjava.base.application.table.ITableCellEditor;
 import com.ulcjava.base.application.table.ITableCellRenderer;
-import com.ulcjava.base.application.util.Color;
 import com.ulcjava.base.application.util.Dimension;
 import com.ulcjava.base.application.util.Font;
 import com.ulcjava.base.application.util.Insets;
@@ -42,6 +42,7 @@ import com.ulcjava.base.application.util.Insets;
 /**
  * This is the implementation of list that use a Table. This component is used to represent attribute of type
  * Ivy List.
+ * 
  * @see List
  * 
  * @author Patrick Joly, TI-Informatique
@@ -76,12 +77,13 @@ public class Table extends ListComponent
     public void actionPerformed(ActionEvent arg0)
     {
       addActionPerformed();
+      // invoke(getParameters().getDefaultValueMethodtMethod());
     }
   }
 
-  private static IEditorComponent getEditor(FieldComponentParameters fieldParameters)
+  private static ULCComponent getEditor(FieldComponentParameters fieldParameters, DynamicDialogPanel panel)
   {
-    IEditorComponent editor;
+    ULCComponent editor;
     java.util.List<String[]> choices;
 
     editor = null;
@@ -103,7 +105,7 @@ public class Table extends ListComponent
 
       choices = listFieldParameters.getRecordset();
 
-      widget = new MyComboBoxCellWidget(choices, listFieldParameters);
+      widget = new MyComboBoxCellWidget(choices, listFieldParameters, panel);
       widget.setName(fieldParameters.getName() + "ComboBoxCell");
       editor = widget;
     }
@@ -118,48 +120,12 @@ public class Table extends ListComponent
         {
           widget.setValidation(parameters.getValidation());
         }
+        widget.setMandatory(parameters.isMandatory());
       }
       editor = widget;
     }
-    if (editor instanceof ULCComponent)
-    {
-      ULCComponent component = (ULCComponent) editor;
-      component.setBorder(BorderFactory.createLineBorder(Color.black));
-    }
 
     return editor;
-  }
-
-  private static IRendererComponent getRenderer(FieldComponentParameters fieldParameters)
-  {
-    IRendererComponent renderer;
-    java.util.List<String[]> choices;
-
-    renderer = null;
-
-    if (fieldParameters.isAssignableFromBoolean())
-    {
-      RBooleanCellWidget widget;
-      widget = new RBooleanCellWidget();
-      widget.setText("");
-      widget.setName(fieldParameters.getName() + "BooleanCellWidget");
-      widget.setFont(new Font("Serif", Font.PLAIN, 12));
-
-      renderer = widget;
-    }
-    else if (fieldParameters instanceof FieldComponentWithListParameters)
-    {
-      RComboBoxCellWidget widget;
-      FieldComponentWithListParameters listFieldParameters = (FieldComponentWithListParameters) fieldParameters;
-
-      choices = listFieldParameters.getRecordset();
-
-      widget = new MyComboBoxCellWidget(choices, listFieldParameters);
-      widget.setName(fieldParameters.getName() + "ComboBoxCell");
-      renderer = widget;
-    }
-
-    return renderer;
   }
 
   private static final class TableModel
@@ -179,10 +145,11 @@ public class Table extends ListComponent
     {
       String field;
       String resultScript;
+      String order;
       ComponentParameters parameters;
       FieldComponentParameters fieldParameters;
-      IRendererComponent cellRenderer;
       IEditorComponent cellEditor;
+      ULCComponent cellWidget;
       Integer columnPosition;
       NumberFormat nf;
       int currentPosition;
@@ -195,54 +162,69 @@ public class Table extends ListComponent
       for (TreeNode<ComponentParameters> child : node)
       {
         parameters = child.getValue();
-        if (parameters instanceof FieldComponentParameters)
+        if (!parameters.isList())
         {
-          fieldParameters = (FieldComponentParameters) parameters;
-
-          if (fieldParameters.isCellVisible())
+          if (parameters instanceof FieldComponentParameters)
           {
-            field = child.getValue().getFullName().replace(
-                    root.getChildren().get(0).getValue().getFullName() + "/", "").replaceAll("/", ".");
+            fieldParameters = (FieldComponentParameters) parameters;
 
-            columnPosition = fieldParameters.getTableColumnPosition();
-            currentPosition = currentPosition + 1000;
-            if (columnPosition < 0)
+            if (fieldParameters.isCellVisible())
             {
-              columnPosition = currentPosition;
-            }
+              field = child.getValue().getFullName().replace(
+                      root.getChildren().get(0).getValue().getFullName() + "/", "").replaceAll("/", ".");
+              if (fieldParameters.useDescriptionAttributeInCell())
+              {
+                field = field + DynamicDialogParametersBuilder.DESCRIPTION;
+              }
 
-            cellFormat = fieldParameters.getCellFormat();
-            if (!cellFormat.equals(""))
-            {
-              resultScript = "result=value.format(\"" + cellFormat + "\")";
-            }
-            else if (fieldParameters.isAssignableFromDate())
-            {
-              resultScript = "result=IF (value instanceof Date, ch.ivyteam.ivy.addons.dynamicrd.DynamicDialog.Component.getDateFormat().format(value as java.util.Date), value)";
-            }
-            else
-            {
-              resultScript = "result=value";
-            }
+              columnPosition = fieldParameters.getTableColumnPosition();
+              currentPosition = currentPosition + 1000;
+              if (columnPosition < 0)
+              {
+                columnPosition = currentPosition;
+              }
 
-            columnModels.put(nf.format(columnPosition) + "_" + nf.format(currentPosition), getColumnModel(
-                    "3.0", resultScript, "", "", fieldParameters.getShortTitle(), field, fieldParameters
-                            .isCellEditable(), "", fieldParameters.getColumnWidth() == 0 ? null
-                            : fieldParameters.getColumnWidth(), fieldParameters.getTableCellStyle(), ""));
+              cellFormat = fieldParameters.getCellFormat();
+              if (!cellFormat.equals(""))
+              {
+                resultScript = "result=value.format(\"" + cellFormat + "\")";
+              }
+              else if (fieldParameters.isAssignableFromDate())
+              {
+                resultScript = "result=IF (value instanceof Date, ch.ivyteam.ivy.addons.dynamicrd.DynamicDialog.Component.getDateFormat().format(value as java.util.Date), value)";
+              }
+              else if (fieldParameters.isAssignableFromNumber())
+              {
+                resultScript = "result=IF (value instanceof Number, (value as Number).longValue(), value)";
+              }
+              else
+              {
+                resultScript = "result=value";
+              }
+              order = nf.format(columnPosition) + "_" + nf.format(currentPosition);
+              columnModels.put(order, getColumnModel("3.0", resultScript, "", "", fieldParameters
+                      .getShortTitle(), field, fieldParameters.isCellEditable(), "", fieldParameters
+                      .getColumnWidth() == 0 ? null : fieldParameters.getColumnWidth(), fieldParameters
+                      .getTableCellStyle(), ""));
 
-            cellRenderer = getRenderer(fieldParameters);
-            cellEditor = null;
-            if (fieldParameters.isCellEditable())
-            {
-              cellEditor = getEditor(fieldParameters);
+              cellEditor = null;
+              if (!fieldParameters.useDescriptionAttributeInCell())
+              {
+                cellWidget = getEditor(fieldParameters, table.getPanel());
+                if (cellWidget instanceof IEditorComponent)
+                {
+                  cellEditor = (IEditorComponent) cellWidget;
+                }
+              }
+              table.cellMandatory.put(order, fieldParameters.isMandatory());
+              table.editorComponents.put(order, cellEditor);
+
             }
-            table.rendererComponents.add(cellRenderer);
-            table.editorComponents.add(cellEditor);
           }
-        }
-        if (child.hasChildren())
-        {
-          currentPosition = fillColumnModels(root, child, columnModels, table, currentPosition);
+          if (child.hasChildren())
+          {
+            currentPosition = fillColumnModels(root, child, columnModels, table, currentPosition);
+          }
         }
       }
       return currentPosition;
@@ -352,21 +334,20 @@ public class Table extends ListComponent
     }
   }
 
-  private static final class MyComboBoxCellWidget extends RComboBoxCellWidget
+  public static final class MyComboBoxCellWidget extends RComboBoxCellWidget
   {
     private static final long serialVersionUID = -8911110986731467802L;
 
-    @SuppressWarnings("unchecked")
+    private FieldComponentWithListParameters listFieldParameters;
+
     private MyComboBoxCellWidget(java.util.List<String[]> recordset,
-            FieldComponentWithListParameters listFieldParameters)
+            FieldComponentWithListParameters listFieldParameters, DynamicDialogPanel panel)
     {
       super();
       String resultExpr;
-      Object key;
       String config;
 
-      ch.ivyteam.ivy.scripting.objects.List list;
-      ch.ivyteam.ivy.scripting.objects.List item;
+      this.listFieldParameters = listFieldParameters;
 
       resultExpr = "(entry as List).get(0);";
 
@@ -375,13 +356,28 @@ public class Table extends ListComponent
               + resultExpr + "\"}";
       setModelConfiguration(config);
 
-      list = ch.ivyteam.ivy.scripting.objects.List.create();
+      panel.getCellWidgetWithList().put(listFieldParameters.getFullName(), this);
 
-      item = ch.ivyteam.ivy.scripting.objects.List.create(Object.class);
-      item.add("");
-      item.add("");
-      list.add(item);
-      for (String[] record : recordset)
+      setKeyValue(recordset);
+    }
+
+    protected void setKeyValue(java.util.List<String[]> recordset)
+    {
+      ch.ivyteam.ivy.scripting.objects.List<Object> list;
+      ch.ivyteam.ivy.scripting.objects.List<Object> item;
+      Object key;
+      java.util.List<String[]> innerRecordset;
+
+      innerRecordset = new ArrayList<String[]>();
+      if (recordset != null)
+      {
+        innerRecordset.addAll(recordset);
+      }
+      innerRecordset.add(0, new String[] {"", ""});
+
+      list = ch.ivyteam.ivy.scripting.objects.List.create(Object.class);
+
+      for (String[] record : innerRecordset)
       {
         item = ch.ivyteam.ivy.scripting.objects.List.create(Object.class);
         key = record[0];
@@ -391,13 +387,21 @@ public class Table extends ListComponent
         }
         else if (listFieldParameters.isAssignableFromNumber())
         {
+          if ("".equals(key))
+          {
+            key = "-1";
+          }
           if (!(key instanceof Number))
           {
-            key = Integer.parseInt(key.toString());
+            key = Long.parseLong(key.toString());
           }
         }
         else if (listFieldParameters.isAssignableFromInteger())
         {
+          if ("".equals(key))
+          {
+            key = "-1";
+          }
           if (!(key instanceof Integer))
           {
             key = Integer.parseInt(key.toString());
@@ -414,7 +418,6 @@ public class Table extends ListComponent
         item.add(record[1]);
         list.add(item);
       }
-
       try
       {
         setListData(list);
@@ -428,15 +431,15 @@ public class Table extends ListComponent
 
   private RButton addButton;
 
-  private java.util.List<IEditorComponent> editorComponents;
+  private java.util.Map<String, IEditorComponent> editorComponents;
+
+  private java.util.Map<String, Boolean> cellMandatory;
 
   private RGridBagLayoutPane gridBag;
 
   private boolean modelSet = false;
 
   private RButton removeButton;
-
-  private java.util.List<IRendererComponent> rendererComponents;
 
   private RScrollPane scrollPane;
 
@@ -446,8 +449,8 @@ public class Table extends ListComponent
   {
     super(panel, container, parameters, index);
 
-    rendererComponents = new ArrayList<IRendererComponent>();
-    editorComponents = new ArrayList<IEditorComponent>();
+    editorComponents = new TreeMap<String, IEditorComponent>();
+    cellMandatory = new TreeMap<String, Boolean>();
   }
 
   protected void removeActionPerformed()
@@ -614,7 +617,7 @@ public class Table extends ListComponent
   }
 
   @Override
-  public final ULCComponent getLastMainComponent()
+  public final RTable getLastMainComponent()
   {
     return getMainComponent();
   }
@@ -626,7 +629,7 @@ public class Table extends ListComponent
   }
 
   @Override
-  public final ULCComponent getMainComponent()
+  public final RTable getMainComponent()
   {
     return getTable();
   }
@@ -678,6 +681,8 @@ public class Table extends ListComponent
   protected final RTable getTable()
   {
     String model;
+    List<Object> list;
+    Object item;
 
     if (table == null)
     {
@@ -686,6 +691,30 @@ public class Table extends ListComponent
 
       model = TableModel.getTableModel(getParameters().getParameterTree(), this);
       table.setModelConfiguration(model);
+
+      // RTable creates renderer automatically but extracts which renderer
+      // to use from content of the 1st line
+      // of the data model present when the table is created.
+      // Without these code lines, the RTable doesn't use the right
+      // renderer for Boolean values.
+      // The created list is only used at RTable creation. The content of
+      // the RTable is replaced later with
+      // the real content. The job is done as is because, the real content
+      // can be an empty list.
+      list = (List<Object>) constructListData();
+      try
+      {
+        item = getItemClazz().newInstance();
+        new DataClassInstanceExplorer(new ExploreHandler<Object>()).explore(item, true, true);
+
+        list.add(item);
+        table.setListData(list);
+      }
+      catch (Exception e)
+      {
+        throw new DynamicDialogException(e);
+      }
+
       table.setSortable(getParameters().isSortable());
 
       table.addValueChangedListener(new ValueChangedListener(this, true));
@@ -740,45 +769,55 @@ public class Table extends ListComponent
 
   private void setColumnModel() throws PersistencyException
   {
+    ITableCellRenderer renderer;
+    Method method;
+
     int i;
     i = 0;
     ModelConfigurationProps modelConfiguration = new ModelConfigurationProps(table.getModelConfiguration());
-    for (IEditorComponent editorComponent : editorComponents)
+    for (String order : editorComponents.keySet())
     {
-      if (editorComponent != null)
+      if (order != null && editorComponents.get(order) != null)
       {
         try
         {
           getTable().getColumnModel().getColumn(i).setCellEditor(
-                  new RTableEditorWrapper((ITableCellEditor) editorComponent, table
+                  new RTableEditorWrapper((ITableCellEditor) editorComponents.get(order), table
                           .convertColumnIndexToModel(i), getPanel().getProject(), modelConfiguration, table
                           .getRowCount(), table.getColumnCount()));
-        }
-        catch (Exception e)
-        {
-          throw new AddonsRuntimeException(e);
-        }
-      }
-      i++;
-    }
-    i = 0;
-    for (IRendererComponent rendererComponent : rendererComponents)
-    {
-      if (rendererComponent != null)
-      {
-        try
-        {
-          getTable().getColumnModel().getColumn(i).setCellRenderer(
-                  new RTableRendererWrapper((ITableCellRenderer) rendererComponent, table
-                          .convertColumnIndexToModel(i), getPanel().getProject(), modelConfiguration, table
-                          .getRowCount(), table.getColumnCount()));
-        }
-        catch (Exception e)
-        {
-          throw new AddonsRuntimeException(e);
-        }
-      }
 
+          renderer = getTable().getColumnModel().getColumn(i).getCellRenderer();
+          method = null;
+          // TODO find better solution to avoid reflection
+          try
+          {
+            method = renderer.getClass().getMethod("setMandatory", boolean.class);
+            if (method != null)
+            {
+              method.invoke(renderer, (boolean) cellMandatory.get(order));
+            }
+          }
+          catch (NoSuchMethodException e)
+          {
+            try
+            {
+              method = renderer.getClass().getMethod("setMandatory", Bool.class);
+              if (method != null)
+              {
+                method.invoke(renderer, cellMandatory.get(order));
+              }
+            }
+            catch (NoSuchMethodException e1)
+            {
+              // Do nothing
+            }
+          }
+        }
+        catch (Exception e)
+        {
+          throw new AddonsRuntimeException(e);
+        }
+      }
       i++;
     }
   }
@@ -834,5 +873,27 @@ public class Table extends ListComponent
   protected final Position getStartPos(Position pos)
   {
     return new Position();
+  }
+
+  /**
+   * Enables or disables the add button as specified.
+   * 
+   * @param enabled if true, the add button is enabled; otherwise it is disabled
+   */
+  public void setAddButtonEnabled(boolean enabled)
+  {
+    getAddButton().setEnabled(enabled);
+
+  }
+
+  /**
+   * Enables or disables the remove button as specified.
+   * 
+   * @param enabled if true, the remove button is enabled; otherwise it is disabled
+   */
+  public void setRemoveButtonEnabled(boolean enabled)
+  {
+    getRemoveButton().setEnabled(enabled);
+
   }
 }

@@ -23,7 +23,7 @@ final class DynamicDialogParametersBuilder
   /**
    * Suffix used for data class attributes that received the displayed value of component like ComboBox.
    */
-  private static final String DESCRIPTION = "Description";
+  protected static final String DESCRIPTION = "Description";
 
   private static final int POSITION_DEFAULT_INTERVAL = 1000;
 

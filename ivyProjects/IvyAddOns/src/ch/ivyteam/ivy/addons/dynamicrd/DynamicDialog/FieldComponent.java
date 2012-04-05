@@ -1,7 +1,5 @@
 package ch.ivyteam.ivy.addons.dynamicrd.DynamicDialog;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.List;
 
 import ch.ivyteam.ivy.addons.dynamicrd.DynamicDialog.KnownParameters.LayoutType;
@@ -626,13 +624,16 @@ public abstract class FieldComponent extends Component
     {
       try
       {
-        errorIcon = new ULCIcon(new URL(Ivy.html().coref(getParameters().getErrorIconUrl())));
-        mandatoryIcon = new ULCIcon(new URL(Ivy.html().coref(getParameters().getMandatoryIconUrl())));
-        transparentIcon = new ULCIcon(new URL(Ivy.html().coref(getParameters().getTransparentIconUrl())));
+        errorIcon = new ULCIcon(Ivy.cms().getContentObjectValue(getParameters().getErrorIconUrl(), null)
+                .getContentAsByteArray());
+        mandatoryIcon = new ULCIcon(Ivy.cms().getContentObjectValue(getParameters().getMandatoryIconUrl(),
+                null).getContentAsByteArray());
+        transparentIcon = new ULCIcon(Ivy.cms().getContentObjectValue(
+                getParameters().getTransparentIconUrl(), null).getContentAsByteArray());
       }
-      catch (MalformedURLException e)
+      catch (Exception e)
       {
-        Ivy.log().error("Load FieldComponent validation icons : " + e.getMessage());
+        throw new DynamicDialogException(e);
       }
     }
     postInitializeField();
@@ -660,6 +661,7 @@ public abstract class FieldComponent extends Component
   /**
    * Returns if a validation was already be done. The field validation is done explicitly or when the field
    * loose the focus.
+   * 
    * @return true if it's the first time that a validation is done on this field; false otherwise
    */
   protected final boolean isFirstValidation()

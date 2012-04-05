@@ -93,6 +93,8 @@ abstract class FieldComponentParameters extends ComponentParameters
 
   private boolean cellVisible;
 
+  private boolean useDescriptionAttributeInCell;
+
   private boolean selectAllOnFocusGained;
 
   private String defaultValueMethod;
@@ -121,6 +123,9 @@ abstract class FieldComponentParameters extends ComponentParameters
     cellEditable = Cms.coAsBoolean(cmsContexts, KnownParameters.CELL_EDITABLE_PARAMETER, false);
 
     cellVisible = Cms.coAsBoolean(cmsContexts, KnownParameters.CELL_VISIBLE_PARAMETER, isVisible());
+
+    useDescriptionAttributeInCell = Cms.coAsBoolean(cmsContexts,
+            KnownParameters.USE_DESCRIPTION_ATTRIBUTE_IN_CELL, false);
 
     cellFormat = Cms.co(cmsContexts, KnownParameters.CELL_FORMAT_PARAMETER);
 
@@ -516,5 +521,10 @@ abstract class FieldComponentParameters extends ComponentParameters
   public Integer getLabelInsetsTop()
   {
     return labelInsetsTop;
+  }
+
+  public boolean useDescriptionAttributeInCell()
+  {
+    return useDescriptionAttributeInCell;
   }
 }

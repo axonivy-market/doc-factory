@@ -3,6 +3,7 @@ package ch.ivyteam.ivy.addons.util;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Stack;
@@ -154,7 +155,7 @@ public final class DataClassInstanceExplorer extends ExploreHandler<Object>
       parentPair = stack.empty() ? null : stack.peek();
       attribute = null;
 
-      if (propertyDescriptor instanceof PropertyDescriptor)
+      if (propertyDescriptor != null && propertyDescriptor.getReadMethod() != null)
       {
         property = (PropertyDescriptor) propertyDescriptor;
 
@@ -199,8 +200,30 @@ public final class DataClassInstanceExplorer extends ExploreHandler<Object>
       Method method;
       Object attribute;
 
+      attribute = null;
       method = property.getReadMethod();
-      attribute = invoke(object, method, null);
+      if (method != null)
+      {
+        if (object instanceof Proxy)
+        {
+          try
+          {
+            attribute = Proxy.getInvocationHandler(object).invoke(object, method, new Object[] {});
+          }
+          catch (IllegalArgumentException e)
+          {
+            throw new AddonsException(e);
+          }
+          catch (Throwable e)
+          {
+            throw new AddonsException(e);
+          }
+        }
+        else
+        {
+          attribute = invoke(object, method, null);
+        }
+      }
       return attribute;
     }
 
@@ -254,7 +277,21 @@ public final class DataClassInstanceExplorer extends ExploreHandler<Object>
 
       try
       {
-        attribute = method.invoke(parent, params);
+        if (parent instanceof Proxy)
+        {
+          try
+          {
+            attribute = Proxy.getInvocationHandler(parent).invoke(parent, method, params);
+          }
+          catch (Throwable e)
+          {
+            throw new AddonsException(e);
+          }
+        }
+        else
+        {
+          attribute = method.invoke(parent, params);
+        }
       }
       catch (IllegalArgumentException e)
       {
@@ -262,7 +299,30 @@ public final class DataClassInstanceExplorer extends ExploreHandler<Object>
       }
       catch (IllegalAccessException e)
       {
-        throw new AddonsException(e);
+        // On illegal access exception try to call the same method from an interface.
+        // Do that only for read method (method without params)
+        attribute = null;
+        if (params == null || params.length == 0)
+        {
+          for (Class<?> clazz : method.getDeclaringClass().getInterfaces())
+          {
+            Method interfaceMethod;
+
+            try
+            {
+              interfaceMethod = clazz.getDeclaredMethod(method.getName());
+              if (interfaceMethod != null)
+              {
+                attribute = interfaceMethod.invoke(parent, params);
+                break;
+              }
+            }
+            catch (Exception e1)
+            {
+              // Do nothing
+            }
+          }
+        }
       }
       catch (InvocationTargetException e)
       {

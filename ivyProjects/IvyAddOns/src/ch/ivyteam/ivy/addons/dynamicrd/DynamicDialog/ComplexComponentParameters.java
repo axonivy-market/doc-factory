@@ -76,6 +76,12 @@ public abstract class ComplexComponentParameters extends ComponentParameters
 
   private boolean selectAllOnFocusGained;
 
+  private String defaultContainerWidget;
+
+  private String separatorLabelStyle;
+
+  private String separatorFillerStyle;
+
   protected ComplexComponentParameters(List<String> cmsContexts, String name, String fullName,
           ComplexComponentParameters parentContainerParameters, Integer position, Class<?> clazz)
   {
@@ -98,6 +104,8 @@ public abstract class ComplexComponentParameters extends ComponentParameters
       mandatoryFieldStyle = "";
       radioContainerStyle = KnownParameters.RADIO_CONTAINER_DEFAULT_STYLE;
       insideContainerStyle = KnownParameters.CONTAINER_DEFAULT_STYLE;
+      separatorFillerStyle = KnownParameters.SEPARATOR_FILLER_DEFAULT_STYLE;
+      separatorLabelStyle = KnownParameters.SEPARATOR_LABEL_DEFAULT_STYLE;
       scrollPaneStyle = KnownParameters.SCROLL_PANE_DEFAULT_STYLE;
       buttonStyle = KnownParameters.BUTTON_DEFAULT_STYLE;
       tableStyle = KnownParameters.TABLE_DEFAULT_STYLE;
@@ -105,6 +113,7 @@ public abstract class ComplexComponentParameters extends ComponentParameters
       containerButtonStyle = KnownParameters.CONTAINER_BUTTON_DEFAULT_STYLE;
 
       fieldLayout = KnownParameters.DEFAULT_LAYOUT;
+      defaultContainerWidget = KnownParameters.DEFAULT_CONTAINER_WIDGET;
 
       showLabel = true;
       showExampleLabel = true;
@@ -127,6 +136,8 @@ public abstract class ComplexComponentParameters extends ComponentParameters
       mandatoryFieldStyle = parentContainerParameters.mandatoryFieldStyle;
       radioContainerStyle = parentContainerParameters.radioContainerStyle;
       insideContainerStyle = parentContainerParameters.insideContainerStyle;
+      separatorFillerStyle = parentContainerParameters.separatorFillerStyle;
+      separatorLabelStyle = parentContainerParameters.separatorLabelStyle;
       scrollPaneStyle = parentContainerParameters.scrollPaneStyle;
       buttonStyle = parentContainerParameters.buttonStyle;
       tableStyle = parentContainerParameters.tableStyle;
@@ -134,6 +145,7 @@ public abstract class ComplexComponentParameters extends ComponentParameters
       containerButtonStyle = parentContainerParameters.containerButtonStyle;
 
       fieldLayout = parentContainerParameters.fieldLayout;
+      defaultContainerWidget=parentContainerParameters.defaultContainerWidget;
 
       showLabel = parentContainerParameters.showLabel;
       showExampleLabel = parentContainerParameters.showExampleLabel;
@@ -172,6 +184,7 @@ public abstract class ComplexComponentParameters extends ComponentParameters
             containerButtonStyle);
 
     fieldLayout = Cms.co(getCmsContexts(), KnownParameters.FIELD_LAYOUT_PARAMETER, fieldLayout);
+    defaultContainerWidget = (Cms.co(getCmsContexts(), KnownParameters.DEFAULT_CONTAINER_WIDGET_PARAMETER, defaultContainerWidget));
 
     showValidationIcon = Cms.coAsBoolean(getCmsContexts(), KnownParameters.SHOW_VALIDATION_ICON_PARAMETER,
             showValidationIcon);
@@ -434,5 +447,20 @@ public abstract class ComplexComponentParameters extends ComponentParameters
   public boolean isSelectAllOnFocusGained()
   {
     return selectAllOnFocusGained;
+  }
+
+  public String getDefaultContainerWidget()
+  {
+    return defaultContainerWidget;
+  }
+
+  public String getSeparatorLabelStyle()
+  {
+    return separatorLabelStyle;
+  }
+
+  public String getSeparatorFillerStyle()
+  {
+    return separatorFillerStyle;
   }
 }

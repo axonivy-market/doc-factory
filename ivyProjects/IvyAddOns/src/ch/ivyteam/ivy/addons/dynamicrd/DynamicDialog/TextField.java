@@ -49,13 +49,13 @@ public class TextField extends FieldComponent
   }
 
   @Override
-  public final ULCComponent getLastMainComponent()
+  public final RTextField getLastMainComponent()
   {
     return getMainComponent();
   }
 
   @Override
-  public final ULCComponent getMainComponent()
+  public final RTextField getMainComponent()
   {
     return textField;
   }

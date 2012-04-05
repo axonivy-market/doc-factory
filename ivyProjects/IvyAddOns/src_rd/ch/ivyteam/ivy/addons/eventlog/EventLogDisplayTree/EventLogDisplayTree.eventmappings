@@ -1,0 +1,19 @@
+# Xpert.ivy RichDialog Event-Mapping Data
+# 2011-08-08 12:46:39 | 4.2.0.35989 | 1.0
+~@RD_METHODCALL[start()]--->ch.ivyteam.ivy.process.ProcessStart:12CE011328E96402/12CE01132E2827F4
+~@RD_BROADCAST[search]--->ch.ivyteam.ivy.process.ProcessStart:12CE011328E96402/12CE057D2A4BF58C
+~@RD_METHODCALL[next()]--->ch.ivyteam.ivy.process.ProcessStart:12CE011328E96402/12CE057AF294070F
+~@RD_METHODCALL[setTree(Tree)]--->ch.ivyteam.ivy.process.ProcessStart:12CE011328E96402/131A8FE95D9D598A
+~@RD_METHODCALL[getTableTreeWidget()]--->ch.ivyteam.ivy.process.ProcessStart:12CE011328E96402/12FE32FF3FA4961F
+~@RD_METHODCALL[startGroupByGroupId()]--->ch.ivyteam.ivy.process.ProcessStart:12CE011328E96402/12CE555409D85DBE
+~@RD_METHODCALL[startGroupByCase()]--->ch.ivyteam.ivy.process.ProcessStart:12CE011328E96402/12CE55539B45A97A
+~@RD_METHODCALL[getTree()]--->ch.ivyteam.ivy.process.ProcessStart:12CE011328E96402/12CE057A9CCBA3B9
+~@RD_METHODCALL[getSelectedNode()]--->ch.ivyteam.ivy.process.ProcessStart:12CE011328E96402/12CE057A4ED99591
+~@RD_METHODCALL[getList()]--->ch.ivyteam.ivy.process.ProcessStart:12CE011328E96402/12CE0579FD716AE8
+~@RD_METHODCALL[startGroupByCase(List<ch.ivyteam.ivy.workflow.eventlog.EventLogProperty>,String)]--->ch.ivyteam.ivy.process.ProcessStart:12CE011328E96402/12FD8CF590512431
+~@RD_BROADCAST[prev]--->ch.ivyteam.ivy.process.ProcessStart:12CE011328E96402/12CE057CEFD1CBE2
+~@RD_METHODCALL[search(ch.ivyteam.ivy.addons.data.technical.eventlog.EventLogSearchCriteria)]--->ch.ivyteam.ivy.process.ProcessStart:12CE011328E96402/12CE057E95EE8A98
+~@RD_METHODCALL[startGroupByGroupId(List<ch.ivyteam.ivy.workflow.eventlog.EventLogProperty>,String)]--->ch.ivyteam.ivy.process.ProcessStart:12CE011328E96402/12FD8CF4FBDB5ACC
+~.tableTree@TREE_SELECTION[]--->ch.ivyteam.ivy.process.ProcessStart:12CE011328E96402/12CE44D137FB337E
+~@RD_BROADCAST[next]--->ch.ivyteam.ivy.process.ProcessStart:12CE011328E96402/12CE057CA757D080
+~@RD_METHODCALL[prev()]--->ch.ivyteam.ivy.process.ProcessStart:12CE011328E96402/12CE057BC787B7E0

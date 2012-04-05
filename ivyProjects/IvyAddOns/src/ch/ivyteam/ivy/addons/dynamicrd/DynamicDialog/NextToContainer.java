@@ -4,7 +4,6 @@ import ch.ivyteam.ivy.addons.dynamicrd.DynamicDialog.internal.VisualDebugGridBag
 import ch.ivyteam.ivy.richdialog.widgets.containers.RGridBagLayoutPane;
 
 import com.ulcjava.base.application.GridBagConstraints;
-import com.ulcjava.base.application.ULCComponent;
 import com.ulcjava.base.application.ULCContainer;
 
 /**
@@ -87,13 +86,13 @@ public class NextToContainer extends ComplexComponent
   }
 
   @Override
-  public final ULCComponent getLastMainComponent()
+  public final RGridBagLayoutPane getLastMainComponent()
   {
     return getMainComponent();
   }
 
   @Override
-  public final ULCComponent getMainComponent()
+  public final RGridBagLayoutPane getMainComponent()
   {
     return gridBag;
   }

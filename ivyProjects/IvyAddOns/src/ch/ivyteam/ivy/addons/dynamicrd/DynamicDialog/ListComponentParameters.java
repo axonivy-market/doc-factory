@@ -25,6 +25,8 @@ abstract class ListComponentParameters extends ComplexComponentParameters
 
   private TreeNode<ComponentParameters> parameterTree;
 
+  private String defaultValueMethod;
+
   protected ListComponentParameters(List<String> cmsContexts, String name, String fullName,
           ComplexComponentParameters parentContainerParameters, Integer position,
           TreeNode<ComponentParameters> parameters, Class<?> clazz)
@@ -35,6 +37,8 @@ abstract class ListComponentParameters extends ComplexComponentParameters
     autoTableHeader = Cms.coAsBoolean(cmsContexts, KnownParameters.AUTO_TABLE_HEADER, false);
     sortable = Cms.coAsBoolean(cmsContexts, KnownParameters.SORTABLE_TABLE, true);
     editable = Cms.coAsBoolean(cmsContexts, KnownParameters.EDITABLE_PARAMETER, true);
+    defaultValueMethod = Cms.co(cmsContexts, KnownParameters.DEFAULT_VALUE_METHOD_PARAMETER);
+
     parameterTree = parameters;
   }
 
@@ -72,5 +76,10 @@ abstract class ListComponentParameters extends ComplexComponentParameters
   protected final TreeNode<ComponentParameters> getParameterTree()
   {
     return parameterTree;
+  }
+
+  public String getDefaultValueMethodtMethod()
+  {
+    return defaultValueMethod;
   }
 }

@@ -1,6 +1,7 @@
 package ch.ivyteam.ivy.addons.util;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Stack;
 
@@ -25,23 +26,25 @@ import ch.ivyteam.ivy.scripting.objects.Time;
  */
 public final class Xml2DataClass extends ExploreHandler<Class<?>>
 {
-  private Node xmlNode;
+  private static final String LIST_ITEM_TAG_NAME = "item";
 
-  private Stack<Element> elements;
+  private Node fXMLNode;
 
-  private Map<String, String> tagNameSubstitutions;
+  private Stack<Element> fElements;
 
-  private Stack<Object> objects;
+  private Map<String, String> fTagNameSubstitutions;
 
-  private Object rootObject;
+  private Stack<Object> fObjects;
+
+  private Object fRootObject;
 
   private Xml2DataClass(Node xmlNode, Map<String, String> tagNameSubstitutions, Object object)
   {
-    this.xmlNode = xmlNode;
-    this.tagNameSubstitutions = tagNameSubstitutions;
-    this.objects = new Stack<Object>();
-    this.elements = new Stack<Element>();
-    this.rootObject = object;
+    fXMLNode = xmlNode;
+    fTagNameSubstitutions = tagNameSubstitutions;
+    fObjects = new Stack<Object>();
+    fElements = new Stack<Element>();
+    fRootObject = object;
   }
 
   /**
@@ -62,13 +65,21 @@ public final class Xml2DataClass extends ExploreHandler<Class<?>>
     convert(object, xmldoc.getDocumentElement(), tagNameSubstitutions);
   }
 
-  private static void convert(final Object object, Node xmlNode, Map<String, String> tagNameSubstitutions)
+  /**
+   * Deserializes an XML node.
+   * 
+   * @param object object that is filled by this method
+   * @param xmlElement dom document
+   * @param tagNameSubstitutions same as {@link #convert(Object, Document, Map)}
+   * @throws AddonsException
+   */
+  public static void convert(final Object object, Element xmlElement, Map<String, String> tagNameSubstitutions)
           throws AddonsException
   {
     Xml2DataClass handler;
     DataClassExplorer<?> explorer;
 
-    handler = new Xml2DataClass(xmlNode, tagNameSubstitutions, object);
+    handler = new Xml2DataClass(xmlElement, tagNameSubstitutions, object);
     explorer = DataClassExplorer.createClassExplorer(handler);
 
     explorer.explore(object.getClass());
@@ -87,10 +98,10 @@ public final class Xml2DataClass extends ExploreHandler<Class<?>>
     parentObject = null;
     parentElement = null;
     result = false;
-    if (!objects.empty())
+    if (!fObjects.empty())
     {
-      parentObject = objects.peek();
-      parentElement = elements.peek();
+      parentObject = fObjects.peek();
+      parentElement = fElements.peek();
     }
 
     if (parentObject instanceof List)
@@ -105,7 +116,7 @@ public final class Xml2DataClass extends ExploreHandler<Class<?>>
 
     if (parentObject == null)
     {
-      value = rootObject;
+      value = fRootObject;
     }
     else
     {
@@ -133,8 +144,8 @@ public final class Xml2DataClass extends ExploreHandler<Class<?>>
       }
     }
 
-    objects.push(value);
-    elements.push(xmlCurrentNode instanceof Element ? (Element) xmlCurrentNode : null);
+    fObjects.push(value);
+    fElements.push(xmlCurrentNode instanceof Element ? (Element) xmlCurrentNode : null);
     if (xmlCurrentNode != null)
     {
       result = super.startNode(propertyType, name, qualifiedName) && xmlCurrentNode.hasChildNodes();
@@ -166,17 +177,38 @@ public final class Xml2DataClass extends ExploreHandler<Class<?>>
   private Node findNode(String name, Element parentElement, int index)
   {
     Node xmlCurrentNode;
+    java.util.List<Element> elements;
 
+    xmlCurrentNode = null;
     if (parentElement == null)
     {
-      xmlCurrentNode = this.xmlNode;
+      xmlCurrentNode = fXMLNode;
     }
     else
     {
-      xmlCurrentNode = parentElement.getElementsByTagName(
-              DataClass2Xml.tagNameSubstitution(name, tagNameSubstitutions)).item(index);
+      elements = getChildByName(parentElement, DataClass2Xml.tagNameSubstitution(name, fTagNameSubstitutions));
+      if (elements.size() > index)
+      {
+        xmlCurrentNode = elements.get(index);
+      }
     }
     return xmlCurrentNode;
+  }
+
+  private java.util.List<Element> getChildByName(Element parent, String name)
+  {
+    java.util.List<Element> result;
+
+    result = new ArrayList<Element>();
+
+    for (Node child = parent.getFirstChild(); child != null; child = child.getNextSibling())
+    {
+      if (child instanceof Element && name.equals(child.getNodeName()))
+      {
+        result.add((Element) child);
+      }
+    }
+    return result;
   }
 
   private Object processLeaf(Class<?> propertyType, Node xmlNode)
@@ -271,8 +303,8 @@ public final class Xml2DataClass extends ExploreHandler<Class<?>>
   @Override
   public void endNode(Class<?> propertyType, String name, String uri)
   {
-    objects.pop();
-    elements.pop();
+    fObjects.pop();
+    fElements.pop();
 
     super.endNode(propertyType, name, uri);
   }
@@ -285,13 +317,13 @@ public final class Xml2DataClass extends ExploreHandler<Class<?>>
 
     result = false;
 
-    if (!objects.empty())
+    if (!fObjects.empty())
     {
-      parent = objects.peek();
+      parent = fObjects.peek();
       if (parent instanceof List<?>)
       {
         List<?> list = (List<?>) parent;
-        if (elements.peek().getElementsByTagName("item").getLength() != list.size())
+        if (getChildByName(fElements.peek(), LIST_ITEM_TAG_NAME).size() != list.size())
         {
           result = true;
         }

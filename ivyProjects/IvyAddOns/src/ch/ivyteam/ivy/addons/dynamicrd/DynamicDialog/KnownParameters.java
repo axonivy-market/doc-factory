@@ -37,6 +37,8 @@ public final class KnownParameters
 
   public static final String DEFAULT_LAYOUT = LABEL_FIELD_ICON_LAYOUT;
 
+  public static final String DEFAULT_CONTAINER_WIDGET = ComponentParameterFactory.TASK_PANE;
+
   public static final String COMPONENT_DEFAULT_STYLE = "default";
 
   public static final String CONTAINER_DEFAULT_STYLE = "container";
@@ -60,6 +62,10 @@ public final class KnownParameters
   public static final String FIELD_FILLER_DEFAULT_STYLE = "field";
 
   public static final String LABEL_FILLER_DEFAULT_STYLE = "label";
+
+  public static final String SEPARATOR_FILLER_DEFAULT_STYLE = "separatorFiller";
+
+  public static final String SEPARATOR_LABEL_DEFAULT_STYLE = "separatorLabel";
 
   public static final String TABLE_DEFAULT_STYLE = "default";
 
@@ -106,6 +112,8 @@ public final class KnownParameters
   public static final String CELL_VISIBLE_PARAMETER = "parameters/cellVisible";
 
   public static final String CELL_FORMAT_PARAMETER = "parameters/cellFormat";
+  
+  public static final String USE_DESCRIPTION_ATTRIBUTE_IN_CELL = "parameters/useDescriptionAttributeInCell";
 
   public static final String LABEL_STYLE_PARAMETER = "parameters/labelStyle";
 
@@ -160,6 +168,10 @@ public final class KnownParameters
   public static final String FIELD_FILLER_STYLE_PARAMETER = "parameters/fieldFillerStyle";
 
   public static final String LABEL_FILLER_STYLE_PARAMETER = "parameters/labelFillerStyle";
+
+  public static final String SEPARATOR_LABEL_STYLE_PARAMETER = "parameters/separatorLabelStyle";
+
+  public static final String SEPARATOR_FILLER_STYLE_PARAMETER = "parameters/separatorFillerStyle";
 
   public static final String FIELD_STYLE_PARAMETER = "parameters/fieldStyle";
 
@@ -292,6 +304,8 @@ public final class KnownParameters
   public static final String LABEL_INSETS_LEFT_PARAMETER = "parameters/labelInsetsLeft";
 
   public static final String LABEL_INSETS_RIGHT_PARAMETER = "parameters/labelInsetsRight";
+
+  public static final String DEFAULT_CONTAINER_WIDGET_PARAMETER = "parameters/defaultContainerWidget";
 
   public enum LayoutType
   {

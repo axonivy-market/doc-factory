@@ -14,6 +14,7 @@ import ch.ivyteam.ivy.addons.util.AddonsException;
 import ch.ivyteam.ivy.addons.util.DataClassExplorer;
 import ch.ivyteam.ivy.addons.util.DataClassInstanceExplorer;
 import ch.ivyteam.ivy.addons.util.ExploreHandler;
+import ch.ivyteam.ivy.addons.util.StringUtil;
 
 /**
  * This helper class implements getter and setter for dynamic dialog.
@@ -161,9 +162,9 @@ final class DynamicDialogMapper
           }
           break;
         case SIMPLE:
-          if (itemQualifiedName.endsWith("Description"))
+          if (itemQualifiedName.endsWith(DynamicDialogParametersBuilder.DESCRIPTION))
           {
-            component = componentMap.get(itemQualifiedName.replaceFirst("Description$", ""));
+            component = componentMap.get(itemQualifiedName.replaceFirst(DynamicDialogParametersBuilder.DESCRIPTION, ""));
             if (component instanceof FieldComponent)
             {
               FieldComponent field = (FieldComponent) component;
@@ -193,6 +194,8 @@ final class DynamicDialogMapper
   {
     DataClassInstanceExplorer explorer;
 
+    prefix = StringUtil.cleanUpPath(prefix);
+    
     explorer = new DataClassInstanceExplorer(new SetValueHandler(componentMap, inexistantValueMap, prefix));
     explorer.setClassMap(classMap);
     try
@@ -238,7 +241,7 @@ final class DynamicDialogMapper
       component = componentMap.get(itemQualifiedName);
 
       if (component instanceof FieldComponent || component instanceof ListComponent
-              || itemQualifiedName.endsWith("Description"))
+              || itemQualifiedName.endsWith(DynamicDialogParametersBuilder.DESCRIPTION))
       {
         result = false;
         valueMap.put(itemQualifiedName, object);
@@ -272,7 +275,7 @@ final class DynamicDialogMapper
           FieldComponent field = (FieldComponent) component;
 
           text = "";
-          textObject = valueMap.get(qualifiedName + "Description");
+          textObject = valueMap.get(qualifiedName + DynamicDialogParametersBuilder.DESCRIPTION);
           if (textObject != null)
           {
             text = textObject.toString();
@@ -319,6 +322,8 @@ final class DynamicDialogMapper
           Map<String, Class<?>> classMap)
   {
     DataClassExplorer<PropertyDescriptor> explorer;
+
+    prefix = StringUtil.cleanUpPath(prefix);
 
     try
     {

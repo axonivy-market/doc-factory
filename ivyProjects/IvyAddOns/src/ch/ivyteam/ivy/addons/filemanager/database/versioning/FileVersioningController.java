@@ -298,7 +298,7 @@ public class FileVersioningController {
 				DateFormat sdf = new SimpleDateFormat("hh:mm:ss");
 				stmt.setLong(1, fileId);
 				stmt.setInt(2, vn);
-				stmt.setDate(3, new java.sql.Date(da.toJavaDate().getTime()));
+				stmt.setDate(3, new java.sql.Date(da.toDate().getTime()));
 				stmt.setTime(4, new java.sql.Time(sdf.parse(doc.getCreationTime()).getTime()));
 				stmt.setString(5, doc.getUserID());
 				stmt.setString(6, doc.getFilename());
@@ -589,19 +589,9 @@ public class FileVersioningController {
 					fv.setFilename(rst.getString("file_name"));
 					String vname = FileHandler.getFileNameWithoutExt(rst.getString("file_name"))+
 						"#"+rst.getInt("version_number")+"."+FileHandler.getFileExtension(rst.getString("file_name"));					
-					Blob bl = null;
-					byte[] byt = null;
-					try{
-						bl = rst.getBlob("content");
-					}catch(Throwable t){
-						try{
-							byt = rst.getBytes("content");
-						}catch(Throwable t2){
-							
-						}
-					}
+					Blob bl = rst.getBlob("content");
 
-					byte[] allBytesInBlob = bl!=null?bl.getBytes(1, (int) bl.length()):byt;
+					byte[] allBytesInBlob = bl.getBytes(1, (int) bl.length());
 
 					FileOutputStream fos=null;
 					try{
@@ -638,19 +628,9 @@ public class FileVersioningController {
 					fv.setFilename(rst.getString("filename"));
 					String vname = FileHandler.getFileNameWithoutExt(rst.getString("filename"))+
 						"#"+rst.getInt("versionnumber")+"."+FileHandler.getFileExtension(rst.getString("filename"));					
-					Blob bl = null;
-					byte[] byt = null;
-					try{
-						bl = rst.getBlob("file_content");
-					}catch(Throwable t){
-						try{
-							byt = rst.getBytes("file_content");
-						}catch(Throwable t2){
-							
-						}
-					}
+					Blob bl = rst.getBlob("file_content");
 
-					byte[] allBytesInBlob = bl!=null?bl.getBytes(1, (int) bl.length()):byt;
+					byte[] allBytesInBlob = bl.getBytes(1, (int) bl.length());
 
 					FileOutputStream fos=null;
 					try{
@@ -732,22 +712,12 @@ public class FileVersioningController {
 					fv.setUser(rst.getString("cuser"));
 					fv.setFilename(rst.getString("file_name"));
 
-					Blob bl = null;
-					byte[] byt = null;
-					try{
-						bl = rst.getBlob("content");
-					}catch(Throwable t){
-						try{
-							byt = rst.getBytes("content");
-						}catch(Throwable t2){
-							
-						}
-					}
+					Blob bl = rst.getBlob("content");
 
 					String tmpPath="tmp/"+System.nanoTime()+"/"+rst.getString("file_name");
 					File ivyFile = new File(tmpPath,true);
 					ivyFile.createNewFile();
-					byte[] allBytesInBlob = bl!=null?bl.getBytes(1, (int) bl.length()):byt;
+					byte[] allBytesInBlob = bl.getBytes(1, (int) bl.length());
 
 					FileOutputStream fos=null;
 					try{

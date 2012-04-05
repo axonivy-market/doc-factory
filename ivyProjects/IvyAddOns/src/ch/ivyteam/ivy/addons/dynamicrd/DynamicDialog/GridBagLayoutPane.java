@@ -5,7 +5,6 @@ import ch.ivyteam.ivy.richdialog.widgets.containers.RGridBagLayoutPane;
 
 import com.ulcjava.base.application.BorderFactory;
 import com.ulcjava.base.application.GridBagConstraints;
-import com.ulcjava.base.application.ULCComponent;
 import com.ulcjava.base.application.ULCContainer;
 import com.ulcjava.base.application.border.ULCTitledBorder;
 
@@ -59,13 +58,13 @@ public class GridBagLayoutPane extends ComplexComponent
   }
 
   @Override
-  public final ULCComponent getLastMainComponent()
+  public final RGridBagLayoutPane getLastMainComponent()
   {
     return getMainComponent();
   }
 
   @Override
-  public final ULCComponent getMainComponent()
+  public final RGridBagLayoutPane getMainComponent()
   {
     return gridBag;
   }

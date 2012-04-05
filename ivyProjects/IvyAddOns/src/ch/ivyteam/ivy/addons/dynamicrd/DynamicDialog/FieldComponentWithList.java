@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import ch.ivyteam.ivy.addons.dynamicrd.DynamicDialog.Table.MyComboBoxCellWidget;
 import ch.ivyteam.ivy.scripting.objects.Date;
 import ch.ivyteam.ivy.scripting.objects.DateTime;
 import ch.ivyteam.ivy.scripting.objects.Duration;
@@ -40,6 +41,8 @@ public abstract class FieldComponentWithList extends FieldComponent
 
   protected final void fill()
   {
+    MyComboBoxCellWidget cellWidget;
+
     if (recordset != null && isFillable())
     {
       ch.ivyteam.ivy.scripting.objects.List<String> widgetData = ch.ivyteam.ivy.scripting.objects.List
@@ -55,6 +58,13 @@ public abstract class FieldComponentWithList extends FieldComponent
         widgetData.add(record[1]);
       }
       setListData(widgetData);
+
+      // Fill the cell if that field is displayed in a table
+      cellWidget = getPanel().getCellWidgetWithList().get(getFullName());
+      if (cellWidget != null)
+      {
+        cellWidget.setKeyValue(recordset);
+      }
     }
   }
 

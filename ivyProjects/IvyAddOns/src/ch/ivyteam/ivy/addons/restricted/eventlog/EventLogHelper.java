@@ -41,9 +41,10 @@ public class EventLogHelper
    * 
    * @param wfCase case for which business events have to be found
    * @return list of business events, it could be empty, never null
- * @throws PersistencyException 
+   * @throws PersistencyException
    */
-  public static List<EventLog> findBusinessEventLogsAsSystemUser(final ICase wfCase) throws PersistencyException
+  public static List<EventLog> findBusinessEventLogsAsSystemUser(final ICase wfCase)
+          throws PersistencyException
   {
     List<IEventLog> eventLogs = null;
     List<IEventLog> businessEventLogs = new ArrayList<IEventLog>();
@@ -54,44 +55,43 @@ public class EventLogHelper
     for (IEventLog eventLog : eventLogs)
     {
       if (eventLog.isBusinessEvent())
-    	  businessEventLogs.add(eventLog);
+        businessEventLogs.add(eventLog);
     }
 
     // sort the list
     sortByEventDateAndTime(businessEventLogs);
 
-    // return the result as List<EventLog>    
+    // return the result as List<EventLog>
     return getEventLogs(businessEventLogs);
-   
+
   }
-  
-  
+
   /**
    * It returns true if case has business events; otherwise false.
    * 
    * @param wfCase case for which business events have to be found
-   * @return 
- * @throws PersistencyException 
+   * @return
+   * @throws PersistencyException
    */
   public static boolean caseContainsBusinessEventLogs(final ICase wfCase) throws PersistencyException
   {
-	  boolean result = false;
-	  
-	  // get all events that are related to that case
-	  List<IEventLog> eventLogs = Ivy.wf().findEventLogs(wfCase);
-	
-	    for (IEventLog eventLog : eventLogs)
-	    {
-	      if (eventLog.isBusinessEvent())
-	      {
-	    	  result = true;
-	    	  break;
-	      }
-	    }
-	
-	 return result;
+    boolean result = false;
+
+    // get all events that are related to that case
+    List<IEventLog> eventLogs = Ivy.wf().findEventLogs(wfCase);
+
+    for (IEventLog eventLog : eventLogs)
+    {
+      if (eventLog.isBusinessEvent())
+      {
+        result = true;
+        break;
+      }
+    }
+
+    return result;
   }
-  
+
   /**
    * It sorts the entries of the list based on the eventDate AND eventTime property of each entry
    * @param eventLogs is the list of editors to sort
@@ -251,20 +251,20 @@ public class EventLogHelper
     List<IEventLog> events;
 
     filter = wf.createEventLogPropertyFilter(EventLogProperty.EVENT_TYPE, RelationalOperator.EQUAL, MESSAGE);
-    filter.and(wf.createEventLogPropertyFilter(EventLogProperty.EVENT_SUB_TYPE, RelationalOperator.EQUAL,
-            messageName));
+    filter = filter.and(wf.createEventLogPropertyFilter(EventLogProperty.EVENT_SUB_TYPE,
+            RelationalOperator.EQUAL, messageName));
 
     if (objectId != null)
     {
-      filter.and(wf.createEventLogPropertyFilter(EventLogProperty.OBJECT_ID, RelationalOperator.EQUAL,
-              objectId));
+      filter = filter.and(wf.createEventLogPropertyFilter(EventLogProperty.OBJECT_ID,
+              RelationalOperator.EQUAL, objectId));
     }
     if (applicationName == null || applicationName.equals(""))
     {
       throw new IllegalArgumentException("Parameter applicationName is mandatory");
     }
-    filter.and(wf.createEventLogPropertyFilter(EventLogProperty.APPLICATION_NAME, RelationalOperator.EQUAL,
-            applicationName));
+    filter = filter.and(wf.createEventLogPropertyFilter(EventLogProperty.APPLICATION_NAME,
+            RelationalOperator.EQUAL, applicationName));
 
     events = new ArrayList<IEventLog>();
     events.addAll(wf.findEventLogs(ch.ivyteam.ivy.workflow.eventlog.EventLogStatus.PENDING, filter, null, 0,

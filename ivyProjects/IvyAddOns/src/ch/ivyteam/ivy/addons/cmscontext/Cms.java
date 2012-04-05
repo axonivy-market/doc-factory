@@ -10,8 +10,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import ch.ivyteam.ivy.addons.util.AddonsException;
 import ch.ivyteam.ivy.addons.util.StringUtil;
@@ -134,13 +132,13 @@ public final class Cms
 
   public static final String CMS_CONTEXT = "cmsContext";
 
-  private static final String CMS_KEY = "key";
+  public static final String CMS_KEY = "key";
 
   public static final String CMS_URI_ROOT = "/";
 
   public static final String CMS_URI_SEPARATOR = "/";
 
-  private static final String CMS_VALUE = "value";
+  public static final String CMS_VALUE = "value";
 
   public static final String INEXISTANT_NODE_PREFIX = "X";
 
@@ -233,19 +231,10 @@ public final class Cms
   public static boolean coAsBoolean(List<String> contexts, String cmsKey, boolean defaultValue,
           IContentManagementSystem cms)
   {
-    boolean result;
     String temp;
     temp = co(contexts, cmsKey, cms);
 
-    if (defaultValue)
-    {
-      result = temp.equals("") || temp.equals("1");
-    }
-    else
-    {
-      result = temp.equals("1");
-    }
-    return result;
+    return StringUtil.toBoolean(temp, defaultValue);
   }
 
   /**
@@ -275,31 +264,17 @@ public final class Cms
   public static Number coAsNumber(List<String> contexts, String cmsKey, Number defaultValue,
           IContentManagementSystem cms)
   {
-    Number result;
     String temp;
     temp = co(contexts, cmsKey, cms);
 
-    result = defaultValue;
-
-    if (temp != null)
-    {
-      try
-      {
-        result = Integer.parseInt(temp);
-      }
-      catch (NumberFormatException e)
-      {
-        // Nothing to do
-      }
-    }
-
-    return result;
+    return StringUtil.toNumber(temp, defaultValue);
   }
 
   /**
    * Returns the list of value found through the CMScontext mechanism. In that mechanism, a list is a set of
    * content values that have as name the key name suffixed with with 3 digits. <br />
-   * It permits in one call to read many values in the CMS. (<code>value001 - value002 - value003 - ...</code>)
+   * It permits in one call to read many values in the CMS. (<code>value001 - value002 - value003 - ...</code>
+   * )
    * 
    * @param contexts CMS context list
    * @param key suffix that is searched
@@ -313,7 +288,8 @@ public final class Cms
   /**
    * Returns the list of value found through the CMScontext mechanism. In that mechanism, a list is a set of
    * content values that have as name the key name suffixed with with 3 digits. <br />
-   * It permits in one call to read many values in the CMS. (<code>value001 - value002 - value003 - ...</code>)
+   * It permits in one call to read many values in the CMS. (<code>value001 - value002 - value003 - ...</code>
+   * )
    * 
    * @param contexts CMS context list
    * @param key suffix that is searched
@@ -523,29 +499,7 @@ public final class Cms
         {
           COBlankCache.getInstance(cms).add(cleanURI);
         }
-        if (result.contains("%"))
-        {
-          Pattern p;
-
-          p = Pattern.compile("%(.*?)(?=%)");
-          Matcher m = p.matcher(result);
-
-          while (m.find())
-          {
-            try
-            {
-              if (Ivy.var().get(m.group(1)) != null)
-              {
-                result = result.replaceFirst("%" + m.group(1) + "%", Ivy.var().get(m.group(1)));
-                m = p.matcher(result);
-              }
-            }
-            catch (Exception e)
-            {
-              // Nothing to do
-            }
-          }
-        }
+        result = StringUtil.resolveGlobalVars(result);
       }
     }
     if (result.equals("null"))
@@ -718,7 +672,7 @@ public final class Cms
 
             if (getCms(context, true, cms).equals(""))
             {
-              throw new CmsException("Could not access the CMS uri '" + context + "' used by uri '"
+              Ivy.log().error("Could not access the CMS uri '" + context + "' used by uri '"
                       + contextURI + "'");
             }
 

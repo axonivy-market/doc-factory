@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import ch.ivyteam.ivy.addons.dynamicrd.DynamicDialog.Table.MyComboBoxCellWidget;
 import ch.ivyteam.ivy.addons.dynamicrd.DynamicDialog.internal.DynamicDialogCacheEntry;
 import ch.ivyteam.ivy.addons.dynamicrd.DynamicDialog.internal.Invocation;
 import ch.ivyteam.ivy.addons.dynamicrd.DynamicDialog.internal.TreeNode;
@@ -78,13 +79,14 @@ public class DynamicDialogPanel extends RichDialogGridBagPanel implements IRichD
 
   @SuppressWarnings("restriction")
   private ch.ivyteam.ivy.project.IIvyProject project;
-  
-  
+
   private String controllerDisplayName;
 
   private boolean isConstructed = false;
 
   private RCardPane invisibleComponentsCardPane = null;
+
+  private Map<String, MyComboBoxCellWidget> cellWidgetWithListMap;
 
   /**
    * Create a new instance of DynamicDialogPanel
@@ -115,8 +117,8 @@ public class DynamicDialogPanel extends RichDialogGridBagPanel implements IRichD
   }
 
   @SuppressWarnings("restriction")
-  public void start(Object value, IRichDialogContext rdContext, ch.ivyteam.ivy.project.IIvyProject project, DynamicDialogCacheEntry entry)
-          throws AddonsException
+  public void start(Object value, IRichDialogContext rdContext, ch.ivyteam.ivy.project.IIvyProject project,
+          DynamicDialogCacheEntry entry) throws AddonsException
   {
     this.ddObjectClass = value.getClass();
     this.rdContext = rdContext;
@@ -148,8 +150,8 @@ public class DynamicDialogPanel extends RichDialogGridBagPanel implements IRichD
 
   @SuppressWarnings("restriction")
   @Deprecated
-  public void start(String prefix, Object value, StaticRelation staticRelation, IRichDialogContext rdContext, ch.ivyteam.ivy.project.IIvyProject project)
-          throws AddonsException
+  public void start(String prefix, Object value, StaticRelation staticRelation, IRichDialogContext rdContext,
+          ch.ivyteam.ivy.project.IIvyProject project) throws AddonsException
   {
     ch.ivyteam.ivy.addons.dynamicrd.DynamicDialog.StaticRelation.Item item;
 
@@ -165,7 +167,7 @@ public class DynamicDialogPanel extends RichDialogGridBagPanel implements IRichD
 
     constructUI(value);
   }
-  
+
   public static DynamicDialogCacheEntry constructParameters(Class<?> clazz, List<String> cmsContext,
           String defaultDBConfig, String prefix, final Map<String, Class<?>> classMap)
   {
@@ -188,6 +190,7 @@ public class DynamicDialogPanel extends RichDialogGridBagPanel implements IRichD
     clazz = value.getClass();
     componentMap = new HashMap<String, Component>();
     componentList = new ArrayList<Component>();
+    cellWidgetWithListMap = new HashMap<String, MyComboBoxCellWidget>();
 
     add(getFocusReceiverComponent());
 
@@ -330,14 +333,22 @@ public class DynamicDialogPanel extends RichDialogGridBagPanel implements IRichD
     }
   }
 
+  // TODO javadoc
   public void setDDValue(Object value) throws AddonsException
   {
-    setDDValue(value, false);
+    setDDValue(value, getPrefix(), false);
   }
 
-  private void setDDValue(Object value, boolean construction) throws AddonsException
+  // TODO javadoc
+  public void setDDValue(Object value, String fullName) throws AddonsException
   {
-    DynamicDialogMapper.setValue(value, componentMap, inexistantAttributeValues, getPrefix(), !construction,
+    setDDValue(value, fullName, false);
+  }
+
+  // TODO javadoc
+  private void setDDValue(Object value, String fullName, boolean construction) throws AddonsException
+  {
+    DynamicDialogMapper.setValue(value, componentMap, inexistantAttributeValues, fullName, !construction,
             getClassMap());
   }
 
@@ -360,10 +371,17 @@ public class DynamicDialogPanel extends RichDialogGridBagPanel implements IRichD
     construct(value);
   }
 
+  // TODO javadoc
+  public Object getDDValue(String fullName, Class<?> type)
+  {
+    return DynamicDialogMapper.getValue(componentMap, inexistantAttributeValues, type, fullName,
+            getClassMap());
+  }
+
+  // TODO javadoc
   public Object getDDValue()
   {
-    return DynamicDialogMapper.getValue(componentMap, inexistantAttributeValues, ddObjectClass, getPrefix(),
-            getClassMap());
+    return getDDValue(getPrefix(), ddObjectClass);
   }
 
   public Class<?> getDDObjectClass()
@@ -491,7 +509,10 @@ public class DynamicDialogPanel extends RichDialogGridBagPanel implements IRichD
 
           if (fieldComponent.isVisible() && !fieldComponent.validate())
           {
-            result = checkBlocking ? !fieldComponent.getParameters().isValidationBlocking() : false;
+            if (!checkBlocking || fieldComponent.getParameters().isValidationBlocking())
+            {
+              result = false;
+            }
 
             if (!result && setFocus)
             {
@@ -704,7 +725,7 @@ public class DynamicDialogPanel extends RichDialogGridBagPanel implements IRichD
   {
     return project;
   }
-  
+
   @Override
   public void setEnabled(boolean enabled)
   {
@@ -736,5 +757,35 @@ public class DynamicDialogPanel extends RichDialogGridBagPanel implements IRichD
       invisibleComponentsCardPane.add(getControllerDisplay());
     }
     return invisibleComponentsCardPane;
+  }
+
+  protected Map<String, MyComboBoxCellWidget> getCellWidgetWithList()
+  {
+    return cellWidgetWithListMap;
+  }
+
+  /**
+   * Returns all the master/detail components that are in edition.
+   * 
+   * @return list of master/detail components
+   */
+  public List<MasterDetail> getMasterDetailComponentsWithDetailVisible()
+  {
+    List<MasterDetail> result;
+    MasterDetail md;
+
+    result = new ArrayList<MasterDetail>();
+    for (Component c : componentList)
+    {
+      if (c instanceof MasterDetail)
+      {
+        md = (MasterDetail) c;
+        if (md.isDetailVisible())
+        {
+          result.add(md);
+        }
+      }
+    }
+    return result;
   }
 }

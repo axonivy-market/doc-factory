@@ -151,7 +151,6 @@ public final class ExcelExport
     ULCTableColumnModel columnModel;
     String usedSheetName;
 
-    int columnNumber;
     int rowNumber;
     ITableModel model;
 
@@ -170,7 +169,6 @@ public final class ExcelExport
     }
 
     model = table.getModel();
-    columnNumber = model.getColumnCount();
     rowNumber = model.getRowCount();
 
     tableValues = new ArrayList<List<Object>>();
@@ -178,9 +176,9 @@ public final class ExcelExport
     {
       rowValues = new ArrayList<Object>();
 
-      for (int x = 0; x < columnNumber; x++)
+      for (int x = 0; x < columnModel.getColumnCount(); x++)
       {
-        rowValues.add(model.getValueAt(y, x));
+        rowValues.add(model.getValueAt(y, table.convertColumnIndexToModel(x)));
       }
       tableValues.add(rowValues);
     }
@@ -247,7 +245,7 @@ public final class ExcelExport
     else
     {
       cell = excelRow.createCell(currentColumn);
-      cell.setCellValue(new HSSFRichTextString(usedCellContent.toString()));
+      cell.setCellValue(new HSSFRichTextString(usedCellContent == null ? "" : usedCellContent.toString()));
       cell.setCellStyle(defaultCellStyle);
     }
   }

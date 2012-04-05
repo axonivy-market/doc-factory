@@ -1,0 +1,8 @@
+EventLogDisplayTreeData #class
+ch.ivyteam.ivy.addons.eventlog.EventLogDisplayTree #namespace
+criteria ch.ivyteam.ivy.addons.data.technical.eventlog.EventLogSearchCriteria #field
+events List<ch.ivyteam.ivy.addons.data.technical.eventlog.EventLog> #field
+eventTree Tree #field
+groupBy Integer #field
+cmsContext List<String> #field
+columns List<ch.ivyteam.ivy.workflow.eventlog.EventLogProperty> #field
