@@ -298,7 +298,7 @@ public class FileVersioningController {
 				DateFormat sdf = new SimpleDateFormat("hh:mm:ss");
 				stmt.setLong(1, fileId);
 				stmt.setInt(2, vn);
-				stmt.setDate(3, new java.sql.Date(da.toDate().getTime()));
+				stmt.setDate(3, new java.sql.Date(da.toJavaDate().getTime()));
 				stmt.setTime(4, new java.sql.Time(sdf.parse(doc.getCreationTime()).getTime()));
 				stmt.setString(5, doc.getUserID());
 				stmt.setString(6, doc.getFilename());
