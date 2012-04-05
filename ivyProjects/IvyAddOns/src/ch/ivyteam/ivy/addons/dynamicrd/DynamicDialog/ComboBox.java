@@ -92,13 +92,13 @@ public class ComboBox extends FieldComponentWithList
   }
 
   @Override
-  public final ULCComponent getLastMainComponent()
+  public final RComboBox getLastMainComponent()
   {
     return getMainComponent();
   }
 
   @Override
-  public final ULCComponent getMainComponent()
+  public final RComboBox getMainComponent()
   {
     return comboBox;
   }

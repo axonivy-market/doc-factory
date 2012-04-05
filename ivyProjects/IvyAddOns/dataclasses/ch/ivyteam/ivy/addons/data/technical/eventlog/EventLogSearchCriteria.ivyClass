@@ -1,0 +1,23 @@
+EventLogSearchCriteria #class
+'This gives the search criteria to find events into the event log tables.
+Please refer to ch.ivyteam.ivy.addons.data.technical.eventlog.EventLogData to have detailled description of each field.' #classComment
+ch.ivyteam.ivy.addons.data.technical.eventlog #namespace
+server String #field
+application String #field
+tower String #field
+module String #field
+environment String #field
+groupId String #field
+initiator String #field
+eventDateFrom Date #field
+eventDateTo Date #field
+userName String #field
+source String #field
+severities List<ch.ivyteam.ivy.addons.eventlog.data.technical.EventLogSeverity> #field
+objectId String #field
+context String #field
+isBusinessEvent Boolean #field
+eventType String #field
+eventSubType String #field
+userComment String #field
+errorCode String #field

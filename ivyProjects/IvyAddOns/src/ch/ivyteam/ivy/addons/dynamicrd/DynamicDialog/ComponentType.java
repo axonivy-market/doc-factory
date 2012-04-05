@@ -21,6 +21,10 @@ public enum ComponentType
    */
   GRID_BAG_LAYOUT_PANE,
   /**
+   * Container that use a RGridBagLayoutPane and a separator
+   */
+  SEPARATOR_PANE,
+  /**
    * Container that reuses the parent container
    */
   INSIDE,
@@ -52,6 +56,10 @@ public enum ComponentType
    * Field that uses a RTextField
    */
   TEXT_FIELD,
+  /**
+   * Field that uses a RLabel
+   */
+  LABEL,
   /**
    * Field that uses a RTextField
    */

@@ -6,7 +6,6 @@ import ch.ivyteam.ivy.richdialog.widgets.containers.RTaskPane;
 import ch.ivyteam.ivy.richdialog.widgets.containers.RTaskPaneContainer;
 
 import com.ulcjava.base.application.GridBagConstraints;
-import com.ulcjava.base.application.ULCComponent;
 import com.ulcjava.base.application.ULCContainer;
 
 /**
@@ -51,13 +50,13 @@ public class TaskPane extends ComplexComponent
   }
 
   @Override
-  public final ULCComponent getLastMainComponent()
+  public final RTaskPane getLastMainComponent()
   {
     return getMainComponent();
   }
 
   @Override
-  public final ULCComponent getMainComponent()
+  public final RTaskPane getMainComponent()
   {
     return taskPane;
   }

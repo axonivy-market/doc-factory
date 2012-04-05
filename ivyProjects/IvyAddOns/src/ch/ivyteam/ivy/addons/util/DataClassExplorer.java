@@ -56,7 +56,6 @@ public final class DataClassExplorer<T extends Object>
     return new DataClassExplorer<Class<?>>(handler, Class.class);
   }
 
-  
   /**
    * Constructs a new DataClassExplorer object.
    * 
@@ -158,18 +157,25 @@ public final class DataClassExplorer<T extends Object>
   private void exploreAttribute(Class<?> clazz, Class<?> parentClass, String path, PropertyDescriptor property)
           throws AddonsException
   {
+    Object returnType;
+
     switch (TypeCategory.getCategory(clazz))
     {
       case SIMPLE:
         break;
       case LIST:
-        ParameterizedType parameterizedType;
-
         if (property != null)
         {
-          parameterizedType = (ParameterizedType) property.getReadMethod().getGenericReturnType();
-
-          explore((Class<?>) parameterizedType.getActualTypeArguments()[0], parentClass, "item", path, null);
+          returnType = property.getReadMethod().getGenericReturnType();
+          if (returnType instanceof ParameterizedType)
+          {
+            ParameterizedType parameterizedType = (ParameterizedType) returnType;
+            
+            if (parameterizedType.getActualTypeArguments()[0] instanceof Class<?>)
+            {
+              explore((Class<?>) parameterizedType.getActualTypeArguments()[0], parentClass, "item", path, null);
+            }
+          }
         }
         break;
       case COMPLEX:

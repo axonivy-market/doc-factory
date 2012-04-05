@@ -1,8 +1,5 @@
 package ch.ivyteam.ivy.addons.dynamicrd.DynamicDialog;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
 import ch.ivyteam.ivy.addons.dynamicrd.DynamicDialog.internal.InsideLookupTextFilter;
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.richdialog.widgets.components.RLookupTextField;
@@ -56,7 +53,7 @@ public class LookupTextField extends FieldComponentWithList
   }
 
   @Override
-  public final ULCComponent getLastMainComponent()
+  public final RLookupTextField getLastMainComponent()
   {
     return getMainComponent();
   }
@@ -75,7 +72,8 @@ public class LookupTextField extends FieldComponentWithList
 
       lookupTextField.setSelectAllOnFocusGained(getParameters().isSelectAllOnFocusGained());
 
-      // TODO Force selection doesn't seem to work. Try it with new Ivy version.
+      // TODO Force selection doesn't seem to work. Try it with new Ivy
+      // version.
       // See issue #21609
       // Call setForcedSelection with isEditable has parameter
 
@@ -83,12 +81,13 @@ public class LookupTextField extends FieldComponentWithList
       {
         try
         {
-          lookupTextField.setIndicatorIcon(new ULCIcon(new URL(Ivy.html().coref(
-                  "/ch/ivyteam/ivy/addons/dynamicrd/DynamicDialog/icons/LookupTextField16"))));
+          lookupTextField.setIndicatorIcon(new ULCIcon(Ivy.cms().getContentObjectValue(
+                  "/ch/ivyteam/ivy/addons/dynamicrd/DynamicDialog/icons/LookupTextField16", null)
+                  .getContentAsByteArray()));
         }
-        catch (MalformedURLException e)
+        catch (Exception e)
         {
-          Ivy.log().error("Set LookupTextField Icon : " + e.getMessage());
+          throw new DynamicDialogException(e);
         }
       }
 
@@ -98,7 +97,7 @@ public class LookupTextField extends FieldComponentWithList
   }
 
   @Override
-  public final ULCComponent getMainComponent()
+  public final RLookupTextField getMainComponent()
   {
     return lookupTextField;
   }
@@ -143,7 +142,8 @@ public class LookupTextField extends FieldComponentWithList
     boolean isEnabled;
     try
     {
-      // Without that LookupTextField becomes enabled when the list data is changed
+      // Without that LookupTextField becomes enabled when the list data
+      // is changed
       isEnabled = lookupTextField.isEnabled();
       lookupTextField.setListData(lookupTextFieldData);
       lookupTextField.setEnabled(isEnabled);

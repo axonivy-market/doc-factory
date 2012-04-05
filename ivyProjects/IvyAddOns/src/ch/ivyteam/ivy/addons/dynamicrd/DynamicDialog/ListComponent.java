@@ -34,4 +34,17 @@ public abstract class ListComponent extends ComplexComponent
    * @param list data to display
    */
   public abstract void setListData(List<?> list);
+
+  /**
+   * Fills the list component with its default value.
+   */
+  public final void useDefaultValue()
+  {
+    callDefaultValueMethod();
+  }
+  
+  private void callDefaultValueMethod()
+  {
+    invoke(getParameters().getDefaultValueMethodtMethod());
+  }
 }

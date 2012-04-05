@@ -136,6 +136,10 @@ final class DynamicDialogBinding
       }
     }
     listComponent.setListData(list);
+    if (list == null)
+    {
+      listComponent.useDefaultValue();
+    }
   }
 
   @SuppressWarnings("unchecked")

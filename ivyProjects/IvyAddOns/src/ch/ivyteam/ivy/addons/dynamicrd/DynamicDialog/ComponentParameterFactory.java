@@ -29,6 +29,8 @@ public final class ComponentParameterFactory
 
   public static final String GRID_BAG_LAYOUT_PANE = "GridBagLayoutPane";
 
+  public static final String SEPARATOR_PANE = "SeparatorPane";
+
   public static final String LOOKUP_TEXT_FIELD = "LookupTextField";
 
   public static final String RADIO_BUTTONS = "RadioButtons";
@@ -52,6 +54,8 @@ public final class ComponentParameterFactory
   public static final String COMPONENT_LIST = "ComponentList";
 
   public static final String LAZY_FIELD = "LazyField";
+
+  public static final String LABEL = "Label";
 
   protected static ComponentParameters createParametersComponent(String name, Class<?> clazz,
           ComplexComponentParameters parentParameters, List<String> cmsContexts, String fullName,
@@ -77,7 +81,7 @@ public final class ComponentParameterFactory
     switch (TypeCategory.getCategory(clazz))
     {
       case COMPLEX:
-        componentType = chooseContainerWidget(cmsContexts);
+        componentType = chooseContainerWidget(cmsContexts, parentParameters, clazz);
         break;
       case LIST:
         componentType = chooseListWidget();
@@ -122,11 +126,18 @@ public final class ComponentParameterFactory
       case LAZY_FIELD:
         component = new LazyFieldParameters(cmsContexts, name, fullName, parentParameters, position, clazz);
         break;
+      case LABEL:
+        component = new LabelParameters(cmsContexts, name, fullName, parentParameters, position, clazz);
+        break;
       case TASK_PANE:
         component = new TaskPaneParameters(cmsContexts, name, fullName, parentParameters, position, clazz);
         break;
       case GRID_BAG_LAYOUT_PANE:
         component = new GridBagLayoutPaneParameters(cmsContexts, name, fullName, parentParameters, position,
+                clazz);
+        break;
+      case SEPARATOR_PANE:
+        component = new SeparatorPaneParameters(cmsContexts, name, fullName, parentParameters, position,
                 clazz);
         break;
       case TABBED_PANE:
@@ -168,6 +179,10 @@ public final class ComponentParameterFactory
         else if (widgetName.equals(GRID_BAG_LAYOUT_PANE))
         {
           result = ComponentType.GRID_BAG_LAYOUT_PANE;
+        }
+        else if (widgetName.equals(SEPARATOR_PANE))
+        {
+          result = ComponentType.SEPARATOR_PANE;
         }
         else if (widgetName.equals(TABBED_PANE))
         {
@@ -225,6 +240,10 @@ public final class ComponentParameterFactory
         {
           result = ComponentType.LAZY_FIELD;
         }
+        else if (widgetName.equals(LABEL))
+        {
+          result = ComponentType.LABEL;
+        }
         break;
     }
     return result;
@@ -276,12 +295,21 @@ public final class ComponentParameterFactory
     return componentType;
   }
 
-  private static ComponentType chooseContainerWidget(List<String> cmsContexts)
+  private static ComponentType chooseContainerWidget(List<String> cmsContexts,
+          ComplexComponentParameters parentParameters, Class<?> clazz)
   {
     ComponentType componentType;
+    String defaultContainerWidget;
+
     if (Cms.coAsBoolean(cmsContexts, KnownParameters.GROUP_PARAMETER, true))
     {
-      componentType = ComponentType.TASK_PANE;
+      defaultContainerWidget = Cms.co(cmsContexts, KnownParameters.DEFAULT_CONTAINER_WIDGET_PARAMETER);
+      if (defaultContainerWidget.isEmpty())
+      {
+        defaultContainerWidget = parentParameters == null ? KnownParameters.DEFAULT_CONTAINER_WIDGET
+                : parentParameters.getDefaultContainerWidget();
+      }
+      componentType = getComponentType(clazz, defaultContainerWidget, ComponentType.TASK_PANE);
     }
     else
     {

@@ -50,13 +50,13 @@ public class TextArea extends FieldComponent
   }
 
   @Override
-  public final ULCComponent getLastMainComponent()
+  public final RTextArea getLastMainComponent()
   {
     return getMainComponent();
   }
 
   @Override
-  public final ULCComponent getMainComponent()
+  public final RTextArea getMainComponent()
   {
     return textArea;
   }

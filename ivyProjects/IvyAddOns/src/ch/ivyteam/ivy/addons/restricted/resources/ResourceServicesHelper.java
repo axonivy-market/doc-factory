@@ -78,7 +78,7 @@ public class ResourceServicesHelper {
 		
 		// define application code and application module
 		String applicationCodeAndModule = applicationCode;
-		if (applicationModule != null || !("".equals(applicationModule)))
+		if (applicationModule != null && !("".equals(applicationModule)))
 			applicationCodeAndModule += "_" + applicationModule;
 		Ivy.log().debug("The application code and module is {0}.", applicationCodeAndModule);
 		

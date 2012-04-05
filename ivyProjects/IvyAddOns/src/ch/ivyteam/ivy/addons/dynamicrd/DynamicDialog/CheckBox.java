@@ -42,13 +42,13 @@ public class CheckBox extends FieldComponent
   }
 
   @Override
-  public final ULCComponent getLastMainComponent()
+  public final RCheckBox getLastMainComponent()
   {
     return getMainComponent();
   }
 
   @Override
-  public final ULCComponent getMainComponent()
+  public final RCheckBox getMainComponent()
   {
     return checkBox;
   }

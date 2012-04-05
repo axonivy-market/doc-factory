@@ -1,6 +1,6 @@
 [Ivy]
-[>Created: Mon Mar 14 09:49:06 CET 2011]
-1253032DA521D92D 3.16 #module
+[>Created: Wed Jun 01 13:36:47 CEST 2011]
+1253032DA521D92D 3.17 #module
 >Proto >Proto Collection #zClass
 Ds0 DynamicDialogNewProcess Big #zClass
 Ds0 RD #cInfo
@@ -1177,6 +1177,7 @@ Ds0 f90 @|RichDialogMethodStartIcon #fIcon
 Ds0 f91 type ch.ivyteam.ivy.addons.dynamicrd.DynamicDialog.DynamicDialogData #txt
 Ds0 f91 966 1086 20 20 13 0 #rect
 Ds0 f91 @|RichDialogProcessEndIcon #fIcon
+Ds0 f92 targetWindow NEW:card: #txt
 Ds0 f92 targetDisplay TOP #txt
 Ds0 f92 richDialogId ch.ivyteam.ivy.addons.commondialogs.MessageDialog #txt
 Ds0 f92 startMethod showMessage(String) #txt
@@ -1189,9 +1190,10 @@ Ds0 f92 responseActionDecl 'ch.ivyteam.ivy.addons.dynamicrd.DynamicDialog.Dynami
 Ds0 f92 responseMappingAction 'out=in;
 ' #txt
 Ds0 f92 windowConfiguration '{/title "<%=in.messageTitle%>"/width 0 /height 0 /centered true /resizable false /maximized false /close_after_last_rd true }' #txt
-Ds0 f92 isAsynch true #txt
+Ds0 f92 isAsynch false #txt
 Ds0 f92 isInnerRd true #txt
 Ds0 f92 isDialog true #txt
+Ds0 f92 userContext '* ' #txt
 Ds0 f92 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -1227,6 +1229,7 @@ Ds0 f95 expr out #txt
 Ds0 f95 976 1060 976 1086 #arcP
 Ds0 f96 expr out #txt
 Ds0 f96 976 962 976 988 #arcP
+Ds0 f97 targetWindow NEW:card: #txt
 Ds0 f97 targetDisplay TOP #txt
 Ds0 f97 richDialogId ch.ivyteam.ivy.addons.commondialogs.QuestionDialog #txt
 Ds0 f97 startMethod askQuestion(String,String,List<String>,String) #txt
@@ -1246,6 +1249,7 @@ Ds0 f97 windowConfiguration '{/title "<%=in.messageTitle%>"/width 0 /height 0 /c
 Ds0 f97 isAsynch false #txt
 Ds0 f97 isInnerRd true #txt
 Ds0 f97 isDialog true #txt
+Ds0 f97 userContext '* ' #txt
 Ds0 f97 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>

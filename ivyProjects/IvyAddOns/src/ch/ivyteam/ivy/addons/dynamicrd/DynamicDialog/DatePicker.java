@@ -11,6 +11,8 @@ import ch.ivyteam.ivy.scripting.objects.Duration;
 import ch.ivyteam.ivy.scripting.objects.Time;
 
 import com.ulcjava.base.application.ULCComponent;
+import com.ulcjava.base.application.event.ActionEvent;
+import com.ulcjava.base.application.event.IActionListener;
 
 /**
  * This is the implementation of fields that use a DatePicker.
@@ -44,13 +46,13 @@ public class DatePicker extends FieldComponent
   }
 
   @Override
-  public final ULCComponent getLastMainComponent()
+  public final RDatePicker getLastMainComponent()
   {
     return getMainComponent();
   }
 
   @Override
-  public final ULCComponent getMainComponent()
+  public final RDatePicker getMainComponent()
   {
     return datePicker;
   }
@@ -83,7 +85,16 @@ public class DatePicker extends FieldComponent
       datePicker.setName(getParameters().getName() + "DatePicker");
 
       datePicker.addValueChangedListener(new ValueChangedListener(this, true));
+      datePicker.addActionListener(new IActionListener()
+        {
+          private static final long serialVersionUID = -4839480071852703707L;
 
+          @Override
+          public void actionPerformed(ActionEvent event)
+          {
+            valueChanged();
+          }
+        });
       datePicker.addFocusListener(new FocusListener(this));
 
       simpleFormat = getDateFormat();

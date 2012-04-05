@@ -3,6 +3,10 @@ package ch.ivyteam.ivy.addons.util;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import ch.ivyteam.ivy.environment.Ivy;
 
 /**
  * String utilities.
@@ -179,5 +183,67 @@ public final class StringUtil
       }
     }
     return result.toString();
+  }
+
+  public static boolean toBoolean(String value, boolean defaultValue)
+  {
+    boolean result;
+    if (defaultValue)
+    {
+      result = value.equals("") || value.equals("1");
+    }
+    else
+    {
+      result = value.equals("1");
+    }
+    return result;
+  }
+
+  public static Number toNumber(String value, Number defaultValue)
+  {
+    Number result;
+    result = defaultValue;
+  
+    if (value != null)
+    {
+      try
+      {
+        result = Integer.parseInt(value);
+      }
+      catch (NumberFormatException e)
+      {
+        // Nothing to do
+      }
+    }
+  
+    return result;
+  }
+
+  public static String resolveGlobalVars(String value)
+  {
+    if (value.contains("%"))
+    {
+      Pattern p;
+  
+      p = Pattern.compile("%(.*?)(?=%)");
+      Matcher m = p.matcher(value);
+  
+      while (m.find())
+      {
+        try
+        {
+          if (Ivy.var().get(m.group(1)) != null)
+          {
+            value = value.replaceFirst("%" + m.group(1) + "%", Ivy.var().get(m.group(1)));
+            m = p.matcher(value);
+          }
+        }
+        catch (Exception e)
+        {
+          // Nothing to do
+        }
+      }
+    }
+    return value;
   }
 }

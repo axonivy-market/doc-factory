@@ -98,6 +98,7 @@ public final class XmlUtil
   /**
    * Saves document into a byte array.
    * 
+   * @param xmldoc the dom document to save
    * @param encoding encoding to use. UTF-8, if this parameter is null
    * @return XML byte array
    * @throws AddonsException
