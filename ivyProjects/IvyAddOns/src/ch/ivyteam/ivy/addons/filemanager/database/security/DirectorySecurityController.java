@@ -839,6 +839,9 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 				stmt.setString(13, returnStringFromList(fos.getCdd()));
 				stmt.setString(14, returnStringFromList(fos.getCwf()));
 				stmt.setString(15, returnStringFromList(fos.getCdf()));
+				stmt.executeUpdate();
+				fos=getDirectoryWithPath(directoryPath);
+				/*
 				int i = stmt.executeUpdate();
 				if(i>0)
 				{
@@ -847,7 +850,7 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 				else
 				{
 					fos=getDirectoryWithPath(directoryPath);
-				}
+				}*/
 
 			}finally{
 				DatabaseUtil.close(stmt);

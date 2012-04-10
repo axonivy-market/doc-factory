@@ -984,7 +984,6 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 				stmt = jdbcConnection.prepareStatement(base);
 				//Select the root
 				stmt.setString(1, rootPath);
-				Ivy.log().info(base+" => "+rootPath);
 				rset=executeStatement(stmt);
 				recordList=rset.toList();
 				if(recordList.size()==1)
@@ -1304,7 +1303,8 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 
 				if(rst.next())
 				{
-
+					
+					
 					doc.setFileID(String.valueOf(rst.getInt("FileId")));
 					doc.setFilename(rst.getString("FileName"));
 					doc.setPath(rst.getString("FilePath"));
@@ -1323,6 +1323,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 					}catch(Exception ex){
 						//Ignore the Exception here
 					}
+
 					Blob bl = null;
 					byte[] byt = null;
 					try{
@@ -1334,13 +1335,14 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 							
 						}
 					}
-
+					
+					
 					//we create a temp file on the server 
 					String tmpPath="tmp/"+System.nanoTime()+"/"+doc.getFilename();
 					File ivyFile = new File(tmpPath,true);
 					ivyFile.createNewFile();
 					byte[] allBytesInBlob = bl!=null?bl.getBytes(1, (int) bl.length()):byt;
-
+					
 					FileOutputStream fos=null;
 					//DataOutputStream dos =null;
 					try{
@@ -1377,7 +1379,6 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 								is.close();
 							}
 						}
-						doc=this.getDocumentOnServerWithJavaFile(docu);
 					}
 				}
 			}catch(Exception ex){
@@ -1391,7 +1392,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 				database.giveBackAndUnlockConnection(connection);
 			}
 		}
-		
+
 
 		return doc;
 	}
@@ -1894,7 +1895,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 		String query ="INSERT INTO "+this.fileContentTableNameSpace+" (file_id, file_content) VALUES (?,?)";
 
 		String date = new Date().format("dd.MM.yyyy");
-		String time = new Time().format();
+		String time = new Time().format("HH:mm:ss");
 
 		IExternalDatabaseRuntimeConnection connection=null;
 		try {
@@ -1947,14 +1948,20 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 						stmt.setString(12, s);
 
 						stmt.executeUpdate();
-						ResultSet rs = stmt.getGeneratedKeys();
+						ResultSet rs = null;
 						int id=-1;
-						if ( rs.next() ) {
-							// Retrieve the auto generated key(s).
-							id = rs.getInt(1);
+						try{
+							rs = stmt.getGeneratedKeys();
+							if ( rs!=null && rs.next() ) {
+								// Retrieve the auto generated key(s).
+								id = rs.getInt(1);
+							}
+						}catch(Exception ex)
+						{
+							//ignore the exception: happens if system is ORACLE and so on....
 						}
 						if(!flag || id<=0)
-						{
+						{// In case of Oracle, the Id could not be retrieved automatically
 							try{
 								id=this.getDocIdWithPath(escapeBackSlash(doc.getPath()));
 							}catch(Exception ex){
@@ -2016,7 +2023,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 		String query ="INSERT INTO "+this.fileContentTableNameSpace+" (file_id, file_content) VALUES (?,?)";
 
 		String date = new Date().format("dd.MM.yyyy");
-		String time = new Time().format();
+		String time = new Time().format("HH:mm:ss");
 		String user= Ivy.session().getSessionUserName();
 		_destinationPath=formatPathForDirectory(_destinationPath);
 		IExternalDatabaseRuntimeConnection connection=null;
@@ -2047,15 +2054,21 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 				stmt.setString(11, time);
 				stmt.setString(12, "");
 				stmt.executeUpdate();
-				ResultSet rs = stmt.getGeneratedKeys();
-
-				if ( rs.next() ) {
-					// Retrieve the auto generated key(s).
-					insertedId = rs.getInt(1);
+				
+				ResultSet rs = null;
+				try{
+					rs = stmt.getGeneratedKeys();
+					if ( rs!=null && rs.next() ) {
+						// Retrieve the auto generated key(s).
+						insertedId = rs.getInt(1);
+					}
+				}catch(Exception ex)
+				{
+					//ignore the exception: happens if system is ORACLE and so on....
 				}
 
 				if(!flag || insertedId<=0)
-				{
+				{// In case of Oracle, the Id could not be retrieved automatically
 					try{
 						insertedId=this.getDocIdWithPath(escapeBackSlash(_destinationPath+_file.getName()));
 					}catch(Exception ex){
@@ -2101,7 +2114,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 		" (FileName, FilePath, CreationUserId, CreationDate, CreationTime, FileSize, Locked, LockingUserId, ModificationUserId, ModificationDate, ModificationTime, Description) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
 		String query ="INSERT INTO "+this.fileContentTableNameSpace+" (file_id, file_content) VALUES (?,?)";
 		String date = new Date().format("dd.MM.yyyy");
-		String time = new Time().format();
+		String time = new Time().format("HH:mm:ss");
 		if(_user==null || _user.trim().equals("")){
 			_user= Ivy.session().getSessionUserName();
 		}
@@ -2135,28 +2148,27 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 				stmt.setString(11, time);
 				stmt.setString(12, "");
 				stmt.executeUpdate();
-				ResultSet rs=null;
+				ResultSet rs = null;
 				try{
 					rs = stmt.getGeneratedKeys();
-				}catch(SQLFeatureNotSupportedException fex)
-				{//The JDBC Driver doesn't accept the PreparedStatement.RETURN_GENERATED_KEYS
-					//ignore
-				}
-
-				if ( rs!=null && rs.next() ) {
-					// Retrieve the auto generated key(s).
-					insertedId = rs.getInt(1);
+					if ( rs!=null && rs.next() ) {
+						// Retrieve the auto generated key(s).
+						insertedId = rs.getInt(1);
+					}
+				}catch(Exception ex)
+				{
+					//ignore the exception: happens if system is ORACLE and so on....
 				}
 
 				if(!flag || insertedId<=0)
-				{//The JDBC Driver doesn't accept the PreparedStatement.RETURN_GENERATED_KEYS
-					//we have to get the inserted Id manually....
+				{// In case of Oracle, the Id could not be retrieved automatically
 					try{
 						insertedId=this.getDocIdWithPath(escapeBackSlash(_destinationPath+_file.getName()));
 					}catch(Exception ex){
 						Ivy.log().error(ex.getMessage(),ex);
 					}
 				}
+
 				if(insertedId>0)
 				{//INSERT THE FILE CONTENT IN THE CONTENT TABLE
 					stmt = jdbcConnection.prepareStatement(query);
@@ -2203,7 +2215,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 		" (FileName, FilePath, CreationUserId, CreationDate, CreationTime, FileSize, Locked, LockingUserId, ModificationUserId, ModificationDate, ModificationTime, Description) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
 		String query ="INSERT INTO "+this.fileContentTableNameSpace+" (file_id, file_content) VALUES (?,?)";
 		String date = new Date().format("dd.MM.yyyy");
-		String time = new Time().format();
+		String time = new Time().format("HH:mm:ss");
 		if(_user==null || _user.trim().equals("")){
 			_user= Ivy.session().getSessionUserName();
 		}
@@ -2241,11 +2253,18 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 						stmt.setString(12, "");
 
 						stmt.executeUpdate();
-						ResultSet rs = stmt.getGeneratedKeys();
+
 						int id=-1;
-						if ( rs.next() ) {
-							// Retrieve the auto generated key(s).
-							id = rs.getInt(1);
+						ResultSet rs = null;
+						try{
+							rs = stmt.getGeneratedKeys();
+							if ( rs!=null && rs.next() ) {
+								// Retrieve the auto generated key(s).
+								id = rs.getInt(1);
+							}
+						}catch(Exception ex)
+						{
+							//ignore the exception: happens if system is ORACLE and so on....
 						}
 						if(!flag || id<=0)
 						{
@@ -2297,7 +2316,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 		" (FileName, FilePath, CreationUserId, CreationDate, CreationTime, FileSize, Locked, LockingUserId, ModificationUserId, ModificationDate, ModificationTime, Description) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
 		String query ="INSERT INTO "+this.fileContentTableNameSpace+" (file_id, file_content) VALUES (?,?)";
 		String date = new Date().format("dd.MM.yyyy");
-		String time = new Time().format();
+		String time = new Time().format("HH:mm:ss");
 		if( _user==null ||  _user.trim().equals("")){
 			_user= Ivy.session().getSessionUserName();
 		}
@@ -2334,11 +2353,17 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 						stmt.setString(11, time);
 						stmt.setString(12, "");
 						stmt.executeUpdate();
-						ResultSet rs = stmt.getGeneratedKeys();
 						int id=-1;
-						if ( rs.next() ) {
-							// Retrieve the auto generated key(s).
-							id = rs.getInt(1);
+						ResultSet rs = null;
+						try{
+							rs = stmt.getGeneratedKeys();
+							if ( rs!=null && rs.next() ) {
+								// Retrieve the auto generated key(s).
+								id = rs.getInt(1);
+							}
+						}catch(Exception ex)
+						{
+							//ignore the exception: happens if system is ORACLE and so on....
 						}
 						if(!flag || id<=0)
 						{
@@ -2414,7 +2439,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 		" (FileName, FilePath, CreationUserId, CreationDate, CreationTime, FileSize, Locked, LockingUserId, ModificationUserId, ModificationDate, ModificationTime, Description) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
 		String query ="INSERT INTO "+this.fileContentTableNameSpace+" (file_id, file_content) VALUES (?,?)";
 		String date = new Date().format("dd.MM.yyyy");
-		String time = new Time().format();
+		String time = new Time().format("HH:mm:ss");
 
 		IExternalDatabaseRuntimeConnection connection=null;
 		try {
@@ -2450,10 +2475,16 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 				stmt.setString(12, s);
 
 				stmt.executeUpdate();
-				ResultSet rs = stmt.getGeneratedKeys();
-				if ( rs.next() ) {
-					// Retrieve the auto generated key(s).
-					insertedId = rs.getInt(1);
+				ResultSet rs = null;
+				try{
+					rs = stmt.getGeneratedKeys();
+					if ( rs!=null && rs.next() ) {
+						// Retrieve the auto generated key(s).
+						insertedId = rs.getInt(1);
+					}
+				}catch(Exception ex)
+				{
+					//ignore the exception: happens if system is ORACLE and so on....
 				}
 
 				if(!flag || insertedId<=0)
@@ -2788,7 +2819,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 		List<DocumentOnServer> pasteDocs = List.create(DocumentOnServer.class);
 		String dest = formatPathForDirectory(fileDestinationPath);
 		String date = new Date().format("dd.MM.yyyy");
-		String time = new Time().format();
+		String time = new Time().format("HH:mm:ss");
 		String user ="IVYSYSTEM";
 		try{
 			user = Ivy.session().getSessionUserName();
@@ -2798,7 +2829,9 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 		}
 
 		for(DocumentOnServer doc: documents){
+			Ivy.log().info("Try to copy doc: "+doc.getFilename());
 			int i = getNextCopiedFileNumber(doc.getFilename(),dest);
+			Ivy.log().info("Next Copy: "+i);
 			if(i<0)
 			{
 				continue;
@@ -2806,6 +2839,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 
 			DocumentOnServer docJ = new DocumentOnServer();
 			docJ.setJavaFile(this.getDocumentOnServerWithJavaFile(doc).getJavaFile());
+			Ivy.log().info("Doc with Java File retrieved ");
 			if(docJ.getJavaFile()==null || !docJ.getJavaFile().isFile())
 			{
 				continue;
@@ -4010,7 +4044,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 		}
 
 		String date = new Date().format("dd.MM.yyyy");
-		String time = new Time().format();
+		String time = new Time().format("hh:mm:ss");
 		String user ="IVYSYSTEM";
 		//we create a temp file on the server 
 		String tmpPath="tmp/"+System.nanoTime();
