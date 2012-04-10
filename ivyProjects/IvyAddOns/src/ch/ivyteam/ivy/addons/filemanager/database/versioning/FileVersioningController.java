@@ -295,7 +295,7 @@ public class FileVersioningController {
 				}
 				Date da = new Date(doc.getCreationDate());
 
-				DateFormat sdf = new SimpleDateFormat("hh:mm:ss");
+				DateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 				stmt.setLong(1, fileId);
 				stmt.setInt(2, vn);
 				stmt.setDate(3, new java.sql.Date(da.toJavaDate().getTime()));
@@ -306,15 +306,15 @@ public class FileVersioningController {
 				ResultSet rs=null;
 				try{
 					rs = stmt.getGeneratedKeys();
-				}catch(SQLFeatureNotSupportedException fex)
+					if ( rs!=null && rs.next() ) {
+						// Retrieve the auto generated key.
+						vid= rs.getInt(1);
+					}
+				}catch(Exception fex)
 				{//The JDBC Driver doesn't accept the PreparedStatement.RETURN_GENERATED_KEYS
 					//ignore
 				}
 
-				if ( rs!=null && rs.next() ) {
-					// Retrieve the auto generated key.
-					vid= rs.getInt(1);
-				}
 				if(!flag || vid<=0)
 				{//The JDBC Driver doesn't accept the PreparedStatement.RETURN_GENERATED_KEYS
 					//we have to get the inserted Id manually....
@@ -337,14 +337,15 @@ public class FileVersioningController {
 				rs=null;
 				try{
 					rs = stmt.getGeneratedKeys();
-				}catch(SQLFeatureNotSupportedException fex)
+					if ( rs!=null && rs.next() ) {
+						// Retrieve the auto generated key.
+						vcid= rs.getInt(1);
+					}
+				}catch(Exception fex)
 				{//The JDBC Driver doesn't accept the PreparedStatement.RETURN_GENERATED_KEYS
 					//ignore
 				}
-				if ( rs!=null && rs.next() ) {
-					// Retrieve the auto generated key.
-					vcid= rs.getInt(1);
-				}
+				
 				if(!flag || vcid<=0)
 				{//The JDBC Driver doesn't accept the PreparedStatement.RETURN_GENERATED_KEYS
 					//we have to get the inserted Id manually....
@@ -491,7 +492,7 @@ public class FileVersioningController {
 				{
 					Record rec = recordList.get(0);
 					fv=new FileVersion();
-					fv.setId(Long.parseLong(rec.getField("id").toString()));
+					fv.setId(Long.parseLong(rec.getField("versionid").toString()));
 					fv.setFileid(fileId);
 					fv.setVersionNumber(versionNumber);
 					fv.setVersionContentId(Long.parseLong(rec.getField("fvc_id").toString()));
@@ -589,9 +590,19 @@ public class FileVersioningController {
 					fv.setFilename(rst.getString("file_name"));
 					String vname = FileHandler.getFileNameWithoutExt(rst.getString("file_name"))+
 						"#"+rst.getInt("version_number")+"."+FileHandler.getFileExtension(rst.getString("file_name"));					
-					Blob bl = rst.getBlob("content");
+					Blob bl = null;
+					byte[] byt = null;
+					try{
+						bl = rst.getBlob("content");
+					}catch(Throwable t){
+						try{
+							byt = rst.getBytes("content");
+						}catch(Throwable t2){
+							
+						}
+					}
 
-					byte[] allBytesInBlob = bl.getBytes(1, (int) bl.length());
+					byte[] allBytesInBlob = bl!=null?bl.getBytes(1, (int) bl.length()):byt;
 
 					FileOutputStream fos=null;
 					try{
@@ -628,9 +639,19 @@ public class FileVersioningController {
 					fv.setFilename(rst.getString("filename"));
 					String vname = FileHandler.getFileNameWithoutExt(rst.getString("filename"))+
 						"#"+rst.getInt("versionnumber")+"."+FileHandler.getFileExtension(rst.getString("filename"));					
-					Blob bl = rst.getBlob("file_content");
+					Blob bl = null;
+					byte[] byt = null;
+					try{
+						bl = rst.getBlob("file_content");
+					}catch(Throwable t){
+						try{
+							byt = rst.getBytes("file_content");
+						}catch(Throwable t2){
+							
+						}
+					}
 
-					byte[] allBytesInBlob = bl.getBytes(1, (int) bl.length());
+					byte[] allBytesInBlob = bl!=null?bl.getBytes(1, (int) bl.length()):byt;
 
 					FileOutputStream fos=null;
 					try{
@@ -712,12 +733,23 @@ public class FileVersioningController {
 					fv.setUser(rst.getString("cuser"));
 					fv.setFilename(rst.getString("file_name"));
 
-					Blob bl = rst.getBlob("content");
+					//Blob bl = rst.getBlob("content");
+					Blob bl = null;
+					byte[] byt = null;
+					try{
+						bl = rst.getBlob("content");
+					}catch(Throwable t){
+						try{
+							byt = rst.getBytes("content");
+						}catch(Throwable t2){
+							
+						}
+					}
 
 					String tmpPath="tmp/"+System.nanoTime()+"/"+rst.getString("file_name");
 					File ivyFile = new File(tmpPath,true);
 					ivyFile.createNewFile();
-					byte[] allBytesInBlob = bl.getBytes(1, (int) bl.length());
+					byte[] allBytesInBlob = bl!=null?bl.getBytes(1, (int) bl.length()):byt;
 
 					FileOutputStream fos=null;
 					try{
@@ -804,7 +836,7 @@ public class FileVersioningController {
 		{
 			return 0;
 		}
-		String query= "SELECT MAX(fvcid) FROM "+this.fileVersionContentTableName+" WHERE version_id=?";
+		String query= "SELECT fvcid FROM "+this.fileVersionContentTableName+" WHERE version_id=?";
 		IExternalDatabaseRuntimeConnection connection = null;
 		try {
 			connection = getDatabase().getAndLockConnection();
@@ -821,7 +853,7 @@ public class FileVersioningController {
 				{
 					Record rec = recordList.get(0);
 
-					id=Long.parseLong(rec.getField("id").toString());
+					id=Long.parseLong(rec.getField("fvcid").toString());
 
 				}
 			}
