@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="ivyaddons.introduction">
 	<title>Introduction</title>
-	<para> 
-		The IvyAddOns project is provided as a convenience "utility" project for 
-		Xpert.ivy developers. It contains various reusable components, such as 
-		utility JavaClasses, RichDialogs, Cms Entries etc. The IvyAddOns project
-		can be used as base project for own applications.
-	</para>
+	<para>The <emphasis role="italic">IvyAddOns</emphasis> project is provided as a convenience
+			<emphasis role="italic">utility project</emphasis> for Xpert.ivy developers. It contains
+		various reusable components, such as utility Java classes, Rich Dialogs, CMS entries etc.
+		The <emphasis role="italic">IvyAddOns</emphasis> project can be used as base project for own
+		applications. </para>
 </chapter>
