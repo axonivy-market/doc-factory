@@ -1,43 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="ivy.addons.java">
 	<title>Java Helper Classes</title>
-	<para> The IvyAddOns project contains numerous Java helper classes which can be both used from
-		Java and IvyScript. The available classes are listed and their purpose and usage is
-		explained in the various sections of this chapter. </para>
+	<para>The IvyAddOns project contains numerous Java helper classes which can be both used from Java
+		and IvyScript. The available classes and their purpose and usage is explained in the various
+		sections of this chapter. </para>
 	<sect1 xml:id="ivy.addons.java.pollingtimerutils">
 		<title>PollingTimerUtils</title>
 		<para> The Java class <code>ch.ivyteam.ivy.addons.util.PollingTimerUtils</code> may be used
 			in conjunction with progress bars to continuously update the UI during a long during
 			operation. With this utility class it is also possible to refresh the UI periodically
 			without any user interaction. </para>
-		<mediaobject>
-			<imageobject>
-				<imagedata fileref="images/JavaHelpers/uiRefreshDemo.png"/>
-			</imageobject>
-		</mediaobject>
-		<para>
-			<emphasis>Basic concept of usage:</emphasis>The <code>PollingTimerUtils</code> class is
+		<para><emphasis>Basic concept of usage:</emphasis>The <code>PollingTimerUtils</code> class is
 			always used in conjunction with <emphasis role="italic">hidden</emphasis> buttons (i.e.
 			buttons on the UI that have the property <code>visible</code> set to
 			<code>false</code>). Such buttons are visible in the Rich Dialog editor where they can
 			be mapped to event handling processes, but they will not be visible at runtime. The
 				<code>PollingTimerUtils</code> will click the hidden buttons without any user
-			interaction, which allows to implement the use cases described below.</para>
+			interaction, once or repeatedly, after a specified amount of time has passed.</para>
 		<sect2>
 			<title>Use a ProgressBar to show state of a long during operation</title>
-			<para>In this case, you have a long during operation which can be split up into shorter
-				parts that are realized by a RichDialog event process. The same event process is to
-				be executed n times before the work is complete, and during one run x percent of the
-				work get completed. At the end of each work part, the progress bar's properties are
-				adjusted according to the performed work and the request returns to the client where
-				the UI is updated.</para>
-			<para>However, as soon as the client UI is updated, the <code>PollingTimerUtils</code>
-				are used to click on a hidden button, which triggers the next event and thus
-				executes the next part of work as described before. This is repeated so long until
-				100% of the work are complete.</para>
-			<para>During the work the UI stays typically non-responsive, but progess is shown
-				continuously, so that the user has an idea about what's going on.</para>
 			<tip>
+				<para>Since Xpert.ivy 4.2 you can use the UI Synchronization element to perform an
+					UI refresh, while a Rich Dialog process is still running. During the work the UI
+					stays typically non-responsive, but progess is shown continuously, so that the
+					user has an idea about what's going on.</para>
 				<para>Please have a look at the <emphasis>UI Refresh</emphasis> demo in the
 						<emphasis role="italic">IvyDemos</emphasis> project to see an example
 					implementation of the above described use case.</para>
@@ -45,14 +31,19 @@
 		</sect2>
 		<sect2>
 			<title>Auto-refresh UI periodically</title>
-			<para>In this case you are displaying data on the UI which is silently updated in the
-				background, e.g. database entries. Normally this data will not be refreshed until
-				the user performs an operation on the UI. But by using the
-				<code>PollingTimerUtils</code> you may automatically click a hidden button every n
-				(milli) seconds which will trigger an event on the server side which may in turn
-				update data on the UI, either explicitly or by using data binding.</para>
-			<para>Between two invocations of the auto-refresh the UI stays fully responsive, and
-				will update itself even earlier, if the user preforms any actions.</para>
+			<para><mediaobject>
+					<imageobject>
+						<imagedata fileref="images/JavaHelpers/uiRefreshDemo.png"/>
+					</imageobject>
+				</mediaobject>Sometimes you want to refresh the UI periodically with data that has
+				been silently computed or updated in the background, e.g. database entries. Normally
+				this data will not be refreshed until the user performs an operation on the UI. </para>
+			<para>However, by using the <code>PollingTimerUtils</code> you can schedule automatic
+				clicking of a hidden button every n (milli-)seconds, which will trigger an event on
+				the server side and thus update the UI, either explicitly or by using data
+				binding.</para>
+			<para>Between two invocations of the auto-refresh the UI stays fully responsive and will update
+				itself even earlier, if the user preforms any actions.</para>
 			<tip>
 				<para>Please have a look at the <emphasis>UI Refresh</emphasis> demo in the
 						<emphasis role="italic">IvyDemos</emphasis> project to see an example
