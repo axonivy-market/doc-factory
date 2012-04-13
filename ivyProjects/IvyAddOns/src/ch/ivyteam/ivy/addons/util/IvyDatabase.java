@@ -78,7 +78,7 @@ public final class IvyDatabase
     entryId = getEntryId(query, configuration);
 
     result = null;
-    group = Ivy.datacache().getApplicationCache().getGroup(groupId);
+    group = Ivy.datacache().getEnvironmentCache().getGroup(groupId);
     if (group != null)
     {
       entry = group.getEntry(entryId);
@@ -94,7 +94,7 @@ public final class IvyDatabase
 
       if (result != null)
       {
-        Ivy.datacache().getApplicationCache().setEntry(groupId, entryId, CACHE_LIFE_TIME_IN_SECONDS, result);
+        Ivy.datacache().getEnvironmentCache().setEntry(groupId, entryId, CACHE_LIFE_TIME_IN_SECONDS, result);
       }
     }
     return result;
@@ -110,10 +110,10 @@ public final class IvyDatabase
     IDataCacheGroup group;
 
     groupId = getGroupId();
-    group = Ivy.datacache().getApplicationCache().getGroup(groupId);
+    group = Ivy.datacache().getEnvironmentCache().getGroup(groupId);
     if (group != null)
     {
-      Ivy.datacache().getApplicationCache().invalidateGroup(group);
+      Ivy.datacache().getEnvironmentCache().invalidateGroup(group);
     }
   }
 

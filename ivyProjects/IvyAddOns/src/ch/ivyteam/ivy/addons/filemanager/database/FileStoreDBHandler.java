@@ -433,7 +433,8 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 		}
 		if(this.securityActivated)
 		{
-			this.securityController.createIndestructibleDirectory(_newDirectoryPath.trim(), null);
+			//this.securityController.createIndestructibleDirectory(_newDirectoryPath.trim(), null);
+			this.securityController.createDirectoryWithParentSecurity(_newDirectoryPath.trim());
 			message.setType(FileHandler.SUCCESS_MESSAGE);
 			message.setText("The directory was successfuly created.");
 			return message;
@@ -544,7 +545,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 			try{
 				stmt = jdbcConnection.prepareStatement(base);
 				//delete all the children directories
-				Ivy.log().info("Delete Directories under the path " +_directoryPath);
+				//Ivy.log().info("Delete Directories under the path " +_directoryPath);
 				stmt.setString(1, _directoryPath+"/%");
 				stmt.executeUpdate();
 
@@ -595,7 +596,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 			try{
 				stmt = jdbcConnection.prepareStatement(base);
 				//delete all the children directories
-				Ivy.log().info("Delete Directories under the path " +_directoryPath);
+				//Ivy.log().info("Delete Directories under the path " +_directoryPath);
 				stmt.setString(1, _directoryPath+"/%");
 				stmt.executeUpdate();
 
@@ -635,9 +636,9 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 		//Query to delete the files under a path
 		String base ="DELETE FROM "+this.tableNameSpace+" WHERE FilePath LIKE ?";
 		String query="DELETE FROM "+this.fileContentTableNameSpace+" WHERE file_id = ?";
-		Ivy.log().info("We get the file ids...");
+		//Ivy.log().info("We get the file ids...");
 		int[] ids = this.getFileIdsUnderPath(_directoryPath+"/%");
-		Ivy.log().info("File ids under the path to delete" +_directoryPath + " "+ids.length);
+		//Ivy.log().info("File ids under the path to delete" +_directoryPath + " "+ids.length);
 		IExternalDatabaseRuntimeConnection connection=null;
 		try {
 			connection = getDatabase().getAndLockConnection();
@@ -961,7 +962,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 	 */
 	public ArrayList<FolderOnServer> getListDirectoriesUnderPath(String rootPath) throws Exception
 	{
-		Ivy.log().info("SECURITY ?: "+this.securityActivated);
+		//Ivy.log().info("SECURITY ?: "+this.securityActivated);
 		if(this.securityActivated){
 			return this.securityController.getListDirectoriesUnderPath(rootPath, null);
 		}
@@ -1365,7 +1366,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 					{
 						FileInputStream is = null;
 						try{
-							Ivy.log().info("We found the file");
+							//Ivy.log().info("We found the file");
 							String query2 ="INSERT INTO "+this.fileContentTableNameSpace+" (file_id, file_content) VALUES (?,?)";
 							stmt = jdbcConnection.prepareStatement(query2);
 							is = new FileInputStream ( f );   
@@ -1535,7 +1536,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 					stmt.setString(1, folderPath+"%");
 					stmt.setString(2, folderPath+"%/%");
 				}
-				Ivy.log().info(query +" => "+folderPath);
+				//Ivy.log().info(query +" => "+folderPath);
 				rset=executeStatement(stmt);
 				recordList=rset.toList();
 			}finally{
@@ -1929,7 +1930,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 							flag=false;
 						}
 						stmt.setString(1, doc.getFilename());
-						Ivy.log().info("DOC TO INSERT "+doc.getPath());
+						//Ivy.log().info("DOC TO INSERT "+doc.getPath());
 						stmt.setString(2, escapeBackSlash(doc.getPath()));
 						stmt.setString(3, doc.getUserID());
 						stmt.setString(4, date);
@@ -2425,7 +2426,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 		}else if(_document.getJavaFile() !=null && _document.getJavaFile().exists())
 		{
 			f = _document.getJavaFile();
-			Ivy.log().info("Insert One Document: java file exists "+f.length());
+			//Ivy.log().info("Insert One Document: java file exists "+f.length());
 		}else if(_document.getPath()!=null && !_document.getPath().trim().equals(""))
 		{
 			f=new java.io.File(_document.getPath().trim());
@@ -2497,7 +2498,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 				}
 				if(insertedId>0)
 				{//INSERT THE FILE CONTENT IN THE CONTENT TABLE
-					Ivy.log().info("Inserted Id in file table : "+ insertedId);
+					//Ivy.log().info("Inserted Id in file table : "+ insertedId);
 					stmt = jdbcConnection.prepareStatement(query);
 					FileInputStream is=null;
 					try{
@@ -2829,9 +2830,9 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 		}
 
 		for(DocumentOnServer doc: documents){
-			Ivy.log().info("Try to copy doc: "+doc.getFilename());
+			//Ivy.log().info("Try to copy doc: "+doc.getFilename());
 			int i = getNextCopiedFileNumber(doc.getFilename(),dest);
-			Ivy.log().info("Next Copy: "+i);
+			//Ivy.log().info("Next Copy: "+i);
 			if(i<0)
 			{
 				continue;
@@ -2839,7 +2840,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 
 			DocumentOnServer docJ = new DocumentOnServer();
 			docJ.setJavaFile(this.getDocumentOnServerWithJavaFile(doc).getJavaFile());
-			Ivy.log().info("Doc with Java File retrieved ");
+			//Ivy.log().info("Doc with Java File retrieved ");
 			if(docJ.getJavaFile()==null || !docJ.getJavaFile().isFile())
 			{
 				continue;
@@ -2921,7 +2922,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 				}else
 				{
 					stmt.setString(1, _dest+search+"%");
-					Ivy.log().info("Search for copy for "+_dest+search+"%");
+					//Ivy.log().info("Search for copy for "+_dest+search+"%");
 					rset=executeStatement(stmt);
 					recordList=rset.toList();
 					if(recordList.isEmpty()){
@@ -2932,10 +2933,10 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 						{
 							String n = rec.getField("FileName").toString();
 							n=FileHandler.getFileNameWithoutExt(n);
-							Ivy.log().info("Search for copy found "+n);
+							//Ivy.log().info("Search for copy found "+n);
 							try{
 								n = n.substring(n.lastIndexOf("_Copy")+5);
-								Ivy.log().info("Search for copy number found "+n);
+								//Ivy.log().info("Search for copy number found "+n);
 								tmpi=Integer.parseInt(n)+1;
 								if(tmpi>i)
 								{
@@ -2976,7 +2977,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 
 		String newPath="";
 		path= formatPathForDirectoryWithoutLastSeparator(path);
-		Ivy.log().info("Formatted path: "+path);
+		//Ivy.log().info("Formatted path: "+path);
 		if(path.equals(""))
 		{//no valid path was entered ("////" for example)
 			message.setText("One of the parameter was invalid for the method renameDirectory in "+this.getClass().getName());
@@ -2992,7 +2993,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 
 			newPath= path.substring(0,path.lastIndexOf("/"))+"/"+newName;
 		}
-		Ivy.log().info("The new path: "+newPath);
+		//Ivy.log().info("The new path: "+newPath);
 		//look if directory exists
 		if(!this.directoryExists(path))
 		{
@@ -3060,7 +3061,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 		{//We remove the directory to rename from the list
 			dirs.remove(0);
 		}
-		Ivy.log().info("Sub dir to rename: "+dirs.size());
+		//Ivy.log().info("Sub dir to rename: "+dirs.size());
 		try {
 			connection = getDatabase().getAndLockConnection();
 			Connection jdbcConnection=connection.getDatabaseConnection();
@@ -3073,7 +3074,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 					try{
 						String p = path+"/";
 						String s = dir.getPath().replaceFirst(p, newPath+"/");
-						Ivy.log().info("New dir path: "+s);
+						//Ivy.log().info("New dir path: "+s);
 						stmt.setString(1, s);
 						stmt.setInt(2, dir.getId());
 						stmt.executeUpdate();
@@ -3194,7 +3195,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 				stmt.setString(1, newName+ext);
 				stmt.setString(2,escapeBackSlash( newPath));
 				stmt.setString(3,escapeBackSlash( document.getPath()));
-				Ivy.log().debug(query+" "+newName+ext+" "+newPath+" "+document.getPath());
+				//Ivy.log().debug(query+" "+newName+ext+" "+newPath+" "+document.getPath());
 				stmt.executeUpdate();
 			}finally{
 				DatabaseUtil.close(stmt);

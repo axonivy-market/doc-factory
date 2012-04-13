@@ -30,17 +30,17 @@ public abstract class AbstractDirectorySecurityController {
 	 * @param _path: the path of the directory
 	 * @return true if operation succeeded, else false.
 	 * @throws Exception
-	 */
+	 
 	public abstract boolean activateSecurityOnDirectory(String _path) throws Exception;
-	
+	*/
 	/**
 	 * Deactivates the security on the given directory. The directory will not be protected anymore.
 	 * @param _path: the path of the directory
 	 * @return true if operation succeeded, else false.
 	 * @throws Exception
-	 */
+	 
 	public abstract boolean deactivateSecurityOnDirectory(String _path) throws Exception;
-	
+	*/
 	
 	/**
 	 * Tells if a directory is protected or not.<br>
@@ -48,9 +48,9 @@ public abstract class AbstractDirectorySecurityController {
 	 * @param _path: the directory path
 	 * @return: true if the security is on or false if it is off on this particular directory.
 	 * @throws Exception
-	 */
+	 
 	public abstract boolean isDirectoryProtected(String _path) throws Exception;
-	
+	*/
 	/**
 	 * Check if user has at least one Ivy Role granted to open a given directory.
 	 * @param _path: the directory path
