@@ -27,6 +27,7 @@ import ch.ivyteam.ivy.db.IExternalDatabase;
 import ch.ivyteam.ivy.db.IExternalDatabaseApplicationContext;
 import ch.ivyteam.ivy.db.IExternalDatabaseRuntimeConnection;
 import ch.ivyteam.ivy.environment.Ivy;
+import ch.ivyteam.ivy.scripting.objects.DateTime;
 import ch.ivyteam.ivy.scripting.objects.File;
 import ch.ivyteam.ivy.scripting.objects.Record;
 import ch.ivyteam.ivy.scripting.objects.Recordset;
@@ -182,20 +183,34 @@ public class FileVersioningController {
 					fv.setFileid(fileId);
 					fv.setVersionNumber(Integer.parseInt(rec.getField("version_number").toString()));
 					fv.setVersionContentId(Long.parseLong(rec.getField("fvc_id").toString()));
-					fv.setDate(new Date(rec.getField("cdate").toString()));
 					try{
-						if(rec.getField("ctime").toString().length()>8)
+						fv.setDate(new Date(rec.getField("cdate").toString()));
+					}catch(Exception ex){
+						try{
+							fv.setDate(new Date(new DateTime(rec.getField("cdate").toString()).format("dd.MM.yyyy")));
+						}catch(Exception e)
 						{
-							fv.setTime(new Time(rec.getField("ctime").toString().substring(0,8)));
+							fv.setDate(new Date());
 						}
-						else{
-							fv.setTime(new Time(rec.getField("ctime").toString()));
-						}
-					}catch(Exception ex)
-					{
-						fv.setTime(new Time("00:00:00"));
 					}
-
+					try{
+						fv.setTime(new Time(new DateTime(rec.getField("ctime").toString()).format("HH:mm:ss")));
+					}catch(Exception e)
+					{
+						try{
+							if(rec.getField("ctime").toString().length()>8)
+							{
+								fv.setTime(new Time(rec.getField("ctime").toString().substring(0,8)));
+							}
+							else{
+								fv.setTime(new Time(rec.getField("ctime").toString()));
+							}
+						}catch(Exception ex)
+						{
+							fv.setTime(new Time("00:00:00"));
+						}
+					}
+					
 					fv.setUser(rec.getField("cuser").toString());
 					fv.setFilename(rec.getField("file_name").toString());
 					l.add(fv);
@@ -271,7 +286,9 @@ public class FileVersioningController {
 		//Query to insert the new version
 		String q1= "INSERT INTO "+this.fileVersionTableName+" (file_id,version_number,cdate,ctime,cuser,file_name) VALUES (?,?,?,?,?,?)";
 		//Query to insert the new Version Content
-		String q2= "INSERT INTO "+this.fileVersionContentTableName+" (content, version_id) SELECT file_content, ? FROM "+this.fileContentTableName+" WHERE file_id = ?";
+		//String q2= "INSERT INTO "+this.fileVersionContentTableName+" (content, version_id) SELECT file_content, ? FROM "+this.fileContentTableName+" WHERE file_id = ? ";
+		String q2= "INSERT INTO "+this.fileVersionContentTableName+" (content, version_id) VALUES ((SELECT file_content FROM "+this.fileContentTableName+" WHERE file_id = ?) , ?)";
+
 		//Query to update the new  file version  "file version content Id" field
 		String q3= "UPDATE "+this.fileVersionTableName+" SET fvc_id=? WHERE versionid=?";
 		//Query to update the number version in the main file table
@@ -319,6 +336,7 @@ public class FileVersioningController {
 				{//The JDBC Driver doesn't accept the PreparedStatement.RETURN_GENERATED_KEYS
 					//we have to get the inserted Id manually....
 					vid= this.getFileVersionWithParentFileIdAndVersionNumber(fileId, vn).getId();
+					//Ivy.log().info("CREATE VERSION TEST 1");
 				}
 
 				// insert the new version content
@@ -330,10 +348,14 @@ public class FileVersioningController {
 					stmt = jdbcConnection.prepareStatement(q2);
 					flag=false;
 				}
-
-				stmt.setLong(1, vid);
-				stmt.setLong(2, fileId);
+				//Ivy.log().info("CREATE VERSION version id  "+vid);
+				//Ivy.log().info("CREATE VERSION file id  "+fileId);
+				//Ivy.log().info("CREATE VERSION QUERY 2 "+q2);
+				stmt.setLong(1, fileId);
+				stmt.setLong(2, vid);
+				//Ivy.log().info("CREATE VERSION TEST 3");
 				stmt.executeUpdate();
+				//Ivy.log().info("CREATE VERSION TEST 4");
 				rs=null;
 				try{
 					rs = stmt.getGeneratedKeys();
@@ -475,6 +497,7 @@ public class FileVersioningController {
 			return fv;
 		}
 		String query = "SELECT * FROM "+this.fileVersionTableName+" WHERE file_id=? AND version_number=?";
+		//Ivy.log().info("getFileVersionWithParentFileIdAndVersionNumber QUERY "+query);
 		IExternalDatabaseRuntimeConnection connection = null;
 		try {
 			connection = getDatabase().getAndLockConnection();
@@ -495,9 +518,16 @@ public class FileVersioningController {
 					fv.setId(Long.parseLong(rec.getField("versionid").toString()));
 					fv.setFileid(fileId);
 					fv.setVersionNumber(versionNumber);
-					fv.setVersionContentId(Long.parseLong(rec.getField("fvc_id").toString()));
-					fv.setDate(new Date(rec.getField("cdate").toString()));
-					fv.setTime(new Time(rec.getField("ctime").toString()));
+					try{
+						fv.setVersionContentId(Long.parseLong(rec.getField("fvc_id").toString()));
+					}catch(Exception ex){
+						fv.setVersionContentId(0);
+					}
+					//Ivy.log().info("HERE IS THE DATE OF THE NEW VERSION :"+rec.getField("cdate"));
+					
+					fv.setDate(new Date(new DateTime(rec.getField("cdate").toString()).format("dd.MM.yyyy")));
+					//Ivy.log().info("HERE IS THE TIME OF THE NEW VERSION :"+rec.getField("ctime"));
+					fv.setTime(new Time(new DateTime(rec.getField("ctime").toString()).format("HH:mm:ss")));
 					fv.setUser(rec.getField("cuser").toString());
 				}
 			}
@@ -717,6 +747,7 @@ public class FileVersioningController {
 					fv.setVersionNumber(rst.getInt("version_number"));
 					fv.setVersionContentId(rst.getLong("fvc_id"));
 					fv.setDate(new Date(rst.getDate("cdate")));
+					//fv.setDate(new Date(new DateTime(rst.getDate("cdate").toString()).format("dd.MM.yyyy")));
 					try{
 						if(rst.getTime("ctime").toString().length()>8)
 						{
@@ -729,7 +760,7 @@ public class FileVersioningController {
 					{
 						fv.setTime(new Time("00:00:00"));
 					}
-
+					//fv.setTime(new Time(new DateTime(rst.getTime("ctime").toString()).format("HH:mm:ss")));
 					fv.setUser(rst.getString("cuser"));
 					fv.setFilename(rst.getString("file_name"));
 

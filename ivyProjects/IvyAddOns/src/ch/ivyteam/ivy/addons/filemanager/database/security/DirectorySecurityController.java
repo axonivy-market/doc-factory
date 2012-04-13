@@ -17,6 +17,7 @@ import ch.ivyteam.ivy.addons.filemanager.LockedFolder;
 import ch.ivyteam.ivy.db.IExternalDatabase;
 import ch.ivyteam.ivy.db.IExternalDatabaseApplicationContext;
 import ch.ivyteam.ivy.db.IExternalDatabaseRuntimeConnection;
+import ch.ivyteam.ivy.environment.EnvironmentNotAvailableException;
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.persistence.PersistencyException;
 import ch.ivyteam.ivy.scripting.objects.List;
@@ -38,6 +39,7 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 	private String dirTableName = null; // the table that stores directories infos
 	private String dirTableNameSpace = null; // equals to dirTableName if schemaName == null, else schemaName.dirTableName
 	private String schemaName=null;
+	private String securityAdmin="";
 
 	/**
 	 * Constructor
@@ -73,6 +75,13 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 		{
 			this.schemaName=Ivy.var().get("xivy_addons_fileManager_databaseSchemaName").trim();
 			this.dirTableNameSpace="\""+this.schemaName+"\""+"."+"\""+this.dirTableName+"\"";
+		}
+		
+		try{
+			this.securityAdmin=Ivy.var().get("xivy_addons_fileManager_adminRoleName");
+		}catch(EnvironmentNotAvailableException ex)
+		{
+			Ivy.log().error("Error in constructor DirectorySecurityController. "+ex.getMessage(),ex);
 		}
 	}
 
@@ -140,10 +149,7 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 		return r;
 	}
 
-	/* (non-Javadoc)
-	 * @see ch.ivyteam.ivy.addons.filemanager.database.security.AbstractFileSecurityController#activateSecurityOnDirectory(java.lang.String)
-	 */
-	@Override
+	/*
 	public boolean activateSecurityOnDirectory(String path) throws Exception {
 		path=formatPathForDirectoryWithoutLastSeparator(path);
 		if(path==null || path.length()==0)
@@ -175,7 +181,7 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 			}
 		}
 		return flag;
-	}
+	}*/
 
 	@Override
 	public List<String> AddRightOnDirectoryForIvyRole(String path,
@@ -414,6 +420,10 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 			throw  new IllegalArgumentException("One of the parameter is not set in method canRoleDeleteDirectory(String path, String ivyRoleName) " +
 					" in "+this.getClass());
 		}
+		if(ivyRoleName.trim().equals(Ivy.var().get("xivy_addons_fileManager_adminRoleName")))
+		{
+			return true;
+		}
 		List<String> roles = this.getRolesNamesAllowedForRightOnDirectory(path, DELETE_DIRECTORY_RIGHT);
 		if(roles.contains(ivyRoleName.trim())){
 			return true;
@@ -433,6 +443,10 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 		{
 			throw  new IllegalArgumentException("One of the parameter is not set in method canRoleDeleteFilesInDirectory(String path, String ivyRoleName) " +
 					" in "+this.getClass());
+		}
+		if(ivyRoleName.trim().equals(Ivy.var().get("xivy_addons_fileManager_adminRoleName")))
+		{
+			return true;
 		}
 		List<String> roles = this.getRolesNamesAllowedForRightOnDirectory(path, DELETE_FILES_RIGHT);
 		if(roles.contains(ivyRoleName.trim())){
@@ -454,6 +468,10 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 			throw  new IllegalArgumentException("One of the parameter is not set in method canRoleEditFilesInDirectory(String path, String ivyRoleName) " +
 					" in "+this.getClass());
 		}
+		if(ivyRoleName.trim().equals(Ivy.var().get("xivy_addons_fileManager_adminRoleName")))
+		{
+			return true;
+		}
 		List<String> roles = this.getRolesNamesAllowedForRightOnDirectory(path, WRITE_FILES_RIGHT);
 		if(roles.contains(ivyRoleName.trim())){
 			return true;
@@ -473,6 +491,10 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 		{
 			throw  new IllegalArgumentException("One of the parameter is not set in method canRoleManageDirectorySecurity(String path, String ivyRoleName) " +
 					" in "+this.getClass());
+		}
+		if(ivyRoleName.trim().equals(Ivy.var().get("xivy_addons_fileManager_adminRoleName")))
+		{
+			return true;
 		}
 		List<String> roles = this.getRolesNamesAllowedForRightOnDirectory(path, MANAGE_SECURITY_RIGHT);
 		if(roles.contains(ivyRoleName.trim())){
@@ -494,6 +516,10 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 			throw  new IllegalArgumentException("One of the parameter is not set in method canRoleOpenDirectory(String path, String ivyRoleName) " +
 					" in "+this.getClass());
 		}
+		if(ivyRoleName.trim().equals(Ivy.var().get("xivy_addons_fileManager_adminRoleName")))
+		{
+			return true;
+		}
 		List<String> roles = this.getRolesNamesAllowedForRightOnDirectory(path, OPEN_DIRECTORY_RIGHT);
 		if(roles.contains(ivyRoleName.trim())){
 			return true;
@@ -514,6 +540,10 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 			throw  new IllegalArgumentException("One of the parameter is not set in method canRoleUpdateDirectory(String path, String ivyRoleName) " +
 					" in "+this.getClass());
 		}
+		if(ivyRoleName.trim().equals(Ivy.var().get("xivy_addons_fileManager_adminRoleName")))
+		{
+			return true;
+		}
 		List<String> roles = this.getRolesNamesAllowedForRightOnDirectory(path, UPDATE_DIRECTORY_RIGHT);
 		if(roles.contains(ivyRoleName.trim())){
 			return true;
@@ -533,6 +563,9 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 		{
 			throw  new IllegalArgumentException("One of the parameter is not set in method canUserDeleteDirectory(String path, String ivyUserName) " +
 					" in "+this.getClass());
+		}
+		if(this.isUserFileManagerAdmin(ivyUserName)){
+			return true;
 		}
 		List <IRole> userRoles = List.create(IRole.class);
 		try{
@@ -573,6 +606,9 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 			throw  new IllegalArgumentException("One of the parameter is not set in method canUserDeleteFilesInDirectory(String path, String ivyUserName) " +
 					" in "+this.getClass());
 		}
+		if(this.isUserFileManagerAdmin(ivyUserName)){
+			return true;
+		}
 		List <IRole> userRoles = List.create(IRole.class);
 		try{
 			userRoles.addAll(Ivy.wf().getSecurityContext().findUser(ivyUserName).getAllRoles());
@@ -611,6 +647,9 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 		{
 			throw  new IllegalArgumentException("One of the parameter is not set in method canUserEditFilesInDirectory(String path, String ivyUserName) " +
 					" in "+this.getClass());
+		}
+		if(this.isUserFileManagerAdmin(ivyUserName)){
+			return true;
 		}
 		List <IRole> userRoles = List.create(IRole.class);
 		try{
@@ -651,6 +690,9 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 			throw  new IllegalArgumentException("One of the parameter is not set in method canUserManageDirectorySecurity(String path, String ivyUserName) " +
 					" in "+this.getClass());
 		}
+		if(this.isUserFileManagerAdmin(ivyUserName)){
+			return true;
+		}
 		List <IRole> userRoles = List.create(IRole.class);
 		try{
 			userRoles.addAll(Ivy.wf().getSecurityContext().findUser(ivyUserName).getAllRoles());
@@ -690,6 +732,9 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 			throw  new IllegalArgumentException("One of the parameter is not set in method canUserOpenDirectory(String path, String ivyUserName) " +
 					" in "+this.getClass());
 		}
+		if(this.isUserFileManagerAdmin(ivyUserName)){
+			return true;
+		}
 		List <IRole> userRoles = List.create(IRole.class);
 		try{
 			userRoles.addAll(Ivy.wf().getSecurityContext().findUser(ivyUserName).getAllRoles());
@@ -728,6 +773,9 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 		{
 			throw  new IllegalArgumentException("One of the parameter is not set in method canUserUpdateDirectory(String path, String ivyUserName) " +
 					" in "+this.getClass());
+		}
+		if(this.isUserFileManagerAdmin(ivyUserName)){
+			return true;
 		}
 		List <IRole> userRoles = List.create(IRole.class);
 		try{
@@ -791,14 +839,14 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 					grantedIvyRoleNamesToWriteFiles,
 					grantedIvyRoleNamesToDeleteFiles);
 		}
-		Ivy.log().info("grantedIvyRoleNamesToDeleteDirectory 1 "+grantedIvyRoleNamesToDeleteDirectory);
+		//Ivy.log().info("grantedIvyRoleNamesToDeleteDirectory 1 "+grantedIvyRoleNamesToDeleteDirectory);
 		grantedIvyRoleNamesToManageRights = ensureAdminRoleInList(grantedIvyRoleNamesToManageRights);
 		grantedIvyRoleNamesToDeleteDirectory = ensureAdminRoleInList(grantedIvyRoleNamesToDeleteDirectory);
 		grantedIvyRoleNamesToUpdateDirectory = ensureAdminRoleInList(grantedIvyRoleNamesToUpdateDirectory);
 		grantedIvyRoleNamesToOpenDirectory = ensureAdminRoleInList(grantedIvyRoleNamesToOpenDirectory);
 		grantedIvyRoleNamesToWriteFiles = ensureAdminRoleInList(grantedIvyRoleNamesToWriteFiles);
 		grantedIvyRoleNamesToDeleteFiles = ensureAdminRoleInList(grantedIvyRoleNamesToDeleteFiles);
-		Ivy.log().info("grantedIvyRoleNamesToDeleteDirectory 2 "+grantedIvyRoleNamesToDeleteDirectory);
+		//Ivy.log().info("grantedIvyRoleNamesToDeleteDirectory 2 "+grantedIvyRoleNamesToDeleteDirectory);
 		FolderOnServer fos = new FolderOnServer();
 		directoryPath=formatPathForDirectoryWithoutLastSeparator(directoryPath);
 		String dirName=getDirectoryNameFromPath(directoryPath);
@@ -842,8 +890,8 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 				stmt.executeUpdate();
 				fos=getDirectoryWithPath(directoryPath);
 				/*
-				int i = stmt.executeUpdate();
-				if(i>0)
+				 int i = stmt.executeUpdate();
+				 if(i>0)
 				{
 					fos.setId(i);
 				}
@@ -1146,10 +1194,7 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 
 
 
-	/* (non-Javadoc)
-	 * @see ch.ivyteam.ivy.addons.filemanager.database.security.AbstractFileSecurityController#deactivateSecurityOnDirectory(java.lang.String)
-	 */
-	@Override
+	/*
 	public boolean deactivateSecurityOnDirectory(String path) throws Exception {
 		path=formatPathForDirectoryWithoutLastSeparator(path);
 		if(path==null || path.length()==0)
@@ -1181,14 +1226,14 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 			}
 		}
 		return flag;
-	}
+	}*/
 
 	/* (non-Javadoc)
 	 * @see ch.ivyteam.ivy.addons.filemanager.database.security.AbstractFileSecurityController#getFileManagerAdminRoleName()
 	 */
 	@Override
 	public String getFileManagerAdminRoleName() throws Exception {
-		return Ivy.var().get("xivy_addons_fileManager_adminRoleName");
+		return this.securityAdmin;
 	}
 
 	@Override
@@ -1198,8 +1243,7 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 			throw  new IllegalArgumentException("The parameter is not set in method isUserFileManagerAdmin(String ivyUserName) " +
 					" in "+this.getClass());
 		}
-		String adminRole= this.getFileManagerAdminRoleName();
-		if(adminRole==null || adminRole.length()==0)
+		if(this.securityAdmin==null || this.securityAdmin.length()==0)
 		{
 			return false;
 		}
@@ -1217,7 +1261,7 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 		else{
 			for(IRole r : userRoles)
 			{
-				if(r.getName().equals(adminRole))
+				if(r.getName().equals(this.securityAdmin))
 				{
 					found = true;
 					break;
@@ -1665,7 +1709,18 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 			if(ivyUserName== null || ivyUserName.trim().length()==0){
 				ivyUserName = Ivy.session().getSessionUserName();
 			}
+			if(this.isUserFileManagerAdmin(ivyUserName))
+			{
+				_fos.setCanUserDeleteDir(true);
+				_fos.setCanUserDeleteFiles(true);
+				_fos.setCanUserManageRights(true);
+				_fos.setCanUserOpenDir(true);
+				_fos.setCanUserUpdateDir(true);
+				_fos.setCanUserWriteFiles(true);
+				return _fos;
+			}
 			userRoles.addAll(Ivy.wf().getSecurityContext().findUser(ivyUserName).getAllRoles());
+			
 		}catch(Throwable t)
 		{
 			//If a problem occurs with the username (no existing IvyUser, null etc...) the returned fos will have false in all the fields.
@@ -1719,12 +1774,12 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 
 	}
 
-	@Override
+	/*
 	public boolean isDirectoryProtected(String path) throws Exception {
 
 		return this.getDirectoryWithPath(path).getIs_protected();
 	}
-
+*/
 	@Override
 	public ArrayList<FolderOnServer> getListDirectoriesUnderPath(
 			String rootPath, String ivyUserName) throws Exception {
@@ -1762,7 +1817,7 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 
 					Record rec = recordList.get(0);
 					List<String> roles = getListFromString(rec.getField("cod").toString(),",");
-					if(this.isOneUserRoleInList(roles, ivyUserName)){
+					if(this.isUserFileManagerAdmin(ivyUserName) || this.isOneUserRoleInList(roles, ivyUserName)){
 						FolderOnServer fos = new FolderOnServer();
 						fos.setId(Integer.parseInt(rec.getField("id").toString()));
 						fos.setName(rec.getField("dir_name").toString());
@@ -1798,7 +1853,7 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 					recordList=rset.toList();
 					for(Record rec1: recordList){
 						List<String> roles1 = getListFromString(rec1.getField("cod").toString(),",");
-						if(this.isOneUserRoleInList(roles1, ivyUserName)){
+						if(this.isUserFileManagerAdmin(ivyUserName) || this.isOneUserRoleInList(roles1, ivyUserName)){
 							FolderOnServer fos1 = new FolderOnServer();
 							fos1.setId(Integer.parseInt(rec1.getField("id").toString()));
 							fos1.setName(rec1.getField("dir_name").toString());
@@ -1903,7 +1958,4 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 		}
 		return found;
 	}
-
-
-
 }
