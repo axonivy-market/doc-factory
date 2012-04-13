@@ -133,15 +133,15 @@
             </tgroup>
           </table>
           <ns:warning>
-            <para>For the moment only three kinds of external databases were tested: MS SQL, MySQL
-              and PostGRESQL.</para>
+            <para>For the moment only four kinds of external databases were tested: MS SQL, MySQL,
+              PostGRESQL and Oracle 11g.</para>
           </ns:warning>
         </sect4>
         <sect4>
           <title> The files' content is stored in a database as BLOB or VARBINARY field (depending
             on your database vendor) </title>
-          <para><emphasis role="bold">This feature is not supported within the Ivy System
-            Database.</emphasis> You must store the files informations in an external database.</para>
+          <para>This feature is not supported within the Ivy System Database. You must store the
+            files informations in an external database.</para>
           <para> Instead of having all the files and directory structure stored in a file system,
             you can store all of these informations in a database. For that you will need 3 tables: <itemizedlist>
               <listitem>
@@ -321,8 +321,8 @@
     </sect2>
     <sect2 xml:id="ivy.addons.filemanager.dbstructure">
       <title>The database definition</title>
-      <para>The DDL for MS SQL, MySQL and PostGreSQL has been included into the IvyAddons cms under:
-        /ch/ivyteam/ivy/addons/filemanager/techData/createTablesDDL.
+      <para>The DDL for MS SQL, MySQL, PostGreSQL and Oracle has been included into the IvyAddons
+        cms under: /ch/ivyteam/ivy/addons/filemanager/techData/createTablesDDL.
               <inlinemediaobject><imageobject><imagedata fileref="images/FileManager/DDLinCMS.png"
           /></imageobject></inlinemediaobject></para>
       <para><emphasis role="bold">The uploadedFiles Table.</emphasis> is historically the first and
