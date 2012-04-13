@@ -1,0 +1,124 @@
+CREATE TABLE uploadedfiles
+	(
+	FileId             number(19,0) NOT NULL,
+	FileName           VARCHAR2 (255) NULL,
+	FilePath           VARCHAR2 (750) NULL,
+	CreationUserId     VARCHAR2 (64) NULL,
+	CreationDate       VARCHAR2 (10) NULL,
+	CreationTime       VARCHAR2 (8) NULL,
+	FileSize           VARCHAR2 (20) NULL,
+	Locked             number(1,0) NULL,
+	LockingUserId      VARCHAR2 (64) NULL,
+	ModificationUserId VARCHAR2 (64) NULL,
+	ModificationDate   VARCHAR2 (10) NULL,
+	ModificationTime   VARCHAR2 (8) NULL,
+	Description        VARCHAR2 (1024) NULL,
+	versionnumber      number(19,0) NULL,
+	CONSTRAINT PK__UPLOADED__6F0F98BF22751F6C PRIMARY KEY (FileId)
+	);
+
+CREATE SEQUENCE uploadedfiles_id_seq START WITH 1;
+
+CREATE TRIGGER uploadedfiles_pk_trg
+  BEFORE INSERT ON uploadedfiles FOR EACH ROW
+BEGIN 
+    IF :NEW.FileId  IS NULL THEN
+      SELECT uploadedfiles_id_seq.NEXTVAL INTO :NEW.FileId FROM DUAL;
+    END IF;
+END;
+/
+
+CREATE TABLE filecontent
+	(
+	id           number(19,0) NOT NULL,
+	file_id      number(19,0) NOT NULL,
+	file_content BLOB NULL,
+	CONSTRAINT PK__FilesCon__3213E83F1BC821DD PRIMARY KEY (id),
+	CONSTRAINT UQ__FilesCon__07D884C71EA48E88 UNIQUE (file_id)
+	);
+
+CREATE SEQUENCE fc_id_seq START WITH 1;
+
+CREATE TRIGGER fc_pk_trg
+  BEFORE INSERT ON filecontent FOR EACH ROW
+BEGIN 
+    IF :NEW.id IS NULL THEN
+      SELECT fc_id_seq.NEXTVAL INTO :NEW.id FROM DUAL;
+    END IF;
+END;
+/
+
+CREATE TABLE directories
+	(
+		id                   number(19,0)  NOT NULL,
+		dir_name             VARCHAR2 (255) NOT NULL,
+		dir_path             VARCHAR2 (750) NOT NULL,
+		creation_user_id     VARCHAR2 (200) NULL,
+		creation_date        DATE NULL,
+		creation_time        TIMESTAMP NULL,
+		modification_user_id VARCHAR2 (200) NULL,
+		modification_date    DATE NULL,
+		modification_time    TIMESTAMP NULL,
+		is_protected         number(1,0) DEFAULT ((0)) NOT NULL,
+		cmdr                 VARCHAR2 (2048) NULL,
+		cod                  VARCHAR2 (2048) NULL,
+		cud                  VARCHAR2 (2048) NULL,
+		cdd                  VARCHAR2 (2048) NULL,
+		cwf                  VARCHAR2 (2048) NULL,
+		cdf                  VARCHAR2 (2048) NULL,
+		CONSTRAINT PK_ PRIMARY KEY (id),
+		CONSTRAINT UQ__FileMana__89DC233C0EA330E9 UNIQUE (dir_path)
+	);
+CREATE SEQUENCE dir_id_seq START WITH 1;
+
+CREATE TRIGGER dir_pk_trg
+  BEFORE INSERT ON directories FOR EACH ROW
+BEGIN 
+    IF :NEW.id IS NULL THEN
+      SELECT dir_id_seq.NEXTVAL INTO :NEW.id FROM DUAL;
+    END IF;
+END;
+/
+
+CREATE TABLE file_versions
+	(
+	versionid      number(19,0) NOT NULL,
+	file_id        number(19,0) NOT NULL,
+	version_number number(19,0) NULL,
+	fvc_id         number(19,0) NULL,
+	file_name      VARCHAR2 (255) NOT NULL,
+	cdate          DATE NULL,
+	ctime          TIMESTAMP NULL,
+	cuser          VARCHAR2 (255) NULL,
+	CONSTRAINT PK_X PRIMARY KEY (versionid)
+	);
+
+CREATE SEQUENCE fv_id_seq START WITH 1;
+
+CREATE TRIGGER fv_pk_trg
+  BEFORE INSERT ON file_versions FOR EACH ROW
+BEGIN 
+    IF :NEW.versionid IS NULL THEN
+      SELECT fv_id_seq.NEXTVAL INTO :NEW.versionid FROM DUAL;
+    END IF;
+END;
+/
+
+CREATE TABLE file_version_content
+	(
+	fvcid      number(19,0) NOT NULL,
+	version_id number(19,0) NULL,
+	content    BLOB NULL,
+	CONSTRAINT PK_Y PRIMARY KEY (fvcid)
+	);
+
+CREATE SEQUENCE fvc_id_seq START WITH 1;
+
+CREATE TRIGGER fvc_pk_trg
+  BEFORE INSERT ON file_version_content FOR EACH ROW
+BEGIN 
+    IF :NEW.fvcid IS NULL THEN
+      SELECT fvc_id_seq.NEXTVAL INTO :NEW.fvcid FROM DUAL;
+    END IF;
+END;
+/

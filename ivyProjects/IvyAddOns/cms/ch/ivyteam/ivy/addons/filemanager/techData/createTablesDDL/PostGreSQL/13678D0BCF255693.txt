@@ -72,12 +72,6 @@ CREATE TABLE filecontent
   file_id integer NOT NULL,
   file_content bytea,
   CONSTRAINT filecontent_pkey PRIMARY KEY (id),
-  CONSTRAINT filecontent_file_id_fkey FOREIGN KEY (file_id)
-	REFERENCES UploadedFiles (fileid) MATCH SIMPLE
-	ON UPDATE NO ACTION ON DELETE NO ACTION,
-  CONSTRAINT fk_filecontent_file_id FOREIGN KEY (file_id)
-	REFERENCES UploadedFiles (fileid) MATCH SIMPLE
-	ON UPDATE NO ACTION ON DELETE NO ACTION,
   CONSTRAINT filecontent_file_id_key UNIQUE (file_id)
   )
   WITH (
@@ -101,13 +95,7 @@ CREATE TABLE file_versions
   cdate date,
   ctime time without time zone,
   cuser character varying(255),
-  CONSTRAINT file_versions_pkey PRIMARY KEY (versionid),
-  CONSTRAINT file_versions_file_id_fkey FOREIGN KEY (file_id)
-      REFERENCES UploadedFiles (fileid) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION,
-  CONSTRAINT fk_file_versions_file_id FOREIGN KEY (file_id)
-      REFERENCES UploadedFiles (fileid) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION
+  CONSTRAINT file_versions_pkey PRIMARY KEY (versionid)
 )
 WITH (
   OIDS=FALSE
@@ -126,9 +114,6 @@ CREATE TABLE file_version_content
   version_id integer NOT NULL,
   content bytea,
   CONSTRAINT file_version_content_pkey PRIMARY KEY (fvcid),
-  CONSTRAINT file_version_content_version_id_fkey FOREIGN KEY (version_id)
-      REFERENCES file_versions (versionid) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION,
   CONSTRAINT file_version_content_version_id_key UNIQUE (version_id)
 )
 WITH (
