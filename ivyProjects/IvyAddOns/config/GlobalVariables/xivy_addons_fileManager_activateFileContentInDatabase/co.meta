@@ -1,2 +1,2 @@
-co: name={xivy_addons_fileManager_activateFileContentInDatabase} description={} changed={2012-04-10 21:55:13 CEST} changedby={ec} visualorder={0} guid={135590B54E53E371} parentguid={} typeguid={1065A70222E84F59} id={} parentid={} typeid={}
-val: guid={135590B54F9AF53F} datatype={} isdefault={true} langid={en} description={} validfrom={2012-02-07 19:20:09 CET} validto={} changed={2012-04-10 21:55:13 CEST} changedby={ec} properties={} id={}
+co: name={xivy_addons_fileManager_activateFileContentInDatabase} description={} changed={2012-04-13 03:00:58 CEST} changedby={ec} visualorder={0} guid={135590B54E53E371} parentguid={} typeguid={1065A70222E84F59} id={} parentid={} typeid={}
+val: guid={135590B54F9AF53F} datatype={} isdefault={true} langid={en} description={} validfrom={2012-02-07 19:20:09 CET} validto={} changed={2012-04-13 03:00:58 CEST} changedby={ec} properties={} id={}
