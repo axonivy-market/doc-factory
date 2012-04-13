@@ -14,10 +14,78 @@
                                     <String xml:space="preserve">text/xml</String>
                                 </field>
                                 <field name="unparsedInsertString">
+                                    <String xml:space="preserve">@appname@</String>
+                                </field>
+                                <field name="descriptionString">
+                                    <String xml:space="preserve">Xpert.ivy</String>
+                                </field>
+                                <field name="renderString">
+                                    <String xml:space="preserve">appname</String>
+                                </field>
+                                <field name="enabled">
+                                    <Boolean xml:space="preserve">true</Boolean>
+                                </field>
+                            </codeTemplateItem>
+                            <codeTemplateItem>
+                                <field name="contentType">
+                                    <String xml:space="preserve">text/xml</String>
+                                </field>
+                                <field name="unparsedInsertString">
+                                    <String xml:space="preserve">@date@</String>
+                                </field>
+                                <field name="descriptionString">
+                                    <String xml:space="preserve">dd.mm.yyyy</String>
+                                </field>
+                                <field name="renderString">
+                                    <String xml:space="preserve">date</String>
+                                </field>
+                                <field name="enabled">
+                                    <Boolean xml:space="preserve">true</Boolean>
+                                </field>
+                            </codeTemplateItem>
+                            <codeTemplateItem>
+                                <field name="contentType">
+                                    <String xml:space="preserve">text/xml</String>
+                                </field>
+                                <field name="unparsedInsertString">
+                                    <String xml:space="preserve">@vendor@</String>
+                                </field>
+                                <field name="descriptionString">
+                                    <String xml:space="preserve">ivyTeam AG</String>
+                                </field>
+                                <field name="renderString">
+                                    <String xml:space="preserve">vendor</String>
+                                </field>
+                                <field name="enabled">
+                                    <Boolean xml:space="preserve">true</Boolean>
+                                </field>
+                            </codeTemplateItem>
+                            <codeTemplateItem>
+                                <field name="contentType">
+                                    <String xml:space="preserve">text/xml</String>
+                                </field>
+                                <field name="unparsedInsertString">
+                                    <String xml:space="preserve">@version@</String>
+                                </field>
+                                <field name="descriptionString">
+                                    <String xml:space="preserve">4.x</String>
+                                </field>
+                                <field name="renderString">
+                                    <String xml:space="preserve">version</String>
+                                </field>
+                                <field name="enabled">
+                                    <Boolean xml:space="preserve">true</Boolean>
+                                </field>
+                            </codeTemplateItem>
+                            <codeTemplateItem>
+                                <field name="contentType">
+                                    <String xml:space="preserve">text/xml</String>
+                                </field>
+                                <field name="unparsedInsertString">
                                     <String xml:space="preserve">@year@</String>
                                 </field>
                                 <field name="descriptionString">
-                                    <String xml:space="preserve"></String>
+                                    <String xml:space="preserve">20xx</String>
                                 </field>
                                 <field name="renderString">
                                     <String xml:space="preserve">year</String>
