@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="12.1">
+    <meta>
+        <filters directoryPatterns="" filePatterns=""
+            positiveFilePatterns="" showHiddenFiles="false"/>
+        <options>
+            <serialized version="12.1">
+                <map>
+                    <entry>
+                        <String xml:space="preserve">code-templates</String>
+                        <codeTemplateItem-array>
+                            <codeTemplateItem>
+                                <field name="contentType">
+                                    <String xml:space="preserve">text/xml</String>
+                                </field>
+                                <field name="unparsedInsertString">
+                                    <String xml:space="preserve">@year@</String>
+                                </field>
+                                <field name="descriptionString">
+                                    <String xml:space="preserve"></String>
+                                </field>
+                                <field name="renderString">
+                                    <String xml:space="preserve">year</String>
+                                </field>
+                                <field name="enabled">
+                                    <Boolean xml:space="preserve">true</Boolean>
+                                </field>
+                            </codeTemplateItem>
+                        </codeTemplateItem-array>
+                    </entry>
+                    <entry>
+                        <String xml:space="preserve">key.code.templates.option.pane</String>
+                        <Boolean xml:space="preserve">true</Boolean>
+                    </entry>
+                </map>
+            </serialized>
+        </options>
+    </meta>
+    <projectTree name="IvyAddOnsGuide.xpr">
+        <folder path="CommonRichDialogs/"/>
+        <folder path="DocFactory/"/>
+        <folder path="DynamicDialog/"/>
+        <folder path="FileManager/"/>
+        <folder path="Introduction/"/>
+        <folder path="JavaHelpers/"/>
+        <folder path="Libraries/"/>
+        <folder path="WaitForAsyncProcess/"/>
+        <file name="IvyAddOnsGuide.xml"/>
+        <file name="SampleChapter.xml"/>
+    </projectTree>
+</project>
