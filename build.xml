@@ -95,8 +95,9 @@
 	 Install ivy server
 	======================================================================
 	-->
-	<target name="installIvyServer" depends="checkIvyServerInstallation" unless="check.ivy.server">
+	<target name="installIvyServer">
 		<mkdir dir="${dir.build}"/>
+		<delete dir="${dir.ivy.server}"/>
 		<if>
 			<contains string="${os.name}" substring="linux" casesensitive="false"/>
 			<then>
@@ -136,16 +137,6 @@
 		<get dest="${dir.build}/XpertIvyServer.zip" src="${url.ivy.server.build}/artifact/${path.ivy.server}"/>
 		<unzip dest="${dir.ivy.server}" src="${dir.build}/XpertIvyServer.zip"/>
 	</target>
-
-	<!--
-	======================================================================
-	 Check ivy server installation
-	======================================================================
-	-->
-	<target name="checkIvyServerInstallation">
-		<available file="${dir.ivy.server}" property="check.ivy.server"/>
-	</target>
-
 </project>
 	
 	
