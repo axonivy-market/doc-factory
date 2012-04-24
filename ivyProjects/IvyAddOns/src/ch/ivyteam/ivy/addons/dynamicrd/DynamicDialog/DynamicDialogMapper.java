@@ -258,7 +258,7 @@ final class DynamicDialogMapper
     }
 
     @Override
-    protected final void endDocument()
+    public final void endDocument()
     {
       Component component;
       Object object;

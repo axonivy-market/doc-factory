@@ -113,7 +113,7 @@ public final class DataClassExplorer<T extends Object>
     String currentPath;
     String attributeQualifiedName;
     Class<?> clazz;
-
+    
     clazz = attributeClass;
     if (property != null && classMap != null)
     {
@@ -124,9 +124,9 @@ public final class DataClassExplorer<T extends Object>
       }
     }
 
-    currentPath = path;
     do
     {
+      currentPath = path;
       if (!clazz.equals(Class.class))
       {
         if (!name.equals(""))

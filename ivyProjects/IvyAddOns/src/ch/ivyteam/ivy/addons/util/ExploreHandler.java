@@ -57,7 +57,7 @@ public class ExploreHandler<T>
    * Method called when the exploring is finished.
    * @throws AddonsException 
    */
-  protected void endDocument() throws AddonsException
+  public void endDocument() throws AddonsException
   {
 
   }

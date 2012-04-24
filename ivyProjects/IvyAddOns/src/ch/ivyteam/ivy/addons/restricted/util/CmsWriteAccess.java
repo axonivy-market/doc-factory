@@ -196,7 +196,9 @@ public final class CmsWriteAccess
               && (node.getParent() != null || node.getName().equals(Cms.SPECIFIC_ENVIRONMENT_NODE_NAME)))
       {
         parent = node.getParent();
-        if (!node.hasChildren() && !node.hasValues())
+
+        if (!node.hasChildren()
+                && (node.getContentObjectType().getCoType() == CoType.FOLDER || !node.hasValues()))
         {
           Cms.invalidate(node.getUri());
           node.delete();
