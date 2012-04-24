@@ -7,6 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import ch.ivyteam.ivy.environment.Ivy;
+import ch.ivyteam.ivy.scripting.objects.util.NumberUtil;
 
 /**
  * String utilities.
@@ -203,31 +204,39 @@ public final class StringUtil
   {
     Number result;
     result = defaultValue;
-  
-    if (value != null)
+
+    if (value != null && !"".equals(value))
     {
       try
       {
-        result = Integer.parseInt(value);
+        result = NumberUtil.parseNumber(value);
       }
       catch (NumberFormatException e)
       {
         // Nothing to do
       }
     }
-  
+
     return result;
   }
 
+  /**
+   * Resolves the global vars references contained in a string. Every <code>%var_name%</code> contained into
+   * the string are replaced by the value defined for the global var that have the name given between
+   * <code>%</code>.<br />
+   * When the asked global var doesn't exist nothing is done.
+   * @param value the string template
+   * @return a string where global vars are resolved
+   */
   public static String resolveGlobalVars(String value)
   {
     if (value.contains("%"))
     {
       Pattern p;
-  
+
       p = Pattern.compile("%(.*?)(?=%)");
       Matcher m = p.matcher(value);
-  
+
       while (m.find())
       {
         try

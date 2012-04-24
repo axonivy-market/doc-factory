@@ -72,7 +72,7 @@ public final class Cms2LinearXml
     }
 
     @Override
-    protected void endDocument() throws AddonsException
+    public void endDocument() throws AddonsException
     {
       StreamResult streamResult;
       BufferedOutputStream bufferedOutputStream;
