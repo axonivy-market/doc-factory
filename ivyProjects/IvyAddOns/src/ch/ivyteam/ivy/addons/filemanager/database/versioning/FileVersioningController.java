@@ -187,20 +187,21 @@ public class FileVersioningController {
 						fv.setDate(new Date(rec.getField("cdate").toString()));
 					}catch(Exception ex){
 						try{
-							fv.setDate(new Date(new DateTime(rec.getField("cdate").toString()).format("dd.MM.yyyy")));
+							fv.setDate(new Date(new DateTime(rec.getField("cdate").toString()).getDate().format("dd.MM.yyyy")));
 						}catch(Exception e)
 						{
 							fv.setDate(new Date());
 						}
 					}
 					try{
-						fv.setTime(new Time(new DateTime(rec.getField("ctime").toString()).format("HH:mm:ss")));
+						fv.setTime(new Time(new DateTime(rec.getField("ctime").toString()).getTime().format("HH:mm:ss")));
 					}catch(Exception e)
 					{
 						try{
 							if(rec.getField("ctime").toString().length()>8)
 							{
-								fv.setTime(new Time(rec.getField("ctime").toString().substring(0,8)));
+								fv.setTime(new Time(rec.getField("ctime").toString().substring(rec.getField("ctime").toString().length()-10,rec.getField("ctime").toString().length()-2)));
+								
 							}
 							else{
 								fv.setTime(new Time(rec.getField("ctime").toString()));
@@ -286,8 +287,8 @@ public class FileVersioningController {
 		//Query to insert the new version
 		String q1= "INSERT INTO "+this.fileVersionTableName+" (file_id,version_number,cdate,ctime,cuser,file_name) VALUES (?,?,?,?,?,?)";
 		//Query to insert the new Version Content
-		//String q2= "INSERT INTO "+this.fileVersionContentTableName+" (content, version_id) SELECT file_content, ? FROM "+this.fileContentTableName+" WHERE file_id = ? ";
 		String q2= "INSERT INTO "+this.fileVersionContentTableName+" (content, version_id) VALUES ((SELECT file_content FROM "+this.fileContentTableName+" WHERE file_id = ?) , ?)";
+		String q2bis= "INSERT INTO "+this.fileVersionContentTableName+" (content, version_id) SELECT file_content, ? FROM "+this.fileContentTableName+" WHERE file_id = ? ";
 
 		//Query to update the new  file version  "file version content Id" field
 		String q3= "UPDATE "+this.fileVersionTableName+" SET fvc_id=? WHERE versionid=?";
@@ -299,6 +300,7 @@ public class FileVersioningController {
 		try {
 			connection = getDatabase().getAndLockConnection();
 			Connection jdbcConnection=connection.getDatabaseConnection();
+			
 			PreparedStatement stmt = null;
 			try{			
 				boolean flag = true;
@@ -348,13 +350,36 @@ public class FileVersioningController {
 					stmt = jdbcConnection.prepareStatement(q2);
 					flag=false;
 				}
-				//Ivy.log().info("CREATE VERSION version id  "+vid);
-				//Ivy.log().info("CREATE VERSION file id  "+fileId);
+				
 				//Ivy.log().info("CREATE VERSION QUERY 2 "+q2);
 				stmt.setLong(1, fileId);
 				stmt.setLong(2, vid);
+				
 				//Ivy.log().info("CREATE VERSION TEST 3");
-				stmt.executeUpdate();
+				boolean error = false;
+				try{
+					stmt.executeUpdate();
+				}catch(SQLException ex)
+				{//Older Version from MS SQL , like MS SQL 2005 may throw an Exception because of the nested query.
+					error=true;
+				}
+				if(error)
+				{
+					flag = true;
+					try{
+						stmt = jdbcConnection.prepareStatement(q2bis, PreparedStatement.RETURN_GENERATED_KEYS);
+					}catch(SQLFeatureNotSupportedException fex)
+					{//The JDBC Driver doesn't accept the PreparedStatement.RETURN_GENERATED_KEYS
+						stmt = jdbcConnection.prepareStatement(q2bis);
+						flag=false;
+					}
+					
+					//Ivy.log().info("CREATE VERSION QUERY 2 "+q2bis+" file_id = "+fileId+" file_version_id = "+vid);
+					stmt.setLong(1, vid);
+					stmt.setLong(2, fileId);
+					//Ivy.log().info("CREATE VERSION TEST 3");
+					stmt.executeUpdate();
+				}
 				//Ivy.log().info("CREATE VERSION TEST 4");
 				rs=null;
 				try{
@@ -366,11 +391,13 @@ public class FileVersioningController {
 				}catch(Exception fex)
 				{//The JDBC Driver doesn't accept the PreparedStatement.RETURN_GENERATED_KEYS
 					//ignore
+					//Ivy.log().error("CREATE VERSION TEST 5 Exception "+fex.getMessage());
 				}
 				
 				if(!flag || vcid<=0)
 				{//The JDBC Driver doesn't accept the PreparedStatement.RETURN_GENERATED_KEYS
 					//we have to get the inserted Id manually....
+					//Ivy.log().info("CREATE VERSION TEST 6 No returned file version content");
 					vcid= this.getLastInsertedFileVersionContent(vid);
 				}
 

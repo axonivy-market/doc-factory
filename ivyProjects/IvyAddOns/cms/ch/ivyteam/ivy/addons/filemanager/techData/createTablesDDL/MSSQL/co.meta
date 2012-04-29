@@ -1,2 +1,2 @@
-co: name={MSSQL} description={} changed={2012-04-03 17:27:59 CEST} changedby={ec} visualorder={0} guid={13678D048F37A28E} parentguid={} typeguid={E6AFEA1FBC44F7F7} id={} parentid={} typeid={}
-val: guid={13678D048F8D2CB0} datatype={} isdefault={true} langid={en} description={} validfrom={2012-04-03 17:26:17 CEST} validto={} changed={2012-04-03 17:27:59 CEST} changedby={ec} properties={} id={}
+co: name={MSSQL} description={} changed={2012-04-29 23:38:52 CEST} changedby={ec} visualorder={0} guid={13678D048F37A28E} parentguid={} typeguid={E6AFEA1FBC44F7F7} id={} parentid={} typeid={}
+val: guid={13678D048F8D2CB0} datatype={} isdefault={true} langid={en} description={} validfrom={2012-04-03 17:26:17 CEST} validto={} changed={2012-04-29 23:38:52 CEST} changedby={ec} properties={} id={}
