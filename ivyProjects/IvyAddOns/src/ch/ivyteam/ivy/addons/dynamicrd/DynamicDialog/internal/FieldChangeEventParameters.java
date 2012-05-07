@@ -1,5 +1,7 @@
 package ch.ivyteam.ivy.addons.dynamicrd.DynamicDialog.internal;
 
+import java.io.Serializable;
+
 import ch.ivyteam.ivy.addons.dynamicrd.DynamicDialog.Component;
 import ch.ivyteam.ivy.cm.IContentManagementSystem;
 
@@ -9,11 +11,13 @@ import ch.ivyteam.ivy.cm.IContentManagementSystem;
  * @author Patrick Joly, TI-Informatique
  * @since 30.08.2010
  */
-public class FieldChangeEventParameters
+public class FieldChangeEventParameters implements Serializable
 {
-  private Component component;
+  private static final long serialVersionUID = 4493071292565205651L;
 
-  private IContentManagementSystem cms;
+  private transient Component component;
+
+  private transient IContentManagementSystem cms;
 
   /**
    * Constructs a new FieldChangeEventParameters with parameters.
