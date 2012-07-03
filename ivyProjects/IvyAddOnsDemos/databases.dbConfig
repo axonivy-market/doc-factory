@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<databaseconfigs>
-    <databaseconfig password="milesd" user="root" driver="com.mysql.jdbc.Driver" url="jdbc:mysql://localhost/fm_test" name="filemanager"/>
-</databaseconfigs>
