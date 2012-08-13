@@ -19,15 +19,17 @@
     <ns:warning>
       <para> The File Management System needs Java 6 at client side as a prerequisite. </para>
     </ns:warning>
-    <para>The Users are then going to share the same files among an application. They will be able
-      to edit, print, copy, zip or download those files. They will also be able to upload some Files
+    <para>The Users are going to share the same files among an application. They will be able to
+      edit, print, copy, zip or download those files. They will also be able to upload some Files
       from their computer to the server.</para>
     <para>The file management system doesn't work with Ivy File Objects. It works with java.io.File
       objects and moreover with
       <ns:code>ch.ivyteam.ivy.addons.filemanager.DocumentOnServer</ns:code> Objects. A
       DocumentOnServer is just a DataClass representing a java.io.File within the file management
       system and contains some informations like the File size, a short description, the date and
-      time of creation and last modification or if it is already edited (locked) by someone.</para>
+      time of creation and last modification or if it is already edited (locked) by someone. All
+      these meta informations are stored in a database. The documents can be stored as files on the
+      fileset or as BLOB in the database.</para>
   </sect1>
   <sect1 xml:id="ivy.addons.filemanager.thefilemanagerRDC">
     <title>The FileManager RDC</title>
@@ -55,193 +57,547 @@
             <ns:emphasis>ExternalDatabaseConfigurationReadMaxConnections</ns:emphasis> and
             <ns:emphasis>ExternalDatabaseConfigurationReadDatabaseConnectionConfiguration</ns:emphasis></para>
       </ns:warning>
-      <para>There are two major informations to provide the FileManager: the <ns:emphasis>server
-          path</ns:emphasis> representing the top directory that will be displayed, and the
-          <ns:emphasis>database informations</ns:emphasis> to be able to store the files
-        informations.</para>
-      <para>These parameters can be given to the file manager through start methods or with the use
-        of global variables. You will find these indications in next two sub paragraphs.</para>
-      <sect3>
-        <title>The Server path</title>
-        <para>The server path is provided as parameter in the start methods of the RDC. This
-          parameter can be an empty String. In such a case nothing is going to be displayed and the
-          user will not be able to do anything. You can set the server Path dynamically at a delayed
-          time with the <ns:code>setServerPath(String _serverPath)</ns:code> method. </para>
-        <para>If you provide a path like "Test/dir1/", the directories and theirs files are going to
-          be located at the root of the Ivy Server installation directory. If the path is like
-          "/test/dir1/...", the directories and theirs files are going to be located at the root of
-          the drive. You can also provide a path like "C:/test/...".</para>
-        <para>You can connect to a file share server path with for example
-            <ns:emphasis>"//ServerShareName/dir1/"</ns:emphasis>. In such a case the file sharing
-          must be configured so that the Ivy Server User can connect to it. </para>
+      <sect3 xml:id="ivy.addons.filemanager.thefilemanagerRDC.configurationController"
+          ><title>Starting with a ConfigurationController as input parameter</title><important>
+          <para>Before the Ivy 4.3.2 version all the different settings were given as single
+            parameters. With the increasing number of new features, the number of possible starts
+            methods had grown. To avoid creating new start methods each time a new feature is
+            embedded, we use an extendable ConfigurationController object. This object is just a
+            container for start parameters and configurations. It is now the official and prefered
+            way to start the file manager.</para>
+        </important><para>A ConfigurationController is a Java Object that contains all the necessary
+          informations to configure your FileManager at start. There are for the moment two
+          Controllers, both in the <code>ch.ivyteam.ivy.addons.filemanager.configuration</code>
+          package: <itemizedlist>
+            <listitem>
+              <para>the BasicConfigurationController. It holds all the necessary informations that
+                are part of the configuration of a file management object. It contains for example
+                the root path of the root directory, all the database table names, the ivy database
+                connexion name, flags that activate or inactivate some features like the security,
+                file versioning and so on... </para>
+            </listitem>
+            <listitem>
+              <para>the FileManagerConfigurationController extends the BasicConfigurationController.
+                It inherits all the settings of the BasicConfigurationController and holds some
+                specific settings for the FileManager Rich Dialog. It contains for example flags
+                that describe the visibility of some elements. The FileManager start method uses
+                such an object.</para>
+            </listitem>
+          </itemizedlist> All the settings contained in such controllers are accessible through
+          getter and setter methods. Here an example of such a configuration found in the IvyDemos
+          in an Ivy context: <mediaobject>
+            <imageobject><imagedata fileref="images/FileManager/configurationController.png"
+            /></imageobject>
+          </mediaobject>As you can see a lot of important settings like the tables names are blank.
+          In fact those settings have already default values. The next table gives an overview of
+          the settings contained in the controllers, of their default values if any and of the
+          features they control. </para><table>
+          <title>FileManager ConfigurationController settings</title>
+          <tgroup cols="4">
+            <thead>
+              <row>
+                <entry>Setting</entry>
+                <entry>Description</entry>
+                <entry>Default value</entry>
+                <entry>Feature</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>rootPath</entry>
+                <entry>String, the path of the root directory</entry>
+                <entry>Empty, so it must be set.</entry>
+                <entry>Basic and obligatory</entry>
+              </row>
+              <row>
+                <entry>useIvySystemDB</entry>
+                <entry>Boolean, if true the File Manager RDC will use the Ivy System DB to store the
+                  file's meta data information. If this flag is true, then you won't have the
+                  possibility to use any avanced features like the security, file versioning and so
+                  on....</entry>
+                <entry>false</entry>
+                <entry>Use the Ivy System DB and not an external database connexion. </entry>
+              </row>
+              <row>
+                <entry>storeFilesInDB</entry>
+                <entry>Boolean, If true, the files content is stored as BLOB into the Table which
+                  name is set in filesContentTableName. If you set this flag to true, all the
+                  advanced features will be able to work.</entry>
+                <entry>false</entry>
+                <entry>Files are stored in the database. </entry>
+              </row>
+              <row>
+                <entry>activateFileTags</entry>
+                <entry>Boolean, if true, the file tags feature will be activated. Flag
+                  storeFilesInDB must be true to be able to activate this feature.</entry>
+                <entry>false</entry>
+                <entry><link linkend="ivy.addons.filemanager.tags">File tags</link></entry>
+              </row>
+              <row>
+                <entry>activateFileType</entry>
+                <entry>Boolean, if true, the file type feature will be activated. Flag
+                  storeFilesInDB must be true to be able to activate this feature.</entry>
+                <entry>false</entry>
+                <entry><link linkend="ivy.addons.filemanager.types">File Types</link></entry>
+              </row>
+              <row>
+                <entry>activateFileVersioning</entry>
+                <entry>Boolean, if true the File version feature will be activated. Flag
+                  storeFilesInDB must be true to be able to activate this feature.</entry>
+                <entry>false</entry>
+                <entry><link linkend="ivy.addons.filemanager.versioning">File
+                versioning</link></entry>
+              </row>
+              <row>
+                <entry>activateSecurity</entry>
+                <entry>Boolean, if true the security management on the directories will be
+                  activated. Flag storeFilesInDB must be true.</entry>
+                <entry>false</entry>
+                <entry><link linkend="ivy.addons.filemanager.security">Security</link></entry>
+              </row>
+              <row>
+                <entry>adminRole</entry>
+                <entry>String, The name of the ivy role that is allowed to manage the file manager
+                  security.</entry>
+                <entry>Value of global variable "xivy_addons_fileManager_admin_roleName"</entry>
+                <entry><link linkend="ivy.addons.filemanager.security">Security</link></entry>
+              </row>
+              <row>
+                <entry>fileActionHistoryConfiguration</entry>
+                <entry>ch.ivyteam.ivy.addons.filemanager.database.fileaction.FileActionConfiguration
+                  object. This object is used as configuration for the file action history tracking
+                  feature. Please read the corresponding section for more details.</entry>
+                <entry>Per default this feature is deactivated, and can only be activated if the
+                  files are stored in the database.</entry>
+                <entry><link linkend="ivy.addons.filemanager.fileactionhistory">File action history
+                    tracking</link></entry>
+              </row>
+              <row>
+                <entry>IvyDBConnectionName</entry>
+                <entry>String. The name of the Ivy database Configuration name used to connect to
+                  the database.</entry>
+                <entry>Value of global variable "xivy_addons_fileManager_ivyDatabaseConnectionName"</entry>
+                <entry>Basic. Not used if the useIvySystemDB flag is true.</entry>
+              </row>
+              <row>
+                <entry>filesTableName</entry>
+                <entry>String. The name of the Table that stores the information about the files. </entry>
+                <entry>Value of global variable "xivy_addons_fileManager_fileMetaDataTableName"</entry>
+                <entry>Basic. Not used if the useIvySystemDB flag is true.</entry>
+              </row>
+              <row>
+                <entry>directoriesTableName</entry>
+                <entry>String. The name of the DB Table that stores the directory structure.</entry>
+                <entry>Value of global variable "xivy_addons_fileManager_directoriesTableName"</entry>
+                <entry>Files are stored in the database. Not used if the storeFilesInDB flag is
+                  false.</entry>
+              </row>
+              <row>
+                <entry>filesContentTableName</entry>
+                <entry>String. The name of the DB Table that stores the file content.</entry>
+                <entry>Value of global variable "xivy_addons_fileManager_fileContentTableName"</entry>
+                <entry>Files are stored in the database. Not used if the storeFilesInDB flag is
+                  false.</entry>
+              </row>
+              <row>
+                <entry>filesVersionTableName</entry>
+                <entry>String. The name of the DB Table that stores the file versions information.</entry>
+                <entry>Value of global variable
+                  "xivy_addons_fileManager_fileVersioningMetaDataTableName"</entry>
+                <entry><link linkend="ivy.addons.filemanager.versioning">File
+                versioning</link></entry>
+              </row>
+              <row>
+                <entry>filesVersionContentTableName</entry>
+                <entry>String. The name of the DB Table that stores the file versions content.</entry>
+                <entry>Value of global variable
+                  "xivy_addons_fileManager_fileVersioningContentTableName"</entry>
+                <entry><link linkend="ivy.addons.filemanager.versioning">File
+                versioning</link></entry>
+              </row>
+              <row>
+                <entry>fileTagsTableName</entry>
+                <entry>String. Name of the DB Table that stores the file tags.</entry>
+                <entry>Value of the "xivy_addons_fileManager_fileTagsTableName" global variable.</entry>
+                <entry><link linkend="ivy.addons.filemanager.tags">File tags</link></entry>
+              </row>
+              <row>
+                <entry>fileTypeTableName</entry>
+                <entry>String. Name of the DB Table that stores the file types.</entry>
+                <entry>Value of the xivy_addons_fileManager_fileTypesTableName global variable.</entry>
+                <entry><link linkend="ivy.addons.filemanager.types">File Types</link></entry>
+              </row>
+              <row>
+                <entry>databaseSchemaName</entry>
+                <entry>String. The name of the database schema that may be used if the tables are
+                  stored in a schema.</entry>
+                <entry>Value of the xivy_addons_fileManager_databaseSchemaName global variable.</entry>
+                <entry>Basic</entry>
+              </row>
+              <row>
+                <entry>maxFileUploadSize</entry>
+                <entry>int. The max file size the user is allowed to upload in Kb. 0 means no limit.</entry>
+                <entry>0</entry>
+                <entry>Set the maximum file size a user can upload.</entry>
+              </row>
+              <row>
+                <entry>allowUserToSetDocumentFileTypes*</entry>
+                <entry>Boolean. Flag used if the file type feature is activated to allow the user to
+                  choose the types manually.</entry>
+                <entry>false</entry>
+                <entry><link linkend="ivy.addons.filemanager.types">File Types</link></entry>
+              </row>
+              <row>
+                <entry>showFileTypeManagement*</entry>
+                <entry>Boolean.Flag used if the file type feature is activated to allow the user to
+                  manage the types.</entry>
+                <entry>false</entry>
+                <entry><link linkend="ivy.addons.filemanager.types">File Types</link></entry>
+              </row>
+              <row>
+                <entry>showFileTypeInTable*</entry>
+                <entry>Boolean. Flag used if the file type feature is activated to show the types in
+                  a column.</entry>
+                <entry>true</entry>
+                <entry><link linkend="ivy.addons.filemanager.types">File Types</link></entry>
+              </row>
+              <row>
+                <entry>allowUserToSetDocumentTags*</entry>
+                <entry>Boolean. Flag used if the file tag feature is activated to allow the user to
+                  edit the tags manually.</entry>
+                <entry>false</entry>
+                <entry><link linkend="ivy.addons.filemanager.tags">File tags</link></entry>
+              </row>
+              <row>
+                <entry>showFileHistoryMenuItem*</entry>
+                <entry>Boolean. Flag used if the file action history tracking feature is activated
+                  to allow the user to view the history of the files..</entry>
+                <entry>true</entry>
+                <entry><link linkend="ivy.addons.filemanager.fileactionhistory">File action history
+                    tracking</link></entry>
+              </row>
+              <row>
+                <entry>toolBarVisible*</entry>
+                <entry>Boolean. If true then the tool bar is visible.</entry>
+                <entry>true</entry>
+                <entry>Misc.</entry>
+              </row>
+              <row>
+                <entry>folderTreeVisible*</entry>
+                <entry>Boolean. If true then the folder tree is visible.</entry>
+                <entry>true</entry>
+                <entry>Misc.</entry>
+              </row>
+              <row>
+                <entry>diplayFilesRecursively*</entry>
+                <entry>Boolean. If true then the files are displayed recursively in the directories
+                  structure.</entry>
+                <entry>false</entry>
+                <entry>Misc.</entry>
+              </row>
+              <row>
+                <entry>advancedActionsEnabled*</entry>
+                <entry>Boolean. Flag used for some actions, should not be in use now, may be again
+                  in the future.</entry>
+                <entry>true</entry>
+                <entry>Misc.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+        <annotation>
+          <para>* All these settings are located in the FileManagerConfigurationController.</para>
+        </annotation>
       </sect3>
       <sect3>
-        <title>The database settings</title>
+        <title>Starting the FileManager with the old and deprecated start methods.</title>
+        <para>As already mentioned in the previous section all the described start methods here
+          should be concidered as deprecated. They still work but do not provide the flexibility and
+          all the features provided by the ConfigurationController. </para>
+        <para>There are two major informations to provide the FileManager: the <ns:emphasis>server
+            path</ns:emphasis> representing the top directory that will be displayed, and the
+            <ns:emphasis>database informations</ns:emphasis> to be able to store the files
+          informations.</para>
+        <para>These parameters can be given to the file manager through start methods or with the
+          use of global variables. You will find these indications in next two sub paragraphs. </para>
         <sect4>
-          <title>If the files are stored on a server File System...</title>
-          <para>You can use the IvySystem DB to store the informations about the files, or you can
-            use an external Database System.</para>
-          <para>If your table is located on the Ivy System Database you can start the FileManager
-            with its <ns:code>startWithServerPathAndUseIvySystemDB(String _serverPath)</ns:code>
-            start method. It is the easiest way to use the FileManager. You can also set the
-              <ns:code>xivy_addons_fileManager_activateUseOfIvySystemDatabase global variable to
-              "1".</ns:code></para>
-          <para>If you use an external database you have to provide more informations:<itemizedlist>
-              <listitem>
-                <para>First you have to configure an Ivy Database Configuration in your project (see
-                  the Ivy Documentation related to this point).</para>
-              </listitem>
-              <listitem>
-                <para>You have to create the "UploadedFiles" Table. Please refer to the database
-                  definition section.</para>
-              </listitem>
-              <listitem>
-                <para>Then use one of the following start methods:</para>
-              </listitem>
-            </itemizedlist></para>
-          <table>
-            <title><code>FileManager Start methods</code> using an Ivy database configuration</title>
-            <tgroup cols="3">
-              <thead>
-                <row>
-                  <entry>Start method name</entry>
-                  <entry>Description</entry>
-                </row>
-              </thead>
-              <tbody>
-                <row>
-                  <entry><ns:code>startWithServerPathAndIvyDbConnectionNameAndDbTableName</ns:code></entry>
-                  <entry>Starts with serverPath / IvyDBConnectionName / DBTableName. The server path
-                    is the root directory in the server file system where the documents are going to
-                    be uploaded and found. The IvyDBConnectionName is the name of the Ivy Database
-                    Connection configuration, used to store the files informations. (Per default
-                    "FileManager"). The DBTableName is the Table name where the files informations
-                    are going to be stored. Per Default "uploadedfiles"</entry>
-                </row>
-                <row>
-                  <entry><ns:code>startWithServerPathAndIvyDbConnectionNameAndDbTableNameAndDBSchemaName</ns:code></entry>
-                  <entry>If you use a PostGreSQL database, you can provide a schema name also. If no
-                    Schema is provided, the default used will be "public".</entry>
-                </row>
-                <row>
-                  <entry><ns:code>startWithServerPath</ns:code></entry>
-                  <entry>This start method only takes the serverPath as Parameter. In this case you
-                    have to obligatory provide a database configuration named "FileManager" and your
-                    table has to be named "uploadedfiles".</entry>
-                </row>
-              </tbody>
-            </tgroup>
-          </table>
-          <ns:warning>
-            <para>For the moment only four kinds of external databases were tested: MS SQL, MySQL,
-              PostGRESQL and Oracle 11g.</para>
-          </ns:warning>
+          <title>The server path</title>
+          <para>The server path is provided as parameter in the start methods of the RDC. This
+            parameter can be an empty String. In such a case nothing is going to be displayed and
+            the user will not be able to do anything. You can set the server Path dynamically at a
+            delayed time with the <ns:code>setServerPath(String _serverPath)</ns:code> method. </para>
+          <para>If you provide a path like "Test/dir1/", the directories and theirs files are going
+            to be located at the root of the Ivy Server installation directory. If the path is like
+            "/test/dir1/...", the directories and theirs files are going to be located at the root
+            of the drive. You can also provide a path like "C:/test/...".</para>
+          <para>You can connect to a file share server path with for example
+              <ns:emphasis>"//ServerShareName/dir1/"</ns:emphasis>. In such a case the file sharing
+            must be configured so that the Ivy Server User can connect to it. </para>
         </sect4>
         <sect4>
-          <title> The files' content is stored in a database as BLOB or VARBINARY field (depending
-            on your database vendor) </title>
-          <para>This feature is not supported within the Ivy System Database. You must store the
-            files informations in an external database.</para>
-          <para> Instead of having all the files and directory structure stored in a file system,
-            you can store all of these informations in a database. For that you will need 3 tables: <itemizedlist>
-              <listitem>
-                <para> the files meta informations table (per default uploadedfiles), </para>
-              </listitem>
-              <listitem>
-                <para> the file content table (per default filemanagercontent),</para>
-              </listitem>
-              <listitem>
-                <para> the directory structure table (per default filemanagerdirectory),</para>
-              </listitem>
-            </itemizedlist></para>
-          <para>Please refer to the database definition section.</para>
-          <para>To be able to start the filemanager with the filecontent stored in the database, you
-            have to use the start method corresponding to the following parameters, or you can set
-            the <ns:code>xivy_addons_fileManager_activateFileContentInDatabase global variable to
-              "1".</ns:code>
-          </para>
-          <table>
-            <title><code>FileManager Start method</code> enabling the file storage in database</title>
-            <tgroup cols="3">
-              <thead>
-                <row>
-                  <entry>Parameter name</entry>
-                  <entry>Parameter type</entry>
-                  <entry>Description</entry>
-                </row>
-              </thead>
-              <tbody>
-                <row>
-                  <entry>serverPath</entry>
-                  <entry>String</entry>
-                  <entry>The entry Path of the FileManager</entry>
-                </row>
-                <row>
-                  <entry>useIvySystemDB</entry>
-                  <entry>Boolean</entry>
-                  <entry>If true, the files informations are going to be stored in the Ivy System
-                    Database. In such a case the file content storage in the database is not
-                    supported. If false you will use a separate external database (see
-                    ivyDBConnectionName, schemaName, FileTableName, DirTableName parameters)</entry>
-                </row>
-                <row>
-                  <entry>ivyDBConnectionName</entry>
-                  <entry>String</entry>
-                  <entry>If use of external DB, this is the user friendly Ivy connection to the
-                  DB.</entry>
-                </row>
-                <row>
-                  <entry>schemaName</entry>
-                  <entry>String</entry>
-                  <entry>If use of external DB with engine that supports Schemas like
-                  PostGreSQL</entry>
-                </row>
-                <row>
-                  <entry>fileTableName</entry>
-                  <entry>String</entry>
-                  <entry>The name of the table that stores the informations relative to the
-                  files</entry>
-                </row>
-                <row>
-                  <entry>fileContentTableName</entry>
-                  <entry>String</entry>
-                  <entry>The name of the table that stores the file content</entry>
-                </row>
-                <row>
-                  <entry>dirTableName</entry>
-                  <entry>String</entry>
-                  <entry>The name of the table that stores the informations relative to the
-                    directories (only necessary if the files content is stored in the fileTable (see
-                    storeFilesInDB parameter)</entry>
-                </row>
-                <row>
-                  <entry>storeFilesInDB</entry>
-                  <entry>Boolean</entry>
-                  <entry>If true, the file content will be also stored in the fileTable. If the
-                    "useIvySystemDB" parameter is true, the "storeFilesInDB will always be
-                  false."</entry>
-                </row>
-                <row>
-                  <entry>activateSecurity</entry>
-                  <entry>Boolean</entry>
-                  <entry>If true, the security on the directories will be taken (See the section
-                    about this feature to get mor informations). The security Informations are
-                    stored in the dirTable. This only works for the moment with storeFilesInDB
-                    parameter to true. Parameter storeFilesInDB to false implies this parameter to
-                    false also.</entry>
-                </row>
-              </tbody>
-            </tgroup>
-          </table>
+          <title>The database settings</title>
+          <sect5>
+            <title>If the files are stored on a server File System...</title>
+            <para>You can use the IvySystem DB to store the informations about the files, or you can
+              use an external Database System.</para>
+            <para>If your table is located on the Ivy System Database you can start the FileManager
+              with its <ns:code>startWithServerPathAndUseIvySystemDB(String _serverPath)</ns:code>
+              start method. It is the easiest way to use the FileManager. </para>
+            <para>If you use an external database you have to provide more informations:<itemizedlist>
+                <listitem>
+                  <para>First you have to configure an Ivy Database Configuration in your project
+                    (see the Ivy Documentation related to this point).</para>
+                </listitem>
+                <listitem>
+                  <para>You have to create the "UploadedFiles" Table. Please refer to the database
+                    definition section.</para>
+                </listitem>
+                <listitem>
+                  <para>Then use one of the following start methods:</para>
+                </listitem>
+              </itemizedlist></para>
+            <table>
+              <title><code>FileManager Start methods</code> using an Ivy database configuration</title>
+              <tgroup cols="3">
+                <thead>
+                  <row>
+                    <entry>Start method name</entry>
+                    <entry>Description</entry>
+                  </row>
+                </thead>
+                <tbody>
+                  <row>
+                    <entry><ns:code>startWithServerPathAndIvyDbConnectionNameAndDbTableName</ns:code></entry>
+                    <entry>Starts with serverPath / IvyDBConnectionName / DBTableName. The server
+                      path is the root directory in the server file system where the documents are
+                      going to be uploaded and found. The IvyDBConnectionName is the name of the Ivy
+                      Database Connection configuration, used to store the files informations. (Per
+                      default "FileManager"). The DBTableName is the Table name where the files
+                      informations are going to be stored. Per Default "uploadedfiles"</entry>
+                  </row>
+                  <row>
+                    <entry><ns:code>startWithServerPathAndIvyDbConnectionNameAndDbTableNameAndDBSchemaName</ns:code></entry>
+                    <entry>If you use a PostGreSQL database, you can provide a schema name also. If
+                      no Schema is provided, the default used will be "public".</entry>
+                  </row>
+                  <row>
+                    <entry><ns:code>startWithServerPath</ns:code></entry>
+                    <entry>This start method only takes the serverPath as Parameter. In this case
+                      you have to obligatory provide a database configuration named "FileManager"
+                      and your table has to be named "uploadedfiles".</entry>
+                  </row>
+                </tbody>
+              </tgroup>
+            </table>
+            <para>You can also start the FileManager with the
+                <ns:code>startWithConfigInGlobalVariables(String _serverPath)</ns:code> start method
+              and configure the FielManager with the use of global variables provided for that
+              purpose. (<link linkend="ivy.addons.filemanager.thefilemanagerRDC.globalVariables"
+                >This section describes the way to configure the Filemanager with global
+              variables)</link>.</para>
+            <ns:warning>
+              <para>For the moment four kinds of external databases were fully tested: MS SQL 2005
+                and 2008, MySQL, PostGRESQL and Oracle 11g.</para>
+            </ns:warning>
+          </sect5>
+          <sect5 xml:id="ivy.addons.filemanager.thefilemanagerRDC.filesAsBlob">
+            <title> The files' content is stored in a database as BLOB or VARBINARY field (depending
+              on your database vendor) </title>
+            <para>This feature is not supported within the Ivy System Database. You must store the
+              files informations in an external database.</para>
+            <para> Instead of having all the files and directory structure stored in a file system,
+              you can store all of these informations in a database. For that you will need 3
+              tables: <itemizedlist>
+                <listitem>
+                  <para> the files meta informations table (per default uploadedfiles), </para>
+                </listitem>
+                <listitem>
+                  <para> the file content table (per default filemanagercontent),</para>
+                </listitem>
+                <listitem>
+                  <para> the directory structure table (per default filemanagerdirectory),</para>
+                </listitem>
+              </itemizedlist></para>
+            <para>Please refer to the database definition section.</para>
+            <para>To be able to start the filemanager with the filecontent stored in the database,
+              you have to use the start method corresponding to the following parameters, or you can
+              set the <ns:code>xivy_addons_fileManager_activateFileContentInDatabase global variable
+                to "1".</ns:code>
+            </para>
+            <table>
+              <title><code>FileManager Start method</code> enabling the file storage in database</title>
+              <tgroup cols="3">
+                <thead>
+                  <row>
+                    <entry>Parameter name</entry>
+                    <entry>Parameter type</entry>
+                    <entry>Description</entry>
+                  </row>
+                </thead>
+                <tbody>
+                  <row>
+                    <entry>serverPath</entry>
+                    <entry>String</entry>
+                    <entry>The entry Path of the FileManager</entry>
+                  </row>
+                  <row>
+                    <entry>useIvySystemDB</entry>
+                    <entry>Boolean</entry>
+                    <entry>If true, the files informations are going to be stored in the Ivy System
+                      Database. In such a case the file content storage in the database is not
+                      supported. If false you will use a separate external database (see
+                      ivyDBConnectionName, schemaName, FileTableName, DirTableName
+                    parameters)</entry>
+                  </row>
+                  <row>
+                    <entry>ivyDBConnectionName</entry>
+                    <entry>String</entry>
+                    <entry>If use of external DB, this is the user friendly Ivy connection to the
+                      DB.</entry>
+                  </row>
+                  <row>
+                    <entry>schemaName</entry>
+                    <entry>String</entry>
+                    <entry>If use of external DB with engine that supports Schemas like
+                    PostGreSQL</entry>
+                  </row>
+                  <row>
+                    <entry>fileTableName</entry>
+                    <entry>String</entry>
+                    <entry>The name of the table that stores the informations relative to the
+                    files</entry>
+                  </row>
+                  <row>
+                    <entry>fileContentTableName</entry>
+                    <entry>String</entry>
+                    <entry>The name of the table that stores the file content</entry>
+                  </row>
+                  <row>
+                    <entry>dirTableName</entry>
+                    <entry>String</entry>
+                    <entry>The name of the table that stores the informations relative to the
+                      directories (only necessary if the files content is stored in the fileTable
+                      (see storeFilesInDB parameter)</entry>
+                  </row>
+                  <row>
+                    <entry>storeFilesInDB</entry>
+                    <entry>Boolean</entry>
+                    <entry>If true, the file content will be also stored in the fileTable. If the
+                      "useIvySystemDB" parameter is true, the "storeFilesInDB will always be
+                    false."</entry>
+                  </row>
+                  <row>
+                    <entry>activateSecurity</entry>
+                    <entry>Boolean</entry>
+                    <entry>If true, the security on the directories will be activated (See the
+                      section about this feature to get mor informations). The security Informations
+                      are stored in the dirTable. This only works for the moment with storeFilesInDB
+                      parameter to true. Parameter storeFilesInDB to false implies this parameter to
+                      false also.</entry>
+                  </row>
+                </tbody>
+              </tgroup>
+            </table>
+            <para>You can also start the FileManager with the
+                <ns:code>startWithConfigInGlobalVariables(String _serverPath)</ns:code> start method
+              and configure the FielManager with the use of global variables provided for that
+              purpose. (<link linkend="ivy.addons.filemanager.thefilemanagerRDC.globalVariables">The
+                next section describes the way to configure the Filemanager with global
+              variables)</link>.</para>
+          </sect5>
+          <sect5 xml:id="ivy.addons.filemanager.thefilemanagerRDC.globalVariables">
+            <title>Starting the fileManager with the configuration stored as global variables</title>
+            <para>Some global variables stored in the IvyAddons Configuration can be used to
+              configured the FileManager if you start it with the
+              startWithConfigInGlobalVariables(String _serverPath) start method. These global
+              variables are: <itemizedlist>
+                <listitem>
+                  <para>xivy_addons_fileManager_activateUseOfIvySystemDatabase: if set to "1" the
+                    fileManager will use the Ivy System database to store the files' information.
+                    Activating this feature disables the File Versioning, the security and the
+                    storage of the files as BLOB. The files are stored "physically" on the server
+                    file system.</para>
+                </listitem>
+                <listitem>
+                  <para>xivy_addons_fileManager_activateFileContentInDatabase: if set to "1" the
+                    files' content will be stored as BLOB in the file_content table. Else, the files
+                    are going to be stored on the fileset and the security and file versioning
+                    features are automatically disabled.</para>
+                </listitem>
+                <listitem>
+                  <para>xivy_addons_fileManager_activateFileVersioning: if set to "1" the file
+                    Versioning feature will be activated (<link
+                      linkend="ivy.addons.filemanager.versioning">This section describes this
+                      feature</link>). Only supported if the file content is stored as BLOB.</para>
+                </listitem>
+                <listitem>
+                  <para>xivy_addons_fileManager_activateSecurity: if set to "1" the file Security
+                    feature will be activated (<link linkend="ivy.addons.filemanager.security">The
+                      next section describes this feature</link>). Only supported if the file
+                    content is stored as BLOB.</para>
+                </listitem>
+                <listitem>
+                  <para>xivy_addons_fileManager_admin_roleName: this variable is used to store the
+                    iyv role name of the file manager security administrator(<link
+                      linkend="ivy.addons.filemanager.security">The next section describes this
+                      feature</link>). Users having this role will be able to administrate the
+                    FileManager security.</para>
+                </listitem>
+                <listitem>
+                  <para>xivy_addons_fileManager_ivyDatabaseConnectionName: this is the name of ivy
+                    database connection that is connected with the database containing the
+                    filemanager's tables..</para>
+                </listitem>
+                <listitem>
+                  <para>xivy_addons_fileManager_fileMetaDataTableName: this is the name of the
+                    database table containing the files meta data like creation user, date of
+                    creation etc....</para>
+                </listitem>
+                <listitem>
+                  <para>xivy_addons_fileManager_directoriesTableName: this is the name of the
+                    database table containing the directories structure. Only used if the file
+                    content is stored as BLOB.</para>
+                </listitem>
+                <listitem>
+                  <para>xivy_addons_fileManager_fileContentTableName: this is the name of the
+                    database table containing the files' content. Only used if the file content is
+                    stored as BLOB.</para>
+                </listitem>
+                <listitem>
+                  <para>xivy_addons_fileManager_fileVersioningContentTableName: this is the name of
+                    the database table that contains all the file versions ' content. Only used if
+                    the file content is stored as BLOB and the File Versioning Feature is
+                  activated.</para>
+                </listitem>
+                <listitem>
+                  <para>xivy_addons_fileManager_fileVersioningMetaDataTableName: this is the name of
+                    the database table that contains the informations about the different versions
+                    of the files. Only used if the file content is stored as BLOB and the File
+                    Versioning Feature is activated.</para>
+                </listitem>
+                <listitem>
+                  <para>xivy_addons_fileManager_databaseSchemaName: This is the name of the database
+                    Schema where the file manager's table are located. Most of the DB Engines like
+                    PostgreSQL support this feature. Default is an empty String: no Schema will be
+                    predefined and the default one will be used if applicable. </para>
+                </listitem>
+              </itemizedlist></para>
+          </sect5>
         </sect4>
       </sect3>
     </sect2>
     <sect2 xml:id="ivy.addons.filemanager.security">
       <title>Security manager</title>
       <para> If the files content are stored in the database, you can activate the security embedded
-        in the filemanager. For this purpose you have to use the start method described in the
-        precedent paragraph, or you can set the <ns:code>xivy_addons_fileManager_activateSecurity
-          global variable to "1". </ns:code></para>
+        in the filemanager. The best way to do that is to use <link
+          linkend="ivy.addons.filemanager.thefilemanagerRDC.configurationController">the
+          ConfigurationController start method.</link> You can also use the start method described
+          <link linkend="ivy.addons.filemanager.thefilemanagerRDC.filesAsBlob">in this
+        paragraph</link>, or you can set the
+        <ns:code>xivy_addons_fileManager_activateSecurity</ns:code> global variable to "1" and use
+        the <code>startWithConfigInGlobalVariables</code> start method described previously <link
+          linkend="ivy.addons.filemanager.thefilemanagerRDC.globalVariables">in this
+        paragraph</link>.</para>
       <para> The security is based on the Ivy Roles. The filemanager security administrator has all
         the roles and can manage the security of the other roles. This role is set in the following
         global variable: </para>
@@ -282,10 +638,15 @@
       <title>File Versioning</title>
       <para>A new feature has been also added to the filemanager: the possibility to create files
         versions. A prerequesite is that the files content is stored in the database.</para>
-      <para>To be able to activate this feature you have to <ns:code>set the
-          xivy_addons_fileManager_activateFileVersioning to "1".</ns:code></para>
-      <para> For this feature you will need a more complete database structure (Please refer to the
-        database definition section.): <itemizedlist>
+      <para>To be able to activate this feature use <link
+          linkend="ivy.addons.filemanager.thefilemanagerRDC.configurationController">the
+          ConfigurationController start method.</link> You can also to <ns:code>set the
+          xivy_addons_fileManager_activateFileVersioning to "1".</ns:code> and start the FileManager
+        as described <link linkend="ivy.addons.filemanager.thefilemanagerRDC.globalVariables">in
+          this paragraph</link></para>
+      <para> For this feature you will need a more complete database structure (<link
+          linkend="ivy.addons.filemanager.dbstructure">Please refer to the database definition
+          section.</link>): <itemizedlist>
           <listitem>
             <para> The files meta informations table (per default uploadedfiles),<emphasis
                 role="bold"> with a new field (versionnumber (int))</emphasis></para>
@@ -319,6 +680,356 @@
         <inlinemediaobject><imageobject><imagedata fileref="images/FileManager/fileversioning3.png"/></imageobject></inlinemediaobject>
       </literallayout></para>
     </sect2>
+    <sect2 xml:id="ivy.addons.filemanager.types">
+      <title>File Types feature</title>
+      <para>A file type is a special kind of file meta-information. It describes the business type
+        of the file (CV, Bill etc…). The DocumentOnServer Dataclass has a filetype attribute from
+        type ch.ivyteam.ivy.addons.filemanager.FileType (dataClass). Here is the description of the
+        FileType class:</para>
+      <literallayout>
+        A FileType represents an arbitrary document type within an application.
+        This Object Class is mainly used by the FileTypesController. The DocumentOnServer DataClass has a FileType attribute. 
+        This can be a CV for eRecruitment, a bill, a letter_abc etc...
+        A file type has a name and a corresponding optional application name.
+        The applicationName can be the name of a module or of an Ivy application. (ex: "eRecruitment", "TalentManagement", "xjob" etc...).
+        The applicationName allows to distinguish fileTypes with the same name.
+        For example the Type "CV" can be used for eRecruitment and also for a company internal talent management system. In that case one may want to distinguish CVs from candidates and CVs from employees. That is possible with this applicationName attribute.
+        If a FileType does not have any application name, this type can be seen has generic (cross applications). 
+        You can also use file types without application name if you use them in a single application context.
+        Important: The file types name and application name association must be unique (SQL constraint: "UNIQUE(name,appname)").
+      </literallayout>
+      <para> The file type feature is controlled by a Java controller
+          object:<code>ch.ivyteam.ivy.addons.filemanager.database.filetype.FileTypesController</code>
+        that can be instantiated with a BasicConfigurationController object. The API of this
+        controller is documented in javadoc style.</para>
+      <para>To be able to use this feature you have to start the file manager with a
+        ConfigurationController object just as it is described <link
+          linkend="ivy.addons.filemanager.thefilemanagerRDC.configurationController">in this
+        section</link>. The following settings and details are mandatory: <itemizedlist>
+          <listitem>
+            <para>The files content must be stored as BLOB in the database, so the
+              ConfigurationController "storeFilesInDB" flag must be true.</para>
+          </listitem>
+          <listitem>
+            <para>The ConfigurationController "activateFileType" flag must be true.</para>
+          </listitem>
+          <listitem>
+            <para>The name of the filetypes table must be at least given in the
+              "xivy_addons_fileManager_fileTypesTableName" global variable.</para>
+          </listitem>
+          <listitem>
+            <para>The filetypes table must exist and the field "filetypeid BIGINT NULL" must exist
+              in the files table. (<link linkend="ivy.addons.filemanager.dbstructure">Please refer
+                to the database definition section.</link>)</para>
+          </listitem>
+        </itemizedlist> The FileManagerConfigurationController contains the following settings that
+        are also from interest: <table>
+          <title>FileManagerConfigurationController settings for the file types allowed actions</title>
+          <tgroup cols="3">
+            <thead>
+              <row>
+                <entry>Setting</entry>
+                <entry>Description</entry>
+                <entry>Default value</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>allowUserToSetDocumentFileTypes</entry>
+                <entry>Boolean. Flag used if the file type feature is activated to allow selecting
+                  the types manually. If the security is activated, then the user must also have
+                  files editing rights to be able to set the document types.</entry>
+                <entry>false</entry>
+              </row>
+              <row>
+                <entry>showFileTypeManagement</entry>
+                <entry>Boolean. Flag used if the file type feature is activated to allow managing
+                  the types. If the security is activated, then the user must also have the
+                  fileManager admin role to be able to manage the document types.</entry>
+                <entry>false</entry>
+              </row>
+              <row>
+                <entry>showFileTypeInTable</entry>
+                <entry>Boolean. Flag used if the file type feature is activated to show the types in
+                  a column. If false, the types column won't appear and the only way to see the type
+                  is the document's toolip.</entry>
+                <entry>true</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table> If the file type column is visible, you will see the types in the file Table: <mediaobject>
+          <imageobject><imagedata fileref="images/FileManager/fileTypeColumn.png"/></imageobject>
+        </mediaobject> The file type is also visible in the document tooltip: <mediaobject>
+          <imageobject><imagedata fileref="images/FileManager/fileTypeTooltip.png"/></imageobject>
+        </mediaobject> Depending on the user rigths if the security is activated and on the
+        ConfigurationController settings, the user may be able to set and manage the filetypes with
+        the following context menu items: <mediaobject>
+          <imageobject><imagedata fileref="images/FileManager/fileTypeMenu.png"/></imageobject>
+        </mediaobject> The file type chooser allows selecting a file type manually for the selected
+        document. It is a Rich Dialog ch.ivyteam.ivy.addons.filemanager.filetype.FileTypesDialog
+        started with the <code>startAsFileTypeChooser(BasicConfigurationController)</code> method. <mediaobject>
+          <imageobject><imagedata fileref="images/FileManager/fileTypeChooser.png"/></imageobject>
+        </mediaobject> The file type manager allows administrating the file types manually. It is
+        the same RDC as the chooser but started with the
+          <code>startAsFileTypeManager(BasicConfigurationController)</code> method. <mediaobject>
+          <imageobject><imagedata fileref="images/FileManager/fileTypeManager.png"/></imageobject>
+        </mediaobject></para>
+    </sect2>
+    <sect2 xml:id="ivy.addons.filemanager.tags">
+      <title>File Tags feature</title>
+      <para>A fileTag is a String tag that can contains any information. Each tag refers to a
+        precise document. Each document can have from 0 to n tags. Example: you can "tag" all the
+        documents attached to a particular candidate with the following tag "candidate.id.346". The
+        convention used for tags is free.</para>
+      <para> The file tag feature is controlled by a Java controller
+          object:<code>ch.ivyteam.ivy.addons.filemanager.database.filetag.FileTagsController</code>
+        that can be instantiated with a BasicConfigurationController object. The API of this
+        controller is documented in javadoc style.</para>
+      <para>To be able to use this feature you have to start the file manager with a
+        ConfigurationController object just as it is described <link
+          linkend="ivy.addons.filemanager.thefilemanagerRDC.configurationController">in this
+        section</link>. The following settings and details are mandatory: <itemizedlist>
+          <listitem>
+            <para>The files content must be stored as BLOB in the database, so the
+              ConfigurationController "storeFilesInDB" flag must be true.</para>
+          </listitem>
+          <listitem>
+            <para>The ConfigurationController "activateFileTags" flag must be true.</para>
+          </listitem>
+          <listitem>
+            <para>The name of the filetags table must be at least given in the
+              "xivy_addons_fileManager_fileTagsTableName" global variable.</para>
+          </listitem>
+          <listitem>
+            <para>The filetags table must exist. (<link linkend="ivy.addons.filemanager.dbstructure"
+                >Please refer to the database definition section.</link>)</para>
+          </listitem>
+        </itemizedlist> The FileManagerConfigurationController contains the following setting that
+        is also from interest: <table>
+          <title>FileManagerConfigurationController setting for the file tags allowed actions</title>
+          <tgroup cols="3">
+            <thead>
+              <row>
+                <entry>Setting</entry>
+                <entry>Description</entry>
+                <entry>Default value</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>allowUserToSetDocumentTags</entry>
+                <entry>Boolean. Flag used if the file tag feature is activated to allow the user to
+                  edit the tags manually. If the security is activated, then the user must also have
+                  files editing rights to be able to set the document tags.</entry>
+                <entry>false</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table> The file tags are not directly visible in the table. You have to use the following
+        context menu item: <mediaobject>
+          <imageobject><imagedata fileref="images/FileManager/fileTagsMenuItem.png"/></imageobject>
+        </mediaobject> Depending on the user rights if the security is activated and on the
+        ConfigurationController settings, the user will be able to set the tags manually. </para>
+      <para>Here the tags window allows editing the tags
+          (<code>ch.ivyteam.ivy.addons.filemanager.tag.FileTagDialog</code> rich dialog): <mediaobject>
+          <imageobject><imagedata fileref="images/FileManager/fileTagsManager.png"/></imageobject>
+        </mediaobject></para>
+      <para>Here the tags window shows just the tags: <mediaobject>
+          <imageobject><imagedata fileref="images/FileManager/fileTagsReader.png"/></imageobject>
+        </mediaobject></para>
+    </sect2>
+    <sect2 xml:id="ivy.addons.filemanager.fileactionhistory">
+      <title>File action history tracking feature</title>
+      <para>This feature offers the possibility to track and reference all the actions the users can
+        perform on the files. If this feature is activated, you have the possibility to choose the
+        actions that have to be tracked. For example, you can choose to track the "file content
+        changed (file edition)" actions but not to register the "file opened" actions. Each time a
+        "tracked action" is performed, a new file action history entry is written in the file action
+        history table. Each history entry contains the file id on which the action was made, the
+        action type, the Ivy user name and the full user name who has done the action, the date and
+        the time of the action and a description field used witrh some actions to save more
+        information.</para>
+      <para> The file action history feature is controlled by a Java controller
+          object:<code>ch.ivyteam.ivy.addons.filemanager.database.fileaction.FileActionHistoryController</code>
+        that can be instantiated with a FileActionConfiguration object. The API of this controller
+        is documented in javadoc style. Such a FileActionConfiguration object has been included in
+        the BasicConfigurationController object. This FileActionConfiguration contains all the
+        necessary parameters to control this feature. Per default it is not activated. Please read
+        the following table to learn more about this configuration:</para>
+      <table>
+        <title>File action history ConfigurationController settings</title>
+        <tgroup cols="4">
+          <thead>
+            <row>
+              <entry>Setting</entry>
+              <entry>Description</entry>
+              <entry>Default value</entry>
+            </row>
+          </thead>
+          <tbody>
+            <row>
+              <entry>activateFileActionHistory</entry>
+              <entry>Boolean, activate - deactivate the file action history feature.</entry>
+              <entry>Default is false. It is also automatically false within the FileManager
+                Configuration object if the storeFilesInDB field is false</entry>
+            </row>
+            <row>
+              <entry>ivyDBConnectionName</entry>
+              <entry>String. The name of the Ivy database Configuration name used to connect to the
+                database. It is automatically set within the FileManager configuration controller,
+                so that you don't have to extra care about it. </entry>
+              <entry>Value of global variable
+              "xivy_addons_fileManager_ivyDatabaseConnectionName"</entry>
+            </row>
+            <row>
+              <entry>schemaName</entry>
+              <entry>String. The name of the database schema that may be used if the tables are
+                stored in a schema. It is automatically set within the FileManager configuration
+                controller, so that you don't have to extra care about it. </entry>
+              <entry>Value of the xivy_addons_fileManager_databaseSchemaName global
+              variable.</entry>
+            </row>
+            <row>
+              <entry>fileActionTypeTableName</entry>
+              <entry>The name of the DB Table that stores the file action history types. For example
+                the "file created", "file printed" etc. types. The common types are already defined
+                and can be found as INSERT SQL scripts in the corresponding cms SQL DDL document.
+                (Please refer to <link linkend="ivy.addons.filemanager.dbstructure">the database
+                  definition paragraph</link>)</entry>
+              <entry>Value of global variable
+              "xivy_addons_fileManager_fileActionTypeTableName"</entry>
+            </row>
+            <row>
+              <entry>fileActionHistoryTableName</entry>
+              <entry>The name of the DB Table that stores the file action history entries.</entry>
+              <entry>Value of global variable
+              "xivy_addons_fileManager_fileActionHistoryTableName"</entry>
+            </row>
+            <row>
+              <entry>changeFileDescriptionTracked</entry>
+              <entry>Boolean. If set to true and the activateFileActionHistory parameter is also
+                true, then changing the desription of a file will create a new history entry. </entry>
+              <entry>Default is true</entry>
+            </row>
+            <row>
+              <entry>copyFileTracked</entry>
+              <entry>Boolean. If set to true and the activateFileActionHistory parameter is also
+                true, then copying and pasting a file will create a new history entry. The path of
+                the new copied File will be stored in the description of the file action history
+                entry.</entry>
+              <entry>Default is true</entry>
+            </row>
+            <row>
+              <entry>deleteFileTracked</entry>
+              <entry>Boolean. If set to true and the activateFileActionHistory parameter is also
+                true, then deleting a file will create a new history entry. You have to notice that
+                deleting a file will not delete its history, so that it remains possible to keep a
+                complete view on the action history of a user for example. The path of the deleted
+                File will be stored in the description of the file action history entry.</entry>
+              <entry>Default is true</entry>
+            </row>
+            <row>
+              <entry>downloadFileTracked</entry>
+              <entry>Boolean. If set to true and the activateFileActionHistory parameter is also
+                true, then downloading a file will create a new history entry. </entry>
+              <entry>Default is true</entry>
+            </row>
+            <row>
+              <entry>editFileTracked</entry>
+              <entry>Boolean. If set to true and the activateFileActionHistory parameter is also
+                true, then changing the content of a file will create a new history entry. </entry>
+              <entry>Default is true</entry>
+            </row>
+            <row>
+              <entry>fileCreationTracked</entry>
+              <entry>Boolean. If set to true and the activateFileActionHistory parameter is also
+                true, then creating a new file will create a new history entry. </entry>
+              <entry>Default is true</entry>
+            </row>
+            <row>
+              <entry>printFileTracked</entry>
+              <entry>Boolean. If set to true and the activateFileActionHistory parameter is also
+                true, then printing a file will create a new history entry. </entry>
+              <entry>Default is true</entry>
+            </row>
+            <row>
+              <entry>readFileTracked</entry>
+              <entry>Boolean. If set to true and the activateFileActionHistory parameter is also
+                true, then opening a file will create a new history entry. </entry>
+              <entry>Default is true</entry>
+            </row>
+            <row>
+              <entry>renameFileTracked</entry>
+              <entry>Boolean. If set to true and the activateFileActionHistory parameter is also
+                true, then changing the desription of a file will create a new history entry. The
+                old name and new file name will be stored in the description of the file action
+                history entry.</entry>
+              <entry>Default is true</entry>
+            </row>
+            <row>
+              <entry>moveFileTracked</entry>
+              <entry>Boolean. If set to true and the activateFileActionHistory parameter is also
+                true, then moving a file will create a new history entry. The old path and new file
+                path will be stored in the description of the file action history entry.</entry>
+              <entry>Default is true</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+      <para>To be able to use this feature you have to start the file manager with a
+        ConfigurationController object just as it is described <link
+          linkend="ivy.addons.filemanager.thefilemanagerRDC.configurationController">in this
+        section</link>. The following settings and details are mandatory: <itemizedlist>
+          <listitem>
+            <para>The files content must be stored as BLOB in the database, so the
+              ConfigurationController "storeFilesInDB" flag must be true.</para>
+          </listitem>
+          <listitem>
+            <para>The FileActionConfiguration "activateFileActionHistory" flag must be true.</para>
+          </listitem>
+          <listitem>
+            <para>The name of the fileactiontype and fileactionhistory table names must be at least
+              given in the corresponding global variable.</para>
+          </listitem>
+          <listitem>
+            <para>The fileactiontype and fileactionhistory tables must exist. (<link
+                linkend="ivy.addons.filemanager.dbstructure">Please refer to the database definition
+                section.</link>)</para>
+          </listitem>
+        </itemizedlist> The FileManagerConfigurationController contains the following setting that
+        is also from interest: <table>
+          <title>FileManagerConfigurationController setting for the file action history feature</title>
+          <tgroup cols="3">
+            <thead>
+              <row>
+                <entry>Setting</entry>
+                <entry>Description</entry>
+                <entry>Default value</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>showFileHistoryMenuItem*</entry>
+                <entry>Boolean. Flag used if the file action history tracking feature is activated
+                  to allow the user to view the history of the files.</entry>
+                <entry>true</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table> If the preceding parameter is set to true, the user can open an history viewer by
+        clicking on the following context menu item:<mediaobject>
+          <imageobject><imagedata fileref="images/FileManager/fileactionhistorymenuitem.png"
+          /></imageobject>
+        </mediaobject></para>
+      <para>
+        <mediaobject>
+          <imageobject><imagedata fileref="images/FileManager/historyViewer.png"/></imageobject>
+        </mediaobject>
+      </para>
+      <para>Has shown in the previous picture, some tracked actions give some complementary
+        information concerning the place where a file was copied or the new and old names in a
+        rename operation.</para>
+    </sect2>
     <sect2 xml:id="ivy.addons.filemanager.dbstructure">
       <title>The database definition</title>
       <para>The DDL for MS SQL, MySQL, PostGreSQL and Oracle has been included into the IvyAddons
@@ -340,7 +1051,7 @@
       </ns:warning>
       <literallayout>
    </literallayout>
-      <para>Here is the representation of the tables relationships within a My SQL database server:
+      <para>Here is the representation of the tables relationships within a MySQL database server:
               <inlinemediaobject><imageobject><imagedata fileref="images/FileManager/database.png"
           /></imageobject></inlinemediaobject>
       </para>
@@ -400,6 +1111,14 @@
           </tbody>
         </tgroup>
       </table>
+    </sect2>
+    <sect2 xml:id="ivy.addons.filemanager.demo">
+      <title>The Filemanager Demo</title>
+      <para>A demo has been included in the IvyDemo project that comes with the Ivy Designer. This
+        demo allows testing the main features of the FileManager (File storage on the database,
+        Security and so on...). <mediaobject>
+          <imageobject><imagedata fileref="images/FileManager/demo.png"/></imageobject>
+        </mediaobject></para>
     </sect2>
     <sect2 xml:id="ivy.addons.filemanager.miscellaneous">
       <title>Other Informations on the FileManager RDC</title>
@@ -471,7 +1190,9 @@
             implement directly this last rich dialog into your applications.</para>
         </listitem>
         <listitem>
-          <para>The Second Group contains 7 Rich Dialogs other than the FileManager.<ns:orderedlist>
+          <para>The Second Group contains 7 Rich Dialogs other than the FileManager. They all
+            supports now the File stored as BLOB in a database feature, if it applies. To activate
+            this feature you have to start them with a ConfigurationController as specified in their interface.<ns:orderedlist>
               <listitem>
                 <para>The <ns:emphasis>FileActionOptionPane</ns:emphasis>: it should be used as
                   Synchronous "popup" Window to perform an action (edit, print, download) on a given
@@ -524,10 +1245,5 @@
             </ns:orderedlist></para>
         </listitem>
       </itemizedlist></para>
-    <ns:warning>
-      <para>These Richdialogs do not support the new features like storing the file content in the
-        database, file versioning or the security. For the moment, only the FileManager RDC support
-        these features.</para>
-    </ns:warning>
   </sect1>
 </chapter>
