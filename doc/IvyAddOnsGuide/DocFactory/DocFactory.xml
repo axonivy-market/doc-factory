@@ -74,7 +74,9 @@
   <sect1 xml:id="ivy.addons.docfactory.mailmergeWithRegions">
     <title>Mail Merging with Regions</title>
     <ns:warning>
-      <para>The mail merge with regions described here is specific to the Aspose engine. If you extend this current DocFactory by using another engine you have to refer to its specifical documentation.</para>
+      <para>The mail merge with regions described here is specific to the Aspose engine. If you
+        extend this current DocFactory by using another engine you have to refer to its specifical
+        documentation.</para>
     </ns:warning>
     <para>If you want to dynamically grow portions inside the document, use mail merge with regions.
       To specify a mail merge region in the document you need to insert two mail merge fields to
@@ -120,6 +122,95 @@
     </mediaobject>
     <para>We have provided some callables subprocesses to ease the use of mail merge and mail merge
       with regions. Please refer to the <link linkend="ivy.addons.docfactory.docfactory">next
+        section.</link>
+    </para>
+  </sect1>
+  <sect1 xml:id="ivy.addons.docfactory.mailmergeWithNestedRegions">
+    <title>Mail Merging with Nested Regions</title>
+    <ns:warning>
+      <para>The mail merge with nested regions described here is specific to the Aspose engine. If
+        you extend this current DocFactory by using another engine you have to refer to its
+        specifical documentation.</para>
+    </ns:warning>
+    <tip>
+      <para>Most of the information provided in this section was retrieved from the aspose official
+        documentation. You can find the complete documentation on the aspose web site at
+        http://www.aspose.com. </para>
+    </tip>
+    <para>
+      <literallayout>
+        Most data in relational databases or XML files is hierarchical (e.g. with parent-child relationships). 
+        One common example is a report about employees of a company. The different employees are employed in different departments and have for example several human capital elements. 
+        In this case we have several Items nested in each other: Human Capital elements nested in Employees nested in Departments nested in a Company.
+        
+        Aspose.Words allows nesting mail merge regions inside each other in a document to reflect the way the data is nested and this allows you to
+        easily populate a document with hierarchical data.
+        Nested mail merge regions are at least two regions in which one is defined entirely inside
+        the other, so they are “nested” in one another. In a document it looks like this:
+      </literallayout>
+    </para>
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="images/DocFactory/NestedMailMerge01.png"/>
+      </imageobject>
+    </mediaobject>
+    <para>There are a few things you need to consider when preparing nested mail merge regions and
+      merge regions in general.</para>
+    <para>
+      <itemizedlist>
+        <listitem>
+          <para>The mail merge region opening and closing tag (e.g. TableStart:Order,
+            TableEnd:Order) both need to appear in the same row or cell. For example, if you start a
+            merge region in a cell of a table, you must end the merge region in the same row as the
+            first cell.</para>
+        </listitem>
+        <listitem>
+          <para>The names of the columns in the DataTable must match the merge field name. Unless
+            you have specified mapped fields the merge will not be successful for those fields whose
+            names are different. In the Ivy Implementation of this feature we use the Dataclasses
+            Class names as TableStart names and the Dataclasses attributes names as mergefields
+            names (more information <link linkend="ivy.addons.docfactory.nestedMailMergeMapping"
+              >here). </link>
+          </para>
+        </listitem>
+        <listitem>
+          <para>Mail merge regions should be well formed (there is always a pair of matching
+            TableStart and TableEnd with the same table name).</para>
+        </listitem>
+      </itemizedlist>
+    </para>
+    <para>The following picture shows a template with a mail merge region:</para>
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="images/DocFactory/NestedMailMerge02.png"/>
+      </imageobject>
+    </mediaobject>
+    <para>The following picture shows the result of the mail merge with regions:</para>
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="images/DocFactory/NestedMailMerge03.png"/>
+      </imageobject>
+    </mediaobject>
+    <para xml:id="ivy.addons.docfactory.nestedMailMergeMapping"> The previous nested mail merging
+      was made by using List of Ivy DataClasses built as following: <mediaobject>
+        <imageobject>
+          <imagedata fileref="images/DocFactory/NestedMailMerge04.png"/>
+        </imageobject>
+      </mediaobject><emphasis role="bold"> It is very important to create your templates with this
+        in mind: </emphasis><itemizedlist>
+        <listitem>
+          <para>Each TableStart merge field has to be named like the corresponding dataclass: e.g.
+            the TableStart:Employee will correspond to the Employee data object. This rule is case
+            sensitive.</para>
+        </listitem>
+        <listitem>
+          <para>Within each "Data Object - Table" the merge fields will be filled with the
+            corresponding data attribute value. The merge field must have the same name as the data
+            attribute. E.g. the level attribute/mergefield in the HumanCapital table.</para>
+        </listitem>
+      </itemizedlist></para>
+    <para>We have provided some callables subprocesses to ease the use of mail merge and mail merge
+      with nested regions. Please refer to the <link linkend="ivy.addons.docfactory.docfactory">next
         section.</link>
     </para>
   </sect1>
@@ -295,6 +386,50 @@
                   a row in a table. A Record's value will be inserted in the mergefield that
                   corresponds to its field's name.</entry>
               </row>
+              <row>
+                <entry>
+                  <literallayout>List&lt;CompositeObject> parentDataSourceForNestedMailMerge and
+List&lt;List&lt;CompositeObject>> childrenDataSourcesForNestedMailMerge</literallayout>
+                </entry>
+                <entry>
+                </entry>
+                <entry>
+                  <literallayout> Used for mail merge with Nested regions. With these attributes set, only one nested level is supported:
+the parent list contains the information for the parent table/region,
+each child List&lt;CompositeObject> contains the information for one parent data object and is nested in this parent.
+                </literallayout>
+                </entry>
+              </row>
+              <row>
+                <entry>
+                  <literallayout>nestedDataSourceForNestedMailMerge</literallayout>
+                </entry>
+                <entry>
+                  <literallayout>List&lt;CompositeObject></literallayout>
+                </entry>
+                <entry>
+                  <literallayout>Used for mail merge with Nested regions. 
+In this case each dataclass may contain lists of other nested dataclasses and so on... .
+There is no limit in nesting regions.
+ </literallayout>
+                </entry>
+              </row>
+              <row>
+                <entry>
+                  <literallayout>treeData</literallayout>
+                </entry>
+                <entry>
+                  <literallayout>Tree</literallayout>
+                </entry>
+                <entry>
+                  <literallayout>Used for mail merge with Nested regions. There is no limit in nesting regions.
+In this case the data structure corresponding to the nested regions in the template is stored in a Tree.
+The first root node of the Tree contains a dataclass as value object. The attributes of this dataclass are used 
+to fill merge fields outside of the nested regions area.
+All the children nodes at each level of the Tree contain dataclasses as value that are used to fill the corresponding nested region.
+                </literallayout>
+                </entry>
+              </row>
             </tbody>
           </tgroup>
         </table>
@@ -302,7 +437,7 @@
           be used together to perform mail merge with regions. If one is set, then the other one is
           cleared. So you have to decide if you use Recordsets or List of CompositeObjects to fill
           your merge regions.</para>
-        <para>There are several constructors: <itemizedlist>
+        <para>There are several constructors, that are all documented in javadoc style: <itemizedlist>
             <listitem>
               <para>The default constructor <code>public DocumentTemplate()</code>,</para>
             </listitem>
@@ -336,6 +471,21 @@
                   _outputName, String _outputFormat, CompositeObject _data, Hashtable&lt;String ,
                   Recordset> _tablesNamesAndFieldsHashtable)</code></para>
             </listitem>
+            <listitem>
+              <para><code>public DocumentTemplate(String _templatePath, String _outputPath, String
+                  _outputName, String _outputFormat, CompositeObject _data, List&lt;CompositeObject>
+                  _parentDataSourceForNestedMailMerge,List&lt;List&lt;CompositeObject>>
+                  _childrenDataSourcesForNestedMailMerge)</code></para>
+            </listitem>
+            <listitem>
+              <para><code>public DocumentTemplate(String _templatePath, String _outputPath, String
+                  _outputName, String _outputFormat, CompositeObject _data, List&lt;CompositeObject>
+                  _nestedDataSourceForNestedMailMerge)</code></para>
+            </listitem>
+            <listitem>
+              <para><code>public DocumentTemplate(String _templatePath, String _outputPath, String
+                  _outputName, String _outputFormat, Tree _treeData)</code></para>
+            </listitem>
           </itemizedlist></para>
       </sect3>
     </sect2>
@@ -368,12 +518,24 @@
             <imagedata fileref="images/DocFactory/callable3.png"/>
           </imageobject>
         </mediaobject>
-        <para>The other ones (writeDocumentWithMailMergeTable) allows writing a single document with
-          a template that can contain merge mail with regions (tables) . Here is the description of
+        <para>Other ones (writeDocumentWithMailMergeTable) allow writing a single document with a
+          template that can contain merge mail with regions (tables) . Here is the description of
           this callable that you can find in the ivy process mod file:</para>
         <mediaobject>
           <imageobject>
             <imagedata fileref="images/DocFactory/callable4.png"/>
+          </imageobject>
+        </mediaobject>
+        <para>The last three ones allows writing a single document with a template that can contain
+          merge mail with nested regions (tables).
+          <literallayout>
+            writeDocumentWithMailMergeNestedTable(String,String,String,String, List&lt;CompositeObject>,List&lt;List&lt;CompositeObject>>)
+            writeDocumentWithMailMergeNestedTableWithTree(String,String,String,String,Tree)
+            writeDocumentWithMailMergeNestedTableWithListOfDatas(String,String,String,String,CompositeObject, List&lt;CompositeObject>)
+          </literallayout></para>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="images/DocFactory/NestedMailMerge05.png"/>
           </imageobject>
         </mediaobject>
       </sect3>
@@ -382,8 +544,8 @@
         <para>The callable named <code>writeSerialLetterToManyCorrespondents</code> allows writing
           more than one document with a list of <code>DocumentTemplate</code> objects. Each
             <code>DocumentTemplate</code> object is going to produce a document. Merge mail with
-          regions is now supported, because the DocumentTemplate Object encapsulates the necessary
-          parameters to perform such a merge (see the <link
+          regions and merge mail with nested regions are now supported, because the DocumentTemplate
+          Object encapsulates the necessary parameters to perform such merges (see the <link
             linkend="ivy.addons.docfactory.documentTemplate">DocumentTemplate documentation</link>).
           Here is the description of this callable that you can find in the ivy process mod file:</para>
         <mediaobject>
@@ -396,63 +558,96 @@
   </sect1>
   <sect1 xml:id="ivy.addons.docfactory.demos">
     <title>Demos</title>
-    <para>A demo is available in the <emphasis>IvyDemos</emphasis> project that demonstrate the
-      usage of the DocFactory.</para>
-    <para>To be able to make the demo works, three default templates have been included into the CMS
-      of the ivy demo project. They are located under “/docfactory/templatecache/myTemplate”,
-      “/docfactory/templatecache/myTemplateWithDynamicPicture” and
-      “/docfactory/templatecache/myTemplateWithTable” as MS World documents (.doc format).</para>
-    <mediaobject>
-      <imageobject>
-        <imagedata fileref="images/DocFactory/demoTemplates.png"/>
-      </imageobject>
-    </mediaobject>
-    <para>You can use the cms designer “Export to File” option, to save them as doc Files and to be
-      able to look into them.</para>
-    <para>They both contain three text fields (Name, Firstname, Address). All the documents produced
-      are going to be saved into the “ivy_RIA_files” designer or server directory. The second one
-      contains also a picture field, to illustrate the use of dynamic image merge fields, and the
-      third one contains a merge mail region (table). </para>
-    <para>The demo shows how to generate serial documents and the template with merge regions is
-      used. All the serial documents are going to be generated into the
-      <filename>ivy_RIA_files</filename> directory of your Server or Designer installation. </para>
-    <mediaobject>
-      <imageobject>
-        <imagedata fileref="images/DocFactory/theDemo.png"/>
-      </imageobject>
-    </mediaobject>
-    <para>The data for mail merge with regions is put into a Recordset that is used in an Hashtable
-      to be inserted into the "reporting" region of the template. Here is the code for this
-      operation: </para>
-    <mediaobject>
-      <imageobject>
-        <imagedata fileref="images/DocFactory/recordsetCode.png"/>
-      </imageobject>
-    </mediaobject>
-    <para>The following result is produced:</para>
-    <mediaobject>
-      <imageobject>
-        <imagedata fileref="images/DocFactory/demoResults.png"/>
-      </imageobject>
-    </mediaobject>
-    <para>A new button is also available to illustrate the use of a Dataclass as input parameter. A
-      Panel is used to fill the Person Dataclass. This Dataclass contains three attributes (name,
-      firstname, address) that are going to be used to fill the template. </para>
-    <mediaobject>
-      <imageobject>
-        <imagedata fileref="images/DocFactory/newDemo1.png"/>
-      </imageobject>
-    </mediaobject>
-    <mediaobject>
-      <imageobject>
-        <imagedata fileref="images/DocFactory/newDemo2.png"/>
-      </imageobject>
-    </mediaobject>
-    <mediaobject>
-      <imageobject>
-        <imagedata fileref="images/DocFactory/newDemo3.png"/>
-      </imageobject>
-    </mediaobject>
+    <para>Two demos are available in the <emphasis>IvyDemos</emphasis> project that demonstrate the
+      usage of the DocFactory: one for the mail merging and mail merge with regions, and one for the
+      nested mail mail with regions (Reporting).</para>
+    <sect2 xml:id="ivy.addons.docfactory.demos1">
+      <title> Mail merging and mail merge with regions</title>
+      <para>For that purpose, three default templates have been included into the CMS of the ivy
+        demo project. They are located under “/docfactory/templatecache/myTemplate”,
+        “/docfactory/templatecache/myTemplateWithDynamicPicture” and
+        “/docfactory/templatecache/myTemplateWithTable” as MS World documents (.doc format).</para>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="images/DocFactory/demoTemplates.png"/>
+        </imageobject>
+      </mediaobject>
+      <para>You can use the cms designer “Export to File” option, to save them as doc Files and to
+        be able to look into them.</para>
+      <para>They both contain three text fields (Name, Firstname, Address). All the documents
+        produced are going to be saved into the “ivy_RIA_files” designer or server directory. The
+        second one contains also a picture field, to illustrate the use of dynamic image merge
+        fields, and the third one contains a merge mail region (table). </para>
+      <para>The demo shows how to generate serial documents and the template with merge regions is
+        used. All the serial documents are going to be generated into the
+        <filename>ivy_RIA_files</filename> directory of your Server or Designer installation. </para>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="images/DocFactory/theDemo.png"/>
+        </imageobject>
+      </mediaobject>
+      <para>The data for mail merge with regions is put into a Recordset that is used in an
+        Hashtable to be inserted into the "reporting" region of the template. Here is the code for
+        this operation: </para>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="images/DocFactory/recordsetCode.png"/>
+        </imageobject>
+      </mediaobject>
+      <para>The following result is produced:</para>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="images/DocFactory/demoResults.png"/>
+        </imageobject>
+      </mediaobject>
+      <para>A new button is also available to illustrate the use of a Dataclass as input parameter.
+        A Panel is used to fill the Person Dataclass. This Dataclass contains three attributes
+        (name, firstname, address) that are going to be used to fill the template. </para>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="images/DocFactory/newDemo1.png"/>
+        </imageobject>
+      </mediaobject>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="images/DocFactory/newDemo2.png"/>
+        </imageobject>
+      </mediaobject>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="images/DocFactory/newDemo3.png"/>
+        </imageobject>
+      </mediaobject>
+    </sect2>
+    <sect2 xml:id="ivy.addons.docfactory.demos2">
+      <title> Mail merge with nested regions</title>
+      <para>For that purpose, one template have been included into the CMS of the ivy demo project.
+        They are located under “/docfactory/templatecache/myReporting1”,
+        “/docfactory/templatecache/myTemplateWithDynamicPicture” and
+        “/docfactory/templatecache/myTemplateWithTable” as MS World documents (.doc format). You can
+        use the cms designer “Export to File” option, to save it as doc Files and to be able to look
+        into it.</para>
+      <para>This template contains some merge fields that are external to the mail merge regions and
+        nested mail merge regions.</para>
+      <para>The demo shows how to generate serial documents and the template with merge regions is
+        used. All the serial documents are going to be generated into the
+        <filename>ivy_RIA_files</filename> directory of your Server or Designer installation. </para>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="images/DocFactory/startReportingDemo.png"/>
+        </imageobject>
+      </mediaobject>
+      <para>Three ways to produce the reporting with nested regions are illustrated:</para>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="images/DocFactory/ReportingDemo.png"/>
+        </imageobject>
+      </mediaobject>
+      <para>Please refer to the following Rich Dialog to learn more about the details of the
+        creation of the needed datas, and about the way to use the provided callables:<emphasis
+          role="bold">
+        /IvyDemos/src_rd/ch/ivyteam/ivy/demo/docfactory/DocFactoryReporting/</emphasis></para>
+    </sect2>
   </sect1>
   <sect1 xml:id="ivy.addons.docfactory.docfactory">
     <title>The Document Factory Object</title>
