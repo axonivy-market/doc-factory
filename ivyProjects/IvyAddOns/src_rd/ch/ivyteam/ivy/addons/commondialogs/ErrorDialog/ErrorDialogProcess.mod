@@ -1,6 +1,6 @@
 [Ivy]
-[>Created: Fri May 07 15:19:49 CEST 2010]
-1180E624C69827DC 3.12 #module
+[>Created: Fri Aug 10 16:15:42 EDT 2012]
+1180E624C69827DC 3.17 #module
 >Proto >Proto Collection #zClass
 Es0 ErrorDialogProcess Big #zClass
 Es0 RD #cInfo
@@ -40,16 +40,10 @@ Es0 @PushWFArc f13 '' #zField
 Es0 @RichDialog f22 '' #zField
 Es0 @PushWFArc f23 '' #zField
 Es0 @PushWFArc f24 '' #zField
+Es0 @RichDialogInitStart f25 '' #zField
+Es0 @RichDialogProcessEnd f26 '' #zField
+Es0 @PushWFArc f27 '' #zField
 >Proto Es0 Es0 ErrorDialogProcess #zField
-Es0 f0 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<elementInfo>
-    <language>
-        <name>showError(Throwable,Boolean,Boolean)</name>
-        <nameStyle>36,5,6,9
-</nameStyle>
-    </language>
-</elementInfo>
-' #txt
 Es0 f0 guid 1180E6FD55B71527 #txt
 Es0 f0 type ch.ivyteam.ivy.addons.commondialogs.ErrorDialog.ErrorDialogData #txt
 Es0 f0 method showError(java.lang.Throwable,Boolean,Boolean) #txt
@@ -64,6 +58,15 @@ out.showDetailButton=param.showDetailButton;
 Es0 f0 outParameterDecl '<> result;
 ' #txt
 Es0 f0 embeddedRdInitializations '* ' #txt
+Es0 f0 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>showError(Throwable,Boolean,Boolean)</name>
+        <nameStyle>36,5,6,9
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
 Es0 f0 54 62 20 20 13 0 #rect
 Es0 f0 @|RichDialogInitStartIcon #fIcon
 Es0 f1 type ch.ivyteam.ivy.addons.commondialogs.ErrorDialog.ErrorDialogData #txt
@@ -219,15 +222,6 @@ Es0 f17 expr out #txt
 Es0 f17 64 82 64 148 #arcP
 Es0 f2 expr out #txt
 Es0 f2 64 172 64 219 #arcP
-Es0 f18 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<elementInfo>
-    <language>
-        <name>showError(IvyResultStatus,Boolean,Boolean)</name>
-        <nameStyle>42,5,7,9
-</nameStyle>
-    </language>
-</elementInfo>
-' #txt
 Es0 f18 guid 12871AC6DD0D1C28 #txt
 Es0 f18 type ch.ivyteam.ivy.addons.commondialogs.ErrorDialog.ErrorDialogData #txt
 Es0 f18 method showError(ch.ivyteam.ivy.addons.data.technical.IvyResultStatus,Boolean,Boolean) #txt
@@ -241,12 +235,22 @@ out.showDetailButton = param.showDetailButton;' #txt
 Es0 f18 outParameterDecl '<> result;
 ' #txt
 Es0 f18 embeddedRdInitializations '* ' #txt
+Es0 f18 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>showError(IvyResultStatus,Boolean,Boolean)</name>
+        <nameStyle>42,5,7,9
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
 Es0 f18 270 62 20 20 13 0 #rect
 Es0 f18 @|RichDialogInitStartIcon #fIcon
 Es0 f19 expr out #txt
 Es0 f19 280 82 82 158 #arcP
 Es0 f19 1 280 136 #addKink
 Es0 f19 1 0.38113887193118207 0 0 #arcLabel
+Es0 f20 type ch.ivyteam.ivy.addons.commondialogs.ErrorDialog.ErrorDialogData #txt
 Es0 f20 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -256,7 +260,6 @@ Es0 f20 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-Es0 f20 type ch.ivyteam.ivy.addons.commondialogs.ErrorDialog.ErrorDialogData #txt
 Es0 f20 578 106 28 28 5 -21 #rect
 Es0 f20 @|AlternativeIcon #fIcon
 Es0 f21 expr out #txt
@@ -317,6 +320,29 @@ Es0 f24 expr out #txt
 Es0 f24 704 188 604 230 #arcP
 Es0 f24 1 704 216 #addKink
 Es0 f24 1 0.24593882054344138 0 0 #arcLabel
+Es0 f25 guid 139122D87A7FFE25 #txt
+Es0 f25 type ch.ivyteam.ivy.addons.commondialogs.ErrorDialog.ErrorDialogData #txt
+Es0 f25 method start() #txt
+Es0 f25 disableUIEvents true #txt
+Es0 f25 inParameterDecl 'ch.ivyteam.ivy.richdialog.exec.RdMethodCallEvent methodEvent = event as ch.ivyteam.ivy.richdialog.exec.RdMethodCallEvent;
+<> param = methodEvent.getInputArguments();
+' #txt
+Es0 f25 outParameterDecl '<> result;
+' #txt
+Es0 f25 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>start()</name>
+    </language>
+</elementInfo>
+' #txt
+Es0 f25 270 206 20 20 13 0 #rect
+Es0 f25 @|RichDialogInitStartIcon #fIcon
+Es0 f26 type ch.ivyteam.ivy.addons.commondialogs.ErrorDialog.ErrorDialogData #txt
+Es0 f26 270 278 20 20 13 0 #rect
+Es0 f26 @|RichDialogProcessEndIcon #fIcon
+Es0 f27 expr out #txt
+Es0 f27 280 226 280 278 #arcP
 >Proto Es0 .xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -363,3 +389,5 @@ Es0 f20 out f23 tail #connect
 Es0 f23 head f22 mainIn #connect
 Es0 f22 mainOut f24 tail #connect
 Es0 f24 head f9 mainIn #connect
+Es0 f25 mainOut f27 tail #connect
+Es0 f27 head f26 mainIn #connect

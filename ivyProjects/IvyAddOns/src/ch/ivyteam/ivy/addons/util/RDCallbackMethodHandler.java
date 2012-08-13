@@ -37,7 +37,7 @@ public abstract class RDCallbackMethodHandler {
 					
 				} catch (InvocationTargetException _ex) {
 					//Just warn because we call "automatically" some callback methods that does not exist in every RDC.
-					Ivy.log().warn("InvocationTargetException in RDCallbackMethodHandler (callRDMethod) called on IRichDialogPanel "+rdPanel.getName()+" on following callback method "+methodName+" ,"+_ex.getMessage());
+					Ivy.log().warn("InvocationTargetException in RDCallbackMethodHandler (callRDMethod) called on IRichDialogPanel "+rdPanel.getName()+" on following callback method "+methodName+" with following parameters "+parameters+" ,"+_ex.getMessage());
 				} catch (NoSuchMethodException _ex) {
 					//Just warn because we call "automatically" some callback methods that does not exist in every RDC.
 					Ivy.log().warn("NoSuchMethodException in RDCallbackMethodHandler (callRDMethod) called on IRichDialogPanel "+rdPanel.getName()+" on following callback method "+methodName+" ,"+_ex.getMessage());

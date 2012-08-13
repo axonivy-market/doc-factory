@@ -1,5 +1,5 @@
 [Ivy]
-[>Created: Wed Mar 28 10:09:25 EDT 2012]
+[>Created: Thu Aug 09 13:49:12 EDT 2012]
 125F9B9E8C5A4087 3.17 #module
 >Proto >Proto Collection #zClass
 Fs0 FileActionOptionPaneProcess Big #zClass
@@ -64,7 +64,6 @@ Fs0 @Alternative f53 '' #zField
 Fs0 @PushWFArc f54 '' #zField
 Fs0 @RichDialog f55 '' #zField
 Fs0 @PushWFArc f56 '' #zField
-Fs0 @PushWFArc f23 '' #zField
 Fs0 @PushWFArc f57 '' #zField
 Fs0 @RichDialogProcessStep f58 '' #zField
 Fs0 @PushWFArc f59 '' #zField
@@ -102,6 +101,27 @@ Fs0 @PushWFArc f83 '' #zField
 Fs0 @PushWFArc f84 '' #zField
 Fs0 @RichDialogProcessEnd f85 '' #zField
 Fs0 @PushWFArc f86 '' #zField
+Fs0 @RichDialogInitStart f87 '' #zField
+Fs0 @RichDialogProcessStep f88 '' #zField
+Fs0 @PushWFArc f89 '' #zField
+Fs0 @RichDialogProcessEnd f90 '' #zField
+Fs0 @Alternative f92 '' #zField
+Fs0 @PushWFArc f91 '' #zField
+Fs0 @RichDialogProcessStep f94 '' #zField
+Fs0 @PushWFArc f95 '' #zField
+Fs0 @PushWFArc f93 '' #zField
+Fs0 @RichDialogProcessStep f96 '' #zField
+Fs0 @PushWFArc f97 '' #zField
+Fs0 @PushWFArc f98 '' #zField
+Fs0 @Alternative f99 '' #zField
+Fs0 @PushWFArc f100 '' #zField
+Fs0 @PushWFArc f23 '' #zField
+Fs0 @RichDialog f101 '' #zField
+Fs0 @PushWFArc f102 '' #zField
+Fs0 @PushWFArc f103 '' #zField
+Fs0 @RichDialogProcessStart f104 '' #zField
+Fs0 @RichDialogProcessEnd f105 '' #zField
+Fs0 @PushWFArc f106 '' #zField
 >Proto Fs0 Fs0 FileActionOptionPaneProcess #zField
 Fs0 f0 guid 121E36CF8DC15FC4 #txt
 Fs0 f0 type ch.ivyteam.ivy.addons.filemanager.FileActionOptionPane.FileActionOptionPaneData #txt
@@ -291,6 +311,15 @@ import ch.ivyteam.ivy.addons.filemanager.FileHandler;
 
 FileDownloadHandler fdh = new FileDownloadHandler();
 fdh.downloadFiles(in.files);
+if(in.configurationController.fileActionHistoryConfiguration.downloadFileTracked)
+{
+	try{
+		in.fileManagementHandler.getFileActionHistoryController().createNewActionHistory(Long.parseLong(in.documentOnServer.fileID),6,ivy.session.getSessionUserName(),"");
+	}catch(Throwable t)
+	{
+		ivy.log.error("Error in FileActionPane with file action history feature."+t.getMessage(),t);
+	}
+}
 ' #txt
 Fs0 f17 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
@@ -318,7 +347,7 @@ Fs0 f18 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-Fs0 f18 942 38 20 20 13 0 #rect
+Fs0 f18 1102 38 20 20 13 0 #rect
 Fs0 f18 @|RichDialogProcessStartIcon #fIcon
 Fs0 f19 guid 121E3921736486F2 #txt
 Fs0 f19 type ch.ivyteam.ivy.addons.filemanager.FileActionOptionPane.FileActionOptionPaneData #txt
@@ -374,7 +403,7 @@ using Ivy DB connection infos</name>
     </language>
 </elementInfo>
 ' #txt
-Fs0 f22 1006 140 36 24 19 -10 #rect
+Fs0 f22 1246 188 36 24 19 -10 #rect
 Fs0 f22 @|RichDialogIcon #fIcon
 Fs0 f30 type ch.ivyteam.ivy.addons.filemanager.FileActionOptionPane.FileActionOptionPaneData #txt
 Fs0 f30 683 99 26 26 14 0 #rect
@@ -382,10 +411,12 @@ Fs0 f30 @|RichDialogProcessEndIcon #fIcon
 Fs0 f31 expr out #txt
 Fs0 f31 799 52 707 105 #arcP
 Fs0 f24 type ch.ivyteam.ivy.addons.filemanager.FileActionOptionPane.FileActionOptionPaneData #txt
-Fs0 f24 947 195 26 26 14 0 #rect
+Fs0 f24 1099 235 26 26 14 0 #rect
 Fs0 f24 @|RichDialogProcessEndIcon #fIcon
 Fs0 f25 expr out #txt
-Fs0 f25 1010 164 969 199 #arcP
+Fs0 f25 1264 212 1125 248 #arcP
+Fs0 f25 1 1264 248 #addKink
+Fs0 f25 1 0.08574965496934503 0 0 #arcLabel
 Fs0 f38 guid 124FD19E306F3D76 #txt
 Fs0 f38 type ch.ivyteam.ivy.addons.filemanager.FileActionOptionPane.FileActionOptionPaneData #txt
 Fs0 f38 actionDecl 'ch.ivyteam.ivy.addons.filemanager.FileActionOptionPane.FileActionOptionPaneData out;
@@ -605,10 +636,10 @@ Fs0 f53 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-Fs0 f53 938 82 28 28 -65 -21 #rect
+Fs0 f53 1098 82 28 28 -65 -21 #rect
 Fs0 f53 @|AlternativeIcon #fIcon
 Fs0 f54 expr out #txt
-Fs0 f54 952 58 952 82 #arcP
+Fs0 f54 1112 58 1112 82 #arcP
 Fs0 f55 targetWindow NEW:card: #txt
 Fs0 f55 targetDisplay TOP #txt
 Fs0 f55 richDialogId ch.ivyteam.ivy.addons.filemanager.FileManager #txt
@@ -635,7 +666,7 @@ using Ivy System DB</name>
     </language>
 </elementInfo>
 ' #txt
-Fs0 f55 870 148 36 24 -130 -18 #rect
+Fs0 f55 1030 140 36 24 -130 -18 #rect
 Fs0 f55 @|RichDialogIcon #fIcon
 Fs0 f56 expr in #txt
 Fs0 f56 outCond in.startIvySystemDb #txt
@@ -648,28 +679,42 @@ Fs0 f56 .xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-Fs0 f56 945 103 900 148 #arcP
+Fs0 f56 1105 103 1062 140 #arcP
 Fs0 f56 0 0.5000000000000001 0 0 #arcLabel
-Fs0 f23 expr in #txt
-Fs0 f23 .xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<elementInfo>
-    <language>
-        <name>NO</name>
-        <nameStyle>2,7,9
-</nameStyle>
-    </language>
-</elementInfo>
-' #txt
-Fs0 f23 960 102 1009 140 #arcP
 Fs0 f57 expr out #txt
-Fs0 f57 906 172 949 200 #arcP
+Fs0 f57 1048 164 1099 248 #arcP
+Fs0 f57 1 1048 248 #addKink
+Fs0 f57 1 0.1728894361168337 0 0 #arcLabel
 Fs0 f58 actionDecl 'ch.ivyteam.ivy.addons.filemanager.FileActionOptionPane.FileActionOptionPaneData out;
 ' #txt
 Fs0 f58 actionTable 'out=in;
 ' #txt
 Fs0 f58 actionCode 'try{
-	if(in.file.isFile()){
+	if(in.#documentOnServer!=null && in.documentOnServer.getJavaFile()!=null)
+	{
+		panel.desktopHandlerPanel.openDocumentOnServerAndCheckForChanges(in.documentOnServer);
+		try{
+			if(in.configurationController.fileActionHistoryConfiguration.readFileTracked)
+			{
+				in.fileManagementHandler.getFileActionHistoryController().createNewActionHistory(Long.parseLong(in.documentOnServer.fileID),8,ivy.session.getSessionUserName(),"");
+			}
+		}catch(Throwable t)
+		{
+			ivy.log.error("Error in FileActionPane with file action history feature."+t.getMessage(),t);
+		}
+	}
+	else if(in.file.isFile()){
 		panel.desktopHandlerPanel.openFileAndCheckForChanges(in.file);
+		try{
+			if(in.configurationController.fileActionHistoryConfiguration.readFileTracked)
+			{
+				long id = Long.parseLong(in.fileManagementHandler.getDocumentOnServer(in.file.getPath()).fileID);
+				in.fileManagementHandler.getFileActionHistoryController().createNewActionHistory(id,8,ivy.session.getSessionUserName(),"");
+			}
+		}catch(Throwable t)
+		{
+			ivy.log.error("Error in FileActionPane with file action history feature."+t.getMessage(),t);
+		}
 	}
 }catch(Throwable t){
 	ivy.log.info(t.getMessage(),t);
@@ -745,7 +790,18 @@ Fs0 f60 actionDecl 'ch.ivyteam.ivy.addons.filemanager.FileActionOptionPane.FileA
 ' #txt
 Fs0 f60 actionTable 'out=in;
 ' #txt
-Fs0 f60 actionCode panel.desktopHandlerPanel.printFiles(in.files); #txt
+Fs0 f60 actionCode 'panel.desktopHandlerPanel.printFiles(in.files);
+
+if(in.configurationController.fileActionHistoryConfiguration.printFileTracked)
+{
+	try{
+		in.fileManagementHandler.getFileActionHistoryController().createNewActionHistory(Long.parseLong(in.documentOnServer.fileID),7,ivy.session.getSessionUserName(),"");
+	}catch(Throwable t)
+	{
+		ivy.log.error("Error in FileActionPane with file action history feature."+t.getMessage(),t);
+	}
+}
+' #txt
 Fs0 f60 type ch.ivyteam.ivy.addons.filemanager.FileActionOptionPane.FileActionOptionPaneData #txt
 Fs0 f60 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
@@ -931,7 +987,7 @@ Fs0 f81 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-Fs0 f81 1118 38 20 20 13 0 #rect
+Fs0 f81 1374 38 20 20 13 0 #rect
 Fs0 f81 @|RichDialogBroadcastStartIcon #fIcon
 Fs0 f82 type ch.ivyteam.ivy.addons.filemanager.FileActionOptionPane.FileActionOptionPaneData #txt
 Fs0 f82 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -943,10 +999,10 @@ Fs0 f82 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-Fs0 f82 1114 82 28 28 14 0 #rect
+Fs0 f82 1370 82 28 28 14 0 #rect
 Fs0 f82 @|AlternativeIcon #fIcon
 Fs0 f83 expr out #txt
-Fs0 f83 1128 58 1128 82 #arcP
+Fs0 f83 1384 58 1384 82 #arcP
 Fs0 f84 expr in #txt
 Fs0 f84 outCond in.isSamePanelId #txt
 Fs0 f84 .xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -958,12 +1014,348 @@ Fs0 f84 .xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-Fs0 f84 1114 96 966 96 #arcP
+Fs0 f84 1370 96 1126 96 #arcP
 Fs0 f85 type ch.ivyteam.ivy.addons.filemanager.FileActionOptionPane.FileActionOptionPaneData #txt
-Fs0 f85 1118 126 20 20 13 0 #rect
+Fs0 f85 1374 126 20 20 13 0 #rect
 Fs0 f85 @|RichDialogProcessEndIcon #fIcon
 Fs0 f86 expr in #txt
-Fs0 f86 1128 110 1128 126 #arcP
+Fs0 f86 1384 110 1384 126 #arcP
+Fs0 f87 guid 137A87E86A96F391 #txt
+Fs0 f87 type ch.ivyteam.ivy.addons.filemanager.FileActionOptionPane.FileActionOptionPaneData #txt
+Fs0 f87 method start(ch.ivyteam.ivy.addons.filemanager.configuration.BasicConfigurationController,String,Number) #txt
+Fs0 f87 disableUIEvents true #txt
+Fs0 f87 inParameterDecl 'ch.ivyteam.ivy.richdialog.exec.RdMethodCallEvent methodEvent = event as ch.ivyteam.ivy.richdialog.exec.RdMethodCallEvent;
+<ch.ivyteam.ivy.addons.filemanager.configuration.BasicConfigurationController configurationController,java.lang.String filePath,java.lang.Number fileId> param = methodEvent.getInputArguments();
+' #txt
+Fs0 f87 inParameterMapAction 'out.configurationController=param.configurationController;
+out.documentOnServer.fileID=param.fileId.toString();
+out.documentOnServer.path=param.filePath;
+' #txt
+Fs0 f87 inActionCode 'import ch.ivyteam.ivy.addons.filemanager.configuration.BasicConfigurationController;
+if(param.#configurationController==null)
+{
+	out.configurationController = new BasicConfigurationController();
+}' #txt
+Fs0 f87 outParameterDecl '<> result;
+' #txt
+Fs0 f87 embeddedRdInitializations '{/desktopHandlerPanel {/fieldName "desktopHandlerPanel"/startMethod "start()"/parameterMapping ""/initScript ""/userContext * }}' #txt
+Fs0 f87 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>start(BasicConfigurationController,String,Number)</name>
+        <nameStyle>49,5,7
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
+Fs0 f87 118 374 20 20 13 0 #rect
+Fs0 f87 @|RichDialogInitStartIcon #fIcon
+Fs0 f88 actionDecl 'ch.ivyteam.ivy.addons.filemanager.FileActionOptionPane.FileActionOptionPaneData out;
+' #txt
+Fs0 f88 actionTable 'out=in;
+' #txt
+Fs0 f88 actionCode 'import ch.ivyteam.ivy.addons.filemanager.database.AbstractFileManagementHandler;
+import ch.ivyteam.ivy.addons.filemanager.database.fileaction.FileActionHistoryController;
+int id = 0;
+try{
+	in.fileManagementHandler = AbstractFileManagementHandler.getInstance(in.configurationController);
+	id = Integer.parseInt(in.documentOnServer.fileID);
+	if(in.configurationController.fileActionHistoryConfiguration.activateFileActionHistory)
+	{
+		in.fileManagementHandler.setFileActionHistoryController(new FileActionHistoryController(in.configurationController.fileActionHistoryConfiguration));
+	}
+}catch(Exception ex)
+{
+		// do nothing in case of numberFormatException
+}
+try{
+	
+	if(id>0)
+	{
+		out.documentOnServer = in.fileManagementHandler.getDocumentOnServerWithJavaFile(id);
+	}else{
+		out.documentOnServer = in.fileManagementHandler.getDocumentOnServerWithJavaFile(in.documentOnServer.path);
+	}
+}catch(Throwable t){
+	ivy.log.info(t.getMessage(),t);
+}
+' #txt
+Fs0 f88 type ch.ivyteam.ivy.addons.filemanager.FileActionOptionPane.FileActionOptionPaneData #txt
+Fs0 f88 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>getDocumentOnServer with java.io.File</name>
+        <nameStyle>37
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
+Fs0 f88 110 420 36 24 20 -2 #rect
+Fs0 f88 @|RichDialogProcessStepIcon #fIcon
+Fs0 f89 expr out #txt
+Fs0 f89 128 394 128 420 #arcP
+Fs0 f90 type ch.ivyteam.ivy.addons.filemanager.FileActionOptionPane.FileActionOptionPaneData #txt
+Fs0 f90 118 622 20 20 13 0 #rect
+Fs0 f90 @|RichDialogProcessEndIcon #fIcon
+Fs0 f92 type ch.ivyteam.ivy.addons.filemanager.FileActionOptionPane.FileActionOptionPaneData #txt
+Fs0 f92 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>file OK?</name>
+        <nameStyle>8
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
+Fs0 f92 114 530 28 28 -45 12 #rect
+Fs0 f92 @|AlternativeIcon #fIcon
+Fs0 f91 expr in #txt
+Fs0 f91 outCond 'in.#file != null && in.file.isFile()' #txt
+Fs0 f91 .xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>YES</name>
+        <nameStyle>3
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
+Fs0 f91 128 558 128 622 #arcP
+Fs0 f94 actionDecl 'ch.ivyteam.ivy.addons.filemanager.FileActionOptionPane.FileActionOptionPaneData out;
+' #txt
+Fs0 f94 actionTable 'out=in;
+' #txt
+Fs0 f94 actionCode 'if(in.documentOnServer!=null && in.documentOnServer.getJavaFile()!=null)
+{
+	in.file= in.documentOnServer.getJavaFile();
+	in.files.add(in.documentOnServer.getJavaFile());
+	in.fileName = in.file.getName();
+}' #txt
+Fs0 f94 type ch.ivyteam.ivy.addons.filemanager.FileActionOptionPane.FileActionOptionPaneData #txt
+Fs0 f94 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>Stores the java.io.File</name>
+        <nameStyle>23
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
+Fs0 f94 110 468 36 24 20 -2 #rect
+Fs0 f94 @|RichDialogProcessStepIcon #fIcon
+Fs0 f95 expr out #txt
+Fs0 f95 128 444 128 468 #arcP
+Fs0 f93 expr out #txt
+Fs0 f93 128 492 128 530 #arcP
+Fs0 f96 actionDecl 'ch.ivyteam.ivy.addons.filemanager.FileActionOptionPane.FileActionOptionPaneData out;
+' #txt
+Fs0 f96 actionTable 'out=in;
+' #txt
+Fs0 f96 actionCode 'panel.downloadButton.enabled=false;
+panel.printButton.enabled=false;
+panel.editButton.enabled=false;' #txt
+Fs0 f96 type ch.ivyteam.ivy.addons.filemanager.FileActionOptionPane.FileActionOptionPaneData #txt
+Fs0 f96 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>disable actions buttons</name>
+        <nameStyle>23
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
+Fs0 f96 198 532 36 24 20 -2 #rect
+Fs0 f96 @|RichDialogProcessStepIcon #fIcon
+Fs0 f97 expr in #txt
+Fs0 f97 .xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>NO</name>
+        <nameStyle>2
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
+Fs0 f97 142 544 198 544 #arcP
+Fs0 f98 expr out #txt
+Fs0 f98 204 556 135 624 #arcP
+Fs0 f99 type ch.ivyteam.ivy.addons.filemanager.FileActionOptionPane.FileActionOptionPaneData #txt
+Fs0 f99 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>use Configuration?</name>
+        <nameStyle>18
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
+Fs0 f99 1194 130 28 28 3 -21 #rect
+Fs0 f99 @|AlternativeIcon #fIcon
+Fs0 f100 expr in #txt
+Fs0 f100 .xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>NO</name>
+        <nameStyle>2,7,9
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
+Fs0 f100 1121 101 1199 139 #arcP
+Fs0 f23 expr in #txt
+Fs0 f23 outCond in.filesTableName.length()>0 #txt
+Fs0 f23 .xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>NO</name>
+        <nameStyle>2
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
+Fs0 f23 1222 144 1264 188 #arcP
+Fs0 f23 1 1264 144 #addKink
+Fs0 f23 0 0.9607004427599172 0 0 #arcLabel
+Fs0 f101 targetWindow NEW:card: #txt
+Fs0 f101 targetDisplay TOP #txt
+Fs0 f101 richDialogId ch.ivyteam.ivy.addons.filemanager.FileManager #txt
+Fs0 f101 startMethod start(ch.ivyteam.ivy.addons.filemanager.configuration.FileManagerConfigurationController) #txt
+Fs0 f101 type ch.ivyteam.ivy.addons.filemanager.FileActionOptionPane.FileActionOptionPaneData #txt
+Fs0 f101 requestActionDecl '<ch.ivyteam.ivy.addons.filemanager.configuration.FileManagerConfigurationController filemanagerConfiguration> param;' #txt
+Fs0 f101 requestMappingAction 'param.filemanagerConfiguration.activateFileVersioning=in.configurationController.activateFileVersioning;
+param.filemanagerConfiguration.activateSecurity=in.configurationController.activateSecurity;
+param.filemanagerConfiguration.adminRole=in.configurationController.adminRole;
+param.filemanagerConfiguration.advancedActionsEnabled=true;
+param.filemanagerConfiguration.databaseSchemaName=in.configurationController.databaseSchemaName;
+param.filemanagerConfiguration.diplayFilesRecursively=false;
+param.filemanagerConfiguration.directoriesTableName=in.configurationController.directoriesTableName;
+param.filemanagerConfiguration.filesContentTableName=in.configurationController.filesContentTableName;
+param.filemanagerConfiguration.filesTableName=in.configurationController.filesTableName;
+param.filemanagerConfiguration.filesVersionContentTableName=in.configurationController.filesVersionContentTableName;
+param.filemanagerConfiguration.filesVersionTableName=in.configurationController.filesVersionTableName;
+param.filemanagerConfiguration.folderTreeVisible=true;
+param.filemanagerConfiguration.ivyDBConnectionName=in.configurationController.IvyDBConnectionName;
+param.filemanagerConfiguration.rootPath=in.configurationController.rootPath;
+param.filemanagerConfiguration.storeFilesInDB=in.configurationController.storeFilesInDB;
+param.filemanagerConfiguration.toolBarVisible=true;
+param.filemanagerConfiguration.useIvySystemDB=in.configurationController.useIvySystemDB;
+' #txt
+Fs0 f101 responseActionDecl 'ch.ivyteam.ivy.addons.filemanager.FileActionOptionPane.FileActionOptionPaneData out;
+' #txt
+Fs0 f101 responseMappingAction 'out=in;
+' #txt
+Fs0 f101 windowConfiguration '{/title "File management"/width 780 /height 400 /centered true /resizable true /maximized false /close_after_last_rd true }' #txt
+Fs0 f101 isAsynch false #txt
+Fs0 f101 isInnerRd true #txt
+Fs0 f101 userContext '* ' #txt
+Fs0 f101 1142 188 36 24 20 -2 #rect
+Fs0 f101 @|RichDialogIcon #fIcon
+Fs0 f102 expr in #txt
+Fs0 f102 .xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>YES</name>
+        <nameStyle>3
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
+Fs0 f102 1194 144 1160 188 #arcP
+Fs0 f102 1 1160 144 #addKink
+Fs0 f102 1 0.12294327942289687 0 0 #arcLabel
+Fs0 f103 expr out #txt
+Fs0 f103 1148 212 1121 238 #arcP
+Fs0 f104 guid 137A8E42CFD44837 #txt
+Fs0 f104 type ch.ivyteam.ivy.addons.filemanager.FileActionOptionPane.FileActionOptionPaneData #txt
+Fs0 f104 actionDecl 'ch.ivyteam.ivy.addons.filemanager.FileActionOptionPane.FileActionOptionPaneData out;
+' #txt
+Fs0 f104 actionTable 'out=in;
+' #txt
+Fs0 f104 actionCode 'import ch.ivyteam.ivy.addons.filemanager.FileCouple;
+import ch.ivyteam.ivy.addons.filemanager.DocumentOnServer;
+import ch.ivyteam.ivy.richdialog.exec.RdEvent;
+
+RdEvent e = event as RdEvent;
+try{
+	if(in.#fileManagementHandler!=null)
+	{
+		if(e.getParameter() instanceof java.io.File){
+			
+				java.io.File file = e.getParameter() as java.io.File;
+				if(in.#fileManagementHandler!=null)
+				{
+					in.fileManagementHandler.changeModificationInformations(file, ivy.session.getSessionUserName());
+					
+					if(in.configurationController.fileActionHistoryConfiguration.editFileTracked)
+					{
+						try
+						{
+							long id = Long.parseLong(in.fileManagementHandler.getDocumentOnServer(file.getPath()).fileID);
+							in.fileManagementHandler.getFileActionHistoryController().createNewActionHistory(id,2,ivy.session.getSessionUserName(),"");
+						}catch(Throwable t)
+						{
+							ivy.log.error("File action option pane error: an error occurred while writing file changed history. "+t.getMessage());
+						}
+					}
+				}
+				
+		}
+		else if(e.getParameter() instanceof FileCouple){
+			FileCouple fc = e.getParameter() as FileCouple;
+			if(fc.referencedDocumentOnServer!=null){
+				ivy.log.info("doc modified cached "+fc.referencedDocumentOnServer.path+" File on Server "+(fc.getReferencedDocumentOnServer()!=null && fc.getReferencedDocumentOnServer().getJavaFile()!=null?fc.getReferencedDocumentOnServer().getJavaFile().getPath():"NULL"));
+				in.fileManagementHandler.saveDocumentOnServer(fc.getReferencedDocumentOnServer(),fc.getReferencedDocumentOnServer().path);
+				if(in.configurationController.fileActionHistoryConfiguration.editFileTracked)
+				{
+					try
+					{
+						long id = Long.parseLong(fc.getReferencedDocumentOnServer().fileID);
+						in.fileManagementHandler.getFileActionHistoryController().createNewActionHistory(id,2,ivy.session.getSessionUserName(),"");
+					}catch(Throwable t)
+					{
+						ivy.log.error("File action option pane error: an error occurred while writing file changed history. "+t.getMessage());
+					}
+				}
+			}
+		}
+		else if(e.getParameter() instanceof DocumentOnServer)
+		{
+			DocumentOnServer doc = e.getParameter() as DocumentOnServer;
+			in.fileManagementHandler.saveDocumentOnServer(doc,doc.path);
+			if(in.configurationController.fileActionHistoryConfiguration.editFileTracked)
+			{
+				try
+				{
+					long id = Long.parseLong(doc.fileID);
+					in.fileManagementHandler.getFileActionHistoryController().createNewActionHistory(id,2,ivy.session.getSessionUserName(),"");
+				}catch(Throwable t)
+				{
+					ivy.log.error("File action option pane error: an error occurred while writing file changed history. "+t.getMessage());
+				}
+			}
+		}
+	}
+}catch(Throwable t){
+	
+ivy.log.info(t.getMessage(),t);
+
+}' #txt
+Fs0 f104 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>fileModified</name>
+        <nameStyle>12,5,7
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
+Fs0 f104 1102 398 20 20 -28 -28 #rect
+Fs0 f104 @|RichDialogProcessStartIcon #fIcon
+Fs0 f105 type ch.ivyteam.ivy.addons.filemanager.FileActionOptionPane.FileActionOptionPaneData #txt
+Fs0 f105 1102 462 20 20 13 0 #rect
+Fs0 f105 @|RichDialogProcessEndIcon #fIcon
+Fs0 f106 expr out #txt
+Fs0 f106 1112 418 1112 462 #arcP
 >Proto Fs0 .type ch.ivyteam.ivy.addons.filemanager.FileActionOptionPane.FileActionOptionPaneData #txt
 >Proto Fs0 .processKind RICH_DIALOG #txt
 >Proto Fs0 .rdData2UIAction 'panel.infoLabel.text=IF(in.files.size()==1,
@@ -984,7 +1376,7 @@ Fs0 f86 1128 110 1128 126 #arcP
     </language>
     <swimlaneSize>328</swimlaneSize>
     <swimlaneSize>150</swimlaneSize>
-    <swimlaneSize>602</swimlaneSize>
+    <swimlaneSize>856</swimlaneSize>
     <swimlaneColor>-10027162</swimlaneColor>
     <swimlaneColor>-6710785</swimlaneColor>
     <swimlaneColor>-154</swimlaneColor>
@@ -1032,8 +1424,6 @@ Fs0 f18 mainOut f54 tail #connect
 Fs0 f54 head f53 in #connect
 Fs0 f53 out f56 tail #connect
 Fs0 f56 head f55 mainIn #connect
-Fs0 f53 out f23 tail #connect
-Fs0 f23 head f22 mainIn #connect
 Fs0 f55 mainOut f57 tail #connect
 Fs0 f57 head f24 mainIn #connect
 Fs0 f15 mainOut f59 tail #connect
@@ -1072,3 +1462,25 @@ Fs0 f82 out f84 tail #connect
 Fs0 f84 head f53 in #connect
 Fs0 f82 out f86 tail #connect
 Fs0 f86 head f85 mainIn #connect
+Fs0 f87 mainOut f89 tail #connect
+Fs0 f89 head f88 mainIn #connect
+Fs0 f92 out f91 tail #connect
+Fs0 f91 head f90 mainIn #connect
+Fs0 f88 mainOut f95 tail #connect
+Fs0 f95 head f94 mainIn #connect
+Fs0 f94 mainOut f93 tail #connect
+Fs0 f93 head f92 in #connect
+Fs0 f92 out f97 tail #connect
+Fs0 f97 head f96 mainIn #connect
+Fs0 f96 mainOut f98 tail #connect
+Fs0 f98 head f90 mainIn #connect
+Fs0 f53 out f100 tail #connect
+Fs0 f100 head f99 in #connect
+Fs0 f99 out f23 tail #connect
+Fs0 f23 head f22 mainIn #connect
+Fs0 f99 out f102 tail #connect
+Fs0 f102 head f101 mainIn #connect
+Fs0 f101 mainOut f103 tail #connect
+Fs0 f103 head f24 mainIn #connect
+Fs0 f104 mainOut f106 tail #connect
+Fs0 f106 head f105 mainIn #connect

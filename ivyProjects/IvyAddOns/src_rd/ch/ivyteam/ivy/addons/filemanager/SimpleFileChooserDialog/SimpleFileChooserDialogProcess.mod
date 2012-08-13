@@ -1,6 +1,6 @@
 [Ivy]
-[>Created: Tue Nov 30 16:18:38 CET 2010]
-125FE384C5BE80F0 3.15 #module
+[>Created: Thu Aug 09 09:54:23 EDT 2012]
+125FE384C5BE80F0 3.17 #module
 >Proto >Proto Collection #zClass
 Fs0 FileChooserDialogProcess Big #zClass
 Fs0 RD #cInfo
@@ -55,7 +55,6 @@ Fs0 @RichDialogMethodStart f38 '' #zField
 Fs0 @PushWFArc f39 '' #zField
 Fs0 @RichDialogProcessEnd f37 '' #zField
 Fs0 @PushWFArc f40 '' #zField
-Fs0 @PushWFArc f41 '' #zField
 Fs0 @RichDialogInitStart f35 '' #zField
 Fs0 @PushWFArc f42 '' #zField
 Fs0 @RichDialogMethodStart f43 '' #zField
@@ -86,6 +85,11 @@ Fs0 @RichDialogMethodStart f67 '' #zField
 Fs0 @PushWFArc f68 '' #zField
 Fs0 @RichDialogMethodStart f69 '' #zField
 Fs0 @PushWFArc f70 '' #zField
+Fs0 @RichDialogInitStart f71 '' #zField
+Fs0 @PushWFArc f72 '' #zField
+Fs0 @RichDialogProcessStep f73 '' #zField
+Fs0 @PushWFArc f74 '' #zField
+Fs0 @PushWFArc f41 '' #zField
 >Proto Fs0 Fs0 FileChooserDialogProcess #zField
 Fs0 f0 guid 1223BBAF0B7B8784 #txt
 Fs0 f0 type ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.SimpleFileChooserDialogData #txt
@@ -120,15 +124,15 @@ Fs0 f3 disableUIEvents true #txt
 Fs0 f3 inParameterDecl 'ch.ivyteam.ivy.richdialog.exec.RdMethodCallEvent methodEvent = event as ch.ivyteam.ivy.richdialog.exec.RdMethodCallEvent;
 <java.lang.String path> param = methodEvent.getInputArguments();
 ' #txt
-Fs0 f3 inParameterMapAction 'out.fileChoosed=new java.io.File("");
-out.path=param.path;
+Fs0 f3 inParameterMapAction 'out.configurationController.rootPath=param.path;
+out.fileChoosed=new java.io.File("");
 out.uploadEnabled=true;
 ' #txt
 Fs0 f3 outParameterDecl '<java.io.File choosedFile> result;
 ' #txt
 Fs0 f3 outParameterMapAction 'result.choosedFile=in.fileChoosed;
 ' #txt
-Fs0 f3 embeddedRdInitializations '{/fileListChooserPanel {/fieldName "fileListChooserPanel"/startMethod "startWithPath(String)"/parameterMapping "param.path=callParam.path;\n"/initScript ""}/desktopHandlerPanel {/fieldName "desktopHandlerPanel"/startMethod "start()"/parameterMapping ""/initScript ""}}' #txt
+Fs0 f3 embeddedRdInitializations '{/desktopHandlerPanel {/fieldName "desktopHandlerPanel"/startMethod "start()"/parameterMapping ""/initScript ""/userContext * }/fileListChooserPanel {/fieldName "fileListChooserPanel"/startMethod "start(ch.ivyteam.ivy.addons.filemanager.configuration.BasicConfigurationController,String)"/parameterMapping "param.configurationController.rootPath=callParam.path;\nparam.searchPattern=\"\";\n"/initScript ""/userContext * }}' #txt
 Fs0 f3 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -265,16 +269,16 @@ Fs0 f19 disableUIEvents true #txt
 Fs0 f19 inParameterDecl 'ch.ivyteam.ivy.richdialog.exec.RdMethodCallEvent methodEvent = event as ch.ivyteam.ivy.richdialog.exec.RdMethodCallEvent;
 <java.lang.String path,java.lang.String customLabel> param = methodEvent.getInputArguments();
 ' #txt
-Fs0 f19 inParameterMapAction 'out.customLabel=param.customLabel;
+Fs0 f19 inParameterMapAction 'out.configurationController.rootPath=param.path;
+out.customLabel=param.customLabel;
 out.fileChoosed=new java.io.File("");
-out.path=param.path;
 out.uploadEnabled=true;
 ' #txt
 Fs0 f19 outParameterDecl '<java.io.File choosedFile> result;
 ' #txt
 Fs0 f19 outParameterMapAction 'result.choosedFile=in.fileChoosed;
 ' #txt
-Fs0 f19 embeddedRdInitializations '{/fileListChooserPanel {/fieldName "fileListChooserPanel"/startMethod "startWithPath(String)"/parameterMapping "param.path=callParam.path;\n"/initScript ""}/desktopHandlerPanel {/fieldName "desktopHandlerPanel"/startMethod "start()"/parameterMapping ""/initScript ""}}' #txt
+Fs0 f19 embeddedRdInitializations '{/desktopHandlerPanel {/fieldName "desktopHandlerPanel"/startMethod "start()"/parameterMapping ""/initScript ""/userContext * }/fileListChooserPanel {/fieldName "fileListChooserPanel"/startMethod "start(ch.ivyteam.ivy.addons.filemanager.configuration.BasicConfigurationController,String)"/parameterMapping "param.configurationController.rootPath=callParam.path;\nparam.searchPattern=\"\";\n"/initScript ""/userContext * }}' #txt
 Fs0 f19 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -351,6 +355,9 @@ Fs0 f29 actionDecl 'ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.Si
 Fs0 f29 actionTable 'out=in;
 ' #txt
 Fs0 f29 actionCode 'out.fileChoosed = panel.fileListChooserPanel.getSelectedFile();
+
+out.selectedDocumentOnServer = panel.fileListChooserPanel.getSelectedDocument().clone();
+
 panel.chooseButton.setEnabled(true);
 panel.previewButton.setEnabled(true);' #txt
 Fs0 f29 type ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.SimpleFileChooserDialogData #txt
@@ -374,14 +381,40 @@ Fs0 f8 actionDecl 'ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.Sim
 ' #txt
 Fs0 f8 actionTable 'out=in;
 ' #txt
-Fs0 f8 actionCode 'import ch.ivyteam.ivy.addons.filemanager.FileUploadHandler;
+Fs0 f8 actionCode 'import ch.ivyteam.ivy.addons.filemanager.database.AbstractFileManagementHandler;
+import ch.ivyteam.ivy.addons.filemanager.FileUploadHandler;
+import ch.ivyteam.ivy.addons.filemanager.database.fileaction.FileActionHistoryController;
 panel.chooseButton.setEnabled(false);
 panel.previewButton.setEnabled(false);
 
-out.uploader=new FileUploadHandler(panel,"_uploadError","_uploadDone","_askForOverwriteFiles","",in.path);
+//out.uploader=new FileUploadHandler(panel,"_uploadError","_uploadDone","_askForOverwriteFiles","",in.path);
 
 //set the file
-out.fileChoosed=new java.io.File("");' #txt
+out.fileChoosed=new java.io.File("");
+
+if(in.configurationController.storeFilesInDB)
+{
+	in.filemanagementHandler= AbstractFileManagementHandler.getInstance(in.configurationController);
+	if(in.configurationController.fileActionHistoryConfiguration.activateFileActionHistory)
+	{
+		in.fileManagementHandler.setFileActionHistoryController(new FileActionHistoryController(in.configurationController.fileActionHistoryConfiguration));
+	}
+	File dir = new File(ivy.session.getSessionUserName()+"/"+System.nanoTime()+"/Upload/",true);
+	dir.mkdir();
+	if(dir.isDirectory())
+	{
+		in.uploader = new FileUploadHandler(panel,"_uploadError","_uploadDoneForFilesInDB","_askForOverwriteFiles","",dir.getAbsolutePath());
+	  in.uploader.setAreFilesStoredInDB(true);
+	}else{
+		in.uploader = new FileUploadHandler(panel,"_uploadError","_uploadDoneForFilesInDB","_askForOverwriteFiles","",in.configurationController.rootPath);
+		in.uploader.setAreFilesStoredInDB(true);
+	}
+	in.uploader.setAreFilesStoredInDB(true);
+	in.uploader.setFilesDestinationPathForDB(in.configurationController.rootPath);
+	in.uploader.setFileHandlerMgt(in.fileManagementHandler);
+}else{
+	in.uploader = new FileUploadHandler(panel,"_uploadError","_uploadDone","_askForOverwriteFiles","",in.configurationController.rootPath);
+}' #txt
 Fs0 f8 type ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.SimpleFileChooserDialogData #txt
 Fs0 f8 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
@@ -434,13 +467,25 @@ Fs0 f12 @|RichDialogProcessStartIcon #fIcon
 Fs0 f33 expr out #txt
 Fs0 f33 400 506 400 540 #arcP
 Fs0 f34 type ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.SimpleFileChooserDialogData #txt
-Fs0 f34 390 654 20 20 13 0 #rect
+Fs0 f34 390 598 20 20 13 0 #rect
 Fs0 f34 @|RichDialogProcessEndIcon #fIcon
 Fs0 f36 actionDecl 'ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.SimpleFileChooserDialogData out;
 ' #txt
 Fs0 f36 actionTable 'out=in;
 ' #txt
-Fs0 f36 actionCode panel.fileListChooserPanel.refresh(); #txt
+Fs0 f36 actionCode 'import ch.ivyteam.ivy.addons.filemanager.DocumentOnServer;
+try{
+	if(in.configurationController.storeFilesInDB)
+	{
+		for(DocumentOnServer doc:in.returnedMessage.documentOnServers)
+		{
+			in.fileManagementHandler.saveDocumentOnServer(doc,in.configurationController.rootPath);
+		}
+	}
+}catch(Throwable t)
+{
+	ivy.log.error("Error while saving the uploaded files in the SimpleFileChooserDialog. ",+t.getMessage(),t);
+}' #txt
 Fs0 f36 type ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.SimpleFileChooserDialogData #txt
 Fs0 f36 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
@@ -451,7 +496,7 @@ Fs0 f36 750 388 36 24 20 -2 #rect
 Fs0 f36 @|RichDialogProcessStepIcon #fIcon
 Fs0 f38 guid 128B94A86BA64AE4 #txt
 Fs0 f38 type ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.SimpleFileChooserDialogData #txt
-Fs0 f38 method _uploadDone(ch.ivyteam.ivy.addons.filemanager.ReturnedMessage) #txt
+Fs0 f38 method _uploadDoneForFilesInDB(ch.ivyteam.ivy.addons.filemanager.ReturnedMessage) #txt
 Fs0 f38 disableUIEvents false #txt
 Fs0 f38 inParameterDecl 'ch.ivyteam.ivy.richdialog.exec.RdMethodCallEvent methodEvent = event as ch.ivyteam.ivy.richdialog.exec.RdMethodCallEvent;
 <ch.ivyteam.ivy.addons.filemanager.ReturnedMessage returnedMessage> param = methodEvent.getInputArguments();
@@ -463,8 +508,8 @@ Fs0 f38 outParameterDecl '<> result;
 Fs0 f38 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
-        <name>_uploadDone()</name>
-        <nameStyle>13,5,7,9
+        <name>_uploadDoneForFilesInDB()</name>
+        <nameStyle>25,5,7,9
 </nameStyle>
     </language>
 </elementInfo>
@@ -472,14 +517,12 @@ Fs0 f38 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 Fs0 f38 758 334 20 20 13 0 #rect
 Fs0 f38 @|RichDialogMethodStartIcon #fIcon
 Fs0 f39 expr out #txt
-Fs0 f39 400 564 400 654 #arcP
+Fs0 f39 400 564 400 598 #arcP
 Fs0 f37 type ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.SimpleFileChooserDialogData #txt
-Fs0 f37 758 446 20 20 13 0 #rect
+Fs0 f37 758 486 20 20 13 0 #rect
 Fs0 f37 @|RichDialogProcessEndIcon #fIcon
 Fs0 f40 expr out #txt
 Fs0 f40 768 354 768 388 #arcP
-Fs0 f41 expr out #txt
-Fs0 f41 768 412 768 446 #arcP
 Fs0 f35 guid 128B98D3200575CD #txt
 Fs0 f35 type ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.SimpleFileChooserDialogData #txt
 Fs0 f35 method start(String,String,Boolean) #txt
@@ -487,16 +530,16 @@ Fs0 f35 disableUIEvents true #txt
 Fs0 f35 inParameterDecl 'ch.ivyteam.ivy.richdialog.exec.RdMethodCallEvent methodEvent = event as ch.ivyteam.ivy.richdialog.exec.RdMethodCallEvent;
 <java.lang.String path,java.lang.String customLabel,java.lang.Boolean showUploadButton> param = methodEvent.getInputArguments();
 ' #txt
-Fs0 f35 inParameterMapAction 'out.customLabel=param.customLabel;
+Fs0 f35 inParameterMapAction 'out.configurationController.rootPath=param.path;
+out.customLabel=param.customLabel;
 out.fileChoosed=new java.io.File("");
-out.path=param.path;
 out.uploadEnabled=param.showUploadButton;
 ' #txt
 Fs0 f35 outParameterDecl '<java.io.File choosedFile> result;
 ' #txt
 Fs0 f35 outParameterMapAction 'result.choosedFile=in.fileChoosed;
 ' #txt
-Fs0 f35 embeddedRdInitializations '{/fileListChooserPanel {/fieldName "fileListChooserPanel"/startMethod "startWithPath(String)"/parameterMapping "param.path=callParam.path;\n"/initScript ""}/desktopHandlerPanel {/fieldName "desktopHandlerPanel"/startMethod "start()"/parameterMapping ""/initScript ""}}' #txt
+Fs0 f35 embeddedRdInitializations '{/desktopHandlerPanel {/fieldName "desktopHandlerPanel"/startMethod "start()"/parameterMapping ""/initScript ""/userContext * }/fileListChooserPanel {/fieldName "fileListChooserPanel"/startMethod "start(ch.ivyteam.ivy.addons.filemanager.configuration.BasicConfigurationController,String)"/parameterMapping "param.configurationController.rootPath=callParam.path;\nparam.searchPattern=\"\";\n"/initScript ""/userContext * }}' #txt
 Fs0 f35 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -713,7 +756,18 @@ Fs0 f63 actionDecl 'ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.Si
 ' #txt
 Fs0 f63 actionTable 'out=in;
 ' #txt
-Fs0 f63 actionCode panel.desktopHandlerPanel.openFile(in.fileChoosed); #txt
+Fs0 f63 actionCode 'panel.desktopHandlerPanel.openFile(in.fileChoosed);
+
+if(in.fileManagementHandler.fileActionHistoryController.config.activateFileActionHistory)
+{
+	try{
+		long id = long.parseLong(in.selectedDocumentOnServer.fileID);
+		in.fileManagementHandler.getFileActionHistoryController().createNewActionHistory(id,8,ivy.session.getSessionUserName(),"");
+	}catch(Throwable t){
+		ivy.log.error("Error in writing activity in SimpleFileChooser dialog. "+t.getMessage(),t);
+	}
+}
+' #txt
 Fs0 f63 type ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.SimpleFileChooserDialogData #txt
 Fs0 f63 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
@@ -768,6 +822,47 @@ Fs0 f69 558 54 20 20 13 0 #rect
 Fs0 f69 @|RichDialogMethodStartIcon #fIcon
 Fs0 f70 expr out #txt
 Fs0 f70 559 70 520 100 #arcP
+Fs0 f71 guid 137B77D675A839A2 #txt
+Fs0 f71 type ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.SimpleFileChooserDialogData #txt
+Fs0 f71 method start(ch.ivyteam.ivy.addons.filemanager.configuration.BasicConfigurationController,Boolean) #txt
+Fs0 f71 disableUIEvents true #txt
+Fs0 f71 inParameterDecl 'ch.ivyteam.ivy.richdialog.exec.RdMethodCallEvent methodEvent = event as ch.ivyteam.ivy.richdialog.exec.RdMethodCallEvent;
+<ch.ivyteam.ivy.addons.filemanager.configuration.BasicConfigurationController configurationController,java.lang.Boolean showUploadButton> param = methodEvent.getInputArguments();
+' #txt
+Fs0 f71 inParameterMapAction 'out.configurationController=param.configurationController;
+out.uploadEnabled=param.showUploadButton;
+' #txt
+Fs0 f71 outParameterDecl '<ch.ivyteam.ivy.addons.filemanager.DocumentOnServer selectedDocumentOnServer> result;
+' #txt
+Fs0 f71 outParameterMapAction 'result.selectedDocumentOnServer=in.selectedDocumentOnServer;
+' #txt
+Fs0 f71 embeddedRdInitializations '{/desktopHandlerPanel {/fieldName "desktopHandlerPanel"/startMethod "start()"/parameterMapping ""/initScript ""/userContext * }/fileListChooserPanel {/fieldName "fileListChooserPanel"/startMethod "start(ch.ivyteam.ivy.addons.filemanager.configuration.BasicConfigurationController,String)"/parameterMapping "param.configurationController=callParam.configurationController;\nparam.searchPattern=\"\";\n"/initScript ""/userContext * }}' #txt
+Fs0 f71 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>start(BasicConfigurationController)</name>
+        <nameStyle>35,5,7
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
+Fs0 f71 142 438 20 20 13 0 #rect
+Fs0 f71 @|RichDialogInitStartIcon #fIcon
+Fs0 f72 expr out #txt
+Fs0 f72 145 440 105 388 #arcP
+Fs0 f73 actionDecl 'ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.SimpleFileChooserDialogData out;
+' #txt
+Fs0 f73 actionTable 'out=in;
+' #txt
+Fs0 f73 actionCode '
+panel.fileListChooserPanel.refresh();' #txt
+Fs0 f73 type ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.SimpleFileChooserDialogData #txt
+Fs0 f73 750 436 36 24 20 -2 #rect
+Fs0 f73 @|RichDialogProcessStepIcon #fIcon
+Fs0 f74 expr out #txt
+Fs0 f74 768 412 768 436 #arcP
+Fs0 f41 expr out #txt
+Fs0 f41 768 460 768 486 #arcP
 >Proto Fs0 .xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -784,8 +879,8 @@ Fs0 f70 559 70 520 100 #arcP
 >Proto Fs0 .type ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.SimpleFileChooserDialogData #txt
 >Proto Fs0 .processKind RICH_DIALOG #txt
 >Proto Fs0 .rdData2UIAction 'panel.customLabel.text=in.customLabel;
-panel.pathLabel.text=in.path;
 panel.desktopHandlerPanel.visible=false;
+panel.pathLabel.text=in.configurationController.rootPath;
 panel.uploadButton.visible=in.uploadEnabled;
 ' #txt
 >Proto Fs0 -8 -8 16 16 16 26 #rect
@@ -824,8 +919,6 @@ Fs0 f7 mainOut f39 tail #connect
 Fs0 f39 head f34 mainIn #connect
 Fs0 f38 mainOut f40 tail #connect
 Fs0 f40 head f36 mainIn #connect
-Fs0 f36 mainOut f41 tail #connect
-Fs0 f41 head f37 mainIn #connect
 Fs0 f35 mainOut f42 tail #connect
 Fs0 f42 head f8 mainIn #connect
 Fs0 f44 mainOut f47 tail #connect
@@ -854,3 +947,9 @@ Fs0 f67 mainOut f68 tail #connect
 Fs0 f68 head f36 mainIn #connect
 Fs0 f69 mainOut f70 tail #connect
 Fs0 f70 head f9 mainIn #connect
+Fs0 f71 mainOut f72 tail #connect
+Fs0 f72 head f8 mainIn #connect
+Fs0 f36 mainOut f74 tail #connect
+Fs0 f74 head f73 mainIn #connect
+Fs0 f73 mainOut f41 tail #connect
+Fs0 f41 head f37 mainIn #connect

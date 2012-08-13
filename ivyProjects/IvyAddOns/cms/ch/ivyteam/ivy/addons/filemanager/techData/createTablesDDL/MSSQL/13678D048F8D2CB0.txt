@@ -1,6 +1,6 @@
 CREATE TABLE dbo.uploadedfiles
-	(
-	FileId             INT IDENTITY NOT NULL,
+(
+	FileId             BIGINT IDENTITY NOT NULL,
 	FileName           VARCHAR (255) NULL,
 	FilePath           VARCHAR (750) NULL,
 	CreationUserId     VARCHAR (64) NULL,
@@ -13,13 +13,14 @@ CREATE TABLE dbo.uploadedfiles
 	ModificationDate   VARCHAR (10) NULL,
 	ModificationTime   VARCHAR (8) NULL,
 	Description        VARCHAR (1024) NULL,
-	versionnumber      INT NULL, /*This field is only needed if you use the fileManager with the versioning.*/
-	CONSTRAINT PK__uploaded__6F0F98BF5D95E53A PRIMARY KEY (FileId)
-	)
+	versionnumber      INT NULL,
+	filetypeid         BIGINT NULL,
+	CONSTRAINT PK__uploadedfiles PRIMARY KEY (FileId)
+)
 GO
 
 CREATE TABLE dbo.directories
-	(
+(
 	id                   INT IDENTITY NOT NULL,
 	dir_name             VARCHAR (255) NOT NULL,
 	dir_path             VARCHAR (750) NOT NULL,
@@ -36,23 +37,23 @@ CREATE TABLE dbo.directories
 	cdd                  VARCHAR (2048) NULL,
 	cwf                  VARCHAR (2048) NULL,
 	cdf                  VARCHAR (2048) NULL,
-	CONSTRAINT PK__director__3213E83F6166761E PRIMARY KEY (id),
-	CONSTRAINT UQ__director__89DC233C6442E2C9 UNIQUE (dir_path)
-	)
+	CONSTRAINT PK__directories PRIMARY KEY (id),
+	CONSTRAINT UQ__directories UNIQUE (dir_path)
+)
 GO
 
 CREATE TABLE dbo.filecontent
-	(
+(
 	id           INT IDENTITY NOT NULL,
 	file_id      INT NOT NULL,
 	file_content VARBINARY (max) NULL,
-	CONSTRAINT PK__filecont__3213E83F690797E6 PRIMARY KEY (id),
-	CONSTRAINT UQ__filecont__07D884C76BE40491 UNIQUE (file_id)
-	)
+	CONSTRAINT PK__filecontent PRIMARY KEY (id),
+	CONSTRAINT UQ__filecontent UNIQUE (file_id)
+)
 GO
 
 CREATE TABLE dbo.file_versions
-	(
+(
 	versionid      BIGINT IDENTITY NOT NULL,
 	file_id        INT NOT NULL,
 	version_number INT NULL,
@@ -61,15 +62,73 @@ CREATE TABLE dbo.file_versions
 	cdate          DATETIME NULL,
 	ctime          DATETIME NULL,
 	cuser          NVARCHAR (255) NULL,
-	CONSTRAINT PK__file_ver__E77790D86FB49575 PRIMARY KEY (versionid)
-	)
+	CONSTRAINT PK__file_versions PRIMARY KEY (versionid)
+)
 GO
 
 CREATE TABLE dbo.file_version_content
-	(
+(
 	fvcid      BIGINT IDENTITY NOT NULL,
 	version_id BIGINT NULL,
 	content    VARBINARY (max) NULL,
-	CONSTRAINT PK__file_ver__CF42316873852659 PRIMARY KEY (fvcid)
-	)
+	CONSTRAINT PK__file_version_content PRIMARY KEY (fvcid)
+)
 GO
+
+CREATE TABLE dbo.filetype
+(
+	id      BIGINT IDENTITY NOT NULL,
+	name    VARCHAR (255) NOT NULL,
+	appname VARCHAR (255) NULL,
+	CONSTRAINT PK__filetype PRIMARY KEY (id),
+	CONSTRAINT UQ__filetype UNIQUE (name,appname)
+)
+GO
+
+CREATE TABLE dbo.tags
+(
+	id     BIGINT IDENTITY NOT NULL,
+	fileid BIGINT NOT NULL,
+	tag    VARCHAR (255) NOT NULL,
+	CONSTRAINT PK__filetags PRIMARY KEY (id),
+	CONSTRAINT UQ__filetags UNIQUE (fileid,tag)
+)
+GO
+
+CREATE TABLE dbo.fileactiontype
+(
+	id      INT IDENTITY NOT NULL,
+	atype 	INT NOT NULL,
+	en      VARCHAR (64) NULL,
+	fr      VARCHAR (64) NULL,
+	de      VARCHAR (64) NULL,
+	CONSTRAINT PK__fileactiontype PRIMARY KEY (id),
+	CONSTRAINT UQ__fileactiontype UNIQUE (atype)
+)
+GO
+
+CREATE TABLE dbo.fileactionhistory
+(
+	id      BIGINT IDENTITY NOT NULL,
+	file_id BIGINT NOT NULL,
+	actiontype      INT NOT NULL,
+	usern    VARCHAR (256) NOT NULL,
+	uname   VARCHAR (1024) NULL,
+	ttime	DATETIME NULL,
+	ddate	DATETIME NULL,
+	adesc VARCHAR (1600) NULL,
+	CONSTRAINT PK__fileactionhistory PRIMARY KEY (id),
+	CONSTRAINT FK_fileactionhistory_2 FOREIGN KEY (actiontype) REFERENCES dbo.fileactiontype (atype)
+)
+GO
+
+INSERT INTO dbo.fileactiontype (atype,en,de,fr) VALUES (1,'File created', 'Datei kreiert' , 'Fichier créé')GO
+INSERT INTO dbo.fileactiontype (atype,en,de,fr) VALUES (2,'File content changed', 'Datei Inhalt geändert' , 'Fichier modifié')GO
+INSERT INTO dbo.fileactiontype (atype,en,de,fr) VALUES (3,'File description changed', 'Datei Beschreibung geändert' , 'Description du Fichier modifiée')GO
+INSERT INTO dbo.fileactiontype (atype,en,de,fr) VALUES (4,'File renamed', 'Datei umbennant' , 'Fichier renommé')GO
+INSERT INTO dbo.fileactiontype (atype,en,de,fr) VALUES (5,'File deleted', 'Datei gelöscht' , 'Fichier supprimé')GO
+INSERT INTO dbo.fileactiontype (atype,en,de,fr) VALUES (6,'File downloaded', 'Datei heruntergeladen' , 'Fichier téléchargé')GO
+INSERT INTO dbo.fileactiontype (atype,en,de,fr) VALUES (7,'File printed', 'Datei gedruckt' , 'Fichier imprimé')GO
+INSERT INTO dbo.fileactiontype (atype,en,de,fr) VALUES (8,'File opened', 'Datei geöffnet' , 'Fichier ouvert')GO
+INSERT INTO dbo.fileactiontype (atype,en,de,fr) VALUES (9,'File copied and paste', 'Datei kopiert' , 'Fichier copié')GO
+INSERT INTO dbo.fileactiontype (atype,en,de,fr) VALUES (10,'File moved', 'Datei verschoben' , 'Fichier déplacé')GO

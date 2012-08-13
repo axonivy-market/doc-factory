@@ -29,3 +29,7 @@ ListOfTableFieldsNames List<List<String>> #field
 ListOfTableFieldsNames 'Each List<String> represents the names of the merge Field in one table row. Used with the ListOfTableRows parameter.' #fieldComment
 ListOfTablesRows List<List<List<Object>>> #field
 ListOfTablesRows 'Each List<List<Object>> represents the rows destinated to fill one table. It is used with the ListOfTableFieldsNames parameter.' #fieldComment
+ListOfParentCompositeObjects List<ch.ivyteam.ivy.scripting.objects.CompositeObject> #field
+ListOfParentCompositeObjects 'For Mail Merge with nested Table: Each List of Component Object represent a parent Table: that will contain its List<CompositeObject> datas.' #fieldComment
+TreeDataForNestedMailMerge Tree #field
+TreeDataForNestedMailMerge 'For Mail Merge with nested Table: each Tree Level will be seen as a nested table.' #fieldComment

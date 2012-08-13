@@ -13,6 +13,7 @@ import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.richdialog.exec.panel.IRichDialogPanel;
 import ch.ivyteam.ivy.scripting.objects.CompositeObject;
 import ch.ivyteam.ivy.scripting.objects.Recordset;
+import ch.ivyteam.ivy.scripting.objects.Tree;
 import ch.ivyteam.ivy.addons.docfactory.TemplateMergeField;
 
 
@@ -258,6 +259,43 @@ public abstract class BaseDocFactory{
 	 *  the text of the message and null File Object<br>
 	 */
 	public abstract FileOperationMessage generateDocumentWithRegions(String _templatePath, String _outputName, String _outputPath, String _outputFormat, List<TemplateMergeField> _mergefields, List<String> _tablesNames, List<List<String>> _tables_fieldsNames, List<List<List<Object>>> tables_rowsValues);
+	
+	/**
+	 * 
+	 * @param _templatePath
+	 * @param _outputName
+	 * @param _outputPath
+	 * @param _outputFormat
+	 * @param _mergefields
+	 * @param parentDataSource
+	 * @param childrenDataSources
+	 * @return
+	 */
+	public abstract FileOperationMessage generateDocumentWithNestedRegions(String _templatePath, String _outputName, String _outputPath, String _outputFormat, List<TemplateMergeField> _mergefields, ch.ivyteam.ivy.scripting.objects.List<CompositeObject> parentDataSource, ch.ivyteam.ivy.scripting.objects.List<ch.ivyteam.ivy.scripting.objects.List<CompositeObject>> childrenDataSources);
+	
+	/**
+	 * 
+	 * @param _templatePath
+	 * @param _outputName
+	 * @param _outputPath
+	 * @param _outputFormat
+	 * @param _mergefields
+	 * @param nestedDataSource
+	 * @return
+	 */
+	public abstract FileOperationMessage generateDocumentWithNestedRegions(String _templatePath, String _outputName, String _outputPath, String _outputFormat, List<TemplateMergeField> _mergefields, ch.ivyteam.ivy.scripting.objects.List<CompositeObject> nestedDataSource);
+	
+	/**
+	 * 
+	 * @param _templatePath
+	 * @param _outputName
+	 * @param _outputPath
+	 * @param _outputFormat
+	 * @param _mergefields
+	 * @param _treeDataSource
+	 * @return
+	 */
+	public abstract FileOperationMessage generateDocumentWithNestedRegions(String _templatePath, String _outputName, String _outputPath, String _outputFormat, List<TemplateMergeField> _mergefields, Tree _treeDataSource);
 	
 	/**
 	 * Method to generate one or more documents each one can be saved in a different destination folder.<br>

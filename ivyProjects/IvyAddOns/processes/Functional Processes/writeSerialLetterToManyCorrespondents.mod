@@ -1,5 +1,5 @@
 [Ivy]
-[>Created: Thu May 19 07:39:35 CEST 2011]
+[>Created: Sun May 13 22:06:19 EDT 2012]
 1249FCC8592E4E39 3.17 #module
 >Proto >Proto Collection #zClass
 ws0 writeSerialLetterToManyCorrespondants Big #zClass
@@ -174,10 +174,11 @@ ws0 f5 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <language>
         <name>This callable produces documents with a List of DocumentTemplate objects and 
 with the help of a document factory Object. Each DocumentTemplate will be 
-turned into a document. The Merge Mail With Regions is supported.
+turned into a document. 
 The Document Factory Object is a Java Object that can parse a document model
 that contains mergefields and replace those mergefields by some String Data.
 
+1. The Merge Mail With Regions is supported.
 A Mail Merge Region is a Table in the template whose rows are going to be automatically filled with some data.
 If your template contains such regions, you have to provide to the DocumentTemplates Objects the datas that should be inserted.
 The DocumentTemplates objects have two fields that can be used for that purpose:
@@ -187,6 +188,17 @@ The DocumentTemplates objects have two fields that can be used for that purpose:
       The name of each Record Field corresponds to a MergeFields in the Table.
 The keys (String) of the Maps are the tables'' names contained in the template. 
 The Names of the tables in the template are given by a Start Mergefield(TableStart:nameOfTheTable).
+2. The Merge Mail With Nested Regions is supported.
+Nested mail merge regions are at least two regions in which one is defined entirely inside the other, so they are “nested” in one another.
+The DocumentTemplates objects have fields/attributes that can be used for that purpose:
+    . List&lt;CompositeObject&gt; parentDataSourceForNestedMailMerge and List&lt;List&lt;CompositeObject&gt;&gt; childrenDataSourcesForNestedMailMerge.
+      With these attributes set, only one nested level is supported: the parent list contains the information for the parent table/region,
+      each child List&lt;CompositeObject&gt; contains the information for one parent data object and is nested in this parent.
+    . List&lt;CompositeObject&gt; nestedDataSourceForNestedMailMerge: In this case each dataclass may contain lists of other nested dataclasses and so on... .
+      There is no limit in nesting regions.
+    . Tree treeData: The first root node of the Tree contains a dataclass as value object. The attributes of this dataclass are used 
+      to fill merge fields outside of the nested regions area.
+      All the children nodes at each level of the Tree contain dataclasses as value that are used to fill the corresponding nested region.
 
 This callable takes some mandatory and some optional input parameters.
 Mandatory input Parameters:
@@ -215,15 +227,12 @@ each FileOperationMessage Object reflects the result of the production of one do
 It contains the list of java.io.File objects created during the mail merge operation.
 
 </name>
-        <nameStyle>218,0,7,23
-155,7,9
+        <nameStyle>378,0,7,23
+945,7,23
+53,0,7,23
+621,7,23
+532,7,23
 1,7,22
-238,7,22
-1,7,21
-527,7,22
-163,7,22
-16,1,2,7,22
-1,1,7,9
 72,7,9
 27,0,7,23
 735,7,9
@@ -236,7 +245,7 @@ It contains the list of java.io.File objects created during the mail merge opera
     </language>
 </elementInfo>
 ' #txt
-ws0 f5 590 27 917 698 -453 -344 #rect
+ws0 f5 590 11 917 890 -453 -440 #rect
 ws0 f5 @|IBIcon #fIcon
 ws0 f5 -657956|-1|-16777216 #nodeStyle
 >Proto ws0 .xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>

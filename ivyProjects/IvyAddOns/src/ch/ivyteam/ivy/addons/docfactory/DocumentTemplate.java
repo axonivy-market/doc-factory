@@ -8,6 +8,7 @@ import java.util.Hashtable;
 import ch.ivyteam.ivy.scripting.objects.CompositeObject;
 import ch.ivyteam.ivy.scripting.objects.List;
 import ch.ivyteam.ivy.scripting.objects.Recordset;
+import ch.ivyteam.ivy.scripting.objects.Tree;
 
 /**
  * @author ec<br>
@@ -54,7 +55,7 @@ public class DocumentTemplate implements Serializable {
 	 */
 	private BaseDocFactory documentFactory=null;
 
-	/** The FileOeprationMessage is a convenient Object to get the results of a Mail Merge from a Document Factory Object.<br>
+	/** The FileOperationMessage is a convenient Object to get the results of a Mail Merge from a Document Factory Object.<br>
 	 * @see ch.ivyteam.ivy.addons.docfactory.FileOperationMessage
 	 */
 	private FileOperationMessage fileOperationMessage= null;
@@ -67,7 +68,26 @@ public class DocumentTemplate implements Serializable {
 	 * Used in case of merge mail with regions for reporting.
 	 */
 	private Hashtable<String, Recordset> tablesNamesAndFieldsHashtable = null;
+	
+	/**
+	 * Used in case of merge mail with nested tables
+	 */
+	private List<CompositeObject> parentDataSourceForNestedMailMerge = null;
+	/**
+	 * Used in case of merge mail with nested tables
+	 */
+	private List<List<CompositeObject>> childrenDataSourcesForNestedMailMerge = null;
 
+	/**
+	 * Used in case of merge mail with nested tables
+	 */
+	private List<CompositeObject> nestedDataSourceForNestedMailMerge = null;
+	
+	/**
+	 * Used as possible Data for MergeMail with Nested Regions
+	 */
+	private Tree treeData = null;
+	
 	/**
 	 * empty constructor
 	 */
@@ -174,7 +194,8 @@ public class DocumentTemplate implements Serializable {
 	}
 
 	/**
-	 * Constructor, instantiates the DocumentTemplate's variable
+	 * Constructor, instantiates the DocumentTemplate's variable.
+	 * Supports Nested merge mail regions for reporting.
 	 * @param _templatePath : the path where to find the template
 	 * @param _outputPath : the path where to save the new generated File
 	 * @param _outputName : the name of the new generated File
@@ -196,6 +217,8 @@ public class DocumentTemplate implements Serializable {
 		}else
 		{
 			this.mergeFields =DataClassToMergefields.transformDataClassInMergeField(_data);
+			this.nestedDataSourceForNestedMailMerge = List.create(CompositeObject.class);
+			this.nestedDataSourceForNestedMailMerge.add(_data);
 		}
 
 		this.fileOperationMessage= new FileOperationMessage();
@@ -273,11 +296,142 @@ public class DocumentTemplate implements Serializable {
 		this.fileOperationMessage.setFiles(List.create(java.io.File.class));
 		this.fileOperationMessage.setType(FileOperationMessage.INFORMATION_MESSAGE);
 	}
+	
+	/**
+	 * Constructor, instantiates the DocumentTemplate's variable
+	 * @param _templatePath : the path where to find the template
+	 * @param _outputPath : the path where to save the new generated File
+	 * @param _outputName : the name of the new generated File
+	 * @param _outputFormat : the format of the new generated File
+	 * @param _data : An initialised DataClass that contains the informations that should be inserted in the document.<br>
+	 * The merge fields of the template have to be the same as the names of the dataClass fields.
+	 * The key is the name of the mergeField that can be found in the template<br>
+	 * The value is the String that will replace the mergeField in the template during the template merging.
+	 * @param _parentDataSourceForNestedMailMerge: List<CompositeObject> parent data
+	 * @param _childrenDataSourcesForNestedMailMerge: List<List<CompositeObject>> child data
+	 * The two last parameters are used together for mail merge with Nested regions. 
+	 * The parentDataSource List contains the DataClasses corresponding to the parent table and the
+	 * childrenDataSource contains the list of DataClasses that are nested in the parent table.
+	 * the parentDataSourceForNestedMailMerge list and childrenDataSourcesForNestedMailMerge list must have the same number of elements.
+	 * The first parent dataclass object correspond to the first child list of dataclasses, the second one to the second one and so on... . 
+	 * Here only one level of nested table is supported.
+	 */
+	public DocumentTemplate(String _templatePath, String _outputPath, String _outputName, String _outputFormat, CompositeObject _data, List<CompositeObject> _parentDataSourceForNestedMailMerge,List<List<CompositeObject>> _childrenDataSourcesForNestedMailMerge) {
+		super();
+		this.templatePath = (_templatePath==null)?"":_templatePath;
+		this.outputPath = (_outputPath==null)?"":_outputPath;
+		this.outputName = (_outputName==null)?"":_outputName;
+		this.outputFormat = (_outputFormat==null)?"":_outputFormat;
+		if(_data == null)
+		{
+			this.mergeFields = List.create(TemplateMergeField.class);
+		}else
+		{
+			this.mergeFields = DataClassToMergefields.transformDataClassInMergeField(_data);
+		}
+
+		if(_parentDataSourceForNestedMailMerge!=null && !_parentDataSourceForNestedMailMerge.isEmpty())
+		{
+			this.setParentDataSourceForNestedMailMerge(_parentDataSourceForNestedMailMerge);
+			if(_childrenDataSourcesForNestedMailMerge!=null && !_childrenDataSourcesForNestedMailMerge.isEmpty())
+			{
+				this.setChildrenDataSourcesForNestedMailMerge(_childrenDataSourcesForNestedMailMerge);
+			}
+		}
+
+		this.fileOperationMessage= new FileOperationMessage();
+		this.fileOperationMessage.setMessage("");
+		this.fileOperationMessage.setFiles(List.create(java.io.File.class));
+		this.fileOperationMessage.setType(FileOperationMessage.INFORMATION_MESSAGE);
+	}
+	
+	/**
+	 * Constructor, instantiates the DocumentTemplate's variable
+	 * @param _templatePath : the path where to find the template
+	 * @param _outputPath : the path where to save the new generated File
+	 * @param _outputName : the name of the new generated File
+	 * @param _outputFormat : the format of the new generated File
+	 * @param _data : An initialised DataClass that contains the informations that should be inserted in the document.<br>
+	 * The merge fields of the template have to be the same as the names of the dataClass fields.
+	 * The key is the name of the mergeField that can be found in the template<br>
+	 * The value is the String that will replace the mergeField in the template during the template merging.
+	 * @param _nestedDataSourceForNestedMailMerge: List of CompositeObject - Used for mail merge with Nested regions. 
+	 * In this case each dataclass may contain lists of other nested dataclasses and so on... .
+	 * There is no limit in nesting regions.
+	 */
+	public DocumentTemplate(String _templatePath, String _outputPath, String _outputName, String _outputFormat, CompositeObject _data, List<CompositeObject> _nestedDataSourceForNestedMailMerge) {
+		super();
+		this.templatePath = (_templatePath==null)?"":_templatePath;
+		this.outputPath = (_outputPath==null)?"":_outputPath;
+		this.outputName = (_outputName==null)?"":_outputName;
+		this.outputFormat = (_outputFormat==null)?"":_outputFormat;
+		if(_data == null)
+		{
+			this.mergeFields = List.create(TemplateMergeField.class);
+		}else
+		{
+			this.mergeFields = DataClassToMergefields.transformDataClassInMergeField(_data);
+		}
+
+		if(_nestedDataSourceForNestedMailMerge!=null && !_nestedDataSourceForNestedMailMerge.isEmpty())
+		{
+			this.setNestedDataSourceForNestedMailMerge(_nestedDataSourceForNestedMailMerge);
+			
+		}
+
+		this.fileOperationMessage= new FileOperationMessage();
+		this.fileOperationMessage.setMessage("");
+		this.fileOperationMessage.setFiles(List.create(java.io.File.class));
+		this.fileOperationMessage.setType(FileOperationMessage.INFORMATION_MESSAGE);
+	}
+	
+	/**
+	 * Constructor, instantiates the DocumentTemplate's variable
+	 * @param _templatePath : the path where to find the template
+	 * @param _outputPath : the path where to save the new generated File
+	 * @param _outputName : the name of the new generated File
+	 * @param _outputFormat : the format of the new generated File
+	 * @param _treeData : Tree used to fill the merge fields contain in the template with nested mail merge regions.<br>
+	 * The root node may contain an initialised DataClass that contains the informations that should be inserted in the document outside of the nested regions.<br>
+	 * The merge fields of the template have to be the same as the names of the dataClass fields.
+	 * The key is the name of the mergeField that can be found in the template<br>
+	 * The value is the String that will replace the mergeField in the template during the template merging.
+	 */
+	public DocumentTemplate(String _templatePath, String _outputPath, String _outputName, String _outputFormat, Tree _treeData) {
+		super();
+		this.templatePath = (_templatePath==null)?"":_templatePath;
+		this.outputPath = (_outputPath==null)?"":_outputPath;
+		this.outputName = (_outputName==null)?"":_outputName;
+		this.outputFormat = (_outputFormat==null)?"":_outputFormat;
+		this.mergeFields = List.create(TemplateMergeField.class);
+		if(_treeData!=null)
+		{
+			if( _treeData.getValue()!=null)
+			{
+				CompositeObject obj;
+				try{
+					obj = (CompositeObject) _treeData.getValue(); 
+					this.mergeFields = DataClassToMergefields.transformDataClassInMergeField(obj);
+				}catch(Exception ex)
+				{
+					//ignore the Exception the _treeData does not have a real DataClass object, 
+					//so we do not have any merge fields.
+				}
+			}
+			this.treeData=_treeData;
+		}
+		
+		this.fileOperationMessage= new FileOperationMessage();
+		this.fileOperationMessage.setMessage("");
+		this.fileOperationMessage.setFiles(List.create(java.io.File.class));
+		this.fileOperationMessage.setType(FileOperationMessage.INFORMATION_MESSAGE);
+	}
 
 	/**
-	 * Try to generate the document with his objects variables.
+	 * Try to generate the document with his objects variables.<br>
+	 * Mail merge with regions and mail merge with nested regions are supported.
 	 * @return the FileOperationMessage that results of the Document Factory mail Merge and File Creation
-	 * @see BaseDocFactory#generateDocument(String, String, String, String, java.util.List)
+	 * 
 	 */
 	public FileOperationMessage generateDocument(){
 		if(this.documentFactory==null)
@@ -302,6 +456,31 @@ public class DocumentTemplate implements Serializable {
 					this.outputFormat, 
 					this.mergeFields, 
 					this.tablesNamesAndFieldsHashtable);
+		}else if(this.parentDataSourceForNestedMailMerge!=null && !this.parentDataSourceForNestedMailMerge.isEmpty()){
+			this.fileOperationMessage = this.documentFactory.generateDocumentWithNestedRegions(
+					this.templatePath, 
+					this.outputName, 
+					this.outputPath, 
+					this.outputFormat, 
+					this.mergeFields, 
+					this.parentDataSourceForNestedMailMerge, 
+					this.childrenDataSourcesForNestedMailMerge);
+		}else if(this.nestedDataSourceForNestedMailMerge!=null && !this.nestedDataSourceForNestedMailMerge.isEmpty()){
+			this.fileOperationMessage = this.documentFactory.generateDocumentWithNestedRegions(
+					this.templatePath, 
+					this.outputName, 
+					this.outputPath, 
+					this.outputFormat, 
+					this.mergeFields, 
+					this.nestedDataSourceForNestedMailMerge);
+		}else if(this.treeData!=null){
+			this.fileOperationMessage = this.documentFactory.generateDocumentWithNestedRegions(
+					this.templatePath, 
+					this.outputName, 
+					this.outputPath, 
+					this.outputFormat, 
+					this.mergeFields, 
+					this.treeData);
 		}else{
 			this.fileOperationMessage = this.documentFactory.generateDocument(
 					this.templatePath, 
@@ -481,6 +660,65 @@ public class DocumentTemplate implements Serializable {
 	 */
 	public Hashtable<String, Recordset> getTablesNamesAndFieldsHashtable() {
 		return tablesNamesAndFieldsHashtable;
+	}
+
+	/**
+	 * @return the parentDataSourceForNestedMailMerge
+	 */
+	public List<CompositeObject> getParentDataSourceForNestedMailMerge() {
+		return parentDataSourceForNestedMailMerge;
+	}
+
+	/**
+	 * @param parentDataSourceForNestedMailMerge the parentDataSourceForNestedMailMerge to set
+	 */
+	public void setParentDataSourceForNestedMailMerge(
+			List<CompositeObject> parentDataSourceForNestedMailMerge) {
+		this.parentDataSourceForNestedMailMerge = parentDataSourceForNestedMailMerge;
+	}
+
+	/**
+	 * @return the childrenDataSourcesForNestedMailMerge
+	 */
+	public List<List<CompositeObject>> getChildrenDataSourcesForNestedMailMerge() {
+		return childrenDataSourcesForNestedMailMerge;
+	}
+
+	/**
+	 * @param childrenDataSourcesForNestedMailMerge the childrenDataSourcesForNestedMailMerge to set
+	 */
+	public void setChildrenDataSourcesForNestedMailMerge(
+			List<List<CompositeObject>> childrenDataSourcesForNestedMailMerge) {
+		this.childrenDataSourcesForNestedMailMerge = childrenDataSourcesForNestedMailMerge;
+	}
+
+	/**
+	 * @return the nestedDataSourceForNestedMailMerge
+	 */
+	public List<CompositeObject> getNestedDataSourceForNestedMailMerge() {
+		return nestedDataSourceForNestedMailMerge;
+	}
+
+	/**
+	 * @param nestedDataSourceForNestedMailMerge the nestedDataSourceForNestedMailMerge to set
+	 */
+	public void setNestedDataSourceForNestedMailMerge(
+			List<CompositeObject> nestedDataSourceForNestedMailMerge) {
+		this.nestedDataSourceForNestedMailMerge = nestedDataSourceForNestedMailMerge;
+	}
+
+	/**
+	 * @return the treeData
+	 */
+	public Tree getTreeData() {
+		return treeData;
+	}
+
+	/**
+	 * @param treeData the treeData to set
+	 */
+	public void setTreeData(Tree treeData) {
+		this.treeData = treeData;
 	}
 
 

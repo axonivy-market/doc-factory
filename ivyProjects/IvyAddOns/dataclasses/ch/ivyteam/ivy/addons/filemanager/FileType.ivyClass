@@ -1,0 +1,20 @@
+FileType #class
+'A FileType represents an arbitrary document type within an application.
+This Object Class is mainly used by the FileTypesController. The DocumentOnServer DataClass has a FileType attribute. This can be a CV for eRecruitment, a bill, a letter_abc etc...
+A file type has a name and a corresponding optional application name.
+The applicationName can be the name of a module or of an Ivy application. (ex: "eRecruitment", "TalentManagement", "xjob" etc...).
+The applicationName allows to distinguish fileTypes with the same name.
+For example the Type "CV" can be used for eRecruitment and also for a company internal talent management system. In that case one may want to distinguish CVs from candidates and CVs from employees. That is possible with this applicationName attribute.
+If a FileType does not have any application name, this type can be seen has generic (cross applications). 
+You can also use file types without application name if you use them in a single application context.
+Important: The file types name and application name association must be unique (SQL constraint: "UNIQUE(name,appname)").' #classComment
+ch.ivyteam.ivy.addons.filemanager #namespace
+id Long #field
+id 'the id of the fileType' #fieldComment
+id PERSISTENT #fieldModifier
+fileTypeName String #field
+fileTypeName 'the name of the file Type' #fieldComment
+fileTypeName PERSISTENT #fieldModifier
+applicationName String #field
+applicationName 'the name of the application to which the file type refers. It may be empty or null.' #fieldComment
+applicationName PERSISTENT #fieldModifier

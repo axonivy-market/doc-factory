@@ -29,8 +29,9 @@ import ch.ivyteam.ivy.security.IUser;
 
 
 /**
- * @author ec
- *
+ * @author Emmanuel Comba<br>
+ * Allows controlling the security feature in the file management.
+ * The Security feature is explained in the IvyAddons documentation.
  */
 public class DirectorySecurityController extends AbstractDirectorySecurityController {
 
@@ -78,7 +79,7 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 		}
 		
 		try{
-			this.securityAdmin=Ivy.var().get("xivy_addons_fileManager_adminRoleName");
+			this.securityAdmin=Ivy.var().get("xivy_addons_fileManager_admin_roleName");
 		}catch(EnvironmentNotAvailableException ex)
 		{
 			Ivy.log().error("Error in constructor DirectorySecurityController. "+ex.getMessage(),ex);
@@ -420,7 +421,7 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 			throw  new IllegalArgumentException("One of the parameter is not set in method canRoleDeleteDirectory(String path, String ivyRoleName) " +
 					" in "+this.getClass());
 		}
-		if(ivyRoleName.trim().equals(Ivy.var().get("xivy_addons_fileManager_adminRoleName")))
+		if(ivyRoleName.trim().equals(Ivy.var().get("xivy_addons_fileManager_admin_roleName")))
 		{
 			return true;
 		}
@@ -444,7 +445,7 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 			throw  new IllegalArgumentException("One of the parameter is not set in method canRoleDeleteFilesInDirectory(String path, String ivyRoleName) " +
 					" in "+this.getClass());
 		}
-		if(ivyRoleName.trim().equals(Ivy.var().get("xivy_addons_fileManager_adminRoleName")))
+		if(ivyRoleName.trim().equals(Ivy.var().get("xivy_addons_fileManager_admin_roleName")))
 		{
 			return true;
 		}
@@ -468,7 +469,7 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 			throw  new IllegalArgumentException("One of the parameter is not set in method canRoleEditFilesInDirectory(String path, String ivyRoleName) " +
 					" in "+this.getClass());
 		}
-		if(ivyRoleName.trim().equals(Ivy.var().get("xivy_addons_fileManager_adminRoleName")))
+		if(ivyRoleName.trim().equals(Ivy.var().get("xivy_addons_fileManager_admin_roleName")))
 		{
 			return true;
 		}
@@ -492,7 +493,7 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 			throw  new IllegalArgumentException("One of the parameter is not set in method canRoleManageDirectorySecurity(String path, String ivyRoleName) " +
 					" in "+this.getClass());
 		}
-		if(ivyRoleName.trim().equals(Ivy.var().get("xivy_addons_fileManager_adminRoleName")))
+		if(ivyRoleName.trim().equals(Ivy.var().get("xivy_addons_fileManager_admin_roleName")))
 		{
 			return true;
 		}
@@ -516,7 +517,7 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 			throw  new IllegalArgumentException("One of the parameter is not set in method canRoleOpenDirectory(String path, String ivyRoleName) " +
 					" in "+this.getClass());
 		}
-		if(ivyRoleName.trim().equals(Ivy.var().get("xivy_addons_fileManager_adminRoleName")))
+		if(ivyRoleName.trim().equals(Ivy.var().get("xivy_addons_fileManager_admin_roleName")))
 		{
 			return true;
 		}
@@ -540,7 +541,7 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 			throw  new IllegalArgumentException("One of the parameter is not set in method canRoleUpdateDirectory(String path, String ivyRoleName) " +
 					" in "+this.getClass());
 		}
-		if(ivyRoleName.trim().equals(Ivy.var().get("xivy_addons_fileManager_adminRoleName")))
+		if(ivyRoleName.trim().equals(Ivy.var().get("xivy_addons_fileManager_admin_roleName")))
 		{
 			return true;
 		}
@@ -1256,6 +1257,7 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 		boolean found = false;
 		if(userRoles==null || userRoles.isEmpty())
 		{
+			Ivy.log().info("isUserFileManagerAdmin user roles empty");
 			return false;
 		}
 		else{

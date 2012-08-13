@@ -258,6 +258,61 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 		}
 		return doc;
 	}
+	
+	public DocumentOnServer getDocumentOnServer(long fileid)
+	throws Exception {
+		DocumentOnServer doc = new DocumentOnServer();
+		if(fileid<=0){
+			return doc;
+		}
+		final String fileId =String.valueOf(fileid);
+		Recordset rset = null;
+		List<Record> recordList= (List<Record>) List.create(Record.class);
+
+		String query="SELECT * FROM "+this.tableName+" WHERE FileId LIKE ?";
+		rset = IvySystemDBReuser.executePreparedStatement(query, 
+				new IPreparedStatementExecutable<Recordset>(){
+
+			public Recordset execute(PreparedStatement stmt) throws PersistencyException {
+				try{
+					stmt.setString(1, fileId);
+					return IvySystemDBReuser.executeStatement(stmt);
+				}catch(SQLException ex){
+					throw new PersistencyException(ex);
+				}
+			}
+		});
+		if(rset!=null)
+		{
+			recordList = rset.toList();
+		}
+		if(rset!=null && !recordList.isEmpty())
+		{
+			//we take the first one, normally just one
+			Record rec = recordList.get(0);
+
+			doc.setFileID(rec.getField("FileId").toString());
+			doc.setFilename(rec.getField("FileName").toString());
+			doc.setPath(rec.getField("FilePath").toString());
+			doc.setFileSize(rec.getField("FileSize").toString());
+			doc.setUserID(rec.getField("CreationUserId").toString());
+			doc.setCreationDate(rec.getField("CreationDate").toString());
+			doc.setCreationTime(rec.getField("CreationTime").toString());
+			doc.setModificationUserID(rec.getField("ModificationUserId").toString());
+			doc.setModificationDate(rec.getField("ModificationDate").toString());
+			doc.setModificationTime(rec.getField("ModificationTime").toString());
+			doc.setLocked(rec.getField("Locked").toString());
+			doc.setLockingUserID(rec.getField("LockingUserId").toString());
+			doc.setDescription(rec.getField("Description").toString());
+			try{
+				doc.setExtension(doc.getFilename().substring(doc.getFilename().lastIndexOf(".")+1));
+			}catch(Exception ex){
+				//Ignore the Exception here
+			}
+
+		}
+		return doc;
+	}
 
 
 	/**
@@ -1058,6 +1113,10 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 		
 		if(_user==null || _user.trim().equals("")){
 			_user= Ivy.session().getSessionUserName();
+		}
+		if(_destinationPath==null || _destinationPath.trim().length()==0)
+		{
+			_destinationPath=FileHandler.getFileDirectoryPath(_files.get(0));
 		}
 		final String destinationPath = formatPathForDirectory(_destinationPath);
 		final String user = _user;
@@ -2095,6 +2154,17 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 		return getDocumentOnServerWithJavaFile(doc);
 
 	}
+	
+	@Override
+	public DocumentOnServer getDocumentOnServerWithJavaFile(long fileid)
+			throws Exception {
+		if(fileid<=0)
+		{
+			return null;
+		}
+		DocumentOnServer doc = this.getDocumentOnServer(fileid);
+		return getDocumentOnServerWithJavaFile(doc);
+	}
 
 	@Override
 	public ArrayList<DocumentOnServer> getDocumentsWithJavaFileInPath(
@@ -2223,6 +2293,4 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 	public int getFile_content_storage_type() {
 		return AbstractFileManagementHandler.FILE_STORAGE_FILESYSTEM;
 	}
-	
-	
 }

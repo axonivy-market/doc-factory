@@ -1,5 +1,5 @@
 [Ivy]
-[>Created: Sat Mar 03 22:10:12 EST 2012]
+[>Created: Wed Jun 20 19:19:15 EDT 2012]
 132D1B65FEDF11D7 3.17 #module
 >Proto >Proto Collection #zClass
 Ds0 DirectorySecurityManagerProcess Big #zClass
@@ -146,6 +146,7 @@ if(!in.isLoaded)
 }
 
 out.isVisible=!in.isVisible;
+panel.SplitPane.setDividerLocation(0.5);
 ' #txt
 Ds0 f3 type ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData #txt
 Ds0 f3 318 116 36 24 20 -2 #rect
@@ -399,12 +400,20 @@ Ds0 f33 actionDecl 'ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.D
 ' #txt
 Ds0 f33 actionTable 'out=in;
 ' #txt
-Ds0 f33 actionCode 'import ch.ivyteam.ivy.addons.filemanager.database.security.DirectorySecurityController;
+Ds0 f33 actionCode 'import ch.ivyteam.ivy.security.IRole;
+import ch.ivyteam.ivy.addons.filemanager.database.security.DirectorySecurityController;
 if(in.#dirTableName==null || in.dirTableName.trim().equalsIgnoreCase("")){
 		in.dirTableName=ivy.var.xivy_addons_fileManager_directoriesTableName.trim();
 	}
 out.securityController = new DirectorySecurityController(in.ivyConnectionName,in.dirTableName,in.schemaName);
-panel.actionsGridBagLayoutPane.enabled=false;' #txt
+panel.actionsGridBagLayoutPane.enabled=false;
+try{
+	out.selectedIRole = panel.rolesTree.getTreeData().value as IRole;
+}catch(Throwable t)
+{
+		
+}
+' #txt
 Ds0 f33 type ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData #txt
 Ds0 f33 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
@@ -904,9 +913,18 @@ Ds0 f89 actionDecl 'ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.D
 ' #txt
 Ds0 f89 actionTable 'out=in;
 ' #txt
-Ds0 f89 actionCode 'if(in.isVisible){
+Ds0 f89 actionCode 'import ch.ivyteam.ivy.security.IRole;
+try{
+	in.selectedIRole = panel.rolesTree.getTreeData().value as IRole;
+}catch(Throwable t)
+{
+		
+}
+if(in.isVisible){
 	panel.mapSelectedIRoleRights();
-}' #txt
+}
+
+' #txt
 Ds0 f89 type ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData #txt
 Ds0 f89 318 156 36 24 20 -2 #rect
 Ds0 f89 @|RichDialogProcessStepIcon #fIcon

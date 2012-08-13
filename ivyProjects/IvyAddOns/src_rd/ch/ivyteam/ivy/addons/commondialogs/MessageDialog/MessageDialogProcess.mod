@@ -1,6 +1,6 @@
 [Ivy]
-[>Created: Wed May 27 21:42:59 CEST 2009]
-1180E22A4CFB14EE 3.11 #module
+[>Created: Fri Aug 10 16:16:14 EDT 2012]
+1180E22A4CFB14EE 3.17 #module
 >Proto >Proto Collection #zClass
 Ms0 MessageDialogProcess Big #zClass
 Ms0 RD #cInfo
@@ -27,10 +27,14 @@ Ms0 @RichDialogProcessStep f10 '' #zField
 Ms0 @PushWFArc f12 '' #zField
 Ms0 @PushWFArc f11 '' #zField
 Ms0 @PushWFArc f7 '' #zField
+Ms0 @RichDialogInitStart f6 '' #zField
+Ms0 @RichDialogProcessEnd f13 '' #zField
+Ms0 @PushWFArc f14 '' #zField
 >Proto Ms0 Ms0 MessageDialogProcess #zField
 Ms0 f0 guid 1180E3DBCE9DCCB8 #txt
 Ms0 f0 type ch.ivyteam.ivy.addons.commondialogs.MessageDialog.MessageDialogData #txt
 Ms0 f0 method showMessage(String) #txt
+Ms0 f0 disableUIEvents false #txt
 Ms0 f0 inParameterDecl 'ch.ivyteam.ivy.richdialog.exec.RdMethodCallEvent methodEvent = event as ch.ivyteam.ivy.richdialog.exec.RdMethodCallEvent;
 <java.lang.String message> param = methodEvent.getInputArguments();
 ' #txt
@@ -53,6 +57,12 @@ Ms0 f0 @|RichDialogInitStartIcon #fIcon
 Ms0 f1 type ch.ivyteam.ivy.addons.commondialogs.MessageDialog.MessageDialogData #txt
 Ms0 f1 27 251 26 26 14 0 #rect
 Ms0 f1 @|RichDialogProcessEndIcon #fIcon
+Ms0 f3 guid 1180E404452D8691 #txt
+Ms0 f3 type ch.ivyteam.ivy.addons.commondialogs.MessageDialog.MessageDialogData #txt
+Ms0 f3 actionDecl 'ch.ivyteam.ivy.addons.commondialogs.MessageDialog.MessageDialogData out;
+' #txt
+Ms0 f3 actionTable 'out=in;
+' #txt
 Ms0 f3 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -61,12 +71,6 @@ Ms0 f3 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 </nameStyle>
     </language>
 </elementInfo>
-' #txt
-Ms0 f3 guid 1180E404452D8691 #txt
-Ms0 f3 type ch.ivyteam.ivy.addons.commondialogs.MessageDialog.MessageDialogData #txt
-Ms0 f3 actionDecl 'ch.ivyteam.ivy.addons.commondialogs.MessageDialog.MessageDialogData out;
-' #txt
-Ms0 f3 actionTable 'out=in;
 ' #txt
 Ms0 f3 478 30 20 20 13 0 #rect
 Ms0 f3 @|RichDialogProcessStartIcon #fIcon
@@ -98,6 +102,7 @@ Ms0 f2 @|RichDialogProcessStepIcon #fIcon
 Ms0 f8 guid 119CE58615425133 #txt
 Ms0 f8 type ch.ivyteam.ivy.addons.commondialogs.MessageDialog.MessageDialogData #txt
 Ms0 f8 method showMessageWithTitle(String,String) #txt
+Ms0 f8 disableUIEvents false #txt
 Ms0 f8 inParameterDecl 'ch.ivyteam.ivy.richdialog.exec.RdMethodCallEvent methodEvent = event as ch.ivyteam.ivy.richdialog.exec.RdMethodCallEvent;
 <java.lang.String aMessageTitle,java.lang.String aMessageText> param = methodEvent.getInputArguments();
 ' #txt
@@ -147,6 +152,29 @@ Ms0 f11 40 156 40 188 #arcP
 Ms0 f7 expr out #txt
 Ms0 f7 40 212 40 251 #arcP
 Ms0 f7 0 0.34134107728219387 0 0 #arcLabel
+Ms0 f6 guid 139122E01296CCF3 #txt
+Ms0 f6 type ch.ivyteam.ivy.addons.commondialogs.MessageDialog.MessageDialogData #txt
+Ms0 f6 method start() #txt
+Ms0 f6 disableUIEvents true #txt
+Ms0 f6 inParameterDecl 'ch.ivyteam.ivy.richdialog.exec.RdMethodCallEvent methodEvent = event as ch.ivyteam.ivy.richdialog.exec.RdMethodCallEvent;
+<> param = methodEvent.getInputArguments();
+' #txt
+Ms0 f6 outParameterDecl '<> result;
+' #txt
+Ms0 f6 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>start()</name>
+    </language>
+</elementInfo>
+' #txt
+Ms0 f6 214 182 20 20 13 0 #rect
+Ms0 f6 @|RichDialogInitStartIcon #fIcon
+Ms0 f13 type ch.ivyteam.ivy.addons.commondialogs.MessageDialog.MessageDialogData #txt
+Ms0 f13 214 238 20 20 13 0 #rect
+Ms0 f13 @|RichDialogProcessEndIcon #fIcon
+Ms0 f14 expr out #txt
+Ms0 f14 224 202 224 238 #arcP
 >Proto Ms0 .xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -177,3 +205,5 @@ Ms0 f2 mainOut f11 tail #connect
 Ms0 f11 head f10 mainIn #connect
 Ms0 f10 mainOut f7 tail #connect
 Ms0 f7 head f1 mainIn #connect
+Ms0 f6 mainOut f14 tail #connect
+Ms0 f14 head f13 mainIn #connect

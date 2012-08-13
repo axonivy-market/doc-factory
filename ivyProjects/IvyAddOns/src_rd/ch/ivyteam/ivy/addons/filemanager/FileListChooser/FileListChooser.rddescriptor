@@ -102,6 +102,22 @@ and a pattern that will filter the list of displayed files.</description>
             <nullPermitted>false</nullPermitted>
         </inputParameter>
     </startMethod>
+    <startMethod>
+        <name>start</name>
+        <description></description>
+        <inputParameter>
+            <name>configurationController</name>
+            <description>The configuration contains all the necessary informations to get the files and to instanciate the fileManagementHandler</description>
+            <parameterType>ch.ivyteam.ivy.addons.filemanager.configuration.BasicConfigurationController</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </inputParameter>
+        <inputParameter>
+            <name>searchPattern</name>
+            <description>Allows to filter the listed files with a pattern. Is not mandatory.</description>
+            <parameterType>String</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </inputParameter>
+    </startMethod>
     <firedEvent>
         <name>fileSelectionChanged</name>
         <description>@Subscribers event sent whenever the selected File changes. It sends a DocumentOnServer Object.&#xD;

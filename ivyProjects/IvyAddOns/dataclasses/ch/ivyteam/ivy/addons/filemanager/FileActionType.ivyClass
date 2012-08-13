@@ -1,0 +1,8 @@
+FileActionType #class
+ch.ivyteam.ivy.addons.filemanager #namespace
+id Number #field
+id 'the file action type id' #fieldComment
+type Number #field
+type 'the type number (ex: 1 = file created, 2 = file content changed...)' #fieldComment
+desc String #field
+desc 'the description of the file action. For the moment it is translated in en, fr, de. ' #fieldComment

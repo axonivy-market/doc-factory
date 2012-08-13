@@ -41,6 +41,26 @@ In some processes a user has to choose some Files to upload on the server at a t
             <nullPermitted>false</nullPermitted>
         </inputParameter>
     </method>
+    <method>
+        <name>_getUploadedFileFromUploadHandler</name>
+        <description></description>
+        <inputParameter>
+            <name>returnedMessage</name>
+            <description></description>
+            <parameterType>ch.ivyteam.ivy.addons.filemanager.ReturnedMessage</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </inputParameter>
+    </method>
+    <method>
+        <name>_uploadDone</name>
+        <description></description>
+        <inputParameter>
+            <name>filesUploaded</name>
+            <description></description>
+            <parameterType>List&lt;java.io.File&gt;</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </inputParameter>
+    </method>
     <startMethod>
         <name>start</name>
         <description>Default Rich Dialog start
@@ -53,6 +73,16 @@ This method can not be changed or deleted!</description>
             <name>serverPath</name>
             <description></description>
             <parameterType>String</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </inputParameter>
+    </startMethod>
+    <startMethod>
+        <name>start</name>
+        <description>start with a configurationController so that one can upload files that are stored in the DB as BLOBs</description>
+        <inputParameter>
+            <name>configurationController</name>
+            <description></description>
+            <parameterType>ch.ivyteam.ivy.addons.filemanager.configuration.BasicConfigurationController</parameterType>
             <nullPermitted>false</nullPermitted>
         </inputParameter>
     </startMethod>

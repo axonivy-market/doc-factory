@@ -12,6 +12,8 @@ import ch.ivyteam.ivy.scripting.objects.Tree;
 import ch.ivyteam.ivy.addons.filemanager.KeyValuePair;
 import ch.ivyteam.ivy.addons.filemanager.DocumentOnServer;
 import ch.ivyteam.ivy.addons.filemanager.ReturnedMessage;
+import ch.ivyteam.ivy.addons.filemanager.configuration.BasicConfigurationController;
+import ch.ivyteam.ivy.addons.filemanager.database.fileaction.FileActionHistoryController;
 import ch.ivyteam.ivy.addons.filemanager.database.security.AbstractDirectorySecurityController;
 
 /**
@@ -44,6 +46,23 @@ public abstract class AbstractFileManagementHandler {
 	 */
 	public static int file_content_storage_type = FILE_STORAGE_FILESYSTEM;
 	
+	private FileActionHistoryController fileActionHistoryController = null;
+	
+	/**
+	 * @return the fac or null if it was not set
+	 */
+	public FileActionHistoryController getFileActionHistoryController() {
+		return fileActionHistoryController;
+	}
+
+	/**
+	 * Set the FileActionHistoryController if the file MAnagement system uses the action history feature,
+	 * @param fac the fac to set
+	 */
+	public void setFileActionHistoryController(FileActionHistoryController fac) {
+		this.fileActionHistoryController = fac;
+	}
+
 	/**
 	 * Returns the file content storage type.<br />
 	 * @see AbstractFileManagementHandler.FILE_STORAGE_FILESYSTEM <br />
@@ -170,6 +189,17 @@ public abstract class AbstractFileManagementHandler {
 	 */
 	public abstract DocumentOnServer getDocumentOnServerWithJavaFile(String _filePath) throws Exception;
 
+	/**
+	 * Returns the documentOnServer Object pointing to the given file path with its java.io.File attribute set with the corresponding File.<br>
+	 * If the Files are stored on the File System, then the java.io.File will be the existing File.<br>
+	 * If the File content is stored into a DB, a new non persistent Ivy File will be created with the content,<br>
+	 * and the corresponding java.io.File will be used to set the java.io.File attribute of the resulting documentOnServer.
+	 * @param _fileid: the file id
+	 * @return the documentOnServer Object with its java.io.File attribute set. Can be null if no documentOnServer was found on this path.
+	 * @throws Exception
+	 */
+	public abstract DocumentOnServer getDocumentOnServerWithJavaFile(long _fileid) throws Exception;
+	
 	/**
 	 * Get all the DocumentOnsErver Objects that are listed under a specified path<br>
 	 * @param _path: String representing the path of the directory that contains the files<br>
@@ -353,7 +383,6 @@ public abstract class AbstractFileManagementHandler {
 	 * @return the ch.ivyteam.ivy.addons.filemanager.DocumentOnServer corresponding to the given path.<br>
 	 */
 	public abstract DocumentOnServer getDocumentOnServer(String _filePath) throws Exception;
-	
 	
 	/**
 	 * Saves a ch.ivyteam.ivy.addons.filemanager.DocumentOnServer in the persistence System (File System, database...)
@@ -662,7 +691,7 @@ public abstract class AbstractFileManagementHandler {
 	 * The value of this propertie should be the full qualified name of the class (namespace included).<br>
 	 * If there is no such property, then it returns an Instance of the default fileManagementHandler: a FileManagementDBHandler,<br>
 	 * with a call to its constructor<br> {@code FileManagementDBHandler(String ivyDBConnectionName, String tableName)}<br>
-	 * Here the ivyDBConnectionName will be "uploadManager", and the tableName "UPLOADEDFILES".<br>
+	 * Here the ivyDBConnectionName will be "filemanager", and the tableName "UPLOADEDFILES".<br>
 	 * If you use a database to store the files indexation, and you want to use other arguments
 	 * @return the AbstractFileManagementHandler Instance to handle the file indexation storage.
 	 * @throws Exception
@@ -678,6 +707,36 @@ public abstract class AbstractFileManagementHandler {
 			fileManagementHandler= new FileManagementDBHandlerUniversal("filemanager","UPLOADEDFILES");
 		}
 
+		return fileManagementHandler;
+	}
+	
+	/**
+	 * Best and recommended way to get an Instance of a FileManagementHandler Object.<br>
+	 * The given BasicConfigurationController Object contains all the necessary information 
+	 * to choose between the different possible implementations of the FileManagementHandler Objects.
+	 * @param conf
+	 * @return the right fileManagementHandler corresponding to the provided BasicConfigurationController Object
+	 * @throws Exception
+	 */
+	public static AbstractFileManagementHandler getInstance(BasicConfigurationController conf)throws Exception{
+		AbstractFileManagementHandler fileManagementHandler=null;
+		if(conf==null)
+		{
+			throw new Exception("InvalidConfigurationException: the configuration provided to get the FileManagementHandler instance is null.");
+		}else if(!conf.isConfigurationCorrect())
+		{
+			throw new Exception("InvalidConfigurationException: the configuration provided to get the FileManagementHandler instance is not consistant.");
+		}else{
+			if(conf.isUseIvySystemDB())
+			{
+				fileManagementHandler = new FileManagementIvySystemDBHandler();
+			}else if(conf.isStoreFilesInDB())
+			{
+				fileManagementHandler = new FileStoreDBHandler(conf);
+			}else{
+				fileManagementHandler = new FileManagementDBHandlerUniversal(conf);
+			}
+		}
 		return fileManagementHandler;
 	}
 

@@ -3,7 +3,7 @@ DocumentOnServer #class
 Its elements are the fields found in the DB table used to store the FIles''informations.' #classComment
 ch.ivyteam.ivy.addons.filemanager #namespace
 fileID String #field
-fileID 'Id of the File' #fieldComment
+fileID 'String representation of the File ID' #fieldComment
 path String #field
 path 'path on the server' #fieldComment
 filename String #field
@@ -30,12 +30,13 @@ description String #field
 description 'The description of the document' #fieldComment
 extension String #field
 extension 'The file Extension' #fieldComment
-content Binary #field
-content 'The file content used in case of storage in database' #fieldComment
 ivyFile File #field
 ivyFile 'ivy File to be able to edit the corresponding File in case of DB storage.' #fieldComment
 javaFile java.io.File #field
 javaFile 'java io File, edit a physically stored File' #fieldComment
 versionnumber Number #field
 versionnumber 'if versioning is activated, this is the document version number.' #fieldComment
-versionnumber PERSISTENT #fieldModifier
+fileType ch.ivyteam.ivy.addons.filemanager.FileType #field
+fileType 'The FileType if this is implemented. The FileType.id is stored in the file meta data table. Is null if this feature is not implemented.' #fieldComment
+editedInSession Boolean #field
+editedInSession 'Used as internal flag for history tracking.' #fieldComment

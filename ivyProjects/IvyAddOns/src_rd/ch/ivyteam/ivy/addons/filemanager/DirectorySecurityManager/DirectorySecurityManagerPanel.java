@@ -14,6 +14,8 @@ import com.ulcjava.base.application.BorderFactory;
 import com.ulcjava.base.application.util.Color;
 import com.ulcjava.base.application.border.ULCTitledBorder;
 import com.ulcjava.base.application.util.Font;
+import ch.ivyteam.ivy.richdialog.widgets.containers.RSplitPane;
+import com.ulcjava.base.application.ULCSplitPane;
 
 /**
  * <p>DirectorySecurityManagerPanel is a rich dialog panel implementation.
@@ -31,7 +33,6 @@ implements IRichDialogPanel
 private RGridBagLayoutPane headGridBagLayoutPane = null;
 private RLabel Label = null;
 private RButton closeButton = null;
-private RGridBagLayoutPane mainGridBagLayoutPane = null;
 private RLabel ivyRolesLabel = null;
 private RScrollPane treeScrollPane = null;
 private RTree rolesTree = null;
@@ -44,6 +45,9 @@ private RCheckBox cwfCheckBox = null;
 private RCheckBox cdfCheckBox = null;
 private RLabel mainLabel = null;
 private RLabel iconLabel = null;
+private RSplitPane SplitPane = null;
+private RGridBagLayoutPane leftGridBagLayoutPane = null;
+private RGridBagLayoutPane rightGridBagLayoutPane = null;
 /**
    * Create a new instance of DirectorySecurityManagerPanel
    */
@@ -62,7 +66,7 @@ private RLabel iconLabel = null;
         this.setPreferredSize(new com.ulcjava.base.application.util.Dimension(818,502));
         this.setBorder(BorderFactory.createTitledBorder(null, "", ULCTitledBorder.DEFAULT_JUSTIFICATION, ULCTitledBorder.DEFAULT_POSITION, new Font("Tahoma", Font.PLAIN, 11), new Color(23, 64, 140)));
         this.add(getHeadGridBagLayoutPane(), new com.ulcjava.base.application.GridBagConstraints(0, 1, 1, 1, -1, -1, com.ulcjava.base.application.GridBagConstraints.CENTER, com.ulcjava.base.application.GridBagConstraints.NONE, new com.ulcjava.base.application.util.Insets(0,0,0,0), 0, 0));
-        this.add(getMainGridBagLayoutPane(), new com.ulcjava.base.application.GridBagConstraints(0, 2, 1, 1, -1, -1, com.ulcjava.base.application.GridBagConstraints.CENTER, com.ulcjava.base.application.GridBagConstraints.NONE, new com.ulcjava.base.application.util.Insets(0,0,0,0), 0, 0));
+        this.add(getSplitPane(), new com.ulcjava.base.application.GridBagConstraints(0, 3, 1, 1, -1, -1, com.ulcjava.base.application.GridBagConstraints.CENTER, com.ulcjava.base.application.GridBagConstraints.NONE, new com.ulcjava.base.application.util.Insets(0,0,0,0), 0, 0));
   }
 
 /**
@@ -114,24 +118,6 @@ private RButton getCloseButton() {
 }
 
 /**
- * This method initializes mainGridBagLayoutPane	
- * 	
- * @return ch.ivyteam.ivy.richdialog.widgets.containers.RGridBagLayoutPane	
- */
-private RGridBagLayoutPane getMainGridBagLayoutPane() {
-	if (mainGridBagLayoutPane == null) {
-		mainGridBagLayoutPane = new RGridBagLayoutPane();
-		mainGridBagLayoutPane.setName("mainGridBagLayoutPane");
-		mainGridBagLayoutPane.setStyleProperties("{/insetsBottom \"10\"/insetsTop \"10\"/insetsRight \"10\"/fill \"BOTH\"/insetsLeft \"10\"/weightY \"1\"/weightX \"1\"}");
-		mainGridBagLayoutPane.add(getIvyRolesLabel(), new com.ulcjava.base.application.GridBagConstraints(0, 0, 1, 1, -1, -1, com.ulcjava.base.application.GridBagConstraints.CENTER, com.ulcjava.base.application.GridBagConstraints.NONE, new com.ulcjava.base.application.util.Insets(0,0,0,0), 0, 0));
-		mainGridBagLayoutPane.add(getTreeScrollPane(), new com.ulcjava.base.application.GridBagConstraints(0, 1, 1, 1, -1, -1, com.ulcjava.base.application.GridBagConstraints.CENTER, com.ulcjava.base.application.GridBagConstraints.NONE, new com.ulcjava.base.application.util.Insets(0,0,0,0), 0, 0));
-		mainGridBagLayoutPane.add(getManagedActionsLabel(), new com.ulcjava.base.application.GridBagConstraints(1, 0, 1, 1, -1, -1, com.ulcjava.base.application.GridBagConstraints.CENTER, com.ulcjava.base.application.GridBagConstraints.NONE, new com.ulcjava.base.application.util.Insets(0,0,0,0), 0, 0));
-		mainGridBagLayoutPane.add(getActionsGridBagLayoutPane(), new com.ulcjava.base.application.GridBagConstraints(1, 1, 1, 1, -1, -1, com.ulcjava.base.application.GridBagConstraints.CENTER, com.ulcjava.base.application.GridBagConstraints.NONE, new com.ulcjava.base.application.util.Insets(0,0,0,0), 0, 0));
-	}
-	return mainGridBagLayoutPane;
-}
-
-/**
  * This method initializes ivyRolesLabel	
  * 	
  * @return ch.ivyteam.ivy.richdialog.widgets.components.RLabel	
@@ -171,6 +157,7 @@ private RTree getRolesTree() {
 	if (rolesTree == null) {
 		rolesTree = new RTree();
 		rolesTree.setName("rolesTree");
+		rolesTree.setAutoSelectFirstEntry(true);
 		rolesTree.setModelConfiguration("{/showTableheader \"true\"/autoTableheader \"false\"/showtooltip \"false\"/showIcons \"false\"/dynamicTreeLoadMode \"LOAD_FOR_RENDER_PARENT\"/version \"3.0\"/columns {{/patterns {{/result \"result=value\"/version \"3.0\"/tooltip \"\"/icon \"\"/header \"\"/field \"\"/patternMode \"ALL\"/patternValue \"default\"}{/result \"result=IF(entry.getName().trim().equals(\\\"\\\"),entry.getDisplayName(),entry.getName())\"/version \"3.0\"/icon \"result=ivy.cms.cr(\\\"/ch/ivyteam/ivy/addons/icons/roles/24\\\")\"/field \"\"/patternMode \"INSTANCE\"/patternValue \"ch.ivyteam.ivy.security.IRole\"}}/version \"3.0\"}}}");
 	}
 	return rolesTree;
@@ -201,7 +188,7 @@ private RGridBagLayoutPane getActionsGridBagLayoutPane() {
 		Filler1.setStyleProperties("{/fill \"VERTICAL\"/weightY \"1\"}");
 		actionsGridBagLayoutPane = new RGridBagLayoutPane();
 		actionsGridBagLayoutPane.setName("actionsGridBagLayoutPane");
-		actionsGridBagLayoutPane.setStyleProperties("{/fill \"BOTH\"/insetsLeft \"20\"/weightY \"1\"/weightX \"1\"}");
+		actionsGridBagLayoutPane.setStyleProperties("{/fill \"BOTH\"/weightY \"1\"/weightX \"1\"}");
 		actionsGridBagLayoutPane.setCornerRadius(0);
 		actionsGridBagLayoutPane.setBorder(BorderFactory.createTitledBorder(null, "", ULCTitledBorder.DEFAULT_JUSTIFICATION, ULCTitledBorder.DEFAULT_POSITION, new Font("Tahoma", Font.PLAIN, 11), new Color(23, 64, 140)));
 		actionsGridBagLayoutPane.add(Filler1, new com.ulcjava.base.application.GridBagConstraints(1, 6, 1, 1, -1, -1, com.ulcjava.base.application.GridBagConstraints.CENTER, com.ulcjava.base.application.GridBagConstraints.NONE, new com.ulcjava.base.application.util.Insets(0,0,0,0), 0, 0));
@@ -318,5 +305,52 @@ private RLabel getIconLabel() {
 		iconLabel.setIconUri("<%=ivy.cms.cr(\"/ch/ivyteam/ivy/addons/icons/folder/48\")%>");
 	}
 	return iconLabel;
+}
+
+/**
+ * This method initializes SplitPane	
+ * 	
+ * @return ch.ivyteam.ivy.richdialog.widgets.containers.RSplitPane	
+ */
+private RSplitPane getSplitPane() {
+	if (SplitPane == null) {
+		SplitPane = new RSplitPane();
+		SplitPane.setName("SplitPane");
+		SplitPane.setStyleProperties("{/dividerLocation \"0.5\"/orientation \"HORIZONTAL_SPLIT\"/fill \"BOTH\"}");
+		SplitPane.setDividerLocation(300);
+		SplitPane.setRightComponent(getRightGridBagLayoutPane());
+		SplitPane.setLeftComponent(getLeftGridBagLayoutPane());
+	}
+	return SplitPane;
+}
+
+/**
+ * This method initializes leftGridBagLayoutPane	
+ * 	
+ * @return ch.ivyteam.ivy.richdialog.widgets.containers.RGridBagLayoutPane	
+ */
+private RGridBagLayoutPane getLeftGridBagLayoutPane() {
+	if (leftGridBagLayoutPane == null) {
+		leftGridBagLayoutPane = new RGridBagLayoutPane();
+		leftGridBagLayoutPane.setName("leftGridBagLayoutPane");
+		leftGridBagLayoutPane.add(getIvyRolesLabel(), new com.ulcjava.base.application.GridBagConstraints(0, 0, 1, 1, -1, -1, com.ulcjava.base.application.GridBagConstraints.CENTER, com.ulcjava.base.application.GridBagConstraints.NONE, new com.ulcjava.base.application.util.Insets(0,0,0,0), 0, 0));
+		leftGridBagLayoutPane.add(getTreeScrollPane(), new com.ulcjava.base.application.GridBagConstraints(0, 1, 1, 1, -1, -1, com.ulcjava.base.application.GridBagConstraints.CENTER, com.ulcjava.base.application.GridBagConstraints.NONE, new com.ulcjava.base.application.util.Insets(0,0,0,0), 0, 0));
+	}
+	return leftGridBagLayoutPane;
+}
+
+/**
+ * This method initializes rightGridBagLayoutPane	
+ * 	
+ * @return ch.ivyteam.ivy.richdialog.widgets.containers.RGridBagLayoutPane	
+ */
+private RGridBagLayoutPane getRightGridBagLayoutPane() {
+	if (rightGridBagLayoutPane == null) {
+		rightGridBagLayoutPane = new RGridBagLayoutPane();
+		rightGridBagLayoutPane.setName("rightGridBagLayoutPane");
+		rightGridBagLayoutPane.add(getManagedActionsLabel(), new com.ulcjava.base.application.GridBagConstraints(0, 0, 1, 1, -1, -1, com.ulcjava.base.application.GridBagConstraints.CENTER, com.ulcjava.base.application.GridBagConstraints.NONE, new com.ulcjava.base.application.util.Insets(0,0,0,0), 0, 0));
+		rightGridBagLayoutPane.add(getActionsGridBagLayoutPane(), new com.ulcjava.base.application.GridBagConstraints(0, 1, 1, 1, -1, -1, com.ulcjava.base.application.GridBagConstraints.CENTER, com.ulcjava.base.application.GridBagConstraints.NONE, new com.ulcjava.base.application.util.Insets(0,0,0,0), 0, 0));
+	}
+	return rightGridBagLayoutPane;
 }
 }  //  @jve:decl-index=0:visual-constraint="10,10"

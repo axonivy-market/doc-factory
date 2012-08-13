@@ -19,3 +19,8 @@ panelId Number #field
 panelId PERSISTENT #fieldModifier
 isSamePanelId Boolean #field
 isSamePanelId PERSISTENT #fieldModifier
+configurationController ch.ivyteam.ivy.addons.filemanager.configuration.BasicConfigurationController #field
+configurationController PERSISTENT #fieldModifier
+documentOnServer ch.ivyteam.ivy.addons.filemanager.DocumentOnServer #field
+documentOnServer PERSISTENT #fieldModifier
+fileManagementHandler ch.ivyteam.ivy.addons.filemanager.database.AbstractFileManagementHandler #field

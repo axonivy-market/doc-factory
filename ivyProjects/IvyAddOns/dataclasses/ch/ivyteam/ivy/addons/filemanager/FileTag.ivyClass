@@ -1,0 +1,12 @@
+FileTag #class
+'A fileTag is a String tag that can contains any information.
+Each tag refers to a precise document. Each document can have from 0 to n tags.
+Example: you can "tag" all the documents attached to a particular candidate with the following tag "candidate.id.346". 
+The convention used for tags is free.' #classComment
+ch.ivyteam.ivy.addons.filemanager #namespace
+id Long #field
+id PERSISTENT #fieldModifier
+fileId Long #field
+fileId PERSISTENT #fieldModifier
+tag String #field
+tag PERSISTENT #fieldModifier

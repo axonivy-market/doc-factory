@@ -64,7 +64,7 @@ public class DataClassToMergefields {
 		}
 		Recordset rs = new Recordset();
 		rs.add(compositeObjectsList.get(0));
-		Ivy.log().info("Recordset: "+rs);
+		//Ivy.log().info("Recordset: "+rs);
 		for (int i = 1; i < compositeObjectsList.size(); i++){
 			//Check List consistency: all the compositeObjects have to have the same type
 			if (compositeObjectsList.get(i).getClass().getName() != compositeObjectsList.get(i-1).getClass().getName())
