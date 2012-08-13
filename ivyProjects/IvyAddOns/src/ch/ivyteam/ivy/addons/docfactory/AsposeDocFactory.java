@@ -19,6 +19,7 @@ import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.richdialog.exec.panel.IRichDialogPanel;
 import ch.ivyteam.ivy.scripting.objects.CompositeObject;
 import ch.ivyteam.ivy.scripting.objects.Recordset;
+import ch.ivyteam.ivy.scripting.objects.Tree;
 import ch.ivyteam.ivy.addons.docfactory.TemplateMergeField;
 import ch.ivyteam.ivy.addons.util.RDCallbackMethodHandler;
 import ch.ivyteam.ivy.addons.docfactory.BaseDocFactory;
@@ -221,8 +222,30 @@ public class AsposeDocFactory extends BaseDocFactory{
 						_documentTemplate.getOutputFormat(),
 						_documentTemplate.getMergeFields(), 
 						_documentTemplate.getTablesNamesAndFieldsmap());
-			}else{
-				return generateDocument(_documentTemplate.getTemplatePath(),
+			}else if(_documentTemplate.getParentDataSourceForNestedMailMerge()!=null && !_documentTemplate.getParentDataSourceForNestedMailMerge().isEmpty()){
+				return generateDocumentWithNestedRegions(_documentTemplate.getTemplatePath(),
+						_documentTemplate.getOutputName(),
+						_documentTemplate.getOutputPath(),
+						_documentTemplate.getOutputFormat(),
+						_documentTemplate.getMergeFields(), 
+						_documentTemplate.getParentDataSourceForNestedMailMerge(), 
+						_documentTemplate.getChildrenDataSourcesForNestedMailMerge());
+			}else if(_documentTemplate.getNestedDataSourceForNestedMailMerge()!=null && !_documentTemplate.getNestedDataSourceForNestedMailMerge().isEmpty()){
+				return generateDocumentWithNestedRegions(_documentTemplate.getTemplatePath(),
+						_documentTemplate.getOutputName(),
+						_documentTemplate.getOutputPath(),
+						_documentTemplate.getOutputFormat(),
+						_documentTemplate.getMergeFields(), 
+						_documentTemplate.getNestedDataSourceForNestedMailMerge());
+			}else if(_documentTemplate.getTreeData()!=null){
+				return generateDocumentWithNestedRegions(_documentTemplate.getTemplatePath(),
+						_documentTemplate.getOutputName(),
+						_documentTemplate.getOutputPath(),
+						_documentTemplate.getOutputFormat(),
+						_documentTemplate.getMergeFields(), 
+						_documentTemplate.getTreeData());
+			}
+			else{return generateDocument(_documentTemplate.getTemplatePath(),
 						_documentTemplate.getOutputName(),
 						_documentTemplate.getOutputPath(),
 						_documentTemplate.getOutputFormat(),
@@ -977,20 +1000,18 @@ public class AsposeDocFactory extends BaseDocFactory{
 		ArrayList<MailMergeDataSource> mmds = new ArrayList<MailMergeDataSource>();
 		if(_documentTemplate.getTablesNamesAndFieldsHashtable() != null && !_documentTemplate.getTablesNamesAndFieldsHashtable().isEmpty())
 		{
-			if(_documentTemplate.getTablesNamesAndFieldsHashtable()!=null && !_documentTemplate.getTablesNamesAndFieldsHashtable().isEmpty())
-			{
-				Set<String> tables = _documentTemplate.getTablesNamesAndFieldsHashtable().keySet();
-				Iterator<String> iter = tables.iterator();
-				while(iter.hasNext()){
-					String key = iter.next();
-					try{
-						mmds.add(new MailMergeDataSource(_documentTemplate.getTablesNamesAndFieldsHashtable().get(key), key));
-					}catch(Exception ex)
-					{
-						Ivy.log().error("The DataClass Objects provided to generateDocumentWithRegions are not all from the same Type. This is not allowed. The process will ignore the table "+key, ex);
-					}
+			Set<String> tables = _documentTemplate.getTablesNamesAndFieldsHashtable().keySet();
+			Iterator<String> iter = tables.iterator();
+			while(iter.hasNext()){
+				String key = iter.next();
+				try{
+					mmds.add(new MailMergeDataSource(_documentTemplate.getTablesNamesAndFieldsHashtable().get(key), key));
+				}catch(Exception ex)
+				{
+					Ivy.log().error("The DataClass Objects provided to generateDocumentWithRegions are not all from the same Type. This is not allowed. The process will ignore the table "+key, ex);
 				}
 			}
+
 		}else if(_documentTemplate.getTablesNamesAndFieldsmap() != null && !_documentTemplate.getTablesNamesAndFieldsmap().isEmpty())
 		{
 			Set<String> tables = _documentTemplate.getTablesNamesAndFieldsmap().keySet();
@@ -1004,6 +1025,19 @@ public class AsposeDocFactory extends BaseDocFactory{
 					Ivy.log().error("The DataClass Objects provided to generateDocumentWithRegions are not all from the same Type. This is not allowed. The process will ignore the table "+key, ex);
 				}
 			}
+		}
+
+		if(_documentTemplate.getParentDataSourceForNestedMailMerge()!=null && !_documentTemplate.getParentDataSourceForNestedMailMerge().isEmpty()){
+			mmds.add(new MailMergeDataSource(_documentTemplate.getParentDataSourceForNestedMailMerge(), _documentTemplate.getChildrenDataSourcesForNestedMailMerge()));
+		}
+
+		if(_documentTemplate.getNestedDataSourceForNestedMailMerge()!=null && !_documentTemplate.getNestedDataSourceForNestedMailMerge().isEmpty())
+		{
+			mmds.add(new MailMergeDataSource(_documentTemplate.getNestedDataSourceForNestedMailMerge()));
+		}
+		if(_documentTemplate.getTreeData()!=null)
+		{
+			mmds.add(new MailMergeDataSource(_documentTemplate.getTreeData()));
 		}
 
 		//Do normal Mail merge
@@ -1640,6 +1674,99 @@ public class AsposeDocFactory extends BaseDocFactory{
 			this.fileOperationMessage.setType(ch.ivyteam.ivy.addons.docfactory.FileOperationMessage.ERROR_MESSAGE);
 		}
 
+		return this.fileOperationMessage;
+	}
+
+	@Override
+	public ch.ivyteam.ivy.addons.docfactory.FileOperationMessage generateDocumentWithNestedRegions(
+			String _templatePath, String _outputName, String _outputPath,
+			String _outputFormat, List<TemplateMergeField> _mergeFields,
+			ch.ivyteam.ivy.scripting.objects.List<CompositeObject> _parentDataSource,
+			ch.ivyteam.ivy.scripting.objects.List<ch.ivyteam.ivy.scripting.objects.List<CompositeObject>> _childrenDataSources) 
+	{
+		this.resetAndCheckCommonParameters(_templatePath, _outputName, _outputPath, _outputFormat, _mergeFields);
+		if(this.fileOperationMessage.getType() == ch.ivyteam.ivy.addons.docfactory.FileOperationMessage.ERROR_MESSAGE)
+		{// Check failed
+			return this.fileOperationMessage;
+		}
+		ArrayList<TemplateMergeField> templateParamslist =new ArrayList<TemplateMergeField>();
+		templateParamslist.addAll(_mergeFields);
+		ArrayList<MailMergeDataSource> mmds = new ArrayList<MailMergeDataSource>();
+		try {
+			if(_parentDataSource!=null && !_parentDataSource.isEmpty())
+			{
+				
+				mmds.add(new MailMergeDataSource(_parentDataSource, _childrenDataSources));
+			}
+			this.doc = this.returnDocumentFromMailMerge(templateParamslist, mmds);
+			fileOperationMessage.addFile(makeFileWithDocument(this.doc));
+		} catch (Exception e) {
+			this.fileOperationMessage.setType(ch.ivyteam.ivy.addons.docfactory.FileOperationMessage.ERROR_MESSAGE);
+			this.fileOperationMessage.setMessage(e.getMessage());
+			this.fileOperationMessage.emptyFileList();
+			RDCallbackMethodHandler.callRDMethod(this.parentRD, errorMethodName, new Object[] { this.fileOperationMessage });
+		}
+		return this.fileOperationMessage;
+	}
+
+	@Override
+	public ch.ivyteam.ivy.addons.docfactory.FileOperationMessage generateDocumentWithNestedRegions(
+			String _templatePath, String _outputName, String _outputPath,
+			String _outputFormat, List<TemplateMergeField> _mergeFields,
+			ch.ivyteam.ivy.scripting.objects.List<CompositeObject> _nestedDataSource) 
+	{
+		this.resetAndCheckCommonParameters(_templatePath, _outputName, _outputPath, _outputFormat, _mergeFields);
+		if(this.fileOperationMessage.getType() == ch.ivyteam.ivy.addons.docfactory.FileOperationMessage.ERROR_MESSAGE)
+		{// Check failed
+			return this.fileOperationMessage;
+		}
+		ArrayList<TemplateMergeField> templateParamslist =new ArrayList<TemplateMergeField>();
+		templateParamslist.addAll(_mergeFields);
+		ArrayList<MailMergeDataSource> mmds = new ArrayList<MailMergeDataSource>();
+		try {
+			if(_nestedDataSource!=null && !_nestedDataSource.isEmpty())
+			{
+				Ivy.log().info("We do the merge in nested "+_nestedDataSource);
+				mmds.add(new MailMergeDataSource(_nestedDataSource));
+			}
+			this.doc = this.returnDocumentFromMailMerge(templateParamslist, mmds);
+			fileOperationMessage.addFile(makeFileWithDocument(this.doc));
+		} catch (Exception e) {
+			this.fileOperationMessage.setType(ch.ivyteam.ivy.addons.docfactory.FileOperationMessage.ERROR_MESSAGE);
+			this.fileOperationMessage.setMessage(e.getMessage());
+			this.fileOperationMessage.emptyFileList();
+			RDCallbackMethodHandler.callRDMethod(this.parentRD, errorMethodName, new Object[] { this.fileOperationMessage });
+		}
+		return this.fileOperationMessage;
+	}
+
+	@Override
+	public ch.ivyteam.ivy.addons.docfactory.FileOperationMessage generateDocumentWithNestedRegions(
+			String _templatePath, String _outputName, String _outputPath,
+			String _outputFormat, List<TemplateMergeField> _mergefields,
+			Tree _treeDataSource) {
+		this.resetAndCheckCommonParameters(_templatePath, _outputName, _outputPath, _outputFormat, _mergefields);
+		if(this.fileOperationMessage.getType() == ch.ivyteam.ivy.addons.docfactory.FileOperationMessage.ERROR_MESSAGE)
+		{// Check failed
+			return this.fileOperationMessage;
+		}
+		ArrayList<TemplateMergeField> templateParamslist =new ArrayList<TemplateMergeField>();
+		templateParamslist.addAll(_mergefields);
+		ArrayList<MailMergeDataSource> mmds = new ArrayList<MailMergeDataSource>();
+		try {
+			if(_treeDataSource!=null)
+			{
+				Ivy.log().info("We do the merge in nested "+_treeDataSource);
+				mmds.add(new MailMergeDataSource(_treeDataSource));
+			}
+			this.doc = this.returnDocumentFromMailMerge(templateParamslist, mmds);
+			fileOperationMessage.addFile(makeFileWithDocument(this.doc));
+		} catch (Exception e) {
+			this.fileOperationMessage.setType(ch.ivyteam.ivy.addons.docfactory.FileOperationMessage.ERROR_MESSAGE);
+			this.fileOperationMessage.setMessage(e.getMessage());
+			this.fileOperationMessage.emptyFileList();
+			RDCallbackMethodHandler.callRDMethod(this.parentRD, errorMethodName, new Object[] { this.fileOperationMessage });
+		}
 		return this.fileOperationMessage;
 	}
 }

@@ -134,6 +134,16 @@ path of the directory where the files were deleted</description>
             <nullPermitted>true</nullPermitted>
         </attachment>
     </acceptedBroadcast>
+    <acceptedBroadcast>
+        <name>SE_fileTypeDeleted</name>
+        <description>Catched whenever a fileType is deleted</description>
+        <attachment>
+            <name>fileTypeId</name>
+            <description></description>
+            <parameterType>Long</parameterType>
+            <nullPermitted>true</nullPermitted>
+        </attachment>
+    </acceptedBroadcast>
     <method>
         <name>getLastFileUploaded</name>
         <description>get the last Uploaded File reference.&#xD;
@@ -1375,6 +1385,27 @@ By clicking on the OK button, the RDC gives the choosed path back, else, empty s
             <name>activateSecurity</name>
             <description>If true, the security on the directories will be taken. The security Informations are stored in the dirTable. This only works for the moment with storeFilesInDB parameter to true. Parameter storeFilesInDB to false implies this parameter to false also.</description>
             <parameterType>Boolean</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </inputParameter>
+    </startMethod>
+    <startMethod>
+        <name>startWithConfigInGlobalVariables</name>
+        <description>FileManager Start with the server path as parameter.&#xD;
+The rest of the configuration will be made with global variables. </description>
+        <inputParameter>
+            <name>serverPath</name>
+            <description></description>
+            <parameterType>String</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </inputParameter>
+    </startMethod>
+    <startMethod>
+        <name>start</name>
+        <description></description>
+        <inputParameter>
+            <name>filemanagerConfiguration</name>
+            <description></description>
+            <parameterType>ch.ivyteam.ivy.addons.filemanager.configuration.FileManagerConfigurationController</parameterType>
             <nullPermitted>false</nullPermitted>
         </inputParameter>
     </startMethod>

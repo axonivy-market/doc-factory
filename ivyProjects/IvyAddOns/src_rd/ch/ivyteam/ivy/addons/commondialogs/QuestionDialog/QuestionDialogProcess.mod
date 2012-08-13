@@ -1,6 +1,6 @@
 [Ivy]
-[>Created: Wed May 27 23:05:41 CEST 2009]
-1180E439FFBB432D 3.11 #module
+[>Created: Fri Aug 10 16:16:44 EDT 2012]
+1180E439FFBB432D 3.17 #module
 >Proto >Proto Collection #zClass
 Qs0 QuestionDialogProcess Big #zClass
 Qs0 RD #cInfo
@@ -33,10 +33,14 @@ Qs0 @PushWFArc f17 '' #zField
 Qs0 @PushWFArc f13 '' #zField
 Qs0 @PushWFArc f9 '' #zField
 Qs0 @PushWFArc f12 '' #zField
+Qs0 @RichDialogInitStart f18 '' #zField
+Qs0 @RichDialogProcessEnd f19 '' #zField
+Qs0 @PushWFArc f20 '' #zField
 >Proto Qs0 Qs0 QuestionDialogProcess #zField
 Qs0 f0 guid 1180E4A519E73650 #txt
 Qs0 f0 type ch.ivyteam.ivy.addons.commondialogs.QuestionDialog.QuestionDialogData #txt
 Qs0 f0 method askQuestion(String,String,List<String>) #txt
+Qs0 f0 disableUIEvents false #txt
 Qs0 f0 inParameterDecl 'ch.ivyteam.ivy.richdialog.exec.RdMethodCallEvent methodEvent = event as ch.ivyteam.ivy.richdialog.exec.RdMethodCallEvent;
 <java.lang.String icon,java.lang.String question,List<java.lang.String> buttons> param = methodEvent.getInputArguments();
 ' #txt
@@ -63,15 +67,6 @@ Qs0 f0 @|RichDialogInitStartIcon #fIcon
 Qs0 f1 type ch.ivyteam.ivy.addons.commondialogs.QuestionDialog.QuestionDialogData #txt
 Qs0 f1 59 363 26 26 14 0 #rect
 Qs0 f1 @|RichDialogProcessEndIcon #fIcon
-Qs0 f3 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<elementInfo>
-    <language>
-        <name>button</name>
-        <nameStyle>6,5,6,9
-</nameStyle>
-    </language>
-</elementInfo>
-' #txt
 Qs0 f3 guid 1180E4CA043D915F #txt
 Qs0 f3 type ch.ivyteam.ivy.addons.commondialogs.QuestionDialog.QuestionDialogData #txt
 Qs0 f3 actionDecl 'ch.ivyteam.ivy.addons.commondialogs.QuestionDialog.QuestionDialogData out;
@@ -81,6 +76,15 @@ Qs0 f3 actionTable 'out=in;
 Qs0 f3 actionCode 'import ch.ivyteam.ivy.richdialog.widgets.components.RButton;
 
 in.pressedButton = (event.getSource() as RButton).actionCommand;' #txt
+Qs0 f3 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>button</name>
+        <nameStyle>6,5,6,9
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
 Qs0 f3 854 30 20 20 13 0 #rect
 Qs0 f3 @|RichDialogProcessStartIcon #fIcon
 Qs0 f4 type ch.ivyteam.ivy.addons.commondialogs.QuestionDialog.QuestionDialogData #txt
@@ -154,6 +158,7 @@ Qs0 f2 72 268 72 363 #arcP
 Qs0 f8 guid 119CD4D601442B36 #txt
 Qs0 f8 type ch.ivyteam.ivy.addons.commondialogs.QuestionDialog.QuestionDialogData #txt
 Qs0 f8 method askQuestionWithTitle(String,String,String,List<String>) #txt
+Qs0 f8 disableUIEvents false #txt
 Qs0 f8 inParameterDecl 'ch.ivyteam.ivy.richdialog.exec.RdMethodCallEvent methodEvent = event as ch.ivyteam.ivy.richdialog.exec.RdMethodCallEvent;
 <java.lang.String icon,java.lang.String questionTitle,java.lang.String questionText,List<java.lang.String> buttons> param = methodEvent.getInputArguments();
 ' #txt
@@ -181,6 +186,7 @@ Qs0 f8 @|RichDialogInitStartIcon #fIcon
 Qs0 f10 guid 11C8E1E22C2262AB #txt
 Qs0 f10 type ch.ivyteam.ivy.addons.commondialogs.QuestionDialog.QuestionDialogData #txt
 Qs0 f10 method askQuestionWithTitle(String,String,String,List<String>,String) #txt
+Qs0 f10 disableUIEvents false #txt
 Qs0 f10 inParameterDecl 'ch.ivyteam.ivy.richdialog.exec.RdMethodCallEvent methodEvent = event as ch.ivyteam.ivy.richdialog.exec.RdMethodCallEvent;
 <java.lang.String icon,java.lang.String questionTitle,java.lang.String questionText,List<java.lang.String> buttons,java.lang.String defaultButton> param = methodEvent.getInputArguments();
 ' #txt
@@ -209,6 +215,7 @@ Qs0 f10 @|RichDialogInitStartIcon #fIcon
 Qs0 f11 guid 11C8E1E34E2E22EE #txt
 Qs0 f11 type ch.ivyteam.ivy.addons.commondialogs.QuestionDialog.QuestionDialogData #txt
 Qs0 f11 method askQuestion(String,String,List<String>,String) #txt
+Qs0 f11 disableUIEvents false #txt
 Qs0 f11 inParameterDecl 'ch.ivyteam.ivy.richdialog.exec.RdMethodCallEvent methodEvent = event as ch.ivyteam.ivy.richdialog.exec.RdMethodCallEvent;
 <java.lang.String icon,java.lang.String question,List<java.lang.String> buttons,java.lang.String defaultButton> param = methodEvent.getInputArguments();
 ' #txt
@@ -236,6 +243,7 @@ Qs0 f11 @|RichDialogInitStartIcon #fIcon
 Qs0 f14 guid 012181CD5DA9B891 #txt
 Qs0 f14 type ch.ivyteam.ivy.addons.commondialogs.QuestionDialog.QuestionDialogData #txt
 Qs0 f14 method askQuestionWithTitleAndCustomButtons(String,String,String,List<String>,List<String>,List<String>,String) #txt
+Qs0 f14 disableUIEvents false #txt
 Qs0 f14 inParameterDecl 'ch.ivyteam.ivy.richdialog.exec.RdMethodCallEvent methodEvent = event as ch.ivyteam.ivy.richdialog.exec.RdMethodCallEvent;
 <java.lang.String icon,java.lang.String questionTitle,java.lang.String questionText,List<java.lang.String> actionCommandsForButtons,List<java.lang.String> textsForButtons,List<java.lang.String> iconUrisForButtons,java.lang.String defaultButton> param = methodEvent.getInputArguments();
 ' #txt
@@ -302,6 +310,29 @@ Qs0 f12 expr out #txt
 Qs0 f12 368 234 90 256 #arcP
 Qs0 f12 1 368 256 #addKink
 Qs0 f12 1 0.44141699273427454 0 0 #arcLabel
+Qs0 f18 guid 139122E7D421C1B7 #txt
+Qs0 f18 type ch.ivyteam.ivy.addons.commondialogs.QuestionDialog.QuestionDialogData #txt
+Qs0 f18 method start() #txt
+Qs0 f18 disableUIEvents true #txt
+Qs0 f18 inParameterDecl 'ch.ivyteam.ivy.richdialog.exec.RdMethodCallEvent methodEvent = event as ch.ivyteam.ivy.richdialog.exec.RdMethodCallEvent;
+<> param = methodEvent.getInputArguments();
+' #txt
+Qs0 f18 outParameterDecl '<> result;
+' #txt
+Qs0 f18 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>start()</name>
+    </language>
+</elementInfo>
+' #txt
+Qs0 f18 294 302 20 20 13 0 #rect
+Qs0 f18 @|RichDialogInitStartIcon #fIcon
+Qs0 f19 type ch.ivyteam.ivy.addons.commondialogs.QuestionDialog.QuestionDialogData #txt
+Qs0 f19 294 350 20 20 13 0 #rect
+Qs0 f19 @|RichDialogProcessEndIcon #fIcon
+Qs0 f20 expr out #txt
+Qs0 f20 304 322 304 350 #arcP
 >Proto Qs0 .xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -339,3 +370,5 @@ Qs0 f10 mainOut f9 tail #connect
 Qs0 f9 head f15 mainIn #connect
 Qs0 f14 mainOut f12 tail #connect
 Qs0 f12 head f6 mainIn #connect
+Qs0 f18 mainOut f20 tail #connect
+Qs0 f20 head f19 mainIn #connect

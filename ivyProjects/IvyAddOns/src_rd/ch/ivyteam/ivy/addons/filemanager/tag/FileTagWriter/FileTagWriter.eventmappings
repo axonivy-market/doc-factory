@@ -1,0 +1,7 @@
+# Xpert.ivy RichDialog Event-Mapping Data
+# 2012-06-21 12:49:08 | 4.3.2.39971 | 1.0
+~.cancelButton@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:13800684CB843ED5/138007A34771BD5C
+~.okButton@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:13800684CB843ED5/138007A11DD52E71
+~.TextField@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:13800684CB843ED5/138007A11DD52E71
+~@RD_METHODCALL[start()]--->ch.ivyteam.ivy.process.ProcessStart:13800684CB843ED5/13800684CCCB6DD9
+~@RD_METHODCALL[start(ch.ivyteam.ivy.addons.filemanager.FileTag,String)]--->ch.ivyteam.ivy.process.ProcessStart:13800684CB843ED5/1380074989E25F18

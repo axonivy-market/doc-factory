@@ -29,6 +29,16 @@ The FileManager sends/catches this event too.</description>
             <nullPermitted>true</nullPermitted>
         </attachment>
     </acceptedBroadcast>
+    <acceptedBroadcast>
+        <name>SE_FilesUnlocked</name>
+        <description></description>
+        <attachment>
+            <name>files</name>
+            <description></description>
+            <parameterType>List&lt;java.io.File&gt;</parameterType>
+            <nullPermitted>true</nullPermitted>
+        </attachment>
+    </acceptedBroadcast>
     <method>
         <name>setPath</name>
         <description>set the path where to look at the files.&#xD;
@@ -295,6 +305,19 @@ Param: the list of the files paths to be uploaded from the client Computer.</des
             <nullPermitted>false</nullPermitted>
         </inputParameter>
     </method>
+    <method>
+        <name>_uploadSuccessWithFilesInDB</name>
+        <description>callback method that is called back from the uploadhandler when a group of Files (at least one) &#xD;
+has been successfull uploaded.&#xD;
+it adds the uploaded files to the table list.&#xD;
+This method is called when the files are stored as BLOB in a DB.</description>
+        <inputParameter>
+            <name>returnedMessage</name>
+            <description></description>
+            <parameterType>ch.ivyteam.ivy.addons.filemanager.ReturnedMessage</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </inputParameter>
+    </method>
     <startMethod>
         <name>startWithPath</name>
         <description>Start with &#xD;
@@ -445,6 +468,17 @@ a boolean telling if the toolbar is visible&#xD;
             <nullPermitted>false</nullPermitted>
         </inputParameter>
     </startMethod>
+    <startMethod>
+        <name>start</name>
+        <description>Takes a ch.ivyteam.ivy.addons.filemanager.configuration.FileManagerConfigurationController object as input parameter.&#xD;
+TheConfigurationController contains all the informations necessary to connect to the file management system.</description>
+        <inputParameter>
+            <name>configurationController</name>
+            <description></description>
+            <parameterType>ch.ivyteam.ivy.addons.filemanager.configuration.FileManagerConfigurationController</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </inputParameter>
+    </startMethod>
     <firedEvent>
         <name>filesDeleted</name>
         <description>@SUBSCRIBERS sent whenever some Files are deleted</description>
@@ -510,6 +544,17 @@ sends the list of successfully uploaded Files.</description>
             <name>selectedDocumentOnServers</name>
             <description></description>
             <parameterType>List&lt;ch.ivyteam.ivy.addons.filemanager.DocumentOnServer&gt;</parameterType>
+            <nullPermitted>true</nullPermitted>
+        </attachment>
+    </firedEvent>
+    <firedEvent>
+        <name>SE_FilesUnlocked</name>
+        <description></description>
+        <scope>SYSTEM</scope>
+        <attachment>
+            <name>unlockedFiles</name>
+            <description></description>
+            <parameterType>List&lt;java.io.File&gt;</parameterType>
             <nullPermitted>true</nullPermitted>
         </attachment>
     </firedEvent>

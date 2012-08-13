@@ -1,5 +1,5 @@
 # Xpert.ivy RichDialog Event-Mapping Data
-# 2012-04-02 11:05:55 | 4.3.0.39177 | 1.0
+# 2012-08-07 15:08:32 | 4.3.4.40176 | 1.0
 ~.cancelButton@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/121ECCB8283CD1EF
 ~.copyMenuItem@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11ED95C2B7BDD5B8
 ~.delete2Button@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11D438D57924C5D9
@@ -26,6 +26,8 @@
 ~.editMenuItem@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11E266F60B7C1BDB
 ~.filesTable@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11E266F60B7C1BDB
 ~.filesTable@LIST_SELECTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11D42EE9868EE3A0
+~.fileTypeChooserMenuItem@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/137F10439807F45D
+~.fileTypeManagerMenuItem@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/137F103F249CD51F
 ~.makeNewDirAtRoot2Button@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11EB17DDCC0AC783
 ~.makeNewDirButton@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11EB17DDCC0AC783
 ~.makeVersionMenuItem@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/1357982F0F8F987F
@@ -51,7 +53,9 @@
 ~.refreshSelectedFolderButton@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/120667533EA41579
 ~.setDescriptionMenuItem@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/1309D5203A68CFFC
 ~.showHiddeEditedFilesMenuItem@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11E266B093A206B7
+~.showHistoryMenuItem@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/139026FE65E46FD9 # FileManagerProcess.mod/openHistory
 ~.showTreeMenuItem@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11D678B90A9EFC22
+~.tagsMenuItem@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/13801C27AF581754
 ~.toogleFileListing2Button@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11ED3CBB378B6FDB
 ~.toogleFileListingButton@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11ED3CBB378B6FDB
 ~.toogleRecursiveMenuItem@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11ED3CBB378B6FDB
@@ -74,6 +78,7 @@
 ~@RD_BROADCAST[SE_fileRenamed]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/12BDAAC2C5313D1E
 ~@RD_BROADCAST[SE_FilesDeleted]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/12BDEFBD2E2716AF
 ~@RD_BROADCAST[SE_FilesUnlocked]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/12BCF883DA0EA60A
+~@RD_BROADCAST[SE_fileTypeDeleted]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/1380ABCD5804FE38
 ~@RD_BROADCAST[SE_renameFile]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/12BDDD0C5A62A45F
 ~@RD_METHODCALL[_askIfOverwriteExistingDocumentsOnServer(List<java.io.File>,List<ch.ivyteam.ivy.addons.filemanager.DocumentOnServer>,List<ch.ivyteam.ivy.addons.filemanager.DocumentOnServer>,String)]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/132876E0A253B0E3
 ~@RD_METHODCALL[_askIfOverwriteExistingFiles(List<java.io.File>,List<java.io.File>)]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/1237014B0D3E5743
@@ -139,10 +144,12 @@
 ~@RD_METHODCALL[setToolBarVisible(Boolean)]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/1206627B6174D5EB
 ~@RD_METHODCALL[showTree(Boolean)]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11D6793D8E57A42A
 ~@RD_METHODCALL[start()]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11D3EC39343F50E1
+~@RD_METHODCALL[start(ch.ivyteam.ivy.addons.filemanager.configuration.FileManagerConfigurationController)]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/137A5FB03909804F
 ~@RD_METHODCALL[start(String,Boolean,String,String,String,String,String,Boolean,Boolean)]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/13263A84D61EFBA6
 ~@RD_METHODCALL[startAsPathChooser(String)]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/121ECC3E323F08FF
 ~@RD_METHODCALL[startAsPathChooserWithDBInformations(String,String,String,String)]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/1274D78EDEF27C2A
 ~@RD_METHODCALL[startAsPathChooserWithIvySystemDb(String)]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/1299CEE9D1048323
+~@RD_METHODCALL[startWithConfigInGlobalVariables(String)]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/13793B37CDB70090
 ~@RD_METHODCALL[startWithServerPath(String)]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11D4343AE72A9CC1
 ~@RD_METHODCALL[startWithServerPathAndFileManagementHandler(String,ch.ivyteam.ivy.addons.filemanager.database.AbstractFileManagementHandler)]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11F5FC089E86DEF1
 ~@RD_METHODCALL[startWithServerPathAndFileManagementHandlerAndIsRecursiveAndShowTree(String,ch.ivyteam.ivy.addons.filemanager.database.AbstractFileManagementHandler,Boolean,Boolean)]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11F5FC117241ED1E

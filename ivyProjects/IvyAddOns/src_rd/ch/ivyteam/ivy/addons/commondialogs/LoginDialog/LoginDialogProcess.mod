@@ -1,6 +1,6 @@
 [Ivy]
-[>Created: Mon Feb 14 16:26:52 CET 2011]
-1181284475030FD6 3.15 #module
+[>Created: Fri Aug 10 16:15:59 EDT 2012]
+1181284475030FD6 3.17 #module
 >Proto >Proto Collection #zClass
 Ls0 LoginDialogProcess Big #zClass
 Ls0 RD #cInfo
@@ -54,6 +54,9 @@ Ls0 @PushWFArc f31 '' #zField
 Ls0 @PushWFArc f10 '' #zField
 Ls0 @PushWFArc f8 '' #zField
 Ls0 @PushWFArc f34 '' #zField
+Ls0 @RichDialogInitStart f33 '' #zField
+Ls0 @RichDialogProcessEnd f35 '' #zField
+Ls0 @PushWFArc f39 '' #zField
 >Proto Ls0 Ls0 LoginDialogProcess #zField
 Ls0 f0 guid 11812DC187F6133F #txt
 Ls0 f0 type ch.ivyteam.ivy.addons.commondialogs.LoginDialog.LoginDialogData #txt
@@ -551,6 +554,29 @@ Ls0 f34 expr in #txt
 Ls0 f34 638 176 904 284 #arcP
 Ls0 f34 1 904 176 #addKink
 Ls0 f34 0 0.6763527073249864 0 0 #arcLabel
+Ls0 f33 guid 139122DCB6B8FB33 #txt
+Ls0 f33 type ch.ivyteam.ivy.addons.commondialogs.LoginDialog.LoginDialogData #txt
+Ls0 f33 method start() #txt
+Ls0 f33 disableUIEvents true #txt
+Ls0 f33 inParameterDecl 'ch.ivyteam.ivy.richdialog.exec.RdMethodCallEvent methodEvent = event as ch.ivyteam.ivy.richdialog.exec.RdMethodCallEvent;
+<> param = methodEvent.getInputArguments();
+' #txt
+Ls0 f33 outParameterDecl '<> result;
+' #txt
+Ls0 f33 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>start()</name>
+    </language>
+</elementInfo>
+' #txt
+Ls0 f33 214 214 20 20 13 0 #rect
+Ls0 f33 @|RichDialogInitStartIcon #fIcon
+Ls0 f35 type ch.ivyteam.ivy.addons.commondialogs.LoginDialog.LoginDialogData #txt
+Ls0 f35 214 270 20 20 13 0 #rect
+Ls0 f35 @|RichDialogProcessEndIcon #fIcon
+Ls0 f39 expr out #txt
+Ls0 f39 224 234 224 270 #arcP
 >Proto Ls0 .type ch.ivyteam.ivy.addons.commondialogs.LoginDialog.LoginDialogData #txt
 >Proto Ls0 .processKind RICH_DIALOG #txt
 >Proto Ls0 .xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -622,3 +648,5 @@ Ls0 f32 mainOut f8 tail #connect
 Ls0 f8 head f13 mainIn #connect
 Ls0 f27 out f34 tail #connect
 Ls0 f34 head f32 mainIn #connect
+Ls0 f33 mainOut f39 tail #connect
+Ls0 f39 head f35 mainIn #connect

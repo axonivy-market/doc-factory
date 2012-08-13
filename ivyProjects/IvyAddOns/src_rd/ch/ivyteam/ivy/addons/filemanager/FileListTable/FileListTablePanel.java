@@ -48,6 +48,8 @@ private RButton deleteButton = null;
 private RTextField enablerTextField = null;
 private RFlowLayoutPane ToolbarFlowLayoutPane = null;
 private TransferHandler filesTableTransferHandler;  //  @jve:decl-index=0:
+private RButton unlockButton = null;
+private RMenuItem unockMenuItem = null;
 /**
    * Create a new instance of FileListTablePanel
    */
@@ -186,6 +188,7 @@ private RPopupMenu getTablePopupMenu() {
 		tablePopupMenu.add(getOpenMenuItem());
 		tablePopupMenu.add(getUploadMenuItem());
 		tablePopupMenu.add(getDeleteMenuItem());
+		tablePopupMenu.add(getUnockMenuItem());
 	}
 	return tablePopupMenu;
 }
@@ -317,7 +320,40 @@ private RFlowLayoutPane getToolbarFlowLayoutPane() {
 		ToolbarFlowLayoutPane.add(getUploadButton());
 		ToolbarFlowLayoutPane.add(getOpenButton());
 		ToolbarFlowLayoutPane.add(getDeleteButton());
+		ToolbarFlowLayoutPane.add(getUnlockButton());
 	}
 	return ToolbarFlowLayoutPane;
+}
+
+/**
+ * This method initializes unlockButton	
+ * 	
+ * @return ch.ivyteam.ivy.richdialog.widgets.components.RButton	
+ */
+private RButton getUnlockButton() {
+	if (unlockButton == null) {
+		unlockButton = new RButton();
+		unlockButton.setName("unlockButton");
+		unlockButton.setToolTipText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/buttonLabels/unlockSelectedFiles\")%>");
+		unlockButton.setBorderPainted(false);
+		unlockButton.setEnabler(getEnablerTextField());
+		unlockButton.setIconUri("<%=ivy.cms.cr(\"/ch/ivyteam/ivy/addons/icons/unlock/16\")%>");
+	}
+	return unlockButton;
+}
+
+/**
+ * This method initializes unockMenuItem	
+ * 	
+ * @return ch.ivyteam.ivy.richdialog.widgets.menus.RMenuItem	
+ */
+private RMenuItem getUnockMenuItem() {
+	if (unockMenuItem == null) {
+		unockMenuItem = new RMenuItem();
+		unockMenuItem.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/buttonLabels/unlockSelectedFiles\")%>");
+		unockMenuItem.setIconUri("<%=ivy.cms.cr(\"/ch/ivyteam/ivy/addons/icons/unlock/16\")%>");
+		unockMenuItem.setName("unockMenuItem");
+	}
+	return unockMenuItem;
 }
 }  //  @jve:decl-index=0:visual-constraint="10,10"

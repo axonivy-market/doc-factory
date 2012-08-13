@@ -110,6 +110,34 @@ and with the java.io.File to manage</description>
             <nullPermitted>false</nullPermitted>
         </inputParameter>
     </startMethod>
+    <startMethod>
+        <name>start</name>
+        <description>start with a BasicConfigurationController and ref to the file that has to be used.&#xD;
+the BasicConfigurationController contains all the necessary informations &#xD;
+to know how the file management system is integrated: files on fileset? files stored as BLOB?&#xD;
+You have then to provide one of the both parameters (fileId will be always used if provided):&#xD;
+The filePath is the path of the file in the files table that the user has to use.&#xD;
+The fileId is the file id found in the files table.&#xD;
+</description>
+        <inputParameter>
+            <name>configurationController</name>
+            <description>the configuration controller</description>
+            <parameterType>ch.ivyteam.ivy.addons.filemanager.configuration.BasicConfigurationController</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </inputParameter>
+        <inputParameter>
+            <name>filePath</name>
+            <description>the path of the file in the files table that the user has to use. Alternatively you can use the other input parameter: the fileId</description>
+            <parameterType>String</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </inputParameter>
+        <inputParameter>
+            <name>fileId</name>
+            <description>the id of the file in the files table that the user has to use. Alternatively you can use the other input parameter: the filePath</description>
+            <parameterType>Number</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </inputParameter>
+    </startMethod>
     <firedEvent>
         <name>downloadFiles</name>
         <description>called from the _download method.&#xD;

@@ -28,6 +28,8 @@ import ch.ivyteam.ivy.addons.filemanager.KeyValuePair;
 import ch.ivyteam.ivy.addons.filemanager.LockedFolder;
 import ch.ivyteam.ivy.addons.filemanager.ReturnedMessage;
 import ch.ivyteam.ivy.addons.filemanager.ZipHandler;
+import ch.ivyteam.ivy.addons.filemanager.configuration.BasicConfigurationController;
+import ch.ivyteam.ivy.addons.filemanager.database.filetype.FileTypesController;
 import ch.ivyteam.ivy.addons.filemanager.database.security.AbstractDirectorySecurityController;
 import ch.ivyteam.ivy.addons.filemanager.database.security.DirectorySecurityController;
 import ch.ivyteam.ivy.addons.filemanager.database.security.FileManagementStaticController;
@@ -62,7 +64,9 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 	private String dirTableNameSpace = null; // equals to dirTableName if schemaName == null, else schemaName.dirTableName
 	private boolean securityActivated = false;
 	private AbstractDirectorySecurityController securityController = null; // the file security controller if the security is activated.
-	
+
+	private boolean activateFileType=false;
+	private FileTypesController ftController = null;
 	/**
 	 * @throws Exception 
 	 * 
@@ -81,9 +85,6 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 	public FileStoreDBHandler(String _ivyDBConnectionName, String _tableName) throws Exception {
 		super();
 		initializeVariables(_ivyDBConnectionName,_tableName,null,null,null,null);
-		
-		//makeSecurityController();
-		//checkTablesExists();
 	}
 
 
@@ -101,12 +102,10 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 			String _schemaName) throws Exception {
 		super();
 		initializeVariables(_ivyDBConnectionName,_fileTableName,_fileContentTableName,_dirTableName,_schemaName,null);
-		//makeSecurityController();
-		//checkTablesExists();
 	}
 
 	/**
-	 * * Creates a new FileStoreHandler with possibility to overrides the ivy global variables settings for the six given parameters.
+	 * Creates a new FileStoreHandler with possibility to overrides the ivy global variables settings for the six given parameters.
 	 * @param _ivyDBConnectionName: String, if null or empty, the corresponding ivy global variable will be taken.
 	 * @param _fileTableName:String, if null or empty, the corresponding ivy global variable will be taken.
 	 * @param _fileContentTableName:String, if null or empty, the corresponding ivy global variable will be taken.
@@ -119,10 +118,26 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 			String _schemaName, boolean _securityActivated) throws Exception {
 		super();
 		initializeVariables(_ivyDBConnectionName,_fileTableName,_fileContentTableName,_dirTableName,_schemaName,_securityActivated);
-		//makeSecurityController();
-		//checkTablesExists();
 	}
-	
+
+	/**
+	 * Creates a new FileStoreHandler with the given BasicConfigurationController
+	 * @param _conf BasicConfigurationController
+	 * @throws Exception NullpointerException if the BasicConfigurationController is null
+	 */
+	public FileStoreDBHandler(BasicConfigurationController _conf) throws Exception
+	{
+		super();
+		initializeVariables(_conf.getIvyDBConnectionName(),
+				_conf.getFilesTableName(),
+				_conf.getFilesContentTableName(),
+				_conf.getDirectoriesTableName(),
+				_conf.getDatabaseSchemaName(),
+				_conf.isActivateSecurity());
+		this.activateFileType=_conf.isActivateFileType();
+		this.ftController = new FileTypesController(_conf);
+	}
+
 	/**
 	 * 
 	 * @param _ivyDBConnectionName
@@ -141,28 +156,28 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 		}else{
 			this.ivyDBConnectionName = _ivyDBConnectionName.trim();
 		}
-		
+
 		if(_tableName==null || _tableName.trim().length()==0)
 		{//if ivy table name not settled used default
 			this.tableName=Ivy.var().get("xivy_addons_fileManager_fileMetaDataTableName").trim();
 		}else{
 			this.tableName=_tableName.trim();
 		}
-		
+
 		if(_fileContentTableName==null || _fileContentTableName.trim().length()==0)
 		{//if ivy file content table name not settled used default
 			this.fileContentTableName=Ivy.var().get("xivy_addons_fileManager_fileContentTableName").trim();
 		}else{
 			this.fileContentTableName=_fileContentTableName.trim();
 		}
-		
+
 		if(_dirTableName==null || _dirTableName.trim().length()==0)
 		{//if ivy directories table name not settled used default
 			this.dirTableName=Ivy.var().get("xivy_addons_fileManager_directoriesTableName").trim();
 		}else{
 			this.dirTableName=_dirTableName.trim();
 		}
-		
+
 		if(_schemaName==null)
 		{//if DB schema name not settled used default
 			if(Ivy.var().get("xivy_addons_fileManager_databaseSchemaName")!=null)
@@ -172,7 +187,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 		}else{
 			this.schemaName=_schemaName.trim();
 		}
-		
+
 		if(this.schemaName!=null && this.schemaName.trim().length()>0)
 		{
 			this.tableNameSpace="\""+this.schemaName+"\""+"."+"\""+this.tableName+"\"";
@@ -183,7 +198,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 			this.dirTableNameSpace=this.dirTableName;
 			this.fileContentTableNameSpace=this.fileContentTableName;
 		}
-		
+
 		if(_securityActivated==null)
 		{
 			if(Ivy.var().get("xivy_addons_fileManager_activateSecurity")!=null || 
@@ -196,100 +211,10 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 		}else{
 			this.securityActivated=_securityActivated;
 		}
-		
-		
-		
 		this.makeSecurityController();
-		
-		/*
-		this.fileVersioningActivated= (Ivy.var().get("xivy_addons_fileManager_activateFileVersioning")!=null && 
-				Ivy.var().get("xivy_addons_fileManager_activateFileVersioning").compareTo("1")==0);
-		
-		if(this.fileVersioningActivated)
-		{
-			this.fileVersioningController = new FileVersioningController(this.ivyDBConnectionName, this.tableName, this.fileContentTableName, null, null, this.schemaName);
-		}*/
 	}
 
-	@SuppressWarnings("unused")
-	private void checkTablesExists() throws Exception{
 
-		String createFileTable="CREATE TABLE "+this.tableNameSpace+" (" +
-		"FileId             INT IDENTITY NOT NULL," +
-		"FileName           VARCHAR (255) NULL," +
-		"FilePath           VARCHAR (750) NULL," +
-		"CreationUserId     VARCHAR (64) NULL," +
-		"CreationDate       VARCHAR (10) NULL," +
-		"CreationTime       VARCHAR (8) NULL," +
-		"FileSize           VARCHAR (20) NULL," +
-		"Locked             TINYINT NULL," +
-		"LockingUserId      VARCHAR (64) NULL," +
-		"ModificationUserId VARCHAR (64) NULL," +
-		"ModificationDate   VARCHAR (10) NULL," +
-		"ModificationTime   VARCHAR (8) NULL," +
-		"Description        VARCHAR (1024) NULL," +
-		"PRIMARY KEY (FileId))";
-
-		String createFileContentTable="CREATE TABLE "+this.fileContentTableNameSpace+" (" +
-		"id INT IDENTITY NOT NULL," +
-		"file_id INT UNIQUE NOT NULL," +
-		"file_content VARBINARY (max) NULL," +
-		"PRIMARY KEY (id))";
-
-		String createDirTable="CREATE TABLE "+this.dirTableNameSpace+" (" +
-		"id INT IDENTITY NOT NULL," +
-		"dir_name             VARCHAR (255) NOT NULL," +
-		"dir_path             VARCHAR (750) UNIQUE NOT NULL," +
-		"creation_user_id     VARCHAR (200) NULL," +
-		"creation_date        DATE NULL," +
-		"creation_time        TIME NULL," +
-		"modification_user_id VARCHAR (200) NULL," +
-		"modification_date    DATE NULL," +
-		"modification_time    TIME NULL," +
-		"is_protected         BIT DEFAULT ((0)) NOT NULL," +
-		"cmdr                 VARCHAR (2048) NULL," +
-		"cod                  VARCHAR (2048) NULL," +
-		"cud                  VARCHAR (2048) NULL," +
-		"cdd                  VARCHAR (2048) NULL," +
-		"cwf                  VARCHAR (2048) NULL," +
-		"cdf                  VARCHAR (2048) NULL," +
-		"PRIMARY KEY (id))";
-
-		//Check if fileTable exists if not tries to create it
-		IExternalDatabaseRuntimeConnection connection = null;
-		try {
-
-			connection = getDatabase().getAndLockConnection();
-			Connection jdbcConnection=connection.getDatabaseConnection();
-			PreparedStatement stmt = null;
-			try{			
-				if(!jdbcConnection.getMetaData().getTables(null, null, this.tableNameSpace, null).next()){
-					Ivy.log().info("Files table does not exists, executes "+jdbcConnection.nativeSQL(createFileTable));
-					stmt = jdbcConnection.prepareStatement(jdbcConnection.nativeSQL(createFileTable));
-					stmt.execute();
-				}
-				if(!jdbcConnection.getMetaData().getTables(null, null, this.dirTableNameSpace, null).next()){
-					Ivy.log().info("Dir table does not exists, executes "+jdbcConnection.nativeSQL(createDirTable));
-					stmt = jdbcConnection.prepareStatement(jdbcConnection.nativeSQL(createDirTable));
-					stmt.execute();
-				}
-				if(!jdbcConnection.getMetaData().getTables(null, null, this.fileContentTableNameSpace, null).next()){
-					Ivy.log().info("Files Content table does not exists, executes "+jdbcConnection.nativeSQL(createFileContentTable));
-					stmt = jdbcConnection.prepareStatement(jdbcConnection.nativeSQL(createFileContentTable));
-					stmt.execute();
-				}
-			}
-			finally{
-
-				DatabaseUtil.close(stmt);
-			}
-		} 
-		finally{
-			if(connection!=null ){
-				database.giveBackAndUnlockConnection(connection);
-			}
-		}
-	}
 
 	/**
 	 * 
@@ -334,7 +259,6 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 
 		ResultSet rst = null;
 		Recordset r= new Recordset();
-
 		rst=_stmt.executeQuery();
 		try{
 			ResultSetMetaData rsmd = rst.getMetaData();
@@ -347,6 +271,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 			while(rst.next()){
 				List<Object> values = List.create(numCols);
 				for(int i=1; i<=numCols; i++){
+					
 					if(rst.getString(i)==null)
 						values.add(" ");
 					else values.add(rst.getString(i));
@@ -354,11 +279,12 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 				Record rec = new Record(colNames,values);
 				r.add(rec);
 			}
+		}catch(Exception ex){
+			Ivy.log().error(ex.getMessage(), ex);
 		}finally
 		{
 			DatabaseUtil.close(rst);
 		}
-
 		return r;
 	}
 
@@ -415,7 +341,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 		}
 		return this.createDirectory(_destinationPath+_newDirectoryName.trim());
 	}
-	
+
 	@Override
 	public ReturnedMessage createDirectory(String _newDirectoryPath) throws Exception
 	{
@@ -443,7 +369,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 		String base = "INSERT INTO "+this.dirTableNameSpace+
 		" (dir_name, dir_path, creation_user_id, creation_date, creation_time, modification_user_id, modification_date," +
 		"modification_time,is_protected, cmdr, cod, cud, cdd, cwf, cdf) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-		
+
 		java.util.Date d = new java.util.Date();
 
 		IExternalDatabaseRuntimeConnection connection=null;
@@ -469,7 +395,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 				stmt.setString(14, "");
 				stmt.setString(15, "");
 				int i =  stmt.executeUpdate();
-				
+
 				if(i>0)
 				{//Creation successful
 					message.setType(FileHandler.SUCCESS_MESSAGE);
@@ -652,6 +578,10 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 					{
 						stmt.setInt(1, ids[i]);
 						stmt.executeUpdate();
+						if(super.getFileActionHistoryController()!=null && super.getFileActionHistoryController().getConfig().isDeleteFileTracked())
+						{
+							super.getFileActionHistoryController().createNewActionHistory(ids[i], (short) 5, Ivy.session().getSessionUserName(), "Delete all files under "+_directoryPath);
+						}
 					}
 				}
 				stmt = jdbcConnection.prepareStatement(base);
@@ -704,6 +634,10 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 					message.setType(FileHandler.SUCCESS_MESSAGE);
 				}else{
 					message.setType(FileHandler.ERROR_MESSAGE);
+				}
+				if(super.getFileActionHistoryController()!=null && super.getFileActionHistoryController().getConfig().isDeleteFileTracked())
+				{
+					super.getFileActionHistoryController().createNewActionHistory(id, (short) 5, Ivy.session().getSessionUserName(), document.getPath());
 				}
 			}finally{
 				DatabaseUtil.close(stmt);
@@ -760,6 +694,10 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 					if(document !=null && document.getPath()!=null && !document.getPath().trim().equals("")){
 						stmt.setString(1, formatPath(document.getPath().trim()));
 						stmt.executeUpdate();
+						if(super.getFileActionHistoryController()!=null && super.getFileActionHistoryController().getConfig().isDeleteFileTracked())
+						{
+							super.getFileActionHistoryController().createNewActionHistory(Long.parseLong(document.getFileID()), (short) 5, Ivy.session().getSessionUserName(), document.getPath());
+						}
 					}
 				}
 
@@ -816,6 +754,10 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 				for(DocumentOnServer doc: _documents){
 					stmt.setString(1, escapeBackSlash(doc.getPath().trim()));
 					deletedFiles+=stmt.executeUpdate();
+					if(super.getFileActionHistoryController()!=null && super.getFileActionHistoryController().getConfig().isDeleteFileTracked())
+					{
+						super.getFileActionHistoryController().createNewActionHistory(Long.parseLong(doc.getFileID()), (short) 5, Ivy.session().getSessionUserName(), doc.getPath());
+					}
 				}
 			}finally{
 				DatabaseUtil.close(stmt);
@@ -863,6 +805,10 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 						if(id>0){
 							stmt.setInt(1, id);
 							stmt.executeUpdate();
+							if(super.getFileActionHistoryController()!=null && super.getFileActionHistoryController().getConfig().isDeleteFileTracked())
+							{
+								super.getFileActionHistoryController().createNewActionHistory(id, (short) 5, Ivy.session().getSessionUserName(), file.getPath());
+							}
 						}
 					}
 					stmt = jdbcConnection.prepareStatement(base);
@@ -932,8 +878,8 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 		FolderOnServer fos = (FolderOnServer) tree.getValue();
 		ArrayList<FolderOnServer> children = getDirectChildFoldersInList(fos, dirs);
 		for(FolderOnServer f:children){
-			
-				tree.createChild(f, f.getName());
+
+			tree.createChild(f, f.getName());
 			if(!(f instanceof LockedFolder)){
 				fillRDTree(tree.getLastChild(),dirs);
 			}
@@ -1110,6 +1056,25 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 			doc.setLocked(rec.getField("Locked").toString());
 			doc.setLockingUserID(rec.getField("LockingUserId").toString());
 			doc.setDescription(rec.getField("Description").toString());
+			if(this.activateFileType)
+			{
+				try{
+					long id = Long.parseLong(rec.getField("filetypeid").toString());
+					if(id>0)
+					{
+						doc.setFileType(this.ftController.getFileTypeWithId(id));
+					}
+				}catch(Exception ex)
+				{
+					//do nothing the file type is not mandatory
+				}
+			}
+			try{
+				doc.setVersionnumber(Integer.parseInt(rec.getField("versionnumber").toString()));
+			}catch(Exception ex)
+			{
+				doc.setVersionnumber(1);
+			}
 			try{
 				doc.setExtension(doc.getFilename().substring(doc.getFilename().lastIndexOf(".")+1));
 			}catch(Exception ex){
@@ -1304,8 +1269,6 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 
 				if(rst.next())
 				{
-					
-					
 					doc.setFileID(String.valueOf(rst.getInt("FileId")));
 					doc.setFilename(rst.getString("FileName"));
 					doc.setPath(rst.getString("FilePath"));
@@ -1324,7 +1287,25 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 					}catch(Exception ex){
 						//Ignore the Exception here
 					}
-
+					if(this.activateFileType)
+					{
+						try{
+							long id = rst.getLong("filetypeid");
+							if(id>0)
+							{
+								doc.setFileType(this.ftController.getFileTypeWithId(id));
+							}
+						}catch(Exception ex)
+						{
+							//do nothing the file type is not mandatory
+						}
+					}
+					try{
+						doc.setVersionnumber(rst.getInt("versionnumber"));
+					}catch(Exception ex)
+					{
+						doc.setVersionnumber(1);
+					}
 					Blob bl = null;
 					byte[] byt = null;
 					try{
@@ -1333,17 +1314,17 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 						try{
 							byt = rst.getBytes("file_content");
 						}catch(Throwable t2){
-							
+
 						}
 					}
-					
-					
+
+
 					//we create a temp file on the server 
 					String tmpPath="tmp/"+System.nanoTime()+"/"+doc.getFilename();
 					File ivyFile = new File(tmpPath,true);
 					ivyFile.createNewFile();
 					byte[] allBytesInBlob = bl!=null?bl.getBytes(1, (int) bl.length()):byt;
-					
+
 					FileOutputStream fos=null;
 					//DataOutputStream dos =null;
 					try{
@@ -1373,7 +1354,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 							stmt.setInt(1, Integer.parseInt(docu.getFileID().trim()));
 							stmt.setBinaryStream (2, is, (int) f.length() ); 
 							stmt.executeUpdate();
-							
+
 						}finally{
 							if(is!=null)
 							{
@@ -1445,6 +1426,25 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 					}catch(Exception ex){
 						//Ignore the Exception here
 					}
+					if(this.activateFileType)
+					{
+						try{
+							long id = rst.getLong("filetypeid");
+							if(id>0)
+							{
+								doc.setFileType(this.ftController.getFileTypeWithId(id));
+							}
+						}catch(Exception ex)
+						{
+							//do nothing the file type is not mandatory
+						}
+					}
+					try{
+						doc.setVersionnumber(rst.getInt("versionnumber"));
+					}catch(Exception ex)
+					{
+						doc.setVersionnumber(1);
+					}
 					Blob bl = null;
 					byte[] byt = null;
 					try{
@@ -1453,7 +1453,118 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 						try{
 							byt = rst.getBytes("file_content");
 						}catch(Throwable t2){
-							
+
+						}
+					}
+
+					//we create a temp file on the server 
+					String tmpPath="tmp/"+System.nanoTime()+"/"+doc.getFilename();
+					File ivyFile = new File(tmpPath,true);
+					ivyFile.createNewFile();
+					byte[] allBytesInBlob = bl!=null?bl.getBytes(1, (int) bl.length()):byt;
+					FileOutputStream fos=null;
+					//DataOutputStream dos =null;
+					try{
+						java.io.File javaFile = ivyFile.getJavaFile();
+
+						fos = new FileOutputStream(javaFile.getPath());
+						//dos = new DataOutputStream(fos);
+						//dos.writeBytes(rec.getField("FileContent").toString());
+						fos.write(allBytesInBlob);
+						doc.setJavaFile(javaFile);
+
+					}finally{
+						if(fos!=null){
+							fos.close();
+						}
+					}
+				}
+			}catch(Exception ex){
+				Ivy.log().error("Exception " +ex.getMessage(),ex);
+			}
+			finally{
+				DatabaseUtil.close(stmt);
+			}
+		} finally{
+			if(connection!=null ){
+				database.giveBackAndUnlockConnection(connection);
+			}
+		}
+		return doc;
+	}
+
+	@Override
+	public DocumentOnServer getDocumentOnServerWithJavaFile(long fileid)
+	throws Exception {
+		if(fileid<=0)
+		{
+			return null;
+		}
+		String.valueOf(fileid);
+		DocumentOnServer doc = new DocumentOnServer();
+
+		String query="";
+		IExternalDatabaseRuntimeConnection connection = null;
+		try {
+			connection = getDatabase().getAndLockConnection();
+			Connection jdbcConnection=connection.getDatabaseConnection();
+
+			query="SELECT * FROM "+this.tableNameSpace+
+			" INNER JOIN "+this.fileContentTableNameSpace+" ON "+this.tableNameSpace+".FileId = "+this.fileContentTableNameSpace+".file_id" +
+			" WHERE "+this.tableNameSpace+".FileId LIKE ? ";
+			PreparedStatement stmt = null;
+			try{
+				stmt = jdbcConnection.prepareStatement(query);
+				stmt.setString(1, String.valueOf(fileid));
+				ResultSet rst = stmt.executeQuery();
+				if(rst.next())
+				{
+					doc.setFileID(String.valueOf(rst.getInt("FileId")));
+					doc.setFilename(rst.getString("FileName"));
+					doc.setPath(rst.getString("FilePath"));
+					doc.setFileSize(rst.getString("FileSize"));
+					doc.setUserID(rst.getString("CreationUserId"));
+					doc.setCreationDate(rst.getString("CreationDate"));
+					doc.setCreationTime(rst.getString("CreationTime"));
+					doc.setModificationUserID(rst.getString("ModificationUserId"));
+					doc.setModificationDate(rst.getString("ModificationDate"));
+					doc.setModificationTime(rst.getString("ModificationTime"));
+					doc.setLocked(String.valueOf(rst.getInt("Locked")));
+					doc.setLockingUserID(rst.getString("LockingUserId"));
+					doc.setDescription(rst.getString("Description"));
+					try{
+						doc.setExtension(doc.getFilename().substring(doc.getFilename().lastIndexOf(".")+1));
+					}catch(Exception ex){
+						//Ignore the Exception here
+					}
+					if(this.activateFileType)
+					{
+						try{
+							long id = rst.getLong("filetypeid");
+							if(id>0)
+							{
+								doc.setFileType(this.ftController.getFileTypeWithId(id));
+							}
+						}catch(Exception ex)
+						{
+							//do nothing the file type is not mandatory
+						}
+					}
+					try{
+						doc.setVersionnumber(rst.getInt("versionnumber"));
+					}catch(Exception ex)
+					{
+						doc.setVersionnumber(1);
+					}
+					Blob bl = null;
+					byte[] byt = null;
+					try{
+						bl = rst.getBlob("file_content");
+					}catch(Throwable t){
+						try{
+							byt = rst.getBytes("file_content");
+						}catch(Throwable t2){
+
 						}
 					}
 
@@ -1524,7 +1635,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 			{
 				query="SELECT * FROM "+this.tableNameSpace+" WHERE FilePath LIKE ? AND FilePath NOT LIKE ?";
 			}
-			
+
 			PreparedStatement stmt = null;
 			try{
 				stmt = jdbcConnection.prepareStatement(query);
@@ -1536,7 +1647,6 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 					stmt.setString(1, folderPath+"%");
 					stmt.setString(2, folderPath+"%/%");
 				}
-				//Ivy.log().info(query +" => "+folderPath);
 				rset=executeStatement(stmt);
 				recordList=rset.toList();
 			}finally{
@@ -1549,6 +1659,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 		}
 		if(recordList!=null){
 			for(Record rec: recordList){
+				
 				DocumentOnServer doc = new DocumentOnServer();
 				doc.setFileID(rec.getField("FileId").toString());
 				doc.setFilename(rec.getField("FileName").toString());
@@ -1563,16 +1674,30 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 				doc.setLocked(rec.getField("Locked").toString());
 				doc.setLockingUserID(rec.getField("LockingUserId").toString());
 				doc.setDescription(rec.getField("Description").toString());
-				try{
-					doc.setExtension(doc.getFilename().substring(doc.getFilename().lastIndexOf(".")+1));
-				}catch(Exception ex){
-					//Ignore the Exception here
+				if(this.activateFileType)
+				{
+					try{
+						long id = Long.parseLong(rec.getField("filetypeid").toString());
+						if(id>0)
+						{
+							doc.setFileType(this.ftController.getFileTypeWithId(id));
+						}
+					}catch(Exception ex)
+					{
+						//do nothing the file type is not mandatory
+						//Ivy.log().error("Error while getting the file type on "+doc.getFilename()+ " "+ex.getMessage(), ex);
+					}
 				}
 				try{
 					doc.setVersionnumber(Integer.parseInt(rec.getField("versionnumber").toString()));
 				}catch(Exception ex)
 				{
 					doc.setVersionnumber(1);
+				}
+				try{
+					doc.setExtension(doc.getFilename().substring(doc.getFilename().lastIndexOf(".")+1));
+				}catch(Exception ex){
+					//Ignore the Exception here
 				}
 				al.add(doc);
 			}
@@ -1643,6 +1768,19 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 						}catch(Exception ex)
 						{
 							doc.setVersionnumber(1);
+						}
+						if(this.activateFileType)
+						{
+							try{
+								long id = Long.parseLong(rec.getField("filetypeid").toString());
+								if(id>0)
+								{
+									doc.setFileType(this.ftController.getFileTypeWithId(id));
+								}
+							}catch(Exception ex)
+							{
+								//do nothing the file type is not mandatory
+							}
 						}
 						try{
 							doc.setExtension(doc.getFilename().substring(doc.getFilename().lastIndexOf(".")+1));
@@ -1767,8 +1905,6 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 		ArrayList<DocumentOnServer>  al = new ArrayList<DocumentOnServer>();
 
 		String folderPath = escapeBackSlash(FileHandler.formatPathWithEndSeparator(_path, false));
-		Recordset rset = null;
-		List<Record> recordList= (List<Record>) List.create(Record.class);
 
 		String query="";
 		IExternalDatabaseRuntimeConnection connection = null;
@@ -1800,8 +1936,84 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 					stmt.setString(1, folderPath+"%");
 					stmt.setString(2, folderPath+"%/%");
 				}
-				rset=executeStatement(stmt);
-				recordList=rset.toList();
+				ResultSet rst = stmt.executeQuery();
+				while(rst.next())
+				{
+					DocumentOnServer doc = new DocumentOnServer();
+					doc.setFileID(String.valueOf(rst.getInt("FileId")));
+					doc.setFilename(rst.getString("FileName"));
+					doc.setPath(rst.getString("FilePath"));
+					doc.setFileSize(rst.getString("FileSize"));
+					doc.setUserID(rst.getString("CreationUserId"));
+					doc.setCreationDate(rst.getString("CreationDate"));
+					doc.setCreationTime(rst.getString("CreationTime"));
+					doc.setModificationUserID(rst.getString("ModificationUserId"));
+					doc.setModificationDate(rst.getString("ModificationDate"));
+					doc.setModificationTime(rst.getString("ModificationTime"));
+					doc.setLocked(String.valueOf(rst.getInt("Locked")));
+					doc.setLockingUserID(rst.getString("LockingUserId"));
+					doc.setDescription(rst.getString("Description"));
+					try{
+						doc.setExtension(doc.getFilename().substring(doc.getFilename().lastIndexOf(".")+1));
+					}catch(Exception ex){
+						//Ignore the Exception here
+					}
+					if(this.activateFileType)
+					{
+						try{
+							long id = rst.getLong("filetypeid");
+							if(id>0)
+							{
+								doc.setFileType(this.ftController.getFileTypeWithId(id));
+							}
+						}catch(Exception ex)
+						{
+							//do nothing the file type is not mandatory
+						}
+					}
+					try{
+						doc.setVersionnumber(rst.getInt("versionnumber"));
+					}catch(Exception ex)
+					{
+						doc.setVersionnumber(1);
+					}
+					Blob bl = null;
+					byte[] byt = null;
+					try{
+						bl = rst.getBlob("file_content");
+					}catch(Throwable t){
+						try{
+							byt = rst.getBytes("file_content");
+						}catch(Throwable t2){
+
+						}
+					}
+
+					//we create a temp file on the server 
+					String tmpPath="tmp/"+System.nanoTime()+"/"+doc.getFilename();
+					File ivyFile = new File(tmpPath,true);
+					ivyFile.createNewFile();
+					byte[] allBytesInBlob = bl!=null?bl.getBytes(1, (int) bl.length()):byt;
+					FileOutputStream fos=null;
+					//DataOutputStream dos =null;
+					try{
+						java.io.File javaFile = ivyFile.getJavaFile();
+
+						fos = new FileOutputStream(javaFile.getPath());
+						//dos = new DataOutputStream(fos);
+						//dos.writeBytes(rec.getField("FileContent").toString());
+						fos.write(allBytesInBlob);
+						doc.setJavaFile(javaFile);
+
+					}finally{
+						if(fos!=null){
+							fos.close();
+						}
+					}
+					al.add(doc);
+
+				}
+
 			}finally{
 				DatabaseUtil.close(stmt);
 			}
@@ -1810,47 +2022,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 				database.giveBackAndUnlockConnection(connection);
 			}
 		}
-		if(recordList!=null){
-			for(Record rec: recordList){
-				DocumentOnServer doc = new DocumentOnServer();
-				doc.setFileID(rec.getField("FileId").toString());
-				doc.setFilename(rec.getField("FileName").toString());
-				doc.setPath(rec.getField("FilePath").toString());
-				doc.setFileSize(rec.getField("FileSize").toString());
-				doc.setUserID(rec.getField("CreationUserId").toString());
-				doc.setCreationDate(rec.getField("CreationDate").toString());
-				doc.setCreationTime(rec.getField("CreationTime").toString());
-				doc.setModificationUserID(rec.getField("ModificationUserId").toString());
-				doc.setModificationDate(rec.getField("ModificationDate").toString());
-				doc.setModificationTime(rec.getField("ModificationTime").toString());
-				doc.setLocked(rec.getField("Locked").toString());
-				doc.setLockingUserID(rec.getField("LockingUserId").toString());
-				doc.setDescription(rec.getField("Description").toString());
-				try{
-					doc.setExtension(doc.getFilename().substring(doc.getFilename().lastIndexOf(".")+1));
-				}catch(Exception ex){
-					//Ignore the Exception here
-				}
 
-				//we create a temp file on the server 
-				String tmpPath="tmp/"+System.nanoTime()+"/"+doc.getFilename();
-				File ivyFile = new File(tmpPath,true);
-				Blob bl = (Blob) rec.getField("file_content");
-				byte[] allBytesInBlob = bl.getBytes(1, (int) bl.length());
-				FileOutputStream fos=null;
-				try{
-					java.io.File javaFile = ivyFile.getJavaFile();
-					fos = new FileOutputStream(javaFile.getPath());
-					fos.write(allBytesInBlob);
-					doc.setJavaFile(javaFile);
-				}finally{
-					if(fos!=null){
-						fos.close();
-					}
-				}
-				al.add(doc);
-			}
-		}
 		al.trimToSize();
 		return al;
 	}
@@ -1983,6 +2155,14 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 									is.close();
 								}
 							}
+							if(this.activateFileType && doc.getFileType() !=null && doc.getFileType().getId()!=null && doc.getFileType().getId()>0)
+							{
+								ftController.setDocumentFileType(doc, doc.getFileType().getId());
+							}
+							if(super.getFileActionHistoryController()!=null && super.getFileActionHistoryController().getConfig().isFileCreationTracked())
+							{
+								super.getFileActionHistoryController().createNewActionHistory(id, (short) 1, doc.getUserID(), "");
+							}
 						}
 
 						insertedIDs++;
@@ -2055,7 +2235,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 				stmt.setString(11, time);
 				stmt.setString(12, "");
 				stmt.executeUpdate();
-				
+
 				ResultSet rs = null;
 				try{
 					rs = stmt.getGeneratedKeys();
@@ -2083,6 +2263,10 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 					stmt.setInt(1, insertedId);
 					stmt.setBinaryStream (2, is, (int) _file.length() ); 
 					stmt.executeUpdate();
+					if(super.getFileActionHistoryController()!=null && super.getFileActionHistoryController().getConfig().isFileCreationTracked())
+					{
+						super.getFileActionHistoryController().createNewActionHistory(insertedId, (short) 1, user, "");
+					}
 				}
 
 			}finally{
@@ -2177,6 +2361,10 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 					stmt.setInt(1, insertedId);
 					stmt.setBinaryStream (2, is, (int) _file.length() ); 
 					stmt.executeUpdate();
+					if(super.getFileActionHistoryController()!=null && super.getFileActionHistoryController().getConfig().isFileCreationTracked())
+					{
+						super.getFileActionHistoryController().createNewActionHistory(insertedId, (short) 1, _user, "");
+					}
 				}
 
 			}finally{
@@ -2284,6 +2472,10 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 								stmt.setInt(1, id);
 								stmt.setBinaryStream (2, is, (int) file.length() ); 
 								stmt.executeUpdate();
+								if(super.getFileActionHistoryController()!=null && super.getFileActionHistoryController().getConfig().isFileCreationTracked())
+								{
+									super.getFileActionHistoryController().createNewActionHistory(id, (short) 1, _user, "");
+								}
 							}finally{
 								if(is!=null){
 									is.close();
@@ -2321,7 +2513,10 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 		if( _user==null ||  _user.trim().equals("")){
 			_user= Ivy.session().getSessionUserName();
 		}
-
+		if(_destinationPath==null || _destinationPath.trim().length()==0)
+		{
+			_destinationPath=FileHandler.getFileDirectoryPath(_files.get(0));
+		}
 		_destinationPath=formatPathForDirectory(_destinationPath);
 		IExternalDatabaseRuntimeConnection connection=null;
 		try {
@@ -2383,6 +2578,10 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 								stmt.setInt(1, id);
 								stmt.setBinaryStream (2, is, (int) file.length() ); 
 								stmt.executeUpdate();
+								if(super.getFileActionHistoryController()!=null && super.getFileActionHistoryController().getConfig().isFileCreationTracked())
+								{
+									super.getFileActionHistoryController().createNewActionHistory(id, (short) 1, _user, "");
+								}
 							}finally{
 								if(is!=null){
 									is.close();
@@ -2506,10 +2705,146 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 						stmt.setInt(1, insertedId);
 						stmt.setBinaryStream (2, is, (int) f.length() ); 
 						stmt.executeUpdate();
+						
 					}finally{
 						if(is!=null){
 							is.close();
 						}
+					}
+					_document.setFileID(String.valueOf(insertedId));
+					if(this.activateFileType && _document.getFileType() !=null && _document.getFileType().getId() != null && _document.getFileType().getId()>0)
+					{
+						ftController.setDocumentFileType(_document, _document.getFileType().getId());
+					}
+					if(super.getFileActionHistoryController()!=null && super.getFileActionHistoryController().getConfig().isFileCreationTracked())
+					{
+						super.getFileActionHistoryController().createNewActionHistory(insertedId, (short) 1, _document.getUserID(), "");
+					}
+				}
+			}finally{
+				DatabaseUtil.close(stmt);
+			}
+		}finally{
+			if(connection!=null ){
+				database.giveBackAndUnlockConnection(connection);
+			}
+		}
+		return insertedId;
+	}
+	
+	/**
+	 * Private use only.
+	 * Insert a  DocumentOnServer Object into the DB storing System.<br>
+	 * To be able to store the content of the File in the DB, this method works as following:<br>
+	 * - if the given DocumentOnServer object contains a valid Ivy File Object, then its content will be stored in the DB,<br>
+	 * - else if the given DocumentOnServer object contains a valid java.io.File Object, then its content will be stored in the DB,<br>
+	 * - else it will use the path of the DocumentOnServer object, to retrieve the java.io.File<br>
+	 * - if no content can be found, it will throw an Exception.
+	 * @param _document: DocumentOnServer that has to be inserted into the File storing system
+	 * @return 1 if successful
+	 * @throws Exception 
+	 */
+	private int insertOneDocumentWithoutHistory(DocumentOnServer _document)throws Exception {
+		int insertedId = -1;
+		if(_document== null) return insertedId;
+
+		java.io.File f = null;
+		if(_document.getIvyFile() !=null && _document.getIvyFile().exists())
+		{
+			f=_document.getIvyFile().getJavaFile();
+		}else if(_document.getJavaFile() !=null && _document.getJavaFile().exists())
+		{
+			f = _document.getJavaFile();
+			//Ivy.log().info("Insert One Document: java file exists "+f.length());
+		}else if(_document.getPath()!=null && !_document.getPath().trim().equals(""))
+		{
+			f=new java.io.File(_document.getPath().trim());
+		}
+		if(f==null || !f.exists()){
+			throw new FileNotFoundException("No File could be found to be able to store its content in the Database.");
+		}
+
+		String base="";
+		base = "INSERT INTO "+this.tableNameSpace+
+		" (FileName, FilePath, CreationUserId, CreationDate, CreationTime, FileSize, Locked, LockingUserId, ModificationUserId, ModificationDate, ModificationTime, Description) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+		String query ="INSERT INTO "+this.fileContentTableNameSpace+" (file_id, file_content) VALUES (?,?)";
+		String date = new Date().format("dd.MM.yyyy");
+		String time = new Time().format("HH:mm:ss");
+
+		IExternalDatabaseRuntimeConnection connection=null;
+		try {
+			connection = getDatabase().getAndLockConnection();
+			Connection jdbcConnection=connection.getDatabaseConnection();
+			PreparedStatement stmt = null;
+			try{
+				boolean flag = true;
+				//Insert first the file in UPLOADEDFILES
+				try{
+					stmt = jdbcConnection.prepareStatement(base, PreparedStatement.RETURN_GENERATED_KEYS);
+				}catch(SQLFeatureNotSupportedException fex)
+				{//The JDBC Driver doesn't accept the PreparedStatement.RETURN_GENERATED_KEYS
+					stmt = jdbcConnection.prepareStatement(base);
+					flag=false;
+				}
+				stmt.setString(1, _document.getFilename());
+				stmt.setString(2, escapeBackSlash(_document.getPath()));
+				stmt.setString(3, _document.getUserID());
+				stmt.setString(4, date);
+				stmt.setString(5, time);
+				stmt.setString(6, _document.getFileSize());
+				stmt.setInt(7, 0);
+				stmt.setString(8, "");
+				stmt.setString(9, _document.getUserID());
+				stmt.setString(10, date);
+				stmt.setString(11, time);
+				String s = _document.getDescription();
+				if(s==null)
+				{
+					s="";
+				}
+				stmt.setString(12, s);
+
+				stmt.executeUpdate();
+				ResultSet rs = null;
+				try{
+					rs = stmt.getGeneratedKeys();
+					if ( rs!=null && rs.next() ) {
+						// Retrieve the auto generated key(s).
+						insertedId = rs.getInt(1);
+					}
+				}catch(Exception ex)
+				{
+					//ignore the exception: happens if system is ORACLE and so on....
+				}
+
+				if(!flag || insertedId<=0)
+				{
+					try{
+						insertedId=this.getDocIdWithPath(escapeBackSlash(_document.getPath()));
+					}catch(Exception ex){
+						Ivy.log().error(ex.getMessage(),ex);
+					}
+				}
+				if(insertedId>0)
+				{//INSERT THE FILE CONTENT IN THE CONTENT TABLE
+					//Ivy.log().info("Inserted Id in file table : "+ insertedId);
+					stmt = jdbcConnection.prepareStatement(query);
+					FileInputStream is=null;
+					try{
+						is = new FileInputStream ( f );   
+						stmt.setInt(1, insertedId);
+						stmt.setBinaryStream (2, is, (int) f.length() ); 
+						stmt.executeUpdate();
+						
+					}finally{
+						if(is!=null){
+							is.close();
+						}
+					}
+					_document.setFileID(String.valueOf(insertedId));
+					if(this.activateFileType && _document.getFileType() !=null && _document.getFileType().getId() != null && _document.getFileType().getId()>0)
+					{
+						ftController.setDocumentFileType(_document, _document.getFileType().getId());
 					}
 				}
 			}finally{
@@ -2821,14 +3156,13 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 		String dest = formatPathForDirectory(fileDestinationPath);
 		String date = new Date().format("dd.MM.yyyy");
 		String time = new Time().format("HH:mm:ss");
-		String user ="IVYSYSTEM";
+		String user =Ivy.session().getSessionUserName();
 		try{
 			user = Ivy.session().getSessionUserName();
 		}catch(Exception ex)
 		{
 			//do nothing
 		}
-
 		for(DocumentOnServer doc: documents){
 			//Ivy.log().info("Try to copy doc: "+doc.getFilename());
 			int i = getNextCopiedFileNumber(doc.getFilename(),dest);
@@ -2837,7 +3171,6 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 			{
 				continue;
 			}
-
 			DocumentOnServer docJ = new DocumentOnServer();
 			docJ.setJavaFile(this.getDocumentOnServerWithJavaFile(doc).getJavaFile());
 			//Ivy.log().info("Doc with Java File retrieved ");
@@ -2858,8 +3191,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 				newFile+=fname;
 
 			}
-
-			docJ.setDescription("Copy of "+doc.getPath());
+			docJ.setDescription("");
 			docJ.setCreationDate(date);
 			docJ.setCreationTime(time);
 			docJ.setFilename(fname);
@@ -2871,15 +3203,22 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 			docJ.setModificationUserID("");
 			docJ.setPath(newFile);
 			docJ.setJavaFile(docJ.getJavaFile());
+			docJ.setFileType(doc.getFileType());
 			try{
 				docJ.setExtension(docJ.getFilename().substring(docJ.getFilename().lastIndexOf(".")+1));
 			}catch(Exception ex){
 				//Ignore the Exception here
 			}
 			docJ.setUserID(user);
-			int j = this.insertOneDocument(docJ);
+			int j = this.insertOneDocumentWithoutHistory(docJ);
 			if(j>0){
 				pasteDocs.add(docJ);
+				if(super.getFileActionHistoryController()!=null && super.getFileActionHistoryController().getConfig().isCopyFileTracked())
+				{
+					super.getFileActionHistoryController().createNewActionHistory(j, (short) 1, Ivy.session().getSessionUserName(), "Copy of / Kopie von / copie de: "+doc.getPath());
+					super.getFileActionHistoryController().createNewActionHistory(Long.parseLong(doc.getFileID()), (short) 9, Ivy.session().getSessionUserName(), docJ.getPath());
+				}
+				//Ivy.cms().findContentObjectValue("", Locale.ENGLISH).getContentAsString();
 			}
 		}
 
@@ -3124,7 +3463,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 		}
 		if(_userID==null)
 		{
-			_userID="";
+			_userID=Ivy.session().getSessionUserName();
 		}
 		int i=0;
 		IExternalDatabaseRuntimeConnection connection = null;
@@ -3136,8 +3475,10 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 
 			PreparedStatement stmt = null;
 			try{
-				String newPath = _doc.getPath().substring(0,escapeBackSlash(_doc.getPath()).lastIndexOf("/"))+"/"+_newName.trim();
+				String ext = "."+FileHandler.getFileExtension(_doc.getPath());
+				String newPath = _doc.getPath().substring(0,escapeBackSlash(_doc.getPath()).lastIndexOf("/"))+"/"+_newName.trim()+ext;
 				stmt = jdbcConnection.prepareStatement(query);
+				
 				stmt.setString(1, _newName.trim());
 				stmt.setString(2, newPath);
 				stmt.setString(3, new Date().format("dd.MM.yyyy"));
@@ -3145,6 +3486,17 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 				stmt.setString(5, _userID);
 				stmt.setString(6, escapeBackSlash(_doc.getPath()));
 				i=stmt.executeUpdate();
+				if(super.getFileActionHistoryController()!=null  && super.getFileActionHistoryController().getConfig().isRenameFileTracked())
+				{
+					long l = 0;
+					if(_doc.getFileID()==null || _doc.getFileID().trim().length()==0)
+					{
+						l = this.getDocIdWithPath(newPath);
+					}else{
+						l = Long.parseLong(_doc.getFileID());
+					}
+					super.getFileActionHistoryController().createNewActionHistory(l, (short) 4, _userID, _doc.getFilename() +" -> "+_newName+ext);
+				}
 			}
 			finally{
 				DatabaseUtil.close(stmt);
@@ -3169,12 +3521,12 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 	 * @see ch.ivyteam.ivy.addons.filemanager.database.AbstractFileManagementHandler#renameDocumentOnServer(ch.ivyteam.ivy.addons.filemanager.DocumentOnServer, java.lang.String)
 	 */
 	@Override
-	public ReturnedMessage renameDocumentOnServer(DocumentOnServer document,
+	public ReturnedMessage renameDocumentOnServer(DocumentOnServer _doc,
 			String newName) throws Exception {
 		ReturnedMessage message = new ReturnedMessage();
 		message.setType(FileHandler.SUCCESS_MESSAGE);
 		message.setFiles(List.create(java.io.File.class));
-		if(document==null || document.getPath().trim().equals("") || document.getFilename().trim().equals("") || newName==null || newName.trim().equals("")){
+		if(_doc==null || _doc.getPath().trim().equals("") || _doc.getFilename().trim().equals("") || newName==null || newName.trim().equals("")){
 			message.setType(FileHandler.ERROR_MESSAGE);
 			message.setText("Unable to rename the given DocumentOnServer. One of the parameter is invalid in renameDocumentOnServer(DocumentOnServer document, String newName) in class "+this.getClass().getName());
 			return message;
@@ -3185,18 +3537,33 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 			connection = getDatabase().getAndLockConnection();
 			Connection jdbcConnection=connection.getDatabaseConnection();
 			PreparedStatement stmt = null;
-			String query = "UPDATE "+this.tableNameSpace+" SET FileName = ?, FilePath = ? WHERE FilePath LIKE ?";
+			String query = "UPDATE "+this.tableNameSpace+" SET FileName = ?, FilePath = ?, ModificationDate = ?, ModificationTime = ?, ModificationUserId = ? WHERE FilePath LIKE ?";
 			try{
 				stmt = jdbcConnection.prepareStatement(query);
-				String newPath =escapeBackSlash( document.getPath());
-				String ext = "."+FileHandler.getFileExtension(document.getPath());
+				String newPath =escapeBackSlash( _doc.getPath());
+				String ext = "."+FileHandler.getFileExtension(_doc.getPath());
 				newPath = newPath.substring(0, newPath.lastIndexOf("/")+1)+ newName+ext;
 
 				stmt.setString(1, newName+ext);
 				stmt.setString(2,escapeBackSlash( newPath));
-				stmt.setString(3,escapeBackSlash( document.getPath()));
+				stmt.setString(3, new Date().format("dd.MM.yyyy"));
+				stmt.setString(4, new Time().format("HH:mm.ss"));
+				stmt.setString(5, Ivy.session().getSessionUserName());
+				stmt.setString(6,escapeBackSlash( _doc.getPath()));
+				
 				//Ivy.log().debug(query+" "+newName+ext+" "+newPath+" "+document.getPath());
 				stmt.executeUpdate();
+				if(super.getFileActionHistoryController()!=null && super.getFileActionHistoryController().getConfig().isRenameFileTracked())
+				{
+					long l = 0;
+					if(_doc.getFileID()==null || _doc.getFileID().trim().length()==0)
+					{
+						l = this.getDocIdWithPath(newPath);
+					}else{
+						l = Long.parseLong(_doc.getFileID());
+					}
+					super.getFileActionHistoryController().createNewActionHistory(l, (short) 4, Ivy.session().getSessionUserName(), _doc.getFilename() +" -> "+newName+ext);
+				}
 			}finally{
 				DatabaseUtil.close(stmt);
 			}
@@ -3239,7 +3606,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 
 		}
 		if(id<=0)
-		{//then it is a new document we check if this document already exists
+		{//then it may be a new document we check if this document already exists
 			DocumentOnServer doc = this.getDocumentOnServer(document.getPath().trim());
 
 			if(doc!=null && doc.getFileID()!=null){
@@ -3268,110 +3635,116 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 				// it will overwrite an existing document
 				document.setFileID(doc.getFileID().trim());
 			}
+		}
+		// id is set, we update the existing DocumentOnServer
+		java.io.File f = null;
+		if(document.getIvyFile() !=null && document.getIvyFile().isFile())
+		{
+			f=document.getIvyFile().getJavaFile();
+		}else if(document.getJavaFile() !=null && document.getJavaFile().isFile())
+		{
+			f = document.getJavaFile();
+		}else 
+		{
+			f=this.getDocumentOnServerWithJavaFile(document).getJavaFile();
+		}
+		
+		String query="";
+		String query2="";
+		String filesize="";
+		if(f==null || !f.isFile())
+		{//if non file found to get content, we ignore the content field
+			query = "UPDATE "+this.tableNameSpace+
+			" SET FileName= ?,  FilePath= ?," +
+			" FileSize= ?, Locked= ?, LockingUserId= ?, ModificationUserId= ?," +
+			" ModificationDate= ?, ModificationTime= ?, Description= ? WHERE FileId = ?";
+			filesize = document.getFileSize();
 		}else
-		{// id is set, we update the existing DocumentOnServer
-			java.io.File f = null;
-			if(document.getIvyFile() !=null && document.getIvyFile().isFile())
-			{
-				f=document.getIvyFile().getJavaFile();
-			}else if(document.getJavaFile() !=null && document.getJavaFile().isFile())
-			{
-				f = document.getJavaFile();
-			}else 
-			{
-				f=this.getDocumentOnServerWithJavaFile(document).getJavaFile();
-			}
-
-			String query="";
-			String query2="";
-			String filesize="";
-			if(f==null || !f.isFile())
-			{//if non file found to get content, we ignore the content field
-				query = "UPDATE "+this.tableNameSpace+
-				" SET FileName= ?,  FilePath= ?," +
-				" FileSize= ?, Locked= ?, LockingUserId= ?, ModificationUserId= ?," +
-				" ModificationDate= ?, ModificationTime= ?, Description= ? WHERE FileId = ?";
-				filesize = document.getFileSize();
-			}else
-			{
-				query = "UPDATE "+this.tableNameSpace+
-				" SET FileName= ?,  FilePath= ?," +
-				" FileSize= ?, Locked= ?, LockingUserId= ?, ModificationUserId= ?," +
-				" ModificationDate= ?, ModificationTime= ?, Description= ? WHERE FileId = ?";
-				query2="UPDATE "+this.fileContentTableNameSpace+" SET file_content= ? WHERE File_id = ?";
-				filesize= FileHandler.getFileSize(f);
-			}
-
-			String date = new Date().format("dd.MM.yyyy");
-			String time = new Time().format("HH:mm:ss");
-			String user = Ivy.session().getSessionUserName();
-			IExternalDatabaseRuntimeConnection connection=null;
-			try {
-				connection = getDatabase().getAndLockConnection();
-				Connection jdbcConnection=connection.getDatabaseConnection();
-				PreparedStatement stmt = null;
-				try{
-					stmt = jdbcConnection.prepareStatement(query);
-					stmt.setString(1, document.getFilename());
-					stmt.setString(2, escapeBackSlash(document.getPath()));
-					stmt.setString(3, filesize);
-					int lock =0;
-					try{
-						lock = Integer.parseInt(document.getLocked().trim());
-						if(lock<0){
-							lock=0;
-						}
-						if(lock>1){
-							lock=1;
-						}
-					}catch(Exception ex){
-
-					}
-					stmt.setInt(4, lock);
-					stmt.setString(5, (document.getLockingUserID()==null || document.getLockingUserID().trim().equals("")?user: document.getLockingUserID().trim()));
-					stmt.setString(6, user);
-					stmt.setString(7, date);
-					stmt.setString(8, time);
-					String s = document.getDescription();
-					if(s==null)
-					{
-						s="";
-					}
-					stmt.setString(9, s);
-					stmt.setInt(10, id);
-					stmt.executeUpdate();
-					if(f!=null && f.exists())
-					{// the content exists
-						// set the content
-						stmt = jdbcConnection.prepareStatement(query2);
-						FileInputStream is=null;
-						try{
-							is = new FileInputStream ( f );  
-							stmt.setBinaryStream (1, is, (int) f.length() ); 
-							//stmt.setBlob(10, is, (int) f.length());
-							//set the id (WHERE CLAUSE)
-							stmt.setInt(2, id);
-							stmt.executeUpdate();
-						}finally
-						{
-							if(is!=null)
-							{
-								is.close();
-							}
-						}
-					}
-					message.setDocumentOnServer(document);
-				}finally{
-					DatabaseUtil.close(stmt);
-				}
-			}finally{
-				if(connection!=null ){
-					database.giveBackAndUnlockConnection(connection);
-				}
-			}
-
+		{
+			query = "UPDATE "+this.tableNameSpace+
+			" SET FileName= ?,  FilePath= ?," +
+			" FileSize= ?, Locked= ?, LockingUserId= ?, ModificationUserId= ?," +
+			" ModificationDate= ?, ModificationTime= ?, Description= ? WHERE FileId = ?";
+			query2="UPDATE "+this.fileContentTableNameSpace+" SET file_content= ? WHERE File_id = ?";
+			filesize= FileHandler.getFileSize(f);
 		}
 
+		String date = new Date().format("dd.MM.yyyy");
+		String time = new Time().format("HH:mm:ss");
+		String user = Ivy.session().getSessionUserName();
+		IExternalDatabaseRuntimeConnection connection=null;
+		try {
+			connection = getDatabase().getAndLockConnection();
+			Connection jdbcConnection=connection.getDatabaseConnection();
+			PreparedStatement stmt = null;
+			try{
+				stmt = jdbcConnection.prepareStatement(query);
+				stmt.setString(1, document.getFilename());
+				stmt.setString(2, escapeBackSlash(document.getPath()));
+				stmt.setString(3, filesize);
+				int lock =0;
+				try{
+					lock = Integer.parseInt(document.getLocked().trim());
+					if(lock<0){
+						lock=0;
+					}
+					if(lock>1){
+						lock=1;
+					}
+				}catch(Exception ex){
+
+				}
+				stmt.setInt(4, lock);
+				stmt.setString(5, (document.getLockingUserID()==null || document.getLockingUserID().trim().equals("")?user: document.getLockingUserID().trim()));
+				stmt.setString(6, user);
+				stmt.setString(7, date);
+				stmt.setString(8, time);
+				String s = document.getDescription();
+				if(s==null)
+				{
+					s="";
+				}
+				stmt.setString(9, s);
+				stmt.setInt(10, id);
+				stmt.executeUpdate();
+				if(f!=null && f.exists())
+				{// the content exists
+					// set the content
+					stmt = jdbcConnection.prepareStatement(query2);
+					FileInputStream is=null;
+					try{
+						is = new FileInputStream ( f );  
+						stmt.setBinaryStream (1, is, (int) f.length() ); 
+						//stmt.setBlob(10, is, (int) f.length());
+						//set the id (WHERE CLAUSE)
+						stmt.setInt(2, id);
+						stmt.executeUpdate();
+					}finally
+					{
+						if(is!=null)
+						{
+							is.close();
+						}
+					}
+				}
+				message.setDocumentOnServer(document);
+			}finally{
+				DatabaseUtil.close(stmt);
+			}
+		}finally{
+			if(connection!=null ){
+				database.giveBackAndUnlockConnection(connection);
+			}
+		}
+		if(this.activateFileType)
+		{
+			long ftId =0;
+			if(document.getFileType() != null && document.getFileType().getId()!=null)
+			{
+				ftId = document.getFileType().getId();
+			}
+			this.ftController.setDocumentFileType(document, ftId);
+		}
 		return message;
 	}
 
@@ -3407,6 +3780,12 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 				if(i<=0){
 					message.setType(FileHandler.ERROR_MESSAGE);
 					message.setText(Ivy.cms().co("/ch/ivyteam/ivy/addons/filemanager/fileManagement/messages/error/fileNotfound")+" "+path);
+				}
+				if(super.getFileActionHistoryController()!=null && super.getFileActionHistoryController().getConfig().isChangeFileDescriptionTracked())
+				{
+					long l  = this.getDocIdWithPath(path);
+					
+					super.getFileActionHistoryController().createNewActionHistory(l, (short) 3, Ivy.session().getSessionUserName(), "");
 				}
 			}finally{
 				DatabaseUtil.close(stmt);
@@ -3478,6 +3857,10 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 					message.setType(FileHandler.ERROR_MESSAGE);
 					message.setText(Ivy.cms().co("/ch/ivyteam/ivy/addons/filemanager/fileManagement/messages/error/fileNotfound"));
 				}
+				if(super.getFileActionHistoryController()!=null && super.getFileActionHistoryController().getConfig().isChangeFileDescriptionTracked())
+				{
+					super.getFileActionHistoryController().createNewActionHistory(id, (short) 3, Ivy.session().getSessionUserName(), "");
+				}
 			}finally{
 				DatabaseUtil.close(stmt);
 			}
@@ -3517,6 +3900,10 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 				stmt.setInt(2, Integer.parseInt(document.getFileID()));
 
 				stmt.executeUpdate();
+				if(super.getFileActionHistoryController()!=null&& super.getFileActionHistoryController().getConfig().isMoveFileTracked())
+				{
+					super.getFileActionHistoryController().createNewActionHistory(Long.parseLong(document.getFileID()), (short) 10, Ivy.session().getSessionUserName(), document.getPath() +" -> "+destination+document.getFilename());
+				}
 				message.setDocumentOnServer(document);
 			}finally{
 				DatabaseUtil.close(stmt);
@@ -3873,6 +4260,10 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 					if(id>0){
 						stmt.setInt(1, id);
 						stmt.executeUpdate();
+						if(super.getFileActionHistoryController()!=null && super.getFileActionHistoryController().getConfig().isDeleteFileTracked())
+						{
+							super.getFileActionHistoryController().createNewActionHistory(id, (short) 5, Ivy.session().getSessionUserName(), doc.getPath());
+						}
 					}
 				}
 			}finally{
@@ -3920,6 +4311,10 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 					if(id>0){
 						stmt.setInt(1, id);
 						stmt.executeUpdate();
+						if(super.getFileActionHistoryController()!=null && super.getFileActionHistoryController().getConfig().isDeleteFileTracked())
+						{
+							super.getFileActionHistoryController().createNewActionHistory(id, (short) 5, Ivy.session().getSessionUserName(), file.getPath());
+						}
 					}
 				}
 				stmt = jdbcConnection.prepareStatement(base);
@@ -4106,6 +4501,10 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 				if(id>0){
 					stmt.setInt(1, id);
 					stmt.executeUpdate();
+					if(super.getFileActionHistoryController()!=null && super.getFileActionHistoryController().getConfig().isDeleteFileTracked())
+					{
+						super.getFileActionHistoryController().createNewActionHistory(id, (short) 5, Ivy.session().getSessionUserName(), _filepath);
+					}
 				}
 
 				stmt = jdbcConnection.prepareStatement(base);
@@ -4131,19 +4530,20 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 
 	/**
 	 * @param fileVersioningController the fileVersioningController to set
-	 
+
 	public void setFileVersioningController(FileVersioningController fileVersioningController) {
 		this.fileVersioningController = fileVersioningController;
 	}
 
-	
+
 	public FileVersioningController getFileVersioningController() {
 		return fileVersioningController;
 	}
-	*/
+	 */
 	@Override
 	public int getFile_content_storage_type() {
 		return AbstractFileManagementHandler.FILE_STORAGE_DATABASE;
 	}
+
 
 }

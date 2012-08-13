@@ -12,3 +12,6 @@ pattern String #field
 pattern PERSISTENT #fieldModifier
 filteredDcoumentsList List<ch.ivyteam.ivy.addons.filemanager.DocumentOnServer> #field
 filteredDcoumentsList PERSISTENT #fieldModifier
+configurationController ch.ivyteam.ivy.addons.filemanager.configuration.BasicConfigurationController #field
+configurationController PERSISTENT #fieldModifier
+filemanagementHandler ch.ivyteam.ivy.addons.filemanager.database.AbstractFileManagementHandler #field

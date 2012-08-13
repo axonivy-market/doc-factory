@@ -7,7 +7,7 @@ CREATE SEQUENCE uploadedfiles_sequence
 
 CREATE TABLE UploadedFiles
 (
-	FileId integer NOT NULL DEFAULT nextval('uploadedfiles_sequence'::regclass),
+	FileId bigint NOT NULL DEFAULT nextval('uploadedfiles_sequence'::regclass),
 	FileName character varying(255),
 	FilePath character varying(750),
 	CreationUserId character varying(64),
@@ -20,7 +20,8 @@ CREATE TABLE UploadedFiles
 	ModificationDate character varying(10),
 	ModificationTime character varying(8),
 	Description character varying(1024),
-	versionnumber integer, /*This field is only needed if you use the fileManager with the versioning.*/
+	versionnumber integer default 1,
+	filetypeid integer,
 	CONSTRAINT uploadedfiles_pkey PRIMARY KEY (fileid)
 	)
 	WITH (
@@ -36,7 +37,7 @@ CREATE SEQUENCE directories_sequence
   
 CREATE TABLE directories
   (
-  id integer NOT NULL DEFAULT nextval('directories_sequence'::regclass),
+  id bigint NOT NULL DEFAULT nextval('directories_sequence'::regclass),
   dir_name character varying(255) NOT NULL,
   dir_path character varying(750) NOT NULL,
   creation_user_id character varying(200),
@@ -68,8 +69,8 @@ CREATE SEQUENCE filecontent_sequence
   
 CREATE TABLE filecontent
   (
-  id integer NOT NULL DEFAULT nextval('filecontent_sequence'::regclass),
-  file_id integer NOT NULL,
+  id bigint NOT NULL DEFAULT nextval('filecontent_sequence'::regclass),
+  file_id bigint NOT NULL,
   file_content bytea,
   CONSTRAINT filecontent_pkey PRIMARY KEY (id),
   CONSTRAINT filecontent_file_id_key UNIQUE (file_id)
@@ -87,10 +88,10 @@ CREATE SEQUENCE fileversions_sequence
         
 CREATE TABLE file_versions
 (
-  versionid integer NOT NULL DEFAULT nextval('fileversions_sequence'::regclass),
-  file_id integer NOT NULL,
+  versionid bigint NOT NULL DEFAULT nextval('fileversions_sequence'::regclass),
+  file_id bigint NOT NULL,
   version_number integer NOT NULL,
-  fvc_id integer,
+  fvc_id bigint,
   file_name character varying(255),
   cdate date,
   ctime time without time zone,
@@ -110,8 +111,8 @@ CREATE SEQUENCE fileversioncontent_sequence
         
 CREATE TABLE file_version_content
 (
-  fvcid integer NOT NULL DEFAULT nextval('fileversioncontent_sequence'::regclass),
-  version_id integer NOT NULL,
+  fvcid bigint NOT NULL DEFAULT nextval('fileversioncontent_sequence'::regclass),
+  version_id bigint NOT NULL,
   content bytea,
   CONSTRAINT file_version_content_pkey PRIMARY KEY (fvcid),
   CONSTRAINT file_version_content_version_id_key UNIQUE (version_id)
@@ -119,3 +120,96 @@ CREATE TABLE file_version_content
 WITH (
   OIDS=FALSE
 );
+
+CREATE SEQUENCE filetype_sequence
+        INCREMENT 1
+        MINVALUE 1
+        MAXVALUE 9223372036854775807
+        START 1
+        CACHE 1;
+        
+CREATE TABLE filetype
+(
+  id integer NOT NULL DEFAULT nextval('filetype_sequence'::regclass),
+  name character varying(255) NOT NULL,
+  appname character varying(255) NULL,
+  CONSTRAINT filetype_pkey PRIMARY KEY (id),
+  CONSTRAINT filetype_name_appname_key UNIQUE (name,appname)
+)
+WITH (
+  OIDS=FALSE
+);
+
+CREATE SEQUENCE filetags_sequence
+        INCREMENT 1
+        MINVALUE 1
+        MAXVALUE 9223372036854775807
+        START 1
+        CACHE 1;
+        
+CREATE TABLE tags
+(
+  id bigint NOT NULL DEFAULT nextval('filetags_sequence'::regclass),
+  fileid bigint NOT NULL,
+  tag character varying(255) NOT NULL,
+  CONSTRAINT filetags_pkey PRIMARY KEY (id),
+  CONSTRAINT filetags_fileid_tag_key UNIQUE (fileid,tag)
+)
+WITH (
+  OIDS=FALSE
+);
+
+CREATE SEQUENCE fileactiontype_sequence
+        INCREMENT 1
+        MINVALUE 1
+        MAXVALUE 9223372036854775807
+        START 1
+        CACHE 1;
+        
+CREATE TABLE fileactiontype
+(
+  id integer NOT NULL DEFAULT nextval('fileactiontype_sequence'::regclass),
+  atype integer NOT NULL,
+  en character varying(64) NOT NULL,
+  de character varying(64) NOT NULL,
+  fr character varying(64) NOT NULL,
+  CONSTRAINT fileactiontype_pkey PRIMARY KEY (id),
+  CONSTRAINT fileactiontype_ukey UNIQUE (atype)
+)
+WITH (
+  OIDS=FALSE
+);
+
+CREATE SEQUENCE fileactionhistory_sequence
+        INCREMENT 1
+        MINVALUE 1
+        MAXVALUE 9223372036854775807
+        START 1
+        CACHE 1;
+        
+CREATE TABLE fileactionhistory
+(
+  id bigint NOT NULL DEFAULT nextval('fileactionhistory_sequence'::regclass),
+  actiontype integer NOT NULL REFERENCES fileactiontype(atype),
+  file_id bigint NOT NULL,
+  usern character varying(256) NOT NULL,
+  uname character varying(1024) NOT NULL,
+  ddate date,
+  ttime time without time zone,
+  adesc character varying(1600) NOT NULL,
+  CONSTRAINT fileactionhistory_pkey PRIMARY KEY (id)
+)
+WITH (
+  OIDS=FALSE
+);
+
+INSERT INTO fileactiontype (atype,en,de,fr) VALUES (1,'File created', 'Datei kreiert' , 'Fichier créé');
+INSERT INTO fileactiontype (atype,en,de,fr) VALUES (2,'File content changed', 'Datei Inhalt geändert' , 'Fichier modifié');
+INSERT INTO fileactiontype (atype,en,de,fr) VALUES (3,'File description changed', 'Datei Beschreibung geändert', 'Description du Fichier modifiée');
+INSERT INTO fileactiontype (atype,en,de,fr) VALUES (4,'File renamed', 'Datei umbennant' , 'Fichier renommé');
+INSERT INTO fileactiontype (atype,en,de,fr) VALUES (5,'File deleted', 'Datei gelöscht' , 'Fichier supprimé');
+INSERT INTO fileactiontype (atype,en,de,fr) VALUES (6,'File downloaded', 'Datei heruntergeladen' , 'Fichier téléchargé');
+INSERT INTO fileactiontype (atype,en,de,fr) VALUES (7,'File printed', 'Datei gedruckt' , 'Fichier imprimé');
+INSERT INTO fileactiontype (atype,en,de,fr) VALUES (8,'File opened', 'Datei geöffnet' , 'Fichier ouvert');
+INSERT INTO fileactiontype (atype,en,de,fr) VALUES (9,'File copied and paste', 'Datei kopiert' , 'Fichier copié');
+INSERT INTO fileactiontype (atype,en,de,fr) VALUES (10,'File moved', 'Datei verschoben' , 'Fichier déplacé');

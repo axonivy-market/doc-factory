@@ -32,6 +32,7 @@ import ch.ivyteam.ivy.addons.filemanager.DocumentOnServer;
 import ch.ivyteam.ivy.addons.filemanager.FileHandler;
 import ch.ivyteam.ivy.addons.filemanager.ReturnedMessage;
 import ch.ivyteam.ivy.addons.filemanager.ZipHandler;
+import ch.ivyteam.ivy.addons.filemanager.configuration.BasicConfigurationController;
 import ch.ivyteam.ivy.addons.filemanager.database.security.AbstractDirectorySecurityController;
 
 
@@ -92,8 +93,6 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		}else{
 			this.tableNameSpace = this.tableName;
 		}
-
-		//checkTablesExists();
 	}
 
 	/**
@@ -124,61 +123,30 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 			this.schemaName = _schemaName.trim();
 			//since the schema name is for now only use in PostGreSQL, 
 			//we escape the schema and table name to be able to support non lower case schemas
-			this.tableNameSpace="\""+this.schemaName+"\""+"."+"\""+this.tableName+"\"";
+			this.tableNameSpace="\""+this.schemaName+"\""+"."+"\""+this.tableName+"\""; 
 		}
-
-		//checkTablesExists();
-
 	}
+	
+	/**
+	 * Creates a new FileManagementDBHandlerUniversal with the given BasicConfigurationController
+	 * @param _conf BasicConfigurationController
+	 * @throws Exception NullpointerException if the BasicConfigurationController is null
+	 */
+	public FileManagementDBHandlerUniversal(BasicConfigurationController _conf) throws Exception
+	{
+		super();
+		this.ivyDBConnectionName = _conf.getIvyDBConnectionName();
+		this.tableName = _conf.getFilesTableName();
+		this.schemaName = _conf.getDatabaseSchemaName();
+		this.tableNameSpace = this.tableName;
+		if(this.schemaName!=null && this.schemaName.length()>0)
+		{//set the schema name variable
 
-	@SuppressWarnings("unused")
-	private void checkTablesExists() throws Exception{
-
-		String createFileTable="CREATE TABLE "+this.tableNameSpace+" (" +
-		"FileId             INT AUTOINCREMENT NOT NULL," +
-		"FileName           VARCHAR (255) NULL," +
-		"FilePath           VARCHAR (750) NULL," +
-		"CreationUserId     VARCHAR (64) NULL," +
-		"CreationDate       VARCHAR (10) NULL," +
-		"CreationTime       VARCHAR (8) NULL," +
-		"FileSize           VARCHAR (20) NULL," +
-		"Locked             TINYINT NULL," +
-		"LockingUserId      VARCHAR (64) NULL," +
-		"ModificationUserId VARCHAR (64) NULL," +
-		"ModificationDate   VARCHAR (10) NULL," +
-		"ModificationTime   VARCHAR (8) NULL," +
-		"Description        VARCHAR (1024) NULL," +
-		"PRIMARY KEY (FileId))";
-
-		//Check if fileTable exists if not tries to create it
-		IExternalDatabaseRuntimeConnection connection = null;
-		try {
-
-			connection = getDatabase().getAndLockConnection();
-			Connection jdbcConnection=connection.getDatabaseConnection();
-			PreparedStatement stmt = null;
-			try{
-
-				if(!jdbcConnection.getMetaData().getTables(null, null, this.tableNameSpace, null).next()){
-					Ivy.log().info("Files table does not exists, executes "+jdbcConnection.nativeSQL(createFileTable));
-					stmt = jdbcConnection.prepareStatement(jdbcConnection.nativeSQL(createFileTable));
-					stmt.execute();
-				}
-				if(jdbcConnection.getMetaData().getDatabaseProductName().toLowerCase().contains("postgre") && this.schemaName.trim().equals(""))
-				{
-					this.tableNameSpace = "\""+this.tableNameSpace+"\"";
-				}
-			}
-			finally{
-
-				DatabaseUtil.close(stmt);
-			}
-		} 
-		finally{
-			if(connection!=null ){
-				database.giveBackAndUnlockConnection(connection);
-			}
+			//since the schema name is for now only use in PostGreSQL, 
+			//we escape the schema and table name to be able to support non lower case schemas
+			this.tableNameSpace="\""+this.schemaName+"\""+"."+"\""+this.tableName+"\""; 
 		}
+		
 	}
 
 	/**
@@ -1174,6 +1142,10 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		if(_user==null || _user.trim().equals("")){
 			_user= Ivy.session().getSessionUserName();
 		}
+		if(_destinationPath==null || _destinationPath.trim().length()==0)
+		{
+			_destinationPath=FileHandler.getFileDirectoryPath(_files.get(0));
+		}
 		_destinationPath = formatPathForDirectory(_destinationPath);
 		IExternalDatabaseRuntimeConnection connection=null;
 		try {
@@ -1898,6 +1870,70 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		}
 		return doc;
 	}
+	
+	/**
+	 * returns the document on Server corresponding to the file id
+	 * @param fileId
+	 * @return
+	 * @throws Exception
+	 */
+	public DocumentOnServer getDocumentOnServer(long fileId)
+	throws Exception {
+		DocumentOnServer doc = new DocumentOnServer();
+		if(fileId<=0){
+			return doc;
+		}
+		Recordset rset = null;
+		List<Record> recordList= (List<Record>) List.create(Record.class);
+
+		String query="";
+		IExternalDatabaseRuntimeConnection connection = null;
+		try {
+			connection = getDatabase().getAndLockConnection();
+			Connection jdbcConnection=connection.getDatabaseConnection();
+
+			query="SELECT * FROM "+this.tableNameSpace+" WHERE FileId LIKE ?";
+			PreparedStatement stmt = null;
+			try{
+				stmt = jdbcConnection.prepareStatement(query);
+				stmt.setString(1, String.valueOf(fileId));
+				rset=executeStatement(stmt);
+				recordList=rset.toList();
+			}finally{
+				DatabaseUtil.close(stmt);
+			}
+		} finally{
+			if(connection!=null ){
+				database.giveBackAndUnlockConnection(connection);
+			}
+		}
+		if(!recordList.isEmpty())
+		{
+			//we take the first one, normally just one
+			Record rec = recordList.get(0);
+
+			doc.setFileID(rec.getField("FileId").toString());
+			doc.setFilename(rec.getField("FileName").toString());
+			doc.setPath(rec.getField("FilePath").toString());
+			doc.setFileSize(rec.getField("FileSize").toString());
+			doc.setUserID(rec.getField("CreationUserId").toString());
+			doc.setCreationDate(rec.getField("CreationDate").toString());
+			doc.setCreationTime(rec.getField("CreationTime").toString());
+			doc.setModificationUserID(rec.getField("ModificationUserId").toString());
+			doc.setModificationDate(rec.getField("ModificationDate").toString());
+			doc.setModificationTime(rec.getField("ModificationTime").toString());
+			doc.setLocked(rec.getField("Locked").toString());
+			doc.setLockingUserID(rec.getField("LockingUserId").toString());
+			doc.setDescription(rec.getField("Description").toString());
+			try{
+				doc.setExtension(doc.getFilename().substring(doc.getFilename().lastIndexOf(".")+1));
+			}catch(Exception ex){
+				//Ignore the Exception here
+			}
+
+		}
+		return doc;
+	}
 
 	@Override
 	public List<DocumentOnServer> getDocumentOnServersInDirectory(
@@ -2455,6 +2491,17 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		DocumentOnServer doc = this.getDocumentOnServer(path);
 		return getDocumentOnServerWithJavaFile(doc);
 
+	}
+	
+	@Override
+	public DocumentOnServer getDocumentOnServerWithJavaFile(long fileid)
+			throws Exception {
+		if(fileid<=0)
+		{
+			return null;
+		}
+		DocumentOnServer doc = this.getDocumentOnServer(fileid);
+		return getDocumentOnServerWithJavaFile(doc);
 	}
 
 	@Override

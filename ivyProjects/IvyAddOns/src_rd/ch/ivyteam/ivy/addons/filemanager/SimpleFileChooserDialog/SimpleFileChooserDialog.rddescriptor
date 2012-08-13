@@ -12,7 +12,7 @@
         </inputParameter>
     </method>
     <method>
-        <name>_uploadDone</name>
+        <name>_uploadDoneForFilesInDB</name>
         <description>callback method, called when an upload is done.&#xD;
 The list of files will be automatically refreshed</description>
         <inputParameter>
@@ -126,6 +126,31 @@ The user can upload files (uploadButton visible)</description>
             <name>choosedFile</name>
             <description></description>
             <parameterType>java.io.File</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </outputParameter>
+    </startMethod>
+    <startMethod>
+        <name>start</name>
+        <description>start with a Configuration Controller object.&#xD;
+This object contains all the necessary informations to be able to start a file management environment.&#xD;
+It gives the selected document On Server Object as result. &#xD;
+This Object can be used in a file management context where all the files are sotred as BLOB.</description>
+        <inputParameter>
+            <name>configurationController</name>
+            <description></description>
+            <parameterType>ch.ivyteam.ivy.addons.filemanager.configuration.BasicConfigurationController</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </inputParameter>
+        <inputParameter>
+            <name>showUploadButton</name>
+            <description></description>
+            <parameterType>Boolean</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </inputParameter>
+        <outputParameter>
+            <name>selectedDocumentOnServer</name>
+            <description></description>
+            <parameterType>ch.ivyteam.ivy.addons.filemanager.DocumentOnServer</parameterType>
             <nullPermitted>false</nullPermitted>
         </outputParameter>
     </startMethod>

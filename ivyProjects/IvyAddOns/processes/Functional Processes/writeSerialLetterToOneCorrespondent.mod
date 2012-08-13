@@ -1,5 +1,5 @@
 [Ivy]
-[>Created: Thu May 19 07:39:04 CEST 2011]
+[>Created: Thu May 10 21:11:18 EDT 2012]
 124971223DD62955 3.17 #module
 >Proto >Proto Collection #zClass
 wr0 writeSerialLetter Big #zClass
@@ -85,6 +85,34 @@ wr0 @PushWFArc f68 '' #zField
 wr0 @PushWFArc f69 '' #zField
 wr0 @EndSub f70 '' #zField
 wr0 @PushWFArc f71 '' #zField
+wr0 @StartSub f72 '' #zField
+wr0 @GridStep f73 '' #zField
+wr0 @GridStep f74 '' #zField
+wr0 @GridStep f75 '' #zField
+wr0 @PushWFArc f76 '' #zField
+wr0 @PushWFArc f77 '' #zField
+wr0 @PushWFArc f78 '' #zField
+wr0 @EndSub f79 '' #zField
+wr0 @PushWFArc f80 '' #zField
+wr0 @GridStep f81 '' #zField
+wr0 @GridStep f82 '' #zField
+wr0 @GridStep f83 '' #zField
+wr0 @StartSub f84 '' #zField
+wr0 @PushWFArc f85 '' #zField
+wr0 @PushWFArc f86 '' #zField
+wr0 @PushWFArc f87 '' #zField
+wr0 @EndSub f88 '' #zField
+wr0 @PushWFArc f89 '' #zField
+wr0 @StartSub f90 '' #zField
+wr0 @GridStep f91 '' #zField
+wr0 @GridStep f92 '' #zField
+wr0 @GridStep f93 '' #zField
+wr0 @PushWFArc f94 '' #zField
+wr0 @PushWFArc f95 '' #zField
+wr0 @PushWFArc f96 '' #zField
+wr0 @EndSub f97 '' #zField
+wr0 @PushWFArc f98 '' #zField
+wr0 @InfoButton f99 '' #zField
 >Proto wr0 wr0 writeSerialLetter #zField
 wr0 f0 inParamDecl '<List<ch.ivyteam.ivy.addons.docfactory.TemplateMergeField> listOfTemplateMergeFields,java.lang.String optionalOutputpath,java.lang.String optionalLetterName,java.lang.String optionalOutputFormat,java.lang.String templatePath> param;' #txt
 wr0 f0 inParamTable 'out.mergeFieldsList=param.listOfTemplateMergeFields;
@@ -313,7 +341,8 @@ wr0 f11 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
         <name>This callable produces a document with a data (DataClass) and 
-with the help of a document factory Object.
+with the help of a document factory Object. 
+
 The Document Factory Object is a Java Object that can parse a document model
 that contains mergefields and replace those mergefields by some String Data.
 
@@ -323,6 +352,7 @@ Mandatory input Parameters:
 -&gt; data: A CompositeObject (DataClass). 
 The values of the DataClass fields are going to be used to fill the template and to produce the document.
 The fields of the data have to be named like the fields of the template. 
+If the DataClass Object contains some List of other DataClasses, they will be used in mail merge with nested regions.
 Optional input parameters:
 -&gt; optionalOutputPath: where to store the created java.io.File. By default &quot;ivy_RIA_files&quot;
 -&gt; optionalOutputFormat: by default the first supported one (in general it will be &quot;doc&quot;
@@ -335,10 +365,10 @@ a message in the Session User language,
 a list of java.io.File that were created during the process.
 
 In this callable, just one java.io.File should be created.</name>
-        <nameStyle>106,0,7,23
+        <nameStyle>108,0,7,23
 227,7,9
 27,0,7,23
-289,7,9
+407,7,9
 26,0,7,23
 319,7,9
 55,0,7,23
@@ -348,7 +378,7 @@ In this callable, just one java.io.File should be created.</name>
     </language>
 </elementInfo>
 ' #txt
-wr0 f11 631 427 579 378 -284 -184 #rect
+wr0 f11 593 411 654 410 -322 -200 #rect
 wr0 f11 @|IBIcon #fIcon
 wr0 f11 -657956|-1|-16777216 #nodeStyle
 wr0 f12 actionDecl 'ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter out;
@@ -1024,7 +1054,7 @@ In these callables, just one java.io.File should be created.</name>
     </language>
 </elementInfo>
 ' #txt
-wr0 f49 1348 411 1112 586 -417 -288 #rect
+wr0 f49 1350 412 1188 585 -417 -288 #rect
 wr0 f49 @|IBIcon #fIcon
 wr0 f49 -657956|-1|-16777216 #nodeStyle
 wr0 f50 inParamDecl '<ch.ivyteam.ivy.scripting.objects.CompositeObject data,java.lang.String optionalOutputpath,java.lang.String optionalLetterName,java.lang.String optionalOutputFormat,java.lang.String templatePath,List<java.lang.String> tableNamesList,List<List<ch.ivyteam.ivy.scripting.objects.CompositeObject>> datasForTables> param;' #txt
@@ -1330,6 +1360,474 @@ wr0 f70 1931 363 26 26 14 0 #rect
 wr0 f70 @|EndSubIcon #fIcon
 wr0 f71 expr out #txt
 wr0 f71 1944 316 1944 363 #arcP
+wr0 f72 inParamDecl '<java.lang.String optionalOutputpath,java.lang.String optionalLetterName,java.lang.String optionalOutputFormat,java.lang.String templatePath,ch.ivyteam.ivy.scripting.objects.CompositeObject DataForMailMergeOutOfTables,List<ch.ivyteam.ivy.scripting.objects.CompositeObject> parentTableDatas,List<List<ch.ivyteam.ivy.scripting.objects.CompositeObject>> nestedChildrenTableDatas> param;' #txt
+wr0 f72 inParamTable 'out.data=param.DataForMailMergeOutOfTables;
+out.ListOfCompositeObjectsToFillTheTables=param.nestedChildrenTableDatas;
+out.ListOfParentCompositeObjects=param.parentTableDatas;
+out.outputFormat=param.optionalOutputFormat;
+out.outputPath=param.optionalOutputpath;
+out.serialLetterName=param.optionalLetterName;
+out.templatePath=param.templatePath;
+' #txt
+wr0 f72 outParamDecl '<ch.ivyteam.ivy.addons.docfactory.FileOperationMessage fileOperationMessage> result;
+' #txt
+wr0 f72 outParamTable 'result.fileOperationMessage=in.fileOperationMessage;
+' #txt
+wr0 f72 actionDecl 'ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter out;
+' #txt
+wr0 f72 callSignature writeDocumentWithMailMergeNestedTable(String,String,String,String,ch.ivyteam.ivy.scripting.objects.CompositeObject,List<ch.ivyteam.ivy.scripting.objects.CompositeObject>,List<List<ch.ivyteam.ivy.scripting.objects.CompositeObject>>) #txt
+wr0 f72 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
+wr0 f72 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>writeDocumentWithMailMergeNestedTable(
+String,String,String,String,
+List&lt;CompositeObject&gt;,List&lt;List&lt;CompositeObject&gt;&gt;)</name>
+        <nameStyle>118,5,7
+</nameStyle>
+        <desc>These callables produce a document with the data included in 
+a DataClass Object. The Merge Mail With Nested Regions is supported.
+Just One Level of Nested Regions is supported in this sub Process.
+The List&lt;CompositeObject&gt;  (List of Ivy DataClasses) parameter is used as parent Table.
+The  List&lt;List&lt;CompositeObject&gt;&gt;  (List of List of Ivy DataClasses) parameter is used as child Table.
+
+The Document Factory Object is a Java Object that can parse a document model
+that contains mergefields and replace those mergefields by some String Data.
+
+It returns a FileOperationMessage Object that contains:
+a Type indicating if the operation was successfull,
+a message in the Session User language,
+a list of java.io.File that were created during the process.
+
+In these callables, just one java.io.File should be created.</desc>
+    </language>
+</elementInfo>
+' #txt
+wr0 f72 2779 43 26 26 26 -24 #rect
+wr0 f72 @|StartSubIcon #fIcon
+wr0 f73 actionDecl 'ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter out;
+' #txt
+wr0 f73 actionTable 'out=in;
+' #txt
+wr0 f73 actionCode 'import ch.ivyteam.ivy.addons.docfactory.BaseDocFactory;
+in.documentFactory= BaseDocFactory.getInstance();' #txt
+wr0 f73 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
+wr0 f73 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>make the documentFactory 
+Object</name>
+        <nameStyle>32,7,9
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
+wr0 f73 2774 132 36 24 22 -15 #rect
+wr0 f73 @|StepIcon #fIcon
+wr0 f74 actionDecl 'ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter out;
+' #txt
+wr0 f74 actionTable 'out=in;
+' #txt
+wr0 f74 actionCode '
+import ch.ivyteam.ivy.addons.docfactory.DocumentTemplate;
+try{
+	in.documentTemplate = new DocumentTemplate(in.templatePath,in.outputPath,in.serialLetterName,in.outputFormat,in.data,in.ListOfParentCompositeObjects,in.ListOfCompositeObjectsToFillTheTables);
+	out.fileOperationMessage = 
+in.documentTemplate.generateDocument();
+}catch (Throwable t){
+	ivy.log.error(t.getMessage(),t);
+}
+
+' #txt
+wr0 f74 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
+wr0 f74 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>write the serialLetter</name>
+        <nameStyle>22,7,9
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
+wr0 f74 2774 284 36 24 22 -9 #rect
+wr0 f74 @|StepIcon #fIcon
+wr0 f75 actionDecl 'ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter out;
+' #txt
+wr0 f75 actionTable 'out=in;
+' #txt
+wr0 f75 actionCode 'import ch.ivyteam.ivy.addons.docfactory.FileUtil;
+
+// if desired format not valid, we take the first supportedFormat
+if(in.#outputFormat == null || in.outputFormat.trim().equalsIgnoreCase("") 
+	|| !in.documentFactory.isFormatSupported(in.outputFormat)){
+	if(in.documentFactory.getSupportedFormats().size()>0){
+		out.outputFormat=in.documentFactory.getSupportedFormats().get(0);
+	}
+}
+
+//if desired letter name not valid, we take the name "letter_nanoTime()"
+if(in.#serialLetterName == null || in.serialLetterName.trim().equalsIgnoreCase("")
+	|| !ch.ivyteam.ivy.addons.docfactory.FileUtil.isFileNameValid(in.serialLetterName)){
+		out.serialLetterName = "letter_"+System.nanoTime();
+}
+
+//if desired outputPath is not valid, we take "ivy_RIA_Files"
+if(in.outputPath==null || in.outputPath.trim().equalsIgnoreCase("")){
+	out.outputPath="ivy_RIA_files";
+}
+
+' #txt
+wr0 f75 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
+wr0 f75 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>Check the outputFormat / 
+outputPath / outputLetterName </name>
+        <nameStyle>56,7,9
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
+wr0 f75 2774 204 36 24 22 -18 #rect
+wr0 f75 @|StepIcon #fIcon
+wr0 f76 expr out #txt
+wr0 f76 2792 156 2792 204 #arcP
+wr0 f77 expr out #txt
+wr0 f77 2792 228 2792 284 #arcP
+wr0 f78 expr out #txt
+wr0 f78 2792 69 2792 132 #arcP
+wr0 f79 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
+wr0 f79 2779 363 26 26 14 0 #rect
+wr0 f79 @|EndSubIcon #fIcon
+wr0 f80 expr out #txt
+wr0 f80 2792 308 2792 363 #arcP
+wr0 f81 actionDecl 'ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter out;
+' #txt
+wr0 f81 actionTable 'out=in;
+' #txt
+wr0 f81 actionCode 'import ch.ivyteam.ivy.addons.docfactory.BaseDocFactory;
+in.documentFactory= BaseDocFactory.getInstance();' #txt
+wr0 f81 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
+wr0 f81 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>make the documentFactory 
+Object</name>
+        <nameStyle>32,7,9
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
+wr0 f81 3174 132 36 24 22 -15 #rect
+wr0 f81 @|StepIcon #fIcon
+wr0 f82 actionDecl 'ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter out;
+' #txt
+wr0 f82 actionTable 'out=in;
+' #txt
+wr0 f82 actionCode 'import ch.ivyteam.ivy.addons.docfactory.FileUtil;
+
+// if desired format not valid, we take the first supportedFormat
+if(in.#outputFormat == null || in.outputFormat.trim().equalsIgnoreCase("") 
+	|| !in.documentFactory.isFormatSupported(in.outputFormat)){
+	if(in.documentFactory.getSupportedFormats().size()>0){
+		out.outputFormat=in.documentFactory.getSupportedFormats().get(0);
+	}
+}
+
+//if desired letter name not valid, we take the name "letter_nanoTime()"
+if(in.#serialLetterName == null || in.serialLetterName.trim().equalsIgnoreCase("")
+	|| !ch.ivyteam.ivy.addons.docfactory.FileUtil.isFileNameValid(in.serialLetterName)){
+		out.serialLetterName = "letter_"+System.nanoTime();
+}
+
+//if desired outputPath is not valid, we take "ivy_RIA_Files"
+if(in.outputPath==null || in.outputPath.trim().equalsIgnoreCase("")){
+	out.outputPath="ivy_RIA_files";
+}
+
+' #txt
+wr0 f82 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
+wr0 f82 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>Check the outputFormat / 
+outputPath / outputLetterName </name>
+        <nameStyle>56,7,9
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
+wr0 f82 3174 204 36 24 22 -18 #rect
+wr0 f82 @|StepIcon #fIcon
+wr0 f83 actionDecl 'ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter out;
+' #txt
+wr0 f83 actionTable 'out=in;
+' #txt
+wr0 f83 actionCode '
+import ch.ivyteam.ivy.addons.docfactory.DocumentTemplate;
+try{
+	in.documentTemplate = new DocumentTemplate(in.templatePath,in.outputPath,in.serialLetterName,in.outputFormat,in.TreeDataForNestedMailMerge);
+	out.fileOperationMessage = 
+in.documentTemplate.generateDocument();
+}catch (Throwable t){
+	ivy.log.error(t.getMessage(),t);
+}
+
+' #txt
+wr0 f83 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
+wr0 f83 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>write the serialLetter</name>
+        <nameStyle>22,7,9
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
+wr0 f83 3174 284 36 24 22 -9 #rect
+wr0 f83 @|StepIcon #fIcon
+wr0 f84 inParamDecl '<java.lang.String optionalOutputpath,java.lang.String optionalLetterName,java.lang.String optionalOutputFormat,java.lang.String templatePath,ch.ivyteam.ivy.scripting.objects.Tree treeData> param;' #txt
+wr0 f84 inParamTable 'out.outputFormat=param.optionalOutputFormat;
+out.outputPath=param.optionalOutputpath;
+out.serialLetterName=param.optionalLetterName;
+out.templatePath=param.templatePath;
+out.TreeDataForNestedMailMerge=param.treeData;
+' #txt
+wr0 f84 outParamDecl '<ch.ivyteam.ivy.addons.docfactory.FileOperationMessage fileOperationMessage> result;
+' #txt
+wr0 f84 outParamTable 'result.fileOperationMessage=in.fileOperationMessage;
+' #txt
+wr0 f84 actionDecl 'ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter out;
+' #txt
+wr0 f84 callSignature writeDocumentWithMailMergeNestedTableWithTree(String,String,String,String,Tree) #txt
+wr0 f84 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
+wr0 f84 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>writeDocumentWithMailMergeNestedTableWithTree(
+String,String,String,String,
+Tree)</name>
+        <nameStyle>81,5,7
+</nameStyle>
+        <desc>These callables produce a document with the data included in 
+a Tree Object. The Merge Mail With Nested Regions is supported.
+Just One Level of Nested Regions is supported in this sub Process.
+The Tree is used to generate the Mail Merge with Nested Regions.
+The Object Value of the Node should be a DataClass (CompositeObject) and is used 
+to provide the merge fields data outside of the Nested Tables.
+The Document Factory Object is a Java Object that can parse a document model
+that contains mergefields and replace those mergefields by some String Data.
+
+It returns a FileOperationMessage Object that contains:
+a Type indicating if the operation was successfull,
+a message in the Session User language,
+a list of java.io.File that were created during the process.
+
+In these callables, just one java.io.File should be created.</desc>
+    </language>
+</elementInfo>
+' #txt
+wr0 f84 3179 43 26 26 26 -24 #rect
+wr0 f84 @|StartSubIcon #fIcon
+wr0 f85 expr out #txt
+wr0 f85 3192 156 3192 204 #arcP
+wr0 f86 expr out #txt
+wr0 f86 3192 228 3192 284 #arcP
+wr0 f87 expr out #txt
+wr0 f87 3192 69 3192 132 #arcP
+wr0 f88 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
+wr0 f88 3179 371 26 26 14 0 #rect
+wr0 f88 @|EndSubIcon #fIcon
+wr0 f89 expr out #txt
+wr0 f89 3192 308 3192 371 #arcP
+wr0 f90 inParamDecl '<java.lang.String optionalOutputpath,java.lang.String optionalLetterName,java.lang.String optionalOutputFormat,java.lang.String templatePath,ch.ivyteam.ivy.scripting.objects.CompositeObject aData,List<ch.ivyteam.ivy.scripting.objects.CompositeObject> nestedListOfDatas> param;' #txt
+wr0 f90 inParamTable 'out.data=param.aData;
+out.ListOfParentCompositeObjects=param.nestedListOfDatas;
+out.outputFormat=param.optionalOutputFormat;
+out.outputPath=param.optionalOutputpath;
+out.serialLetterName=param.optionalLetterName;
+out.templatePath=param.templatePath;
+' #txt
+wr0 f90 outParamDecl '<ch.ivyteam.ivy.addons.docfactory.FileOperationMessage fileOperationMessage> result;
+' #txt
+wr0 f90 outParamTable 'result.fileOperationMessage=in.fileOperationMessage;
+' #txt
+wr0 f90 actionDecl 'ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter out;
+' #txt
+wr0 f90 callSignature writeDocumentWithMailMergeNestedTableWithListOfDatas(String,String,String,String,ch.ivyteam.ivy.scripting.objects.CompositeObject,List<ch.ivyteam.ivy.scripting.objects.CompositeObject>) #txt
+wr0 f90 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
+wr0 f90 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>writeDocumentWithMailMergeNestedTableWithListOfDatas(
+String,String,String,String,
+CompositeObject, List&lt;CompositeObject&gt;)</name>
+        <nameStyle>122,5,7
+</nameStyle>
+        <desc>These callables produce a document with the data included in 
+a Tree Object. The Merge Mail With Nested Regions is supported.
+
+The DataClass (CompositeObject) is used 
+to provide the merge fields data outside of the Nested Tables.
+A List of Dataclasses containing other List of DataClasses... will be used to do the mail Merge with nested tables.
+
+It returns a FileOperationMessage Object that contains:
+a Type indicating if the operation was successfull,
+a message in the Session User language,
+a list of java.io.File that were created during the process.
+
+In these callables, just one java.io.File should be created.</desc>
+    </language>
+</elementInfo>
+' #txt
+wr0 f90 3611 43 26 26 26 -24 #rect
+wr0 f90 @|StartSubIcon #fIcon
+wr0 f91 actionDecl 'ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter out;
+' #txt
+wr0 f91 actionTable 'out=in;
+' #txt
+wr0 f91 actionCode '
+import ch.ivyteam.ivy.addons.docfactory.DocumentTemplate;
+try{
+	in.documentTemplate = new DocumentTemplate(in.templatePath,in.outputPath,in.serialLetterName,in.outputFormat,in.data,in.ListOfParentCompositeObjects);
+	out.fileOperationMessage = 
+in.documentTemplate.generateDocument();
+}catch (Throwable t){
+	ivy.log.error(t.getMessage(),t);
+}
+
+' #txt
+wr0 f91 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
+wr0 f91 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>write the serialLetter</name>
+        <nameStyle>22,7,9
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
+wr0 f91 3606 284 36 24 22 -9 #rect
+wr0 f91 @|StepIcon #fIcon
+wr0 f92 actionDecl 'ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter out;
+' #txt
+wr0 f92 actionTable 'out=in;
+' #txt
+wr0 f92 actionCode 'import ch.ivyteam.ivy.addons.docfactory.FileUtil;
+
+// if desired format not valid, we take the first supportedFormat
+if(in.#outputFormat == null || in.outputFormat.trim().equalsIgnoreCase("") 
+	|| !in.documentFactory.isFormatSupported(in.outputFormat)){
+	if(in.documentFactory.getSupportedFormats().size()>0){
+		out.outputFormat=in.documentFactory.getSupportedFormats().get(0);
+	}
+}
+
+//if desired letter name not valid, we take the name "letter_nanoTime()"
+if(in.#serialLetterName == null || in.serialLetterName.trim().equalsIgnoreCase("")
+	|| !ch.ivyteam.ivy.addons.docfactory.FileUtil.isFileNameValid(in.serialLetterName)){
+		out.serialLetterName = "letter_"+System.nanoTime();
+}
+
+//if desired outputPath is not valid, we take "ivy_RIA_Files"
+if(in.outputPath==null || in.outputPath.trim().equalsIgnoreCase("")){
+	out.outputPath="ivy_RIA_files";
+}
+
+' #txt
+wr0 f92 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
+wr0 f92 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>Check the outputFormat / 
+outputPath / outputLetterName </name>
+        <nameStyle>56,7,9
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
+wr0 f92 3606 204 36 24 22 -18 #rect
+wr0 f92 @|StepIcon #fIcon
+wr0 f93 actionDecl 'ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter out;
+' #txt
+wr0 f93 actionTable 'out=in;
+' #txt
+wr0 f93 actionCode 'import ch.ivyteam.ivy.addons.docfactory.BaseDocFactory;
+in.documentFactory= BaseDocFactory.getInstance();' #txt
+wr0 f93 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
+wr0 f93 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>make the documentFactory 
+Object</name>
+        <nameStyle>32,7,9
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
+wr0 f93 3606 132 36 24 22 -15 #rect
+wr0 f93 @|StepIcon #fIcon
+wr0 f94 expr out #txt
+wr0 f94 3624 156 3624 204 #arcP
+wr0 f95 expr out #txt
+wr0 f95 3624 228 3624 284 #arcP
+wr0 f96 expr out #txt
+wr0 f96 3624 69 3624 132 #arcP
+wr0 f97 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
+wr0 f97 3611 371 26 26 14 0 #rect
+wr0 f97 @|EndSubIcon #fIcon
+wr0 f98 expr out #txt
+wr0 f98 3624 308 3624 371 #arcP
+wr0 f99 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>These callables produce a document with a list of merge fields and 
+with the help of a document factory Object. The Merge Mail With Nested Regions is supported.
+The Document Factory Object is a Java Object that can parse a document model
+that contains mergefields and replace those mergefields by some String Data.
+
+Nested mail merge regions are at least two regions in which one is defined entirely inside the other, so they are “nested” in one another.
+The Names of the tables or regions in the template are given by a Start Mergefield(TableStart:nameOfTheTable).
+
+This callable takes some mandatory and some optional input parameters.
+Mandatory input Parameters:
+-&gt; TemplatePath: this is the path of the template (document model)
+-&gt; Other Input parameters containing the data (Tree, List&lt;CompositeObject&gt; etc...)
+
+Optional input parameters:
+-&gt; optionalOutputPath: where to store the created java.io.File. By default &quot;ivy_RIA_files&quot;
+-&gt; optionalOutputFormat: by default the first supported one (in general it will be &quot;doc&quot;
+-&gt; optionalLetterName: the file name of the letter. By default &quot;letter&quot;+ the nanoTime, 
+to be sure the file doesn''t overwrite any other.
+
+It returns a FileOperationMessage Object that contains:
+a Type indicating if the operation was successfull,
+a message in the Session User language,
+a list of java.io.File that were created during the process.
+
+In these callables, just one java.io.File should be created.</name>
+        <nameStyle>160,0,7,23
+156,7,9
+233,7,21
+14,1,2,7,21
+3,7,21
+72,7,9
+27,0,7,23
+68,7,9
+83,7,15
+1,7,9
+26,0,7,23
+319,7,9
+55,0,7,23
+154,7,9
+61,0,7,23
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
+wr0 f99 2771 427 1002 410 -371 -200 #rect
+wr0 f99 @|IBIcon #fIcon
+wr0 f99 -657956|-1|-16777216 #nodeStyle
 >Proto wr0 .xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -1343,7 +1841,7 @@ wr0 f71 1944 316 1944 363 #arcP
     <swimlaneSize>115</swimlaneSize>
     <swimlaneSize>64</swimlaneSize>
     <swimlaneSize>87</swimlaneSize>
-    <swimlaneSize>75</swimlaneSize>
+    <swimlaneSize>72</swimlaneSize>
     <swimlaneColor>-1051265</swimlaneColor>
     <swimlaneColor>-10027162</swimlaneColor>
     <swimlaneColor>-103</swimlaneColor>
@@ -1416,3 +1914,27 @@ wr0 f61 mainOut f69 tail #connect
 wr0 f69 head f64 mainIn #connect
 wr0 f65 mainOut f71 tail #connect
 wr0 f71 head f70 mainIn #connect
+wr0 f73 mainOut f76 tail #connect
+wr0 f76 head f75 mainIn #connect
+wr0 f75 mainOut f77 tail #connect
+wr0 f77 head f74 mainIn #connect
+wr0 f72 mainOut f78 tail #connect
+wr0 f78 head f73 mainIn #connect
+wr0 f74 mainOut f80 tail #connect
+wr0 f80 head f79 mainIn #connect
+wr0 f81 mainOut f85 tail #connect
+wr0 f85 head f82 mainIn #connect
+wr0 f82 mainOut f86 tail #connect
+wr0 f86 head f83 mainIn #connect
+wr0 f84 mainOut f87 tail #connect
+wr0 f87 head f81 mainIn #connect
+wr0 f83 mainOut f89 tail #connect
+wr0 f89 head f88 mainIn #connect
+wr0 f93 mainOut f94 tail #connect
+wr0 f94 head f92 mainIn #connect
+wr0 f92 mainOut f95 tail #connect
+wr0 f95 head f91 mainIn #connect
+wr0 f90 mainOut f96 tail #connect
+wr0 f96 head f93 mainIn #connect
+wr0 f91 mainOut f98 tail #connect
+wr0 f98 head f97 mainIn #connect

@@ -148,6 +148,10 @@ private RMenuItem setDescriptionMenuItem = null;
 private @EmbeddedRichDialog(DirectorySecurityManagerPanel.class) ULCContainer directorySecurityManagerPanel = null;
 private RMenuItem makeVersionMenuItem = null;
 private RMenuItem openVersionsMenuItem = null;
+private RMenuItem fileTypeChooserMenuItem = null;
+private RMenuItem fileTypeManagerMenuItem = null;
+private RMenuItem tagsMenuItem = null;
+private RMenuItem showHistoryMenuItem = null;
 /**
    * Create a new instance of FileManagerPanePanel
    */
@@ -208,7 +212,7 @@ private RTable getFilesTable() {
 		filesTable.setName("filesTable");
 		filesTable.setStyleProperties("{/fill \"BOTH\"/weightY \"1\"/weightX \"1\"}");
 		filesTable.setSortable(true);
-		filesTable.setModelConfiguration("{/showTableheader true /autoTableheader false /showtooltip true /showIcons true /emptyTableText \"Keine Datei / Aucun Fichier / No File\"/version \"3.0\"/columns {{/result \"result=IF(entry.locked.trim().equals(\\\"1\\\"),entry.lockingUserID,\\\"\\\")\"/version \"3.0\"/tooltip \"result=IF(!entry.locked.trim().equals(\\\"1\\\"),ivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/fileUnlocked\\\"),\\r\\nivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/thisFile\\\")+\\\" \\\"+entry.filename+\\\" \\\" + \\r\\nivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/isEditedBy\\\")+\\\" \\\"+entry.lockingUserID)\"/icon \"result=IF(!entry.locked.trim().equals(\\\"1\\\"),ivy.cms.cr(\\\"/ch/ivyteam/ivy/addons/icons/file/16\\\"),\\r\\nivy.cms.cr(\\\"/ch/ivyteam/ivy/addons/icons/lock/16\\\"))\"/header \"\\\"\\\"\"/field \"\"/editable \"\"/condition \"\"/columnWidth \"18\"/columnStyle \"\"/cellWidget \"\"}{/result \"result=entry.filename\"/version \"3.0\"/tooltip \"result=\\\"<html><b>\\\"+\\r\\nivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/fileDetails\\\")+\\\"</b><br>\\\"+\\r\\nivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/createdBy\\\")+\\\" \\\"+entry.userID+\\\"<br>\\\"+\\r\\nivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/creationDate\\\")+\\\" \\\"+entry.creationDate.toIvyDate().format(\\\"dd-MM-yyyy\\\")+\\\"<br>\\\"+\\r\\nivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/creationTime\\\")+\\\" \\\"+entry.creationTime+\\\"<br>\\\"+\\r\\nivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/lastModifiedBy\\\")+\\\" \\\"+entry.modificationUserID+\\\"<br>\\\"+\\r\\nivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/lastModifiedOn\\\")+\\\" \\\"+entry.modificationDate.toIvyDate().format(\\\"dd-MM-yyyy\\\")+\\\"<br>\\\"+\\r\\nivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/modificationTime\\\")+\\\" \\\"+entry.modificationTime+\\\"<br>\\\"+\\r\\nentry.description.replaceAll(\\\"\\\\n\\\", \\\"<br>\\\")+\\r\\n\\\"</html>\\\"\"/icon \"\"/header \"ivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/fileName\\\")\"/field \"\"/editable \"\"/columnWidth \"150\"/columnStyle \"\"}{/result \"result=entry.fileSize\"/version \"3.0\"/tooltip \"\"/icon \"\"/header \"ivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/fileSize\\\")\"/field \"\"/editable \"\"/columnWidth \"80\"/columnStyle \"\"}{/result \"result=entry.versionnumber\"/version \"3.0\"/tooltip \"\"/icon \"\"/header \"ivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileVersioning/plainStrings/versionnumber\\\")\"/field \"\"/editable \"\"/condition \"in.activateFileVersioning\"/cellWidget \"\"}{/result \"result=entry.userID\"/version \"3.0\"/tooltip \"\"/icon \"\"/header \"ivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/createdBy\\\")\"/field \"\"/editable \"\"/condition \"true\"/columnWidth \"70\"}{/result \"result=\\\"<html>\\\" + \\\"<!--\\\" + new DateTime(entry.creationDate.toIvyDate(), entry.creationTime.toTime()).format(\\\"yyyyMMddHHmm\\\") + \\\"-->\\\" +\\r\\nnew DateTime(entry.creationDate.toIvyDate(), entry.creationTime.toTime()).format(\\\"dd.MM.yyyy HH:mm\\\")\"/version \"3.0\"/tooltip \"\"/icon \"\"/header \"ivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/creationDate\\\")\"/field \"\"/editable \"\"/condition \"true\"/columnWidth \"70\"/columnStyle \"alignCenter\"}}}");
+		filesTable.setModelConfiguration("{/showTableheader true /autoTableheader false /showtooltip true /showIcons true /emptyTableText \"Keine Datei / Aucun Fichier / No File\"/version \"3.0\"/columns {{/result \"result=IF(entry.locked.trim().equals(\\\"1\\\"),entry.lockingUserID,\\\"\\\")\"/version \"3.0\"/tooltip \"result=IF(!entry.locked.trim().equals(\\\"1\\\"),ivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/fileUnlocked\\\"),\\r\\nivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/thisFile\\\")+\\\" \\\"+entry.filename+\\\" \\\" + \\r\\nivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/isEditedBy\\\")+\\\" \\\"+entry.lockingUserID)\"/icon \"result=IF(!entry.locked.trim().equals(\\\"1\\\"),ivy.cms.cr(\\\"/ch/ivyteam/ivy/addons/icons/file/16\\\"),\\r\\nivy.cms.cr(\\\"/ch/ivyteam/ivy/addons/icons/lock/16\\\"))\"/header \"\\\"\\\"\"/field \"\"/editable \"\"/condition \"\"/columnWidth \"18\"/columnStyle \"\"/cellWidget \"\"}{/result \"result=entry.filename\"/version \"3.0\"/tooltip \"result=\\\"<html><b>\\\"+\\r\\nivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/fileDetails\\\")+\\\"</b><br>\\\"+\\r\\nivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/createdBy\\\")+\\\" \\\"+entry.userID+\\\" \\\"+\\r\\nivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/onDate\\\")+\\\" \\\"+entry.creationDate.toIvyDate().format(\\\"dd-MM-yyyy\\\")+\\\", \\\"+entry.creationTime+\\\"<br>\\\"+\\r\\nivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/lastModifiedBy\\\")+\\\" \\\"+entry.modificationUserID+\\\" \\\"+\\r\\nivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/onDate\\\")+\\\" \\\"+entry.modificationDate.toIvyDate().format(\\\"dd-MM-yyyy\\\")+\\\", \\\"+entry.modificationTime+\\\"<br>\\\"+\\r\\nIF(entry.#fileType!=null && entry.fileType.id > 0, \\r\\n\\tivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/filetype\\\")+\\\": \\\" +entry.fileType.fileTypeName+\\\" \\\"+\\r\\n\\tIF(entry.fileType.applicationName.trim().length()>0,\\r\\n\\t\\tivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileTypes/strings/application\\\")+\\\" \\\"+entry.fileType.applicationName+\\\"<br>\\\",\\r\\n\\t\\\"<br>\\\")\\r\\n,\\\"\\\")+\\r\\nentry.description.replaceAll(\\\"\\\\n\\\", \\\"<br>\\\")+\\r\\n\\r\\n\\\"</html>\\\"\"/icon \"\"/header \"ivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/fileName\\\")\"/field \"\"/editable \"\"/columnWidth \"150\"/columnStyle \"\"}{/result \"result=IF(entry.#fileType!=null,entry.fileType.fileTypeName,\\\"\\\")\"/version \"3.0\"/tooltip \"result=\\\"<html>\\\"+\\r\\nIF(entry.#fileType==null || entry.fileType.id==0,ivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileTypes/strings/noFileTypeSet\\\"),\\r\\n\\tivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/filetype\\\")+\\\": \\\" +entry.fileType.fileTypeName+\\\" \\\"+\\r\\n\\tIF(entry.fileType.applicationName.trim().length()>0,\\r\\n\\t\\tivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileTypes/strings/application\\\")+\\\" \\\"+entry.fileType.applicationName+\\\"<br>\\\",\\r\\n\\t\\\"<br>\\\")\\r\\n)+\\r\\n\\\"</html>\\\"\"/icon \"\"/header \"ivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/filetype\\\")\"/field \"\"/editable \"\"/condition \"in.configurationController.showFileTypeInTable\"/columnStyle \"default\"/cellWidget \"\"}{/result \"result=entry.versionnumber\"/version \"3.0\"/tooltip \"\"/icon \"\"/header \"ivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileVersioning/plainStrings/versionnumber\\\")\"/field \"\"/editable \"\"/condition \"in.configurationController.activateFileVersioning\"/cellWidget \"\"}{/result \"result=entry.fileSize\"/version \"3.0\"/tooltip \"\"/icon \"\"/header \"ivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/fileSize\\\")\"/field \"\"/editable \"\"/columnWidth \"80\"/columnStyle \"\"}{/result \"result=entry.userID\"/version \"3.0\"/tooltip \"\"/icon \"\"/header \"ivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/createdBy\\\")\"/field \"\"/editable \"\"/condition \"true\"/columnWidth \"70\"}{/result \"result=\\\"<html>\\\" + \\\"<!--\\\" + new DateTime(entry.creationDate.toIvyDate(), entry.creationTime.toTime()).format(\\\"yyyyMMddHHmm\\\") + \\\"-->\\\" +\\r\\nnew DateTime(entry.creationDate.toIvyDate(), entry.creationTime.toTime()).format(\\\"dd.MM.yyyy HH:mm\\\")\"/version \"3.0\"/tooltip \"\"/icon \"\"/header \"ivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/creationDate\\\")\"/field \"\"/editable \"\"/condition \"true\"/columnWidth \"70\"/columnStyle \"alignCenter\"}}}");
 		filesTable.setRowHeight(22);
 		filesTable.setRowMargin(2);
 		filesTable.setFont(new Font("Tahoma", 0, 12));
@@ -440,11 +444,15 @@ private RPopupMenu getServerFilePopupMenu() {
 		ServerFilePopupMenu.add(getZipMenuItem());
 		ServerFilePopupMenu.add(getDeleteMenuItem());
 		ServerFilePopupMenu.add(getRefreshMenuItem());
+		ServerFilePopupMenu.add(getShowHistoryMenuItem());
 		ServerFilePopupMenu.add(getShowTreeMenuItem());
 		ServerFilePopupMenu.add(getShowHiddeEditedFilesMenuItem());
 		ServerFilePopupMenu.add(getUnlockMenuItem());
 		ServerFilePopupMenu.add(getMakeVersionMenuItem());
 		ServerFilePopupMenu.add(getOpenVersionsMenuItem());
+		ServerFilePopupMenu.add(getFileTypeChooserMenuItem());
+		ServerFilePopupMenu.add(getFileTypeManagerMenuItem());
+		ServerFilePopupMenu.add(getTagsMenuItem());
 	}
 	return ServerFilePopupMenu;
 }
@@ -479,6 +487,7 @@ private RMenuItem getDeleteMenuItem() {
 		deleteMenuItem.setToolTipText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tooltips/deleteFiles\")%>");
 		//deleteMenuItem.setEnabler(getFileNameInvisibleTextField());
 		deleteMenuItem.setEnabled(true);
+		deleteMenuItem.setEnabler(getFileNameInvisibleTextField());
 		deleteMenuItem.setName("deleteMenuItem");
 	}
 	return deleteMenuItem;
@@ -1119,6 +1128,7 @@ private RButton getDeleteButton() {
 		deleteButton.setStyleProperties("{/horizontalAlignment \"LEFT\"/font {/name \"Tahoma\"/size \"10\"/style \"PLAIN\"}/insetsBottom \"0\"/insetsTop \"0\"/insetsRight \"0\"/fill \"HORIZONTAL\"/insetsLeft \"0\"}");
 		deleteButton.setIconUri("<%=ivy.cms.cr(\"/ch/ivyteam/ivy/addons/icons/delete/16\")%>");
 		deleteButton.setEnabled(true);
+		deleteButton.setEnabler(getFileNameInvisibleTextField());
 		deleteButton.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/buttonLabels/deleteFiles\")%>");
 		//deleteButton.setEnabler(getFileNameInvisibleTextField());
 		//deleteButton.registerKeyboardAction(getActionForDeleteButton(), KeyStroke.getKeyStroke(KeyEvent.VK_DELETE,0), WHEN_IN_FOCUSED_WINDOW);
@@ -1929,6 +1939,9 @@ private RMenuItem getMakeVersionMenuItem() {
 		makeVersionMenuItem = new RMenuItem();
 		makeVersionMenuItem.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileVersioning/plainStrings/createNewVersion\")%>");
 		makeVersionMenuItem.setIconUri("<%=ivy.cms.cr(\"/ch/ivyteam/ivy/addons/icons/fileSharing/16\")%>");
+		makeVersionMenuItem.setEnabled(false);
+		makeVersionMenuItem.setEnabler(getFileNameInvisibleTextField());
+		unlockMenuItem.setEnabler(getFileNameInvisibleTextField());
 		makeVersionMenuItem.setName("makeVersionMenuItem");
 	}
 	return makeVersionMenuItem;
@@ -1944,9 +1957,81 @@ private RMenuItem getOpenVersionsMenuItem() {
 		openVersionsMenuItem = new RMenuItem();
 		openVersionsMenuItem.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileVersioning/plainStrings/openVersionsPane\")%>");
 		openVersionsMenuItem.setIconUri("<%=ivy.cms.cr(\"/ch/ivyteam/ivy/addons/icons/preview/16\")%>");
+		openVersionsMenuItem.setEnabled(false);
+		openVersionsMenuItem.setEnabler(getFileNameInvisibleTextField());
+		unlockMenuItem.setEnabler(getFileNameInvisibleTextField());
 		openVersionsMenuItem.setName("openVersionsMenuItem");
 	}
 	return openVersionsMenuItem;
+}
+
+/**
+ * This method initializes fileTypeChooserMenuItem	
+ * 	
+ * @return ch.ivyteam.ivy.richdialog.widgets.menus.RMenuItem	
+ */
+private RMenuItem getFileTypeChooserMenuItem() {
+	if (fileTypeChooserMenuItem == null) {
+		fileTypeChooserMenuItem = new RMenuItem();
+		fileTypeChooserMenuItem.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileTypes/strings/fileTypeChooser\")%>");
+		fileTypeChooserMenuItem.setIconUri("<%=ivy.cms.cr(\"/ch/ivyteam/ivy/addons/icons/filetype/16\")%>");
+		fileTypeChooserMenuItem.setEnabled(false);
+		fileTypeChooserMenuItem.setEnabler(getFileNameInvisibleTextField());
+		unlockMenuItem.setEnabler(getFileNameInvisibleTextField());
+		fileTypeChooserMenuItem.setName("fileTypeChooserMenuItem");
+	}
+	return fileTypeChooserMenuItem;
+}
+
+/**
+ * This method initializes fileTypeManagerMenuItem	
+ * 	
+ * @return ch.ivyteam.ivy.richdialog.widgets.menus.RMenuItem	
+ */
+private RMenuItem getFileTypeManagerMenuItem() {
+	if (fileTypeManagerMenuItem == null) {
+		fileTypeManagerMenuItem = new RMenuItem();
+		fileTypeManagerMenuItem.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileTypes/strings/fileTypeManager\")%>");
+		fileTypeManagerMenuItem.setIconUri("<%=ivy.cms.cr(\"/ch/ivyteam/ivy/addons/icons/filetypeadmin/16\")%>");
+		fileTypeManagerMenuItem.setEnabled(false);
+		fileTypeManagerMenuItem.setEnabler(getFileNameInvisibleTextField());
+		unlockMenuItem.setEnabler(getFileNameInvisibleTextField());
+		fileTypeManagerMenuItem.setName("fileTypeManagerMenuItem");
+	}
+	return fileTypeManagerMenuItem;
+}
+
+/**
+ * This method initializes tagsMenuItem	
+ * 	
+ * @return ch.ivyteam.ivy.richdialog.widgets.menus.RMenuItem	
+ */
+private RMenuItem getTagsMenuItem() {
+	if (tagsMenuItem == null) {
+		tagsMenuItem = new RMenuItem();
+		tagsMenuItem.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileTags/fileTagsMenuItem\")%>");
+		tagsMenuItem.setIconUri("<%=ivy.cms.cr(\"/ch/ivyteam/ivy/addons/icons/marker/16\")%>");
+		tagsMenuItem.setEnabled(false);
+		tagsMenuItem.setEnabler(getFileNameInvisibleTextField());
+		unlockMenuItem.setEnabler(getFileNameInvisibleTextField());
+		tagsMenuItem.setName("tagsMenuItem");
+	}
+	return tagsMenuItem;
+}
+
+/**
+ * This method initializes showHistoryMenuItem	
+ * 	
+ * @return ch.ivyteam.ivy.richdialog.widgets.menus.RMenuItem	
+ */
+private RMenuItem getShowHistoryMenuItem() {
+	if (showHistoryMenuItem == null) {
+		showHistoryMenuItem = new RMenuItem();
+		showHistoryMenuItem.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileActionHistory/label/windowTitle\")%>");
+		showHistoryMenuItem.setIconUri("<%=ivy.cms.cr(\"/ch/ivyteam/ivy/addons/icons/calendar/16\")%>");
+		showHistoryMenuItem.setName("showHistoryMenuItem");
+	}
+	return showHistoryMenuItem;
 }
 
 

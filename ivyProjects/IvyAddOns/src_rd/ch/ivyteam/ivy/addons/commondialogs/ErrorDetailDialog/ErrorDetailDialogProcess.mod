@@ -1,6 +1,6 @@
 [Ivy]
-[>Created: Fri May 07 15:18:37 CEST 2010]
-1180E72D324A3BE5 3.12 #module
+[>Created: Fri Aug 10 16:15:27 EDT 2012]
+1180E72D324A3BE5 3.17 #module
 >Proto >Proto Collection #zClass
 Es0 ErrorDetailDialogProcess Big #zClass
 Es0 RD #cInfo
@@ -25,16 +25,10 @@ Es0 @PushWFArc f7 '' #zField
 Es0 @PushWFArc f5 '' #zField
 Es0 @RichDialogInitStart f8 '' #zField
 Es0 @PushWFArc f12 '' #zField
+Es0 @RichDialogInitStart f9 '' #zField
+Es0 @RichDialogProcessEnd f10 '' #zField
+Es0 @PushWFArc f11 '' #zField
 >Proto Es0 Es0 ErrorDetailDialogProcess #zField
-Es0 f0 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<elementInfo>
-    <language>
-        <name>showDetailError(Throwable)</name>
-        <nameStyle>26,5,6,9
-</nameStyle>
-    </language>
-</elementInfo>
-' #txt
 Es0 f0 guid 1180E75DFA8E606F #txt
 Es0 f0 type ch.ivyteam.ivy.addons.commondialogs.ErrorDetailDialog.ErrorDetailDialogData #txt
 Es0 f0 method showDetailError(java.lang.Throwable) #txt
@@ -55,6 +49,15 @@ out.errorStackTrace = writer.toString();
 Es0 f0 outParameterDecl '<> result;
 ' #txt
 Es0 f0 embeddedRdInitializations '* ' #txt
+Es0 f0 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>showDetailError(Throwable)</name>
+        <nameStyle>26,5,6,9
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
 Es0 f0 54 38 20 20 13 0 #rect
 Es0 f0 @|RichDialogInitStartIcon #fIcon
 Es0 f1 guid 1180E75E9B47C51C #txt
@@ -104,15 +107,6 @@ Es0 f7 expr out #txt
 Es0 f7 64 58 64 92 #arcP
 Es0 f5 expr out #txt
 Es0 f5 64 116 64 163 #arcP
-Es0 f8 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<elementInfo>
-    <language>
-        <name>showDetailError(IvyResultStatus)</name>
-        <nameStyle>32,5,7,9
-</nameStyle>
-    </language>
-</elementInfo>
-' #txt
 Es0 f8 guid 12871C62D3E65550 #txt
 Es0 f8 type ch.ivyteam.ivy.addons.commondialogs.ErrorDetailDialog.ErrorDetailDialogData #txt
 Es0 f8 method showDetailError(ch.ivyteam.ivy.addons.data.technical.IvyResultStatus) #txt
@@ -165,12 +159,44 @@ out.errorStackTrace = stringWriter.toString();
 Es0 f8 outParameterDecl '<> result;
 ' #txt
 Es0 f8 embeddedRdInitializations '* ' #txt
+Es0 f8 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>showDetailError(IvyResultStatus)</name>
+        <nameStyle>32,5,7,9
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
 Es0 f8 246 38 20 20 13 0 #rect
 Es0 f8 @|RichDialogInitStartIcon #fIcon
 Es0 f12 expr out #txt
 Es0 f12 256 58 82 103 #arcP
 Es0 f12 1 256 88 #addKink
 Es0 f12 1 0.37895253151529346 0 0 #arcLabel
+Es0 f9 guid 139122D4A2AD818F #txt
+Es0 f9 type ch.ivyteam.ivy.addons.commondialogs.ErrorDetailDialog.ErrorDetailDialogData #txt
+Es0 f9 method start() #txt
+Es0 f9 disableUIEvents true #txt
+Es0 f9 inParameterDecl 'ch.ivyteam.ivy.richdialog.exec.RdMethodCallEvent methodEvent = event as ch.ivyteam.ivy.richdialog.exec.RdMethodCallEvent;
+<> param = methodEvent.getInputArguments();
+' #txt
+Es0 f9 outParameterDecl '<> result;
+' #txt
+Es0 f9 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>start()</name>
+    </language>
+</elementInfo>
+' #txt
+Es0 f9 246 182 20 20 13 0 #rect
+Es0 f9 @|RichDialogInitStartIcon #fIcon
+Es0 f10 type ch.ivyteam.ivy.addons.commondialogs.ErrorDetailDialog.ErrorDetailDialogData #txt
+Es0 f10 246 238 20 20 13 0 #rect
+Es0 f10 @|RichDialogProcessEndIcon #fIcon
+Es0 f11 expr out #txt
+Es0 f11 256 202 256 238 #arcP
 >Proto Es0 .xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -198,3 +224,5 @@ Es0 f6 mainOut f5 tail #connect
 Es0 f5 head f4 mainIn #connect
 Es0 f8 mainOut f12 tail #connect
 Es0 f12 head f6 mainIn #connect
+Es0 f9 mainOut f11 tail #connect
+Es0 f11 head f10 mainIn #connect
