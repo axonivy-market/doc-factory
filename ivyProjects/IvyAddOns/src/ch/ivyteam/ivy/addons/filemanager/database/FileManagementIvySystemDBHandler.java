@@ -146,14 +146,12 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 		}
 		else
 		{
-			//query="SELECT * FROM "+this.tableName+" WHERE FilePath LIKE '"+folderPath+"%' AND FilePath NOT LIKE '"+folderPath+"%["+java.io.File.separator+"]%'";
 			query="SELECT * FROM "+this.tableName+" WHERE FilePath LIKE ? AND FilePath NOT LIKE ?";
 		}
 		List<Record> recordList= (List<Record>) List.create(Record.class);
-
+		
 		rset = IvySystemDBReuser.executePreparedStatement(query, 
 				new IPreparedStatementExecutable<Recordset>(){
-
 			public Recordset execute(PreparedStatement stmt) throws PersistencyException {
 				try{
 					if(_isrecursive)
@@ -170,7 +168,6 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 				}
 			}
 		});
-
 		if(rset!=null)
 		{
 			recordList = rset.toList();
@@ -1957,7 +1954,7 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 		if(directoryPath==null || directoryPath.trim().equals("")){
 			return liste;
 		}
-
+		
 		//we get all the files from the DB - recursive
 		ArrayList<DocumentOnServer> listeInDB=this.getDocumentsInPath(directoryPath.trim(), true);
 
@@ -1966,6 +1963,7 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 
 		//we get the files in the directory
 		ArrayList<DocumentOnServer> docsInSelectedDir=FileHandler.getDocumentsInDir(new java.io.File(directoryPath));
+
 		if(docsInSelectedDir.size()>0){
 
 			List<DocumentOnServer> docsToAdd = List.create(DocumentOnServer.class);

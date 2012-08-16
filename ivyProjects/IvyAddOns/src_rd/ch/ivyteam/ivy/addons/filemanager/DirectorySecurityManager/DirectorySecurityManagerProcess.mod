@@ -1,5 +1,5 @@
 [Ivy]
-[>Created: Wed Jun 20 19:19:15 EDT 2012]
+[>Created: Mon Aug 13 11:57:03 EDT 2012]
 132D1B65FEDF11D7 3.17 #module
 >Proto >Proto Collection #zClass
 Ds0 DirectorySecurityManagerProcess Big #zClass
@@ -915,7 +915,10 @@ Ds0 f89 actionTable 'out=in;
 ' #txt
 Ds0 f89 actionCode 'import ch.ivyteam.ivy.security.IRole;
 try{
-	in.selectedIRole = panel.rolesTree.getTreeData().value as IRole;
+	if(in.#selectedIRole==null)
+	{
+		in.selectedIRole = panel.rolesTree.getTreeData().value as IRole;
+	}
 }catch(Throwable t)
 {
 		
