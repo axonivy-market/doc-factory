@@ -1,6 +1,6 @@
 [Ivy]
-[>Created: Mon Mar 14 14:25:15 CET 2011]
-12495B5A297FD530 3.16 #module
+[>Created: Tue Sep 11 16:11:14 CEST 2012]
+12495B5A297FD530 3.17 #module
 >Proto >Proto Collection #zClass
 Ts0 TableTreeDialogProcess Big #zClass
 Ts0 RD #cInfo
@@ -506,7 +506,8 @@ index = panel.cmsContextList.getSelectedIndex();
 if (index >= 0 && index < in.cmsContext.size()) {
 	context = in.cmsContext.get(index);
 }
-else
+
+else
 {
 	out.lastCmsContext = null;
 }
@@ -723,12 +724,10 @@ import ch.ivyteam.ivy.richdialog.config.IProjectRichDialogManager;
 import ch.ivyteam.ivy.project.IIvyProject;
 import ch.ivyteam.ivy.scripting.dataclass.IDataClass;
 
-IIvyProject project;
-IProjectRichDialogManager rdManager;
-Set dataClasses;
-String className;
 
-project =  ivy.request.getProject();
+Set dataClasses;
+
+IIvyProject project =  ivy.request.getProject();
 
 // Get all dataclasses
 for (IDataClass dataClass : project.getProjectDataClassManager().getDataClasses(null))
@@ -737,7 +736,7 @@ for (IDataClass dataClass : project.getProjectDataClassManager().getDataClasses(
 }	
 // Remove dataclasses that are in RDC
 for (IRichDialog rdc : project.getProjectRichDialogManager().getRichDialogs(null)) {
-  className = rdc.getPanelClass().getPackage().getName() + "." + rdc.getSimpleName() + "Data";
+  String className = rdc.getId() + "." + rdc.getSimpleName() + "Data";
 	dataClasses.remove(className);
 }
 
