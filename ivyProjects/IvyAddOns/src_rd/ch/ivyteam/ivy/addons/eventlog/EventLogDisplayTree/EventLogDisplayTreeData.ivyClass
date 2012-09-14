@@ -6,3 +6,4 @@ eventTree Tree #field
 groupBy Integer #field
 cmsContext List<String> #field
 columns List<ch.ivyteam.ivy.workflow.eventlog.EventLogProperty> #field
+groupId String #field

@@ -19,8 +19,11 @@ public enum EventLogStatus
   PROCESSING(2),
 
   /** Event log messaged that is processed */
-  PROCESSED(3);
+  PROCESSED(3),
 
+  /** Event log messaged that is failed */
+  FAILED(4);
+  
   /** The value of the enum */
   private int value;
 

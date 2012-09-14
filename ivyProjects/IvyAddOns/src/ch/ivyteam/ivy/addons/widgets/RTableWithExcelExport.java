@@ -26,6 +26,7 @@ import com.ulcjava.base.shared.FileChooserConfig;
  * <code>... = new RTable(...)</code> by <code>... = new RTableWithExcelExport(...)</code><br />
  * A new contextual menu is added to the table to export the content.
  * 
+ * @author Rifat Binjos, TI-Informatique
  * @author Patrick Joly, TI-Informatique
  * @since 11.05.2010
  */
@@ -177,7 +178,14 @@ public class RTableWithExcelExport extends RTable
        */
       public void prepareFile(OutputStream data) throws IOException
       {
-        ExcelExport.exportRTableAsExcel(table, table.getName(), data);
+        try
+        {
+          ExcelExport.exportRTableAsExcel(table, table.getName(), data);
+        }
+        catch (Exception e)
+        {
+          throw new IOException(e);
+        }
       }
     }
 

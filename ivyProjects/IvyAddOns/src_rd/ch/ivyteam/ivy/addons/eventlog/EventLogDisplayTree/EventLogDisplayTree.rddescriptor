@@ -134,6 +134,32 @@ This method can not be changed or deleted!</description>
             <nullPermitted>true</nullPermitted>
         </inputParameter>
     </startMethod>
+    <startMethod>
+        <name>startGroupByGroupId</name>
+        <description></description>
+        <inputParameter>
+            <name>groupId</name>
+            <description>id of group</description>
+            <parameterType>String</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </inputParameter>
+    </startMethod>
+    <startMethod>
+        <name>startGroupByGroupIdAndCase</name>
+        <description></description>
+        <inputParameter>
+            <name>groupId</name>
+            <description></description>
+            <parameterType>String</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </inputParameter>
+        <inputParameter>
+            <name>eventLogProperties</name>
+            <description></description>
+            <parameterType>List&lt;ch.ivyteam.ivy.workflow.eventlog.EventLogProperty&gt;</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </inputParameter>
+    </startMethod>
     <firedEvent>
         <name>selectionChanged</name>
         <description>Fired when the selected item of the table tree view change.</description>
