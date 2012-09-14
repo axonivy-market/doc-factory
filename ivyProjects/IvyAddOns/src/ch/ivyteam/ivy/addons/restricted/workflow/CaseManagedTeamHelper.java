@@ -268,10 +268,8 @@ public class CaseManagedTeamHelper {
 	        {
 	          public Boolean call() throws Exception
 	          {
-	        	  // remove the white spaces
-	        	  String teams = normaliseManagedTeams(managedTeams);
-	        	  user.setProperty(MANAGED_TEAMS_PROPERTY_KEY, teams);
-	        	  Ivy.log().debug("User {0} has now <{1}> as managed teams value.", user.getName(), teams);
+	        	  user.setProperty(MANAGED_TEAMS_PROPERTY_KEY, managedTeams);
+	        	  Ivy.log().debug("User {0} has now <{1}> as managed teams value.", user.getName(), managedTeams);
 	        	  return true;
 	          }
 	        });	   
@@ -379,25 +377,5 @@ public class CaseManagedTeamHelper {
 	    		  return result;
 	          }
 	        });
-	  }
-	  
-	  /** 
-	   * It returns a string of comma separated managed teams without spaces (leading, central, trailing)
-	   * 
-	   * @param managedTeams
-	   * 					list of managed teams to normalise
-	   * @return
-	   * 					list of comma separated managed teams without spaces.
-	   */
-	  private static String normaliseManagedTeams(String managedTeams) {
-		  StringTokenizer st = new StringTokenizer(managedTeams," ",false);
-		  String normalisedManagedTeams="";
-		  
-		  while (st.hasMoreElements()) 
-			  normalisedManagedTeams += st.nextToken().trim();
-		  
-		  return normalisedManagedTeams;
-		}
-
-	  
+	  }	  
 }

@@ -12,6 +12,7 @@ import org.apache.commons.io.FileUtils;
 import ch.ivyteam.ivy.addons.filemanager.FileHandler;
 import ch.ivyteam.ivy.addons.filemanager.FileManager.FileManagerPanel;
 import ch.ivyteam.ivy.addons.restricted.util.PublicAPIHelper;
+import ch.ivyteam.ivy.addons.util.AddonsRuntimeException;
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.workflow.ICase;
 
@@ -234,16 +235,30 @@ public class ResourceServicesHelper {
 	
 	
 	/**
-	 * It returns the active environment
-	 * Remark:
-	 * 		If active session environment is default, the Public AP return empty string, then create a folder called "Default"
+	 * It returns the active environment in following order:
+	 *     <ol>
+	 *             <li>First look to the session active environment: if defined return it.</li>
+	 *             <li>Otherwise, look to the application active environment: if defined return it otherwise return "Default"</li>
+	 *     </ol>
+	 * <p>Remark:
+	 * 		If active session environment is default, the Public AP return empty string, then create a folder called "Default"</p>
 	 * 
 	 * @return 
-	 * 			the active environment name
+	 * 	 the active environment name
 	 */
 	private static String getActiveEnvironment()
 	{
-		return Ivy.session().getActiveEnvironment() != null? Ivy.session().getActiveEnvironment(): "Default";
+	  String env;
+	  
+          try
+          {
+                  return (env = Ivy.session().getActiveEnvironment()) != null? 
+                            env : 
+                            ((env = Ivy.wf().getApplication().getActiveEnvironment()) != null ? env : "Default");
+          } catch (Exception e) 
+          {
+                  throw new AddonsRuntimeException(e);
+          }
 	}
 	
 	

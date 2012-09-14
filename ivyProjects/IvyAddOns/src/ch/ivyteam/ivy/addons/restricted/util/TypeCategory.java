@@ -3,6 +3,7 @@ package ch.ivyteam.ivy.addons.restricted.util;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import ch.ivyteam.ivy.scripting.objects.Binary;
 import ch.ivyteam.ivy.scripting.objects.Date;
 import ch.ivyteam.ivy.scripting.objects.DateTime;
 import ch.ivyteam.ivy.scripting.objects.Duration;
@@ -70,6 +71,6 @@ public final class TypeCategory
             || clazz.isAssignableFrom(BigDecimal.class) || clazz.isAssignableFrom(Boolean.class)
             || clazz.isAssignableFrom(Xml.class) || clazz.isAssignableFrom(Tree.class)
             || clazz.isAssignableFrom(File.class) || clazz.isAssignableFrom(Record.class)
-            || clazz.isAssignableFrom(Recordset.class) || clazz.isEnum();
+            || clazz.isAssignableFrom(Recordset.class) || clazz.isAssignableFrom(Binary.class) || clazz.isEnum();
   }
 }

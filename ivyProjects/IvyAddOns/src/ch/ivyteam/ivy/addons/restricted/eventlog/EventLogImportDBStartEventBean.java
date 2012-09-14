@@ -63,7 +63,7 @@ public class EventLogImportDBStartEventBean implements IProcessStartEventBean
 
   private boolean isError = false;
 
-  long pollTimeIntervall = 0L;
+  private String configuration;
 
   /**
    * Gives a user interface to configure this event bean.
@@ -153,17 +153,46 @@ public class EventLogImportDBStartEventBean implements IProcessStartEventBean
   {
     this.eventRuntime = eventRuntime;
     this.logger = eventRuntime.getRuntimeLogLogger();
+    this.configuration = configuration;
 
+    setPollTimeInterval();
+
+  }
+
+  private void setPollTimeInterval()
+  {
+    long pollTimeInterval;
+    String[] sp;
+
+    // default poll time interval to every minute
+    pollTimeInterval = 60000L;
+
+    sp = configuration.split("\\|");
+
+    if (sp.length > 1)
+    {
+      pollTimeInterval = Long.parseLong(sp[1]);
+    }
+
+    logger.info("EventLogImportDBStartEventBean - Initialize Poll Time Interval (" + pollTimeInterval
+            + ") milliseconds.", getName());
+
+    eventRuntime.setPollTimeInterval(pollTimeInterval);
+  }
+
+  /**
+   * It reads the global variable to disable/enable this event start. Disabled status means that it just sets
+   * pollTimeInterval to 0L.
+   * 
+   */
+  private void updateActivityStatus()
+  {
     try
     {
-      // Defaults Poll Time Interval to every minute
-      pollTimeIntervall = 60000L;
 
       String globalVariableDatabaseConfig = null;
 
       String globalVariableDatabaseConfigEnable = null;
-
-      // logger.info("EventLogImportDBStartEventBean - Configuration : " + configuration, getName());
 
       String[] sp;
 
@@ -171,10 +200,6 @@ public class EventLogImportDBStartEventBean implements IProcessStartEventBean
       if (sp.length > 0)
       {
         globalVariableDatabaseConfig = sp[0].replaceAll("\"", "");
-      }
-      if (sp.length > 1)
-      {
-        pollTimeIntervall = Long.parseLong(sp[1]);
       }
       if (sp.length > 2)
       {
@@ -191,11 +216,6 @@ public class EventLogImportDBStartEventBean implements IProcessStartEventBean
       {
         enableStartEventBean = true;
       }
-
-      logger.info("EventLogImportDBStartEventBean - Set Poll Time Intervall (" + pollTimeIntervall
-              + ") milliseconds.", getName());
-
-      eventRuntime.setPollTimeInterval(pollTimeIntervall);
 
       if (globalVariableDatabaseConfig == null || globalVariableDatabaseConfig.length() == 0)
       {
@@ -289,6 +309,9 @@ public class EventLogImportDBStartEventBean implements IProcessStartEventBean
     IExternalDatabaseRuntimeConnection connection = null;
     EventLogData eventLogData;
     Map<String, Object> results;
+
+    // read configuration and update activity status
+    updateActivityStatus();
 
     if (!enableStartEventBean)
       return;

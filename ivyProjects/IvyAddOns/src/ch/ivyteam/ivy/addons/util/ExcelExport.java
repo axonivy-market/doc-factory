@@ -2,7 +2,8 @@ package ch.ivyteam.ivy.addons.util;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.math.BigDecimal;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -16,14 +17,24 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
+import ch.ivyteam.ivy.environment.EnvironmentNotAvailableException;
+import ch.ivyteam.ivy.environment.Ivy;
+import ch.ivyteam.ivy.persistence.PersistencyException;
+import ch.ivyteam.ivy.richdialog.widgets.components.ModelConfigurationProps;
 import ch.ivyteam.ivy.richdialog.widgets.components.RTable;
+import ch.ivyteam.ivy.scripting.objects.Date;
+import ch.ivyteam.ivy.scripting.objects.DateTime;
+import ch.ivyteam.ivy.scripting.objects.Time;
+import ch.ivyteam.ivy.scripting.objects.util.IvyDefaultValues;
+import ch.ivyteam.ivy.scripting.system.IIvyScriptClassRepository;
 
 import com.ulcjava.base.application.table.ITableModel;
 import com.ulcjava.base.application.table.ULCTableColumnModel;
 
 /**
- * Helper methods that permits the exportation to Excel.
+ * Helper methods that permits the export to Excel.
  * 
+ * @author Rifat Binjos, TI-Informatique
  * @author Patrick Joly, TI-Informatique
  * @author Emmanuel Comba, Soreco
  * @since 11.05.2010
@@ -132,9 +143,17 @@ public final class ExcelExport
    * @param sheetName name of the Excel worksheet into the Excel file
    * @param outputStream stream into which the Excel content is written
    * @throws IOException
+   * @throws PersistencyException
+   * @throws EnvironmentNotAvailableException
+   * @throws InvocationTargetException
+   * @throws IllegalAccessException
+   * @throws NoSuchMethodException
+   * @throws IllegalArgumentException
+   * @throws SecurityException
    */
   public static void exportRTableAsExcel(RTable table, String sheetName, OutputStream outputStream)
-          throws IOException
+          throws IOException, EnvironmentNotAvailableException, PersistencyException, SecurityException,
+          IllegalArgumentException, NoSuchMethodException, IllegalAccessException, InvocationTargetException
   {
     HSSFWorkbook workbook;
 
@@ -144,15 +163,23 @@ public final class ExcelExport
   }
 
   private static HSSFWorkbook exportRTableAsExcel(RTable table, String sheetName)
+          throws EnvironmentNotAvailableException, PersistencyException, SecurityException,
+          NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException
   {
     List<String> headers;
     List<List<Object>> tableValues;
     List<Object> rowValues;
     ULCTableColumnModel columnModel;
     String usedSheetName;
-
+    int rowIndex;
+    int columnIndex;
+    Object rawValue;
     int rowNumber;
     ITableModel model;
+    /**
+     * The method getRawValueAt is not visible. Keep that method in this var to avoid getting it every time.
+     */
+    Method getRawValueAtMethod = null;
 
     usedSheetName = sheetName;
     if (usedSheetName == null)
@@ -171,6 +198,13 @@ public final class ExcelExport
     model = table.getModel();
     rowNumber = model.getRowCount();
 
+    if (model != null)
+    {
+      Class<?> clazz = model.getClass();
+      getRawValueAtMethod = clazz.getMethod("getRawValueAt", Integer.TYPE, Integer.TYPE,
+              IIvyScriptClassRepository.class);
+    }
+
     tableValues = new ArrayList<List<Object>>();
     for (int y = 0; y < rowNumber; y++)
     {
@@ -178,7 +212,39 @@ public final class ExcelExport
 
       for (int x = 0; x < columnModel.getColumnCount(); x++)
       {
-        rowValues.add(model.getValueAt(y, table.convertColumnIndexToModel(x)));
+
+        rowIndex = table.convertRowIndexToModel(y);
+        columnIndex = table.convertColumnIndexToModel(x);
+
+        ModelConfigurationProps props = (ModelConfigurationProps) model.getClass().getMethod(
+                "getModelConfiguration").invoke(model);
+        String fieldName = props.getColumnModelConfigurationProps(columnIndex).getFieldConfiguration();
+        Object value;
+
+        value = null;
+        if (fieldName != null && !fieldName.isEmpty())
+        {
+          rawValue = getRawValueAtMethod.invoke(model, rowIndex, columnIndex, Ivy.request().getProject()
+                  .getIvyScriptClassRepository());
+
+          if (IvyDefaultValues.isDefaultObject(rawValue))
+          {
+            rawValue = null;
+          }
+
+          if (rawValue != null
+                  && (rawValue instanceof Number || rawValue instanceof Date || rawValue instanceof DateTime
+                          || rawValue instanceof java.util.Date || rawValue instanceof Time))
+          {
+            value = rawValue;
+          }
+        }
+        if (value == null)
+        {
+          value = model.getValueAt(rowIndex, columnIndex);
+        }
+        rowValues.add(value);
+
       }
       tableValues.add(rowValues);
     }
@@ -193,25 +259,25 @@ public final class ExcelExport
 
   private void addCell(int currentColumn, Object cellContent)
   {
-    Double doubleValue;
     Object usedCellContent;
-
     usedCellContent = cellContent;
 
-    if (usedCellContent instanceof String)
+    // if the object contains ivy default values do not export that value
+    if (IvyDefaultValues.isDefaultObject(cellContent))
     {
-      try
-      {
-        doubleValue = Double.parseDouble((String) usedCellContent);
-        if (new BigDecimal((String) usedCellContent).compareTo(new BigDecimal(doubleValue.toString())) == 0)
-        {
-          usedCellContent = doubleValue;
-        }
-      }
-      catch (NumberFormatException e)
-      {
-        // Nothing to do
-      }
+      usedCellContent = null;
+    }
+    else if (cellContent instanceof Date)
+    {
+      usedCellContent = ((Date) cellContent).toDate();
+    }
+    else if (cellContent instanceof Time)
+    {
+      usedCellContent = ((Time) cellContent).toDate();
+    }
+    else if (cellContent instanceof DateTime)
+    {
+      usedCellContent = ((DateTime) cellContent).toDate();
     }
 
     if (usedCellContent instanceof Number)
@@ -229,11 +295,11 @@ public final class ExcelExport
 
       cell = excelRow.createCell(currentColumn, HSSFCell.CELL_TYPE_NUMERIC);
       cell.setCellValue((java.util.Date) usedCellContent);
-      if (dateString.startsWith("00000000T"))
+      if (dateString.startsWith("00000000T") || cellContent instanceof Time)
       {
         cell.setCellStyle(timeCellStyle);
       }
-      else if (dateString.endsWith("T000000"))
+      else if (dateString.endsWith("T000000") || cellContent instanceof Date)
       {
         cell.setCellStyle(dateCellStyle);
       }

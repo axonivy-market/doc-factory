@@ -133,9 +133,10 @@ public class EventLogHelper
    * @param eventLog informations that constitutes an event log entry
    * @param createTaskAndCaseHistory
    * @param wf workflow context
+   * @return created event log identifier
    * @throws Exception
    */
-  public static void createEventLog(EventLogData eventLog, boolean createTaskAndCaseHistory,
+  public static int createEventLog(EventLogData eventLog, boolean createTaskAndCaseHistory,
           IWorkflowContext wf) throws Exception
   {
     EventLogDescription eventLogDescription;
@@ -199,6 +200,8 @@ public class EventLogHelper
     {
       MessageBeanEngine.getInstance().publish(event.getIdentifier(), applicationName, wf);
     }
+
+    return event.getIdentifier();
   }
 
   /**
@@ -440,6 +443,28 @@ public class EventLogHelper
         break;
     }
     eventLogData.setSeverity(severity);
+
+    if (event.getStatus() != null)
+    {
+      switch (event.getStatus())
+      {
+        case PENDING:
+          eventLog.setStatus(ch.ivyteam.ivy.addons.eventlog.data.technical.EventLogStatus.PENDING);
+          break;
+        case PROCESSED:
+          eventLog.setStatus(ch.ivyteam.ivy.addons.eventlog.data.technical.EventLogStatus.PROCESSED);
+          break;
+        case PROCESSING:
+          eventLog.setStatus(ch.ivyteam.ivy.addons.eventlog.data.technical.EventLogStatus.PROCESSING);
+          break;
+        case WAITING:
+          eventLog.setStatus(ch.ivyteam.ivy.addons.eventlog.data.technical.EventLogStatus.WAITING);
+          break;
+        case FAILED:
+          eventLog.setStatus(ch.ivyteam.ivy.addons.eventlog.data.technical.EventLogStatus.FAILED);
+          break;
+      }
+    }
     eventLogData.setSource(event.getSource());
 
     return eventLog;
@@ -474,6 +499,9 @@ public class EventLogHelper
         break;
       case WAITING:
         ivyStatus = ch.ivyteam.ivy.workflow.eventlog.EventLogStatus.WAITING;
+        break;
+      case FAILED:
+        ivyStatus = ch.ivyteam.ivy.workflow.eventlog.EventLogStatus.FAILED;
         break;
     }
 
