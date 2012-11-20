@@ -1,0 +1,23 @@
+DialogParam #class
+'This DataClass represents a parameter object to be used in Dialogs (Question, Error, warning etc...) .' #classComment
+ch.ivyteam.ivy.addons.filemanager #namespace
+windowTitle String #field
+windowTitle 'the title to be displayed as dialog window title' #fieldComment
+message String #field
+message 'the message to be displayed in the dialog' #fieldComment
+buttons List<String> #field
+buttons 'the list of the buttons' #fieldComment
+icon String #field
+icon 'the icon uri or name' #fieldComment
+defaultButton String #field
+defaultButton 'the default button' #fieldComment
+outputString String #field
+outputString 'output from user as String' #fieldComment
+title String #field
+title 'a title that can be displayed within the dialog.' #fieldComment
+outputNumber Number #field
+outputNumber 'output from user as Number' #fieldComment
+outputBoolean Boolean #field
+outputBoolean 'output from user as Boolean' #fieldComment
+clickedButton String #field
+clickedButton 'The button that was clicked by the user' #fieldComment
