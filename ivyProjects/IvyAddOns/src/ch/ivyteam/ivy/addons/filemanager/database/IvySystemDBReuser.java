@@ -9,8 +9,6 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
-import ch.ivyteam.ivy.PersistencyService;
-import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.persistence.IPersistencyManager;
 import ch.ivyteam.ivy.persistence.IPersistencyService;
 import ch.ivyteam.ivy.persistence.IPersistentTransaction;
@@ -44,11 +42,11 @@ public class IvySystemDBReuser {
 	{
 		//		get the Xpert.ivy server
 		IServer server = ServerFactory.getServer();
+
 		//get the persistency manager
 		IPersistencyManager pm = server.getPersistencyManager();
-
 		//get the database persistency service
-		return pm.getPersistencyService(PersistencyService.SYSTEM_DB.name());
+		return pm.getPersistencyService("WORKFLOW");
 	}
 
 	/**
@@ -184,7 +182,6 @@ public class IvySystemDBReuser {
 	 */
 	public static <T> T executePreparedStatement(final String _sql, final IPreparedStatementExecutable<T> _executor) throws PersistencyException
 	{
-		Ivy.log().info(getPersistencyService()==null?"getPersistencyService() returned null": getPersistencyService().toString());
 		return ((DatabasePersistencyService)getPersistencyService()).execute(_sql, _executor);	
 	}
 }

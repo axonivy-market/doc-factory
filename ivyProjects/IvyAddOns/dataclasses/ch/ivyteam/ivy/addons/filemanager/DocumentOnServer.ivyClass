@@ -40,3 +40,9 @@ fileType ch.ivyteam.ivy.addons.filemanager.FileType #field
 fileType 'The FileType if this is implemented. The FileType.id is stored in the file meta data table. Is null if this feature is not implemented.' #fieldComment
 editedInSession Boolean #field
 editedInSession 'Used as internal flag for history tracking.' #fieldComment
+canUserDelete Boolean #field
+canUserDelete 'true if user has the right to delete the file' #fieldComment
+canUserWrite Boolean #field
+canUserWrite 'true if user has the right to update the file (Content write, rename, description change)' #fieldComment
+canUserRead Boolean #field
+canUserRead 'true if user has the right to read the file' #fieldComment

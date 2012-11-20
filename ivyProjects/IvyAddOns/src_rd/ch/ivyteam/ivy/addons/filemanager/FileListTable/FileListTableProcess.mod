@@ -1,5 +1,5 @@
 [Ivy]
-[>Created: Thu Aug 09 13:48:06 EDT 2012]
+[>Created: Wed Sep 19 10:53:31 EDT 2012]
 125FDB0198DDACE8 3.17 #module
 >Proto >Proto Collection #zClass
 Fs0 FileListTableProcess Big #zClass
@@ -2128,8 +2128,8 @@ if(l.size()==2 && l.get(0) instanceof Number && l.get(1) instanceof DocumentOnSe
 		//ivy.log.debug(docPath);
 		//ivy.log.debug(doc.filename);
 		
-		if(in.#path !=null){
-			String folderPath=FileHandler.formatPathWithEndSeparator(in.path,false);
+		if(in.#configurationController.#rootPath !=null){
+			String folderPath=FileHandler.formatPathWithEndSeparator(in.configurationController.rootPath,false);
 			if(folderPath.equalsIgnoreCase(docPath)){
 				List<DocumentOnServer> docs = new List<DocumentOnServer>();
 				docs.addAll(in.documentsInDb);

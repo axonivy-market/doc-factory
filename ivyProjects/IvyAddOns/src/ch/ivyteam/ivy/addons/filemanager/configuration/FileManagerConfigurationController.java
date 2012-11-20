@@ -105,12 +105,11 @@ public class FileManagerConfigurationController extends
 	}
 
 	/**
-	 * tells if the files are displayed recursively or not.<br>
-	 * If the security is activated, returns always false.
+	 * tells if the files are displayed recursively or not.
 	 * @return the diplayFilesRecursively
 	 */
 	public boolean isDiplayFilesRecursively() {
-		return (!this.isActivateSecurity() && diplayFilesRecursively);
+		return this.diplayFilesRecursively;
 	}
 
 	/**

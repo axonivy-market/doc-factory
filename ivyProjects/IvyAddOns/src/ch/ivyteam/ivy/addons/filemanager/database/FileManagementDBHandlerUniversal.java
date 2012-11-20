@@ -881,7 +881,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		" (FileName, FilePath, CreationUserId, CreationDate, CreationTime, FileSize, Locked, LockingUserId, ModificationUserId, ModificationDate, ModificationTime, Description) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
 
 		String date = new Date().format("dd.MM.yyyy");
-		String time = new Time().format();
+		String time = new Time().format("HH:mm:ss");
 
 		IExternalDatabaseRuntimeConnection connection=null;
 		try {
@@ -922,7 +922,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		" (FileName, FilePath, CreationUserId, CreationDate, CreationTime, FileSize, Locked, LockingUserId, ModificationUserId, ModificationDate, ModificationTime, Description) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
 
 		String date = new Date().format("dd.MM.yyyy");
-		String time = new Time().format();
+		String time = new Time().format("HH:mm:ss");
 		if(_user==null || _user.trim().equals("")){
 			_user= Ivy.session().getSessionUserName();
 		}
@@ -972,7 +972,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		" (FileName, FilePath, CreationUserId, CreationDate, CreationTime, FileSize, Locked, LockingUserId, ModificationUserId, ModificationDate, ModificationTime, Description) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
 
 		String date = new Date().format("dd.MM.yyyy");
-		String time = new Time().format();
+		String time = new Time().format("HH:mm:ss");
 
 		IExternalDatabaseRuntimeConnection connection=null;
 		try {
@@ -1028,7 +1028,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		" (FileName, FilePath, CreationUserId, CreationDate, CreationTime, FileSize, Locked, LockingUserId, ModificationUserId, ModificationDate, ModificationTime, Description) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
 
 		String date = new Date().format("dd.MM.yyyy");
-		String time = new Time().format();
+		String time = new Time().format("HH:mm:ss");
 
 		IExternalDatabaseRuntimeConnection connection=null;
 		try {
@@ -1089,7 +1089,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		" (FileName, FilePath, CreationUserId, CreationDate, CreationTime, FileSize, Locked, LockingUserId, ModificationUserId, ModificationDate, ModificationTime, Description) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
 
 		String date = new Date().format("dd.MM.yyyy");
-		String time = new Time().format();
+		String time = new Time().format("HH:mm:ss");
 
 		IExternalDatabaseRuntimeConnection connection=null;
 		try {
@@ -1138,7 +1138,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		" (FileName, FilePath, CreationUserId, CreationDate, CreationTime, FileSize, Locked, LockingUserId, ModificationUserId, ModificationDate, ModificationTime, Description) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
 
 		String date = new Date().format("dd.MM.yyyy");
-		String time = new Time().format();
+		String time = new Time().format("HH:mm:ss");
 		if(_user==null || _user.trim().equals("")){
 			_user= Ivy.session().getSessionUserName();
 		}
@@ -2056,7 +2056,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		}
 
 		String date = new Date().format("dd.MM.yyyy");
-		String time = new Time().format();
+		String time = new Time().format("HH:mm:ss");
 		String user = Ivy.session().getSessionUserName();
 		if(document.getCreationDate()==null || document.getCreationDate().trim().equals(""))
 		{
@@ -2283,7 +2283,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		List<DocumentOnServer> pasteDocs = List.create(DocumentOnServer.class);
 		String dest = formatPathForDirectory(fileDestinationPath);
 		String date = new Date().format("dd.MM.yyyy");
-		String time = new Time().format();
+		String time = new Time().format("HH:mm:ss");
 		String user="IVYSYSTEM";
 
 		try{
@@ -2502,6 +2502,13 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		}
 		DocumentOnServer doc = this.getDocumentOnServer(fileid);
 		return getDocumentOnServerWithJavaFile(doc);
+	}
+	
+	@Override
+	public DocumentOnServer getDocumentOnServerById(long fileid,
+			boolean getJavaFile) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override

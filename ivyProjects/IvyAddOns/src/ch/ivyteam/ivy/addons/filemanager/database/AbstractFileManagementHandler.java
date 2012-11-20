@@ -190,6 +190,7 @@ public abstract class AbstractFileManagementHandler {
 	public abstract DocumentOnServer getDocumentOnServerWithJavaFile(String _filePath) throws Exception;
 
 	/**
+	 * <b>Deprecated</b>: use getDocumentOnServerById(long _fileid, boolean getJavaFile) instead.<br>
 	 * Returns the documentOnServer Object pointing to the given file path with its java.io.File attribute set with the corresponding File.<br>
 	 * If the Files are stored on the File System, then the java.io.File will be the existing File.<br>
 	 * If the File content is stored into a DB, a new non persistent Ivy File will be created with the content,<br>
@@ -198,7 +199,20 @@ public abstract class AbstractFileManagementHandler {
 	 * @return the documentOnServer Object with its java.io.File attribute set. Can be null if no documentOnServer was found on this path.
 	 * @throws Exception
 	 */
+	@Deprecated 
 	public abstract DocumentOnServer getDocumentOnServerWithJavaFile(long _fileid) throws Exception;
+	
+	/**
+	 * Returns the documentOnServer Object corresponding to the given id and with its java.io.File attribute set with the corresponding File if the boolean parameter is true.<br>
+	 * If the Files are stored on the File System, then the java.io.File will be the existing File.<br>
+	 * If the File content is stored into a DB, a new non persistent Ivy File will be created with the content,<br>
+	 * and the corresponding java.io.File will be used to set the java.io.File attribute of the resulting documentOnServer.
+	 * @param _fileid the fileId in the uploadedfiles table
+	 * @param getJavaFile if true the documentOnServer returned object will contain a reference to the java.io.File, else it will only contains meta information about this document.
+	 * @return the DocumentOnServer corresponding to the given id with or without java.io.File reference
+	 * @throws Exception
+	 */
+	public abstract DocumentOnServer getDocumentOnServerById(long _fileid, boolean getJavaFile) throws Exception;
 	
 	/**
 	 * Get all the DocumentOnsErver Objects that are listed under a specified path<br>
