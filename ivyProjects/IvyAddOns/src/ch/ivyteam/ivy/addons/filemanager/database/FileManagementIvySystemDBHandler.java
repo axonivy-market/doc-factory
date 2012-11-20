@@ -146,12 +146,14 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 		}
 		else
 		{
+			//query="SELECT * FROM "+this.tableName+" WHERE FilePath LIKE '"+folderPath+"%' AND FilePath NOT LIKE '"+folderPath+"%["+java.io.File.separator+"]%'";
 			query="SELECT * FROM "+this.tableName+" WHERE FilePath LIKE ? AND FilePath NOT LIKE ?";
 		}
 		List<Record> recordList= (List<Record>) List.create(Record.class);
-		
+
 		rset = IvySystemDBReuser.executePreparedStatement(query, 
 				new IPreparedStatementExecutable<Recordset>(){
+
 			public Recordset execute(PreparedStatement stmt) throws PersistencyException {
 				try{
 					if(_isrecursive)
@@ -168,6 +170,7 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 				}
 			}
 		});
+
 		if(rset!=null)
 		{
 			recordList = rset.toList();
@@ -855,7 +858,7 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 			return insertedId;
 		}
 		final String date = new Date().format("dd.MM.yyyy");
-		final String time = new Time().format();
+		final String time = new Time().format("HH:mm:ss");
 		
 		insertedId = IvySystemDBReuser.executePreparedStatement("INSERT INTO "+this.tableName+
 				" (FileId, FileName, FilePath, CreationUserId, CreationDate, CreationTime, FileSize, Locked, LockingUserId, ModificationUserId, ModificationDate, ModificationTime, Description) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)", 
@@ -898,7 +901,7 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 			return insertedId;
 		}
 		final String date = new Date().format("dd.MM.yyyy");
-		final String time = new Time().format();
+		final String time = new Time().format("HH:mm:ss");
 		if(_user==null || _user.trim().equals("")){
 			_user= Ivy.session().getSessionUserName();
 		}
@@ -1068,7 +1071,7 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 				int i=0;
 				for(java.io.File file:_files){
 					String date = new Date().format("dd.MM.yyyy");
-					String time = new Time().format();
+					String time = new Time().format("HH:mm:ss");
 					try{
 						stmt.setInt(1, IvySystemDBReuser.getNextFileID());
 						stmt.setString(2, file.getName());
@@ -1126,7 +1129,7 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 				int i=0;
 				for(java.io.File file:_files){
 					String date = new Date().format("dd.MM.yyyy");
-					String time = new Time().format();
+					String time = new Time().format("HH:mm:ss");
 					try{
 						stmt.setInt(1, IvySystemDBReuser.getNextFileID());
 						stmt.setString(2, file.getName());
@@ -1695,7 +1698,7 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 		}
 
 		String date = new Date().format("dd.MM.yyyy");
-		String time = new Time().format();
+		String time = new Time().format("HH:mm:ss");
 		String user = Ivy.session().getSessionUserName();
 		if(document.getCreationDate()==null || document.getCreationDate().trim().equals(""))
 		{
@@ -1954,7 +1957,7 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 		if(directoryPath==null || directoryPath.trim().equals("")){
 			return liste;
 		}
-		
+
 		//we get all the files from the DB - recursive
 		ArrayList<DocumentOnServer> listeInDB=this.getDocumentsInPath(directoryPath.trim(), true);
 
@@ -1963,7 +1966,6 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 
 		//we get the files in the directory
 		ArrayList<DocumentOnServer> docsInSelectedDir=FileHandler.getDocumentsInDir(new java.io.File(directoryPath));
-
 		if(docsInSelectedDir.size()>0){
 
 			List<DocumentOnServer> docsToAdd = List.create(DocumentOnServer.class);
@@ -2008,7 +2010,7 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 		List<DocumentOnServer> pasteDocs = List.create(DocumentOnServer.class);
 		String dest = formatPathForDirectory(fileDestinationPath);
 		String date = new Date().format("dd.MM.yyyy");
-		String time = new Time().format();
+		String time = new Time().format("HH:mm:ss");
 		String user="IVYSYSTEM";
 
 		try{
@@ -2162,6 +2164,13 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 		}
 		DocumentOnServer doc = this.getDocumentOnServer(fileid);
 		return getDocumentOnServerWithJavaFile(doc);
+	}
+	
+	@Override
+	public DocumentOnServer getDocumentOnServerById(long fileid,
+			boolean getJavaFile) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override

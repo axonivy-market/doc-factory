@@ -1,5 +1,5 @@
 FileManagerData #class
-'It allows organizing and managing the files present on the server (download, upload, deletion of Files, directory management etc…). It integrates the DesktopHandlerPanel Rich Dialog.' #classComment
+'It allows organizing and managing the files present on the server (download, upload, deletion of Files, directory management etc…). It integrates the DesktopHandlerPanel Rich Dialog. ' #classComment
 ch.ivyteam.ivy.addons.filemanager.FileManager #namespace
 folderTree Tree #field
 folderTree 'A tree of FolderOnServer objects' #fieldComment
@@ -136,5 +136,6 @@ isUserFileManagerAdmin 'If true, the user has the role to be fileManager Admin. 
 fileVersioningController ch.ivyteam.ivy.addons.filemanager.database.versioning.FileVersioningController #field
 fileVersioningController 'controller for file versioning, if this feature is activated.' #fieldComment
 configurationController ch.ivyteam.ivy.addons.filemanager.configuration.FileManagerConfigurationController #field
-configurationController 'Cofiguration to be able to start the filemanager' #fieldComment
+configurationController 'Configuration to be able to start the filemanager' #fieldComment
 configurationController PERSISTENT #fieldModifier
+dialogParam ch.ivyteam.ivy.addons.filemanager.DialogParam #field

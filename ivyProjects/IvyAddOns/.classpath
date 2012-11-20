@@ -10,5 +10,6 @@
 	<classpathentry kind="src" path="src_wsproc"/>
 	<classpathentry exported="true" kind="lib" path="lib/poi-3.2-FINAL-20081019.jar"/>
 	<classpathentry kind="con" path="WEBAPP_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

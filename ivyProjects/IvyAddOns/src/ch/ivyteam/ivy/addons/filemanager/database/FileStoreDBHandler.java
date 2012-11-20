@@ -33,6 +33,7 @@ import ch.ivyteam.ivy.addons.filemanager.database.filetype.FileTypesController;
 import ch.ivyteam.ivy.addons.filemanager.database.security.AbstractDirectorySecurityController;
 import ch.ivyteam.ivy.addons.filemanager.database.security.DirectorySecurityController;
 import ch.ivyteam.ivy.addons.filemanager.database.security.FileManagementStaticController;
+import ch.ivyteam.ivy.addons.filemanager.database.versioning.FileVersioningController;
 import ch.ivyteam.ivy.db.IExternalDatabase;
 import ch.ivyteam.ivy.db.IExternalDatabaseApplicationContext;
 import ch.ivyteam.ivy.db.IExternalDatabaseRuntimeConnection;
@@ -67,6 +68,11 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 
 	private boolean activateFileType=false;
 	private FileTypesController ftController = null;
+	
+	private boolean activateFileVersioning=false;
+	private FileVersioningController fvc=null;
+	
+	private BasicConfigurationController config=null;
 	/**
 	 * @throws Exception 
 	 * 
@@ -134,8 +140,23 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 				_conf.getDirectoriesTableName(),
 				_conf.getDatabaseSchemaName(),
 				_conf.isActivateSecurity());
+		this.config = _conf;
 		this.activateFileType=_conf.isActivateFileType();
-		this.ftController = new FileTypesController(_conf);
+		if(this.activateFileType)
+		{
+			this.ftController = new FileTypesController(_conf);
+		}
+		this.activateFileVersioning=this.config.isActivateFileVersioning();
+		if(this.activateFileVersioning)
+		{
+			this.fvc = new FileVersioningController(
+					this.ivyDBConnectionName, 
+					this.tableName, 
+					this.fileContentTableName, 
+					this.config.getFilesVersionTableName(),
+					this.config.getFilesVersionContentTableName(), 
+					this.config.getDatabaseSchemaName());
+		}
 	}
 
 	/**
@@ -583,6 +604,14 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 							super.getFileActionHistoryController().createNewActionHistory(ids[i], (short) 5, Ivy.session().getSessionUserName(), "Delete all files under "+_directoryPath);
 						}
 					}
+					if(this.activateFileVersioning)
+					{
+						for(int i=0; i<ids.length; i++)
+						{
+							this.fvc.deleteAllVersionsFromFile(ids[i]);
+						}
+					}
+					
 				}
 				stmt = jdbcConnection.prepareStatement(base);
 				stmt.setString(1, _directoryPath+"/%");
@@ -626,10 +655,15 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 					stmt = jdbcConnection.prepareStatement(query);
 					stmt.setInt(1, id);
 					stmt.executeUpdate();
+					if(this.activateFileVersioning)
+					{
+						this.fvc.deleteAllVersionsFromFile(id);
+					}
 				}
 				stmt = jdbcConnection.prepareStatement(base);
 				stmt.setString(1, formatPath(document.getPath().trim()));
 				int i = stmt.executeUpdate();
+				
 				if(i>0){
 					message.setType(FileHandler.SUCCESS_MESSAGE);
 				}else{
@@ -648,6 +682,77 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 			}
 		}
 		return message;
+	}
+	
+	/**
+	 * Deletes the actual content of the document and makes the last version as the active document.<br><br>
+	 * <b>Warnings: </b>
+	 * <ul><li>Only available if the file versioning feature is activated.<br>
+	 * If the file versioning feature is not activated, the ReturnedMessage object
+	 * has the FileHandler.ERROR_MESSAGE type and nothing is done. Its text field contains an appropriate error message.<br>
+	 * <li>If the given document has no version (its version number is 1), this method will have no effect.<br>
+	 * In that case the ReturnedMessage object has the FileHandler.INFORMATION_MESSAGE type. Its text field contains an appropriate information message.
+	 * <li>If the given document is locked, it mights be edited by somebody. In that case nothing will be done and an appropriate ERROR_MESSAGE will be returned.
+	 * </ul>
+	 * @param doc the DocumentOnServer object. At least it must have a valid fileId. If not an IllegalArgumentException will be thrown. 
+	 * @return ReturnedMessage reflecting the status of the operation. Its type is FileHandler.SUCCESS_MESSAGE if the operation was successful.
+	 * @throws Exception if any SQL Exceptions are thrown.
+	 * @throws NumberFormatException  if the given DocumentOnServer is null or does not have a valid fileId.
+	 */
+	public ReturnedMessage rollBackToPreviousVersion(DocumentOnServer doc) throws NumberFormatException, Exception
+	{
+		if(doc==null || doc.getFileID().trim().equals(""))
+		{
+			throw new IllegalArgumentException("The 'document' parameter in "+this.getClass().getName()+", method rollBackToPreviousVersion(DocumentOnServer document) is not valid.");
+		}
+		ReturnedMessage message = new ReturnedMessage();
+		message.setFiles(List.create(java.io.File.class));
+		if(!this.activateFileVersioning)
+		{
+			message.setText("The File Versioning Feature is not activated. This method can not be used.");
+			message.setType(FileHandler.ERROR_MESSAGE); 
+			return message;
+		}
+		long id = Long.parseLong(doc.getFileID());
+		if(doc.getVersionnumber().intValue()<=0)
+		{//the doc just contains the file id
+			
+			doc= this.getDocumentOnServerById(id, false);
+			if(doc==null || doc.getFileID().trim().length()==0)
+			{
+				message.setText("The Document with fileId "+id+" does not exist.");
+				message.setType(FileHandler.ERROR_MESSAGE); 
+				return message;
+			}
+		}
+		if(!doc.getLocked().equals("0"))
+		{
+			message.setText("The Document is actually locked by "+doc.getLockingUserID()+". This operation can not be performed.");
+			message.setType(FileHandler.ERROR_MESSAGE); 
+			return message;
+		}
+		if(doc.getVersionnumber().intValue()==1)
+		{
+			message.setType(FileHandler.INFORMATION_MESSAGE);
+			message.setText("The document contains no previous version to rollback.");
+			return message;
+			
+		}
+		if(this.fvc.rollbackLastVersionAsActiveDocument(id))
+		{
+			if(super.getFileActionHistoryController()!=null && super.getFileActionHistoryController().getConfig().isDeleteFileTracked())
+			{
+				super.getFileActionHistoryController().createNewActionHistory(Long.parseLong(doc.getFileID()), (short) 12, Ivy.session().getSessionUserName(), "Version "+doc.getVersionnumber().intValue());
+			}
+			message.setType(FileHandler.SUCCESS_MESSAGE);
+			message.setText("The document was successfuly rolledback to its previous version.");
+			return message;
+		}else{
+			message.setType(FileHandler.ERROR_MESSAGE);
+			message.setText("The document could not be rolledback to its previous version. Please check this document manually.");
+			return message;
+		}
+		
 	}
 
 	/* (non-Javadoc)
@@ -686,6 +791,10 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 						if(id>0){
 							stmt.setInt(1, id);
 							stmt.executeUpdate();
+							if(this.activateFileVersioning)
+							{
+								this.fvc.deleteAllVersionsFromFile(id);
+							}
 						}
 					}
 				}
@@ -747,6 +856,10 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 						if(id>0){
 							stmt.setInt(1, id);
 							stmt.executeUpdate();
+							if(this.activateFileVersioning)
+							{
+								this.fvc.deleteAllVersionsFromFile(id);
+							}
 						}
 					}
 				}
@@ -809,6 +922,10 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 							{
 								super.getFileActionHistoryController().createNewActionHistory(id, (short) 5, Ivy.session().getSessionUserName(), file.getPath());
 							}
+							if(this.activateFileVersioning)
+							{
+								this.fvc.deleteAllVersionsFromFile(id);
+							}
 						}
 					}
 					stmt = jdbcConnection.prepareStatement(base);
@@ -862,9 +979,10 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 	}
 
 	/**
-	 * 
-	 * @param tree
-	 * @param dirs
+	 * For internal use. Recursive method to fill a Directory Tree.<br>
+	 * Used in public Tree getDirectoryTree(String rootPath)
+	 * @param tree The tree to fill. If the Tree represents a locked Folder, It will not display its children nodes.
+	 * @param dirs The list of Children FolderOnServer nodes
 	 */
 	private void fillRDTree(Tree tree, ArrayList<FolderOnServer> dirs){
 		if(dirs==null || dirs.isEmpty() || tree ==null)
@@ -886,6 +1004,12 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 		}
 	}
 
+	/**
+	 * Finds out all the direct children from a parent directory in a list of given directories.<br>
+	 * @param parent the parent directory (FolderOnServer object)
+	 * @param dirs the potential FolderOnServer children in an ArrayList<FolderOnServer>
+	 * @return the ArrayList<FolderOnServer> filled with all the direct children of the parent
+	 */
 	public ArrayList<FolderOnServer> getDirectChildFoldersInList(FolderOnServer parent, ArrayList<FolderOnServer> dirs){
 		ArrayList<FolderOnServer> l = new ArrayList<FolderOnServer>();
 		if(parent==null || parent.getPath()==null || parent.getPath().trim().length()==0 || dirs==null || dirs.isEmpty()){
@@ -902,13 +1026,14 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 	}
 
 	/**
-	 * 
+	 * Returns all the directories present under the given path.<br> 
+	 * The directory represented by the given path is also included in this list.
 	 * @param rootPath
 	 * @return
 	 */
 	public ArrayList<FolderOnServer> getListDirectoriesUnderPath(String rootPath) throws Exception
 	{
-		//Ivy.log().info("SECURITY ?: "+this.securityActivated);
+		
 		if(this.securityActivated){
 			return this.securityController.getListDirectoriesUnderPath(rootPath, null);
 		}
@@ -1014,6 +1139,11 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 		if(filePath==null || filePath.trim().equals("")){
 			return doc;
 		}
+		FolderOnServer fos=null;
+		if(this.securityActivated)
+		{
+			fos=this.securityController.getDirectoryWithPath(filePath.substring(0, filePath.lastIndexOf("/")-1));
+		}
 		Recordset rset = null;
 		List<Record> recordList= (List<Record>) List.create(Record.class);
 
@@ -1040,48 +1170,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 		}
 		if(!recordList.isEmpty())
 		{
-			//we take the first one, normally just one
-			Record rec = recordList.get(0);
-
-			doc.setFileID(rec.getField("FileId").toString());
-			doc.setFilename(rec.getField("FileName").toString());
-			doc.setPath(rec.getField("FilePath").toString());
-			doc.setFileSize(rec.getField("FileSize").toString());
-			doc.setUserID(rec.getField("CreationUserId").toString());
-			doc.setCreationDate(rec.getField("CreationDate").toString());
-			doc.setCreationTime(rec.getField("CreationTime").toString());
-			doc.setModificationUserID(rec.getField("ModificationUserId").toString());
-			doc.setModificationDate(rec.getField("ModificationDate").toString());
-			doc.setModificationTime(rec.getField("ModificationTime").toString());
-			doc.setLocked(rec.getField("Locked").toString());
-			doc.setLockingUserID(rec.getField("LockingUserId").toString());
-			doc.setDescription(rec.getField("Description").toString());
-			if(this.activateFileType)
-			{
-				try{
-					long id = Long.parseLong(rec.getField("filetypeid").toString());
-					if(id>0)
-					{
-						doc.setFileType(this.ftController.getFileTypeWithId(id));
-					}
-				}catch(Exception ex)
-				{
-					//do nothing the file type is not mandatory
-				}
-			}
-			try{
-				doc.setVersionnumber(Integer.parseInt(rec.getField("versionnumber").toString()));
-			}catch(Exception ex)
-			{
-				doc.setVersionnumber(1);
-			}
-			try{
-				doc.setExtension(doc.getFilename().substring(doc.getFilename().lastIndexOf(".")+1));
-			}catch(Exception ex){
-				//Ignore the Exception here
-			}
-
-
+			doc = this.makeDocsWithRecordList(recordList, fos).get(0);
 		}
 		return doc;
 	}
@@ -1249,7 +1338,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 		{
 			return docu;
 		}
-
+		
 		String query="";
 		IExternalDatabaseRuntimeConnection connection = null;
 		String path = formatPath(docu.getPath().trim());
@@ -1266,82 +1355,18 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 				stmt = jdbcConnection.prepareStatement(query);
 				stmt.setString(1, path);
 				ResultSet rst = stmt.executeQuery();
-
-				if(rst.next())
+				if(this.securityActivated)
 				{
-					doc.setFileID(String.valueOf(rst.getInt("FileId")));
-					doc.setFilename(rst.getString("FileName"));
-					doc.setPath(rst.getString("FilePath"));
-					doc.setFileSize(rst.getString("FileSize"));
-					doc.setUserID(rst.getString("CreationUserId"));
-					doc.setCreationDate(rst.getString("CreationDate"));
-					doc.setCreationTime(rst.getString("CreationTime"));
-					doc.setModificationUserID(rst.getString("ModificationUserId"));
-					doc.setModificationDate(rst.getString("ModificationDate"));
-					doc.setModificationTime(rst.getString("ModificationTime"));
-					doc.setLocked(String.valueOf(rst.getInt("Locked")));
-					doc.setLockingUserID(rst.getString("LockingUserId"));
-					doc.setDescription(rst.getString("Description"));
-					try{
-						doc.setExtension(doc.getFilename().substring(doc.getFilename().lastIndexOf(".")+1));
-					}catch(Exception ex){
-						//Ignore the Exception here
-					}
-					if(this.activateFileType)
-					{
-						try{
-							long id = rst.getLong("filetypeid");
-							if(id>0)
-							{
-								doc.setFileType(this.ftController.getFileTypeWithId(id));
-							}
-						}catch(Exception ex)
-						{
-							//do nothing the file type is not mandatory
-						}
-					}
-					try{
-						doc.setVersionnumber(rst.getInt("versionnumber"));
-					}catch(Exception ex)
-					{
-						doc.setVersionnumber(1);
-					}
-					Blob bl = null;
-					byte[] byt = null;
-					try{
-						bl = rst.getBlob("file_content");
-					}catch(Throwable t){
-						try{
-							byt = rst.getBytes("file_content");
-						}catch(Throwable t2){
-
-						}
-					}
-
-
-					//we create a temp file on the server 
-					String tmpPath="tmp/"+System.nanoTime()+"/"+doc.getFilename();
-					File ivyFile = new File(tmpPath,true);
-					ivyFile.createNewFile();
-					byte[] allBytesInBlob = bl!=null?bl.getBytes(1, (int) bl.length()):byt;
-
-					FileOutputStream fos=null;
-					//DataOutputStream dos =null;
-					try{
-						java.io.File javaFile = ivyFile.getJavaFile();
-
-						fos = new FileOutputStream(javaFile.getPath());
-						//dos = new DataOutputStream(fos);
-						//dos.writeBytes(rec.getField("FileContent").toString());
-						fos.write(allBytesInBlob);
-						doc.setJavaFile(javaFile);
-					}finally{
-						if(fos!=null){
-							fos.close();
-						}
-					}
-				}else
+					FolderOnServer fos = this.securityController.getDirectoryWithPath(docu.getPath().substring(0, docu.getPath().lastIndexOf("/")-1));
+					doc = this.makeDocumentFromResultSet(rst,true, fos);
+				}else{
+					doc = this.makeDocumentFromResultSet(rst,true, null);
+				}
+				
+				if(doc==null || doc.getFilename().trim().length()==0)
 				{//May be we had the files on the file Set before.... we try to find it on the file set
+					doc=docu;
+					
 					java.io.File f = new java.io.File(path);
 					if(f.isFile() && docu.getFileID().trim().length()>0)
 					{
@@ -1361,6 +1386,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 								is.close();
 							}
 						}
+						doc.setJavaFile(f);
 					}
 				}
 			}catch(Exception ex){
@@ -1378,6 +1404,8 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 
 		return doc;
 	}
+	
+	
 
 	/* (non-Javadoc)
 	 * @see ch.ivyteam.ivy.addons.filemanager.database.AbstractFileManagementHandler#getDocumentOnServerWithJavaFile(java.lang.String)
@@ -1390,7 +1418,11 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 			return null;
 		}
 		DocumentOnServer doc = new DocumentOnServer();
-
+		FolderOnServer folder=null;
+		if(this.securityActivated)
+		{
+			folder=this.securityController.getDirectoryWithPath(filePath.substring(0, filePath.lastIndexOf("/")-1));
+		}
 		String query="";
 		IExternalDatabaseRuntimeConnection connection = null;
 		String path = formatPath(filePath.trim());
@@ -1406,79 +1438,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 				stmt = jdbcConnection.prepareStatement(query);
 				stmt.setString(1, path);
 				ResultSet rst = stmt.executeQuery();
-				if(rst.next())
-				{
-					doc.setFileID(String.valueOf(rst.getInt("FileId")));
-					doc.setFilename(rst.getString("FileName"));
-					doc.setPath(rst.getString("FilePath"));
-					doc.setFileSize(rst.getString("FileSize"));
-					doc.setUserID(rst.getString("CreationUserId"));
-					doc.setCreationDate(rst.getString("CreationDate"));
-					doc.setCreationTime(rst.getString("CreationTime"));
-					doc.setModificationUserID(rst.getString("ModificationUserId"));
-					doc.setModificationDate(rst.getString("ModificationDate"));
-					doc.setModificationTime(rst.getString("ModificationTime"));
-					doc.setLocked(String.valueOf(rst.getInt("Locked")));
-					doc.setLockingUserID(rst.getString("LockingUserId"));
-					doc.setDescription(rst.getString("Description"));
-					try{
-						doc.setExtension(doc.getFilename().substring(doc.getFilename().lastIndexOf(".")+1));
-					}catch(Exception ex){
-						//Ignore the Exception here
-					}
-					if(this.activateFileType)
-					{
-						try{
-							long id = rst.getLong("filetypeid");
-							if(id>0)
-							{
-								doc.setFileType(this.ftController.getFileTypeWithId(id));
-							}
-						}catch(Exception ex)
-						{
-							//do nothing the file type is not mandatory
-						}
-					}
-					try{
-						doc.setVersionnumber(rst.getInt("versionnumber"));
-					}catch(Exception ex)
-					{
-						doc.setVersionnumber(1);
-					}
-					Blob bl = null;
-					byte[] byt = null;
-					try{
-						bl = rst.getBlob("file_content");
-					}catch(Throwable t){
-						try{
-							byt = rst.getBytes("file_content");
-						}catch(Throwable t2){
-
-						}
-					}
-
-					//we create a temp file on the server 
-					String tmpPath="tmp/"+System.nanoTime()+"/"+doc.getFilename();
-					File ivyFile = new File(tmpPath,true);
-					ivyFile.createNewFile();
-					byte[] allBytesInBlob = bl!=null?bl.getBytes(1, (int) bl.length()):byt;
-					FileOutputStream fos=null;
-					//DataOutputStream dos =null;
-					try{
-						java.io.File javaFile = ivyFile.getJavaFile();
-
-						fos = new FileOutputStream(javaFile.getPath());
-						//dos = new DataOutputStream(fos);
-						//dos.writeBytes(rec.getField("FileContent").toString());
-						fos.write(allBytesInBlob);
-						doc.setJavaFile(javaFile);
-
-					}finally{
-						if(fos!=null){
-							fos.close();
-						}
-					}
-				}
+				doc=this.makeDocumentFromResultSet(rst, true, folder);
 			}catch(Exception ex){
 				Ivy.log().error("Exception " +ex.getMessage(),ex);
 			}
@@ -1517,78 +1477,16 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 				stmt = jdbcConnection.prepareStatement(query);
 				stmt.setString(1, String.valueOf(fileid));
 				ResultSet rst = stmt.executeQuery();
-				if(rst.next())
-				{
-					doc.setFileID(String.valueOf(rst.getInt("FileId")));
-					doc.setFilename(rst.getString("FileName"));
-					doc.setPath(rst.getString("FilePath"));
-					doc.setFileSize(rst.getString("FileSize"));
-					doc.setUserID(rst.getString("CreationUserId"));
-					doc.setCreationDate(rst.getString("CreationDate"));
-					doc.setCreationTime(rst.getString("CreationTime"));
-					doc.setModificationUserID(rst.getString("ModificationUserId"));
-					doc.setModificationDate(rst.getString("ModificationDate"));
-					doc.setModificationTime(rst.getString("ModificationTime"));
-					doc.setLocked(String.valueOf(rst.getInt("Locked")));
-					doc.setLockingUserID(rst.getString("LockingUserId"));
-					doc.setDescription(rst.getString("Description"));
-					try{
-						doc.setExtension(doc.getFilename().substring(doc.getFilename().lastIndexOf(".")+1));
-					}catch(Exception ex){
-						//Ignore the Exception here
-					}
-					if(this.activateFileType)
-					{
-						try{
-							long id = rst.getLong("filetypeid");
-							if(id>0)
-							{
-								doc.setFileType(this.ftController.getFileTypeWithId(id));
-							}
-						}catch(Exception ex)
-						{
-							//do nothing the file type is not mandatory
-						}
-					}
-					try{
-						doc.setVersionnumber(rst.getInt("versionnumber"));
-					}catch(Exception ex)
-					{
-						doc.setVersionnumber(1);
-					}
-					Blob bl = null;
-					byte[] byt = null;
-					try{
-						bl = rst.getBlob("file_content");
-					}catch(Throwable t){
-						try{
-							byt = rst.getBytes("file_content");
-						}catch(Throwable t2){
-
-						}
-					}
-
-					//we create a temp file on the server 
-					String tmpPath="tmp/"+System.nanoTime()+"/"+doc.getFilename();
-					File ivyFile = new File(tmpPath,true);
-					ivyFile.createNewFile();
-					byte[] allBytesInBlob = bl!=null?bl.getBytes(1, (int) bl.length()):byt;
-					FileOutputStream fos=null;
-					//DataOutputStream dos =null;
-					try{
-						java.io.File javaFile = ivyFile.getJavaFile();
-
-						fos = new FileOutputStream(javaFile.getPath());
-						//dos = new DataOutputStream(fos);
-						//dos.writeBytes(rec.getField("FileContent").toString());
-						fos.write(allBytesInBlob);
-						doc.setJavaFile(javaFile);
-
-					}finally{
-						if(fos!=null){
-							fos.close();
-						}
-					}
+				doc = this.makeDocumentFromResultSet(rst, true, null);
+				if (this.securityActivated) {
+					FolderOnServer folder = this.securityController.getDirectoryWithPath(doc.getPath().substring(0,doc.getPath().lastIndexOf("/") - 1));
+					doc.setCanUserDelete(folder.getCanUserDeleteFiles());
+					doc.setCanUserRead(folder.getCanUserOpenDir());
+					doc.setCanUserWrite(folder.getCanUserWriteFiles());
+				} else {
+					doc.setCanUserDelete(true);
+					doc.setCanUserRead(true);
+					doc.setCanUserWrite(true);
 				}
 			}catch(Exception ex){
 				Ivy.log().error("Exception " +ex.getMessage(),ex);
@@ -1603,6 +1501,60 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 		}
 		return doc;
 	}
+	
+	@Override
+	public DocumentOnServer getDocumentOnServerById(long fileid, boolean getJavaFile) throws Exception {
+		
+		if(fileid<=0)
+		{
+			return null;
+		}
+		String.valueOf(fileid);
+		DocumentOnServer doc = new DocumentOnServer();
+
+		String query="";
+		IExternalDatabaseRuntimeConnection connection = null;
+		try {
+			connection = getDatabase().getAndLockConnection();
+			Connection jdbcConnection=connection.getDatabaseConnection();
+			if(getJavaFile)
+			{
+				query="SELECT * FROM "+this.tableNameSpace+
+				" INNER JOIN "+this.fileContentTableNameSpace+" ON "+this.tableNameSpace+".FileId = "+this.fileContentTableNameSpace+".file_id" +
+				" WHERE "+this.tableNameSpace+".FileId LIKE ? ";
+			}else{
+				query="SELECT * FROM "+this.tableNameSpace+" WHERE "+this.tableNameSpace+".FileId LIKE ? ";
+			}
+			PreparedStatement stmt = null;
+			try{
+				stmt = jdbcConnection.prepareStatement(query);
+				stmt.setString(1, String.valueOf(fileid));
+				ResultSet rst = stmt.executeQuery();
+				doc = this.makeDocumentFromResultSet(rst, getJavaFile, null);
+				if (this.securityActivated) {
+					FolderOnServer folder = this.securityController.getDirectoryWithPath(doc.getPath().substring(0,doc.getPath().lastIndexOf("/") - 1));
+					doc.setCanUserDelete(folder.getCanUserDeleteFiles());
+					doc.setCanUserRead(folder.getCanUserOpenDir());
+					doc.setCanUserWrite(folder.getCanUserWriteFiles());
+				} else {
+					doc.setCanUserDelete(true);
+					doc.setCanUserRead(true);
+					doc.setCanUserWrite(true);
+				}
+			}catch(Exception ex){
+				Ivy.log().error("Exception " +ex.getMessage(),ex);
+			}
+			finally{
+				DatabaseUtil.close(stmt);
+			}
+		} finally{
+			if(connection!=null ){
+				database.giveBackAndUnlockConnection(connection);
+			}
+		}
+		return doc;
+	}
+	
 
 	/* (non-Javadoc)
 	 * @see ch.ivyteam.ivy.addons.filemanager.database.AbstractFileManagementHandler#getDocumentOnServersInDirectory(java.lang.String, boolean)
@@ -1611,6 +1563,11 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 	public List<DocumentOnServer> getDocumentOnServersInDirectory(
 			String _path, boolean _isrecursive)
 			throws Exception {
+		
+		if(this.securityActivated && _isrecursive)
+		{
+			return this.getDocumentOnServersInPathCheckSecurity(_path);
+		}
 		if(_path==null || _path.trim().length()==0)
 		{
 			throw new Exception("Invalid path in getDocumentsInPath method");
@@ -1658,52 +1615,276 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 			}
 		}
 		if(recordList!=null){
-			for(Record rec: recordList){
-				
-				DocumentOnServer doc = new DocumentOnServer();
-				doc.setFileID(rec.getField("FileId").toString());
-				doc.setFilename(rec.getField("FileName").toString());
-				doc.setPath(rec.getField("FilePath").toString());
-				doc.setFileSize(rec.getField("FileSize").toString());
-				doc.setUserID(rec.getField("CreationUserId").toString());
-				doc.setCreationDate(rec.getField("CreationDate").toString());
-				doc.setCreationTime(rec.getField("CreationTime").toString());
-				doc.setModificationUserID(rec.getField("ModificationUserId").toString());
-				doc.setModificationDate(rec.getField("ModificationDate").toString());
-				doc.setModificationTime(rec.getField("ModificationTime").toString());
-				doc.setLocked(rec.getField("Locked").toString());
-				doc.setLockingUserID(rec.getField("LockingUserId").toString());
-				doc.setDescription(rec.getField("Description").toString());
-				if(this.activateFileType)
-				{
-					try{
-						long id = Long.parseLong(rec.getField("filetypeid").toString());
-						if(id>0)
-						{
-							doc.setFileType(this.ftController.getFileTypeWithId(id));
-						}
-					}catch(Exception ex)
-					{
-						//do nothing the file type is not mandatory
-						//Ivy.log().error("Error while getting the file type on "+doc.getFilename()+ " "+ex.getMessage(), ex);
-					}
-				}
-				try{
-					doc.setVersionnumber(Integer.parseInt(rec.getField("versionnumber").toString()));
-				}catch(Exception ex)
-				{
-					doc.setVersionnumber(1);
-				}
-				try{
-					doc.setExtension(doc.getFilename().substring(doc.getFilename().lastIndexOf(".")+1));
-				}catch(Exception ex){
-					//Ignore the Exception here
-				}
-				al.add(doc);
-			}
+			al.addAll(this.makeDocsWithRecordList(recordList, null));
 		}
 		al.trimToSize();
 		return al;
+	}
+	
+	/**
+	 * for internal private use. Get all the files recursively under a directory, only in directories the user can open.
+	 * @param _path
+	 * @return
+	 * @throws Exception
+	 */
+	private List<DocumentOnServer> getDocumentOnServersInPathCheckSecurity(String _path) throws Exception
+	{
+		if(_path==null || _path.trim().length()==0)
+		{
+			throw new Exception("Invalid path in getDocumentsInPath method");
+		}
+		List<DocumentOnServer>  al = List.create(DocumentOnServer.class);
+		String folderPath = escapeBackSlash(FileHandler.formatPathWithEndSeparator(_path, false));	
+		Tree dirs = this.getDirectoryTree(folderPath);
+		List<FolderOnServer> folders=getDirsUserCanOpenUnderTree(dirs, null);
+		if(folders.size()>0)
+		{
+			Recordset rset = null;	
+			IExternalDatabaseRuntimeConnection connection = null;
+			try {
+				connection = getDatabase().getAndLockConnection();
+				Connection jdbcConnection=connection.getDatabaseConnection();
+				String query="SELECT * FROM "+this.tableNameSpace+" WHERE FilePath LIKE ? AND FilePath NOT LIKE ?";
+			
+				PreparedStatement stmt = null;
+				try{
+					stmt = jdbcConnection.prepareStatement(query);
+					for(FolderOnServer fos:folders){
+						String s1 = escapeBackSlash(FileHandler.formatPathWithEndSeparator(fos.getPath(), false));
+						stmt.setString(1, s1+"%");
+						stmt.setString(2, s1+"%/%");
+						rset=executeStatement(stmt);
+						al.addAll(this.makeDocsWithRecordList(rset.toList(),fos));
+					}
+					
+				}finally{
+					DatabaseUtil.close(stmt);
+				}
+			} finally{
+				if(connection!=null ){
+					database.giveBackAndUnlockConnection(connection);
+				}
+			}
+			
+		}
+		return al;
+	}
+	
+	/**
+	 * for internal private use only. build Documents with a RecordList.
+	 * @param recordList
+	 * @return
+	 */
+	private List<DocumentOnServer> makeDocsWithRecordList(List<Record> recordList, FolderOnServer fos)
+	{
+		List<DocumentOnServer>  al = List.create(DocumentOnServer.class);
+		if(recordList==null || recordList.isEmpty())
+		{
+			return al;
+		}
+		
+		for(Record rec: recordList){
+			
+			DocumentOnServer doc = new DocumentOnServer();
+			doc.setFileID(rec.getField("FileId").toString());
+			doc.setFilename(rec.getField("FileName").toString());
+			doc.setPath(rec.getField("FilePath").toString());
+			doc.setFileSize(rec.getField("FileSize").toString());
+			doc.setUserID(rec.getField("CreationUserId").toString());
+			doc.setCreationDate(rec.getField("CreationDate").toString());
+			doc.setCreationTime(rec.getField("CreationTime").toString());
+			doc.setModificationUserID(rec.getField("ModificationUserId").toString());
+			doc.setModificationDate(rec.getField("ModificationDate").toString());
+			doc.setModificationTime(rec.getField("ModificationTime").toString());
+			doc.setLocked(rec.getField("Locked").toString());
+			doc.setLockingUserID(rec.getField("LockingUserId").toString());
+			doc.setDescription(rec.getField("Description").toString());
+			if(this.securityActivated && fos!=null)
+			{
+				doc.setCanUserDelete(fos.getCanUserDeleteFiles());
+				doc.setCanUserRead(fos.getCanUserOpenDir());
+				doc.setCanUserWrite(fos.getCanUserWriteFiles());
+			}else{
+				doc.setCanUserDelete(true);
+				doc.setCanUserRead(true);
+				doc.setCanUserWrite(true);
+			}
+			if(this.activateFileType)
+			{
+				try{
+					long id = Long.parseLong(rec.getField("filetypeid").toString());
+					if(id>0)
+					{
+						doc.setFileType(this.ftController.getFileTypeWithId(id));
+					}
+				}catch(Exception ex)
+				{
+					//do nothing the file type is not mandatory
+					//Ivy.log().error("Error while getting the file type on "+doc.getFilename()+ " "+ex.getMessage(), ex);
+				}
+			}
+			try{
+				doc.setVersionnumber(Integer.parseInt(rec.getField("versionnumber").toString()));
+			}catch(Exception ex)
+			{
+				doc.setVersionnumber(1);
+			}
+			try{
+				doc.setExtension(doc.getFilename().substring(doc.getFilename().lastIndexOf(".")+1));
+			}catch(Exception ex){
+				//Ignore the Exception here
+			}
+			al.add(doc);
+		}
+		al.trimToSize();
+		return al;
+	}
+	
+	/**
+	 * 
+	 * @param rst
+	 * @param includeJavaFile
+	 * @param folder
+	 * @return
+	 * @throws Exception
+	 */
+	private DocumentOnServer makeDocumentFromResultSet(ResultSet rst, boolean includeJavaFile, FolderOnServer folder) throws Exception
+	{
+		DocumentOnServer doc = new DocumentOnServer();
+		if(rst.next())
+		{
+			doc.setFileID(String.valueOf(rst.getInt("FileId")));
+			doc.setFilename(rst.getString("FileName"));
+			doc.setPath(rst.getString("FilePath"));
+			doc.setFileSize(rst.getString("FileSize"));
+			doc.setUserID(rst.getString("CreationUserId"));
+			doc.setCreationDate(rst.getString("CreationDate"));
+			doc.setCreationTime(rst.getString("CreationTime"));
+			doc.setModificationUserID(rst.getString("ModificationUserId"));
+			doc.setModificationDate(rst.getString("ModificationDate"));
+			doc.setModificationTime(rst.getString("ModificationTime"));
+			doc.setLocked(String.valueOf(rst.getInt("Locked")));
+			doc.setLockingUserID(rst.getString("LockingUserId"));
+			doc.setDescription(rst.getString("Description"));
+			if(this.securityActivated && folder!=null)
+			{
+				doc.setCanUserDelete(folder.getCanUserDeleteFiles());
+				doc.setCanUserWrite(folder.getCanUserWriteFiles());
+				doc.setCanUserRead(folder.getCanUserOpenDir());
+			}else{
+				doc.setCanUserDelete(true);
+				doc.setCanUserWrite(true);
+				doc.setCanUserRead(true);
+			}
+			try{
+				doc.setExtension(doc.getFilename().substring(doc.getFilename().lastIndexOf(".")+1));
+			}catch(Exception ex){
+				//Ignore the Exception here
+			}
+			if(this.activateFileType)
+			{
+				try{
+					long id = rst.getLong("filetypeid");
+					if(id>0)
+					{
+						doc.setFileType(this.ftController.getFileTypeWithId(id));
+					}
+				}catch(Exception ex)
+				{
+					//do nothing the file type is not mandatory
+				}
+			}
+			try{
+				doc.setVersionnumber(rst.getInt("versionnumber"));
+			}catch(Exception ex)
+			{
+				doc.setVersionnumber(1);
+			}
+			if(includeJavaFile)
+			{
+				Blob bl = null;
+				byte[] byt = null;
+				try{
+					bl = rst.getBlob("file_content");
+				}catch(Throwable t){
+					try{
+						byt = rst.getBytes("file_content");
+					}catch(Throwable t2){
+		
+					}
+				}
+	
+				//we create a temp file on the server 
+				String tmpPath="tmp/"+System.nanoTime()+"/"+doc.getFilename();
+				File ivyFile = new File(tmpPath,true);
+				ivyFile.createNewFile();
+				byte[] allBytesInBlob = bl!=null?bl.getBytes(1, (int) bl.length()):byt;
+		
+				FileOutputStream fos=null;
+				try{
+					java.io.File javaFile = ivyFile.getJavaFile();
+					fos = new FileOutputStream(javaFile.getPath());
+					fos.write(allBytesInBlob);
+					doc.setJavaFile(javaFile);
+				}finally{
+					if(fos!=null){
+						fos.close();
+					}
+				}
+			}
+		}
+		return doc;
+	}
+	
+	public List<FolderOnServer> getDirsUserCanOpenUnderTree(Tree dirs, List<FolderOnServer> folders)
+	{
+		if(folders==null)
+		{
+			folders = List.create(FolderOnServer.class);
+		}
+		FolderOnServer fos = (FolderOnServer) dirs.getValue();
+		if(fos.getCanUserOpenDir())
+		{
+			folders.add(fos);
+			if(dirs.getChildCount()>0)
+			{
+				List<Tree> d = dirs.getChildren();
+				for(Tree t:d)
+				{
+					getDirsUserCanOpenUnderTree(t,folders);
+				}
+			}
+		}
+		return folders;
+	}
+	
+	/**
+	 * 
+	 * @param dirs
+	 * @param paths
+	 * @return
+	 */
+	public List<String> getDirPathsUserCanOpenInTree(Tree dirs, List<String> paths)
+	{
+		if(paths==null)
+		{
+			paths = List.create(String.class);
+		}
+		FolderOnServer fos = (FolderOnServer) dirs.getValue();
+		if(fos.getCanUserOpenDir())
+		{
+			paths.add(fos.getPath());
+			if(dirs.getChildCount()>0)
+			{
+				List<Tree> d = dirs.getChildren();
+				for(Tree t:d)
+				{
+					getDirPathsUserCanOpenInTree(t,paths);
+				}
+			}
+		}
+		return paths;
+		
 	}
 
 	/**
@@ -1737,7 +1918,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 			}
 			query.append(_conditions.get(numConditions));
 		}
-		//rset=IvySystemDBReuser.executeQuery(query.toString());
+
 		IExternalDatabaseRuntimeConnection connection = null;
 		try {
 			connection = getDatabase().getAndLockConnection();
@@ -1748,47 +1929,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 				rset = executeStatement(stmt);
 				recordList=rset.toList();
 				if(rset!=null && recordList!=null){
-					for(Record rec: recordList){
-						DocumentOnServer doc = new DocumentOnServer();
-						doc.setFileID(rec.getField("FileId").toString());
-						doc.setFilename(rec.getField("FileName").toString());
-						doc.setPath(rec.getField("FilePath").toString());
-						doc.setFileSize(rec.getField("FileSize").toString());
-						doc.setUserID(rec.getField("CreationUserId").toString());
-						doc.setCreationDate(rec.getField("CreationDate").toString());
-						doc.setCreationTime(rec.getField("CreationTime").toString());
-						doc.setModificationUserID(rec.getField("ModificationUserId").toString());
-						doc.setModificationDate(rec.getField("ModificationDate").toString());
-						doc.setModificationTime(rec.getField("ModificationTime").toString());
-						doc.setLocked(rec.getField("Locked").toString());
-						doc.setLockingUserID(rec.getField("LockingUserId").toString());
-						doc.setDescription(rec.getField("Description").toString());
-						try{
-							doc.setVersionnumber(Integer.parseInt(rec.getField("versionnumber").toString()));
-						}catch(Exception ex)
-						{
-							doc.setVersionnumber(1);
-						}
-						if(this.activateFileType)
-						{
-							try{
-								long id = Long.parseLong(rec.getField("filetypeid").toString());
-								if(id>0)
-								{
-									doc.setFileType(this.ftController.getFileTypeWithId(id));
-								}
-							}catch(Exception ex)
-							{
-								//do nothing the file type is not mandatory
-							}
-						}
-						try{
-							doc.setExtension(doc.getFilename().substring(doc.getFilename().lastIndexOf(".")+1));
-						}catch(Exception ex){
-							//Ignore the Exception here
-						}
-						al.add(doc);
-					}
+					al.addAll(this.makeDocsWithRecordList(recordList, null));
 				}
 			}finally{
 				DatabaseUtil.close(stmt);
@@ -1798,9 +1939,6 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 				database.giveBackAndUnlockConnection(connection);
 			}
 		}
-
-		al.trimToSize();
-
 		return al;
 	}
 
@@ -1864,30 +2002,8 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 			}
 		}
 		if(rset!=null && recordList!=null){
-			for(Record rec: recordList){
-				DocumentOnServer doc = new DocumentOnServer();
-				doc.setFileID(rec.getField("FileId").toString());
-				doc.setFilename(rec.getField("FileName").toString());
-				doc.setPath(rec.getField("FilePath").toString());
-				doc.setFileSize(rec.getField("FileSize").toString());
-				doc.setUserID(rec.getField("CreationUserId").toString());
-				doc.setCreationDate(rec.getField("CreationDate").toString());
-				doc.setCreationTime(rec.getField("CreationTime").toString());
-				doc.setModificationUserID(rec.getField("ModificationUserId").toString());
-				doc.setModificationDate(rec.getField("ModificationDate").toString());
-				doc.setModificationTime(rec.getField("ModificationTime").toString());
-				doc.setLocked(rec.getField("Locked").toString());
-				doc.setLockingUserID(rec.getField("LockingUserId").toString());
-				doc.setDescription(rec.getField("Description").toString());
-				try{
-					doc.setExtension(doc.getFilename().substring(doc.getFilename().lastIndexOf(".")+1));
-				}catch(Exception ex){
-					//Ignore the Exception here
-				}
-				al.add(doc);
-			}
+			al.addAll(this.makeDocsWithRecordList(recordList, null));
 		}
-		al.trimToSize();
 		return al;
 	}
 
@@ -1901,9 +2017,14 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 		{
 			throw new Exception("Invalid path in getDocumentsInPath method");
 		}
+		
 
 		ArrayList<DocumentOnServer>  al = new ArrayList<DocumentOnServer>();
-
+		if(this.securityActivated && _isRecursive)
+		{
+			al.addAll(this.getDocumentOnServersInPathWithJavaFileCheckSecurity(_path));
+			return al;
+		}
 		String folderPath = escapeBackSlash(FileHandler.formatPathWithEndSeparator(_path, false));
 
 		String query="";
@@ -1937,83 +2058,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 					stmt.setString(2, folderPath+"%/%");
 				}
 				ResultSet rst = stmt.executeQuery();
-				while(rst.next())
-				{
-					DocumentOnServer doc = new DocumentOnServer();
-					doc.setFileID(String.valueOf(rst.getInt("FileId")));
-					doc.setFilename(rst.getString("FileName"));
-					doc.setPath(rst.getString("FilePath"));
-					doc.setFileSize(rst.getString("FileSize"));
-					doc.setUserID(rst.getString("CreationUserId"));
-					doc.setCreationDate(rst.getString("CreationDate"));
-					doc.setCreationTime(rst.getString("CreationTime"));
-					doc.setModificationUserID(rst.getString("ModificationUserId"));
-					doc.setModificationDate(rst.getString("ModificationDate"));
-					doc.setModificationTime(rst.getString("ModificationTime"));
-					doc.setLocked(String.valueOf(rst.getInt("Locked")));
-					doc.setLockingUserID(rst.getString("LockingUserId"));
-					doc.setDescription(rst.getString("Description"));
-					try{
-						doc.setExtension(doc.getFilename().substring(doc.getFilename().lastIndexOf(".")+1));
-					}catch(Exception ex){
-						//Ignore the Exception here
-					}
-					if(this.activateFileType)
-					{
-						try{
-							long id = rst.getLong("filetypeid");
-							if(id>0)
-							{
-								doc.setFileType(this.ftController.getFileTypeWithId(id));
-							}
-						}catch(Exception ex)
-						{
-							//do nothing the file type is not mandatory
-						}
-					}
-					try{
-						doc.setVersionnumber(rst.getInt("versionnumber"));
-					}catch(Exception ex)
-					{
-						doc.setVersionnumber(1);
-					}
-					Blob bl = null;
-					byte[] byt = null;
-					try{
-						bl = rst.getBlob("file_content");
-					}catch(Throwable t){
-						try{
-							byt = rst.getBytes("file_content");
-						}catch(Throwable t2){
-
-						}
-					}
-
-					//we create a temp file on the server 
-					String tmpPath="tmp/"+System.nanoTime()+"/"+doc.getFilename();
-					File ivyFile = new File(tmpPath,true);
-					ivyFile.createNewFile();
-					byte[] allBytesInBlob = bl!=null?bl.getBytes(1, (int) bl.length()):byt;
-					FileOutputStream fos=null;
-					//DataOutputStream dos =null;
-					try{
-						java.io.File javaFile = ivyFile.getJavaFile();
-
-						fos = new FileOutputStream(javaFile.getPath());
-						//dos = new DataOutputStream(fos);
-						//dos.writeBytes(rec.getField("FileContent").toString());
-						fos.write(allBytesInBlob);
-						doc.setJavaFile(javaFile);
-
-					}finally{
-						if(fos!=null){
-							fos.close();
-						}
-					}
-					al.add(doc);
-
-				}
-
+				al.addAll(this.makeDocsWithJavaFileFromResultSet(rst, null));
 			}finally{
 				DatabaseUtil.close(stmt);
 			}
@@ -2023,6 +2068,160 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 			}
 		}
 
+		al.trimToSize();
+		return al;
+	}
+	
+	/**
+	 * For internal use only. Utility method to get a list of documents each containing a reference to its java File.
+	 * Get the documents recursively from the top given _path and only in the folder the user can open.
+	 * @param _path
+	 * @return
+	 * @throws Exception
+	 */
+	private List<DocumentOnServer> getDocumentOnServersInPathWithJavaFileCheckSecurity(String _path) throws Exception
+	{
+		if(_path==null || _path.trim().length()==0)
+		{
+			throw new Exception("Invalid path in getDocumentsInPath method");
+		}
+		List<DocumentOnServer>  al = List.create(DocumentOnServer.class);
+		String folderPath = escapeBackSlash(FileHandler.formatPathWithEndSeparator(_path, false));	
+		Tree dirs = this.getDirectoryTree(folderPath);
+		List<FolderOnServer> folders=getDirsUserCanOpenUnderTree(dirs, null);
+		if(folders.size()>0)
+		{
+			IExternalDatabaseRuntimeConnection connection = null;
+			try {
+				connection = getDatabase().getAndLockConnection();
+				Connection jdbcConnection=connection.getDatabaseConnection();
+				String query="SELECT * FROM "+this.tableNameSpace+
+				" INNER JOIN "+this.fileContentTableNameSpace+" ON "+this.tableNameSpace+".FileId = "+this.fileContentTableNameSpace+".file_id" +
+				" WHERE "+this.tableNameSpace+".FilePath LIKE ? AND "+this.tableNameSpace+".FilePath NOT LIKE ?";
+			
+				PreparedStatement stmt = null;
+				try{
+					stmt = jdbcConnection.prepareStatement(query);
+					for(FolderOnServer fos:folders){
+						String s1 = escapeBackSlash(FileHandler.formatPathWithEndSeparator(fos.getPath(), false));
+						stmt.setString(1, s1+"%");
+						stmt.setString(2, s1+"%/%");
+						ResultSet rst = stmt.executeQuery();
+						al.addAll(this.makeDocsWithJavaFileFromResultSet(rst,fos));
+					}
+					
+				}finally{
+					DatabaseUtil.close(stmt);
+				}
+			} finally{
+				if(connection!=null ){
+					database.giveBackAndUnlockConnection(connection);
+				}
+			}
+			
+		}
+		return al;
+	}
+	
+	/**
+	 * for internal use only. Utility method to build documentOnServer Objects with the resultSet from query
+	 * @param rst: ResulSet
+	 * @param folder
+	 * @return
+	 * @throws Exception
+	 */
+	private List<DocumentOnServer> makeDocsWithJavaFileFromResultSet(ResultSet rst, FolderOnServer folder) throws Exception
+	{
+		List<DocumentOnServer>  al = List.create(DocumentOnServer.class);
+		if(rst==null || rst.isClosed())
+		{
+			return al;
+		}
+		while(rst.next())
+		{
+			DocumentOnServer doc = new DocumentOnServer();
+			doc.setFileID(String.valueOf(rst.getInt("FileId")));
+			doc.setFilename(rst.getString("FileName"));
+			doc.setPath(rst.getString("FilePath"));
+			doc.setFileSize(rst.getString("FileSize"));
+			doc.setUserID(rst.getString("CreationUserId"));
+			doc.setCreationDate(rst.getString("CreationDate"));
+			doc.setCreationTime(rst.getString("CreationTime"));
+			doc.setModificationUserID(rst.getString("ModificationUserId"));
+			doc.setModificationDate(rst.getString("ModificationDate"));
+			doc.setModificationTime(rst.getString("ModificationTime"));
+			doc.setLocked(String.valueOf(rst.getInt("Locked")));
+			doc.setLockingUserID(rst.getString("LockingUserId"));
+			doc.setDescription(rst.getString("Description"));
+			if(this.securityActivated && folder!=null)
+			{
+				doc.setCanUserDelete(folder.getCanUserDeleteFiles());
+				doc.setCanUserRead(folder.getCanUserOpenDir());
+				doc.setCanUserWrite(folder.getCanUserWriteFiles());
+			}else{
+				doc.setCanUserDelete(true);
+				doc.setCanUserRead(true);
+				doc.setCanUserWrite(true);
+			}
+			try{
+				doc.setExtension(doc.getFilename().substring(doc.getFilename().lastIndexOf(".")+1));
+			}catch(Exception ex){
+				//Ignore the Exception here
+			}
+			if(this.activateFileType)
+			{
+				try{
+					long id = rst.getLong("filetypeid");
+					if(id>0)
+					{
+						doc.setFileType(this.ftController.getFileTypeWithId(id));
+					}
+				}catch(Exception ex)
+				{
+					//do nothing the file type is not mandatory
+				}
+			}
+			try{
+				doc.setVersionnumber(rst.getInt("versionnumber"));
+			}catch(Exception ex)
+			{
+				doc.setVersionnumber(1);
+			}
+			Blob bl = null;
+			byte[] byt = null;
+			try{
+				bl = rst.getBlob("file_content");
+			}catch(Throwable t){
+				try{
+					byt = rst.getBytes("file_content");
+				}catch(Throwable t2){
+
+				}
+			}
+
+			//we create a temp file on the server 
+			String tmpPath="tmp/"+System.nanoTime()+"/"+doc.getFilename();
+			File ivyFile = new File(tmpPath,true);
+			ivyFile.createNewFile();
+			byte[] allBytesInBlob = bl!=null?bl.getBytes(1, (int) bl.length()):byt;
+			FileOutputStream fos=null;
+			//DataOutputStream dos =null;
+			try{
+				java.io.File javaFile = ivyFile.getJavaFile();
+				fos = new FileOutputStream(javaFile.getPath());
+				//dos = new DataOutputStream(fos);
+				//dos.writeBytes(rec.getField("FileContent").toString());
+				fos.write(allBytesInBlob);
+				doc.setJavaFile(javaFile);
+
+			}finally{
+				if(fos!=null){
+					fos.close();
+				}
+			}
+			al.add(doc);
+		}
+		
 		al.trimToSize();
 		return al;
 	}
@@ -2983,8 +3182,6 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 		return tableNameSpace;
 	}
 
-
-
 	/**
 	 * Look if a File is actually Locked by a user<br>
 	 * If you don't have a locking System for File edition, just override this method with no action in it and return always false.
@@ -3204,6 +3401,17 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 			docJ.setPath(newFile);
 			docJ.setJavaFile(docJ.getJavaFile());
 			docJ.setFileType(doc.getFileType());
+			if(this.securityActivated)
+			{
+				FolderOnServer fos = this.securityController.getDirectoryWithPath(fileDestinationPath);
+				docJ.setCanUserDelete(fos.getCanUserDeleteFiles());
+				docJ.setCanUserRead(fos.getCanUserOpenDir());
+				docJ.setCanUserWrite(fos.getCanUserWriteFiles());
+			}else{
+				docJ.setCanUserDelete(true);
+				docJ.setCanUserRead(true);
+				docJ.setCanUserWrite(true);
+			}
 			try{
 				docJ.setExtension(docJ.getFilename().substring(docJ.getFilename().lastIndexOf(".")+1));
 			}catch(Exception ex){
@@ -3221,7 +3429,6 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 				//Ivy.cms().findContentObjectValue("", Locale.ENGLISH).getContentAsString();
 			}
 		}
-
 		message.getDocumentOnServers().addAll(pasteDocs);
 		return message;
 	}
@@ -3363,7 +3570,6 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 			message.setType(FileHandler.ERROR_MESSAGE);
 			return message;
 		}
-
 
 		IExternalDatabaseRuntimeConnection connection = null;
 		//we update all the contained files
@@ -3567,13 +3773,11 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 			}finally{
 				DatabaseUtil.close(stmt);
 			}
-
 		}finally{
 			if(connection!=null ){
 				database.giveBackAndUnlockConnection(connection);
 			}
 		}
-
 		return message;
 	}
 
@@ -3904,6 +4108,17 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 				{
 					super.getFileActionHistoryController().createNewActionHistory(Long.parseLong(document.getFileID()), (short) 10, Ivy.session().getSessionUserName(), document.getPath() +" -> "+destination+document.getFilename());
 				}
+				if(this.securityActivated)
+				{
+					FolderOnServer fos = this.securityController.getDirectoryWithPath(destination);
+					document.setCanUserDelete(fos.getCanUserDeleteFiles());
+					document.setCanUserRead(fos.getCanUserOpenDir());
+					document.setCanUserWrite(fos.getCanUserWriteFiles());
+				}else{
+					document.setCanUserDelete(true);
+					document.setCanUserRead(true);
+					document.setCanUserWrite(true);
+				}
 				message.setDocumentOnServer(document);
 			}finally{
 				DatabaseUtil.close(stmt);
@@ -3913,10 +4128,6 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 				database.giveBackAndUnlockConnection(connection);
 			}
 		}
-
-
-
-
 		return message;
 	}
 
@@ -4167,7 +4378,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 		{//do nothing if the list of KeyValuePairs is empty
 			return 0;
 		}
-		//build dthe SQL Query with the keyValue pairs and the list of conditions
+		//build the SQL Query with the keyValue pairs and the list of conditions
 		StringBuilder sql=new StringBuilder("UPDATE "+this.tableNameSpace+" SET");
 
 		for(KeyValuePair kvp: _KVP){
@@ -4440,7 +4651,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 		}
 
 		String date = new Date().format("dd.MM.yyyy");
-		String time = new Time().format("hh:mm:ss");
+		String time = new Time().format("HH:mm:ss");
 		String user ="IVYSYSTEM";
 		//we create a temp file on the server 
 		String tmpPath="tmp/"+System.nanoTime();
@@ -4528,22 +4739,10 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 		return this.securityController;
 	}
 
-	/**
-	 * @param fileVersioningController the fileVersioningController to set
 
-	public void setFileVersioningController(FileVersioningController fileVersioningController) {
-		this.fileVersioningController = fileVersioningController;
-	}
-
-
-	public FileVersioningController getFileVersioningController() {
-		return fileVersioningController;
-	}
-	 */
 	@Override
 	public int getFile_content_storage_type() {
 		return AbstractFileManagementHandler.FILE_STORAGE_DATABASE;
 	}
-
 
 }

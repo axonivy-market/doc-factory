@@ -253,8 +253,9 @@ private TransferHandler getFilesTableTransferHandler(){
 			@Override
 			public boolean importData(ULCComponent targetComponent,
 					Transferable _transferable) {
-
+				
 				Object sourceObj = _transferable.getTransferData(DataFlavor.DRAG_FLAVOR);
+				
 				boolean b = false;
 				if(sourceObj instanceof DnDFileListData)
 				{

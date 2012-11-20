@@ -1,5 +1,5 @@
 # Xpert.ivy RichDialog Event-Mapping Data
-# 2012-08-07 15:08:32 | 4.3.4.40176 | 1.0
+# 2012-10-31 11:23:09 | 4.3.7.41063 | 1.0
 ~.cancelButton@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/121ECCB8283CD1EF
 ~.copyMenuItem@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11ED95C2B7BDD5B8
 ~.delete2Button@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11D438D57924C5D9
@@ -53,12 +53,12 @@
 ~.refreshSelectedFolderButton@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/120667533EA41579
 ~.setDescriptionMenuItem@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/1309D5203A68CFFC
 ~.showHiddeEditedFilesMenuItem@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11E266B093A206B7
-~.showHistoryMenuItem@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/139026FE65E46FD9 # FileManagerProcess.mod/openHistory
+~.showHistoryMenuItem@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/139026FE65E46FD9
 ~.showTreeMenuItem@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11D678B90A9EFC22
 ~.tagsMenuItem@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/13801C27AF581754
 ~.toogleFileListing2Button@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11ED3CBB378B6FDB
 ~.toogleFileListingButton@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11ED3CBB378B6FDB
-~.toogleRecursiveMenuItem@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11ED3CBB378B6FDB
+~.toogleRecursiveMenuItem@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/13AB76947CF4EA4E # FileManagerProcess.mod/toogle recursive menuItem
 ~.unlockButton@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11E498DAE43CF912
 ~.unlockMenuItem@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11E498DAE43CF912
 ~.upload2Button@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11D3ECBE28E494B6
