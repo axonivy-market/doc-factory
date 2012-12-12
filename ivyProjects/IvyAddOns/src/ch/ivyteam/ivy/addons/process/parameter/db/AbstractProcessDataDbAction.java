@@ -26,9 +26,6 @@ import ch.ivyteam.ivy.workflow.ICase;
  */
 @SuppressWarnings("restriction")
 public abstract class AbstractProcessDataDbAction<T> {
-
-	/** Persistency Service name */
-	private static final String WORKFLOW_PERSISTENCY_SERVICE = "WORKFLOW";
 	
 	/** we store the process data in this table */
 	protected static final String PROCESS_DATA_TABLE = "IWA_AsyncProcessCaseData";
@@ -72,7 +69,7 @@ public abstract class AbstractProcessDataDbAction<T> {
 	private static IPersistencyService getPersistencyService() {
 		final IServer server = ServerFactory.getServer();
 		final IPersistencyManager pm = server.getPersistencyManager();
-		return pm.getPersistencyService(WORKFLOW_PERSISTENCY_SERVICE);
+		return pm.getPersistencyService(ch.ivyteam.ivy.PersistencyService.SYSTEM_DB.name());
 	}
 	
 	/**
