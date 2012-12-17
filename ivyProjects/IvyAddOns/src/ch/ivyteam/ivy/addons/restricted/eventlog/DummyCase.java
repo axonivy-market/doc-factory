@@ -34,9 +34,9 @@ import ch.ivyteam.ivy.workflow.WorkflowPriority;
 class DummyCase implements ICase
 {
 
-  private int caseId;
+  private long caseId;
 
-  public DummyCase(Integer caseId)
+  public DummyCase(Long caseId)
   {
     this.caseId = caseId;
   }
@@ -278,7 +278,12 @@ class DummyCase implements ICase
   @Override
   public int getIdentifier()
   {
-    return caseId;
+    return (int)caseId;
+  }
+  
+  public long getId()
+  {
+	  return caseId;
   }
 
   @Override

@@ -348,7 +348,7 @@ public class EventLogHelper
    * @return the resulting list
    * @throws PersistencyException
    */
-  public static synchronized List<EventLog> readAllByCase(Integer caseId, IWorkflowContext wf)
+  public static synchronized List<EventLog> readAllByCase(Long caseId, IWorkflowContext wf)
           throws PersistencyException
   {
     List<EventLog> result;
