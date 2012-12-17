@@ -43,14 +43,14 @@ public class EventLogSearchHelper
     List<EventLog> result;
     List<EventLog> temp;
     List<PropertyOrder<EventLogProperty>> propertyOrder;
-    int caseId;
-    Set<Integer> usedIds;
+    long caseId;
+    Set<Long> usedIds;
 
     result = new ArrayList<EventLog>();
     propertyOrder = new ArrayList<PropertyOrder<EventLogProperty>>();
     propertyOrder.add(new PropertyOrder<EventLogProperty>(EventLogProperty.TIMESTAMP));
 
-    usedIds = new HashSet<Integer>();
+    usedIds = new HashSet<Long>();
 
     for (IEventLog event : wf.findEventLogs(prepareCriteria(criteria), propertyOrder, 0, -1, true)
             .getResultList())
@@ -68,9 +68,9 @@ public class EventLogSearchHelper
             for (EventLog e : temp)
             {
               e.setEventLogCase(new EventLogCase());
-              e.getEventLogCase().setCaseId(caseId);
+              e.getEventLogCase().setCaseId((int)caseId);
               e.setEventLogTask(new EventLogTask());
-              e.getEventLogTask().setCaseId(caseId);
+              e.getEventLogTask().setCaseId((int)caseId);
             }
           }
           usedIds.add(caseId);
