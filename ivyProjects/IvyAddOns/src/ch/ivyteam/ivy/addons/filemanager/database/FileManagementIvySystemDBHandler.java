@@ -867,7 +867,7 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 			public Integer execute(PreparedStatement stmt) throws PersistencyException {
 				int i = 0;
 				try{
-					stmt.setInt(1, IvySystemDBReuser.getNextFileID());
+					stmt.setLong(1, IvySystemDBReuser.getNextFileID());
 					stmt.setString(2, _file.getName());
 					stmt.setString(3, escapeBackSlash(_file.getPath()));
 					stmt.setString(4, _user);
@@ -915,7 +915,7 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 			public Integer execute(PreparedStatement stmt) throws PersistencyException {
 				int i = 0;
 				try{
-					stmt.setInt(1, IvySystemDBReuser.getNextFileID());
+					stmt.setLong(1, IvySystemDBReuser.getNextFileID());
 					stmt.setString(2, _file.getName());
 					stmt.setString(3, destinationPath+_file.getName());
 					stmt.setString(4, user);
@@ -963,7 +963,7 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 			public Integer execute(PreparedStatement stmt) throws PersistencyException {
 				int i = 0;
 				try{
-					stmt.setInt(1, IvySystemDBReuser.getNextFileID());
+					stmt.setLong(1, IvySystemDBReuser.getNextFileID());
 					stmt.setString(2, _document.getFilename());
 					stmt.setString(3, escapeBackSlash(_document.getPath()));
 					stmt.setString(4, _document.getUserID());
@@ -1014,7 +1014,7 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 				int i=0;
 				for(DocumentOnServer doc: _documents){
 					try{
-						stmt.setInt(1, IvySystemDBReuser.getNextFileID());
+						stmt.setLong(1, IvySystemDBReuser.getNextFileID());
 						stmt.setString(2, doc.getFilename());
 						stmt.setString(3, escapeBackSlash(doc.getPath()));
 						stmt.setString(4, doc.getUserID());
@@ -1073,7 +1073,7 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 					String date = new Date().format("dd.MM.yyyy");
 					String time = new Time().format("HH:mm:ss");
 					try{
-						stmt.setInt(1, IvySystemDBReuser.getNextFileID());
+						stmt.setLong(1, IvySystemDBReuser.getNextFileID());
 						stmt.setString(2, file.getName());
 						stmt.setString(3, escapeBackSlash(file.getPath()));
 						stmt.setString(4, _userIn);
@@ -1131,7 +1131,7 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 					String date = new Date().format("dd.MM.yyyy");
 					String time = new Time().format("HH:mm:ss");
 					try{
-						stmt.setInt(1, IvySystemDBReuser.getNextFileID());
+						stmt.setLong(1, IvySystemDBReuser.getNextFileID());
 						stmt.setString(2, file.getName());
 						stmt.setString(3, destinationPath+file.getName());
 						stmt.setString(4, user);

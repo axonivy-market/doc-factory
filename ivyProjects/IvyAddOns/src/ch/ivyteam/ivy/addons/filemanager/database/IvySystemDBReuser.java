@@ -118,7 +118,7 @@ public class IvySystemDBReuser {
 	 * @return
 	 * @throws Exception
 	 */
-	protected static int getNextFileID() throws PersistencyException{
+	protected static long getNextFileID() throws PersistencyException{
 		try{
 		DatabasePersistencyService dbp =(DatabasePersistencyService) IvySystemDBReuser.getPersistencyService();
 		return dbp.getNextIdentifier("IWA_UploadedFile");
