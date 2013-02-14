@@ -109,8 +109,14 @@ for (int i=0; i<in.actionCommandsForButtons.size(); i++)
 	String buttonName = in.actionCommandsForButtons.get(i);
 	
 	button = new RButton();
-	
-	button.text = in.isCustomButtonsMode? in.textsForButtons.get(i): "<%= ivy.cms.co(\"/ch/ivyteam/ivy/addons/strings/buttons/" + buttonName + "\")%>";
+	if(in.isCustomButtonsMode)
+	{
+		button.text=in.textsForButtons.get(i);
+	}//avoid getting annoying warning if the content cannot be found....
+	else if(ivy.cms.findContentObject("/ch/ivyteam/ivy/addons/strings/buttons/" + buttonName)!=null)
+	{
+		button.text = "<%= ivy.cms.co(\"/ch/ivyteam/ivy/addons/strings/buttons/" + buttonName + "\")%>";
+	}
 	
 	// if the cms entries does not exist, just put the button name
 	if (button.text.length() == 0)
@@ -121,7 +127,7 @@ for (int i=0; i<in.actionCommandsForButtons.size(); i++)
 	button.actionCommand = buttonName;
 	
 	// define the icon uri
-	if (in.isCustomButtonsMode && in.iconUrisForButtons.get(i).length() > 0)
+	if (in.isCustomButtonsMode && in.iconUrisForButtons.size()>i && in.iconUrisForButtons.get(i).length() > 0)
 	{
 		button.setIconUri(in.iconUrisForButtons.get(i));
 	}

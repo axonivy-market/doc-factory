@@ -22,7 +22,6 @@ import com.aspose.words.IMailMergeDataSource;
  * @since 20/04/2011
  * Class used by Aspose for Mail merge with regions.
  */
-@SuppressWarnings("restriction")
 public class MailMergeDataSource implements IMailMergeDataSource {
 
 	private String tableName;

@@ -49,14 +49,14 @@ public abstract class AbstractFileManagementHandler {
 	private FileActionHistoryController fileActionHistoryController = null;
 	
 	/**
-	 * @return the fac or null if it was not set
+	 * @return the FileActionHistoryController or null if it was not set
 	 */
 	public FileActionHistoryController getFileActionHistoryController() {
 		return fileActionHistoryController;
 	}
 
 	/**
-	 * Set the FileActionHistoryController if the file MAnagement system uses the action history feature,
+	 * Set the FileActionHistoryController if the file Management system uses the action history feature,
 	 * @param fac the fac to set
 	 */
 	public void setFileActionHistoryController(FileActionHistoryController fac) {
@@ -80,10 +80,12 @@ public abstract class AbstractFileManagementHandler {
 
 	/**
 	 * Insert a List of java.io.File Objects into the File indexation storing System.<br>
-	 * Has been marked as @deprecated because it doesn't fit the new needs of the new File Storage in DB, <br>
-	 * where the path will be different as the one from the java.io.File object.<br>
+	 * Has been marked as @deprecated because it doesn't fit the new needs of the new File Storage in DB as BLOB, <br>
+	 * where the path of the inserted files is likely to be different as the one of the java.io.File objects.<br>
 	 * Please use insertFiles(List<java.io.File> _files, String _destinationPath, String _user) instead.<br>
-	 * This method will still be OK for file management on the server's file system.
+	 * This method still works for file management on the server's file system,
+	 * <br>and whenever the java.io.File path is the real file path.<br>
+	 * <b>Important:</b> All the files that already exists will be overwritten. They are deleted first and the new ones are inserted.
 	 * @param _files: List<java.io.File> the files to add into the db
 	 * @param _user: String representation of the user who is performing this operation
 	 * @return the number of inserted Files
@@ -93,7 +95,8 @@ public abstract class AbstractFileManagementHandler {
 	public abstract int insertFiles(List<java.io.File> _files, String _user) throws Exception;
 	
 	/**
-	 * Insert a List of java.io.File Objects into the File storing System
+	 * Insert a List of java.io.File Objects into the File storing System.<br> 
+	 * <b>Important:</b> All the files that already exists will be overwritten. They are deleted first and the new ones are inserted.
 	 * @param _files: the java.io.File to be inserted
 	 * @param _destinationPath: the path where the files have to be stored
 	 * @param _user: the Ivy user name who performs this action. If it is not set (null or empty String), the Ivy.session().getUserName() will be used.
@@ -118,12 +121,14 @@ public abstract class AbstractFileManagementHandler {
 	public abstract int insertOneDocument(DocumentOnServer _document) throws Exception;
 
 	/**
-	 * Insert a  java.io.File Object into the File indexation storing System.
-	 * Has been marked as @deprecated because it doesn't fit the new needs of the new File Storage in DB, <br>
-	 * where the path will be different as the one from the java.io.File object.<br>
+	 * Insert a  java.io.File Object into the File index storing System.<br>
+	 * Has been marked as @deprecated because it doesn't fit the new needs of the new File Storage in DB as BLOB, <br>
+	 * where the path of the inserted file is likely to be different as the one of the java.io.File object.<br>
 	 * Please use insertFile(List<java.io.File> _files, String _destinationPath, String _user) instead.<br>
-	 * This method will still be OK for file management on the server's file system.
-	 * @param _file: java.io.File that has to be inserted into the File indexation storing System.
+	 * This method still works for file management on the server's file system,
+	 * <br>and whenever the java.io.File path is the real file path.<br>
+	 * <b>Important:</b> If the file already exists in the database, its row in the table will be deleted first and a new one is created.
+	 * @param _file: java.io.File that has to be inserted into the File index storing System.
 	 * @param _user the user name who inserts the file
 	 * @return the number of inserted file
 	 * @throws Exception
@@ -132,7 +137,8 @@ public abstract class AbstractFileManagementHandler {
 	public abstract int insertFile(java.io.File _file, String _user) throws Exception;
 
 	/**
-	 * Insert a  java.io.File Object into the File indexation storing System.
+	 * Insert a  java.io.File Object into the File index storing System.<br>
+	 * <b>Important:</b> If the file already exists in the database, its row in the table will be deleted first and a new one is created.
 	 * @param _file: java.io.File that has to be inserted
 	 * @param _destinationPath: where the File should go
 	 * @param _user: the Ivy user name who performs this action. If it is not set (null or empty String), the Ivy.session().getUserName() will be used.
@@ -142,7 +148,7 @@ public abstract class AbstractFileManagementHandler {
 	public abstract int insertFile(java.io.File _file, String _destinationPath, String _user) throws Exception;
 	
 	/**
-	 * renames a DocumentOnServer Object in the file persistency system.
+	 * renames a DocumentOnServer Object in the file persistence system.
 	 * @param _doc the DocumentOnServer Object that will be renamed
 	 * @param _newName the new name
 	 * @param _userID the user name of the person who made the change
@@ -152,7 +158,9 @@ public abstract class AbstractFileManagementHandler {
 	public abstract boolean renameDocument(DocumentOnServer _doc, String _newName, String _userID) throws Exception;
 
 	/**
-	 * delete files from the File indexation storing System
+	 * Delete files from the File index storing System.<br>
+	 * If your files are completely stored in the database as BLOB, you have to be sure that the File paths reflect the path found in the database.<br>
+	 * Else use the deleteDocuments(List<DocumentOnServer>) instead.
 	 * @param _files the list of the java.io.File to delete
 	 * @return the number of items deleted
 	 * @throws Exception
@@ -160,7 +168,7 @@ public abstract class AbstractFileManagementHandler {
 	public abstract int deleteFiles(List<java.io.File> _files) throws Exception;
 
 	/**
-	 * delete documents from the File indexation storing System
+	 * delete documents from the File index storing System
 	 * @param _documents the list of the DocumentOnServer to delete
 	 * @return the number of items deleted
 	 * @throws Exception
@@ -207,7 +215,7 @@ public abstract class AbstractFileManagementHandler {
 	 * If the Files are stored on the File System, then the java.io.File will be the existing File.<br>
 	 * If the File content is stored into a DB, a new non persistent Ivy File will be created with the content,<br>
 	 * and the corresponding java.io.File will be used to set the java.io.File attribute of the resulting documentOnServer.
-	 * @param _fileid the fileId in the uploadedfiles table
+	 * @param _fileid the fileId in the "uploadedfiles" table
 	 * @param getJavaFile if true the documentOnServer returned object will contain a reference to the java.io.File, else it will only contains meta information about this document.
 	 * @return the DocumentOnServer corresponding to the given id with or without java.io.File reference
 	 * @throws Exception
@@ -453,7 +461,7 @@ public abstract class AbstractFileManagementHandler {
 	public abstract ReturnedMessage pasteCopiedDocumentOnServers(List<DocumentOnServer> _documents, String _fileDestinationPath) throws Exception;
 	
 	/**
-	 * Renames a document
+	 * Renames a document. Fails if a document with the same name already exists
 	 * @param _document: the ch.ivyteam.ivy.addons.filemanager.DocumentOnServer to be renamed
 	 * @param _newName: the new name as String
 	 * @return the renamed ch.ivyteam.ivy.addons.filemanager.DocumentOnServer contained in the ch.ivyteam.ivy.addons.filemanager.ReturnedMessage object
@@ -633,33 +641,32 @@ public abstract class AbstractFileManagementHandler {
 	
 	/**
 	 * Formats a given path with "/" as separator<br>
-	 * so that it is always compatible for Windows, Linux and Mac OS.
-	 * It doesn't check if there is a File.separator at the end of the path.
+	 * so that it is always compatible for Windows, Linux and Mac OS.<br>
+	 * It doesn't check if there is a File.separator at the end of the path.<br>
 	 * @param _path
 	 * @return formatted path with the system File.separator
 	 */
 	public static String formatPath(String _path)
 	{
-		if(_path != null && !_path.equals(""))
-		{
-			_path = org.apache.commons.lang.StringUtils.replace(_path,"\\", "/");
-		}
+		_path=formatPathForDirectoryWithoutLastSeparator(_path);
 		return _path;
 	}
 	
 	/**
 	 * Formats a given directory path with "/" as separator<br>
 	 * so that it is always compatible for Windows, Linux and Mac OS.<br>
-	 * The resulting path ends always with "/"
+	 * The resulting path never begins with "/"<br> 
+	 * The resulting path ends always with "/" if it contains at least a directory name.
+	 * Example: if you give "\\root\\test\\test1" the result will be "root/test/test1/".
+	 * If you enter "//////", an empty String "" will be returned..
 	 * @param _path
 	 * @return formatted path with "/"
 	 */
 	public static String formatPathForDirectory(String _path)
 	{
+		_path=formatPathForDirectoryWithoutLastSeparator(_path);
 		if(_path != null && !_path.trim().equals(""))
 		{
-			_path=_path.trim();
-			_path = org.apache.commons.lang.StringUtils.replace(_path,"\\", "/");
 			if(!_path.endsWith("/"))
 			{
 				_path=_path+"/";
@@ -898,12 +905,7 @@ public abstract class AbstractFileManagementHandler {
 			fileManagementHandler = getInstance();
 		// if there are arguments, we try to find the corresponding constructor
 		else { 
-			//first we get all the constructors from the declared FileManagementHandler Class
-			if(fileManagementClass!=null){
-				constructors = fileManagementClass.getConstructors();
-			}else{
-				constructors = Class.forName("ch.ivyteam.ivy.addons.filemanager.database.FileManagementDBHandlerUniversal").getConstructors();
-			}
+			constructors = fileManagementClass.getConstructors();
 			// then for each constructor found, we try to find the constructor 
 			// which arguments Types match the arguments Types given as parameter
 			for(int i=0; i<constructors.length;i++){

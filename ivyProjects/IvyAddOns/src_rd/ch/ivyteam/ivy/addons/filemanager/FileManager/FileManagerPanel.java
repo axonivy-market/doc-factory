@@ -505,7 +505,7 @@ private RTextField getFileNameInvisibleTextField() {
 		FileNameInvisibleTextField.setText("");
 		FileNameInvisibleTextField.setVisible(false);
 		FileNameInvisibleTextField.setMandatory(true);
-		FileNameInvisibleTextField.setValidation("StringWithoutSpaceAtTheEndAndBegin");
+		//FileNameInvisibleTextField.setValidation("StringWithoutSpaceAtTheEndAndBegin");
 		FileNameInvisibleTextField.setDisabledTextColor(new Color(160, 160, 160));
 		FileNameInvisibleTextField.setName("FileNameInvisibleTextField");
 	}

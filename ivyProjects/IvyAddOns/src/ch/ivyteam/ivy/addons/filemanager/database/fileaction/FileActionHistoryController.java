@@ -62,9 +62,9 @@ public class FileActionHistoryController implements Serializable {
 
 	/**
 	 * creates a new file action history record.
-	 * @param fileid: the fileid on which the action was done
+	 * @param fileid: the file id on which the action was done
 	 * @param actionType: the action type
-	 * @param username: the user's username who has performed the action
+	 * @param username: the user's name who has performed the action (eg. ec, sk ect..)
 	 * @param actionInfos: if any, a description of the action.
 	 * @throws Exception
 	 */
@@ -125,10 +125,75 @@ public class FileActionHistoryController implements Serializable {
 			}
 		}
 	}
+	
+	/**
+	 * Creates a new file action history record.<br>
+	 * It takes a java.sql.connection as parameter to be able to be called from within other methods <br>
+	 * without locking another database connection during its processing.<br>
+	 * See Issue #28265, database deadlock in some of the FileManagement methods used concurrently in a lot of different processes.<br>
+	 * <b>Important: </b>this method does not release the given java.sql.Connection. It is up to the calling method to do that.
+	 * @param fileid: the file id on which the action was done
+	 * @param actionType: a short number representing the action type. The action types are stored in the "fileactiontype" table.
+	 * @param username: the user's name who has performed the action (eg. ec, sk ect..)
+	 * @param actionInfos: if any, a description of the action.
+	 * @param con a java.sql.connection to the database.
+	 * @throws Exception if the file id is not a valid id, if the file action type does not exist, or in case of SQLException.
+	 */
+	public void createNewActionHistory(long fileid, short actionType, String username, String actionInfos, Connection con) throws Exception
+	{
+		if(fileid<=0)
+		{
+			throw new IllegalArgumentException("Invalid fileid parameter in FileActionHistoryController.createNewActionHistory");
+		}
+		if(!actionTypeExists(actionType, con))
+		{
+			throw new IllegalArgumentException("Invalid actionType parameter in FileActionHistoryController.createNewActionHistory. This actionType does not exist.");
+		}
+
+		String sql = "INSERT INTO "+this.config.getFileActionHistoryTableNameSpace()+" (file_id,actiontype,usern,uname,ddate,ttime,adesc) VALUES (?,?,?,?,?,?,?)";
+		if(username==null || username.trim().length()==0)
+		{
+			username=Ivy.session().getSessionUserName();
+		}
+		
+		PreparedStatement stmt = null;
+		try{
+			stmt = con.prepareStatement(sql);
+			stmt.setLong(1, fileid);
+			stmt.setShort(2, actionType);
+			stmt.setString(3, username.trim());
+			String uname = "";
+			try{
+				uname = Ivy.session().getSecurityContext().findUser(username).getFullName();
+			}catch(Exception ex)
+			{
+				//do nothing
+			}
+			stmt.setString(4, uname==null?"":uname);
+			stmt.setDate(5, new java.sql.Date(new java.util.Date().getTime()));
+			stmt.setTime(6, new java.sql.Time(new java.util.Date().getTime()));
+			if(actionInfos==null || actionInfos.trim().length()==0)
+			{
+				actionInfos="";
+			}
+			if(actionInfos.trim().length()>1600)
+			{
+				stmt.setString(7, actionInfos.trim().substring(0, 1600));
+			}else{
+				stmt.setString(7, actionInfos.trim());
+			}
+			stmt.executeUpdate();
+			Ivy.log().info("Write history "+this.config.getFileActionHistoryTableNameSpace());
+
+		}finally{
+			DatabaseUtil.close(stmt);
+		}
+		 
+	}
 
 	/**
-	 * Check if the given action Type exists in the table
-	 * @param actionType
+	 * Check if the given action Type exists in the table.
+	 * @param actionType a short number representing the action type. The action types are stored in the "fileactiontype" table.
 	 * @return true if the action type was found, else false.
 	 * @throws Exception
 	 */
@@ -157,11 +222,40 @@ public class FileActionHistoryController implements Serializable {
 		}
 		return r;
 	}
+	
+	/**
+	 * Check if the given action Type exists in the table.
+	 * It takes a java.sql.connection as parameter to be able to be called from within other methods <br>
+	 * without locking another database connection during its processing.<br>
+	 * See Issue #28265, database deadlock in some of the FileManagement methods used concurrently in a lot of different processes.<br>
+	 * <b>Important: </b>this method does not release the given java.sql.Connection. It is up to the calling method to do that.
+	 * @param actionType a short number representing the action type. The action types are stored in the "fileactiontype" table.
+	 * @param con a java.sql.connection to the database.
+	 * @return
+	 * @throws Exception
+	 */
+	public boolean actionTypeExists(short actionType, Connection con) throws Exception
+	{
+		boolean r = false;
+		String sql = "SELECT id FROM "+this.config.getFileActionTypeNameSpace()+" WHERE atype=?";
+		
+		PreparedStatement stmt = null;
+		try{
+			stmt = con.prepareStatement(sql);
+			stmt.setShort(1, actionType);
+			ResultSet rst = stmt.executeQuery();
+			r = rst.next();
+		}finally{
+			DatabaseUtil.close(stmt);
+		}
+
+		return r;
+	}
 
 	/**
 	 * returns all the action types with the action description in the right language.<br>
 	 * The language is stored in a column which name is the ISO language code in lowercase: "en", "fr", "de"...<br>
-	 * If the language column does not exist the english translation will be inserted.
+	 * If the language column does not exist the English translation will be inserted.
 	 * @param lang: the desired language for the description. "en", "fr", "de"....
 	 * @return the java.util.List of ch.ivyteam.ivy.addons.filemanager.FileActionType objects
 	 * @throws Exception in case of sql exceptions etc...

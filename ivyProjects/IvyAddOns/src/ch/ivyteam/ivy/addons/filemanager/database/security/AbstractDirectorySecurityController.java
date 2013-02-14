@@ -605,6 +605,7 @@ public abstract class AbstractDirectorySecurityController {
 		{
 			stringList.add(sc.next().trim());
 		}
+		sc.close();
 		return stringList;
 	}
 	

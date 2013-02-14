@@ -132,3 +132,5 @@ INSERT INTO dbo.fileactiontype (atype,en,de,fr) VALUES (7,'File printed', 'Datei
 INSERT INTO dbo.fileactiontype (atype,en,de,fr) VALUES (8,'File opened', 'Datei geöffnet' , 'Fichier ouvert')GO
 INSERT INTO dbo.fileactiontype (atype,en,de,fr) VALUES (9,'File copied and paste', 'Datei kopiert' , 'Fichier copié')GO
 INSERT INTO dbo.fileactiontype (atype,en,de,fr) VALUES (10,'File moved', 'Datei verschoben' , 'Fichier déplacé')GO
+INSERT INTO dbo.fileactiontype (atype,en,de,fr) VALUES (11,'New Version created', 'Neue Version erfasst' , 'Nouvelle version')GO
+INSERT INTO dbo.fileactiontype (atype,en,de,fr) VALUES (12,'Last version rollbacked', 'Letzte Version gelöscht' , 'Dernière version supprimée')GO

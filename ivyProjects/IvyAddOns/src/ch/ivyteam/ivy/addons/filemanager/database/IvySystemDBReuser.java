@@ -9,6 +9,8 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
+import ch.ivyteam.ivy.PersistencyService;
+import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.persistence.IPersistencyManager;
 import ch.ivyteam.ivy.persistence.IPersistencyService;
 import ch.ivyteam.ivy.persistence.IPersistentTransaction;
@@ -20,7 +22,6 @@ import ch.ivyteam.ivy.persistence.db.DatabaseUtil;
 import ch.ivyteam.ivy.persistence.db.IPreparedStatementExecutable;
 import ch.ivyteam.ivy.scripting.objects.List;
 import ch.ivyteam.ivy.scripting.objects.Record;
-import ch.ivyteam.ivy.scripting.objects.Recordset;
 import ch.ivyteam.ivy.server.IServer;
 import ch.ivyteam.ivy.server.ServerFactory;
 
@@ -46,7 +47,7 @@ public class IvySystemDBReuser {
 		//get the persistency manager
 		IPersistencyManager pm = server.getPersistencyManager();
 		//get the database persistency service
-		return pm.getPersistencyService("WORKFLOW");
+		return pm.getPersistencyService(PersistencyService.SYSTEM_DB.name());
 	}
 
 	/**
@@ -134,7 +135,7 @@ public class IvySystemDBReuser {
 	 * @return the recordSet resulting of the PreparedStatement execution
 	 * @throws PersistencyException 
 	 * @throws SQLException 
-	 */
+	 
 	public static Recordset executeStatement (PreparedStatement _stmt) throws PersistencyException{
 		final Recordset r= new Recordset();
 		ResultSet rst = null;
@@ -175,6 +176,44 @@ public class IvySystemDBReuser {
 		{
 			DatabaseUtil.close(rst);
 		}						
+	}*/
+	
+	public static List<Record> executeStmt(PreparedStatement _stmt) throws PersistencyException{
+
+		if(_stmt == null){
+			throw(new PersistencyException("Invalid PreparedStatement"));
+		}
+
+		ResultSet rst = null;
+		
+		List<Record> recordList= (List<Record>) List.create(Record.class);
+		try{
+			rst=_stmt.executeQuery();
+			ResultSetMetaData rsmd = rst.getMetaData();
+			int numCols = rsmd.getColumnCount();
+			List<String> colNames= List.create(String.class);
+			for(int i=1; i<=numCols; i++){
+				colNames.add(rsmd.getColumnName(i));
+				//Ivy.log().debug(rsmd.getColumnName(i));
+			}
+			while(rst.next()){
+				List<Object> values = List.create(numCols);
+				for(int i=1; i<=numCols; i++){
+
+					if(rst.getString(i)==null)
+						values.add(" ");
+					else values.add(rst.getString(i));
+				}
+				Record rec = new Record(colNames,values);
+				recordList.add(rec);
+			}
+		}catch(Exception ex){
+			Ivy.log().error(ex.getMessage(), ex);
+		}finally
+		{
+			DatabaseUtil.close(rst);
+		}
+		return recordList;
 	}
 	
 	/**
@@ -182,6 +221,7 @@ public class IvySystemDBReuser {
 	 */
 	public static <T> T executePreparedStatement(final String _sql, final IPreparedStatementExecutable<T> _executor) throws PersistencyException
 	{
+
 		return ((DatabasePersistencyService)getPersistencyService()).execute(_sql, _executor);	
 	}
 }

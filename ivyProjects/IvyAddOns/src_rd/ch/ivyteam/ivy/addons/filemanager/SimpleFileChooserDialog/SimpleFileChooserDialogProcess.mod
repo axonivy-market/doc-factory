@@ -1,5 +1,5 @@
 [Ivy]
-[>Created: Thu Aug 09 09:54:23 EDT 2012]
+[>Created: Fri Jan 25 09:04:33 EST 2013]
 125FE384C5BE80F0 3.17 #module
 >Proto >Proto Collection #zClass
 Fs0 FileChooserDialogProcess Big #zClass
@@ -82,7 +82,6 @@ Fs0 @PushWFArc f64 '' #zField
 Fs0 @RichDialogProcessEnd f65 '' #zField
 Fs0 @PushWFArc f66 '' #zField
 Fs0 @RichDialogMethodStart f67 '' #zField
-Fs0 @PushWFArc f68 '' #zField
 Fs0 @RichDialogMethodStart f69 '' #zField
 Fs0 @PushWFArc f70 '' #zField
 Fs0 @RichDialogInitStart f71 '' #zField
@@ -90,6 +89,9 @@ Fs0 @PushWFArc f72 '' #zField
 Fs0 @RichDialogProcessStep f73 '' #zField
 Fs0 @PushWFArc f74 '' #zField
 Fs0 @PushWFArc f41 '' #zField
+Fs0 @RichDialogProcessStep f75 '' #zField
+Fs0 @PushWFArc f76 '' #zField
+Fs0 @PushWFArc f77 '' #zField
 >Proto Fs0 Fs0 FileChooserDialogProcess #zField
 Fs0 f0 guid 1223BBAF0B7B8784 #txt
 Fs0 f0 type ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.SimpleFileChooserDialogData #txt
@@ -391,10 +393,10 @@ panel.previewButton.setEnabled(false);
 
 //set the file
 out.fileChoosed=new java.io.File("");
-
+in.filemanagementHandler= AbstractFileManagementHandler.getInstance(in.configurationController);
 if(in.configurationController.storeFilesInDB)
 {
-	in.filemanagementHandler= AbstractFileManagementHandler.getInstance(in.configurationController);
+	
 	if(in.configurationController.fileActionHistoryConfiguration.activateFileActionHistory)
 	{
 		in.fileManagementHandler.setFileActionHistoryController(new FileActionHistoryController(in.configurationController.fileActionHistoryConfiguration));
@@ -414,6 +416,8 @@ if(in.configurationController.storeFilesInDB)
 	in.uploader.setFileHandlerMgt(in.fileManagementHandler);
 }else{
 	in.uploader = new FileUploadHandler(panel,"_uploadError","_uploadDone","_askForOverwriteFiles","",in.configurationController.rootPath);
+	in.uploader.setFileHandlerMgt(in.fileManagementHandler);
+	in.uploader.setAreFilesStoredInDB(false);
 }' #txt
 Fs0 f8 type ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.SimpleFileChooserDialogData #txt
 Fs0 f8 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -803,10 +807,8 @@ Fs0 f67 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-Fs0 f67 838 390 20 20 13 0 #rect
+Fs0 f67 950 390 20 20 13 0 #rect
 Fs0 f67 @|RichDialogMethodStartIcon #fIcon
-Fs0 f68 expr out #txt
-Fs0 f68 838 400 786 400 #arcP
 Fs0 f69 guid 12B9B45F3E5AB46B #txt
 Fs0 f69 type ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.SimpleFileChooserDialogData #txt
 Fs0 f69 method _close() #txt
@@ -863,6 +865,27 @@ Fs0 f74 expr out #txt
 Fs0 f74 768 412 768 436 #arcP
 Fs0 f41 expr out #txt
 Fs0 f41 768 460 768 486 #arcP
+Fs0 f75 actionDecl 'ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.SimpleFileChooserDialogData out;
+' #txt
+Fs0 f75 actionTable 'out=in;
+' #txt
+Fs0 f75 actionCode 'if(in.fileManagementHandler!=null)
+{
+	try{
+		in.fileManagementHandler.insertFiles(in.returnedMessage.files,in.configurationController.rootPath,"");
+	}catch(Throwable t)
+	{
+		ivy.log.error("Error while saving the uploaded files in the SimpleFileChooserDialog. ",+t.getMessage(),t);
+	}
+}' #txt
+Fs0 f75 type ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.SimpleFileChooserDialogData #txt
+Fs0 f75 854 388 36 24 20 -2 #rect
+Fs0 f75 @|RichDialogProcessStepIcon #fIcon
+Fs0 f76 expr out #txt
+Fs0 f76 950 400 890 400 #arcP
+Fs0 f77 expr out #txt
+Fs0 f77 854 408 786 440 #arcP
+Fs0 f77 0 0.65 0 0 #arcLabel
 >Proto Fs0 .xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -943,8 +966,6 @@ Fs0 f62 mainOut f64 tail #connect
 Fs0 f64 head f63 mainIn #connect
 Fs0 f63 mainOut f66 tail #connect
 Fs0 f66 head f65 mainIn #connect
-Fs0 f67 mainOut f68 tail #connect
-Fs0 f68 head f36 mainIn #connect
 Fs0 f69 mainOut f70 tail #connect
 Fs0 f70 head f9 mainIn #connect
 Fs0 f71 mainOut f72 tail #connect
@@ -953,3 +974,7 @@ Fs0 f36 mainOut f74 tail #connect
 Fs0 f74 head f73 mainIn #connect
 Fs0 f73 mainOut f41 tail #connect
 Fs0 f41 head f37 mainIn #connect
+Fs0 f67 mainOut f76 tail #connect
+Fs0 f76 head f75 mainIn #connect
+Fs0 f75 mainOut f77 tail #connect
+Fs0 f77 head f73 mainIn #connect

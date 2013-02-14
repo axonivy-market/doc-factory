@@ -108,7 +108,8 @@ implements IRichDialogPanel
 	private RMenuItem getRemoveFilesMenuItem() {
 		if (removeFilesMenuItem == null) {
 			removeFilesMenuItem = new RMenuItem();
-			removeFilesMenuItem.setText("<%=ivy.cms.co(\"/ch/xpertline/common/ria/component/DesktopHandler/RemovetheselectedFilesfromthelist\")%>");
+			removeFilesMenuItem.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/buttonLabels/unlockSelectedFiles\")%>");
+			removeFilesMenuItem.setIconUri("<%=ivy.cms.cr(\"/ch/ivyteam/ivy/addons/icons/unlock/16\")%>");
 			removeFilesMenuItem.setName("removeFilesMenuItem");
 		}
 		return removeFilesMenuItem;

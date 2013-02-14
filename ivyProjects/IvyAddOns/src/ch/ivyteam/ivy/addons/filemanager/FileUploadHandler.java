@@ -67,6 +67,7 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel>
 	private boolean areFilesStoredInDB = false;
 	private String filesDestinationPathForDB="";
 	private AbstractFileManagementHandler fileHandlerMgt=null;
+	public int fileUnit=100;
 
 
 	private String MULTIFILE_UPLOAD_WINDOW_TITLE = Ivy.cms().co("/ch/ivyteam/ivy/addons/filemanager/fileManagement/windowTitles/chooseSomeFileToUpload");
@@ -296,14 +297,16 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel>
 					if(goesOn)
 					{//the file does not exists already
 						uploadedFile = serverFile;
+						@SuppressWarnings("resource")
 						final BufferedOutputStream server = new BufferedOutputStream(new FileOutputStream(serverFile));
 						final java.io.File choosedFile= new java.io.File(filePaths[0]);
 						final String fileName = fileNames[0];
+						fileUnit = getInputStreamPercentLength(ins[0],20);
+						Ivy.log().info("BufferedInputStream preparedFile: {0} fileUnit = {1}",fileNames[0],fileUnit);
 						cleanTimer();
 						timer.addActionListener(new IActionListener() {
 							private static final long serialVersionUID = -3025252014358720080L;
 							byte b[] = new byte[1024];
-							int progressUnit = 10; // 10 Kb
 							int totalKBUploaded =0 ;
 							int intRead;
 							boolean done=false;
@@ -311,7 +314,7 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel>
 							public void actionPerformed(ActionEvent arg0) {
 								int progressDone =0;
 								try{
-									while(!done && progressDone< progressUnit){	
+									while(!done && progressDone< fileUnit){	
 										if((intRead= preparedFile.read(b)) != -1){
 											server.write(b,0,intRead);
 											progressDone++;
@@ -486,10 +489,12 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel>
 					{ //we can upload without asking for overwriting files
 						cleanTimer();
 						callPanelReleaseUploadUIMethod(false); //disables the Upload GUI launchers
+						fileUnit = getInputStreamPercentLength(fIns[0],20);
+						Ivy.log().info("BufferedInputStream preparedFile: {0} fileUnit = {1}",fFileNames[0],fileUnit);
 						timer.addActionListener(new IActionListener() {
 							private static final long serialVersionUID = -3025252014358720080L;
 							byte b[] = new byte[1024];
-							int progressUnit = 10; // 10 Kb
+							//int progressUnit = 10; // 10 Kb
 							int totalKBUploaded =0 ;
 							int intRead;
 							boolean done=false;
@@ -501,11 +506,12 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel>
 							String fileOnServer = serverPath + fFileNames[0];
 							String fileName= fFileNames[0];
 							java.io.File serverFile = new java.io.File(fileOnServer);
-
+							
 							BufferedOutputStream server = new BufferedOutputStream(new FileOutputStream(serverFile));
 							public void actionPerformed(ActionEvent arg0) {
 								int progressDone=0;
-								while(!done && progressDone< progressUnit){
+								
+								while(!done && progressDone< fileUnit){
 									try{
 										if((intRead= preparedFile.read(b)) != -1){
 											server.write(b,0,intRead);
@@ -525,7 +531,9 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel>
 												files.add(serverFile);
 												//we get the next file to upload
 												fileNumber=fileNumber+1;
+												fileUnit = getInputStreamPercentLength(fIns[fileNumber],20);
 												preparedFile = new BufferedInputStream(fIns[fileNumber]);
+												Ivy.log().info("BufferedInputStream preparedFile: {0} fileUnit = {1}",preparedFile,fileUnit);
 												fileOnServer = serverPath + fFileNames[fileNumber];
 												serverFile = new java.io.File(fileOnServer);
 												server = new BufferedOutputStream(new FileOutputStream(serverFile));
@@ -540,6 +548,7 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel>
 								}
 
 								if(!done){
+									Ivy.log().info("File unit is "+fileUnit);
 									String s = fileName+" "+totalKBUploaded+" Kb uploaded";
 									RDCallbackMethodHandler.callRDMethod(ulcPane, progressMethodName, new Object[] { s });
 									timer.restart(); // restart the timer because the file is not completely uploaded
@@ -689,10 +698,11 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel>
 					{ //we can upload without asking for overwriting files
 						cleanTimer();
 						callPanelReleaseUploadUIMethod(false); //disables the Upload GUI launchers
+						fileUnit = getInputStreamPercentLength(fIns[0],20);
+						Ivy.log().info("BufferedInputStream preparedFile: {0} fileUnit = {1}",fFileNames[0],fileUnit);
 						timer.addActionListener(new IActionListener() {
 							private static final long serialVersionUID = -3025252014358720080L;
 							byte b[] = new byte[1024];
-							int progressUnit = 10; // 10 Kb
 							int totalKBUploaded =0 ;
 							int intRead;
 							boolean done=false;
@@ -708,7 +718,7 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel>
 							BufferedOutputStream server = new BufferedOutputStream(new FileOutputStream(serverFile));
 							public void actionPerformed(ActionEvent arg0) {
 								int progressDone=0;
-								while(!done && progressDone< progressUnit){
+								while(!done && progressDone< fileUnit){
 									try{
 										if((intRead= preparedFile.read(b)) != -1){
 											server.write(b,0,intRead);
@@ -729,6 +739,8 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel>
 												//we get the next file to upload
 												fileNumber=fileNumber+1;
 												preparedFile = new BufferedInputStream(fIns[fileNumber]);
+												fileUnit = getInputStreamPercentLength(fIns[fileNumber],20);
+												Ivy.log().info("BufferedInputStream preparedFile: {0} fileUnit = {1}", preparedFile.toString(),fileUnit);
 												fileOnServer = serverPath + fFileNames[fileNumber];
 												serverFile = new java.io.File(fileOnServer);
 												server = new BufferedOutputStream(new FileOutputStream(serverFile));
@@ -931,7 +943,7 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel>
 		returnedMessage.setFile(null);
 		returnedMessage.getFiles().clear();
 		uploadedFile = null;
-		Ivy.log().info("Starting to upload");
+		//Ivy.log().info("Starting to upload");
 		FileChooserConfig fcConfig = new FileChooserConfig();
 
 		if(multiFile)
@@ -966,7 +978,7 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel>
 						{
 							if(serverFile.exists())
 							{//we check if the file exists on the file set
-								Ivy.log().info("File exists: "+serverFilePath.toString());
+								//Ivy.log().info("File exists: "+serverFilePath.toString());
 								returnedMessage.setType(FileHandler.INFORMATION_MESSAGE);
 								returnedMessage.setText(FILE_ALREADY_EXISTS);
 								returnedMessage.setFile(serverFile);
@@ -976,7 +988,7 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel>
 						}// end if
 						else
 						{//we check if the file exists in the DB
-							Ivy.log().info("Starting to upload with files stored in DB");
+							//Ivy.log().info("Starting to upload with files stored in DB");
 							if(fileHandlerMgt!=null){
 								List<DocumentOnServer> choosedDocs = List.create(DocumentOnServer.class);
 								List<DocumentOnServer> existingDocs = List.create(DocumentOnServer.class);
@@ -987,7 +999,7 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel>
 								doc.setFilename(fileNames[i]);
 								doc.setPath(filesDestinationPathForDB+fileNames[i]);
 								choosedDocs.add(doc);
-								Ivy.log().info("Checking file "+doc.getPath());
+								//Ivy.log().info("Checking file "+doc.getPath());
 								if(fileHandlerMgt.documentOnServerExists(doc, filesDestinationPathForDB)){
 									existingDocs.add(doc);
 								}	
@@ -1001,7 +1013,7 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel>
 						}
 						if(goesOn)
 						{//the file does not exists already
-							Ivy.log().info("File doesn't exist: "+serverFilePath.toString());
+							//Ivy.log().info("File doesn't exist: "+serverFilePath.toString());
 							uploadedFile = serverFile;
 							callPanelReleaseUploadUIMethod(false); //disables the Upload GUI launchers
 							final BufferedOutputStream server = new BufferedOutputStream(new FileOutputStream(serverFile));
@@ -1010,7 +1022,7 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel>
 							byte b[] = new byte[1024];
 							while((intRead= preparedFile.read(b)) != -1){
 								server.write(b,0,intRead);
-								Ivy.log().info("Writing the File: "+serverFilePath.toString());
+								//Ivy.log().info("Writing the File: "+serverFilePath.toString());
 							}
 							server.close();    			
 
@@ -1228,11 +1240,14 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel>
 				try{
 					callPanelReleaseUploadUIMethod(false); //disables the Upload GUI launchers
 					final BufferedInputStream preparedFile = new BufferedInputStream(ins[0]);
+					fileUnit = getInputStreamPercentLength(ins[0],20);
+					Ivy.log().info("BufferedInputStream preparedFile: {0} fileUnit = {1}", preparedFile.toString(),fileUnit);
 					serverFilePath = fileNames[0];
 					formatServerPath();
 					serverFilePath = (new StringBuilder(String.valueOf(serverPath))).append(serverFilePath).toString();
 					final java.io.File serverFile = new java.io.File(serverFilePath);
 					uploadedFile = serverFile;
+					@SuppressWarnings("resource")
 					final BufferedOutputStream server = new BufferedOutputStream(new FileOutputStream(serverFile));
 					final java.io.File choosedFile= new java.io.File(filePaths[0]);
 					final String fileName = fileNames[0];
@@ -1240,14 +1255,14 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel>
 					timer.addActionListener(new IActionListener() {
 						private static final long serialVersionUID = -3025252014358720080L;
 						byte b[] = new byte[1024];
-						int progressUnit = 10; // 10 Kb
+						
 						int totalKBUploaded =0 ;
 						int intRead;
 						boolean done=false;
 						public void actionPerformed(ActionEvent arg0) {
 							int progressDone =0;
 							try{
-								while(!done && progressDone< progressUnit){	
+								while(!done && progressDone< fileUnit){	
 									if((intRead= preparedFile.read(b)) != -1){
 										server.write(b,0,intRead);
 										progressDone++;
@@ -1492,24 +1507,26 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel>
 					uploadedFile = f;
 					final String fileName= f.getName();
 					final BufferedInputStream preparedFile = new BufferedInputStream(ins[0]);
+					fileUnit = getInputStreamPercentLength(ins[0],20);
+					Ivy.log().info("BufferedInputStream preparedFile: {0} fileUnit = {1}", preparedFile.toString(),fileUnit);
 					serverFilePath = uploadedFile.getName();
 					formatServerPath();
 					serverFilePath = (new StringBuilder(String.valueOf(serverPath))).append(serverFilePath).toString();
 					final java.io.File serverFile = new java.io.File(serverFilePath);
 					uploadedFile = new java.io.File(serverFilePath);
+					@SuppressWarnings("resource")
 					final BufferedOutputStream server = new BufferedOutputStream(new FileOutputStream(serverFile));
 					cleanTimer();
 					timer.addActionListener(new IActionListener() {
 						private static final long serialVersionUID = -3025252014358720080L;
 						byte b[] = new byte[1024];
-						int progressUnit = 10; // 10 Kb
 						int totalKBUploaded =0 ;
 						int intRead;
 						boolean done=false;
 						public void actionPerformed(ActionEvent arg0) {
 							int progressDone =0;
 							try{
-								while(!done && progressDone< progressUnit){	
+								while(!done && progressDone< fileUnit){	
 									if((intRead= preparedFile.read(b)) != -1){
 										server.write(b,0,intRead);
 										progressDone++;
@@ -1594,12 +1611,14 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel>
 						uploadedFile = f;
 						final String fileName= f.getName();
 						final BufferedInputStream preparedFile = new BufferedInputStream(ins[0]);
-						Ivy.log().info("BufferedInputStream preparedFile: "+preparedFile.toString());
+						fileUnit = getInputStreamPercentLength(ins[0],20);
+						Ivy.log().info("BufferedInputStream preparedFile: {0} fileUnit = {1}", preparedFile.toString(),fileUnit);
 						serverFilePath = uploadedFile.getName();
 						formatServerPath();
 						serverFilePath = (new StringBuilder(String.valueOf(serverPath))).append(serverFilePath).toString();
 						final java.io.File serverFile = new java.io.File(serverFilePath);
 						uploadedFile = new java.io.File(serverFilePath);
+						@SuppressWarnings("resource")
 						final BufferedOutputStream serverBOS = new BufferedOutputStream(new FileOutputStream(serverFile));
 						Ivy.log().info("BufferedOutputStream serverBOS: "+serverFile);
 						cleanTimer();
@@ -1607,14 +1626,13 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel>
 						timer.addActionListener(new IActionListener() {
 							private static final long serialVersionUID = -3025252014358720080L;
 							byte b[] = new byte[1024];
-							int progressUnit = 10; // 10 Kb
 							int totalKBUploaded =0 ;
 							int intRead;
 							boolean done=false;
 							public void actionPerformed(ActionEvent arg0) {
 								int progressDone =0;
 								try{
-									while(!done && progressDone< progressUnit){	
+									while(!done && progressDone< fileUnit){	
 										if((intRead= preparedFile.read(b)) != -1){
 											serverBOS.write(b,0,intRead);
 											progressDone++;
@@ -1723,7 +1741,8 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel>
 						uploadedFile = f;
 						final String fileName= f.getName();
 						final BufferedInputStream preparedFile = new BufferedInputStream(ins[0]);
-						Ivy.log().info("BufferedInputStream preparedFile: "+preparedFile.toString());
+						fileUnit = getInputStreamPercentLength(ins[0],20);
+						Ivy.log().info("BufferedInputStream preparedFile: {0} fileUnit = {1}", preparedFile.toString(),fileUnit);
 						serverFilePath = uploadedFile.getName();
 						if(!System.getProperty("os.name").contains("Window")){
 							//get file name only
@@ -1737,6 +1756,7 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel>
 						serverFilePath = (new StringBuilder(String.valueOf(serverPath))).append(serverFilePath).toString();
 						final java.io.File serverFile = new java.io.File(serverFilePath);
 						uploadedFile = new java.io.File(serverFilePath);
+						@SuppressWarnings("resource")
 						final BufferedOutputStream serverBOS = new BufferedOutputStream(new FileOutputStream(serverFile));
 						Ivy.log().info("BufferedOutputStream serverBOS: "+serverFile);
 						cleanTimer();
@@ -1744,14 +1764,13 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel>
 						timer.addActionListener(new IActionListener() {
 							private static final long serialVersionUID = -3025252014358720080L;
 							byte b[] = new byte[1024];
-							int progressUnit = 10; // 10 Kb
 							int totalKBUploaded =0 ;
 							int intRead;
 							boolean done=false;
 							public void actionPerformed(ActionEvent arg0) {
 								int progressDone =0;
 								try{
-									while(!done && progressDone< progressUnit){	
+									while(!done && progressDone< fileUnit){	
 										if((intRead= preparedFile.read(b)) != -1){
 											serverBOS.write(b,0,intRead);
 											progressDone++;
@@ -2428,6 +2447,46 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel>
 	 */
 	public void setFileHandlerMgt(AbstractFileManagementHandler fileHandlerMgt) {
 		this.fileHandlerMgt = fileHandlerMgt;
+	}
+	
+	/**
+	 * 
+	 * @param in InputStream which byte length has to be computed
+	 * @param percent (int) must be greater than 0 and less or egal to 100.
+	 * @return The number of Kb representing the given percentage of the InputStream as an int approximation.<br>
+	 * Return -1 if something went wrong. <br>
+	 * Returns 1 if the InputStream contains lees then one Kb.<br>
+	 * {@code Example: a give file's size is 1Mb. Calling this method with percent = 10 will return 102. 10% from the file size is about 102 Kb}
+	 */
+	private final static int getInputStreamPercentLength(InputStream in, int percent)
+	{
+		int total=0;
+		int intRead=0;
+		try{
+			assert percent>0 && percent<=100:percent;
+			in.mark(Integer.MAX_VALUE);
+			byte b[] = new byte[102400];
+
+			while(total<1024000 && (intRead= in.read(b))!=-1){
+				total+=intRead;
+			}
+			
+		}catch(Throwable t){
+			total=-1;
+		}finally
+		{
+			try{
+				in.reset();
+				in.close();
+			}catch(Exception ex){
+				Ivy.log().error(ex.getMessage());
+			}
+		}
+		total=intRead==-1?(int) ((total/1024)*percent/100):600;
+		if(total==0){
+			total=1;
+		}
+		return total;
 	}
 
 }

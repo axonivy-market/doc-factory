@@ -13,7 +13,6 @@ import ch.ivyteam.ivy.persistence.db.IPreparedStatementExecutable;
 import ch.ivyteam.ivy.scripting.objects.Date;
 import ch.ivyteam.ivy.scripting.objects.List;
 import ch.ivyteam.ivy.scripting.objects.Record;
-import ch.ivyteam.ivy.scripting.objects.Recordset;
 import ch.ivyteam.ivy.scripting.objects.Time;
 import ch.ivyteam.ivy.scripting.objects.Tree;
 import ch.ivyteam.ivy.addons.filemanager.FolderOnServer;
@@ -66,8 +65,7 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 	 */
 	public ArrayList<DocumentOnServer> getDocuments(List<String> _conditions)throws Exception{
 		ArrayList<DocumentOnServer>  al = new ArrayList<DocumentOnServer>();
-		Recordset rset = null;
-		List<Record> recordList=null;
+
 		StringBuilder query=new StringBuilder("");
 
 		query.append("SELECT * FROM "+this.tableName+" WHERE ");
@@ -85,17 +83,15 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 			}
 			query.append(_conditions.get(numConditions));
 		}
-		//rset=IvySystemDBReuser.executeQuery(query.toString());
+		List<Record> recordList= IvySystemDBReuser.executePreparedStatement(query.toString(), 
+				new IPreparedStatementExecutable<List<Record>>(){
 
-		rset = IvySystemDBReuser.executePreparedStatement(query.toString(), 
-				new IPreparedStatementExecutable<Recordset>(){
-
-			public Recordset execute(PreparedStatement stmt) throws PersistencyException {
-				return IvySystemDBReuser.executeStatement(stmt);
+			public List<Record> execute(PreparedStatement stmt) throws PersistencyException {
+				return IvySystemDBReuser.executeStmt(stmt);
 			}
 		});
-		recordList=rset.toList();
-		if(rset!=null && recordList!=null){
+
+		if(recordList!=null){
 			for(Record rec: recordList){
 				DocumentOnServer doc = new DocumentOnServer();
 				doc.setFileID(rec.getField("FileId").toString());
@@ -138,7 +134,6 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 	public ArrayList<DocumentOnServer> getDocumentsInPath(String _path, final boolean _isrecursive) throws Exception{
 		ArrayList<DocumentOnServer>  al = new ArrayList<DocumentOnServer>();
 		final String folderPath =escapeBackSlash(FileHandler.formatPathWithEndSeparator(_path, false));
-		Recordset rset = null;
 		String query="";
 		if(_isrecursive)
 		{
@@ -149,12 +144,10 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 			//query="SELECT * FROM "+this.tableName+" WHERE FilePath LIKE '"+folderPath+"%' AND FilePath NOT LIKE '"+folderPath+"%["+java.io.File.separator+"]%'";
 			query="SELECT * FROM "+this.tableName+" WHERE FilePath LIKE ? AND FilePath NOT LIKE ?";
 		}
-		List<Record> recordList= (List<Record>) List.create(Record.class);
+		List<Record> recordList= IvySystemDBReuser.executePreparedStatement(query.toString(), 
+				new IPreparedStatementExecutable<List<Record>>(){
 
-		rset = IvySystemDBReuser.executePreparedStatement(query, 
-				new IPreparedStatementExecutable<Recordset>(){
-
-			public Recordset execute(PreparedStatement stmt) throws PersistencyException {
+			public List<Record> execute(PreparedStatement stmt) throws PersistencyException {
 				try{
 					if(_isrecursive)
 					{
@@ -164,18 +157,14 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 						stmt.setString(1, folderPath+"%");
 						stmt.setString(2, folderPath+"%/%");
 					}
-					return IvySystemDBReuser.executeStatement(stmt);
-				}catch(SQLException ex){
-					throw new PersistencyException(ex);
+				}catch(SQLException ex)
+				{
+					throw new PersistencyException(ex.getMessage());
 				}
+				return IvySystemDBReuser.executeStmt(stmt);
 			}
 		});
-
-		if(rset!=null)
-		{
-			recordList = rset.toList();
-		}
-		if(rset!=null && recordList!=null){
+		if(recordList!=null){
 			for(Record rec: recordList){
 				DocumentOnServer doc = new DocumentOnServer();
 				doc.setFileID(rec.getField("FileId").toString());
@@ -211,27 +200,21 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 			return doc;
 		}
 		final String path =escapeBackSlash(filePath);
-		Recordset rset = null;
-		List<Record> recordList= (List<Record>) List.create(Record.class);
-
 		String query="SELECT * FROM "+this.tableName+" WHERE FilePath LIKE ?";
-		rset = IvySystemDBReuser.executePreparedStatement(query, 
-				new IPreparedStatementExecutable<Recordset>(){
 
-			public Recordset execute(PreparedStatement stmt) throws PersistencyException {
+		List<Record> recordList= IvySystemDBReuser.executePreparedStatement(query.toString(), 
+				new IPreparedStatementExecutable<List<Record>>(){
+
+			public List<Record> execute(PreparedStatement stmt) throws PersistencyException {
 				try{
 					stmt.setString(1, path);
-					return IvySystemDBReuser.executeStatement(stmt);
+					return IvySystemDBReuser.executeStmt(stmt);
 				}catch(SQLException ex){
 					throw new PersistencyException(ex);
 				}
 			}
 		});
-		if(rset!=null)
-		{
-			recordList = rset.toList();
-		}
-		if(rset!=null && !recordList.isEmpty())
+		if(recordList!=null && !recordList.isEmpty())
 		{
 			//we take the first one, normally just one
 			Record rec = recordList.get(0);
@@ -266,27 +249,22 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 			return doc;
 		}
 		final String fileId =String.valueOf(fileid);
-		Recordset rset = null;
-		List<Record> recordList= (List<Record>) List.create(Record.class);
+
 
 		String query="SELECT * FROM "+this.tableName+" WHERE FileId LIKE ?";
-		rset = IvySystemDBReuser.executePreparedStatement(query, 
-				new IPreparedStatementExecutable<Recordset>(){
+		List<Record> recordList= IvySystemDBReuser.executePreparedStatement(query.toString(), 
+				new IPreparedStatementExecutable<List<Record>>(){
 
-			public Recordset execute(PreparedStatement stmt) throws PersistencyException {
+			public List<Record> execute(PreparedStatement stmt) throws PersistencyException {
 				try{
 					stmt.setString(1, fileId);
-					return IvySystemDBReuser.executeStatement(stmt);
+					return IvySystemDBReuser.executeStmt(stmt);
 				}catch(SQLException ex){
 					throw new PersistencyException(ex);
 				}
 			}
 		});
-		if(rset!=null)
-		{
-			recordList = rset.toList();
-		}
-		if(rset!=null && !recordList.isEmpty())
+		if(recordList!=null && !recordList.isEmpty())
 		{
 			//we take the first one, normally just one
 			Record rec = recordList.get(0);
@@ -328,8 +306,6 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 
 		ArrayList<DocumentOnServer>  al = new ArrayList<DocumentOnServer>();
 		final String folderPath = escapeBackSlash(FileHandler.formatPathWithEndSeparator(_path, false));
-		Recordset rset = null;
-		List<Record> recordList=null;
 		String query="";
 
 		if(_isrecursive)
@@ -340,10 +316,9 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 			//query="SELECT * FROM "+this.tableName+" WHERE Locked=1 AND FilePath LIKE '"+folderPath+"%' AND FilePath NOT LIKE '"+folderPath+"%["+java.io.File.separator+"]%'";
 			query="SELECT * FROM "+this.tableName+" WHERE Locked=1 AND FilePath LIKE ? AND FilePath NOT LIKE ?";
 		}
-
-		rset = IvySystemDBReuser.executePreparedStatement(query, 
-				new IPreparedStatementExecutable<Recordset>(){
-			public Recordset execute(PreparedStatement stmt) throws PersistencyException {
+		List<Record> recordList= IvySystemDBReuser.executePreparedStatement(query.toString(), 
+				new IPreparedStatementExecutable<List<Record>>(){
+			public List<Record> execute(PreparedStatement stmt) throws PersistencyException {
 				try{
 					if(_isrecursive)
 					{
@@ -354,16 +329,13 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 						stmt.setString(1, folderPath+"%");
 						stmt.setString(2, folderPath+"%/%");
 					}
-					return IvySystemDBReuser.executeStatement(stmt);
+					return IvySystemDBReuser.executeStmt(stmt);
 				}catch(SQLException ex){
 					throw new PersistencyException(ex);
 				}
 			}
 		});
-
-
-		recordList=rset.toList();
-		if(rset!=null && recordList!=null){
+		if(recordList!=null){
 			for(Record rec: recordList){
 				DocumentOnServer doc = new DocumentOnServer();
 				doc.setFileID(rec.getField("FileId").toString());
@@ -402,7 +374,7 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 				new IPreparedStatementExecutable<Void>(){
 
 			public Void execute(PreparedStatement stmt) throws PersistencyException {
-				IvySystemDBReuser.executeStatement(stmt);
+				IvySystemDBReuser.executeStmt(stmt);
 				return null;
 			}
 		});
@@ -1253,22 +1225,18 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 			return false;
 		}
 		boolean retour = false;
-
-
-		Integer i=IvySystemDBReuser.executePreparedStatement("SELECT * FROM "+this.tableName+" WHERE Locked=1 AND FilePath LIKE ?", new IPreparedStatementExecutable<Integer>(){
-
+		Integer i=IvySystemDBReuser.executePreparedStatement("SELECT * FROM "+this.tableName+" WHERE Locked=1 AND FilePath LIKE ?", 
+				new IPreparedStatementExecutable<Integer>(){
 			public Integer execute(PreparedStatement stmt) throws PersistencyException {
 				try {
 					stmt.setString(1,escapeBackSlash(_file.getPath()));
-					Recordset rst=IvySystemDBReuser.executeStatement(stmt);
-					return new Integer(rst.size());
+					List<Record> l =IvySystemDBReuser.executeStmt(stmt);
+					return new Integer(l.size());
 
 				} catch (SQLException ex) {
 					throw new PersistencyException(ex);
 				}
-
 			}
-
 		});
 		if(i.intValue()==1)
 		{
@@ -1293,22 +1261,19 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 			return false;
 		}
 		boolean retour = false;
-
 		Integer i=IvySystemDBReuser.executePreparedStatement("SELECT * FROM "+this.tableName+" WHERE Locked=1 AND FilePath LIKE ? AND LockingUserId NOT LIKE ?", new IPreparedStatementExecutable<Integer>(){
 
 			public Integer execute(PreparedStatement stmt) throws PersistencyException {
 				try {
 					stmt.setString(1,escapeBackSlash(_file.getPath()));
 					stmt.setString(2,_user);
-					Recordset rst=IvySystemDBReuser.executeStatement(stmt);
-					return new Integer(rst.size());
+					List<Record> l =IvySystemDBReuser.executeStmt(stmt);
+					return new Integer(l.size());
 
 				} catch (SQLException ex) {
 					throw new PersistencyException(ex);
 				}
-
 			}
-
 		});
 		if(i.intValue()==1)
 		{
@@ -1332,21 +1297,18 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 			return false;
 		}
 		boolean retour = false;
-
 		Integer i=IvySystemDBReuser.executePreparedStatement("SELECT * FROM "+this.tableName+" WHERE Locked=1 AND FilePath LIKE ?", new IPreparedStatementExecutable<Integer>(){
 
 			public Integer execute(PreparedStatement stmt) throws PersistencyException {
 				try {
 					stmt.setString(1,escapeBackSlash(_doc.getPath()));
-					Recordset rst=IvySystemDBReuser.executeStatement(stmt);
-					return new Integer(rst.size());
+					List<Record> l =IvySystemDBReuser.executeStmt(stmt);
+					return new Integer(l.size());
 
 				} catch (SQLException ex) {
 					throw new PersistencyException(ex);
 				}
-
 			}
-
 		});
 		if(i.intValue()==1)
 		{
@@ -1364,22 +1326,18 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 			return false;
 		}
 		boolean retour = false;
-
 		Integer i=IvySystemDBReuser.executePreparedStatement("SELECT * FROM "+this.tableName+" WHERE Locked=1 AND FilePath LIKE ? AND LockingUserId NOT LIKE ?", new IPreparedStatementExecutable<Integer>(){
 
 			public Integer execute(PreparedStatement stmt) throws PersistencyException {
 				try {
 					stmt.setString(1,escapeBackSlash(_doc.getPath()));
 					stmt.setString(2,_user.trim());
-					Recordset rst=IvySystemDBReuser.executeStatement(stmt);
-					return new Integer(rst.size());
-
+					List<Record> l =IvySystemDBReuser.executeStmt(stmt);
+					return new Integer(l.size());
 				} catch (SQLException ex) {
 					throw new PersistencyException(ex);
 				}
-
 			}
-
 		});
 		if(i.intValue()==1)
 		{
@@ -1672,6 +1630,7 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 		}else
 		{
 			message.setType(FileHandler.ERROR_MESSAGE);
+			message.setText(Ivy.cms().co("/ch/ivyteam/ivy/addons/filemanager/fileManagement/messages/error/RenameFileAlreadyExists"));
 		}
 
 		return message;
@@ -2169,8 +2128,17 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 	@Override
 	public DocumentOnServer getDocumentOnServerById(long fileid,
 			boolean getJavaFile) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		if(fileid<=0)
+		{
+			return null;
+		}
+		DocumentOnServer doc = this.getDocumentOnServer(fileid);
+		if(getJavaFile)
+		{
+			return getDocumentOnServerWithJavaFile(doc);
+		}else{
+			return doc;
+		}
 	}
 
 	@Override
