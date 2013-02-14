@@ -144,14 +144,12 @@ public class UserSystemPropertiesHandler<T extends IRichDialogPanel> {
 	 * returns the Properties in form of String [][]
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	public synchronized String [][] getProperties(){
 		String [][] prop = new String[properties.size()][2];
 		Set<Entry<String, String>> set = properties.entrySet();
-		Iterator it = set.iterator();
-
+		Iterator<Entry<String, String>> it = set.iterator();
 		for (int i=0; i<properties.size(); i++){
-			Entry<String, String> e= (Entry<String, String>) it.next();
+			Entry<String, String> e= it.next();
 			prop[i][0]=e.getKey();
 			prop[i][1]=e.getValue();
 			//Ivy.log().debug(e.getKey()+": "+e.getValue());

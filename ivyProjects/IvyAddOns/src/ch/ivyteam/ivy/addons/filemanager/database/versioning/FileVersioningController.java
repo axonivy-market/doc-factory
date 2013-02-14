@@ -30,7 +30,6 @@ import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.scripting.objects.DateTime;
 import ch.ivyteam.ivy.scripting.objects.File;
 import ch.ivyteam.ivy.scripting.objects.Record;
-import ch.ivyteam.ivy.scripting.objects.Recordset;
 import ch.ivyteam.ivy.scripting.objects.Date;
 import ch.ivyteam.ivy.scripting.objects.Time;
 
@@ -187,32 +186,55 @@ public class FileVersioningController {
 	 *             in case of a Persistence or SQLException
 	 */
 	public List<FileVersion> getFileVersions(long fileId) throws Exception {
-		List<FileVersion> l = new ArrayList<FileVersion>();
-		if (fileId < 0) {
-			return l;
-		}
 
-		String query = "SELECT * FROM " + this.fileVersionTableName
-				+ " WHERE file_id=? ORDER BY version_number DESC";
 		IExternalDatabaseRuntimeConnection connection = null;
-		Recordset rset = null;
-		List<Record> recordList = new ArrayList<Record>();
 		try {
 			connection = getDatabase().getAndLockConnection();
 			Connection jdbcConnection = connection.getDatabaseConnection();
-			PreparedStatement stmt = null;
-			try {
-				stmt = jdbcConnection.prepareStatement(query);
-				stmt.setLong(1, fileId);
-				rset = executeStatement(stmt);
-				recordList = rset.toList();
-			} finally {
-				DatabaseUtil.close(stmt);
-			}
+			return this.getFileVersions(fileId, jdbcConnection);
 		} finally {
 			if (connection != null) {
 				database.giveBackAndUnlockConnection(connection);
 			}
+		}
+	}
+	/**
+	 * Returns the versions of a given file from the file management system.<br />
+	 * The returned FileVersion Objects do not contain any File Content.<br />
+	 * This method is designed to display such a list to a user for example.<br />
+	 * The List is returned with the last created File version at first, and the
+	 * very first version at the end.<br />
+	 * This method does not release the given java.sql.Connection Object. The calling method has to do that.
+	 * @param fileId fileId
+	 *            the id of the file as stored in the table whose name is
+	 *            defined in the ivy var:
+	 *            "xivy_addons_fileManager_fileMetaDataTableName"
+	 * @param con java.sql.Connection Object.
+	 * @return an empty list if the given fileID < 0 or if no version exists for
+	 *         the file.
+	 * @throws Exception
+	 *             in case of a Persistence or SQLException
+	 * @throws Exception
+	 */
+	public List<FileVersion> getFileVersions(long fileId, java.sql.Connection con) throws Exception {
+		if(con==null || con.isClosed())
+		{
+			throw new SQLException("the java.sql.Connection passed to the getFileVersions method is null or closed.");
+		}
+		List<FileVersion> l = new ArrayList<FileVersion>();
+		if (fileId < 0) {
+			return l;
+		}
+		String query = "SELECT * FROM " + this.fileVersionTableName
+				+ " WHERE file_id=? ORDER BY version_number DESC";
+		List<Record> recordList = new ArrayList<Record>();
+		PreparedStatement stmt = null;
+		try {
+			stmt = con.prepareStatement(query);
+			stmt.setLong(1, fileId);
+			recordList = executeStmt(stmt);
+		} finally {
+			DatabaseUtil.close(stmt);
 		}
 		if (recordList != null) {
 			for (Record rec : recordList) {
@@ -299,7 +321,7 @@ public class FileVersioningController {
 			try {
 				stmt = jdbcConnection.prepareStatement(query);
 				stmt.setLong(1, fileId);
-				nvn += executeStatement(stmt).size();
+				nvn += executeStmt(stmt).size();
 			} finally {
 				DatabaseUtil.close(stmt);
 			}
@@ -517,7 +539,6 @@ public class FileVersioningController {
 			return null;
 		}
 		DocumentOnServer doc = new DocumentOnServer();
-		Recordset rset = null;
 		List<Record> recordList = new ArrayList<Record>();
 		String query = "";
 		IExternalDatabaseRuntimeConnection connection = null;
@@ -530,8 +551,7 @@ public class FileVersioningController {
 			try {
 				stmt = jdbcConnection.prepareStatement(query);
 				stmt.setLong(1, fileId);
-				rset = executeStatement(stmt);
-				recordList = rset.toList();
+				recordList = executeStmt(stmt);
 			} finally {
 				DatabaseUtil.close(stmt);
 			}
@@ -604,14 +624,12 @@ public class FileVersioningController {
 			connection = getDatabase().getAndLockConnection();
 			Connection jdbcConnection = connection.getDatabaseConnection();
 			PreparedStatement stmt = null;
-			Recordset rset = null;
 			List<Record> recordList = new ArrayList<Record>();
 			try {
 				stmt = jdbcConnection.prepareStatement(query);
 				stmt.setLong(1, fileId);
 				stmt.setInt(2, versionNumber);
-				rset = executeStatement(stmt);
-				recordList = rset.toList();
+				recordList = executeStmt(stmt);
 				if (recordList.size() > 0) {
 					Record rec = recordList.get(0);
 					fv = new FileVersion();
@@ -880,47 +898,63 @@ public class FileVersioningController {
 	/**
 	 * This method deletes all the versions from a given file denoted by its id.<br />
 	 * Do nothing if the fileID <=0 or if no version are found for this id.<br />
-	 * it does not delete the file from the main table (last version).
+	 * It does not delete the file from the main table (last version).
 	 * 
-	 * @param fileId
-	 *            the file id from the files main table
-	 * @throws Exception
-	 *             in case of a Persistence or SQLException
+	 * @param fileId the file id from the files main table
+	 * @throws Exception in case of a Persistence or SQLException
 	 */
 	public void deleteAllVersionsFromFile(long fileId) throws Exception {
-		if (fileId <= 0) {
-			return;
-		}
-		List<FileVersion> fvs = this.getFileVersions(fileId);
-		String q1 = "DELETE FROM " + this.fileVersionTableName
-				+ " WHERE versionid = ?";
-		String q2 = "DELETE FROM " + this.fileVersionContentTableName
-				+ " WHERE version_id = ?";
 		IExternalDatabaseRuntimeConnection connection = null;
 		try {
 			connection = getDatabase().getAndLockConnection();
 			Connection jdbcConnection = connection.getDatabaseConnection();
-			PreparedStatement stmt = null;
-			try {
-				for (FileVersion fv : fvs) {
-					stmt = jdbcConnection.prepareStatement(q1);
-					stmt.setLong(1, fv.getId());
-					stmt.executeUpdate();
-
-					stmt = jdbcConnection.prepareStatement(q2);
-					stmt.setLong(1, fv.getId());
-					stmt.executeUpdate();
-				}
-			} finally {
-				try {
-					DatabaseUtil.close(stmt);
-				} catch (Exception ex) {
-				}
-			}
-
+			this.deleteAllVersionsFromFile(fileId, jdbcConnection);
 		} finally {
 			if (connection != null) {
 				database.giveBackAndUnlockConnection(connection);
+			}
+		}
+	}
+	
+	/**
+	 * This method deletes all the versions from a given file denoted by its id.<br />
+	 * Do nothing if the fileID <=0 or if no version are found for this id.<br />
+	 * It does not delete the file from the main table (last version).<br />
+	 * This method does not release the given java.sql.Connection Object. The calling method has to do that.
+	 * @param fileId the file id from the files main table
+	 * @param con java.sql.Connection Object to communicate with the DB.<br />
+	 * @throws Exception in case of a Persistence or SQLException
+	 */
+	public void deleteAllVersionsFromFile(long fileId, java.sql.Connection con) throws Exception {
+		if(con==null || con.isClosed())
+		{
+			throw new SQLException("the java.sql.Connection passed to the deleteAllVersionsFromFile method is null or closed.");
+		}
+		if (fileId <= 0) {
+			return;
+		}
+		List<FileVersion> fvs = this.getFileVersions(fileId,con);
+		String q1 = "DELETE FROM " + this.fileVersionTableName
+				+ " WHERE versionid = ?";
+		String q2 = "DELETE FROM " + this.fileVersionContentTableName
+				+ " WHERE version_id = ?";
+		PreparedStatement stmt = null;
+		PreparedStatement stmt2 = null;
+		try {
+			stmt = con.prepareStatement(q1);
+			stmt2 = con.prepareStatement(q2);
+			for (FileVersion fv : fvs) {
+				stmt.setLong(1, fv.getId());
+				stmt.executeUpdate();
+
+				stmt2.setLong(1, fv.getId());
+				stmt2.executeUpdate();
+			}
+		} finally {
+			try {
+				DatabaseUtil.close(stmt);
+				DatabaseUtil.close(stmt2);
+			} catch (Exception ex) {
 			}
 		}
 	}
@@ -1109,16 +1143,13 @@ public class FileVersioningController {
 			connection = getDatabase().getAndLockConnection();
 			Connection jdbcConnection = connection.getDatabaseConnection();
 			PreparedStatement stmt = null;
-			Recordset rset = null;
 			List<Record> recordList = new ArrayList<Record>();
 			try {
 				stmt = jdbcConnection.prepareStatement(query);
 				stmt.setLong(1, versionId);
-				rset = executeStatement(stmt);
-				recordList = rset.toList();
+				recordList = executeStmt(stmt);
 				if (recordList.size() > 0) {
 					Record rec = recordList.get(0);
-
 					id = Long.parseLong(rec.getField("fvcid").toString());
 
 				}
@@ -1162,52 +1193,41 @@ public class FileVersioningController {
 		return database;
 	}
 
-	/**
-	 * allows executing a prepareStatement and returns the resulting recordset.<br>
-	 * If the preparedStatement execution returns an empty Resultset then the
-	 * RecordSet will be empty. The calling method is responsible to give back
-	 * the preparedStatement with DatabaseUtil.close(stmt);
-	 * 
-	 * @param _stmt
-	 * @return
-	 * @throws Exception
-	 */
-	private static Recordset executeStatement(PreparedStatement _stmt)
-			throws Exception {
+	private static List<Record> executeStmt(PreparedStatement _stmt) throws Exception{
 
-		if (_stmt == null) {
-			throw (new SQLException("Invalid PreparedStatement",
-					"PreparedStatement Null"));
+		if(_stmt == null){
+			throw(new SQLException("Invalid PreparedStatement","PreparedStatement Null"));
 		}
 
 		ResultSet rst = null;
-		Recordset r = new Recordset();
-
-		rst = _stmt.executeQuery();
-		try {
+		rst=_stmt.executeQuery();
+		List<Record> recordList= new ArrayList<Record>();
+		try{
 			ResultSetMetaData rsmd = rst.getMetaData();
 			int numCols = rsmd.getColumnCount();
-			List<String> colNames = new ArrayList<String>();
-			for (int i = 1; i <= numCols; i++) {
+			List<String> colNames= new ArrayList<String>();
+			for(int i=1; i<=numCols; i++){
 				colNames.add(rsmd.getColumnName(i));
-				// Ivy.log().debug(rsmd.getColumnName(i));
+				//Ivy.log().debug(rsmd.getColumnName(i));
 			}
-			while (rst.next()) {
+			while(rst.next()){
 				List<Object> values = new ArrayList<Object>();
-				for (int i = 1; i <= numCols; i++) {
-					if (rst.getString(i) == null)
+				for(int i=1; i<=numCols; i++){
+
+					if(rst.getString(i)==null)
 						values.add(" ");
-					else
-						values.add(rst.getString(i));
+					else values.add(rst.getString(i));
 				}
-				Record rec = new Record(colNames, values);
-				r.add(rec);
+				Record rec = new Record(colNames,values);
+				recordList.add(rec);
 			}
-		} finally {
+		}catch(Exception ex){
+			Ivy.log().error(ex.getMessage(), ex);
+		}finally
+		{
 			DatabaseUtil.close(rst);
 		}
-
-		return r;
+		return recordList;
 	}
 
 	/**

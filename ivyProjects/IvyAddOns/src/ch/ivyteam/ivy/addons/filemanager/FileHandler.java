@@ -765,68 +765,52 @@ public abstract class FileHandler
 		
 		int nbPlace = fileName.lastIndexOf("###");
 		File newVersion=null;
+		FileInputStream fis = null;
+		FileOutputStream fos = null;
 		if(greaterVersion==-1){
 			newVersion = new File(getFileNameWithoutExt(_file.getPath())+"###1."+getFileExtension(_file.getName()));
-			try {
-				if(newVersion.createNewFile()){
-					FileInputStream fis = new FileInputStream(_file);
-					FileOutputStream fos = new FileOutputStream(newVersion);
-					byte b[] = new byte[1024];
-					int c=0;
-					while((c= fis.read(b)) != -1){
-						fos.write(b,0,c);
-					}
-					fis.close();
-				}else
-					newVersion=null;
-			} catch (FileNotFoundException _ex) {
-				Ivy.log().error(_ex.getMessage(),_ex);
-			} catch (IOException _ex) {
-				Ivy.log().error(_ex.getMessage(),_ex);
-			}
+			
 		} else if(greaterVersion==0){
 			newVersion = new File(getFileNameWithoutExt(_file.getPath())+"1."+getFileExtension(_file.getName()));
-			try {
-				if(newVersion.createNewFile()){
-					FileInputStream fis = new FileInputStream(_file);
-					FileOutputStream fos = new FileOutputStream(newVersion);
-					byte b[] = new byte[1024];
-					int c=0;
-					while((c= fis.read(b)) != -1){
-						fos.write(b,0,c);
-					}
-					fis.close();
-				}else
-					newVersion=null;
-			}  catch (FileNotFoundException _ex) {
-				Ivy.log().error(_ex.getMessage(),_ex);
-			} catch (IOException _ex) {
-				Ivy.log().error(_ex.getMessage(),_ex);
-			}
+			
 		} else{
 			if(nbPlace==-1)
 				nbPlace=fileName.length();
 			int ver= greaterVersion+1;
 			String version= filedir+getFileNameWithoutExt(_file.getName()).substring(0, nbPlace)+"###"+ver+"."+getFileExtension(_file.getName());
 			newVersion = new File(version);
-			try {
-				if(newVersion.createNewFile()){
-					FileInputStream fis = new FileInputStream(_file);
-					FileOutputStream fos = new FileOutputStream(newVersion);
-					byte b[] = new byte[1024];
-					int c=0;
-					while((c= fis.read(b)) != -1){
-						fos.write(b,0,c);
-					}
+		}
+		try {
+			if(newVersion.createNewFile()){
+				fis = new FileInputStream(_file);
+				fos = new FileOutputStream(newVersion);
+				byte b[] = new byte[1024];
+				int c=0;
+				while((c= fis.read(b)) != -1){
+					fos.write(b,0,c);
+				}
+			}else
+				newVersion=null;
+		} catch (FileNotFoundException _ex) {
+			Ivy.log().error(_ex.getMessage(),_ex);
+		} catch (IOException _ex) {
+			Ivy.log().error(_ex.getMessage(),_ex);
+		}finally{
+			if(fis!=null)
+			{
+				try {
 					fis.close();
+				} catch (IOException e) {
+					
+				}
+			}
+			if(fos!=null)
+			{
+				try {
 					fos.close();
-
-				}else
-					newVersion=null;
-			}  catch (FileNotFoundException _ex) {
-				Ivy.log().error(_ex.getMessage(),_ex);
-			} catch (IOException _ex) {
-				Ivy.log().error(_ex.getMessage(),_ex);
+				} catch (IOException e) {
+					
+				}
 			}
 		}
 		return newVersion;

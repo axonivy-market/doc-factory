@@ -21,7 +21,6 @@ import ch.ivyteam.ivy.db.IExternalDatabaseRuntimeConnection;
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.scripting.objects.List;
 import ch.ivyteam.ivy.scripting.objects.Record;
-import ch.ivyteam.ivy.scripting.objects.Recordset;
 
 /**
  * @author ec
@@ -47,24 +46,15 @@ public abstract class FileManagementStaticController {
 		return database;	
 	}
 
-	/**
-	 * allows executing a prepareStatement and returns the resulting recordset.<br>
-	 * If the preparedStatement execution returns an empty Resultset then the RecordSet will be empty.
-	 * The calling method is responsible to give back the preparedStatement with DatabaseUtil.close(stmt);
-	 * @param _stmt
-	 * @return
-	 * @throws Exception
-	 */
-	private static Recordset executeStatement(PreparedStatement _stmt) throws Exception{
+	private static List<Record> executeStmt(PreparedStatement _stmt) throws Exception{
 
 		if(_stmt == null){
 			throw(new SQLException("Invalid PreparedStatement","PreparedStatement Null"));
 		}
 
 		ResultSet rst = null;
-		Recordset r= new Recordset();
-
 		rst=_stmt.executeQuery();
+		List<Record> recordList= (List<Record>) List.create(Record.class);
 		try{
 			ResultSetMetaData rsmd = rst.getMetaData();
 			int numCols = rsmd.getColumnCount();
@@ -76,19 +66,21 @@ public abstract class FileManagementStaticController {
 			while(rst.next()){
 				List<Object> values = List.create(numCols);
 				for(int i=1; i<=numCols; i++){
+
 					if(rst.getString(i)==null)
 						values.add(" ");
 					else values.add(rst.getString(i));
 				}
 				Record rec = new Record(colNames,values);
-				r.add(rec);
+				recordList.add(rec);
 			}
+		}catch(Exception ex){
+			Ivy.log().error(ex.getMessage(), ex);
 		}finally
 		{
 			DatabaseUtil.close(rst);
 		}
-
-		return r;
+		return recordList;
 	}
 
 	/**
@@ -110,7 +102,6 @@ public abstract class FileManagementStaticController {
 		ArrayList<DocumentOnServer>  al = new ArrayList<DocumentOnServer>();
 
 		String folderPath = AbstractDirectorySecurityController.formatPathForDirectoryWithoutLastSeparator(_path)+"/";
-		Recordset rset = null;
 		List<Record> recordList= (List<Record>) List.create(Record.class);
 
 		String query="";
@@ -139,8 +130,7 @@ public abstract class FileManagementStaticController {
 					stmt.setString(1, folderPath+"%");
 					stmt.setString(2, folderPath+"%/%");
 				}
-				rset=executeStatement(stmt);
-				recordList=rset.toList();
+				recordList=executeStmt(stmt);
 			}finally{
 				DatabaseUtil.close(stmt);
 			}
@@ -256,7 +246,6 @@ public abstract class FileManagementStaticController {
 		String query="";
 
 		IExternalDatabaseRuntimeConnection connection = null;
-		Recordset rset = null;
 		List<Record> recordList= (List<Record>) List.create(Record.class);
 		IExternalDatabase database = null;
 		try {
@@ -269,8 +258,7 @@ public abstract class FileManagementStaticController {
 			try{
 				stmt = jdbcConnection.prepareStatement(query);
 				stmt.setString(1, _path);
-				rset = executeStatement(stmt);
-				recordList = rset.toList();
+				recordList =executeStmt(stmt);
 				int j=0;
 				i= new int[recordList.size()];
 				for(Record r : recordList)

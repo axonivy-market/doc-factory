@@ -1,5 +1,5 @@
 FileManagerData #class
-'It allows organizing and managing the files present on the server (download, upload, deletion of Files, directory management etc…). It integrates the DesktopHandlerPanel Rich Dialog. ' #classComment
+'It allows organizing and managing the files present on the server (download, upload, deletion of Files, directory management etc…). It integrates the DesktopHandlerPanel Rich Dialog.' #classComment
 ch.ivyteam.ivy.addons.filemanager.FileManager #namespace
 folderTree Tree #field
 folderTree 'A tree of FolderOnServer objects' #fieldComment

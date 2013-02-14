@@ -22,7 +22,6 @@ import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.persistence.PersistencyException;
 import ch.ivyteam.ivy.scripting.objects.List;
 import ch.ivyteam.ivy.scripting.objects.Record;
-import ch.ivyteam.ivy.scripting.objects.Recordset;
 import ch.ivyteam.ivy.security.IRole;
 import ch.ivyteam.ivy.security.IUser;
 
@@ -105,32 +104,31 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 		}
 		return database;	
 	}
-
+	
 	/**
-	 * allows executing a prepareStatement and returns the resulting recordset.<br>
-	 * If the preparedStatement execution returns an empty Resultset then the RecordSet will be empty.
+	 * 
+	 * allows executing a prepareStatement and returns the resulting list of records.<br>
+	 * If the preparedStatement execution returns an empty Resultset then the list of records will be empty.<br>
 	 * The calling method is responsible to give back the preparedStatement with DatabaseUtil.close(stmt);
-	 * @param _stmt
-	 * @return
+	 * @param _stmt the PreparedStatement to execute
+	 * @return List<Record> list of records
 	 * @throws Exception
 	 */
-	private static Recordset executeStatement(PreparedStatement _stmt) throws Exception{
+	private static List<Record> executeStmt(PreparedStatement _stmt) throws Exception{
 
 		if(_stmt == null){
 			throw(new SQLException("Invalid PreparedStatement","PreparedStatement Null"));
 		}
 
 		ResultSet rst = null;
-		Recordset r= new Recordset();
-
 		rst=_stmt.executeQuery();
+		List<Record> recordList= (List<Record>) List.create(Record.class);
 		try{
 			ResultSetMetaData rsmd = rst.getMetaData();
 			int numCols = rsmd.getColumnCount();
 			List<String> colNames= List.create(String.class);
 			for(int i=1; i<=numCols; i++){
 				colNames.add(rsmd.getColumnName(i));
-				//Ivy.log().debug(rsmd.getColumnName(i));
 			}
 			while(rst.next()){
 				List<Object> values = List.create(numCols);
@@ -140,49 +138,16 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 					else values.add(rst.getString(i));
 				}
 				Record rec = new Record(colNames,values);
-				r.add(rec);
+				recordList.add(rec);
 			}
+		}catch(Exception ex){
+			Ivy.log().error(ex.getMessage(), ex);
 		}finally
 		{
 			DatabaseUtil.close(rst);
 		}
-
-		return r;
+		return recordList;
 	}
-
-	/*
-	public boolean activateSecurityOnDirectory(String path) throws Exception {
-		path=formatPathForDirectoryWithoutLastSeparator(path);
-		if(path==null || path.length()==0)
-		{
-			return false;
-		}
-
-		String query="UPDATE "+this.dirTableNameSpace+" SET is_protected = ? WHERE dir_path LIKE ?";
-		IExternalDatabaseRuntimeConnection connection = null;
-		boolean flag=false;
-		try {
-			connection = getDatabase().getAndLockConnection();
-			Connection jdbcConnection=connection.getDatabaseConnection();
-			PreparedStatement stmt = null;
-			try{			
-				stmt = jdbcConnection.prepareStatement(query);
-				stmt.setInt(1, 1);
-				stmt.setString(2, path);
-
-				flag = stmt.executeUpdate()>0;
-			}
-			finally{
-				DatabaseUtil.close(stmt);
-			}
-		} 
-		finally{
-			if(connection!=null ){
-				database.giveBackAndUnlockConnection(connection);
-			}
-		}
-		return flag;
-	}*/
 
 	@Override
 	public List<String> AddRightOnDirectoryForIvyRole(String path,
@@ -1193,42 +1158,6 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 		return _directory;
 	}
 
-
-
-	/*
-	public boolean deactivateSecurityOnDirectory(String path) throws Exception {
-		path=formatPathForDirectoryWithoutLastSeparator(path);
-		if(path==null || path.length()==0)
-		{
-			return false;
-		}
-
-		String query="UPDATE "+this.dirTableNameSpace+" SET is_protected = ? WHERE dir_path LIKE ?";
-		IExternalDatabaseRuntimeConnection connection = null;
-		boolean flag=false;
-		try {
-			connection = getDatabase().getAndLockConnection();
-			Connection jdbcConnection=connection.getDatabaseConnection();
-			PreparedStatement stmt = null;
-			try{			
-				stmt = jdbcConnection.prepareStatement(query);
-				stmt.setInt(1, 0);
-				stmt.setString(2, path);
-
-				flag = stmt.executeUpdate()>0;
-			}
-			finally{
-				DatabaseUtil.close(stmt);
-			}
-		} 
-		finally{
-			if(connection!=null ){
-				database.giveBackAndUnlockConnection(connection);
-			}
-		}
-		return flag;
-	}*/
-
 	/* (non-Javadoc)
 	 * @see ch.ivyteam.ivy.addons.filemanager.database.security.AbstractFileSecurityController#getFileManagerAdminRoleName()
 	 */
@@ -1393,8 +1322,6 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 		roles.add(ivyRoleName);
 		List<String> result = this.removeRightOnDirectory(path, DELETE_FILES_RIGHT, roles);
 
-
-
 		return !result.contains(ivyRoleName);
 	}
 
@@ -1413,8 +1340,6 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 		List<String> roles = List.create(String.class);
 		roles.add(ivyRoleName);
 		List<String> result = this.removeRightOnDirectory(path, WRITE_FILES_RIGHT, roles);
-
-
 
 		return !result.contains(ivyRoleName);
 	}
@@ -1435,8 +1360,6 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 		roles.add(ivyRoleName);
 		List<String> result = this.removeRightOnDirectory(path, MANAGE_SECURITY_RIGHT, roles);
 
-
-
 		return !result.contains(ivyRoleName);
 	}
 
@@ -1455,9 +1378,6 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 		List<String> roles = List.create(String.class);
 		roles.add(ivyRoleName);
 		List<String> result = this.removeRightOnDirectory(path, OPEN_DIRECTORY_RIGHT, roles);
-
-
-
 		return !result.contains(ivyRoleName);
 	}
 
@@ -1476,8 +1396,6 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 		List<String> roles = List.create(String.class);
 		roles.add(ivyRoleName);
 		List<String> result = this.removeRightOnDirectory(path, UPDATE_DIRECTORY_RIGHT, roles);
-
-
 
 		return !result.contains(ivyRoleName);
 	}
@@ -1604,12 +1522,8 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 		{
 			return false;
 		}
-
-
 		String base ="SELECT * FROM "+this.dirTableNameSpace+" WHERE dir_path LIKE ?";
 		IExternalDatabaseRuntimeConnection connection=null;
-		Recordset rset = null;
-		//List<Record> recordList= (List<Record>) List.create(Record.class);
 		try {
 			connection = getDatabase().getAndLockConnection();
 			Connection jdbcConnection=connection.getDatabaseConnection();
@@ -1617,11 +1531,9 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 			try{
 				stmt = jdbcConnection.prepareStatement(base);
 				stmt.setString(1, _path);
-
-				rset=executeStatement(stmt);
-				int i =rset.size();
-
-				if(i>0){
+				ResultSet rst = stmt.executeQuery();
+				if(rst.next()){
+					
 					b=true;
 				}
 			}catch(Exception ex){Ivy.log().error("ERROR 1 isDirectoryExist "+ex.getMessage(),ex);}
@@ -1649,7 +1561,6 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 
 		String base ="SELECT * FROM "+this.dirTableNameSpace+" WHERE dir_path LIKE ?";
 		IExternalDatabaseRuntimeConnection connection=null;
-		Recordset rset = null;
 		FolderOnServer fos = new FolderOnServer();
 		//List<Record> recordList= (List<Record>) List.create(Record.class);
 		try {
@@ -1660,23 +1571,20 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 			try{
 				stmt = jdbcConnection.prepareStatement(base);
 				stmt.setString(1, _path);
-				rset=executeStatement(stmt);
-				
-				if(rset.size()==1)
+				ResultSet rst = stmt.executeQuery();
+				if(rst.next())
 				{
-					Record rec = rset.getAt(0);
-					fos.setId(Integer.parseInt(rec.getField("id").toString()));
-					fos.setName(rec.getField("dir_name").toString());
-					fos.setPath(rec.getField("dir_path").toString());
-					fos.setIs_protected(rec.getField("is_protected").toString().equals("1"));
-					fos.setCmrd(returnListFromStringWithSeparator(rec.getField("cmdr").toString(),","));
-					fos.setCdd(returnListFromStringWithSeparator(rec.getField("cdd").toString(),","));
-					fos.setCod(returnListFromStringWithSeparator(rec.getField("cod").toString(),","));
-					fos.setCud(returnListFromStringWithSeparator(rec.getField("cud").toString(),","));
-					fos.setCwf(returnListFromStringWithSeparator(rec.getField("cwf").toString(),","));
-					fos.setCdf(returnListFromStringWithSeparator(rec.getField("cdf").toString(),","));
+					fos.setId(rst.getInt("id"));
+					fos.setName(rst.getString("dir_name"));
+					fos.setPath(rst.getString("dir_path"));
+					fos.setIs_protected(rst.getByte("is_protected")==1);
+					fos.setCmrd(returnListFromStringWithSeparator(rst.getString("cmdr"),","));
+					fos.setCdd(returnListFromStringWithSeparator(rst.getString("cdd"),","));
+					fos.setCod(returnListFromStringWithSeparator(rst.getString("cod"),","));
+					fos.setCud(returnListFromStringWithSeparator(rst.getString("cud"),","));
+					fos.setCwf(returnListFromStringWithSeparator(rst.getString("cwf"),","));
+					fos.setCdf(returnListFromStringWithSeparator(rst.getString("cdf"),","));
 					getUserRightsInFolderOnServer(fos,user);
-
 				}
 			}catch(Exception ex){Ivy.log().error("ERROR 1 getDirectoryWithPath "+ex.getMessage(),ex);}
 			finally{
@@ -1771,7 +1679,6 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 				// if persistencyException, we only try to get the next Role.
 			}
 		}
-
 		return _fos;
 
 	}
@@ -1802,7 +1709,6 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 		String base= "SELECT * FROM "+this.dirTableNameSpace+" WHERE dir_path LIKE ? ORDER BY dir_path ASC"; 
 		IExternalDatabaseRuntimeConnection connection=null;
 
-		Recordset rset = null;
 		List<Record> recordList= (List<Record>) List.create(Record.class);
 		try {
 			connection = getDatabase().getAndLockConnection();
@@ -1812,11 +1718,9 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 				stmt = jdbcConnection.prepareStatement(base);
 				//Select the root
 				stmt.setString(1, rootPath);
-				rset=executeStatement(stmt);
-				recordList=rset.toList();
+				recordList=executeStmt(stmt);
 				if(recordList.size()==1)
 				{// there is one dir with the denoted rootpath
-
 					Record rec = recordList.get(0);
 					List<String> roles = getListFromString(rec.getField("cod").toString(),",");
 					if(this.isUserFileManagerAdmin(ivyUserName) || this.isOneUserRoleInList(roles, ivyUserName)){
@@ -1850,9 +1754,8 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 					}
 
 					//Select all the children
-					stmt.setString(1, rootPath+"/%");
-					rset=executeStatement(stmt);
-					recordList=rset.toList();
+					stmt.setString(1, rootPath+"/%");;
+					recordList=executeStmt(stmt);
 					for(Record rec1: recordList){
 						List<String> roles1 = getListFromString(rec1.getField("cod").toString(),",");
 						if(this.isUserFileManagerAdmin(ivyUserName) || this.isOneUserRoleInList(roles1, ivyUserName)){
@@ -1921,6 +1824,7 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 				l.add(t);
 			}
 		}
+		sc.close();
 		return l;
 	}
 

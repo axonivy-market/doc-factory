@@ -213,3 +213,5 @@ INSERT INTO fileactiontype (atype,en,de,fr) VALUES (7,'File printed', 'Datei ged
 INSERT INTO fileactiontype (atype,en,de,fr) VALUES (8,'File opened', 'Datei geöffnet' , 'Fichier ouvert');
 INSERT INTO fileactiontype (atype,en,de,fr) VALUES (9,'File copied and paste', 'Datei kopiert' , 'Fichier copié');
 INSERT INTO fileactiontype (atype,en,de,fr) VALUES (10,'File moved', 'Datei verschoben' , 'Fichier déplacé');
+INSERT INTO fileactiontype (atype,en,de,fr) VALUES (11,'New Version created', 'Neue Version erfasst' , 'Nouvelle version');
+INSERT INTO fileactiontype (atype,en,de,fr) VALUES (12,'Last version rollbacked', 'Letzte Version gelöscht' , 'Dernière version supprimée');

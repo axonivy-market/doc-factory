@@ -161,7 +161,7 @@ private RButton getButton() {
 	if (Button == null) {
 		Button = new RButton();
 		Button.setName("Button");
-		Button.setToolTipText("<%=ivy.cms.co(\"/ch/xpertline/common/ria/component/fileManagement/tooltips/openPathChooser\")%>");
+		Button.setToolTipText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tooltips/openPathChooser\")%>");
 		Button.setIconUri("<%=ivy.cms.cr(\"/ch/ivyteam/ivy/addons/icons/folder/16\")%>");
 	}
 	return Button;

@@ -398,7 +398,7 @@ Fs0 f27 actionDecl 'ch.ivyteam.ivy.addons.filemanager.FileNameDialog.FileNameDia
 ' #txt
 Fs0 f27 actionTable 'out=in;
 ' #txt
-Fs0 f27 actionCode 'if(panel.fileNameTextField.getText().trim().length()>0){
+Fs0 f27 actionCode '/*if(panel.fileNameTextField.getText().trim().length()>0){
 	if(panel.fileNameTextField.getText().trim().contains(".")){
 
 		panel.warnLabel.setText(ivy.cms.co("/ch/xpertline/common/ria/component/fileManagement/messages/error/invalidCharacterInFileName"));
@@ -424,7 +424,7 @@ Fs0 f27 actionCode 'if(panel.fileNameTextField.getText().trim().length()>0){
 
 	panel.warnLabel.visible=false;
 	panel.okButton.setEnabled(true);
-}' #txt
+}*/' #txt
 Fs0 f27 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -707,7 +707,7 @@ if(panel.fileNameTextField.getText().trim().length()>0){
 		if(file.exists()){
 			panel.warnLabel.setText(ivy.cms.co("/ch/ivyteam/ivy/addons/filemanager/fileManagement/messages/information/fileAlreadyExists"));
 			panel.warnLabel.visible=true;
-			panel.okButton.setEnabled(true);
+			panel.okButton.setEnabled(false);
 		}else{
 			panel.warnLabel.visible=false;
 			panel.okButton.setEnabled(true);

@@ -21,6 +21,7 @@ public class BasicConfigurationController{
 	/**
 	 * The auto generated serial Version ID
 	 */
+	@SuppressWarnings("unused")
 	private static final long serialVersionUID = 6999167937669289180L;
 
 	/**

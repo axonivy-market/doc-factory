@@ -205,33 +205,52 @@ public class FileTypesController {
 	public FileType getFileTypeWithId(long fileTypeId) throws PersistencyException, SQLException, Exception
 	{
 		FileType ft = new FileType();
+		IExternalDatabaseRuntimeConnection connection = null;
+		try {
+			connection = getDatabase().getAndLockConnection();
+			Connection jdbcConnection=connection.getDatabaseConnection();
+			ft= this.getFileTypeWithId(fileTypeId, jdbcConnection);
+		} finally{
+			if(connection!=null ){
+				database.giveBackAndUnlockConnection(connection);
+			}
+		}
+		return ft;
+	}
+	
+	/**
+	 * Returns the FileType corresponding to the given id.<br>
+	 * @param fileTypeId the FileType id
+	 * @param con the java.sql.Connection object used to communicate with the database.<br>
+	 * <b>IMPORTANT: </b>This method does NOT release this Connection. The method that calls this method has to do it.
+	 * @return
+	 * @throws Exception 
+	 * @throws SQLException 
+	 * @throws PersistencyException 
+	 */
+	public FileType getFileTypeWithId(long fileTypeId, java.sql.Connection con) throws PersistencyException, SQLException, Exception
+	{
+		if(con==null || con.isClosed())
+		{
+			throw new IllegalArgumentException("The java.sql.Connection Object is null or closed. Method getFileTypeWithId in FileTypeController.");
+		}
+		FileType ft = new FileType();
 		if(fileTypeId>0)
 		{
-			String query="";
-			IExternalDatabaseRuntimeConnection connection = null;
-			try {
-				connection = getDatabase().getAndLockConnection();
-				Connection jdbcConnection=connection.getDatabaseConnection();
-
-				query="SELECT * FROM "+this.tableNameSpace+" WHERE id = ?";
-				PreparedStatement stmt = null;
-				try{
-					stmt = jdbcConnection.prepareStatement(query);
-					stmt.setLong(1, fileTypeId);
-					ResultSet rst = stmt.executeQuery();
-					if(rst.next())
-					{
-						ft.setId(fileTypeId);
-						ft.setFileTypeName(rst.getString("name"));
-						ft.setApplicationName(rst.getString("appname"));
-					}
-				}finally{
-					DatabaseUtil.close(stmt);
+			String query="SELECT * FROM "+this.tableNameSpace+" WHERE id = ?";
+			PreparedStatement stmt = null;
+			try{
+				stmt = con.prepareStatement(query);
+				stmt.setLong(1, fileTypeId);
+				ResultSet rst = stmt.executeQuery();
+				if(rst.next())
+				{
+					ft.setId(fileTypeId);
+					ft.setFileTypeName(rst.getString("name"));
+					ft.setApplicationName(rst.getString("appname"));
 				}
-			} finally{
-				if(connection!=null ){
-					database.giveBackAndUnlockConnection(connection);
-				}
+			}finally{
+				DatabaseUtil.close(stmt);
 			}
 		}
 		return ft;
@@ -508,32 +527,54 @@ public class FileTypesController {
 	 */
 	public DocumentOnServer setDocumentFileType(DocumentOnServer doc, long fileTypeId) throws Exception
 	{
+		IExternalDatabaseRuntimeConnection connection = null;
+		try {
+			connection = getDatabase().getAndLockConnection();
+			Connection jdbcConnection=connection.getDatabaseConnection();
+			this.setDocumentFileType(doc, fileTypeId, jdbcConnection);
+		} finally{
+			if(connection!=null ){
+				database.giveBackAndUnlockConnection(connection);
+			}
+		}
+		return doc;
+	}
+	
+	/**
+	 * Set the fileType on given documentOnServer Object. The only needed information in the DocumentOnServer is its FileId attribute.
+	 * If the given fileTypeId is 0, then the DocumentOnServer object will not be associated with any FileType.<br>
+	 * If no FileType corresponds to the given fileTypeId, then the DocumentOnServer object will not be associated with any FileType.
+	 * @param doc : the DocumentOnServer object
+	 * @param fileTypeId: the fileTypeId
+	 * @param con the java.sql.Connection object used to communicate with the database.<br>
+	 * <b>IMPORTANT: </b>This method does NOT release this Connection. The method that calls this method has to do it.
+	 * @return the DocumentOnServer whose FileType attribute has been updated
+	 * @throws Exception
+	 */
+	public DocumentOnServer setDocumentFileType(DocumentOnServer doc, long fileTypeId, java.sql.Connection con) throws Exception
+	{
+		if(con==null || con.isClosed())
+		{
+			throw new IllegalArgumentException("The java.sql.Connection Object is null or closed. Method setDocumentFileType in FileTypeController.");
+		}
 		if(doc==null || Long.parseLong(doc.getFileID())==0)
 		{
 			throw new IllegalArgumentException("The documentOnServer argument is invalid in setDocumentFileType(DocumentOnServer doc, long fileTypeId) method.");
 		}
 		String query="";
-		IExternalDatabaseRuntimeConnection connection = null;
-		try {
-			FileType ft = fileTypeId>0?this.getFileTypeWithId(fileTypeId):null;
-			connection = getDatabase().getAndLockConnection();
-			Connection jdbcConnection=connection.getDatabaseConnection();
-			query="UPDATE "+this.filesTableNameSpace+" SET filetypeid = ? WHERE FileId = ?";
 
-			PreparedStatement stmt = null;
-			try{
-				stmt = jdbcConnection.prepareStatement(query);
-				stmt.setLong(1, fileTypeId);
-				stmt.setLong(2, Long.parseLong(doc.getFileID()));
-				stmt.executeUpdate();
-				doc.setFileType(ft);
-			}finally{
-				DatabaseUtil.close(stmt);
-			}
-		} finally{
-			if(connection!=null ){
-				database.giveBackAndUnlockConnection(connection);
-			}
+		FileType ft = fileTypeId>0?this.getFileTypeWithId(fileTypeId,con):null;
+		query="UPDATE "+this.filesTableNameSpace+" SET filetypeid = ? WHERE FileId = ?";
+
+		PreparedStatement stmt = null;
+		try{
+			stmt = con.prepareStatement(query);
+			stmt.setLong(1, fileTypeId);
+			stmt.setLong(2, Long.parseLong(doc.getFileID()));
+			stmt.executeUpdate();
+			doc.setFileType(ft);
+		}finally{
+			DatabaseUtil.close(stmt);
 		}
 		return doc;
 	}

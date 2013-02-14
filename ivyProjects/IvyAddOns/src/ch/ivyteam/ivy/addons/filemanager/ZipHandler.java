@@ -152,9 +152,10 @@ public class ZipHandler {
 		List<String> files = List.create(String.class);
 		//check if zip not null, exists and is a zip file
 		if(zip != null && zip.exists() && zip.getName().endsWith(".zip")){
+			ZipFile zipFile=null;
 			try{
 				//Open Zip file for reading
-				ZipFile zipFile = new ZipFile(zip, ZipFile.OPEN_READ);
+				zipFile = new ZipFile(zip, ZipFile.OPEN_READ);
 				//Create an enumeration of the entries in the zip file
 				Enumeration<? extends ZipEntry> zipFileEntries = zipFile.entries();
 
@@ -167,6 +168,14 @@ public class ZipHandler {
 				}
 			}catch(IOException e){
 
+			}finally{
+				if(zipFile!=null)
+				{
+					try {
+						zipFile.close();
+					} catch (IOException e) {
+					}
+				}
 			}
 		}
 

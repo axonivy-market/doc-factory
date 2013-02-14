@@ -17,6 +17,7 @@ public class FileManagerConfigurationController extends
 	/**
 	 * 
 	 */
+	@SuppressWarnings("unused")
 	private static final long serialVersionUID = 2041056437350105136L;
 	/**
 	 * If true then the folder tree is visible. Default is true.

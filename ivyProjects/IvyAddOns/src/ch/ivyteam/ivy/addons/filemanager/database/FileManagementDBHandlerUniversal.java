@@ -23,7 +23,6 @@ import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.scripting.objects.Date;
 import ch.ivyteam.ivy.scripting.objects.List;
 import ch.ivyteam.ivy.scripting.objects.Record;
-import ch.ivyteam.ivy.scripting.objects.Recordset;
 import ch.ivyteam.ivy.scripting.objects.Time;
 import ch.ivyteam.ivy.scripting.objects.Tree;
 import ch.ivyteam.ivy.addons.filemanager.FolderOnServer;
@@ -187,9 +186,8 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		ArrayList<DocumentOnServer>  al = new ArrayList<DocumentOnServer>();
 
 		String folderPath = escapeBackSlash(FileHandler.formatPathWithEndSeparator(_path, false));
-		Recordset rset = null;
-		List<Record> recordList= (List<Record>) List.create(Record.class);
 
+		List<Record> recordList= (List<Record>) List.create(Record.class);
 		String query="";
 		IExternalDatabaseRuntimeConnection connection = null;
 		try {
@@ -214,8 +212,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 					stmt.setString(1, folderPath+"%");
 					stmt.setString(2, folderPath+"%/%");
 				}
-				rset=executeStatement(stmt);
-				recordList=rset.toList();
+				recordList=executeStmt(stmt);
 			}finally{
 				DatabaseUtil.close(stmt);
 			}
@@ -264,8 +261,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 	 */
 	public ArrayList<DocumentOnServer> getDocuments(List<String> _conditions)throws Exception{
 		ArrayList<DocumentOnServer>  al = new ArrayList<DocumentOnServer>();
-		Recordset rset = null;
-		List<Record> recordList=null;
+		List<Record> recordList= (List<Record>) List.create(Record.class);
 		StringBuilder query=new StringBuilder("");
 
 		query.append("SELECT * FROM "+this.tableNameSpace+" WHERE ");
@@ -284,7 +280,6 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 			}
 			query.append(_conditions.get(numConditions));
 		}
-		//rset=IvySystemDBReuser.executeQuery(query.toString());
 		IExternalDatabaseRuntimeConnection connection = null;
 		try {
 			connection = getDatabase().getAndLockConnection();
@@ -292,9 +287,8 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 			PreparedStatement stmt = null;
 			try{
 				stmt = jdbcConnection.prepareStatement(query.toString());
-				rset = executeStatement(stmt);
-				recordList=rset.toList();
-				if(rset!=null && recordList!=null){
+				recordList=executeStmt(stmt);
+				if(recordList!=null){
 					for(Record rec: recordList){
 						DocumentOnServer doc = new DocumentOnServer();
 						doc.setFileID(rec.getField("FileId").toString());
@@ -346,8 +340,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		}
 		ArrayList<DocumentOnServer>  al = new ArrayList<DocumentOnServer>();
 		String folderPath = escapeBackSlash(FileHandler.formatPathWithEndSeparator(_path, false));
-		Recordset rset = null;
-		List<Record> recordList=null;
+		List<Record> recordList= (List<Record>) List.create(Record.class);
 		String query="";
 		IExternalDatabaseRuntimeConnection connection = null;
 		try {
@@ -372,8 +365,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 					stmt.setString(1, folderPath+"%");
 					stmt.setString(2, folderPath+"%/%");
 				}
-				rset=executeStatement(stmt);
-				recordList=rset.toList();
+				recordList=executeStmt(stmt);
 			}finally{
 				DatabaseUtil.close(stmt);
 			}
@@ -382,7 +374,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 				database.giveBackAndUnlockConnection(connection);
 			}
 		}
-		if(rset!=null && recordList!=null){
+		if(recordList!=null){
 			for(Record rec: recordList){
 				DocumentOnServer doc = new DocumentOnServer();
 				doc.setFileID(rec.getField("FileId").toString());
@@ -1353,8 +1345,8 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 			try{
 				stmt = jdbcConnection.prepareStatement(sql);
 				stmt.setString(1,escapeBackSlash(_file.getPath()));
-				Recordset r = executeStatement(stmt);
-				if(r.size()>0)
+				ResultSet rst = stmt.executeQuery();
+				if(rst.next())
 				{
 					retour=true;
 				}
@@ -1395,8 +1387,8 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 				stmt = jdbcConnection.prepareStatement(sql);
 				stmt.setString(1,escapeBackSlash(_file.getPath()));
 				stmt.setString(2,_user.trim());
-				Recordset r = executeStatement(stmt);
-				if(r.size()>0)
+				ResultSet rst = stmt.executeQuery();
+				if(rst.next())
 				{
 					retour=true;
 				}
@@ -1430,8 +1422,8 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 			try{
 				stmt = jdbcConnection.prepareStatement(sql);
 				stmt.setString(1,escapeBackSlash(_doc.getPath()));
-				Recordset r = executeStatement(stmt);
-				if(r.size()>0)
+				ResultSet rst = stmt.executeQuery();
+				if(rst.next())
 				{
 					retour=true;
 				}
@@ -1460,8 +1452,8 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 				stmt = jdbcConnection.prepareStatement(sql);
 				stmt.setString(1,escapeBackSlash(_doc.getPath()));
 				stmt.setString(2,_user.trim());
-				Recordset r = executeStatement(stmt);
-				if(r.size()>0)
+				ResultSet rst = stmt.executeQuery();
+				if(rst.next())
 				{
 					retour=true;
 				}
@@ -1551,7 +1543,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 	 * @param _stmt
 	 * @return
 	 * @throws Exception
-	 */
+	 
 	private static Recordset executeStatement(PreparedStatement _stmt) throws Exception{
 
 		if(_stmt == null){
@@ -1586,6 +1578,43 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		}
 
 		return r;
+	}*/
+	
+	private static List<Record> executeStmt(PreparedStatement _stmt) throws Exception{
+
+		if(_stmt == null){
+			throw(new SQLException("Invalid PreparedStatement","PreparedStatement Null"));
+		}
+
+		ResultSet rst = null;
+		rst=_stmt.executeQuery();
+		List<Record> recordList= (List<Record>) List.create(Record.class);
+		try{
+			ResultSetMetaData rsmd = rst.getMetaData();
+			int numCols = rsmd.getColumnCount();
+			List<String> colNames= List.create(String.class);
+			for(int i=1; i<=numCols; i++){
+				colNames.add(rsmd.getColumnName(i));
+				//Ivy.log().debug(rsmd.getColumnName(i));
+			}
+			while(rst.next()){
+				List<Object> values = List.create(numCols);
+				for(int i=1; i<=numCols; i++){
+
+					if(rst.getString(i)==null)
+						values.add(" ");
+					else values.add(rst.getString(i));
+				}
+				Record rec = new Record(colNames,values);
+				recordList.add(rec);
+			}
+		}catch(Exception ex){
+			Ivy.log().error(ex.getMessage(), ex);
+		}finally
+		{
+			DatabaseUtil.close(rst);
+		}
+		return recordList;
 	}
 
 	@Override
@@ -1819,7 +1848,6 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		if(filePath==null || filePath.trim().equals("")){
 			return doc;
 		}
-		Recordset rset = null;
 		List<Record> recordList= (List<Record>) List.create(Record.class);
 
 		String query="";
@@ -1833,8 +1861,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 			try{
 				stmt = jdbcConnection.prepareStatement(query);
 				stmt.setString(1, filePath);
-				rset=executeStatement(stmt);
-				recordList=rset.toList();
+				recordList=executeStmt(stmt);
 			}finally{
 				DatabaseUtil.close(stmt);
 			}
@@ -1883,9 +1910,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		if(fileId<=0){
 			return doc;
 		}
-		Recordset rset = null;
 		List<Record> recordList= (List<Record>) List.create(Record.class);
-
 		String query="";
 		IExternalDatabaseRuntimeConnection connection = null;
 		try {
@@ -1897,8 +1922,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 			try{
 				stmt = jdbcConnection.prepareStatement(query);
 				stmt.setString(1, String.valueOf(fileId));
-				rset=executeStatement(stmt);
-				recordList=rset.toList();
+				recordList=executeStmt(stmt);
 			}finally{
 				DatabaseUtil.close(stmt);
 			}
@@ -1930,7 +1954,6 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 			}catch(Exception ex){
 				//Ignore the Exception here
 			}
-
 		}
 		return doc;
 	}
@@ -2030,6 +2053,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		}else
 		{
 			message.setType(FileHandler.ERROR_MESSAGE);
+			message.setText(Ivy.cms().co("/ch/ivyteam/ivy/addons/filemanager/fileManagement/messages/error/RenameFileAlreadyExists"));
 		}
 
 		return message;
@@ -2424,7 +2448,9 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		{
 			return false;
 		}
-		return f.delete();
+		List<java.io.File> files = List.create(java.io.File.class);
+		
+		return this.deleteFiles(files)==1;
 	}
 
 	/**
@@ -2507,8 +2533,17 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 	@Override
 	public DocumentOnServer getDocumentOnServerById(long fileid,
 			boolean getJavaFile) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		if(fileid<=0)
+		{
+			return null;
+		}
+		DocumentOnServer doc = this.getDocumentOnServer(fileid);
+		if(getJavaFile)
+		{
+			return getDocumentOnServerWithJavaFile(doc);
+		}else{
+			return doc;
+		}
 	}
 
 	@Override

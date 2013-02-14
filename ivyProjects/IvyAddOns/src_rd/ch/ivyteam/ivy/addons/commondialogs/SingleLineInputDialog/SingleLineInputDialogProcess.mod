@@ -1,5 +1,5 @@
 [Ivy]
-[>Created: Fri Aug 10 16:16:58 EDT 2012]
+[>Created: Wed Feb 13 14:21:49 EST 2013]
 118122EB8FB3ED37 3.17 #module
 >Proto >Proto Collection #zClass
 Ss0 SingleLineInputDialogProcess Big #zClass
@@ -103,7 +103,7 @@ for (int i=0; i<in.actionCommandsForButtons.size(); i++)
 	String buttonName = in.actionCommandsForButtons.get(i);
 	button = new RButton();
 	
-	button.text = in.isCustomButtonsMode? in.textsForButtons.get(i): "<%= ivy.cms.co(\"/ch/ivyteam/ivy/addons/strings/buttons/"+buttonName+"\")%>";	
+	button.text = (in.isCustomButtonsMode&&in.textsForButtons.size()>i)? in.textsForButtons.get(i): "<%= ivy.cms.co(\"/ch/ivyteam/ivy/addons/strings/buttons/"+buttonName+"\")%>";	
 	// if the cms entries does not exist, just put the button name
 	if (button.text.length() == 0)
 	{
@@ -113,7 +113,7 @@ for (int i=0; i<in.actionCommandsForButtons.size(); i++)
 	button.actionCommand = buttonName;
 
 	// set the icon
-	if (in.isCustomButtonsMode && in.iconUrisForButtons.get(i).length() > 0)
+	if (in.isCustomButtonsMode && in.iconUrisForButtons.size()>i && in.iconUrisForButtons.get(i).length() > 0)
 	{
 		button.setIconUri(in.iconUrisForButtons.get(i));
 	}
@@ -133,7 +133,7 @@ Ss0 f6 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
         <name>setup buttons</name>
-        <nameStyle>13,9
+        <nameStyle>13,7,9
 </nameStyle>
     </language>
 </elementInfo>
