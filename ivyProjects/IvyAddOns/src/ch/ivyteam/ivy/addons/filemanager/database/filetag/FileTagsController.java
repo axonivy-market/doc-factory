@@ -176,7 +176,7 @@ public class FileTagsController {
 			throw new IllegalArgumentException("Input parameter not valid in getTag method.");
 		}
 		FileTag ft = new FileTag();
-		String query ="SELECT * FROM "+this.tableNameSpace+" WHERE fileid = ? AND tag LIKE ?";
+		String query ="SELECT * FROM "+this.tableNameSpace+" WHERE fileid = ? AND tag = ?";
 		IExternalDatabaseRuntimeConnection connection = null;
 		try {
 			connection = getDatabase().getAndLockConnection();

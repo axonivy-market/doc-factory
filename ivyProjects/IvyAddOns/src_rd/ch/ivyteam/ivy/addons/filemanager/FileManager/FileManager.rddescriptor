@@ -144,6 +144,16 @@ path of the directory where the files were deleted</description>
             <nullPermitted>true</nullPermitted>
         </attachment>
     </acceptedBroadcast>
+    <acceptedBroadcast>
+        <name>SE_fileChanged</name>
+        <description></description>
+        <attachment>
+            <name>fileId</name>
+            <description></description>
+            <parameterType>String</parameterType>
+            <nullPermitted>true</nullPermitted>
+        </attachment>
+    </acceptedBroadcast>
     <method>
         <name>getLastFileUploaded</name>
         <description>get the last Uploaded File reference.&#xD;
@@ -1049,6 +1059,16 @@ Else returns null.</description>
             <nullPermitted>false</nullPermitted>
         </outputParameter>
     </method>
+    <method>
+        <name>_editSelectedFile</name>
+        <description>For internal use only&#xD;
+Used to re-route the refresh action in case of file versioning extended use.</description>
+    </method>
+    <method>
+        <name>_readSelectedFile</name>
+        <description>For internal use only&#xD;
+Used to re-route the refresh action in case of file versioning extended use.</description>
+    </method>
     <startMethod>
         <name>startAsPathChooser</name>
         <description>start the RDC as Path chooser. The user will be able to make a new directory, no actions on Files are possible.&#xD;
@@ -1593,6 +1613,17 @@ This Event sends the FileManager unique PanelId data so that only other FileMana
             <name>selectedDocuments</name>
             <description></description>
             <parameterType>List&lt;ch.ivyteam.ivy.addons.filemanager.DocumentOnServer&gt;</parameterType>
+            <nullPermitted>true</nullPermitted>
+        </attachment>
+    </firedEvent>
+    <firedEvent>
+        <name>SE_fileChanged</name>
+        <description></description>
+        <scope>SYSTEM</scope>
+        <attachment>
+            <name>fileId</name>
+            <description></description>
+            <parameterType>String</parameterType>
             <nullPermitted>true</nullPermitted>
         </attachment>
     </firedEvent>

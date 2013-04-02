@@ -1,0 +1,4 @@
+co: name={newDirName} description={} changed={2013-03-20 00:05:22 CET} changedby={ec} visualorder={0} guid={13D84E5F248A5E4F} parentguid={} typeguid={E6AFEA2034301F66} id={} parentid={} typeid={}
+val: guid={13D84E5F2563FD75} datatype={} isdefault={true} langid={en} description={} validfrom={2013-03-20 00:02:45 CET} validto={} changed={2013-03-20 00:05:22 CET} changedby={ec} properties={} id={}
+val: guid={13D84E5F25F5AF3C} datatype={} isdefault={false} langid={de} description={} validfrom={2013-03-20 00:03:14 CET} validto={} changed={2013-03-20 00:05:22 CET} changedby={ec} properties={} id={}
+val: guid={13D84E5F24D1CC49} datatype={} isdefault={false} langid={fr} description={} validfrom={2013-03-20 00:03:11 CET} validto={} changed={2013-03-20 00:05:22 CET} changedby={ec} properties={} id={}

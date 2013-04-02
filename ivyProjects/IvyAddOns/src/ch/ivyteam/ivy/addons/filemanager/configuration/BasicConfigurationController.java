@@ -46,6 +46,11 @@ public class BasicConfigurationController{
 	 */
 	private boolean activateFileVersioning = false;
 	/**
+	 * If true the activateFileVersioning flag is automatically set to true.<br>  storeFilesInDB must be true.<br>
+	 * This flag is used to activate some extended functionalities in the file version feature.
+	 */
+	private boolean activateFileVersioningExtended = false;
+	/**
 	 * If true, the file types feature will be activated.
 	 */
 	private boolean activateFileType = false;
@@ -222,6 +227,34 @@ public class BasicConfigurationController{
 	 */
 	public void setActivateFileVersioning(boolean activateFileVersioning) {
 		this.activateFileVersioning = activateFileVersioning;
+	}
+
+	/**
+	 * Tells if the file version extended feature is activated.
+	 * As prerequisite the storeFilesInDB attribute must be true, so if you set this feature to true,<br>
+	 * and isStoreFilesInDB() returns false, then this method will still returns false 
+	 * even if the activateFileVersioningExtended attribute stored value is true.
+	 * @return the activateFileVersioningExtended, true if the file version feature can be activated: storeFilesInDB is true && activateFileVersioningExtended is true.
+	 */
+	public boolean isActivateFileVersioningExtended() {
+		return (this.storeFilesInDB && activateFileVersioningExtended);
+	}
+
+	/**
+	 * Set if the file version extended feature is activated or not.
+	 * As prerequisite the storeFilesInDB attribute must be true, so if you set the file version feature to true,<br>
+	 * and isStoreFilesInDB() returns false, then the isActivateFileVersioningExtended() method will still returns false 
+	 * even if the activateFileVersioningExtended attribute stored value is true.<br>
+	 * If this feature is set to true, then the activateFileVersioning will be also automatically activated.
+	 * @param activateFileVersioningExtended the activateFileVersioningExtended to set
+	 */
+	public void setActivateFileVersioningExtended(
+			boolean activateFileVersioningExtended) {
+		this.activateFileVersioningExtended = activateFileVersioningExtended;
+		if(this.activateFileVersioningExtended)
+		{
+			this.activateFileVersioning=true;
+		}
 	}
 
 	/**

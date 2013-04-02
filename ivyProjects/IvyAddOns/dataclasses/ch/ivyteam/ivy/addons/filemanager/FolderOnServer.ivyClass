@@ -41,3 +41,5 @@ creationTime Time #field
 creationTime 'time of creation' #fieldComment
 creationUser String #field
 creationUser 'Ivy username who has created the directory' #fieldComment
+isRoot Boolean #field
+isRoot 'if the directory is the root of the directory tree, the true else no' #fieldComment

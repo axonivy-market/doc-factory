@@ -1,4 +1,4 @@
-CREATE TABLE uploadedfiles
+?CREATE TABLE uploadedfiles
 (
 	FileId             number(19,0) NOT NULL,
 	FileName           VARCHAR2 (255) NULL,
@@ -221,15 +221,15 @@ BEGIN
 END;
 /
 
-INSERT INTO fileactiontype (atype,en,de,fr) VALUES (1,'File created', 'Datei kreiert' , 'Fichier créé');
-INSERT INTO fileactiontype (atype,en,de,fr) VALUES (2,'File content changed', 'Datei Inhalt geändert' , 'Fichier modifié');
-INSERT INTO fileactiontype (atype,en,de,fr) VALUES (3,'File description changed', 'Datei Beschreibung geändert', 'Description du Fichier modifiée');
-INSERT INTO fileactiontype (atype,en,de,fr) VALUES (4,'File renamed', 'Datei umbennant' , 'Fichier renommé');
-INSERT INTO fileactiontype (atype,en,de,fr) VALUES (5,'File deleted', 'Datei gelöscht' , 'Fichier supprimé');
-INSERT INTO fileactiontype (atype,en,de,fr) VALUES (6,'File downloaded', 'Datei heruntergeladen' , 'Fichier téléchargé');
-INSERT INTO fileactiontype (atype,en,de,fr) VALUES (7,'File printed', 'Datei gedruckt' , 'Fichier imprimé');
-INSERT INTO fileactiontype (atype,en,de,fr) VALUES (8,'File opened', 'Datei geöffnet' , 'Fichier ouvert');
-INSERT INTO fileactiontype (atype,en,de,fr) VALUES (9,'File copied and paste', 'Datei kopiert' , 'Fichier copié');
-INSERT INTO fileactiontype (atype,en,de,fr) VALUES (10,'File moved', 'Datei verschoben' , 'Fichier déplacé');
-INSERT INTO fileactiontype (atype,en,de,fr) VALUES (11,'New Version created', 'Neue Version erfasst' , 'Nouvelle version')
-INSERT INTO fileactiontype (atype,en,de,fr) VALUES (12,'Last version rollbacked', 'Letzte Version gelöscht' , 'Dernière version supprimée')
+INSERT INTO fileactiontype (atype,en,de,fr) VALUES (1,'File created', 'Datei kreiert' , 'Fichier crÃ©Ã©');
+INSERT INTO fileactiontype (atype,en,de,fr) VALUES (2,'File content changed', 'Datei Inhalt geÃ¤ndert' , 'Fichier modifiÃ©');
+INSERT INTO fileactiontype (atype,en,de,fr) VALUES (3,'File description changed', 'Datei Beschreibung geÃ¤ndert', 'Description du Fichier modifiÃ©e');
+INSERT INTO fileactiontype (atype,en,de,fr) VALUES (4,'File renamed', 'Datei umbennant' , 'Fichier renommÃ©');
+INSERT INTO fileactiontype (atype,en,de,fr) VALUES (5,'File deleted', 'Datei gelÃ¶scht' , 'Fichier supprimÃ©');
+INSERT INTO fileactiontype (atype,en,de,fr) VALUES (6,'File downloaded', 'Datei heruntergeladen' , 'Fichier tÃ©lÃ©chargÃ©');
+INSERT INTO fileactiontype (atype,en,de,fr) VALUES (7,'File printed', 'Datei gedruckt' , 'Fichier imprimÃ©');
+INSERT INTO fileactiontype (atype,en,de,fr) VALUES (8,'File opened', 'Datei geÃ¶ffnet' , 'Fichier ouvert');
+INSERT INTO fileactiontype (atype,en,de,fr) VALUES (9,'File copied and paste', 'Datei kopiert' , 'Fichier copiÃ©');
+INSERT INTO fileactiontype (atype,en,de,fr) VALUES (10,'File moved', 'Datei verschoben' , 'Fichier dÃ©placÃ©');
+INSERT INTO fileactiontype (atype,en,de,fr) VALUES (11,'New Version created', 'Neue Version erfasst' , 'Nouvelle version');
+INSERT INTO fileactiontype (atype,en,de,fr) VALUES (12,'Last version rollbacked', 'Letzte Version gelÃ¶scht' , 'DerniÃ¨re version supprimÃ©e');

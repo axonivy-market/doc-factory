@@ -46,3 +46,5 @@ canUserWrite Boolean #field
 canUserWrite 'true if user has the right to update the file (Content write, rename, description change)' #fieldComment
 canUserRead Boolean #field
 canUserRead 'true if user has the right to read the file' #fieldComment
+isLocked Boolean #field
+isLocked 'Flag set to true if the doc is locked.' #fieldComment

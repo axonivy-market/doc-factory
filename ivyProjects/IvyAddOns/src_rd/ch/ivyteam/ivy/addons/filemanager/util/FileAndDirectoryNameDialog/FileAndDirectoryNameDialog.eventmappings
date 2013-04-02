@@ -1,0 +1,9 @@
+# Xpert.ivy RichDialog Event-Mapping Data
+# 2013-03-19 18:56:19 | 4.3.8.41480 | 1.0
+~.cancelButton@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:13D83ACB5AF97DAD/13D83C926A39FEAD # FileAndDirectoryNameDialogProcess.mod/Cancel
+~.nameTextField@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:13D83ACB5AF97DAD/13D83C8E23A4250D # FileAndDirectoryNameDialogProcess.mod/OK
+~.nameTextField@KEY[]--->ch.ivyteam.ivy.process.ProcessStart:13D83ACB5AF97DAD/13D83C89032F0208 # FileAndDirectoryNameDialogProcess.mod/KeyPressed
+~.nameTextField@VALUE_CHANGED[]--->ch.ivyteam.ivy.process.ProcessStart:13D83ACB5AF97DAD/13D83C89032F0208 # FileAndDirectoryNameDialogProcess.mod/KeyPressed
+~.okButton@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:13D83ACB5AF97DAD/13D83C8E23A4250D # FileAndDirectoryNameDialogProcess.mod/OK
+~@RD_METHODCALL[start()]--->ch.ivyteam.ivy.process.ProcessStart:13D83ACB5AF97DAD/13D83ACB5C5EFF7A
+~@RD_METHODCALL[start(String,String,List<String>,String,String,Number)]--->ch.ivyteam.ivy.process.ProcessStart:13D83ACB5AF97DAD/13D83F8E07C4C789

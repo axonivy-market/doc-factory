@@ -148,8 +148,9 @@ public class UserSystemPropertiesHandler<T extends IRichDialogPanel> {
 		String [][] prop = new String[properties.size()][2];
 		Set<Entry<String, String>> set = properties.entrySet();
 		Iterator<Entry<String, String>> it = set.iterator();
+
 		for (int i=0; i<properties.size(); i++){
-			Entry<String, String> e= it.next();
+			Entry<String, String> e= (Entry<String, String>) it.next();
 			prop[i][0]=e.getKey();
 			prop[i][1]=e.getValue();
 			//Ivy.log().debug(e.getKey()+": "+e.getValue());

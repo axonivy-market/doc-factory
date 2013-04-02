@@ -4,6 +4,7 @@ package ch.ivyteam.ivy.addons.filemanager.database;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -50,6 +51,9 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 	public FileManagementIvySystemDBHandler(String _tableName) {
 		super();
 		this.tableName="IWA_UploadedFile";
+		if(IvySystemDBReuser.getDatabaseProductName().toLowerCase().contains("mysql")){
+			this.setEscapeChar("\\\\");
+		}
 
 	}
 
@@ -105,6 +109,7 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 				doc.setModificationDate(rec.getField("ModificationDate").toString());
 				doc.setModificationTime(rec.getField("ModificationTime").toString());
 				doc.setLocked(rec.getField("Locked").toString().equals("false")?"0":(rec.getField("Locked").toString().equals("true")?"1":rec.getField("Locked").toString()));
+				doc.setIsLocked(doc.getLocked().compareTo("1")==0);
 				doc.setLockingUserID(rec.getField("LockingUserId").toString());
 				doc.setDescription(rec.getField("Description").toString());
 				try{
@@ -133,16 +138,17 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 	 */
 	public ArrayList<DocumentOnServer> getDocumentsInPath(String _path, final boolean _isrecursive) throws Exception{
 		ArrayList<DocumentOnServer>  al = new ArrayList<DocumentOnServer>();
-		final String folderPath =escapeBackSlash(FileHandler.formatPathWithEndSeparator(_path, false));
+		final String folderPath =escapeUnderscoreInPath(escapeBackSlash(FileHandler.formatPathWithEndSeparator(_path, false)));
+		
 		String query="";
 		if(_isrecursive)
 		{
-			query="SELECT * FROM "+this.tableName+" WHERE FilePath LIKE ?";
+			query="SELECT * FROM "+this.tableName+" WHERE FilePath LIKE ? ESCAPE '"+escapeChar+"'";
 		}
 		else
 		{
 			//query="SELECT * FROM "+this.tableName+" WHERE FilePath LIKE '"+folderPath+"%' AND FilePath NOT LIKE '"+folderPath+"%["+java.io.File.separator+"]%'";
-			query="SELECT * FROM "+this.tableName+" WHERE FilePath LIKE ? AND FilePath NOT LIKE ?";
+			query="SELECT * FROM "+this.tableName+" WHERE FilePath LIKE ? ESCAPE '"+escapeChar+"' AND FilePath NOT LIKE ? ESCAPE '"+escapeChar+"'";;
 		}
 		List<Record> recordList= IvySystemDBReuser.executePreparedStatement(query.toString(), 
 				new IPreparedStatementExecutable<List<Record>>(){
@@ -178,6 +184,7 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 				doc.setModificationDate(rec.getField("ModificationDate").toString());
 				doc.setModificationTime(rec.getField("ModificationTime").toString());
 				doc.setLocked(rec.getField("Locked").toString().equals("false")?"0":(rec.getField("Locked").toString().equals("true")?"1":rec.getField("Locked").toString()));
+				doc.setIsLocked(doc.getLocked().compareTo("1")==0);
 				doc.setLockingUserID(rec.getField("LockingUserId").toString());
 				doc.setDescription(rec.getField("Description").toString());
 				try{
@@ -200,7 +207,7 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 			return doc;
 		}
 		final String path =escapeBackSlash(filePath);
-		String query="SELECT * FROM "+this.tableName+" WHERE FilePath LIKE ?";
+		String query="SELECT * FROM "+this.tableName+" WHERE FilePath = ?";
 
 		List<Record> recordList= IvySystemDBReuser.executePreparedStatement(query.toString(), 
 				new IPreparedStatementExecutable<List<Record>>(){
@@ -242,22 +249,20 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 		return doc;
 	}
 	
-	public DocumentOnServer getDocumentOnServer(long fileid)
+	public DocumentOnServer getDocumentOnServer(final long fileid)
 	throws Exception {
 		DocumentOnServer doc = new DocumentOnServer();
 		if(fileid<=0){
 			return doc;
 		}
-		final String fileId =String.valueOf(fileid);
-
-
-		String query="SELECT * FROM "+this.tableName+" WHERE FileId LIKE ?";
+		
+		String query="SELECT * FROM "+this.tableName+" WHERE FileId = ?";
 		List<Record> recordList= IvySystemDBReuser.executePreparedStatement(query.toString(), 
 				new IPreparedStatementExecutable<List<Record>>(){
 
 			public List<Record> execute(PreparedStatement stmt) throws PersistencyException {
 				try{
-					stmt.setString(1, fileId);
+					stmt.setLong(1, fileid);
 					return IvySystemDBReuser.executeStmt(stmt);
 				}catch(SQLException ex){
 					throw new PersistencyException(ex);
@@ -280,6 +285,7 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 			doc.setModificationDate(rec.getField("ModificationDate").toString());
 			doc.setModificationTime(rec.getField("ModificationTime").toString());
 			doc.setLocked(rec.getField("Locked").toString());
+			doc.setIsLocked(doc.getLocked().compareTo("1")==0);
 			doc.setLockingUserID(rec.getField("LockingUserId").toString());
 			doc.setDescription(rec.getField("Description").toString());
 			try{
@@ -305,16 +311,16 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 	public ArrayList<DocumentOnServer> getDocumentsLocked(String _path, final boolean _isrecursive) throws Exception{
 
 		ArrayList<DocumentOnServer>  al = new ArrayList<DocumentOnServer>();
-		final String folderPath = escapeBackSlash(FileHandler.formatPathWithEndSeparator(_path, false));
+		final String folderPath = escapeUnderscoreInPath(escapeBackSlash(FileHandler.formatPathWithEndSeparator(_path, false)));
 		String query="";
 
 		if(_isrecursive)
 		{
-			query="SELECT * FROM "+this.tableName+" WHERE Locked=1 AND FilePath LIKE ?";
+			query="SELECT * FROM "+this.tableName+" WHERE Locked=1 AND FilePath LIKE ? ESCAPE '"+escapeChar+"'";
 		}else
 		{
 			//query="SELECT * FROM "+this.tableName+" WHERE Locked=1 AND FilePath LIKE '"+folderPath+"%' AND FilePath NOT LIKE '"+folderPath+"%["+java.io.File.separator+"]%'";
-			query="SELECT * FROM "+this.tableName+" WHERE Locked=1 AND FilePath LIKE ? AND FilePath NOT LIKE ?";
+			query="SELECT * FROM "+this.tableName+" WHERE Locked=1 AND FilePath LIKE ? ESCAPE '"+escapeChar+"' AND FilePath NOT LIKE ? ESCAPE '"+escapeChar+"'";
 		}
 		List<Record> recordList= IvySystemDBReuser.executePreparedStatement(query.toString(), 
 				new IPreparedStatementExecutable<List<Record>>(){
@@ -453,7 +459,7 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 		}
 
 		result =true;
-		String query= "UPDATE "+this.tableName+" SET FileName = ?, FilePath = ?, ModificationDate = ?, ModificationTime = ?, ModificationUserId = ? WHERE FilePath LIKE ?";
+		String query= "UPDATE "+this.tableName+" SET FileName = ?, FilePath = ?, ModificationDate = ?, ModificationTime = ?, ModificationUserId = ? WHERE FilePath = ?";
 		IvySystemDBReuser.executePreparedStatement(query, 
 				new IPreparedStatementExecutable<Boolean>(){
 
@@ -492,7 +498,7 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 			throw new Exception("File null or doesn't exist, or userID null in changeModificationInformations method.");
 		}
 
-		String query= "UPDATE "+this.tableName+" SET FileSize = ?, ModificationDate = ?, ModificationTime = ?, ModificationUserId = ? WHERE FilePath LIKE ?";
+		String query= "UPDATE "+this.tableName+" SET FileSize = ?, ModificationDate = ?, ModificationTime = ?, ModificationUserId = ? WHERE FilePath = ?";
 		IvySystemDBReuser.executePreparedStatement(query, 
 				new IPreparedStatementExecutable<Void>(){
 			public Void execute(PreparedStatement stmt) throws PersistencyException {
@@ -526,7 +532,7 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 			return flag;
 		}
 
-		String query = "UPDATE "+this.tableName+" SET Locked=1, LockingUserId= ? WHERE FilePath LIKE ? AND (LockingUserId LIKE ? OR Locked <> 1)";
+		String query = "UPDATE "+this.tableName+" SET Locked=1, LockingUserId= ? WHERE FilePath = ? AND (LockingUserId = ? OR Locked <> 1)";
 
 		flag = IvySystemDBReuser.executePreparedStatement(query, 
 				new IPreparedStatementExecutable<Boolean>(){
@@ -568,7 +574,7 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 			return flag;
 		}
 		//		String user= IvySystemDBReuser.escapeForMSSQL(userIn);
-		String query = "UPDATE "+this.tableName+" SET Locked=1, LockingUserId = ? WHERE FilePath LIKE ? AND (LockingUserId LIKE ? OR Locked <> 1)";
+		String query = "UPDATE "+this.tableName+" SET Locked=1, LockingUserId = ? WHERE FilePath = ? AND (LockingUserId = ? OR Locked <> 1)";
 
 		flag = IvySystemDBReuser.executePreparedStatement(query, 
 				new IPreparedStatementExecutable<Boolean>(){
@@ -606,7 +612,7 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 			return flag;
 		}
 
-		String query = "UPDATE "+this.tableName+" SET Locked=0, LockingUserId= ? WHERE FilePath LIKE ?";
+		String query = "UPDATE "+this.tableName+" SET Locked=0, LockingUserId= ? WHERE FilePath = ?";
 
 		flag = IvySystemDBReuser.executePreparedStatement(query, 
 				new IPreparedStatementExecutable<Boolean>(){
@@ -644,7 +650,7 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 		{
 			return flag;
 		}
-		String query = "UPDATE "+this.tableName+" SET Locked=?, LockingUserId= ? WHERE FilePath LIKE ?";
+		String query = "UPDATE "+this.tableName+" SET Locked=?, LockingUserId= ? WHERE FilePath = ?";
 
 		flag = IvySystemDBReuser.executePreparedStatement(query, 
 				new IPreparedStatementExecutable<Boolean>(){
@@ -687,7 +693,7 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 			return flag;
 		}
 
-		String query = "UPDATE "+this.tableName+" SET Locked=0, LockingUserId = ? WHERE FilePath LIKE ? AND LockingUserId LIKE ?";
+		String query = "UPDATE "+this.tableName+" SET Locked=0, LockingUserId = ? WHERE FilePath = ? AND LockingUserId = ?";
 		flag = IvySystemDBReuser.executePreparedStatement(query, 
 				new IPreparedStatementExecutable<Boolean>(){
 
@@ -727,7 +733,7 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 		{
 			return flag;
 		}
-		String query = "UPDATE "+this.tableName+" SET Locked=0, LockingUserId= ? WHERE FilePath LIKE ? AND LockingUserId LIKE ?";
+		String query = "UPDATE "+this.tableName+" SET Locked=0, LockingUserId= ? WHERE FilePath = ? AND LockingUserId = ?";
 
 		flag = IvySystemDBReuser.executePreparedStatement(query, 
 				new IPreparedStatementExecutable<Boolean>(){
@@ -771,16 +777,16 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 			return;
 		}
 
-		final String folderPath = escapeBackSlash(FileHandler.formatPathWithEndSeparator(_path, false));
+		final String folderPath = escapeUnderscoreInPath(escapeBackSlash(FileHandler.formatPathWithEndSeparator(_path, false)));
 
 		String query="";
 		if(_recursive)
 		{
-			query="UPDATE "+ tableName + " SET Locked = 0, LockingUserId= ? WHERE LockingUserId LIKE ? AND FilePath LIKE ?";
+			query="UPDATE "+ this.tableName + " SET Locked = 0, LockingUserId= ? WHERE LockingUserId = ? AND FilePath LIKE ? ESCAPE '"+escapeChar+"'";
 		}else
 		{
 			//query="UPDATE "+ tableName + " SET Locked = 0 WHERE LockingUserId LIKE '"+user+"' AND FilePath LIKE '"+folderPath+"%' AND FilePath NOT LIKE '"+folderPath+"%["+java.io.File.separator+"]%'";
-			query="UPDATE "+ tableName + " SET Locked = 0, LockingUserId= ? WHERE LockingUserId LIKE ? AND FilePath LIKE ? AND FilePath NOT LIKE ?";
+			query="UPDATE "+ this.tableName + " SET Locked = 0, LockingUserId= ? WHERE LockingUserId = ? AND FilePath LIKE ? ESCAPE '"+escapeChar+"' AND FilePath NOT LIKE ? ESCAPE '"+escapeChar+"'";
 		}
 
 		IvySystemDBReuser.executePreparedStatement(query, 
@@ -1142,7 +1148,7 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 			return 0;
 		}
 
-		Integer _int= IvySystemDBReuser.executePreparedStatement("DELETE FROM "+this.tableName+" WHERE FilePath LIKE ?", 
+		Integer _int= IvySystemDBReuser.executePreparedStatement("DELETE FROM "+this.tableName+" WHERE FilePath = ?", 
 				new IPreparedStatementExecutable<Integer>()
 				{
 			public Integer execute(PreparedStatement stmt)
@@ -1183,7 +1189,7 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 		}
 		int deletedFiles=0;
 
-		Integer _int= IvySystemDBReuser.executePreparedStatement("DELETE FROM "+this.tableName+" WHERE FilePath LIKE ?", 
+		Integer _int= IvySystemDBReuser.executePreparedStatement("DELETE FROM "+this.tableName+" WHERE FilePath = ?", 
 				new IPreparedStatementExecutable<Integer>()
 				{
 			public Integer execute(PreparedStatement stmt)
@@ -1225,7 +1231,7 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 			return false;
 		}
 		boolean retour = false;
-		Integer i=IvySystemDBReuser.executePreparedStatement("SELECT * FROM "+this.tableName+" WHERE Locked=1 AND FilePath LIKE ?", 
+		Integer i=IvySystemDBReuser.executePreparedStatement("SELECT * FROM "+this.tableName+" WHERE Locked=1 AND FilePath = ?", 
 				new IPreparedStatementExecutable<Integer>(){
 			public Integer execute(PreparedStatement stmt) throws PersistencyException {
 				try {
@@ -1261,7 +1267,7 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 			return false;
 		}
 		boolean retour = false;
-		Integer i=IvySystemDBReuser.executePreparedStatement("SELECT * FROM "+this.tableName+" WHERE Locked=1 AND FilePath LIKE ? AND LockingUserId NOT LIKE ?", new IPreparedStatementExecutable<Integer>(){
+		Integer i=IvySystemDBReuser.executePreparedStatement("SELECT * FROM "+this.tableName+" WHERE Locked=1 AND FilePath = ? AND LockingUserId <> ?", new IPreparedStatementExecutable<Integer>(){
 
 			public Integer execute(PreparedStatement stmt) throws PersistencyException {
 				try {
@@ -1297,7 +1303,7 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 			return false;
 		}
 		boolean retour = false;
-		Integer i=IvySystemDBReuser.executePreparedStatement("SELECT * FROM "+this.tableName+" WHERE Locked=1 AND FilePath LIKE ?", new IPreparedStatementExecutable<Integer>(){
+		Integer i=IvySystemDBReuser.executePreparedStatement("SELECT * FROM "+this.tableName+" WHERE Locked=1 AND FilePath = ?", new IPreparedStatementExecutable<Integer>(){
 
 			public Integer execute(PreparedStatement stmt) throws PersistencyException {
 				try {
@@ -1326,7 +1332,7 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 			return false;
 		}
 		boolean retour = false;
-		Integer i=IvySystemDBReuser.executePreparedStatement("SELECT * FROM "+this.tableName+" WHERE Locked=1 AND FilePath LIKE ? AND LockingUserId NOT LIKE ?", new IPreparedStatementExecutable<Integer>(){
+		Integer i=IvySystemDBReuser.executePreparedStatement("SELECT * FROM "+this.tableName+" WHERE Locked=1 AND FilePath = ? AND LockingUserId <> ?", new IPreparedStatementExecutable<Integer>(){
 
 			public Integer execute(PreparedStatement stmt) throws PersistencyException {
 				try {
@@ -1389,6 +1395,9 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 		if(_newDirectoryPath==null ||  _newDirectoryPath.trim().equals(""))
 		{
 			throw new IllegalArgumentException("One of the parameters in "+this.getClass().getName()+", method createDirectory(String _newDirectoryPath) is not set.");
+		}
+		if(_newDirectoryPath.contains("%")){
+			throw new IllegalArgumentException("The directories name cannot contain a percent sign (%).");
 		}
 		ReturnedMessage message = new ReturnedMessage();
 		message.setFiles(List.create(java.io.File.class));
@@ -1547,6 +1556,7 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 		FolderOnServer o = new FolderOnServer();
 		o.setName(dir.getName());
 		o.setPath(formatPath(dir.getPath()));
+		o.setIsRoot(true);
 		RDTree.setValue(o);
 		RDTree.setInfo(o.getName());
 		fillRDTree(entryPath, RDTree);
@@ -1810,7 +1820,7 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 		}
 		final String desc=description==null?"":description.trim();
 		
-		String query = "UPDATE "+this.tableName+" SET Description = ? WHERE FilePath LIKE ?";
+		String query = "UPDATE "+this.tableName+" SET Description = ? WHERE FilePath = ?";
 
 		int i = IvySystemDBReuser.executePreparedStatement(query, 
 				new IPreparedStatementExecutable<Integer>(){
@@ -2096,6 +2106,8 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 		if(f.isFile())
 		{
 			doc.setJavaFile(f);
+		}else{
+			throw new IOException("The file "+doc.getFilename()+" cannot be found on the filesystem in "+doc.getPath());
 		}
 		return doc;
 	}
@@ -2147,7 +2159,11 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 		ArrayList<DocumentOnServer> docs = this.getDocumentsInPath(path, isRecursive);
 		ArrayList<DocumentOnServer> documents = new ArrayList<DocumentOnServer>();
 		for(DocumentOnServer d : docs){
-			documents.add(this.getDocumentOnServerWithJavaFile(d));
+			java.io.File f = new java.io.File(d.getPath());
+			if(f.isFile()){
+				d.setJavaFile(f);
+				documents.add(d);
+			}
 		}
 		return documents;
 	}
@@ -2267,5 +2283,31 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 	@Override
 	public int getFile_content_storage_type() {
 		return AbstractFileManagementHandler.FILE_STORAGE_FILESYSTEM;
+	}
+
+	@Override
+	public ArrayList<FolderOnServer> getListDirectDirectoriesUnderPath(String path)
+			throws Exception {
+		if(path==null || path.trim().length()==0){
+			throw new IllegalArgumentException("The path argument is null or is an empty String.");
+		}
+		path=formatPathForDirectory(path);
+		java.io.File dir = new java.io.File(path);
+		ArrayList<FolderOnServer> fos = new ArrayList<FolderOnServer>();
+		if(dir.isDirectory())
+		{
+			String[] files =dir.list();
+			for(int i =0; i<files.length;i++)
+			{
+				java.io.File d = new java.io.File(path+files[i]);
+				if(d.isDirectory()){
+					FolderOnServer fo = new FolderOnServer();
+					fo.setName(files[i]);
+					fo.setPath(path+files[i]);
+					fos.add(fo);
+				}
+			}
+		}
+		return fos;
 	}
 }

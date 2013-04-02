@@ -1,5 +1,5 @@
 [Ivy]
-[>Created: Tue Aug 28 15:10:33 CEST 2012]
+[>Created: Mon Mar 18 22:15:06 EDT 2013]
 12CE011328E96402 3.17 #module
 >Proto >Proto Collection #zClass
 Es0 EventLogDisplayTreeProcess Big #zClass
@@ -146,7 +146,7 @@ Es0 f4 inParameterDecl 'ch.ivyteam.ivy.richdialog.exec.RdMethodCallEvent methodE
 ' #txt
 Es0 f4 outParameterDecl '<ch.ivyteam.ivy.addons.data.technical.eventlog.EventLog data> result;
 ' #txt
-Es0 f4 outParameterMapAction 'result.data=panel.tree.#selectedTreeNode is initialized ? panel.tree.selectedTreeNode as ch.ivyteam.ivy.addons.data.technical.eventlog.EventLog : null;
+Es0 f4 outParameterMapAction 'result.data=panel.tableTree.#selectedTreeNode is initialized ? panel.tableTree.selectedTreeNode as ch.ivyteam.ivy.addons.data.technical.eventlog.EventLog : null;
 ' #txt
 Es0 f4 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>

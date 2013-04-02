@@ -50,6 +50,8 @@ private RFlowLayoutPane ToolbarFlowLayoutPane = null;
 private TransferHandler filesTableTransferHandler;  //  @jve:decl-index=0:
 private RButton unlockButton = null;
 private RMenuItem unockMenuItem = null;
+private RButton refrehButton = null;
+private RMenuItem refreshMenuItem = null;
 /**
    * Create a new instance of FileListTablePanel
    */
@@ -184,6 +186,7 @@ private RPopupMenu getTablePopupMenu() {
 	if (tablePopupMenu == null) {
 		tablePopupMenu = new RPopupMenu();
 		tablePopupMenu.setName("tablePopupMenu");
+		tablePopupMenu.add(getRefreshMenuItem());
 		tablePopupMenu.setName("tablePopupMenu");
 		tablePopupMenu.add(getOpenMenuItem());
 		tablePopupMenu.add(getUploadMenuItem());
@@ -317,6 +320,7 @@ private RFlowLayoutPane getToolbarFlowLayoutPane() {
 		ToolbarFlowLayoutPane.setName("ToolbarFlowLayoutPane");
 		ToolbarFlowLayoutPane.setAlignment(ULCFlowLayoutPane.LEFT);
 		ToolbarFlowLayoutPane.setStyleProperties("{/fill \"HORIZONTAL\"/weightX \"1\"}");
+		ToolbarFlowLayoutPane.add(getRefrehButton());
 		ToolbarFlowLayoutPane.add(getUploadButton());
 		ToolbarFlowLayoutPane.add(getOpenButton());
 		ToolbarFlowLayoutPane.add(getDeleteButton());
@@ -355,5 +359,37 @@ private RMenuItem getUnockMenuItem() {
 		unockMenuItem.setName("unockMenuItem");
 	}
 	return unockMenuItem;
+}
+
+/**
+ * This method initializes refrehButton	
+ * 	
+ * @return ch.ivyteam.ivy.richdialog.widgets.components.RButton	
+ */
+private RButton getRefrehButton() {
+	if (refrehButton == null) {
+		refrehButton = new RButton();
+		refrehButton.setName("refrehButton");
+		refrehButton.setBorderPainted(false);
+		refrehButton.setIconUri("<%=ivy.cms.cr(\"/ch/ivyteam/ivy/addons/icons/refresh/16\")%>");
+		refrehButton.setToolTipText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/FileListTable/buttonsLabel/refresh\")%>");
+	}
+	return refrehButton;
+}
+
+/**
+ * This method initializes refreshMenuItem	
+ * 	
+ * @return ch.ivyteam.ivy.richdialog.widgets.menus.RMenuItem	
+ */
+private RMenuItem getRefreshMenuItem() {
+	if (refreshMenuItem == null) {
+		refreshMenuItem = new RMenuItem();
+		refreshMenuItem.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/FileListTable/buttonsLabel/refresh\")%>");
+		refreshMenuItem.setIconUri("<%=ivy.cms.cr(\"/ch/ivyteam/ivy/addons/icons/refresh/16\")%>");
+		refreshMenuItem.setToolTipText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/FileListTable/buttonsLabel/refresh\")%>");
+		refreshMenuItem.setName("refreshMenuItem");
+	}
+	return refreshMenuItem;
 }
 }  //  @jve:decl-index=0:visual-constraint="10,10"

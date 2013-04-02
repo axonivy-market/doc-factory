@@ -129,55 +129,6 @@ public class IvySystemDBReuser {
 		}
 	}
 	
-	/**
-	 * Executes a PreparedStatement using executeQuery method
-	 * @param _stmt the PreparedStatement
-	 * @return the recordSet resulting of the PreparedStatement execution
-	 * @throws PersistencyException 
-	 * @throws SQLException 
-	 
-	public static Recordset executeStatement (PreparedStatement _stmt) throws PersistencyException{
-		final Recordset r= new Recordset();
-		ResultSet rst = null;
-		ResultSetMetaData rsmd = null;
-		try
-		{
-			rst = _stmt.executeQuery();
-			rsmd = rst.getMetaData();
-
-			int numCols = rsmd.getColumnCount();
-			List<String> colNames= List.create(String.class);
-			for(int i=1; i<=numCols; i++){
-				colNames.add(rsmd.getColumnName(i));
-			}
-			while(rst.next()){
-				List<Object> values = List.create(numCols);
-				
-				for(int i=1; i<=numCols; i++){
-					if(rst.getString(i)==null)
-					{
-						values.add(" ");
-					}
-					else
-					{
-						values.add(rst.getString(i));
-					}
-				}
-				Record rec = new Record(colNames,values);
-				
-				r.add(rec);
-			}
-			return r;
-		}
-		catch(SQLException ex){
-			throw new PersistencyException(ex);
-		}
-		finally
-		{
-			DatabaseUtil.close(rst);
-		}						
-	}*/
-	
 	public static List<Record> executeStmt(PreparedStatement _stmt) throws PersistencyException{
 
 		if(_stmt == null){
@@ -221,7 +172,15 @@ public class IvySystemDBReuser {
 	 */
 	public static <T> T executePreparedStatement(final String _sql, final IPreparedStatementExecutable<T> _executor) throws PersistencyException
 	{
-
 		return ((DatabasePersistencyService)getPersistencyService()).execute(_sql, _executor);	
+	}
+	
+	/**
+	 * gives the database product name of the Ivy System Database.
+	 * @return
+	 */
+	public static String getDatabaseProductName()
+	{
+		return ((DatabasePersistencyService)getPersistencyService()).getDatabaseProductName();
 	}
 }

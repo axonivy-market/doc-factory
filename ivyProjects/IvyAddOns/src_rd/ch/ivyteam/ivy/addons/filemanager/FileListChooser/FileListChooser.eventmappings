@@ -1,7 +1,9 @@
 # Xpert.ivy RichDialog Event-Mapping Data
-# 2012-06-05 20:47:27 | 4.3.0.39524 | 1.0
+# 2013-03-23 17:34:35 | 4.3.8.41480 | 1.0
 ~.fileListComboBox@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FD643F033AAB0/11F6EE95766E1866
 ~@RD_METHODCALL[filter(String)]--->ch.ivyteam.ivy.process.ProcessStart:125FD643F033AAB0/1223C456E56E7061
+~@RD_METHODCALL[getDocumentsFilteredList()]--->ch.ivyteam.ivy.process.ProcessStart:125FD643F033AAB0/13D992C7031AFE1B
+~@RD_METHODCALL[getDocumentsList()]--->ch.ivyteam.ivy.process.ProcessStart:125FD643F033AAB0/13D992A133935561
 ~@RD_METHODCALL[getPath()]--->ch.ivyteam.ivy.process.ProcessStart:125FD643F033AAB0/11F6EE5DAC974A3A
 ~@RD_METHODCALL[getSelectedDocument()]--->ch.ivyteam.ivy.process.ProcessStart:125FD643F033AAB0/11F6EE621C3EF7A9
 ~@RD_METHODCALL[getSelectedFile()]--->ch.ivyteam.ivy.process.ProcessStart:125FD643F033AAB0/11F6EE733F7E846D

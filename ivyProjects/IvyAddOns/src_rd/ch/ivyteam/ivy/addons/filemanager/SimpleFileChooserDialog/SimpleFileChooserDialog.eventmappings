@@ -1,7 +1,8 @@
 # Xpert.ivy RichDialog Event-Mapping Data
-# 2012-06-05 20:51:30 | 4.3.0.39524 | 1.0
+# 2013-03-23 17:47:32 | 4.3.8.41480 | 1.0
 ~.cancelButton@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE384C5BE80F0/1223C2F27664F76D
 ~.chooseButton@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE384C5BE80F0/1223C2F12D42CBD6
+~.fileListChooserPanel@RD_EVENT[errorOccurred]--->ch.ivyteam.ivy.process.ProcessStart:125FE384C5BE80F0/13D993809DFC5A45 # SimpleFileChooserDialogProcess.mod/error
 ~.fileListChooserPanel@RD_EVENT[fileSelectionChanged]--->ch.ivyteam.ivy.process.ProcessStart:125FE384C5BE80F0/122F3EA5CC997B1E
 ~.previewButton@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE384C5BE80F0/12925613436290EC
 ~.uploadButton@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE384C5BE80F0/128B5FB2D0AAFD6E

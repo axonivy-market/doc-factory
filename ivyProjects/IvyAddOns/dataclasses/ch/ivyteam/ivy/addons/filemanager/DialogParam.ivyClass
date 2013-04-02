@@ -21,3 +21,4 @@ outputBoolean Boolean #field
 outputBoolean 'output from user as Boolean' #fieldComment
 clickedButton String #field
 clickedButton 'The button that was clicked by the user' #fieldComment
+stringList List<String> #field

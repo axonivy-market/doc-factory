@@ -6,6 +6,8 @@ import ch.ivyteam.ivy.richdialog.widgets.components.RLabel;
 import ch.ivyteam.ivy.richdialog.widgets.components.RTextField;
 import ch.ivyteam.ivy.richdialog.widgets.containers.RFlowLayoutPane;
 import ch.ivyteam.ivy.richdialog.widgets.components.RButton;
+import com.ulcjava.base.application.BorderFactory;
+import com.ulcjava.base.application.util.Color;
 
 /**
  * <p>FileTagWriterPanel is a rich dialog panel implementation.
@@ -42,7 +44,7 @@ private RButton cancelButton = null;
    */
   private void initialize()
   {
-        this.setPreferredSize(new com.ulcjava.base.application.util.Dimension(552,110));
+        this.setPreferredSize(new com.ulcjava.base.application.util.Dimension(550,120));
         this.add(getLabel(), new com.ulcjava.base.application.GridBagConstraints(0, 0, 3, 1, -1, -1, com.ulcjava.base.application.GridBagConstraints.CENTER, com.ulcjava.base.application.GridBagConstraints.NONE, new com.ulcjava.base.application.util.Insets(0,0,0,0), 0, 0));
         this.add(getTagLabel(), new com.ulcjava.base.application.GridBagConstraints(0, 1, 1, 1, -1, -1, com.ulcjava.base.application.GridBagConstraints.CENTER, com.ulcjava.base.application.GridBagConstraints.NONE, new com.ulcjava.base.application.util.Insets(0,0,0,0), 0, 0));
         this.add(getTextField(), new com.ulcjava.base.application.GridBagConstraints(1, 1, 1, 1, -1, -1, com.ulcjava.base.application.GridBagConstraints.CENTER, com.ulcjava.base.application.GridBagConstraints.NONE, new com.ulcjava.base.application.util.Insets(0,0,0,0), 0, 0));
@@ -57,7 +59,7 @@ private RButton cancelButton = null;
 private RLabel getLabel() {
 	if (Label == null) {
 		Label = new RLabel();
-		Label.setStyleProperties("{/font {/name \"Tahoma\"/size \"12\"/style \"PLAIN\"}/fill \"BOTH\"}");
+		Label.setStyleProperties("{/font {/name \"Verdana\"/size \"11\"/style \"PLAIN\"}/insetsBottom \"10\"/insetsTop \"10\"/fill \"BOTH\"/insetsRight \"10\"/insetsLeft \"10\"}");
 		Label.setName("Label");
 	}
 	return Label;
@@ -72,7 +74,7 @@ private RLabel getTagLabel() {
 	if (TagLabel == null) {
 		TagLabel = new RLabel();
 		TagLabel.setText("Tag");
-		TagLabel.setStyleProperties("{/font {/name \"Tahoma\"/size \"12\"/style \"PLAIN\"}}");
+		TagLabel.setStyleProperties("{/font {/name \"Verdana\"/size \"11\"/style \"PLAIN\"}/insetsLeft \"10\"}");
 		TagLabel.setName("TagLabel");
 	}
 	return TagLabel;
@@ -87,7 +89,7 @@ private RTextField getTextField() {
 	if (TextField == null) {
 		TextField = new RTextField();
 		TextField.setText("");
-		TextField.setStyleProperties("{/insetsBottom \"5\"/insetsTop \"5\"/insetsRight \"5\"/fill \"HORIZONTAL\"/insetsLeft \"5\"/weightX \"1\"}");
+		TextField.setStyleProperties("{/font {/name \"Verdana\"/size \"11\"/style \"PLAIN\"}/insetsBottom \"5\"/insetsTop \"5\"/fill \"HORIZONTAL\"/insetsRight \"10\"/insetsLeft \"5\"/weightX \"1\"}");
 		TextField.setMandatory(true);
 		TextField.setName("TextField");
 	}
@@ -103,7 +105,8 @@ private RFlowLayoutPane getFlowLayoutPane() {
 	if (FlowLayoutPane == null) {
 		FlowLayoutPane = new RFlowLayoutPane();
 		FlowLayoutPane.setName("FlowLayoutPane");
-		FlowLayoutPane.setStyleProperties("{/fill \"HORIZONTAL\"}");
+		FlowLayoutPane.setStyleProperties("{/insetsTop \"10\"/insetsBottom \"10\"/fill \"HORIZONTAL\"/insetsRight \"10\"/insetsLeft \"10\"/alignment \"RIGHT\"}");
+		FlowLayoutPane.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.gray));
 		FlowLayoutPane.add(getOkButton());
 		FlowLayoutPane.add(getCancelButton());
 	}
@@ -120,6 +123,7 @@ private RButton getOkButton() {
 		okButton = new RButton();
 		okButton.setIconUri("<%=ivy.cms.cr(\"/ch/ivyteam/ivy/addons/icons/ok/24\")%>");
 		okButton.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/buttonLabels/ok\")%>");
+		okButton.setStyleProperties("{/font {/name \"Verdana\"/size \"11\"/style \"PLAIN\"}}");
 		okButton.setEnabler(getTextField());
 		okButton.setName("okButton");
 	}
@@ -136,6 +140,7 @@ private RButton getCancelButton() {
 		cancelButton = new RButton();
 		cancelButton.setIconUri("<%=ivy.cms.cr(\"/ch/ivyteam/ivy/addons/icons/cancel/24\")%>");
 		cancelButton.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/buttonLabels/cancel\")%>");
+		cancelButton.setStyleProperties("{/font {/name \"Verdana\"/size \"11\"/style \"PLAIN\"}}");
 		cancelButton.setName("cancelButton");
 	}
 	return cancelButton;

@@ -7,6 +7,8 @@ import ch.ivyteam.ivy.richdialog.widgets.components.RLabel;
 import ch.ivyteam.ivy.richdialog.widgets.components.RTextField;
 import ch.ivyteam.ivy.richdialog.widgets.containers.RFlowLayoutPane;
 import ch.ivyteam.ivy.richdialog.widgets.components.RButton;
+import com.ulcjava.base.application.BorderFactory;
+import com.ulcjava.base.application.util.Color;
 
 /**
  * <p>FileTypeWriterPanel is a rich dialog panel implementation.
@@ -61,7 +63,7 @@ private RButton cancelButton = null;
 private RLabel getIdLabel() {
 	if (idLabel == null) {
 		idLabel = new RLabel();
-		idLabel.setStyleProperties("{/font {/name \"Tahoma\"/size \"12\"/style \"PLAIN\"}/fill \"HORIZONTAL\"}");
+		idLabel.setStyleProperties("{/font {/name \"Verdana\"/size \"11\"/style \"PLAIN\"}/insetsBottom \"10\"/insetsTop \"10\"/insetsRight \"10\"/fill \"HORIZONTAL\"/insetsLeft \"10\"}");
 		idLabel.setName("idLabel");
 	}
 	return idLabel;
@@ -76,7 +78,7 @@ private RLabel getNameLabel() {
 	if (nameLabel == null) {
 		nameLabel = new RLabel();
 		nameLabel.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/name\")%>");
-		nameLabel.setStyleProperties("{/font {/name \"Tahoma\"/size \"12\"/style \"PLAIN\"}/fill \"HORIZONTAL\"}");
+		nameLabel.setStyleProperties("{/font {/name \"Verdana\"/size \"11\"/style \"PLAIN\"}/fill \"HORIZONTAL\"/insetsLeft \"10\"}");
 		nameLabel.setName("nameLabel");
 	}
 	return nameLabel;
@@ -91,7 +93,7 @@ private RLabel getApplicationNameLabel() {
 	if (applicationNameLabel == null) {
 		applicationNameLabel = new RLabel();
 		applicationNameLabel.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/applicationName\")%>");
-		applicationNameLabel.setStyleProperties("{/font {/name \"Tahoma\"/size \"12\"/style \"PLAIN\"}/fill \"HORIZONTAL\"}");
+		applicationNameLabel.setStyleProperties("{/font {/name \"Verdana\"/size \"11\"/style \"PLAIN\"}/fill \"HORIZONTAL\"/insetsLeft \"10\"}");
 		applicationNameLabel.setName("applicationNameLabel");
 	}
 	return applicationNameLabel;
@@ -106,7 +108,7 @@ private RTextField getNameTextField() {
 	if (nameTextField == null) {
 		nameTextField = new RTextField();
 		nameTextField.setText("");
-		nameTextField.setStyleProperties("{/insetsBottom \"5\"/insetsTop \"5\"/insetsRight \"5\"/fill \"HORIZONTAL\"/insetsLeft \"5\"/weightX \"1\"}");
+		nameTextField.setStyleProperties("{/font {/name \"Verdana\"/size \"11\"/style \"PLAIN\"}/insetsBottom \"5\"/insetsTop \"5\"/fill \"BOTH\"/insetsRight \"10\"/insetsLeft \"5\"/weightX \"1\"}");
 		nameTextField.setMandatory(true);
 		nameTextField.setName("nameTextField");
 	}
@@ -122,7 +124,7 @@ private RTextField getAppNameTextField() {
 	if (appNameTextField == null) {
 		appNameTextField = new RTextField();
 		appNameTextField.setText("");
-		appNameTextField.setStyleProperties("{/insetsTop \"5\"/insetsBottom \"5\"/fill \"HORIZONTAL\"/insetsRight \"5\"/insetsLeft \"5\"}");
+		appNameTextField.setStyleProperties("{/font {/name \"Verdana\"/size \"11\"/style \"PLAIN\"}/insetsBottom \"5\"/insetsTop \"5\"/fill \"BOTH\"/insetsRight \"10\"/insetsLeft \"5\"}");
 		appNameTextField.setName("appNameTextField");
 	}
 	return appNameTextField;
@@ -137,7 +139,8 @@ private RFlowLayoutPane getFlowLayoutPane() {
 	if (FlowLayoutPane == null) {
 		FlowLayoutPane = new RFlowLayoutPane();
 		FlowLayoutPane.setName("FlowLayoutPane");
-		FlowLayoutPane.setStyleProperties("{/fill \"BOTH\"/weightY \"1\"/weightX \"1\"}");
+		FlowLayoutPane.setStyleProperties("{/insetsBottom \"10\"/insetsTop \"10\"/fill \"BOTH\"/insetsRight \"10\"/insetsLeft \"10\"/alignment \"RIGHT\"/weightX \"1\"}");
+		FlowLayoutPane.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.gray));
 		FlowLayoutPane.add(getOkButton());
 		FlowLayoutPane.add(getCancelButton());
 	}
@@ -154,6 +157,7 @@ private RButton getOkButton() {
 		okButton = new RButton();
 		okButton.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/buttonLabels/ok\")%>");
 		okButton.setIconUri("<%=ivy.cms.cr(\"/ch/ivyteam/ivy/addons/icons/ok/24\")%>");
+		okButton.setStyleProperties("{/font {/name \"Verdana\"/size \"11\"/style \"PLAIN\"}}");
 		okButton.setEnabler(getNameTextField());
 		okButton.setName("okButton");
 	}
@@ -170,6 +174,7 @@ private RButton getCancelButton() {
 		cancelButton = new RButton();
 		cancelButton.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/buttonLabels/cancel\")%>");
 		cancelButton.setIconUri("<%=ivy.cms.cr(\"/ch/ivyteam/ivy/addons/icons/cancel/24\")%>");
+		cancelButton.setStyleProperties("{/font {/name \"Verdana\"/size \"11\"/style \"PLAIN\"}}");
 		cancelButton.setName("cancelButton");
 	}
 	return cancelButton;

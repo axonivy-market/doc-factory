@@ -128,6 +128,7 @@ private AbstractAction closeAction = null;  //  @jve:decl-index=0:
 private AbstractAction copyFilesAction;  //  @jve:decl-index=0:
 private AbstractAction pasteFilesAction;  //  @jve:decl-index=0:
 private AbstractAction renameFileAction;  //  @jve:decl-index=0:
+private AbstractAction refreshFileAction;  //  @jve:decl-index=0:
 private RBoxPane serverDirectoriesToolBar2BoxPane = null;
 private RHyperlink makeNewDirAtRoot2Button = null;
 private RHyperlink deleteDir2Button = null;
@@ -152,6 +153,8 @@ private RMenuItem fileTypeChooserMenuItem = null;
 private RMenuItem fileTypeManagerMenuItem = null;
 private RMenuItem tagsMenuItem = null;
 private RMenuItem showHistoryMenuItem = null;
+private RMenuItem renameDirMenuItem = null;
+private RMenuItem readFileMenuItem = null;
 /**
    * Create a new instance of FileManagerPanePanel
    */
@@ -210,7 +213,6 @@ private RTable getFilesTable() {
 	if (filesTable == null) {
 		filesTable = new RTable();
 		filesTable.setName("filesTable");
-		filesTable.setStyleProperties("{/fill \"BOTH\"/weightY \"1\"/weightX \"1\"}");
 		filesTable.setSortable(true);
 		filesTable.setModelConfiguration("{/showTableheader true /autoTableheader false /showtooltip true /showIcons true /emptyTableText \"Keine Datei / Aucun Fichier / No File\"/version \"3.0\"/columns {{/result \"result=IF(entry.locked.trim().equals(\\\"1\\\"),entry.lockingUserID,\\\"\\\")\"/version \"3.0\"/tooltip \"result=IF(!entry.locked.trim().equals(\\\"1\\\"),ivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/fileUnlocked\\\"),\\r\\nivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/thisFile\\\")+\\\" \\\"+entry.filename+\\\" \\\" + \\r\\nivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/isEditedBy\\\")+\\\" \\\"+entry.lockingUserID)\"/icon \"result=IF(!entry.locked.trim().equals(\\\"1\\\"),ivy.cms.cr(\\\"/ch/ivyteam/ivy/addons/icons/file/16\\\"),\\r\\nivy.cms.cr(\\\"/ch/ivyteam/ivy/addons/icons/lock/16\\\"))\"/header \"\\\"\\\"\"/field \"\"/editable \"\"/condition \"\"/columnWidth \"18\"/columnStyle \"\"/cellWidget \"\"}{/result \"result=entry.filename\"/version \"3.0\"/tooltip \"result=\\\"<html><b>\\\"+\\r\\nivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/fileDetails\\\")+\\\"</b><br>\\\"+\\r\\nivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/createdBy\\\")+\\\" \\\"+entry.userID+\\\" \\\"+\\r\\nivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/onDate\\\")+\\\" \\\"+entry.creationDate.toIvyDate().format(\\\"dd-MM-yyyy\\\")+\\\", \\\"+entry.creationTime+\\\"<br>\\\"+\\r\\nivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/lastModifiedBy\\\")+\\\" \\\"+entry.modificationUserID+\\\" \\\"+\\r\\nivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/onDate\\\")+\\\" \\\"+entry.modificationDate.toIvyDate().format(\\\"dd-MM-yyyy\\\")+\\\", \\\"+entry.modificationTime+\\\"<br>\\\"+\\r\\nIF(entry.#fileType!=null && entry.fileType.id > 0, \\r\\n\\tivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/filetype\\\")+\\\": \\\" +entry.fileType.fileTypeName+\\\" \\\"+\\r\\n\\tIF(entry.fileType.applicationName.trim().length()>0,\\r\\n\\t\\tivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileTypes/strings/application\\\")+\\\" \\\"+entry.fileType.applicationName+\\\"<br>\\\",\\r\\n\\t\\\"<br>\\\")\\r\\n,\\\"\\\")+\\r\\nentry.description.replaceAll(\\\"\\\\n\\\", \\\"<br>\\\")+\\r\\n\\r\\n\\\"</html>\\\"\"/icon \"\"/header \"ivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/fileName\\\")\"/field \"\"/editable \"\"/columnWidth \"150\"/columnStyle \"\"}{/result \"result=IF(entry.#fileType!=null,entry.fileType.fileTypeName,\\\"\\\")\"/version \"3.0\"/tooltip \"result=\\\"<html>\\\"+\\r\\nIF(entry.#fileType==null || entry.fileType.id==0,ivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileTypes/strings/noFileTypeSet\\\"),\\r\\n\\tivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/filetype\\\")+\\\": \\\" +entry.fileType.fileTypeName+\\\" \\\"+\\r\\n\\tIF(entry.fileType.applicationName.trim().length()>0,\\r\\n\\t\\tivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileTypes/strings/application\\\")+\\\" \\\"+entry.fileType.applicationName+\\\"<br>\\\",\\r\\n\\t\\\"<br>\\\")\\r\\n)+\\r\\n\\\"</html>\\\"\"/icon \"\"/header \"ivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/filetype\\\")\"/field \"\"/editable \"\"/condition \"in.configurationController.showFileTypeInTable\"/columnStyle \"default\"/cellWidget \"\"}{/result \"result=entry.versionnumber\"/version \"3.0\"/tooltip \"\"/icon \"\"/header \"ivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileVersioning/plainStrings/versionnumber\\\")\"/field \"\"/editable \"\"/condition \"in.configurationController.activateFileVersioning\"/cellWidget \"\"}{/result \"result=entry.fileSize\"/version \"3.0\"/tooltip \"\"/icon \"\"/header \"ivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/fileSize\\\")\"/field \"\"/editable \"\"/columnWidth \"80\"/columnStyle \"\"}{/result \"result=entry.userID\"/version \"3.0\"/tooltip \"\"/icon \"\"/header \"ivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/createdBy\\\")\"/field \"\"/editable \"\"/condition \"true\"/columnWidth \"70\"}{/result \"result=\\\"<html>\\\" + \\\"<!--\\\" + new DateTime(entry.creationDate.toIvyDate(), entry.creationTime.toTime()).format(\\\"yyyyMMddHHmm\\\") + \\\"-->\\\" +\\r\\nnew DateTime(entry.creationDate.toIvyDate(), entry.creationTime.toTime()).format(\\\"dd.MM.yyyy HH:mm\\\")\"/version \"3.0\"/tooltip \"\"/icon \"\"/header \"ivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/creationDate\\\")\"/field \"\"/editable \"\"/condition \"true\"/columnWidth \"70\"/columnStyle \"alignCenter\"}}}");
 		filesTable.setRowHeight(22);
@@ -225,6 +227,7 @@ private RTable getFilesTable() {
 		filesTable.registerKeyboardAction(getCopyFilesAction(), KeyStroke.getKeyStroke(KeyEvent.VK_C,KeyEvent.CTRL_DOWN_MASK), WHEN_FOCUSED);
 		filesTable.registerKeyboardAction(getPasteFilesAction(), KeyStroke.getKeyStroke(KeyEvent.VK_V,KeyEvent.CTRL_DOWN_MASK), WHEN_FOCUSED);
 		filesTable.registerKeyboardAction(getRenameFileAction(), KeyStroke.getKeyStroke(KeyEvent.VK_F2,0), WHEN_FOCUSED);
+		filesTable.registerKeyboardAction(getRefreshFileAction(), KeyStroke.getKeyStroke(KeyEvent.VK_F5,0), WHEN_FOCUSED);
 	}
 	return filesTable;
 }
@@ -339,7 +342,7 @@ private AbstractAction getRenameFileAction(){
 	return renameFileAction;
 }
 /**
- * makes the methode call for renaming selected file
+ * makes the method call for renaming selected file
  *
  */
 private void doRenameFileAction(){
@@ -350,7 +353,38 @@ private void doRenameFileAction(){
 		
 	}
 }
-
+/**
+ * This method initializes refreshFileAction
+ * 
+ * @return com.ulcjava.base.application.AbstractAction
+ */
+private AbstractAction getRefreshFileAction(){
+	if(refreshFileAction==null){
+		refreshFileAction = new AbstractAction(){
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1739969094756189860L;
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				doRefreshFileAction();
+				
+			}
+		};
+	}
+	return refreshFileAction;
+}
+/**
+ * makes the method call for renaming selected file
+ *
+ */
+private void doRefreshFileAction(){
+	try{
+		this.getPanelAPI().callMethod("refreshActualSelectedFolder", new Object [0]);
+	}catch(Exception ex){
+		
+	}
+}
 /**
  * This method initializes copyFilessAction
  * 
@@ -436,6 +470,7 @@ private RPopupMenu getServerFilePopupMenu() {
 		ServerFilePopupMenu.setName("ServerFilePopupMenu");
 		ServerFilePopupMenu.add(getUploadMenuItem());
 		ServerFilePopupMenu.add(getDownloadMenuItem());
+		ServerFilePopupMenu.add(getReadFileMenuItem());
 		ServerFilePopupMenu.add(getEditMenuItem());
 		ServerFilePopupMenu.add(getPrintMenuItem());
 		ServerFilePopupMenu.add(getSetDescriptionMenuItem());
@@ -539,7 +574,6 @@ private RTree getOrdnersTree() {
 		ordnersTree.setModelConfiguration("{/dynamicTreeLoadMode \"LOAD_FOR_RENDER_PARENT\"/version \"3.0\"/showTableheader true /autoTableheader false /showtooltip false /showIcons true /emptyTableText \"\"/columns {{/patterns {{/result \"result=\\\"Folder\\\"\"/version \"3.0\"/icon \"result=ivy.cms.cr(\\\"/ch/ivyteam/ivy/addons/icons/folder/16\\\")\"/patternMode \"ALL\"/patternValue \"default\"}{/result \"result=entry.name\"/version \"3.0\"/tooltip \"\"/icon \"result=ivy.cms.cr(\\\"/ch/ivyteam/ivy/addons/icons/square/16\\\")\"/patternMode \"INSTANCE\"/patternValue \"ch.ivyteam.ivy.addons.filemanager.LockedFolder\"}{/result \"result=entry.name\"/version \"3.0\"/icon \"\"/patternMode \"INSTANCE\"/patternValue \"ch.ivyteam.ivy.addons.filemanager.FolderOnServer\"}}/version \"3.0\"}}}");
 		ordnersTree.setAutoSelectFirstEntry(true);
 		ordnersTree.setComponentPopupMenu(getServerDirPopupMenu());
-		ordnersTree.setStyleProperties("{/fill \"BOTH\"/weightY \"1\"/weightX \"1\"}");
 		//ordnersTree.setDragEnabled(true);
 		ordnersTree.setTransferHandler(getTransferHandler());
 		ordnersTree.registerKeyboardAction(getActionForDeleteDirectory(), KeyStroke.getKeyStroke(KeyEvent.VK_DELETE,0), WHEN_FOCUSED);
@@ -750,7 +784,7 @@ private RMenuItem getUploadMenuItem() {
 private RMenuItem getRefreshMenuItem() {
 	if (refreshMenuItem == null) {
 		refreshMenuItem = new RMenuItem();
-		refreshMenuItem.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/buttonLabels/refresh\")%>");
+		refreshMenuItem.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/buttonLabels/refreshFiles\")%>");
 		refreshMenuItem.setIconUri("<%=ivy.cms.cr(\"/ch/ivyteam/ivy/addons/icons/refresh/16\")%>");
 		refreshMenuItem.setToolTipText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tooltips/refresh\")%>");
 		refreshMenuItem.setName("refreshMenuItem");
@@ -892,6 +926,7 @@ private RPopupMenu getServerDirPopupMenu() {
 		ServerDirPopupMenu.add(getPasteMenuItem());
 		ServerDirPopupMenu.add(getDownloadDirContentMenuItem());
 		ServerDirPopupMenu.add(getToogleRecursiveMenuItem());
+		ServerDirPopupMenu.add(getRenameDirMenuItem());
 	}
 	return ServerDirPopupMenu;
 }
@@ -1020,7 +1055,7 @@ private RMenuItem getPrintMenuItem() {
 private RMenuItem getRefreshDirMenuItem() {
 	if (refreshDirMenuItem == null) {
 		refreshDirMenuItem = new RMenuItem();
-		refreshDirMenuItem.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/buttonLabels/refresh\")%>");
+		refreshDirMenuItem.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/buttonLabels/refreshDir\")%>");
 		refreshDirMenuItem.setIconUri("<%=ivy.cms.cr(\"/ch/ivyteam/ivy/addons/icons/refresh/16\")%>");
 		refreshDirMenuItem.setName("refreshDirMenuItem");
 	}
@@ -1149,7 +1184,7 @@ private RButton getRefreshSelectedFolderButton() {
 		refreshSelectedFolderButton.setBorderPainted(false);
 		refreshSelectedFolderButton.setName("refreshSelectedFolderButton");
 		refreshSelectedFolderButton.setToolTipText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tooltips/refresh\")%>");
-		refreshSelectedFolderButton.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/buttonLabels/refresh\")%>");
+		refreshSelectedFolderButton.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/buttonLabels/refreshFiles\")%>");
 		refreshSelectedFolderButton.setStyle("toolBarSmall");
 		refreshSelectedFolderButton.setPressedIconUri("<%=ivy.cms.cr(\"/ch/ivyteam/ivy/addons/icons/refresh/24\")%>");
 		refreshSelectedFolderButton.setRolloverIconUri("<%=ivy.cms.cr(\"/ch/ivyteam/ivy/addons/icons/refresh/24\")%>");
@@ -2033,6 +2068,40 @@ private RMenuItem getShowHistoryMenuItem() {
 		showHistoryMenuItem.setName("showHistoryMenuItem");
 	}
 	return showHistoryMenuItem;
+}
+
+/**
+ * This method initializes renameDirMenuItem	
+ * 	
+ * @return ch.ivyteam.ivy.richdialog.widgets.menus.RMenuItem	
+ */
+private RMenuItem getRenameDirMenuItem() {
+	if (renameDirMenuItem == null) {
+		renameDirMenuItem = new RMenuItem();
+		renameDirMenuItem.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/buttonLabels/renameDir\")%>");
+		renameDirMenuItem.setToolTipText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tooltips/renameDir\")%>");
+		renameDirMenuItem.setIconUri("<%=ivy.cms.cr(\"/ch/ivyteam/ivy/addons/icons/marker/16\")%>");
+		renameDirMenuItem.setName("renameDirMenuItem");
+	}
+	return renameDirMenuItem;
+}
+
+/**
+ * This method initializes readFileMenuItem	
+ * 	
+ * @return ch.ivyteam.ivy.richdialog.widgets.menus.RMenuItem	
+ */
+private RMenuItem getReadFileMenuItem() {
+	if (readFileMenuItem == null) {
+		readFileMenuItem = new RMenuItem();
+		readFileMenuItem.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/buttonLabels/readFile\")%>");
+		readFileMenuItem.setToolTipText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tooltips/read\")%>");
+		readFileMenuItem.setIconUri("<%=ivy.cms.cr(\"/ch/ivyteam/ivy/addons/icons/file/16\")%>");
+		readFileMenuItem.setMnemonic(KeyEvent.VK_UNDEFINED);
+		readFileMenuItem.setEnabler(getFileNameInvisibleTextField());
+		readFileMenuItem.setName("readFileMenuItem");
+	}
+	return readFileMenuItem;
 }
 
 
