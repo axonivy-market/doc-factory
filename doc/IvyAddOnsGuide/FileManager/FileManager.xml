@@ -149,6 +149,16 @@
                 versioning</link></entry>
               </row>
               <row>
+                <entry>activateFileVersioningExtended</entry>
+                <entry>Boolean, it is used to activate some extended functionalities in the file
+                  version feature. If true the activateFileVersioning will be also activated. Flag
+                  storeFilesInDB must be true to be able to activate this feature. </entry>
+                <entry>false</entry>
+                <entry><link linkend="ivy.addons.filemanager.versioning">File versioning</link> and
+                  especially: <link linkend="ivy.addons.filemanager.versioningExt">File versioning
+                    extended</link></entry>
+              </row>
+              <row>
                 <entry>activateSecurity</entry>
                 <entry>Boolean, if true the security management on the directories will be
                   activated. Flag storeFilesInDB must be true.</entry>
@@ -678,7 +688,27 @@
         
         The old files versions can be opened but you cannot edit their content in the file manager. 
         <inlinemediaobject><imageobject><imagedata fileref="images/FileManager/fileversioning3.png"/></imageobject></inlinemediaobject>
-      </literallayout></para>
+        </literallayout></para>
+      <sect3 xml:id="ivy.addons.filemanager.versioningExt">
+        <title>File versioning extended feature</title>
+        <para>This feature extends the file versioning and adds some default behaviors. To be able
+          to activate this feature use <link
+            linkend="ivy.addons.filemanager.thefilemanagerRDC.configurationController">the
+            ConfigurationController start method</link>, and set the activateFileVersioningExtended
+          flag to true.</para>
+        <para>The user cannot create any file version manually with the "new version" context menu.
+          This menu is not shown anymore.</para>
+        <para>The exact use case is:</para>
+        <para>1. The user opens a file in edit mode,</para>
+        <para>2. The user modifies the file and save it. A new version will be automatically
+          created. The previous version is the file as it was found by the user before editing it.</para>
+        <para>3. If the user goes on editing and saves the file several times without releasing the
+          lock, no new version will be created.</para>
+        <para>4. The user releases the lock on the file, opens it in edit modus again and changes
+          it: a new version will be again created.</para>
+        <para>The duration in which a user gets a file lock can be seen as "edit session". All the
+          saved changes within the same edit session will be saved in the same new version.</para>
+      </sect3>
     </sect2>
     <sect2 xml:id="ivy.addons.filemanager.types">
       <title>File Types feature</title>
