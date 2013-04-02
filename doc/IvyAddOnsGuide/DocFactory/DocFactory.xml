@@ -214,6 +214,23 @@
         section.</link>
     </para>
   </sect1>
+  <sect1 xml:id="ivy.addons.docfactory.complexMergeFields">
+    <title>Complex Mergefields (Field Update)</title>
+    <para>
+      <literallayout>
+Aspose and its implementation in the docFactory allows using complex fields types like IF, NEXTIF, ADDRESSBLOCK etc...
+The list of the fields type that are supported and the way they can be handled is explained here: http://www.aspose.com/docs/display/wordsjava/About+Field+Update
+The DocFactory Demo uses an IF Mergefield to write a salutation depending on the gender of the person.
+Such a Field can be inserted and viewed by using the Alt+F9 shortcut in the template. Please refer to your Office documentation to learn how to set these kinds of fields:
+    </literallayout>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="images/DocFactory/IFMergerField.png"/>
+        </imageobject>
+      </mediaobject>
+      <literallayout>To see such a conditional Field in action, please refer to the Demo with a dataclass</literallayout>
+    </para>
+  </sect1>
   <sect1 xml:id="ivy.addons.docfactory.callables">
     <title>Callable Processes for generating Serial Letters and documents</title>
     <para>Two Callable Processes are available from the AddOns project and at your disposal, to
@@ -560,7 +577,7 @@ All the children nodes at each level of the Tree contain dataclasses as value th
     <title>Demos</title>
     <para>Two demos are available in the <emphasis>IvyDemos</emphasis> project that demonstrate the
       usage of the DocFactory: one for the mail merging and mail merge with regions, and one for the
-      nested mail mail with regions (Reporting).</para>
+      nested mail merge with regions (Reporting).</para>
     <sect2 xml:id="ivy.addons.docfactory.demos1">
       <title> Mail merging and mail merge with regions</title>
       <para>For that purpose, three default templates have been included into the CMS of the ivy
@@ -601,8 +618,17 @@ All the children nodes at each level of the Tree contain dataclasses as value th
         </imageobject>
       </mediaobject>
       <para>A new button is also available to illustrate the use of a Dataclass as input parameter.
-        A Panel is used to fill the Person Dataclass. This Dataclass contains three attributes
-        (name, firstname, address) that are going to be used to fill the template. </para>
+        A Panel is used to fill the Person Dataclass. This Dataclass contains 4 attributes (gender,
+        name, firstname, address) that are going to be used to fill the template. The gender
+        attribute is used in an IF Field to output the salutation, the other will fill "classical"
+        mergefields.</para>
+      <para>In this demo the following template is used (viewed with the detailed template veiw
+        accessible with Alt+F9 shortcut):</para>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="images/DocFactory/newDemo4.png"/>
+        </imageobject>
+      </mediaobject>
       <mediaobject>
         <imageobject>
           <imagedata fileref="images/DocFactory/newDemo1.png"/>
