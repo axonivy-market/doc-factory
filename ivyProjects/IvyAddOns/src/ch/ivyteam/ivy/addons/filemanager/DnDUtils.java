@@ -26,12 +26,13 @@ import com.ulcjava.base.application.tree.TreePath;
  *@since 01.01.2010
  *Used by the FileManager for DnD
  */
+@SuppressWarnings("unchecked")
 public class DnDUtils {
 	
 	public static class DnDTransferData
 	{
 		public IDnDData data = null;
-		public List<?> values = null;
+		public List values = null;
 	}
 	
 	/**
@@ -41,7 +42,7 @@ public class DnDUtils {
 	 */
 	public static Object getDraggedValue(final Transferable transferData)
 	{
-		List<?> values = getDraggedValues(transferData);
+		List values = getDraggedValues(transferData);
 		if(values.size() > 0)
 		{
 			return values.get(0);
@@ -57,7 +58,7 @@ public class DnDUtils {
 	 * @param transferData
 	 * @return List of selected values
 	 */
-	public static List<?> getDraggedValues(final Transferable transferData)
+	public static List getDraggedValues(final Transferable transferData)
 	{
 		return getDraggedTransferData(transferData).values;
 	}
@@ -123,7 +124,7 @@ public class DnDUtils {
 		}
 		else
 		{
-			LinkedList<String> values = new LinkedList<String>();
+			LinkedList values = new LinkedList();
 			values.add( ((DnDData) data).getTextualRepresentation() );
 			result.values = values;
 			result.data = (DnDData) data;
@@ -131,11 +132,11 @@ public class DnDUtils {
 		return result;
 	}
 	
-	private static List<Object> getTableTreeValues(final DnDTableTreeData data)
+	private static List getTableTreeValues(final DnDTableTreeData data)
 	{
 		RTableTree tree = (RTableTree) data.getTableTree();
 		TreePath paths[] = data.getTreePaths();
-		List<Object> values = new LinkedList<Object>();
+		List values = new LinkedList();
 		for(TreePath path : paths)
 		{
 			values.add(tree.getTreeNodeForPath(path).getValue());
@@ -143,10 +144,10 @@ public class DnDUtils {
 		return values;
 	}
 
-	private static List<?> getTableValues(final DnDTableData data)
+	private static List getTableValues(final DnDTableData data)
 	{		
 		RTable table = (RTable) data.getTable();
-		List<?> values = null;
+		List values = null;
 		if((values = table.getSelectedListEntries()).size() == 0)
 		{
 			values = table.getSelectedRecords();
@@ -155,24 +156,24 @@ public class DnDUtils {
 		
 	}
 
-	private static List<String> getLabelValue(final DnDLabelData data)
+	private static List getLabelValue(final DnDLabelData data)
 	{
-		List<String> values = new LinkedList<String>();
+		List values = new LinkedList();
 		values.add(data.getText());
 		return values;
 	}
 
-	private static List<String> getTextValue(final DnDTextData data)
+	private static List getTextValue(final DnDTextData data)
 	{
-		List<String> values = new LinkedList<String>();
+		List values = new LinkedList();
 		values.add(data.getText());
 		return values;
 	}
 
-	private static List<?> getListValues(final DnDListData data)
+	private static List getListValues(final DnDListData data)
 	{
 		RList list = (RList) data.getList();
-		List<?> values = new LinkedList<Object>();
+		List values = new LinkedList();
 		if((values = list.getSelectedListEntries()).size() == 0)
 		{
 			values = list.getSelectedRecords();
@@ -180,10 +181,10 @@ public class DnDUtils {
 		return values;
 	}
 
-	private static List<Object> getTreeValues(final DnDTreeData data)
+	private static List getTreeValues(final DnDTreeData data)
 	{
 		TreePath[] paths = data.getTreePaths();
-		List<Object> values = new LinkedList<Object>();
+		List values = new LinkedList();
 		RTree tree = (RTree) data.getTree();
 		for(TreePath path : paths)
 		{
@@ -192,8 +193,8 @@ public class DnDUtils {
 		return values;
 	}
 	
-	private static List<String> getListFilesValues(final DnDFileListData data){
-		LinkedList<String> values = new LinkedList<String>();
+	private static List getListFilesValues(final DnDFileListData data){
+		LinkedList values = new LinkedList();
 		String[] l = data.getFileNames();
 		for(int i =0; i<l.length; i++){
 			values.add(l[i].replace("\\", "/"));

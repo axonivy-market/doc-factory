@@ -49,7 +49,6 @@ import com.aspose.words.SectionStart;
  * @see ch.ivyteam.ivy.addons.docfactory.BaseDocFactory#successMethodName
  * 
  */
-@SuppressWarnings("restriction")
 public class AsposeDocFactory extends BaseDocFactory{
 
 	/** The supportedFormat in this implementation of the BaseDocFactory */

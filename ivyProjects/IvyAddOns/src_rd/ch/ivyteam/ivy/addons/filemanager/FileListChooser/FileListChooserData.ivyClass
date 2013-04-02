@@ -15,3 +15,4 @@ filteredDcoumentsList PERSISTENT #fieldModifier
 configurationController ch.ivyteam.ivy.addons.filemanager.configuration.BasicConfigurationController #field
 configurationController PERSISTENT #fieldModifier
 filemanagementHandler ch.ivyteam.ivy.addons.filemanager.database.AbstractFileManagementHandler #field
+errorUtil ch.ivyteam.ivy.addons.filemanager.ErrorUtil #field

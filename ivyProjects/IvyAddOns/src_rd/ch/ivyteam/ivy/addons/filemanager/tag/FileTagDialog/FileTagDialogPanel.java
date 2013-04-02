@@ -9,6 +9,8 @@ import ch.ivyteam.ivy.richdialog.widgets.containers.RFlowLayoutPane;
 import ch.ivyteam.ivy.richdialog.widgets.components.RButton;
 import com.ulcjava.base.application.ULCTable;
 import com.ulcjava.base.application.ULCListSelectionModel;
+import com.ulcjava.base.application.BorderFactory;
+import com.ulcjava.base.application.util.Color;
 
 /**
  * <p>FileTagDialogPanel is a rich dialog panel implementation.
@@ -63,7 +65,7 @@ private RLabel getTitelLabel() {
 	if (titelLabel == null) {
 		titelLabel = new RLabel();
 		titelLabel.setText("titelLabel");
-		titelLabel.setStyleProperties("{/font {/name \"Tahoma\"/size \"12\"/style \"PLAIN\"}/fill \"BOTH\"}");
+		titelLabel.setStyleProperties("{/font {/name \"Verdana\"/size \"11\"/style \"PLAIN\"}/insetsBottom \"10\"/insetsTop \"10\"/insetsRight \"10\"/fill \"BOTH\"/insetsLeft \"10\"}");
 		titelLabel.setName("titelLabel");
 	}
 	return titelLabel;
@@ -78,7 +80,7 @@ private RScrollPane getScrollPane() {
 	if (ScrollPane == null) {
 		ScrollPane = new RScrollPane();
 		ScrollPane.setName("ScrollPane");
-		ScrollPane.setStyleProperties("{/fill \"BOTH\"/weightY \"1\"/weightX \"1\"}");
+		ScrollPane.setStyleProperties("{/insetsRight \"10\"/fill \"BOTH\"/insetsLeft \"10\"/weightY \"1\"/weightX \"1\"}");
 		ScrollPane.setViewPortView(getTagsTable());
 	}
 	return ScrollPane;
@@ -113,7 +115,8 @@ private RFlowLayoutPane getFlowLayoutPane() {
 	if (FlowLayoutPane == null) {
 		FlowLayoutPane = new RFlowLayoutPane();
 		FlowLayoutPane.setName("FlowLayoutPane");
-		FlowLayoutPane.setStyleProperties("{/fill \"HORIZONTAL\"/weightX \"1\"}");
+		FlowLayoutPane.setStyleProperties("{/insetsBottom \"10\"/insetsTop \"10\"/insetsRight \"10\"/fill \"HORIZONTAL\"/insetsLeft \"10\"/alignment \"RIGHT\"/weightX \"1\"}");
+		FlowLayoutPane.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.gray));
 		FlowLayoutPane.add(getNewButton());
 		FlowLayoutPane.add(getEditButton());
 		FlowLayoutPane.add(getDeleteButton());
@@ -133,6 +136,7 @@ private RButton getEditButton() {
 		editButton = new RButton();
 		editButton.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/buttonLabels/edit\")%>");
 		editButton.setIconUri("<%=ivy.cms.cr(\"/ch/ivyteam/ivy/addons/icons/write/24\")%>");
+		editButton.setStyleProperties("{/font {/name \"Verdana\"/size \"11\"/style \"PLAIN\"}}");
 		editButton.setName("editButton");
 	}
 	return editButton;
@@ -148,6 +152,7 @@ private RButton getDeleteButton() {
 		deleteButton = new RButton();
 		deleteButton.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/buttonLabels/delete\")%>");
 		deleteButton.setIconUri("<%=ivy.cms.cr(\"/ch/ivyteam/ivy/addons/icons/delete/24\")%>");
+		deleteButton.setStyleProperties("{/font {/name \"Verdana\"/size \"11\"/style \"PLAIN\"}}");
 		deleteButton.setName("deleteButton");
 	}
 	return deleteButton;
@@ -163,6 +168,7 @@ private RButton getCloseButton() {
 		closeButton = new RButton();
 		closeButton.setIconUri("<%=ivy.cms.cr(\"/ch/ivyteam/ivy/addons/icons/close/24\")%>");
 		closeButton.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/buttonLabels/close\")%>");
+		closeButton.setStyleProperties("{/font {/name \"Verdana\"/size \"11\"/style \"PLAIN\"}}");
 		closeButton.setName("closeButton");
 	}
 	return closeButton;
@@ -178,6 +184,7 @@ private RButton getRefreshButton() {
 		refreshButton = new RButton();
 		refreshButton.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/buttonLabels/refresh\")%>");
 		refreshButton.setIconUri("<%=ivy.cms.cr(\"/ch/ivyteam/ivy/addons/icons/refresh/24\")%>");
+		refreshButton.setStyleProperties("{/font {/name \"Verdana\"/size \"11\"/style \"PLAIN\"}}");
 		refreshButton.setName("refreshButton");
 	}
 	return refreshButton;
@@ -193,6 +200,7 @@ private RButton getNewButton() {
 		newButton = new RButton();
 		newButton.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/buttonLabels/new\")%>");
 		newButton.setIconUri("<%=ivy.cms.cr(\"/ch/ivyteam/ivy/addons/icons/add/24\")%>");
+		newButton.setStyleProperties("{/font {/name \"Verdana\"/size \"11\"/style \"PLAIN\"}}");
 		newButton.setName("newButton");
 	}
 	return newButton;

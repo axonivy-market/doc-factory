@@ -10,6 +10,8 @@ import ch.ivyteam.ivy.richdialog.widgets.containers.RScrollPane;
 import ch.ivyteam.ivy.richdialog.widgets.components.RTextArea;
 import ch.ivyteam.ivy.richdialog.widgets.containers.RFlowLayoutPane;
 import ch.ivyteam.ivy.richdialog.widgets.components.RButton;
+import com.ulcjava.base.application.BorderFactory;
+import com.ulcjava.base.application.util.Color;
 
 /**
  * <p>FileDescriptionInputPanel is a rich dialog panel implementation.
@@ -78,7 +80,7 @@ private RScrollPane getScrollPane() {
 	if (ScrollPane == null) {
 		ScrollPane = new RScrollPane();
 		ScrollPane.setName("ScrollPane");
-		ScrollPane.setStyleProperties("{/fill \"BOTH\"/weightY \"1\"/weightX \"1\"}");
+		ScrollPane.setStyleProperties("{/insetsRight \"10\"/fill \"BOTH\"/insetsLeft \"10\"/weightY \"1\"/weightX \"1\"}");
 		ScrollPane.setViewPortView(getTextArea());
 	}
 	return ScrollPane;
@@ -95,6 +97,7 @@ private RTextArea getTextArea() {
 		TextArea.setText("");
 		TextArea.setLineWrap(true);
 		TextArea.setWrapStyleWord(true);
+		TextArea.setStyleProperties("{/font {/name \"Verdana\"/size \"11\"/style \"PLAIN\"}}");
 		TextArea.setEventDeliveryMode(UlcEventCategories.VALUE_CHANGED_EVENT_CATEGORY, UlcEventConstants. ASYNCHRONOUS_MODE);
 		TextArea.setEventDeliveryMode(UlcEventCategories.KEY_EVENT_CATEGORY, UlcEventConstants. ASYNCHRONOUS_MODE);
 		TextArea.setName("TextArea");
@@ -111,7 +114,7 @@ private RLabel getValidationLabel() {
 	if (validationLabel == null) {
 		validationLabel = new RLabel();
 		validationLabel.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/messages/information/enteredTextToolong\")%>");
-		validationLabel.setStyleProperties("{/foregroundColor {/b \"0\"/r \"255\"/g \"153\"}/font {/name \"Dialog\"/size \"12\"/style \"BOLD\"}/fill \"HORIZONTAL\"}");
+		validationLabel.setStyleProperties("{/foregroundColor {/b \"0\"/r \"255\"/g \"153\"}/font {/name \"Verdana\"/size \"11\"/style \"PLAIN\"}/insetsRight \"10\"/fill \"HORIZONTAL\"/insetsLeft \"10\"}");
 		validationLabel.setName("validationLabel");
 	}
 	return validationLabel;
@@ -126,7 +129,8 @@ private RFlowLayoutPane getFlowLayoutPane() {
 	if (FlowLayoutPane == null) {
 		FlowLayoutPane = new RFlowLayoutPane();
 		FlowLayoutPane.setName("FlowLayoutPane");
-		FlowLayoutPane.setStyleProperties("{/fill \"BOTH\"}");
+		FlowLayoutPane.setStyleProperties("{/insetsTop \"10\"/fill \"BOTH\"/insetsRight \"10\"/insetsLeft \"10\"/alignment \"RIGHT\"}");
+		FlowLayoutPane.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.gray));
 		FlowLayoutPane.add(getOkButton());
 		FlowLayoutPane.add(getCancelButton());
 	}
@@ -141,8 +145,8 @@ private RFlowLayoutPane getFlowLayoutPane() {
 private RButton getOkButton() {
 	if (okButton == null) {
 		okButton = new RButton();
-		okButton.setIconUri("<%=ivy.cms.cr(\"/ch/ivyteam/ivy/addons/icons/ok/24\")%>");
 		okButton.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/buttonLabels/ok\")%>");
+		okButton.setStyleProperties("{/font {/name \"Verdana\"/size \"11\"/style \"PLAIN\"}}");
 		okButton.setName("okButton");
 	}
 	return okButton;
@@ -157,7 +161,7 @@ private RButton getCancelButton() {
 	if (cancelButton == null) {
 		cancelButton = new RButton();
 		cancelButton.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/buttonLabels/cancel\")%>");
-		cancelButton.setIconUri("<%=ivy.cms.cr(\"/ch/ivyteam/ivy/addons/icons/cancel/24\")%>");
+		cancelButton.setStyleProperties("{/font {/name \"Verdana\"/size \"11\"/style \"PLAIN\"}}");
 		cancelButton.setName("cancelButton");
 	}
 	return cancelButton;

@@ -70,6 +70,27 @@ This object just contains the following informations: filename, path and size. T
             <nullPermitted>false</nullPermitted>
         </outputParameter>
     </method>
+    <method>
+        <name>getDocumentsList</name>
+        <description>Returns the list of the documents found in the file chooser path.&#xD;
+All the documents are in this list, even if some are not visible because they were filtered out.</description>
+        <outputParameter>
+            <name>documentsList</name>
+            <description></description>
+            <parameterType>List&lt;ch.ivyteam.ivy.addons.filemanager.DocumentOnServer&gt;</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </outputParameter>
+    </method>
+    <method>
+        <name>getDocumentsFilteredList</name>
+        <description></description>
+        <outputParameter>
+            <name>documentsFilteredList</name>
+            <description></description>
+            <parameterType>List&lt;ch.ivyteam.ivy.addons.filemanager.DocumentOnServer&gt;</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </outputParameter>
+    </method>
     <startMethod>
         <name>start</name>
         <description>Default Rich Dialog start
@@ -127,6 +148,16 @@ This object just contains the following informations: filename, path and size. T
             <name>selectedDocumentOnServer</name>
             <description></description>
             <parameterType>ch.ivyteam.ivy.addons.filemanager.DocumentOnServer</parameterType>
+            <nullPermitted>true</nullPermitted>
+        </attachment>
+    </firedEvent>
+    <firedEvent>
+        <name>errorOccurred</name>
+        <description></description>
+        <attachment>
+            <name>errorUtil</name>
+            <description></description>
+            <parameterType>ch.ivyteam.ivy.addons.filemanager.ErrorUtil</parameterType>
             <nullPermitted>true</nullPermitted>
         </attachment>
     </firedEvent>

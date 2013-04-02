@@ -1,5 +1,5 @@
 [Ivy]
-[>Created: Fri Jan 25 09:04:33 EST 2013]
+[>Created: Sat Mar 23 17:57:15 EDT 2013]
 125FE384C5BE80F0 3.17 #module
 >Proto >Proto Collection #zClass
 Fs0 FileChooserDialogProcess Big #zClass
@@ -58,24 +58,10 @@ Fs0 @PushWFArc f40 '' #zField
 Fs0 @RichDialogInitStart f35 '' #zField
 Fs0 @PushWFArc f42 '' #zField
 Fs0 @RichDialogMethodStart f43 '' #zField
-Fs0 @RichDialog f44 '' #zField
 Fs0 @RichDialogProcessEnd f46 '' #zField
-Fs0 @PushWFArc f47 '' #zField
 Fs0 @RichDialogProcessStep f48 '' #zField
 Fs0 @PushWFArc f49 '' #zField
-Fs0 @PushWFArc f45 '' #zField
 Fs0 @RichDialogMethodStart f50 '' #zField
-Fs0 @RichDialogProcessStep f51 '' #zField
-Fs0 @PushWFArc f52 '' #zField
-Fs0 @RichDialog f53 '' #zField
-Fs0 @PushWFArc f54 '' #zField
-Fs0 @Alternative f55 '' #zField
-Fs0 @PushWFArc f56 '' #zField
-Fs0 @RichDialogProcessStep f57 '' #zField
-Fs0 @PushWFArc f58 '' #zField
-Fs0 @RichDialogProcessEnd f59 '' #zField
-Fs0 @PushWFArc f60 '' #zField
-Fs0 @PushWFArc f61 '' #zField
 Fs0 @RichDialogProcessStart f62 '' #zField
 Fs0 @RichDialogProcessStep f63 '' #zField
 Fs0 @PushWFArc f64 '' #zField
@@ -92,6 +78,35 @@ Fs0 @PushWFArc f41 '' #zField
 Fs0 @RichDialogProcessStep f75 '' #zField
 Fs0 @PushWFArc f76 '' #zField
 Fs0 @PushWFArc f77 '' #zField
+Fs0 @RichDialog f91 '' #zField
+Fs0 @PushWFArc f92 '' #zField
+Fs0 @PushWFArc f44 '' #zField
+Fs0 @RichDialogProcessStep f237 '' #zField
+Fs0 @PushWFArc f45 '' #zField
+Fs0 @RichDialog f204 '' #zField
+Fs0 @RichDialogProcessStep f158 '' #zField
+Fs0 @Alternative f239 '' #zField
+Fs0 @RichDialogProcessStep f241 '' #zField
+Fs0 @RichDialog f47 '' #zField
+Fs0 @PushWFArc f159 '' #zField
+Fs0 @PushWFArc f242 '' #zField
+Fs0 @PushWFArc f206 '' #zField
+Fs0 @PushWFArc f52 '' #zField
+Fs0 @PushWFArc f53 '' #zField
+Fs0 @RichDialogProcessStep f56 '' #zField
+Fs0 @RichDialogProcessStep f68 '' #zField
+Fs0 @PushWFArc f80 '' #zField
+Fs0 @PushWFArc f81 '' #zField
+Fs0 @PushWFArc f82 '' #zField
+Fs0 @RichDialogProcessStep f83 '' #zField
+Fs0 @PushWFArc f84 '' #zField
+Fs0 @RichDialogProcessEnd f85 '' #zField
+Fs0 @PushWFArc f86 '' #zField
+Fs0 @RichDialogProcessStart f51 '' #zField
+Fs0 @RichDialog f54 '' #zField
+Fs0 @PushWFArc f55 '' #zField
+Fs0 @RichDialogProcessEnd f57 '' #zField
+Fs0 @PushWFArc f58 '' #zField
 >Proto Fs0 Fs0 FileChooserDialogProcess #zField
 Fs0 f0 guid 1223BBAF0B7B8784 #txt
 Fs0 f0 type ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.SimpleFileChooserDialogData #txt
@@ -389,14 +404,11 @@ import ch.ivyteam.ivy.addons.filemanager.database.fileaction.FileActionHistoryCo
 panel.chooseButton.setEnabled(false);
 panel.previewButton.setEnabled(false);
 
-//out.uploader=new FileUploadHandler(panel,"_uploadError","_uploadDone","_askForOverwriteFiles","",in.path);
-
 //set the file
 out.fileChoosed=new java.io.File("");
 in.filemanagementHandler= AbstractFileManagementHandler.getInstance(in.configurationController);
 if(in.configurationController.storeFilesInDB)
 {
-	
 	if(in.configurationController.fileActionHistoryConfiguration.activateFileActionHistory)
 	{
 		in.fileManagementHandler.setFileActionHistoryController(new FileActionHistoryController(in.configurationController.fileActionHistoryConfiguration));
@@ -418,6 +430,10 @@ if(in.configurationController.storeFilesInDB)
 	in.uploader = new FileUploadHandler(panel,"_uploadError","_uploadDone","_askForOverwriteFiles","",in.configurationController.rootPath);
 	in.uploader.setFileHandlerMgt(in.fileManagementHandler);
 	in.uploader.setAreFilesStoredInDB(false);
+}
+
+if(in.configurationController.maxFileUploadSize>0){
+	in.uploader.setMaxSize(in.configurationController.maxFileUploadSize);
 }' #txt
 Fs0 f8 type ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.SimpleFileChooserDialogData #txt
 Fs0 f8 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -581,34 +597,9 @@ Fs0 f43 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 ' #txt
 Fs0 f43 758 38 20 20 -45 -33 #rect
 Fs0 f43 @|RichDialogMethodStartIcon #fIcon
-Fs0 f44 targetWindow NEW:card: #txt
-Fs0 f44 targetDisplay TOP #txt
-Fs0 f44 richDialogId ch.ivyteam.ivy.addons.commondialogs.MessageDialog #txt
-Fs0 f44 startMethod showMessageWithTitle(String,String) #txt
-Fs0 f44 type ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.SimpleFileChooserDialogData #txt
-Fs0 f44 requestActionDecl '<String aMessageTitle, String aMessageText> param;' #txt
-Fs0 f44 requestMappingAction 'param.aMessageTitle=ivy.cms.co("/ch/ivyteam/ivy/addons/filemanager/fileManagement/windowTitles/error");
-param.aMessageText=in.returnedMessage.text;
-' #txt
-Fs0 f44 responseActionDecl 'ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.SimpleFileChooserDialogData out;
-' #txt
-Fs0 f44 responseMappingAction 'out=in;
-' #txt
-Fs0 f44 windowConfiguration '{/title "<%=in.windowTitle%>"/width 0 /height 0 /centered true /resizable true /maximized false /close_after_last_rd true }' #txt
-Fs0 f44 isAsynch false #txt
-Fs0 f44 isInnerRd true #txt
-Fs0 f44 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<elementInfo>
-    <language/>
-</elementInfo>
-' #txt
-Fs0 f44 750 132 36 24 20 -2 #rect
-Fs0 f44 @|RichDialogIcon #fIcon
 Fs0 f46 type ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.SimpleFileChooserDialogData #txt
 Fs0 f46 758 198 20 20 13 0 #rect
 Fs0 f46 @|RichDialogProcessEndIcon #fIcon
-Fs0 f47 expr out #txt
-Fs0 f47 768 156 768 198 #arcP
 Fs0 f48 actionDecl 'ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.SimpleFileChooserDialogData out;
 ' #txt
 Fs0 f48 actionTable 'out=in;
@@ -624,8 +615,6 @@ Fs0 f48 750 84 36 24 20 -2 #rect
 Fs0 f48 @|RichDialogProcessStepIcon #fIcon
 Fs0 f49 expr out #txt
 Fs0 f49 768 58 768 84 #arcP
-Fs0 f45 expr out #txt
-Fs0 f45 768 108 768 132 #arcP
 Fs0 f50 guid 128B9DC1608E56B4 #txt
 Fs0 f50 type ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.SimpleFileChooserDialogData #txt
 Fs0 f50 method _askForOverwriteFiles(ch.ivyteam.ivy.addons.filemanager.ReturnedMessage) #txt
@@ -646,99 +635,8 @@ Fs0 f50 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-Fs0 f50 934 38 20 20 13 0 #rect
+Fs0 f50 1190 38 20 20 13 0 #rect
 Fs0 f50 @|RichDialogMethodStartIcon #fIcon
-Fs0 f51 actionDecl 'ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.SimpleFileChooserDialogData out;
-' #txt
-Fs0 f51 actionTable 'out=in;
-out.windowTitle=ivy.cms.co("/ch/ivyteam/ivy/addons/filemanager/fileManagement/windowTitles/question");
-' #txt
-Fs0 f51 actionCode 'for(java.io.File f: in.returnedMessage.files){
-	in.returnedMessage.text+="\n"+f.getName();
-}' #txt
-Fs0 f51 type ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.SimpleFileChooserDialogData #txt
-Fs0 f51 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<elementInfo>
-    <language/>
-</elementInfo>
-' #txt
-Fs0 f51 926 84 36 24 20 -2 #rect
-Fs0 f51 @|RichDialogProcessStepIcon #fIcon
-Fs0 f52 expr out #txt
-Fs0 f52 944 58 944 84 #arcP
-Fs0 f53 targetWindow NEW:card: #txt
-Fs0 f53 targetDisplay TOP #txt
-Fs0 f53 richDialogId ch.ivyteam.ivy.addons.commondialogs.QuestionDialog #txt
-Fs0 f53 startMethod askQuestion(String,String,List<String>,String) #txt
-Fs0 f53 type ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.SimpleFileChooserDialogData #txt
-Fs0 f53 requestActionDecl '<String icon, String question, List<String> buttons, String defaultButton> param;' #txt
-Fs0 f53 requestMappingAction 'param.icon="warning";
-param.question=in.returnedMessage.text;
-param.buttons=[ivy.cms.co("/ch/ivyteam/ivy/addons/filemanager/fileManagement/buttonLabels/yes"),
-ivy.cms.co("/ch/ivyteam/ivy/addons/filemanager/fileManagement/buttonLabels/no")];
-param.defaultButton=ivy.cms.co("/ch/ivyteam/ivy/addons/filemanager/fileManagement/buttonLabels/yes");
-' #txt
-Fs0 f53 responseActionDecl 'ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.SimpleFileChooserDialogData out;
-' #txt
-Fs0 f53 responseMappingAction 'out=in;
-out.userResponse=result.pressedButton;
-' #txt
-Fs0 f53 windowConfiguration '{/title "<%=in.windowTitle%>"/width 0 /height 0 /centered true /resizable true /maximized false /close_after_last_rd true }' #txt
-Fs0 f53 isAsynch false #txt
-Fs0 f53 isInnerRd true #txt
-Fs0 f53 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<elementInfo>
-    <language/>
-</elementInfo>
-' #txt
-Fs0 f53 926 132 36 24 20 -2 #rect
-Fs0 f53 @|RichDialogIcon #fIcon
-Fs0 f54 expr out #txt
-Fs0 f54 944 108 944 132 #arcP
-Fs0 f55 type ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.SimpleFileChooserDialogData #txt
-Fs0 f55 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<elementInfo>
-    <language>
-        <name>check user response</name>
-        <nameStyle>19,9
-</nameStyle>
-    </language>
-</elementInfo>
-' #txt
-Fs0 f55 930 186 28 28 14 0 #rect
-Fs0 f55 @|AlternativeIcon #fIcon
-Fs0 f56 expr out #txt
-Fs0 f56 944 156 944 186 #arcP
-Fs0 f57 actionDecl 'ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.SimpleFileChooserDialogData out;
-' #txt
-Fs0 f57 actionTable 'out=in;
-' #txt
-Fs0 f57 actionCode in.uploader.uploadPreparedFilesWithoutShowingProgress(in.returnedMessage.files); #txt
-Fs0 f57 type ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.SimpleFileChooserDialogData #txt
-Fs0 f57 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<elementInfo>
-    <language>
-        <name>upload</name>
-        <nameStyle>6,7,9
-</nameStyle>
-    </language>
-</elementInfo>
-' #txt
-Fs0 f57 926 244 36 24 20 -2 #rect
-Fs0 f57 @|RichDialogProcessStepIcon #fIcon
-Fs0 f58 expr in #txt
-Fs0 f58 outCond in.userResponse.equals(ivy.cms.co("/ch/ivyteam/ivy/addons/filemanager/fileManagement/buttonLabels/yes")) #txt
-Fs0 f58 944 214 944 244 #arcP
-Fs0 f59 type ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.SimpleFileChooserDialogData #txt
-Fs0 f59 934 310 20 20 13 0 #rect
-Fs0 f59 @|RichDialogProcessEndIcon #fIcon
-Fs0 f60 expr out #txt
-Fs0 f60 944 268 944 310 #arcP
-Fs0 f61 expr in #txt
-Fs0 f61 958 200 954 320 #arcP
-Fs0 f61 1 1000 200 #addKink
-Fs0 f61 2 1000 320 #addKink
-Fs0 f61 1 0.3836339950498122 0 0 #arcLabel
 Fs0 f62 guid 12925613436290EC #txt
 Fs0 f62 type ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.SimpleFileChooserDialogData #txt
 Fs0 f62 actionDecl 'ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.SimpleFileChooserDialogData out;
@@ -859,12 +757,12 @@ Fs0 f73 actionTable 'out=in;
 Fs0 f73 actionCode '
 panel.fileListChooserPanel.refresh();' #txt
 Fs0 f73 type ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.SimpleFileChooserDialogData #txt
-Fs0 f73 750 436 36 24 20 -2 #rect
+Fs0 f73 750 437 36 22 20 -2 #rect
 Fs0 f73 @|RichDialogProcessStepIcon #fIcon
 Fs0 f74 expr out #txt
-Fs0 f74 768 412 768 436 #arcP
+Fs0 f74 768 412 768 437 #arcP
 Fs0 f41 expr out #txt
-Fs0 f41 768 460 768 486 #arcP
+Fs0 f41 768 459 768 486 #arcP
 Fs0 f75 actionDecl 'ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.SimpleFileChooserDialogData out;
 ' #txt
 Fs0 f75 actionTable 'out=in;
@@ -886,6 +784,363 @@ Fs0 f76 950 400 890 400 #arcP
 Fs0 f77 expr out #txt
 Fs0 f77 854 408 786 440 #arcP
 Fs0 f77 0 0.65 0 0 #arcLabel
+Fs0 f91 targetWindow NEW:card: #txt
+Fs0 f91 targetDisplay TOP #txt
+Fs0 f91 richDialogId ch.ivyteam.ivy.addons.filemanager.util.MessageDialog #txt
+Fs0 f91 startMethod start(String,String) #txt
+Fs0 f91 type ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.SimpleFileChooserDialogData #txt
+Fs0 f91 requestActionDecl '<String text, String iconUri> param;' #txt
+Fs0 f91 requestMappingAction 'param.text=in.returnedMessage.text;
+' #txt
+Fs0 f91 responseActionDecl 'ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.SimpleFileChooserDialogData out;
+' #txt
+Fs0 f91 responseMappingAction 'out=in;
+' #txt
+Fs0 f91 windowConfiguration '{/title "<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/windowTitles/information\")%>"/width 300 /height 150 /centered true /resizable true /maximized false /close_after_last_rd true }' #txt
+Fs0 f91 isAsynch false #txt
+Fs0 f91 isInnerRd true #txt
+Fs0 f91 userContext '* ' #txt
+Fs0 f91 750 132 36 24 20 -2 #rect
+Fs0 f91 @|RichDialogIcon #fIcon
+Fs0 f92 expr out #txt
+Fs0 f92 768 108 768 132 #arcP
+Fs0 f44 expr out #txt
+Fs0 f44 768 156 768 198 #arcP
+Fs0 f237 actionDecl 'ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.SimpleFileChooserDialogData out;
+' #txt
+Fs0 f237 actionTable 'out=in;
+' #txt
+Fs0 f237 actionCode 'import ch.ivyteam.ivy.addons.filemanager.DocumentOnServer;
+boolean tmpBoolean=false;
+List<DocumentOnServer> docskeep = new List<DocumentOnServer>();
+List<DocumentOnServer> documents = panel.fileListChooserPanel.getDocumentsList();
+for(DocumentOnServer doc: in.returnedMessage.documentOnServers){//Check if some existing docs are locked
+	for(DocumentOnServer docin: documents){
+		if(doc.getFilename().compareTo(docin.getFilename())==0){
+			if(docin.locked.equals("1")){
+				tmpBoolean=true;
+				doc.setLocked("1");
+			}
+			break;
+		}
+	}
+}
+if(tmpBoolean){//Some docs to override are locked, remove them from the list to override and from the list to upload
+	List<java.io.File> filesToKeep = new List<java.io.File>();
+	for(DocumentOnServer doc: in.returnedMessage.documentOnServers){
+		if(!doc.locked.equals("1"))
+		{
+			docskeep.add(doc);
+		}
+	}
+	for(java.io.File f:in.returnedMessage.files){
+		boolean reject = false;
+		for(DocumentOnServer doc: in.returnedMessage.documentOnServers){
+			if(doc.getFilename().compareTo(f.getName())==0){
+				if(doc.locked.equals("1"))
+				{
+					reject=true;
+				}
+				break;
+			}
+		}
+		if(!reject){
+			filesToKeep.add(f);
+		}
+	}
+	in.returnedMessage.documentOnServers.clear();
+	in.returnedMessage.documentOnServers.addAll(docskeep);
+	in.returnedMessage.files.clear();
+	in.returnedMessage.files.addAll(filesToKeep);
+}
+
+' #txt
+Fs0 f237 type ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.SimpleFileChooserDialogData #txt
+Fs0 f237 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>Are the existing Files
+locked? Exclude them</name>
+        <nameStyle>43,7
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
+Fs0 f237 1182 100 36 24 24 -16 #rect
+Fs0 f237 @|RichDialogProcessStepIcon #fIcon
+Fs0 f45 expr out #txt
+Fs0 f45 1200 58 1200 100 #arcP
+Fs0 f204 targetWindow NEW:card: #txt
+Fs0 f204 targetDisplay TOP #txt
+Fs0 f204 richDialogId ch.ivyteam.ivy.addons.filemanager.util.MessageDialog #txt
+Fs0 f204 startMethod startAsConfirmDialog(String,String,List<String>,String) #txt
+Fs0 f204 type ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.SimpleFileChooserDialogData #txt
+Fs0 f204 requestActionDecl '<String text, String iconUri, List<String> buttonsList, String defaultPressedButton> param;' #txt
+Fs0 f204 requestMappingAction 'param.iconUri="/ch/ivyteam/ivy/addons/icons/question/48";
+param.buttonsList=[ivy.cms.co("/ch/ivyteam/ivy/addons/filemanager/fileManagement/buttonLabels/yes"),
+ivy.cms.co("/ch/ivyteam/ivy/addons/filemanager/fileManagement/buttonLabels/no")];
+param.defaultPressedButton=ivy.cms.co("/ch/ivyteam/ivy/addons/filemanager/fileManagement/buttonLabels/yes");
+' #txt
+Fs0 f204 requestActionCode 'import ch.ivyteam.ivy.addons.filemanager.DocumentOnServer;
+
+param.text=ivy.cms.co("/ch/ivyteam/ivy/addons/filemanager/fileManagement/messages/question/overwriteExistingFiles").replaceFirst("</html>","");
+for(DocumentOnServer doc: in.returnedMessage.documentOnServers){
+	param.text+="<br>"+doc.getFilename();
+}
+param.text+="<br></html>";' #txt
+Fs0 f204 responseActionDecl 'ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.SimpleFileChooserDialogData out;
+' #txt
+Fs0 f204 responseMappingAction 'out=in;
+out.userResponse=result.pressedButton;
+' #txt
+Fs0 f204 windowConfiguration '{/title "<%=in.windowTitle%>"/width 0 /height 0 /centered true /resizable true /maximized false /close_after_last_rd true }' #txt
+Fs0 f204 isAsynch false #txt
+Fs0 f204 isInnerRd true #txt
+Fs0 f204 userContext '* ' #txt
+Fs0 f204 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>Ask if replace the
+existing file on the server</name>
+        <nameStyle>46,7
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
+Fs0 f204 1086 260 36 24 -137 -7 #rect
+Fs0 f204 @|RichDialogIcon #fIcon
+Fs0 f158 actionDecl 'ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.SimpleFileChooserDialogData out;
+' #txt
+Fs0 f158 actionTable 'out=in;
+' #txt
+Fs0 f158 actionCode out.windowTitle=ivy.cms.co("/ch/ivyteam/ivy/addons/filemanager/fileManagement/windowTitles/overwriteFiles"); #txt
+Fs0 f158 type ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.SimpleFileChooserDialogData #txt
+Fs0 f158 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language/>
+</elementInfo>
+' #txt
+Fs0 f158 1086 212 36 24 20 -2 #rect
+Fs0 f158 @|RichDialogProcessStepIcon #fIcon
+Fs0 f239 type ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.SimpleFileChooserDialogData #txt
+Fs0 f239 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name></name>
+    </language>
+</elementInfo>
+' #txt
+Fs0 f239 1186 154 28 28 14 0 #rect
+Fs0 f239 @|AlternativeIcon #fIcon
+Fs0 f241 actionDecl 'ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.SimpleFileChooserDialogData out;
+' #txt
+Fs0 f241 actionTable 'out=in;
+' #txt
+Fs0 f241 actionCode out.windowTitle=ivy.cms.co("/ch/ivyteam/ivy/addons/filemanager/fileManagement/windowTitles/Warning"); #txt
+Fs0 f241 type ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.SimpleFileChooserDialogData #txt
+Fs0 f241 1278 156 36 24 20 -2 #rect
+Fs0 f241 @|RichDialogProcessStepIcon #fIcon
+Fs0 f47 targetWindow NEW:card: #txt
+Fs0 f47 targetDisplay TOP #txt
+Fs0 f47 richDialogId ch.ivyteam.ivy.addons.filemanager.util.MessageDialog #txt
+Fs0 f47 startMethod start(String,String) #txt
+Fs0 f47 type ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.SimpleFileChooserDialogData #txt
+Fs0 f47 requestActionDecl '<String text, String iconUri> param;' #txt
+Fs0 f47 requestActionCode param.text="<html>"+ivy.cms.co("/ch/ivyteam/ivy/addons/filemanager/fileManagement/messages/information/filesNotUploadedBecauseLocked"); #txt
+Fs0 f47 responseActionDecl 'ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.SimpleFileChooserDialogData out;
+' #txt
+Fs0 f47 responseMappingAction 'out=in;
+' #txt
+Fs0 f47 windowConfiguration '{/title "<%=in.windowTitle%>"/width 400 /height 150 /centered true /resizable true /maximized false /close_after_last_rd true }' #txt
+Fs0 f47 isAsynch false #txt
+Fs0 f47 isInnerRd true #txt
+Fs0 f47 userContext '* ' #txt
+Fs0 f47 1278 260 36 24 20 -2 #rect
+Fs0 f47 @|RichDialogIcon #fIcon
+Fs0 f159 expr in #txt
+Fs0 f159 outCond !in.returnedMessage.documentOnServers.isEmpty() #txt
+Fs0 f159 .xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>there are still
+files to override</name>
+        <nameStyle>16,7
+17,7
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
+Fs0 f159 1186 168 1104 212 #arcP
+Fs0 f159 1 1104 168 #addKink
+Fs0 f159 0 0.7780841373825325 0 0 #arcLabel
+Fs0 f242 expr in #txt
+Fs0 f242 .xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>No files to 
+override
+anymore</name>
+        <nameStyle>22,7
+7,7
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
+Fs0 f242 1214 168 1278 168 #arcP
+Fs0 f242 0 0.40625 0 23 #arcLabel
+Fs0 f206 expr out #txt
+Fs0 f206 1104 236 1104 260 #arcP
+Fs0 f52 expr out #txt
+Fs0 f52 1296 180 1296 260 #arcP
+Fs0 f53 expr out #txt
+Fs0 f53 1200 124 1200 154 #arcP
+Fs0 f56 actionDecl 'ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.SimpleFileChooserDialogData out;
+' #txt
+Fs0 f56 actionTable 'out=in;
+' #txt
+Fs0 f56 actionCode 'if(!in.returnedMessage.files.isEmpty()){
+	in.uploader.uploadPreparedFilesWithoutShowingProgress(in.returnedMessage.files);
+}' #txt
+Fs0 f56 type ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.SimpleFileChooserDialogData #txt
+Fs0 f56 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>upload the files if any</name>
+        <nameStyle>23,7,9
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
+Fs0 f56 1182 348 36 24 -53 -33 #rect
+Fs0 f56 @|RichDialogProcessStepIcon #fIcon
+Fs0 f68 actionDecl 'ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.SimpleFileChooserDialogData out;
+' #txt
+Fs0 f68 actionTable 'out=in;
+' #txt
+Fs0 f68 actionCode 'import ch.ivyteam.ivy.addons.filemanager.DocumentOnServer;
+
+try{
+	if(in.userResponse.equalsIgnoreCase(ivy.cms.co("/ch/ivyteam/ivy/addons/filemanager/fileManagement/buttonLabels/yes"))){
+		//we override the files so we delete them
+		in.fileManagementHandler.deleteDocumentOnServers(in.returnedMessage.documentOnServers);
+	}else{
+		//we exclude the files that should be overridden
+		List<java.io.File> filesToKeep = new List<java.io.File>();
+		for(java.io.File f:in.returnedMessage.files){
+			boolean reject = false;
+			for(DocumentOnServer doc: in.returnedMessage.documentOnServers){
+				if(doc.getFilename().compareTo(f.getName())==0){
+					reject=true;
+					break;
+				}
+			}
+			if(!reject){
+				filesToKeep.add(f);
+			}
+		}
+		in.returnedMessage.files.clear();
+		in.returnedMessage.files.addAll(filesToKeep);
+	}
+}catch(Throwable t){
+
+}' #txt
+Fs0 f68 type ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.SimpleFileChooserDialogData #txt
+Fs0 f68 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>if reponse = no Delete the files that
+ will be overwritten</name>
+        <nameStyle>58,7,9
+</nameStyle>
+        <desc>Delete the file that
+ will be overwritten</desc>
+    </language>
+</elementInfo>
+' #txt
+Fs0 f68 1086 308 36 24 -217 -21 #rect
+Fs0 f68 @|RichDialogProcessStepIcon #fIcon
+Fs0 f80 expr out #txt
+Fs0 f80 1104 332 1182 360 #arcP
+Fs0 f80 1 1104 360 #addKink
+Fs0 f80 1 0.2655887406437936 0 0 #arcLabel
+Fs0 f81 expr out #txt
+Fs0 f81 1104 284 1104 308 #arcP
+Fs0 f82 expr out #txt
+Fs0 f82 1296 284 1218 360 #arcP
+Fs0 f82 1 1296 360 #addKink
+Fs0 f82 1 0.040298813044590175 0 0 #arcLabel
+Fs0 f83 actionDecl 'ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.SimpleFileChooserDialogData out;
+' #txt
+Fs0 f83 actionTable 'out=in;
+' #txt
+Fs0 f83 actionCode panel.fileListChooserPanel.refresh(); #txt
+Fs0 f83 type ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.SimpleFileChooserDialogData #txt
+Fs0 f83 1182 404 36 24 20 -2 #rect
+Fs0 f83 @|RichDialogProcessStepIcon #fIcon
+Fs0 f84 expr out #txt
+Fs0 f84 1200 372 1200 404 #arcP
+Fs0 f85 type ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.SimpleFileChooserDialogData #txt
+Fs0 f85 1190 462 20 20 13 0 #rect
+Fs0 f85 @|RichDialogProcessEndIcon #fIcon
+Fs0 f86 expr out #txt
+Fs0 f86 1200 428 1200 462 #arcP
+Fs0 f51 guid 13D993809DFC5A45 #txt
+Fs0 f51 type ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.SimpleFileChooserDialogData #txt
+Fs0 f51 actionDecl 'ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.SimpleFileChooserDialogData out;
+' #txt
+Fs0 f51 actionTable 'out=in;
+' #txt
+Fs0 f51 actionCode 'import ch.ivyteam.ivy.addons.filemanager.ErrorUtil;
+import ch.ivyteam.ivy.richdialog.exec.RdEvent;
+in.errorUtil=null;
+if(event instanceof RdEvent){
+	RdEvent rd = event as RdEvent;
+	if(rd.getParameter() instanceof ErrorUtil)
+	{
+		in.errorUtil = rd.getParameter() as ErrorUtil;
+	}
+}' #txt
+Fs0 f51 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>error</name>
+        <nameStyle>5,5,7
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
+Fs0 f51 398 686 20 20 13 0 #rect
+Fs0 f51 @|RichDialogProcessStartIcon #fIcon
+Fs0 f54 targetWindow NEW:card: #txt
+Fs0 f54 targetDisplay TOP #txt
+Fs0 f54 richDialogId ch.ivyteam.ivy.addons.filemanager.util.MessageDialog #txt
+Fs0 f54 startMethod start(String,String) #txt
+Fs0 f54 type ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.SimpleFileChooserDialogData #txt
+Fs0 f54 requestActionDecl '<String text, String iconUri> param;' #txt
+Fs0 f54 requestMappingAction 'param.iconUri="/ch/ivyteam/ivy/addons/icons/close/48";
+' #txt
+Fs0 f54 requestActionCode 'if(in.#errorUtil!=null){
+	param.text="<html>"+in.errorUtil.message+(in.errorUtil.throwable!=null?"<br>"+in.errorUtil.throwable.getMessage():"");
+}else{
+	param.text="<html>"+ivy.cms.co("/ch/ivyteam/ivy/addons/filemanager/fileManagement/messages/error/errorOccurred");
+}' #txt
+Fs0 f54 responseActionDecl 'ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.SimpleFileChooserDialogData out;
+' #txt
+Fs0 f54 responseMappingAction 'out=in;
+' #txt
+Fs0 f54 windowConfiguration '{/title "<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/windowTitles/error\")%>"/width 450 /height 180 /centered true /resizable true /maximized false /close_after_last_rd true }' #txt
+Fs0 f54 isAsynch false #txt
+Fs0 f54 isInnerRd true #txt
+Fs0 f54 userContext '* ' #txt
+Fs0 f54 390 740 36 24 20 -2 #rect
+Fs0 f54 @|RichDialogIcon #fIcon
+Fs0 f55 expr out #txt
+Fs0 f55 408 706 408 740 #arcP
+Fs0 f57 type ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.SimpleFileChooserDialogData #txt
+Fs0 f57 398 806 20 20 13 0 #rect
+Fs0 f57 @|RichDialogProcessEndIcon #fIcon
+Fs0 f58 expr out #txt
+Fs0 f58 408 764 408 806 #arcP
 >Proto Fs0 .xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -944,24 +1199,8 @@ Fs0 f38 mainOut f40 tail #connect
 Fs0 f40 head f36 mainIn #connect
 Fs0 f35 mainOut f42 tail #connect
 Fs0 f42 head f8 mainIn #connect
-Fs0 f44 mainOut f47 tail #connect
-Fs0 f47 head f46 mainIn #connect
 Fs0 f43 mainOut f49 tail #connect
 Fs0 f49 head f48 mainIn #connect
-Fs0 f48 mainOut f45 tail #connect
-Fs0 f45 head f44 mainIn #connect
-Fs0 f50 mainOut f52 tail #connect
-Fs0 f52 head f51 mainIn #connect
-Fs0 f51 mainOut f54 tail #connect
-Fs0 f54 head f53 mainIn #connect
-Fs0 f53 mainOut f56 tail #connect
-Fs0 f56 head f55 in #connect
-Fs0 f55 out f58 tail #connect
-Fs0 f58 head f57 mainIn #connect
-Fs0 f57 mainOut f60 tail #connect
-Fs0 f60 head f59 mainIn #connect
-Fs0 f55 out f61 tail #connect
-Fs0 f61 head f59 mainIn #connect
 Fs0 f62 mainOut f64 tail #connect
 Fs0 f64 head f63 mainIn #connect
 Fs0 f63 mainOut f66 tail #connect
@@ -978,3 +1217,33 @@ Fs0 f67 mainOut f76 tail #connect
 Fs0 f76 head f75 mainIn #connect
 Fs0 f75 mainOut f77 tail #connect
 Fs0 f77 head f73 mainIn #connect
+Fs0 f48 mainOut f92 tail #connect
+Fs0 f92 head f91 mainIn #connect
+Fs0 f91 mainOut f44 tail #connect
+Fs0 f44 head f46 mainIn #connect
+Fs0 f50 mainOut f45 tail #connect
+Fs0 f45 head f237 mainIn #connect
+Fs0 f239 out f159 tail #connect
+Fs0 f159 head f158 mainIn #connect
+Fs0 f239 out f242 tail #connect
+Fs0 f242 head f241 mainIn #connect
+Fs0 f158 mainOut f206 tail #connect
+Fs0 f206 head f204 mainIn #connect
+Fs0 f241 mainOut f52 tail #connect
+Fs0 f52 head f47 mainIn #connect
+Fs0 f237 mainOut f53 tail #connect
+Fs0 f53 head f239 in #connect
+Fs0 f68 mainOut f80 tail #connect
+Fs0 f80 head f56 mainIn #connect
+Fs0 f204 mainOut f81 tail #connect
+Fs0 f81 head f68 mainIn #connect
+Fs0 f47 mainOut f82 tail #connect
+Fs0 f82 head f56 mainIn #connect
+Fs0 f56 mainOut f84 tail #connect
+Fs0 f84 head f83 mainIn #connect
+Fs0 f83 mainOut f86 tail #connect
+Fs0 f86 head f85 mainIn #connect
+Fs0 f51 mainOut f55 tail #connect
+Fs0 f55 head f54 mainIn #connect
+Fs0 f54 mainOut f58 tail #connect
+Fs0 f58 head f57 mainIn #connect

@@ -1,5 +1,5 @@
 [Ivy]
-[>Created: Tue Mar 20 09:35:28 EDT 2012]
+[>Created: Tue Mar 19 10:05:16 EDT 2013]
 125F850DA67753A5 3.17 #module
 >Proto >Proto Collection #zClass
 Ds0 DesktopHandlerProcess Big #zClass
@@ -1326,11 +1326,24 @@ RdEvent e = event as RdEvent;
 if(e.getParameter() instanceof java.io.File){
 	panel.fireFileModifiedReported(e.getParameter() as java.io.File);
 }else if(e.getParameter() instanceof FileCouple){
-	
 	FileCouple fc = e.getParameter() as FileCouple;
-	ivy.log.info("filecouple changed reported "+fc.getServerSidePath());
-	ivy.log.info("filecouple inner Java File "+(fc.getReferencedDocumentOnServer()!=null && fc.getReferencedDocumentOnServer().getJavaFile()!=null?fc.getReferencedDocumentOnServer().getJavaFile().getPath():"NULL"));
-	panel.fireFileCoupleModifiedReported(e.getParameter() as FileCouple);
+	for(FileCouple f: in.editedFileList){
+		if(fc.serverSidePath.compareTo(f.serverSidePath)==0){
+			if(f.hasChanged){
+				ivy.log.info("File has at least already changed "+fc.getServerSidePath());
+				fc.hasChanged=true;
+				panel.fireFileCoupleModifiedReported(fc);
+			}else{
+				panel.fireFileCoupleModifiedReported(fc);
+				//f.setHasChanged(true);
+				ivy.log.info("File has just changed "+fc.getServerSidePath());
+			}
+		}
+	}
+	
+	//ivy.log.info("filecouple changed reported "+fc.getServerSidePath());
+	//ivy.log.info("filecouple inner Java File "+(fc.getReferencedDocumentOnServer()!=null && fc.getReferencedDocumentOnServer().getJavaFile()!=null?fc.getReferencedDocumentOnServer().getJavaFile().getPath():"NULL"));
+	
 }' #txt
 Ds0 f103 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>

@@ -60,7 +60,7 @@ private RLabel getTitleLabel() {
 	if (titleLabel == null) {
 		titleLabel = new RLabel();
 		titleLabel.setName("titleLabel");
-		titleLabel.setStyleProperties("{/font {/name \"Dialog\"/size \"14\"/style \"BOLD\"}}");
+		titleLabel.setStyleProperties("{/font {/name \"Dialog\"/size \"14\"/style \"BOLD\"}/insetsBottom \"10\"/insetsTop \"10\"/fill \"HORIZONTAL\"/insetsRight \"10\"/insetsLeft \"10\"}");
 	}
 	return titleLabel;
 }
@@ -74,7 +74,7 @@ private RScrollPane getScrollPane() {
 	if (ScrollPane == null) {
 		ScrollPane = new RScrollPane();
 		ScrollPane.setName("ScrollPane");
-		ScrollPane.setStyleProperties("{/fill \"BOTH\"/weightY \"1\"/weightX \"1\"}");
+		ScrollPane.setStyleProperties("{/insetsBottom \"10\"/insetsRight \"10\"/fill \"BOTH\"/insetsLeft \"10\"/weightY \"1\"/weightX \"1\"}");
 		ScrollPane.setViewPortView(getTable());
 	}
 	return ScrollPane;

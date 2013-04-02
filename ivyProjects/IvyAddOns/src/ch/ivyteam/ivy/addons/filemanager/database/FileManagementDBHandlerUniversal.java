@@ -7,6 +7,7 @@ package ch.ivyteam.ivy.addons.filemanager.database;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -33,6 +34,7 @@ import ch.ivyteam.ivy.addons.filemanager.ReturnedMessage;
 import ch.ivyteam.ivy.addons.filemanager.ZipHandler;
 import ch.ivyteam.ivy.addons.filemanager.configuration.BasicConfigurationController;
 import ch.ivyteam.ivy.addons.filemanager.database.security.AbstractDirectorySecurityController;
+import ch.ivyteam.ivy.addons.filemanager.database.security.FileManagementStaticController;
 
 
 /**
@@ -92,6 +94,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		}else{
 			this.tableNameSpace = this.tableName;
 		}
+		this.initialize();
 	}
 
 	/**
@@ -124,6 +127,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 			//we escape the schema and table name to be able to support non lower case schemas
 			this.tableNameSpace="\""+this.schemaName+"\""+"."+"\""+this.tableName+"\""; 
 		}
+		this.initialize();
 	}
 	
 	/**
@@ -145,7 +149,25 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 			//we escape the schema and table name to be able to support non lower case schemas
 			this.tableNameSpace="\""+this.schemaName+"\""+"."+"\""+this.tableName+"\""; 
 		}
+		this.initialize();
 		
+	}
+	
+	private void initialize()
+	{
+		IExternalDatabaseRuntimeConnection connection = null;
+		try {
+			connection = this.getDatabase().getAndLockConnection();
+			if(connection.getDatabaseConnection().getMetaData().getDatabaseProductName().toLowerCase().contains("mysql")){
+				setEscapeChar("\\\\");
+			}
+		} catch (Exception e) {
+			Ivy.log().error("Error while getting the database product name");
+		}finally{
+			if(connection!=null ){
+				this.database.giveBackAndUnlockConnection(connection);
+			}
+		}
 	}
 
 	/**
@@ -178,75 +200,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 	 * @throws Exception 
 	 */
 	public ArrayList<DocumentOnServer> getDocumentsInPath(String _path, boolean _isrecursive) throws Exception{
-		if(_path==null || _path.trim().length()==0)
-		{
-			throw new Exception("Invalid path in getDocumentsInPath method");
-		}
-
-		ArrayList<DocumentOnServer>  al = new ArrayList<DocumentOnServer>();
-
-		String folderPath = escapeBackSlash(FileHandler.formatPathWithEndSeparator(_path, false));
-
-		List<Record> recordList= (List<Record>) List.create(Record.class);
-		String query="";
-		IExternalDatabaseRuntimeConnection connection = null;
-		try {
-			connection = getDatabase().getAndLockConnection();
-			Connection jdbcConnection=connection.getDatabaseConnection();
-			if(_isrecursive)
-			{
-				query="SELECT * FROM "+this.tableNameSpace+" WHERE FilePath LIKE ?";
-			}
-			else
-			{
-				query="SELECT * FROM "+this.tableNameSpace+" WHERE FilePath LIKE ? AND FilePath NOT LIKE ?";
-			}
-			PreparedStatement stmt = null;
-			try{
-				stmt = jdbcConnection.prepareStatement(query);
-				if(_isrecursive)
-				{
-					stmt.setString(1, folderPath+"%");
-				}else
-				{
-					stmt.setString(1, folderPath+"%");
-					stmt.setString(2, folderPath+"%/%");
-				}
-				recordList=executeStmt(stmt);
-			}finally{
-				DatabaseUtil.close(stmt);
-			}
-		} finally{
-			if(connection!=null ){
-				database.giveBackAndUnlockConnection(connection);
-			}
-		}
-		if(recordList!=null){
-			for(Record rec: recordList){
-				DocumentOnServer doc = new DocumentOnServer();
-				doc.setFileID(rec.getField("FileId").toString());
-				doc.setFilename(rec.getField("FileName").toString());
-				doc.setPath(rec.getField("FilePath").toString());
-				doc.setFileSize(rec.getField("FileSize").toString());
-				doc.setUserID(rec.getField("CreationUserId").toString());
-				doc.setCreationDate(rec.getField("CreationDate").toString());
-				doc.setCreationTime(rec.getField("CreationTime").toString());
-				doc.setModificationUserID(rec.getField("ModificationUserId").toString());
-				doc.setModificationDate(rec.getField("ModificationDate").toString());
-				doc.setModificationTime(rec.getField("ModificationTime").toString());
-				doc.setLocked(rec.getField("Locked").toString());
-				doc.setLockingUserID(rec.getField("LockingUserId").toString());
-				doc.setDescription(rec.getField("Description").toString());
-				try{
-					doc.setExtension(doc.getFilename().substring(doc.getFilename().lastIndexOf(".")+1));
-				}catch(Exception ex){
-					//Ignore the Exception here
-				}
-				al.add(doc);
-			}
-		}
-		al.trimToSize();
-		return al;
+		return FileManagementStaticController.getDocumentsInPath(this.getDatabase(), tableNameSpace, _path, _isrecursive, this.getEscapeChar());
 	}
 
 	/**
@@ -302,6 +256,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 						doc.setModificationDate(rec.getField("ModificationDate").toString());
 						doc.setModificationTime(rec.getField("ModificationTime").toString());
 						doc.setLocked(rec.getField("Locked").toString());
+						doc.setIsLocked(doc.getLocked().compareTo("1")==0);
 						doc.setLockingUserID(rec.getField("LockingUserId").toString());
 						doc.setDescription(rec.getField("Description").toString());
 						try{
@@ -340,6 +295,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		}
 		ArrayList<DocumentOnServer>  al = new ArrayList<DocumentOnServer>();
 		String folderPath = escapeBackSlash(FileHandler.formatPathWithEndSeparator(_path, false));
+		folderPath=escapeUnderscoreInPath(folderPath);
 		List<Record> recordList= (List<Record>) List.create(Record.class);
 		String query="";
 		IExternalDatabaseRuntimeConnection connection = null;
@@ -348,11 +304,11 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 			Connection jdbcConnection=connection.getDatabaseConnection();
 			if(_isrecursive)
 			{
-				query="SELECT * FROM "+this.tableNameSpace+" WHERE Locked=1 AND FilePath LIKE ?";
+				query="SELECT * FROM "+this.tableNameSpace+" WHERE Locked=1 AND FilePath LIKE ? ESCAPE '"+escapeChar+"'";
 			}else
 			{
 				//query="SELECT * FROM "+this.tableNamespace+" WHERE Locked=1 AND FilePath LIKE '"+folderPath+"%' AND FilePath NOT LIKE '"+folderPath+"%["+java.io.File.separator+"]%'";
-				query="SELECT * FROM "+this.tableNameSpace+" WHERE Locked=1 AND FilePath LIKE ? AND FilePath NOT LIKE ?";
+				query="SELECT * FROM "+this.tableNameSpace+" WHERE Locked=1 AND FilePath LIKE ? ESCAPE '"+escapeChar+"' AND FilePath NOT LIKE ? ESCAPE '"+escapeChar+"'";
 			}
 			PreparedStatement stmt = null;
 			try{
@@ -388,6 +344,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 				doc.setModificationDate(rec.getField("ModificationDate").toString());
 				doc.setModificationTime(rec.getField("ModificationTime").toString());
 				doc.setLocked(rec.getField("Locked").toString());
+				doc.setIsLocked(doc.getLocked().compareTo("1")==0);
 				doc.setLockingUserID(rec.getField("LockingUserId").toString());
 				doc.setDescription(rec.getField("Description").toString());
 				try{
@@ -508,7 +465,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 
 			connection = getDatabase().getAndLockConnection();
 			Connection jdbcConnection=connection.getDatabaseConnection();
-			String query= "UPDATE "+this.tableNameSpace+" SET FileName = ?, FilePath = ?, ModificationDate = ?, ModificationTime = ?, ModificationUserId = ? WHERE FilePath LIKE ?";
+			String query= "UPDATE "+this.tableNameSpace+" SET FileName = ?, FilePath = ?, ModificationDate = ?, ModificationTime = ?, ModificationUserId = ? WHERE FilePath = ?";
 
 			PreparedStatement stmt = null;
 			try{
@@ -552,7 +509,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 
 			connection = getDatabase().getAndLockConnection();
 			Connection jdbcConnection=connection.getDatabaseConnection();
-			String query= "UPDATE "+this.tableNameSpace+" SET FileSize = ?, ModificationDate = ?, ModificationTime = ?, ModificationUserId = ? WHERE FilePath LIKE ?";
+			String query= "UPDATE "+this.tableNameSpace+" SET FileSize = ?, ModificationDate = ?, ModificationTime = ?, ModificationUserId = ? WHERE FilePath = ?";
 			PreparedStatement stmt = null;
 			try{			
 				stmt = jdbcConnection.prepareStatement(query);
@@ -591,7 +548,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		try {
 			connection = getDatabase().getAndLockConnection();
 			Connection jdbcConnection=connection.getDatabaseConnection();
-			String query = "UPDATE "+this.tableNameSpace+" SET Locked=1, LockingUserId= ? WHERE FilePath LIKE ? AND (LockingUserId LIKE ? OR Locked <> 1)";
+			String query = "UPDATE "+this.tableNameSpace+" SET Locked=1, LockingUserId= ? WHERE FilePath = ? AND (LockingUserId = ? OR Locked <> 1)";
 			PreparedStatement stmt = null;
 			try{
 				stmt = jdbcConnection.prepareStatement(query);
@@ -629,7 +586,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		try {
 			connection = getDatabase().getAndLockConnection();
 			Connection jdbcConnection=connection.getDatabaseConnection();
-			String query = "UPDATE "+this.tableNameSpace+" SET Locked=1, LockingUserId= ? WHERE FilePath LIKE ? AND (LockingUserId LIKE ? OR Locked <> 1)";
+			String query = "UPDATE "+this.tableNameSpace+" SET Locked=1, LockingUserId= ? WHERE FilePath = ? AND (LockingUserId = ? OR Locked <> 1)";
 			PreparedStatement stmt = null;
 			try{
 				stmt = jdbcConnection.prepareStatement(query);
@@ -666,7 +623,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		try {
 			connection = getDatabase().getAndLockConnection();
 			Connection jdbcConnection=connection.getDatabaseConnection();
-			String query = "UPDATE "+this.tableNameSpace+" SET Locked=0, LockingUserId= ? WHERE FilePath LIKE ?";
+			String query = "UPDATE "+this.tableNameSpace+" SET Locked=0, LockingUserId= ? WHERE FilePath = ?";
 			PreparedStatement stmt = null;
 			try{
 				stmt = jdbcConnection.prepareStatement(query);
@@ -703,7 +660,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		try {
 			connection = getDatabase().getAndLockConnection();
 			Connection jdbcConnection=connection.getDatabaseConnection();
-			String query = "UPDATE "+this.tableNameSpace+" SET Locked=0, LockingUserId= ? WHERE FilePath LIKE ?";
+			String query = "UPDATE "+this.tableNameSpace+" SET Locked=0, LockingUserId= ? WHERE FilePath = ?";
 			PreparedStatement stmt = null;
 			try{
 				stmt = jdbcConnection.prepareStatement(query);
@@ -742,7 +699,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		try {
 			connection = getDatabase().getAndLockConnection();
 			Connection jdbcConnection=connection.getDatabaseConnection();
-			String query = "UPDATE "+this.tableNameSpace+" SET Locked=0, LockingUserId = ? WHERE FilePath LIKE ? AND LockingUserId LIKE ?";
+			String query = "UPDATE "+this.tableNameSpace+" SET Locked=0, LockingUserId = ? WHERE FilePath = ? AND LockingUserId = ?";
 			PreparedStatement stmt = null;
 			try{
 				stmt = jdbcConnection.prepareStatement(query);
@@ -782,7 +739,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		try {
 			connection = getDatabase().getAndLockConnection();
 			Connection jdbcConnection=connection.getDatabaseConnection();
-			String query = "UPDATE "+this.tableNameSpace+" SET Locked=0, LockingUserId= ? WHERE FilePath LIKE ? AND LockingUserId LIKE ?";
+			String query = "UPDATE "+this.tableNameSpace+" SET Locked=0, LockingUserId= ? WHERE FilePath = ? AND LockingUserId = ?";
 			PreparedStatement stmt = null;
 			try{
 				stmt = jdbcConnection.prepareStatement(query);
@@ -816,6 +773,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 	 */
 	public void unlockFilesEdited(String _path, String _user, boolean _recursive)throws Exception {
 		String folderPath = escapeBackSlash(FileHandler.formatPathWithEndSeparator(_path, false));
+		folderPath=escapeUnderscoreInPath(folderPath);
 		String query="";
 		IExternalDatabaseRuntimeConnection connection=null;
 		try {
@@ -823,11 +781,11 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 			Connection jdbcConnection=connection.getDatabaseConnection();
 			if(_recursive)
 			{
-				query="UPDATE "+ this.tableNameSpace + " SET Locked = 0, LockingUserId= ? WHERE LockingUserId LIKE ? AND FilePath LIKE ?";
+				query="UPDATE "+ this.tableNameSpace + " SET Locked = 0, LockingUserId= ? WHERE LockingUserId = ? AND FilePath LIKE ? ESCAPE '"+escapeChar+"'";
 			}else
 			{
 				//query="UPDATE "+ tableName + " SET Locked = 0 WHERE LockingUserId LIKE '"+user+"' AND FilePath LIKE '"+folderPath+"%' AND FilePath NOT LIKE '"+folderPath+"%["+java.io.File.separator+"]%'";
-				query="UPDATE "+ this.tableNameSpace + " SET Locked = 0, LockingUserId= ? WHERE LockingUserId LIKE ? AND FilePath LIKE ? AND FilePath NOT LIKE ?";
+				query="UPDATE "+ this.tableNameSpace + " SET Locked = 0, LockingUserId= ? WHERE LockingUserId = ? AND FilePath LIKE ? ESCAPE '"+escapeChar+"' AND FilePath NOT LIKE ? ESCAPE '"+escapeChar+"'";
 			}
 			PreparedStatement stmt = null;
 			try{
@@ -1188,7 +1146,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		}
 		IExternalDatabaseRuntimeConnection connection=null;
 		String base ="";
-		base= "DELETE FROM "+this.tableNameSpace+" WHERE FilePath LIKE ?"; 
+		base= "DELETE FROM "+this.tableNameSpace+" WHERE FilePath = ?"; 
 		try {
 			connection = getDatabase().getAndLockConnection();
 			Connection jdbcConnection=connection.getDatabaseConnection();
@@ -1226,7 +1184,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		}
 		IExternalDatabaseRuntimeConnection connection=null;
 		String base ="";
-		base= "DELETE FROM "+this.tableNameSpace+" WHERE FilePath LIKE ?"; 
+		base= "DELETE FROM "+this.tableNameSpace+" WHERE FilePath = ?"; 
 		try {
 			connection = getDatabase().getAndLockConnection();
 			Connection jdbcConnection=connection.getDatabaseConnection();
@@ -1263,7 +1221,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		}
 		IExternalDatabaseRuntimeConnection connection=null;
 		String base ="";
-		base= "DELETE FROM "+this.tableNameSpace+" WHERE FilePath LIKE ?"; 
+		base= "DELETE FROM "+this.tableNameSpace+" WHERE FilePath = ?"; 
 		try {
 			connection = getDatabase().getAndLockConnection();
 			Connection jdbcConnection=connection.getDatabaseConnection();
@@ -1304,7 +1262,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		}
 		IExternalDatabaseRuntimeConnection connection=null;
 		String base ="";
-		base= "DELETE FROM "+this.tableNameSpace+" WHERE FilePath LIKE ?"; 
+		base= "DELETE FROM "+this.tableNameSpace+" WHERE FilePath = ?"; 
 		try {
 			connection = getDatabase().getAndLockConnection();
 			Connection jdbcConnection=connection.getDatabaseConnection();
@@ -1336,7 +1294,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 	 */
 	public boolean isFileLocked(java.io.File _file)throws Exception{
 		boolean retour = false;
-		String sql ="SELECT * FROM "+this.tableNameSpace+" WHERE Locked=1 AND FilePath LIKE ?";
+		String sql ="SELECT * FROM "+this.tableNameSpace+" WHERE Locked=1 AND FilePath = ?";
 		IExternalDatabaseRuntimeConnection connection=null;
 		try {
 			connection = getDatabase().getAndLockConnection();
@@ -1376,7 +1334,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 			return false;
 		}
 		boolean retour = false;
-		String sql="SELECT * FROM "+this.tableNameSpace+" WHERE Locked=1 AND FilePath LIKE ? AND LockingUserId NOT LIKE ?";
+		String sql="SELECT * FROM "+this.tableNameSpace+" WHERE Locked=1 AND FilePath = ? AND LockingUserId <> ?";
 
 		IExternalDatabaseRuntimeConnection connection=null;
 		try {
@@ -1413,7 +1371,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 	 */
 	public boolean isDocumentOnServerLocked(DocumentOnServer _doc)throws Exception{
 		boolean retour = false;
-		String sql ="SELECT * FROM "+this.tableNameSpace+" WHERE Locked=1 AND FilePath LIKE ?";
+		String sql ="SELECT * FROM "+this.tableNameSpace+" WHERE Locked=1 AND FilePath = ?";
 		IExternalDatabaseRuntimeConnection connection=null;
 		try {
 			connection = getDatabase().getAndLockConnection();
@@ -1442,7 +1400,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 	public boolean isDocumentOnServerLocked(DocumentOnServer _doc, String _user)
 	throws Exception {
 		boolean retour = false;
-		String sql ="SELECT * FROM "+this.tableNameSpace+" WHERE Locked=1 AND FilePath LIKE ? AND LockingUserId NOT LIKE ?";
+		String sql ="SELECT * FROM "+this.tableNameSpace+" WHERE Locked=1 AND FilePath = ? AND LockingUserId <> ?";
 		IExternalDatabaseRuntimeConnection connection=null;
 		try {
 			connection = getDatabase().getAndLockConnection();
@@ -1636,6 +1594,9 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		{
 			throw new IllegalArgumentException("One of the parameters in "+this.getClass().getName()+", method createDirectory(String _newDirectoryPath) is not set.");
 		}
+		if(_newDirectoryPath.contains("%")){
+			throw new IllegalArgumentException("The directories name cannot contain a percent sign (%).");
+		}
 		ReturnedMessage message = new ReturnedMessage();
 		message.setFiles(List.create(java.io.File.class));
 
@@ -1786,6 +1747,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		FolderOnServer o = new FolderOnServer();
 		o.setName(dir.getName());
 		o.setPath(formatPath(dir.getPath()));
+		o.setIsRoot(true);
 		RDTree.setValue(o);
 		RDTree.setInfo(o.getName());
 		fillRDTree(entryPath, RDTree);
@@ -1856,7 +1818,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 			connection = getDatabase().getAndLockConnection();
 			Connection jdbcConnection=connection.getDatabaseConnection();
 
-			query="SELECT * FROM "+this.tableNameSpace+" WHERE FilePath LIKE ?";
+			query="SELECT * FROM "+this.tableNameSpace+" WHERE FilePath = ?";
 			PreparedStatement stmt = null;
 			try{
 				stmt = jdbcConnection.prepareStatement(query);
@@ -1886,6 +1848,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 			doc.setModificationDate(rec.getField("ModificationDate").toString());
 			doc.setModificationTime(rec.getField("ModificationTime").toString());
 			doc.setLocked(rec.getField("Locked").toString());
+			doc.setIsLocked(doc.getLocked().compareTo("1")==0);
 			doc.setLockingUserID(rec.getField("LockingUserId").toString());
 			doc.setDescription(rec.getField("Description").toString());
 			try{
@@ -1917,11 +1880,11 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 			connection = getDatabase().getAndLockConnection();
 			Connection jdbcConnection=connection.getDatabaseConnection();
 
-			query="SELECT * FROM "+this.tableNameSpace+" WHERE FileId LIKE ?";
+			query="SELECT * FROM "+this.tableNameSpace+" WHERE FileId = ?";
 			PreparedStatement stmt = null;
 			try{
 				stmt = jdbcConnection.prepareStatement(query);
-				stmt.setString(1, String.valueOf(fileId));
+				stmt.setLong(1, fileId);
 				recordList=executeStmt(stmt);
 			}finally{
 				DatabaseUtil.close(stmt);
@@ -1947,6 +1910,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 			doc.setModificationDate(rec.getField("ModificationDate").toString());
 			doc.setModificationTime(rec.getField("ModificationTime").toString());
 			doc.setLocked(rec.getField("Locked").toString());
+			doc.setIsLocked(doc.getLocked().compareTo("1")==0);
 			doc.setLockingUserID(rec.getField("LockingUserId").toString());
 			doc.setDescription(rec.getField("Description").toString());
 			try{
@@ -2501,6 +2465,8 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		if(f.isFile())
 		{
 			doc.setJavaFile(f);
+		}else{
+			throw new IOException("The file "+doc.getFilename()+" cannot be found on the filesystem in "+doc.getPath());
 		}
 		return doc;
 	}
@@ -2552,7 +2518,11 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		ArrayList<DocumentOnServer> docs = this.getDocumentsInPath(path, isRecursive);
 		ArrayList<DocumentOnServer> documents = new ArrayList<DocumentOnServer>();
 		for(DocumentOnServer d : docs){
-			documents.add(this.getDocumentOnServerWithJavaFile(d));
+			java.io.File f = new java.io.File(d.getPath());
+			if(f.isFile()){
+				d.setJavaFile(f);
+				documents.add(d);
+			}
 		}
 		return documents;
 	}
@@ -2595,7 +2565,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 			connection = getDatabase().getAndLockConnection();
 			Connection jdbcConnection=connection.getDatabaseConnection();
 			PreparedStatement stmt = null;
-			String query = "UPDATE "+this.tableNameSpace+" SET Description = ? WHERE FilePath LIKE ?";
+			String query = "UPDATE "+this.tableNameSpace+" SET Description = ? WHERE FilePath = ?";
 			try{
 				stmt = jdbcConnection.prepareStatement(query);
 				stmt.setString(1,description);
@@ -2654,6 +2624,32 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 	@Override
 	public int getFile_content_storage_type() {
 		return AbstractFileManagementHandler.FILE_STORAGE_FILESYSTEM;
+	}
+
+
+	@Override
+	public ArrayList<FolderOnServer> getListDirectDirectoriesUnderPath(String path)
+			throws Exception {
+		if (path == null || path.trim().length() == 0) {
+			throw new IllegalArgumentException(
+					"The path argument is null or is an empty String.");
+		}
+		path = formatPathForDirectory(path);
+		java.io.File dir = new java.io.File(path);
+		ArrayList<FolderOnServer> fos = new ArrayList<FolderOnServer>();
+		if (dir.isDirectory()) {
+			String[] files = dir.list();
+			for (int i = 0; i < files.length; i++) {
+				java.io.File d = new java.io.File(path + files[i]);
+				if (d.isDirectory()) {
+					FolderOnServer fo = new FolderOnServer();
+					fo.setName(files[i]);
+					fo.setPath(path + files[i]);
+					fos.add(fo);
+				}
+			}
+		}
+		return fos;
 	}
 
 }

@@ -10,6 +10,8 @@ import ch.ivyteam.ivy.richdialog.widgets.components.RButton;
 
 import com.ulcjava.base.application.ULCListSelectionModel;
 import com.ulcjava.base.application.ULCTable;
+import com.ulcjava.base.application.BorderFactory;
+import com.ulcjava.base.application.util.Color;
 
 /**
  * <p>FileTypesDialogPanel is a rich dialog panel implementation.
@@ -65,7 +67,7 @@ private RScrollPane getScrollPane() {
 	if (ScrollPane == null) {
 		ScrollPane = new RScrollPane();
 		ScrollPane.setName("ScrollPane");
-		ScrollPane.setStyleProperties("{/fill \"BOTH\"/weightY \"1\"/weightX \"1\"}");
+		ScrollPane.setStyleProperties("{/insetsTop \"10\"/insetsRight \"10\"/fill \"BOTH\"/insetsLeft \"10\"/weightY \"1\"/weightX \"1\"}");
 		ScrollPane.setViewPortView(getFileTypesTable());
 	}
 	return ScrollPane;
@@ -100,7 +102,8 @@ private RFlowLayoutPane getManagerFlowLayoutPane() {
 	if (managerFlowLayoutPane == null) {
 		managerFlowLayoutPane = new RFlowLayoutPane();
 		managerFlowLayoutPane.setName("managerFlowLayoutPane");
-		managerFlowLayoutPane.setStyleProperties("{/fill \"BOTH\"/weightX \"1\"}");
+		managerFlowLayoutPane.setStyleProperties("{/insetsBottom \"10\"/insetsTop \"10\"/insetsRight \"10\"/fill \"BOTH\"/insetsLeft \"10\"/alignment \"RIGHT\"/weightX \"1\"}");
+		managerFlowLayoutPane.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.gray));
 		managerFlowLayoutPane.add(getNewButton());
 		managerFlowLayoutPane.add(getModifyButton());
 		managerFlowLayoutPane.add(getDeleteButton());
@@ -119,6 +122,7 @@ private RButton getNewButton() {
 		newButton = new RButton();
 		newButton.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/plainStrings/new\")%>");
 		newButton.setIconUri("<%=ivy.cms.cr(\"/ch/ivyteam/ivy/addons/icons/file/24\")%>");
+		newButton.setStyleProperties("{/font {/name \"Verdana\"/size \"11\"/style \"PLAIN\"}}");
 		newButton.setName("newButton");
 	}
 	return newButton;
@@ -134,6 +138,7 @@ private RButton getModifyButton() {
 		modifyButton = new RButton();
 		modifyButton.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/plainStrings/modify\")%>");
 		modifyButton.setIconUri("<%=ivy.cms.cr(\"/ch/ivyteam/ivy/addons/icons/write/24\")%>");
+		modifyButton.setStyleProperties("{/font {/name \"Verdana\"/size \"11\"/style \"PLAIN\"}}");
 		modifyButton.setName("modifyButton");
 	}
 	return modifyButton;
@@ -149,6 +154,7 @@ private RButton getCloseButton() {
 		closeButton = new RButton();
 		closeButton.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/buttonLabels/close\")%>");
 		closeButton.setIconUri("<%=ivy.cms.cr(\"/ch/ivyteam/ivy/addons/icons/close/24\")%>");
+		closeButton.setStyleProperties("{/font {/name \"Verdana\"/size \"11\"/style \"PLAIN\"}}");
 		closeButton.setName("closeButton");
 	}
 	return closeButton;
@@ -163,7 +169,8 @@ private RFlowLayoutPane getChooserFlowLayoutPane() {
 	if (chooserFlowLayoutPane == null) {
 		chooserFlowLayoutPane = new RFlowLayoutPane();
 		chooserFlowLayoutPane.setName("chooserFlowLayoutPane");
-		chooserFlowLayoutPane.setStyleProperties("{/fill \"BOTH\"/weightX \"1\"}");
+		chooserFlowLayoutPane.setStyleProperties("{/insetsBottom \"10\"/insetsTop \"10\"/insetsRight \"10\"/fill \"BOTH\"/insetsLeft \"10\"/alignment \"RIGHT\"/weightX \"1\"}");
+		chooserFlowLayoutPane.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.black));
 		chooserFlowLayoutPane.add(getSelectButton());
 		chooserFlowLayoutPane.add(getCancelButton());
 	}
@@ -180,6 +187,7 @@ private RButton getSelectButton() {
 		selectButton = new RButton();
 		selectButton.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/buttonLabels/select\")%>");
 		selectButton.setIconUri("<%=ivy.cms.cr(\"/ch/ivyteam/ivy/addons/icons/ok/24\")%>");
+		selectButton.setStyleProperties("{/font {/name \"Verdana\"/size \"11\"/style \"PLAIN\"}}");
 		selectButton.setName("selectButton");
 	}
 	return selectButton;
@@ -195,6 +203,7 @@ private RButton getCancelButton() {
 		cancelButton = new RButton();
 		cancelButton.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/buttonLabels/cancel\")%>");
 		cancelButton.setIconUri("<%=ivy.cms.cr(\"/ch/ivyteam/ivy/addons/icons/cancel/24\")%>");
+		cancelButton.setStyleProperties("{/font {/name \"Verdana\"/size \"11\"/style \"PLAIN\"}}");
 		cancelButton.setName("cancelButton");
 	}
 	return cancelButton;
@@ -210,6 +219,7 @@ private RButton getDeleteButton() {
 		deleteButton = new RButton();
 		deleteButton.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/buttonLabels/delete\")%>");
 		deleteButton.setIconUri("<%=ivy.cms.cr(\"/ch/ivyteam/ivy/addons/icons/cancel/24\")%>");
+		deleteButton.setStyleProperties("{/font {/name \"Verdana\"/size \"11\"/style \"PLAIN\"}}");
 		deleteButton.setName("deleteButton");
 	}
 	return deleteButton;

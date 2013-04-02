@@ -283,7 +283,7 @@ public class FileTypesController {
 				connection = getDatabase().getAndLockConnection();
 				Connection jdbcConnection=connection.getDatabaseConnection();
 
-				query="SELECT * FROM "+this.tableNameSpace+" WHERE name LIKE ? AND appname LIKE ?";
+				query="SELECT * FROM "+this.tableNameSpace+" WHERE name = ? AND appname LIKE ?";
 
 				PreparedStatement stmt = null;
 				try{

@@ -109,7 +109,7 @@ public class FileCoupleChecker<T extends IRichDialogPanel>{
 				hash.clear();
 				hash.putAll(event.getFilesChecksums());
 				//after the HashMap of the changed client Files was updated, we upload those files on the server. 
-				Ivy.log().info("File changed reported");
+				Ivy.log().info("File changed reported in FileCoupleChecker");
 				uploadChangedFiles();
 			}
 		});
@@ -169,7 +169,7 @@ public class FileCoupleChecker<T extends IRichDialogPanel>{
 											f.getPath());
 
 									final String finalFilename= filePath.substring(filePath.lastIndexOf(fileSeparator)+1);
-									final int j = i;
+									final java.io.File sFile = fileCouples.get(i).getServerFile();
 									Ivy.log().info("File uploaded from Client from following path "+filePath);
 									ClientContext.setFileTransferMode(ClientContext.ASYNCHRONOUS_MODE);
 									ClientContext.loadFile(new IFileLoadHandler(){
@@ -196,7 +196,7 @@ public class FileCoupleChecker<T extends IRichDialogPanel>{
 												}
 												server.close();
 												server=null;
-												RDCallbackMethodHandler.callRDMethod(parentRD, fileModifiedMethodName, new Object[] { fileCouples.get(j).getServerFile()});
+												RDCallbackMethodHandler.callRDMethod(parentRD, fileModifiedMethodName, new Object[] { sFile});
 											}
 											catch(Exception _ex) { 
 												Ivy.log().error("onSuccess Exception "+_ex.getMessage(), _ex);

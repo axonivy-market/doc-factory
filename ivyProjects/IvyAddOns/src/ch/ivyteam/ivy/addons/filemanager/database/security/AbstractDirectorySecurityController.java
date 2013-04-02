@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import ch.ivyteam.ivy.addons.filemanager.FolderOnServer;
+import ch.ivyteam.ivy.db.IExternalDatabase;
 import ch.ivyteam.ivy.scripting.objects.List;
 
 /**
@@ -24,6 +25,10 @@ public abstract class AbstractDirectorySecurityController {
 	public final int DELETE_DIRECTORY_RIGHT = 4;
 	public final int WRITE_FILES_RIGHT = 5;
 	public final int DELETE_FILES_RIGHT = 6;
+	
+	private String escapeChar="\\";
+	
+	protected IExternalDatabase database=null;
 	
 	/**
 	 * Activates the security on the given directory.
@@ -529,6 +534,7 @@ public abstract class AbstractDirectorySecurityController {
 		{
 			_path=_path.trim();
 			_path = org.apache.commons.lang.StringUtils.replace(_path,"\\", "/");
+			
 			while(_path.endsWith("/")&& _path.length()>1)
 			{
 				_path=_path.substring(0, _path.length()-1);
@@ -627,6 +633,32 @@ public abstract class AbstractDirectorySecurityController {
 			return directoryPath.substring(directoryPath.lastIndexOf("/")+1);
 		}
 		
+	}
+	
+	/**
+	 * escape the underscore sign in paths to be able to perform LIKE sql searches.
+	 * @param _path
+	 * @return
+	 */
+	public static String escapeUnderscoreInPath(String _path) {
+		if (_path != null && !_path.trim().equals("")) {
+			_path=_path.replaceAll("_", "\\\\_");
+		}
+		return _path;
+	}
+
+	public String getEscapeChar() {
+		return escapeChar;
+	}
+
+	public void setEscapeChar(String escapeChar) {
+		if(escapeChar!=null && escapeChar.trim().length()>0){
+			this.escapeChar = escapeChar;
+		}
+	}
+
+	public void setDatabase(IExternalDatabase database) {
+		this.database = database;
 	}
 	
 	

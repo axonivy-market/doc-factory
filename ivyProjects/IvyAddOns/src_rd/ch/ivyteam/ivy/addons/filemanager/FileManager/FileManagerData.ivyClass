@@ -133,9 +133,10 @@ fileListingButtonIconUri24 String #field
 fileListingButtonIconUri24 'Rollover file listing/admin button icon Uri' #fieldComment
 isUserFileManagerAdmin boolean #field
 isUserFileManagerAdmin 'If true, the user has the role to be fileManager Admin. He has the possibility to manage the rights on the directories. I will see the admin button on top of the directories.' #fieldComment
-fileVersioningController ch.ivyteam.ivy.addons.filemanager.database.versioning.FileVersioningController #field
-fileVersioningController 'controller for file versioning, if this feature is activated.' #fieldComment
 configurationController ch.ivyteam.ivy.addons.filemanager.configuration.FileManagerConfigurationController #field
 configurationController 'Configuration to be able to start the filemanager' #fieldComment
 configurationController PERSISTENT #fieldModifier
 dialogParam ch.ivyteam.ivy.addons.filemanager.DialogParam #field
+dialogParam 'util Object to communicate in/out with common dialogs.' #fieldComment
+eventSource ch.ivyteam.ivy.addons.filemanager.EventSourceData #field
+eventSource 'util object to get trace of the source of an event (RButton, RMenuItem)....' #fieldComment

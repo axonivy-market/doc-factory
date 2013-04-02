@@ -10,6 +10,8 @@ import ch.ivyteam.ivy.richdialog.widgets.components.RButton;
 import com.ulcjava.base.application.ULCTable;
 import ch.ivyteam.ivy.richdialog.widgets.menus.RMenuItem;
 import ch.ivyteam.ivy.richdialog.widgets.menus.RPopupMenu;
+import com.ulcjava.base.application.BorderFactory;
+import com.ulcjava.base.application.util.Color;
 
 /**
  * <p>FileActionHistoryViewerPanel is a rich dialog panel implementation.
@@ -62,7 +64,7 @@ private RLabel getTileLabel() {
 	if (tileLabel == null) {
 		tileLabel = new RLabel();
 		tileLabel.setIconUri("<%=ivy.cms.cr(\"/ch/ivyteam/ivy/addons/icons/file/24\")%>");
-		tileLabel.setStyleProperties("{/font {/name \"Dialog\"/size \"14\"/style \"PLAIN\"}/fill \"HORIZONTAL\"}");
+		tileLabel.setStyleProperties("{/font {/name \"Verdana\"/size \"11\"/style \"PLAIN\"}/insetsTop \"10\"/insetsRight \"10\"/fill \"HORIZONTAL\"/insetsLeft \"10\"}");
 		tileLabel.setName("tileLabel");
 	}
 	return tileLabel;
@@ -77,7 +79,7 @@ private RScrollPane getScrollPane() {
 	if (ScrollPane == null) {
 		ScrollPane = new RScrollPane();
 		ScrollPane.setName("ScrollPane");
-		ScrollPane.setStyleProperties("{/fill \"BOTH\"/weightY \"1\"/weightX \"1\"}");
+		ScrollPane.setStyleProperties("{/insetsTop \"10\"/insetsRight \"10\"/fill \"BOTH\"/insetsLeft \"10\"/weightY \"1\"/weightX \"1\"}");
 		ScrollPane.setViewPortView(getTable());
 	}
 	return ScrollPane;
@@ -111,7 +113,8 @@ private RFlowLayoutPane getFlowLayoutPane() {
 	if (FlowLayoutPane == null) {
 		FlowLayoutPane = new RFlowLayoutPane();
 		FlowLayoutPane.setName("FlowLayoutPane");
-		FlowLayoutPane.setStyleProperties("{/fill \"HORIZONTAL\"}");
+		FlowLayoutPane.setStyleProperties("{/font {/name \"Verdana\"/size \"11\"/style \"PLAIN\"}/insetsBottom \"10\"/insetsTop \"10\"/insetsRight \"10\"/fill \"HORIZONTAL\"/insetsLeft \"10\"/alignment \"RIGHT\"}");
+		FlowLayoutPane.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.gray));
 		FlowLayoutPane.add(getCloseButton());
 	}
 	return FlowLayoutPane;
@@ -127,6 +130,7 @@ private RButton getCloseButton() {
 		closeButton = new RButton();
 		closeButton.setName("closeButton");
 		closeButton.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/buttonLabels/close\")%>");
+		closeButton.setStyleProperties("{/font {/name \"Verdana\"/size \"11\"/style \"PLAIN\"}}");
 		closeButton.setIconUri("<%=ivy.cms.cr(\"/ch/ivyteam/ivy/addons/icons/close/24\")%>");
 	}
 	return closeButton;

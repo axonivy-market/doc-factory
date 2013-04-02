@@ -1,0 +1,4 @@
+co: name={filesNotUploadedBecauseLocked} description={} changed={2013-03-23 22:04:43 CET} changedby={ec} visualorder={0} guid={13D99072017DDFF8} parentguid={} typeguid={E6AFEA202AFB4911} id={} parentid={} typeid={}
+val: guid={13D990720236B5E7} datatype={} isdefault={false} langid={de} description={} validfrom={2009-08-31 15:57:28 CEST} validto={} changed={2013-03-23 22:04:43 CET} changedby={ec} properties={} id={}
+val: guid={13D9907201B7FEEB} datatype={} isdefault={false} langid={fr} description={} validfrom={2009-08-31 15:55:48 CEST} validto={} changed={2013-03-23 22:04:43 CET} changedby={ec} properties={} id={}
+val: guid={13D9907202D38284} datatype={} isdefault={true} langid={en} description={} validfrom={2009-08-31 15:55:29 CEST} validto={} changed={2013-03-23 22:04:43 CET} changedby={ec} properties={} id={}

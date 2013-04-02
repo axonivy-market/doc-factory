@@ -1,5 +1,5 @@
 # Xpert.ivy RichDialog Event-Mapping Data
-# 2012-09-19 10:53:27 | 4.3.4.40176 | 1.0
+# 2013-03-23 12:10:48 | 4.3.8.41480 | 1.0
 ~.deleteButton@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FDB0198DDACE8/11F89B713EFCFEA6
 ~.deleteMenuItem@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FDB0198DDACE8/11F89B713EFCFEA6
 ~.desktopHandlerPanel@RD_EVENT[desktopException]--->ch.ivyteam.ivy.process.ProcessStart:125FDB0198DDACE8/11F8D295F50E7097
@@ -12,6 +12,8 @@
 ~.fileListTable@LIST_SELECTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FDB0198DDACE8/11F6A70B450F3C9A
 ~.openButton@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FDB0198DDACE8/11F89AA2F2E17B0B
 ~.openMenuItem@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FDB0198DDACE8/11F89AA2F2E17B0B
+~.refrehButton@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FDB0198DDACE8/13D97FE8F33E39AA # FileListTableProcess.mod/refresh
+~.refreshMenuItem@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FDB0198DDACE8/13D97FE8F33E39AA # FileListTableProcess.mod/refresh
 ~.unlockButton@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FDB0198DDACE8/137BD69A065DF423
 ~.unockMenuItem@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FDB0198DDACE8/137BD69A065DF423
 ~.uploadButton@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FDB0198DDACE8/11F89B358329468E

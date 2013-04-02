@@ -1,0 +1,14 @@
+MessageDialogData #class
+ch.ivyteam.ivy.addons.filemanager.util.MessageDialog #namespace
+text String #field
+text PERSISTENT #fieldModifier
+iconUri String #field
+iconUri PERSISTENT #fieldModifier
+confirm Boolean #field
+confirm PERSISTENT #fieldModifier
+pressedButton String #field
+pressedButton PERSISTENT #fieldModifier
+buttons List<String> #field
+buttons PERSISTENT #fieldModifier
+defaultButton String #field
+defaultButton PERSISTENT #fieldModifier

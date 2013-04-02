@@ -35,7 +35,7 @@ import ch.ivyteam.ivy.security.IUser;
 public class DirectorySecurityController extends AbstractDirectorySecurityController {
 
 	private String ivyDBConnectionName = null; // the user friendly connection name to Database in Ivy
-	private IExternalDatabase database=null;
+	
 	private String dirTableName = null; // the table that stores directories infos
 	private String dirTableNameSpace = null; // equals to dirTableName if schemaName == null, else schemaName.dirTableName
 	private String schemaName=null;
@@ -194,25 +194,25 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 
 				if(rightType == DELETE_DIRECTORY_RIGHT)
 				{
-					query="UPDATE "+this.dirTableNameSpace+" SET cdd = ? WHERE dir_path LIKE ?";
+					query="UPDATE "+this.dirTableNameSpace+" SET cdd = ? WHERE dir_path = ?";
 				}else if( rightType == DELETE_FILES_RIGHT)
 				{
-					query="UPDATE "+this.dirTableNameSpace+" SET cdf = ? WHERE dir_path LIKE ?";
+					query="UPDATE "+this.dirTableNameSpace+" SET cdf = ? WHERE dir_path = ?";
 				}
 				else if( rightType == OPEN_DIRECTORY_RIGHT)
 				{
-					query="UPDATE "+this.dirTableNameSpace+" SET cod = ? WHERE dir_path LIKE ?";
+					query="UPDATE "+this.dirTableNameSpace+" SET cod = ? WHERE dir_path = ?";
 				}
 				else if( rightType == UPDATE_DIRECTORY_RIGHT)
 				{
-					query="UPDATE "+this.dirTableNameSpace+" SET cud = ? WHERE dir_path LIKE ?";
+					query="UPDATE "+this.dirTableNameSpace+" SET cud = ? WHERE dir_path = ?";
 				}
 				else if( rightType == WRITE_FILES_RIGHT)
 				{
-					query="UPDATE "+this.dirTableNameSpace+" SET cwf = ? WHERE dir_path LIKE ?";
+					query="UPDATE "+this.dirTableNameSpace+" SET cwf = ? WHERE dir_path = ?";
 				}else if( rightType == MANAGE_SECURITY_RIGHT)
 				{
-					query="UPDATE "+this.dirTableNameSpace+" SET cmdr = ? WHERE dir_path LIKE ?";
+					query="UPDATE "+this.dirTableNameSpace+" SET cmdr = ? WHERE dir_path = ?";
 				}
 				stmt = jdbcConnection.prepareStatement(query);
 				stmt.setString(1, concat.toString());
@@ -1248,25 +1248,25 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 			try{			
 				if(rightType == DELETE_DIRECTORY_RIGHT)
 				{
-					query="UPDATE "+this.dirTableNameSpace+" SET cdd = ? WHERE dir_path LIKE ?";
+					query="UPDATE "+this.dirTableNameSpace+" SET cdd = ? WHERE dir_path = ?";
 				}else if( rightType == DELETE_FILES_RIGHT)
 				{
-					query="UPDATE "+this.dirTableNameSpace+" SET cdf = ? WHERE dir_path LIKE ?";
+					query="UPDATE "+this.dirTableNameSpace+" SET cdf = ? WHERE dir_path = ?";
 				}
 				else if( rightType == OPEN_DIRECTORY_RIGHT)
 				{
-					query="UPDATE "+this.dirTableNameSpace+" SET cod = ? WHERE dir_path LIKE ?";
+					query="UPDATE "+this.dirTableNameSpace+" SET cod = ? WHERE dir_path = ?";
 				}
 				else if( rightType == UPDATE_DIRECTORY_RIGHT)
 				{
-					query="UPDATE "+this.dirTableNameSpace+" SET cud = ? WHERE dir_path LIKE ?";
+					query="UPDATE "+this.dirTableNameSpace+" SET cud = ? WHERE dir_path = ?";
 				}
 				else if( rightType == WRITE_FILES_RIGHT)
 				{
-					query="UPDATE "+this.dirTableNameSpace+" SET cwf = ? WHERE dir_path LIKE ?";
+					query="UPDATE "+this.dirTableNameSpace+" SET cwf = ? WHERE dir_path = ?";
 				}else if( rightType == MANAGE_SECURITY_RIGHT)
 				{
-					query="UPDATE "+this.dirTableNameSpace+" SET cmdr = ? WHERE dir_path LIKE ?";
+					query="UPDATE "+this.dirTableNameSpace+" SET cmdr = ? WHERE dir_path = ?";
 				}
 				stmt = jdbcConnection.prepareStatement(query);
 				stmt.setString(1, concat.toString());
@@ -1432,25 +1432,25 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 			try{			
 				if(rightType == DELETE_DIRECTORY_RIGHT)
 				{
-					query="UPDATE "+this.dirTableNameSpace+" SET cdd = ? WHERE dir_path LIKE ?";
+					query="UPDATE "+this.dirTableNameSpace+" SET cdd = ? WHERE dir_path = ?";
 				}else if( rightType == DELETE_FILES_RIGHT)
 				{
-					query="UPDATE "+this.dirTableNameSpace+" SET cdf = ? WHERE dir_path LIKE ?";
+					query="UPDATE "+this.dirTableNameSpace+" SET cdf = ? WHERE dir_path = ?";
 				}
 				else if( rightType == OPEN_DIRECTORY_RIGHT)
 				{
-					query="UPDATE "+this.dirTableNameSpace+" SET cod = ? WHERE dir_path LIKE ?";
+					query="UPDATE "+this.dirTableNameSpace+" SET cod = ? WHERE dir_path = ?";
 				}
 				else if( rightType == UPDATE_DIRECTORY_RIGHT)
 				{
-					query="UPDATE "+this.dirTableNameSpace+" SET cud = ? WHERE dir_path LIKE ?";
+					query="UPDATE "+this.dirTableNameSpace+" SET cud = ? WHERE dir_path = ?";
 				}
 				else if( rightType == WRITE_FILES_RIGHT)
 				{
-					query="UPDATE "+this.dirTableNameSpace+" SET cwf = ? WHERE dir_path LIKE ?";
+					query="UPDATE "+this.dirTableNameSpace+" SET cwf = ? WHERE dir_path = ?";
 				}else if( rightType == MANAGE_SECURITY_RIGHT)
 				{
-					query="UPDATE "+this.dirTableNameSpace+" SET cmdr = ? WHERE dir_path LIKE ?";
+					query="UPDATE "+this.dirTableNameSpace+" SET cmdr = ? WHERE dir_path = ?";
 				}
 				stmt = jdbcConnection.prepareStatement(query);
 				stmt.setString(1, roles);
@@ -1522,7 +1522,7 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 		{
 			return false;
 		}
-		String base ="SELECT * FROM "+this.dirTableNameSpace+" WHERE dir_path LIKE ?";
+		String base ="SELECT * FROM "+this.dirTableNameSpace+" WHERE dir_path = ?";
 		IExternalDatabaseRuntimeConnection connection=null;
 		try {
 			connection = getDatabase().getAndLockConnection();
@@ -1559,7 +1559,7 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 			return null;
 		}
 
-		String base ="SELECT * FROM "+this.dirTableNameSpace+" WHERE dir_path LIKE ?";
+		String base ="SELECT * FROM "+this.dirTableNameSpace+" WHERE dir_path = ?";
 		IExternalDatabaseRuntimeConnection connection=null;
 		FolderOnServer fos = new FolderOnServer();
 		//List<Record> recordList= (List<Record>) List.create(Record.class);
@@ -1690,8 +1690,7 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 	}
 */
 	@Override
-	public ArrayList<FolderOnServer> getListDirectoriesUnderPath(
-			String rootPath, String ivyUserName) throws Exception {
+	public ArrayList<FolderOnServer> getListDirectoriesUnderPath(String rootPath, String ivyUserName) throws Exception {
 		ArrayList<FolderOnServer> l = new ArrayList<FolderOnServer>();
 		if(rootPath==null || rootPath.trim().equals("")){
 			return l;
@@ -1706,7 +1705,7 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 			}
 		}
 		rootPath = formatPathForDirectoryWithoutLastSeparator(rootPath);
-		String base= "SELECT * FROM "+this.dirTableNameSpace+" WHERE dir_path LIKE ? ORDER BY dir_path ASC"; 
+		String base= "SELECT * FROM "+this.dirTableNameSpace+" WHERE dir_path = ? ORDER BY dir_path ASC"; 
 		IExternalDatabaseRuntimeConnection connection=null;
 
 		List<Record> recordList= (List<Record>) List.create(Record.class);
@@ -1727,6 +1726,7 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 						FolderOnServer fos = new FolderOnServer();
 						fos.setId(Integer.parseInt(rec.getField("id").toString()));
 						fos.setName(rec.getField("dir_name").toString());
+						fos.setIsRoot(true);
 						fos.setPath(formatPathForDirectoryWithoutLastSeparator(rec.getField("dir_path").toString()));
 						fos.setIs_protected(rec.getField("is_protected").toString().equals("1"));
 						fos.setCmrd(getListFromString(rec.getField("cmdr").toString(),","));
@@ -1741,6 +1741,7 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 						LockedFolder fos = new LockedFolder();
 						fos.setId(Integer.parseInt(rec.getField("id").toString()));
 						fos.setName(rec.getField("dir_name").toString());
+						fos.setIsRoot(true);
 						fos.setPath(formatPathForDirectoryWithoutLastSeparator(rec.getField("dir_path").toString()));
 						fos.setIs_protected(rec.getField("is_protected").toString().equals("1"));
 						fos.setCmrd(getListFromString(rec.getField("cmdr").toString(),","));
@@ -1752,9 +1753,11 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 						getUserRightsInFolderOnServer(fos, ivyUserName);
 						l.add(fos);
 					}
-
+					base= "SELECT * FROM "+this.dirTableNameSpace+" WHERE dir_path LIKE ? ESCAPE '"+this.getEscapeChar()+"' ORDER BY dir_path ASC"; 
+					stmt = jdbcConnection.prepareStatement(base);
 					//Select all the children
-					stmt.setString(1, rootPath+"/%");;
+					rootPath=escapeUnderscoreInPath(rootPath);
+					stmt.setString(1, rootPath+"/%");
 					recordList=executeStmt(stmt);
 					for(Record rec1: recordList){
 						List<String> roles1 = getListFromString(rec1.getField("cod").toString(),",");

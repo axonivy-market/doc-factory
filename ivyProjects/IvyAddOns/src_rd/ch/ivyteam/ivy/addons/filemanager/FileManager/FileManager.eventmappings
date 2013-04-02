@@ -1,5 +1,5 @@
 # Xpert.ivy RichDialog Event-Mapping Data
-# 2013-02-12 14:23:40 | 4.4.0.42044 | 1.0
+# 2013-03-26 19:26:45 | 4.4.0.42421 | 1.0
 ~.cancelButton@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/121ECCB8283CD1EF
 ~.copyMenuItem@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11ED95C2B7BDD5B8
 ~.delete2Button@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11D438D57924C5D9
@@ -45,12 +45,14 @@
 ~.print2Button@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/120C262EB26F4439
 ~.printButton@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/120C262EB26F4439
 ~.printMenuItem@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/120C262EB26F4439
+~.readFileMenuItem@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11E447BF8696BEA3
 ~.refreshDirMenuItem@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11D53743C81FC390
 ~.refreshDirs2Button@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11D53743C81FC390
 ~.refreshDirsButton@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11D53743C81FC390
 ~.refreshMenuItem@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/120667533EA41579
 ~.refreshSelectedFolder2Button@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/120667533EA41579
 ~.refreshSelectedFolderButton@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/120667533EA41579
+~.renameDirMenuItem@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/13CF318E539C7D84
 ~.setDescriptionMenuItem@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/1309D5203A68CFFC
 ~.showHiddeEditedFilesMenuItem@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11E266B093A206B7
 ~.showHistoryMenuItem@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/139026FE65E46FD9
@@ -74,6 +76,7 @@
 ~@RD_BROADCAST[pasteFiles]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/12BD923171D4E876
 ~@RD_BROADCAST[SE_DocumentsDeleted]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/12BD0130C642E9E5
 ~@RD_BROADCAST[SE_DocumentsUnlocked]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/12BCF80819ADE64A
+~@RD_BROADCAST[SE_fileChanged]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/13D83466311799A7
 ~@RD_BROADCAST[SE_fileLocked]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/12BAC26573518ED3
 ~@RD_BROADCAST[SE_fileRenamed]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/12BDAAC2C5313D1E
 ~@RD_BROADCAST[SE_FilesDeleted]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/12BDEFBD2E2716AF
@@ -88,6 +91,7 @@
 ~@RD_METHODCALL[_copyFiles()]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/12BD91649B69AABB
 ~@RD_METHODCALL[_deleteSelectedDirectory()]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/12B9520DCB1E4F8E
 ~@RD_METHODCALL[_deleteSelectedFiles()]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/12B9520FCCF3AD89
+~@RD_METHODCALL[_editSelectedFile()]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/13D884BA64996AE5
 ~@RD_METHODCALL[_filesSelectedForUpload(List<java.io.File>)]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/130C1B37EE276584
 ~@RD_METHODCALL[_getUploadedFileFromUploadHandler(ch.ivyteam.ivy.addons.filemanager.ReturnedMessage)]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11EB0CD093347480
 ~@RD_METHODCALL[_moveFile(String,java.util.ArrayList)]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11EB9F1B8465A0BD
@@ -101,6 +105,7 @@
 ~@RD_METHODCALL[_onUploadSuccess(List<java.io.File>)]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/1236FB8C20C2E141
 ~@RD_METHODCALL[_onUploadSuccessForFilesInDB(ch.ivyteam.ivy.addons.filemanager.ReturnedMessage)]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/132731EA06CD45FB
 ~@RD_METHODCALL[_pasteFiles()]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/12BD9229CD1237A6
+~@RD_METHODCALL[_readSelectedFile()]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/13D884BC2801C9A3
 ~@RD_METHODCALL[_renameFile()]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/12BDDCBC2845D8CB
 ~@RD_METHODCALL[addDocuments(List<ch.ivyteam.ivy.addons.filemanager.DocumentOnServer>)]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11E8B995CB02EF34
 ~@RD_METHODCALL[addFiles(List<java.io.File>)]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11F7F17163AD1939

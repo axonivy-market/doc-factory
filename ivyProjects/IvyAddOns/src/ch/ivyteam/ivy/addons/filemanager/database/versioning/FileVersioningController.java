@@ -425,13 +425,8 @@ public class FileVersioningController {
 				// insert the new version content
 				flag = true;
 				try {
-					stmt = jdbcConnection.prepareStatement(q2,
-							PreparedStatement.RETURN_GENERATED_KEYS);
-				} catch (SQLFeatureNotSupportedException fex) {// The JDBC
-																// Driver
-																// doesn't
-																// accept the
-																// PreparedStatement.RETURN_GENERATED_KEYS
+					stmt = jdbcConnection.prepareStatement(q2,PreparedStatement.RETURN_GENERATED_KEYS);
+				} catch (SQLFeatureNotSupportedException fex) {
 					stmt = jdbcConnection.prepareStatement(q2);
 					flag = false;
 				}
@@ -453,14 +448,8 @@ public class FileVersioningController {
 				if (error) {
 					flag = true;
 					try {
-						stmt = jdbcConnection.prepareStatement(q2bis,
-								PreparedStatement.RETURN_GENERATED_KEYS);
-					} catch (SQLFeatureNotSupportedException fex) {// The JDBC
-																	// Driver
-																	// doesn't
-																	// accept
-																	// the
-																	// PreparedStatement.RETURN_GENERATED_KEYS
+						stmt = jdbcConnection.prepareStatement(q2bis,PreparedStatement.RETURN_GENERATED_KEYS);
+					} catch (SQLFeatureNotSupportedException fex) {
 						stmt = jdbcConnection.prepareStatement(q2bis);
 						flag = false;
 					}

@@ -1,5 +1,5 @@
 [Ivy]
-[>Created: Tue Jun 05 20:51:55 EDT 2012]
+[>Created: Sat Mar 23 17:46:43 EDT 2013]
 125FD643F033AAB0 3.17 #module
 >Proto >Proto Collection #zClass
 Fs0 FileListChooserProcess Big #zClass
@@ -21,7 +21,6 @@ Fs0 @RichDialogInitStart f3 '' #zField
 Fs0 @RichDialogProcessStep f7 '' #zField
 Fs0 @PushWFArc f8 '' #zField
 Fs0 @PushWFArc f2 '' #zField
-Fs0 @PushWFArc f6 '' #zField
 Fs0 @RichDialogMethodStart f4 '' #zField
 Fs0 @RichDialogProcessEnd f5 '' #zField
 Fs0 @PushWFArc f9 '' #zField
@@ -32,7 +31,6 @@ Fs0 @RichDialogMethodStart f13 '' #zField
 Fs0 @RichDialogProcessEnd f14 '' #zField
 Fs0 @PushWFArc f15 '' #zField
 Fs0 @RichDialogMethodStart f16 '' #zField
-Fs0 @PushWFArc f17 '' #zField
 Fs0 @RichDialogMethodStart f18 '' #zField
 Fs0 @RichDialogProcessStart f22 '' #zField
 Fs0 @RichDialogProcessEnd f23 '' #zField
@@ -42,12 +40,24 @@ Fs0 @PushWFArc f24 '' #zField
 Fs0 @RichDialogInitStart f27 '' #zField
 Fs0 @PushWFArc f28 '' #zField
 Fs0 @RichDialogMethodStart f29 '' #zField
-Fs0 @PushWFArc f30 '' #zField
 Fs0 @RichDialogMethodStart f32 '' #zField
-Fs0 @PushWFArc f37 '' #zField
-Fs0 @PushWFArc f33 '' #zField
 Fs0 @RichDialogInitStart f19 '' #zField
 Fs0 @PushWFArc f20 '' #zField
+Fs0 @RichDialogProcessStep f21 '' #zField
+Fs0 @PushWFArc f31 '' #zField
+Fs0 @PushWFArc f6 '' #zField
+Fs0 @RichDialogProcessStep f34 '' #zField
+Fs0 @PushWFArc f35 '' #zField
+Fs0 @PushWFArc f33 '' #zField
+Fs0 @PushWFArc f36 '' #zField
+Fs0 @PushWFArc f30 '' #zField
+Fs0 @PushWFArc f17 '' #zField
+Fs0 @RichDialogMethodStart f37 '' #zField
+Fs0 @RichDialogProcessEnd f38 '' #zField
+Fs0 @PushWFArc f39 '' #zField
+Fs0 @RichDialogMethodStart f40 '' #zField
+Fs0 @RichDialogProcessEnd f41 '' #zField
+Fs0 @PushWFArc f42 '' #zField
 >Proto Fs0 Fs0 FileListChooserProcess #zField
 Fs0 f0 guid 11F6EC90B2294A9F #txt
 Fs0 f0 type ch.ivyteam.ivy.addons.filemanager.FileListChooser.FileListChooserData #txt
@@ -73,7 +83,7 @@ Fs0 f0 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 Fs0 f0 86 38 20 20 13 0 #rect
 Fs0 f0 @|RichDialogInitStartIcon #fIcon
 Fs0 f1 type ch.ivyteam.ivy.addons.filemanager.FileListChooser.FileListChooserData #txt
-Fs0 f1 83 315 26 26 14 0 #rect
+Fs0 f1 83 371 26 26 14 0 #rect
 Fs0 f1 @|RichDialogProcessEndIcon #fIcon
 Fs0 f3 guid 11F6EDD832C64BF6 #txt
 Fs0 f3 type ch.ivyteam.ivy.addons.filemanager.FileListChooser.FileListChooserData #txt
@@ -103,37 +113,13 @@ Fs0 f7 actionDecl 'ch.ivyteam.ivy.addons.filemanager.FileListChooser.FileListCho
 Fs0 f7 actionTable 'out=in;
 ' #txt
 Fs0 f7 actionCode 'import ch.ivyteam.ivy.addons.filemanager.database.AbstractFileManagementHandler;
-import ch.ivyteam.ivy.addons.filemanager.DocumentOnServer;
-import ch.ivyteam.ivy.addons.filemanager.FileHandler;
-import java.util.regex.Pattern;
 
-in.filteredDcoumentsList.clear();
 if(in.configurationController.rootPath.equals(""))
 {
 	in.configurationController.rootPath="defaultDirectory";
 }
 in.filemanagementHandler= AbstractFileManagementHandler.getInstance(in.configurationController);
-try{
-	in.documentsList=in.filemanagementHandler.getDocumentsWithJavaFileInPath(in.configurationController.rootPath,false);
-}catch(Throwable t)
-{
-	ivy.log.error("Error while getting the documents with their Java Files. "+t.getMessage(),t);
-}
-
-in.selectedDocumentOnServer= new DocumentOnServer();
-in.selectedFile=null;
-
-// if we filter
-if(!in.pattern.trim().equalsIgnoreCase("")){
-	Pattern patternOnName = Pattern.compile(".*" + in.pattern + ".*", Pattern.CASE_INSENSITIVE);
-	for(DocumentOnServer doc: in.documentsList){
-		if(patternOnName.matcher(doc.filename).matches()){
-			out.filteredDcoumentsList.add(doc);
-		}
-	}
-}else{
-	out.filteredDcoumentsList.addAll(in.documentsList);
-}' #txt
+' #txt
 Fs0 f7 type ch.ivyteam.ivy.addons.filemanager.FileListChooser.FileListChooserData #txt
 Fs0 f7 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
@@ -146,8 +132,6 @@ Fs0 f8 expr out #txt
 Fs0 f8 96 58 96 220 #arcP
 Fs0 f2 expr out #txt
 Fs0 f2 164 73 101 220 #arcP
-Fs0 f6 expr out #txt
-Fs0 f6 96 244 96 315 #arcP
 Fs0 f4 guid 11F6EE5DAC974A3A #txt
 Fs0 f4 type ch.ivyteam.ivy.addons.filemanager.FileListChooser.FileListChooserData #txt
 Fs0 f4 method getPath() #txt
@@ -249,18 +233,23 @@ Fs0 f16 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 ' #txt
 Fs0 f16 774 46 20 20 13 0 #rect
 Fs0 f16 @|RichDialogMethodStartIcon #fIcon
-Fs0 f17 expr out #txt
-Fs0 f17 784 66 114 232 #arcP
-Fs0 f17 1 784 232 #addKink
-Fs0 f17 1 0.5431044523634235 0 0 #arcLabel
 Fs0 f18 guid 11F6EE86AE988249 #txt
 Fs0 f18 type ch.ivyteam.ivy.addons.filemanager.FileListChooser.FileListChooserData #txt
 Fs0 f18 method setPath(String) #txt
 Fs0 f18 disableUIEvents false #txt
+Fs0 f18 inParameterDecl 'ch.ivyteam.ivy.richdialog.exec.RdMethodCallEvent methodEvent = event as ch.ivyteam.ivy.richdialog.exec.RdMethodCallEvent;
+<java.lang.String path> param = methodEvent.getInputArguments();
+' #txt
+Fs0 f18 inParameterMapAction 'out.configurationController.rootPath=param.path;
+' #txt
+Fs0 f18 outParameterDecl '<> result;
+' #txt
 Fs0 f18 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
         <name>setPath(String)</name>
+        <nameStyle>15,5,7
+</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -373,10 +362,6 @@ Fs0 f29 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 ' #txt
 Fs0 f29 830 86 20 20 13 0 #rect
 Fs0 f29 @|RichDialogMethodStartIcon #fIcon
-Fs0 f30 expr out #txt
-Fs0 f30 840 106 114 232 #arcP
-Fs0 f30 1 840 232 #addKink
-Fs0 f30 1 0.30209449789994514 0 0 #arcLabel
 Fs0 f32 guid 122F435AF966A583 #txt
 Fs0 f32 type ch.ivyteam.ivy.addons.filemanager.FileListChooser.FileListChooserData #txt
 Fs0 f32 method setPattern(String) #txt
@@ -399,14 +384,6 @@ Fs0 f32 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 ' #txt
 Fs0 f32 894 126 20 20 13 0 #rect
 Fs0 f32 @|RichDialogMethodStartIcon #fIcon
-Fs0 f37 expr out #txt
-Fs0 f37 904 146 114 232 #arcP
-Fs0 f37 1 904 232 #addKink
-Fs0 f37 1 0.5834663011785789 0 0 #arcLabel
-Fs0 f33 expr out #txt
-Fs0 f33 552 74 114 232 #arcP
-Fs0 f33 1 552 232 #addKink
-Fs0 f33 1 0.4692777887493621 0 0 #arcLabel
 Fs0 f19 guid 137AECE99D52528C #txt
 Fs0 f19 type ch.ivyteam.ivy.addons.filemanager.FileListChooser.FileListChooserData #txt
 Fs0 f19 method start(ch.ivyteam.ivy.addons.filemanager.configuration.BasicConfigurationController,String) #txt
@@ -429,12 +406,136 @@ Fs0 f19 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-Fs0 f19 214 278 20 20 13 0 #rect
+Fs0 f19 246 166 20 20 13 0 #rect
 Fs0 f19 @|RichDialogInitStartIcon #fIcon
 Fs0 f20 expr out #txt
-Fs0 f20 214 288 111 244 #arcP
-Fs0 f20 1 168 288 #addKink
+Fs0 f20 246 176 111 220 #arcP
+Fs0 f20 1 168 176 #addKink
 Fs0 f20 1 0.17978395702862546 0 0 #arcLabel
+Fs0 f21 actionDecl 'ch.ivyteam.ivy.addons.filemanager.FileListChooser.FileListChooserData out;
+' #txt
+Fs0 f21 actionTable 'out=in;
+' #txt
+Fs0 f21 actionCode 'import ch.ivyteam.ivy.addons.filemanager.DocumentOnServer;
+import ch.ivyteam.ivy.addons.filemanager.FileHandler;
+import java.util.regex.Pattern;
+in.filteredDcoumentsList.clear();
+try{
+	in.documentsList=in.filemanagementHandler.getDocumentsWithJavaFileInPath(in.configurationController.rootPath,false);
+}catch(Throwable t)
+{
+	ivy.log.error("Error while getting the documents with their Java Files. "+t.getMessage(),t);
+	in.errorUtil.throwable=t;
+	in.errorUtil.message=ivy.cms.co("/ch/ivyteam/ivy/addons/filemanager/fileManagement/messages/error/errorOccurred");
+	panel.fireErrorOccurred(in.errorUtil);
+}
+
+in.selectedDocumentOnServer= new DocumentOnServer();
+in.selectedFile=null;
+
+// if we filter
+if(!in.pattern.trim().equalsIgnoreCase("")){
+	Pattern patternOnName = Pattern.compile(".*" + in.pattern + ".*", Pattern.CASE_INSENSITIVE);
+	for(DocumentOnServer doc: in.documentsList){
+		if(patternOnName.matcher(doc.filename).matches()){
+			out.filteredDcoumentsList.add(doc);
+		}
+	}
+}else{
+	out.filteredDcoumentsList.addAll(in.documentsList);
+}' #txt
+Fs0 f21 type ch.ivyteam.ivy.addons.filemanager.FileListChooser.FileListChooserData #txt
+Fs0 f21 78 276 36 24 20 -2 #rect
+Fs0 f21 @|RichDialogProcessStepIcon #fIcon
+Fs0 f31 expr out #txt
+Fs0 f31 96 244 96 276 #arcP
+Fs0 f6 expr out #txt
+Fs0 f6 96 300 96 371 #arcP
+Fs0 f34 actionDecl 'ch.ivyteam.ivy.addons.filemanager.FileListChooser.FileListChooserData out;
+' #txt
+Fs0 f34 actionTable 'out=in;
+' #txt
+Fs0 f34 actionCode 'if(in.configurationController.rootPath.equals(""))
+{
+	in.configurationController.rootPath="defaultDirectory";
+}
+' #txt
+Fs0 f34 type ch.ivyteam.ivy.addons.filemanager.FileListChooser.FileListChooserData #txt
+Fs0 f34 534 116 36 24 20 -2 #rect
+Fs0 f34 @|RichDialogProcessStepIcon #fIcon
+Fs0 f35 expr out #txt
+Fs0 f35 552 74 552 116 #arcP
+Fs0 f35 0 0.6099726031413096 0 0 #arcLabel
+Fs0 f33 expr out #txt
+Fs0 f33 904 146 114 288 #arcP
+Fs0 f33 1 904 288 #addKink
+Fs0 f33 1 0.5834663011785789 0 0 #arcLabel
+Fs0 f36 expr out #txt
+Fs0 f36 840 106 114 288 #arcP
+Fs0 f36 1 840 288 #addKink
+Fs0 f36 1 0.30209449789994514 0 0 #arcLabel
+Fs0 f30 expr out #txt
+Fs0 f30 784 66 114 288 #arcP
+Fs0 f30 1 784 288 #addKink
+Fs0 f30 1 0.5431044523634235 0 0 #arcLabel
+Fs0 f17 expr out #txt
+Fs0 f17 552 140 114 287 #arcP
+Fs0 f17 1 552 272 #addKink
+Fs0 f17 1 0.34117271136633687 0 0 #arcLabel
+Fs0 f37 guid 13D992A133935561 #txt
+Fs0 f37 type ch.ivyteam.ivy.addons.filemanager.FileListChooser.FileListChooserData #txt
+Fs0 f37 method getDocumentsList() #txt
+Fs0 f37 disableUIEvents false #txt
+Fs0 f37 inParameterDecl 'ch.ivyteam.ivy.richdialog.exec.RdMethodCallEvent methodEvent = event as ch.ivyteam.ivy.richdialog.exec.RdMethodCallEvent;
+<> param = methodEvent.getInputArguments();
+' #txt
+Fs0 f37 outParameterDecl '<List<ch.ivyteam.ivy.addons.filemanager.DocumentOnServer> documentsList> result;
+' #txt
+Fs0 f37 outParameterMapAction 'result.documentsList=in.documentsList;
+' #txt
+Fs0 f37 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>getDocumentsList()</name>
+        <nameStyle>18,5,7
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
+Fs0 f37 1014 230 20 20 13 0 #rect
+Fs0 f37 @|RichDialogMethodStartIcon #fIcon
+Fs0 f38 type ch.ivyteam.ivy.addons.filemanager.FileListChooser.FileListChooserData #txt
+Fs0 f38 1014 286 20 20 13 0 #rect
+Fs0 f38 @|RichDialogProcessEndIcon #fIcon
+Fs0 f39 expr out #txt
+Fs0 f39 1024 250 1024 286 #arcP
+Fs0 f40 guid 13D992C7031AFE1B #txt
+Fs0 f40 type ch.ivyteam.ivy.addons.filemanager.FileListChooser.FileListChooserData #txt
+Fs0 f40 method getDocumentsFilteredList() #txt
+Fs0 f40 disableUIEvents false #txt
+Fs0 f40 inParameterDecl 'ch.ivyteam.ivy.richdialog.exec.RdMethodCallEvent methodEvent = event as ch.ivyteam.ivy.richdialog.exec.RdMethodCallEvent;
+<> param = methodEvent.getInputArguments();
+' #txt
+Fs0 f40 outParameterDecl '<List<ch.ivyteam.ivy.addons.filemanager.DocumentOnServer> documentsFilteredList> result;
+' #txt
+Fs0 f40 outParameterMapAction 'result.documentsFilteredList=in.filteredDcoumentsList;
+' #txt
+Fs0 f40 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>getDocumentsFilteredList()</name>
+        <nameStyle>26,5,7
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
+Fs0 f40 1014 342 20 20 13 0 #rect
+Fs0 f40 @|RichDialogMethodStartIcon #fIcon
+Fs0 f41 type ch.ivyteam.ivy.addons.filemanager.FileListChooser.FileListChooserData #txt
+Fs0 f41 1014 398 20 20 13 0 #rect
+Fs0 f41 @|RichDialogProcessEndIcon #fIcon
+Fs0 f42 expr out #txt
+Fs0 f42 1024 362 1024 398 #arcP
 >Proto Fs0 .type ch.ivyteam.ivy.addons.filemanager.FileListChooser.FileListChooserData #txt
 >Proto Fs0 .processKind RICH_DIALOG #txt
 >Proto Fs0 .rdData2UIAction 'panel.fileListComboBox.listData=in.filteredDcoumentsList;
@@ -464,27 +565,35 @@ Fs0 f0 mainOut f8 tail #connect
 Fs0 f8 head f7 mainIn #connect
 Fs0 f3 mainOut f2 tail #connect
 Fs0 f2 head f7 mainIn #connect
-Fs0 f7 mainOut f6 tail #connect
-Fs0 f6 head f1 mainIn #connect
 Fs0 f4 mainOut f9 tail #connect
 Fs0 f9 head f5 mainIn #connect
 Fs0 f10 mainOut f12 tail #connect
 Fs0 f12 head f11 mainIn #connect
 Fs0 f13 mainOut f15 tail #connect
 Fs0 f15 head f14 mainIn #connect
-Fs0 f16 mainOut f17 tail #connect
-Fs0 f17 head f7 mainIn #connect
 Fs0 f22 mainOut f26 tail #connect
 Fs0 f26 head f25 mainIn #connect
 Fs0 f25 mainOut f24 tail #connect
 Fs0 f24 head f23 mainIn #connect
 Fs0 f27 mainOut f28 tail #connect
 Fs0 f28 head f7 mainIn #connect
-Fs0 f29 mainOut f30 tail #connect
-Fs0 f30 head f7 mainIn #connect
-Fs0 f32 mainOut f37 tail #connect
-Fs0 f37 head f7 mainIn #connect
-Fs0 f18 mainOut f33 tail #connect
-Fs0 f33 head f7 mainIn #connect
 Fs0 f19 mainOut f20 tail #connect
 Fs0 f20 head f7 mainIn #connect
+Fs0 f7 mainOut f31 tail #connect
+Fs0 f31 head f21 mainIn #connect
+Fs0 f21 mainOut f6 tail #connect
+Fs0 f6 head f1 mainIn #connect
+Fs0 f18 mainOut f35 tail #connect
+Fs0 f35 head f34 mainIn #connect
+Fs0 f32 mainOut f33 tail #connect
+Fs0 f33 head f21 mainIn #connect
+Fs0 f29 mainOut f36 tail #connect
+Fs0 f36 head f21 mainIn #connect
+Fs0 f16 mainOut f30 tail #connect
+Fs0 f30 head f21 mainIn #connect
+Fs0 f34 mainOut f17 tail #connect
+Fs0 f17 head f21 mainIn #connect
+Fs0 f37 mainOut f39 tail #connect
+Fs0 f39 head f38 mainIn #connect
+Fs0 f40 mainOut f42 tail #connect
+Fs0 f42 head f41 mainIn #connect
