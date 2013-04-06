@@ -30,6 +30,7 @@ import com.aspose.words.FieldMergingArgs;
 import com.aspose.words.IFieldMergingCallback;
 import com.aspose.words.ImageFieldMergingArgs;
 import com.aspose.words.ImportFormatMode;
+import com.aspose.words.MailMergeCleanupOptions;
 import com.aspose.words.Node;
 import com.aspose.words.SaveFormat;
 import com.aspose.words.Section;
@@ -321,6 +322,8 @@ public class AsposeDocFactory extends BaseDocFactory{
 
 		return fileOperationMessage;
 	}
+	
+	
 
 
 	/**
@@ -332,31 +335,8 @@ public class AsposeDocFactory extends BaseDocFactory{
 	@Override
 	public String generateTxt(String templatePath, List<TemplateMergeField> list){
 		String emailText ="";
-		this.template = new java.io.File(FileUtil.formatPath(templatePath));
-		String [] paramName= new String[list.size()];
-		String [] paramValue= new String[list.size()];
-		for(int i=0; i<list.size();i++){
-			String s= list.get(i).getMergeFieldName();
-			if(s.startsWith("Image:") || s.startsWith("Image_"))
-			{//The mergefield name indicates an Image, we take only the second part of the name
-				paramName[i]=s.substring(6);
-			}
-			else
-			{//The mergefield is a text field
-				paramName[i]=s;
-			}
-
-			paramValue[i]=list.get(i).getMergeFieldValue();
-		}
 		try {
-			doc = new Document(templatePath);
-			//Set up the event handler for image fields and perform mail merge.
-			doc.getMailMerge().setFieldMergingCallback(new HandleMergeImageField());
-
-			doc.getMailMerge().execute(paramName,paramValue);
-			doc.getMailMerge().setRemoveEmptyParagraphs(true);
-			doc.getMailMerge().deleteFields();
-			emailText = doc.toTxt();
+			emailText = this.doMailMerge(templatePath, list).toTxt();
 		} catch (Exception e) {
 			this.fileOperationMessage.setType(ch.ivyteam.ivy.addons.docfactory.FileOperationMessage.ERROR_MESSAGE);
 			this.fileOperationMessage.setMessage(e.getMessage());
@@ -380,33 +360,10 @@ public class AsposeDocFactory extends BaseDocFactory{
 			this.outputPath="ivy_RIA_files";
 		}
 		this.outputPath = FileUtil.formatPathWithEndSeparator(this.outputPath);
-		this.template = new java.io.File(FileUtil.formatPath(templatePath));
-
-		String [] paramName= new String[list.size()];
-		String [] paramValue= new String[list.size()];
-		for(int i=0; i<list.size();i++){
-			String s= list.get(i).getMergeFieldName();
-			if(s.startsWith("Image:") || s.startsWith("Image_"))
-			{//The mergefield name indicates an Image, we take only the second part of the name
-				paramName[i]=s.substring(6);
-			}
-			else
-			{//The mergefield is a text field
-				paramName[i]=s;
-			}
-			paramValue[i]=list.get(i).getMergeFieldValue();
-		}
 		try {
 			String randomPart= new Long(System.nanoTime()).toString();
 			String s = this.outputPath+"tmpHTML_" + randomPart+".html";
-			doc = new Document(templatePath);
-			//Set up the event handler for image fields and perform mail merge.
-			doc.getMailMerge().setFieldMergingCallback(new HandleMergeImageField());
-
-			doc.getMailMerge().execute(paramName,paramValue);
-			doc.getMailMerge().setRemoveEmptyParagraphs(true);
-			doc.getMailMerge().deleteFields();
-			doc.save(s, SaveFormat.HTML);
+			this.doMailMerge(templatePath, list).save(s, SaveFormat.HTML);
 
 			StringBuffer fileData = new StringBuffer();
 			BufferedReader reader = new BufferedReader(
@@ -454,30 +411,9 @@ public class AsposeDocFactory extends BaseDocFactory{
 			this.outputName=list.get(0).getMergeFieldValue().trim();
 		}
 
-		String [] paramName= new String[list.size()];
-		String [] paramValue= new String[list.size()];
-		for(int i=0; i<list.size();i++){
-			String s= list.get(i).getMergeFieldName();
-			if(s.startsWith("Image:") || s.startsWith("Image_"))
-			{//The merge field name indicates an Image, we take only the second part of the name
-				paramName[i]=s.substring(6);
-			}
-			else
-			{//The merge field is a text field
-				paramName[i]=s;
-			}
-			paramValue[i]=list.get(i).getMergeFieldValue();
-		}
 		try {
 			String s = this.outputPath+this.outputName+".html";
-			doc = new Document(templatePath);
-			//Set up the event handler for image fields and perform mail merge.
-			doc.getMailMerge().setFieldMergingCallback(new HandleMergeImageField());
-
-			doc.getMailMerge().execute(paramName,paramValue);
-			doc.getMailMerge().setRemoveEmptyParagraphs(true);
-			doc.getMailMerge().deleteFields();
-			doc.save(s, SaveFormat.HTML);
+			this.doMailMerge(templatePath, list).save(s, SaveFormat.HTML);
 			HTMLfiles.add(new java.io.File(s));
 			HTMLfiles.addAll(FileUtil.getFilesWithPattern("\\.[0-9].*$", this.outputName, this.outputPath));
 		} catch (Exception e) {
@@ -545,7 +481,8 @@ public class AsposeDocFactory extends BaseDocFactory{
 						file=new File(s+".txt");
 						break;
 					default:
-						break;
+						_doc.save(s+".pdf");
+						file=new File(s+".pdf");
 					}
 					files.add(file);
 				} catch (Exception e) {
@@ -584,7 +521,6 @@ public class AsposeDocFactory extends BaseDocFactory{
 			this.setOutputPath(FileUtil.formatPathWithEndSeparator(_outputPath));
 		}
 
-
 		this.setFormat(_outputFormat);
 
 		//reset the fileOperationMessage object
@@ -599,22 +535,7 @@ public class AsposeDocFactory extends BaseDocFactory{
 		{// there are still letters that have not been written
 			ArrayList<TemplateMergeField> templateParamslist =new ArrayList<TemplateMergeField>();
 			templateParamslist.addAll(iter.next());
-			// We build parameters/values Arrays for Mailmerging methods.
-			String [] paramName= new String[templateParamslist.size()];
-			String [] paramValue= new String[templateParamslist.size()];
-			for(int i=0; i<templateParamslist.size();i++){
-				String s= templateParamslist.get(i).getMergeFieldName();
-				if(s.startsWith("Image:") || s.startsWith("Image_"))
-				{//The merge field name indicates an Image, we take only the second part of the name
-					paramName[i]=s.substring(6);
-				}
-				else
-				{//The merge field is a text field
-					paramName[i]=s;
-				}
-				paramValue[i]=templateParamslist.get(i).getMergeFieldValue();
-			}
-
+			
 			//Try to get the filename from the first template merge field found
 			if(templateParamslist.get(0).getMergeFieldName().trim().equalsIgnoreCase("filename"))
 			{
@@ -622,52 +543,43 @@ public class AsposeDocFactory extends BaseDocFactory{
 			}else{//we didn't find the filename merge field, we take the default serial letter name
 				outputName="serialLetter_"+System.nanoTime();
 			}
-
-			File file=null;
+			
 			try {
-				doc = new Document(template.getPath());
-
-				//Set up the event handler for image fields and perform mail merge.
-				doc.getMailMerge().setFieldMergingCallback(new HandleMergeImageField());
-
-				doc.getMailMerge().execute(paramName,paramValue);
-				doc.getMailMerge().setRemoveEmptyParagraphs(true);
-				doc.getMailMerge().deleteFields();
-
+				File file=null;
 				switch(getFormatPosition(_outputFormat)){
 				case DOC_FORMAT:
-					doc.save(outputPath+outputName+".doc", SaveFormat.DOC);
+					this.doMailMerge(templatePath, templateParamslist).save(outputPath+outputName+".doc", SaveFormat.DOC);
 					file=new File(outputPath+outputName+".doc");
 					break;
 				case DOCX_FORMAT:
-					doc.save(outputPath+outputName+".docx", SaveFormat.DOCX);
+					this.doMailMerge(templatePath, templateParamslist).save(outputPath+outputName+".docx", SaveFormat.DOCX);
 					file=new File(outputPath+outputName+".docx");
 					break;
 				case PDF_FORMAT:
-					doc.save(outputPath+outputName+".pdf");
+					this.doMailMerge(templatePath, templateParamslist).save(outputPath+outputName+".pdf");
 					file=new File(outputPath+outputName+".pdf");
 					break;
 				case HTML_FORMAT:
-					doc.save(outputPath+outputName+".html", SaveFormat.HTML);
+					this.doMailMerge(templatePath, templateParamslist).save(outputPath+outputName+".html", SaveFormat.HTML);
 					file=new File(outputPath+outputName+".html");
 					break;
 				case TXT_FORMAT:
-					doc.save(outputPath+outputName+".txt", SaveFormat.TEXT);
+					this.doMailMerge(templatePath, templateParamslist).save(outputPath+outputName+".txt", SaveFormat.TEXT);
 					file=new File(outputPath+outputName+".txt");
 					break;
 				default:
-					break;
+					this.doMailMerge(templatePath, templateParamslist).save(outputPath+outputName+".pdf");
+					file=new File(outputPath+outputName+".pdf");
 				}
+				//We add the new created file to the Files list
+				fileOperationMessage.addFile(file);
 			} catch (Exception e1) {
 				fileOperationMessage.setType(ch.ivyteam.ivy.addons.docfactory.FileOperationMessage.ERROR_MESSAGE);
 				fileOperationMessage.setMessage(e1.getMessage());
 				RDCallbackMethodHandler.callRDMethod(parentRD, errorMethodName, new Object[] { fileOperationMessage });	
 			}
-			//We add the new created file to the Files list
-			fileOperationMessage.addFile(file);
-
+			
 		}
-
 		return fileOperationMessage;
 	}
 
@@ -689,13 +601,11 @@ public class AsposeDocFactory extends BaseDocFactory{
 	@Override
 	public FileOperationMessage generateDocumentsWithDifferentDestination(String templatePath, final String _outputFormat, final List<List<TemplateMergeField>> list) {
 
-		this.template = new java.io.File(FileUtil.formatPath(templatePath));
 		if(!doCheckBeforeDocGeneration(_outputFormat, list))
 		{//series of check to see if no exceptions
 			return this.fileOperationMessage;
 		}
 		this.setFormat(_outputFormat);
-
 		this.fileOperationMessage=new FileOperationMessage();
 		this.fileOperationMessage.setType(ch.ivyteam.ivy.addons.docfactory.FileOperationMessage.SUCCESS_MESSAGE);
 		this.fileOperationMessage.emptyFileList();
@@ -707,7 +617,6 @@ public class AsposeDocFactory extends BaseDocFactory{
 			templateParamslist.addAll(iter.next());
 
 			String destinationPath;// the specific destination path for this letter
-
 			//get the name of the document
 			if(templateParamslist.get(0).getMergeFieldName().trim().equalsIgnoreCase("filename"))
 			{
@@ -724,62 +633,42 @@ public class AsposeDocFactory extends BaseDocFactory{
 			else{
 				destinationPath= FileUtil.formatPathWithEndSeparator("ivy_RIA_files", true);
 			}
-
-			// We build parameters/values Arrays for Mail merging methods.
-			String [] paramName= new String[templateParamslist.size()];
-			String [] paramValue= new String[templateParamslist.size()];
-			for(int i=0; i<templateParamslist.size();i++){
-				String s= templateParamslist.get(i).getMergeFieldName();
-				if(s.startsWith("Image:") || s.startsWith("Image_"))
-				{//The merge field name indicates an Image, we take only the second part of the name
-					paramName[i]=s.substring(6);
-				}
-				else
-				{//The merge field is a text field
-					paramName[i]=s;
-				}
-				paramValue[i]=templateParamslist.get(i).getMergeFieldValue();
-			}
-			File file=null;
+			
 			try {
-				doc = new Document(template.getPath());
-				//Set up the event handler for image fields and perform mail merge.
-				doc.getMailMerge().setFieldMergingCallback(new HandleMergeImageField());
-				doc.getMailMerge().execute(paramName,paramValue);
-				doc.getMailMerge().setRemoveEmptyParagraphs(true);
-				doc.getMailMerge().deleteFields();
-
+				File file=null;
 				switch(getFormatPosition(_outputFormat)){
 				case DOC_FORMAT:
-					doc.save(destinationPath+outputName+".doc", SaveFormat.DOC);
+					this.doMailMerge(templatePath, templateParamslist).save(destinationPath+outputName+".doc", SaveFormat.DOC);
 					file=new File(destinationPath+outputName+".doc");
 					break;
 				case DOCX_FORMAT:
-					doc.save(destinationPath+outputName+".docx", SaveFormat.DOCX);
+					this.doMailMerge(templatePath, templateParamslist).save(destinationPath+outputName+".docx", SaveFormat.DOCX);
 					file=new File(destinationPath+outputName+".docx");
 					break;
 				case PDF_FORMAT:
-					doc.save(outputPath+outputName+".pdf");
+					this.doMailMerge(templatePath, templateParamslist).save(outputPath+outputName+".pdf");
 					file=new File(outputPath+outputName+".pdf");
 					break;
 				case HTML_FORMAT:
-					doc.save(destinationPath+outputName+".html", SaveFormat.HTML);
+					this.doMailMerge(templatePath, templateParamslist).save(destinationPath+outputName+".html", SaveFormat.HTML);
 					file=new File(destinationPath+outputName+".html");
 					break;
 				case TXT_FORMAT:
-					doc.save(destinationPath+outputName+".txt", SaveFormat.TEXT);
+					this.doMailMerge(templatePath, templateParamslist).save(destinationPath+outputName+".txt", SaveFormat.TEXT);
 					file=new File(destinationPath+outputName+".txt");
 					break;
 				default:
-					break;
+					this.doMailMerge(templatePath, templateParamslist).save(outputPath+outputName+".pdf");
+					file=new File(outputPath+outputName+".pdf");
 				}
+				//We add the new created file to the Files list
+				fileOperationMessage.addFile(file);
 			} catch (Exception e1) {
 				fileOperationMessage.setType(ch.ivyteam.ivy.addons.docfactory.FileOperationMessage.ERROR_MESSAGE);
 				fileOperationMessage.setMessage(e1.getMessage());
 				RDCallbackMethodHandler.callRDMethod(parentRD, errorMethodName, new Object[] { fileOperationMessage });	
 			}
-			//We add the new created file to the Files list
-			fileOperationMessage.addFile(file);
+			
 		}
 		return fileOperationMessage;
 	}
@@ -972,7 +861,8 @@ public class AsposeDocFactory extends BaseDocFactory{
 		}
 		catch (Exception e1) {
 			this.fileOperationMessage.setType(ch.ivyteam.ivy.addons.docfactory.FileOperationMessage.ERROR_MESSAGE);
-			this.fileOperationMessage.setMessage(e1.getMessage());
+			this.fileOperationMessage.setMessage(e1.getClass().getName()+" "+e1.getMessage());
+			Ivy.log().error(e1.getClass().getName()+" "+e1.getMessage());
 			RDCallbackMethodHandler.callRDMethod(this.parentRD, errorMethodName, new Object[] { this.fileOperationMessage });
 		}
 		if(this.fileOperationMessage.getType()==ch.ivyteam.ivy.addons.docfactory.FileOperationMessage.SUCCESS_MESSAGE)
@@ -1063,6 +953,7 @@ public class AsposeDocFactory extends BaseDocFactory{
 
 		//Set up the event handler for image fields and perform mail merge.
 		document.getMailMerge().setFieldMergingCallback(new HandleMergeImageField());
+		document.getMailMerge().setCleanupOptions(MailMergeCleanupOptions.REMOVE_EMPTY_PARAGRAPHS);
 		document.getMailMerge().execute(paramName,paramValue);
 		//do mail merge with regions if necessary
 		if(!mmds.isEmpty())
@@ -1071,7 +962,7 @@ public class AsposeDocFactory extends BaseDocFactory{
 				document.getMailMerge().executeWithRegions(m);
 			}
 		}
-		document.getMailMerge().setRemoveEmptyParagraphs(true);
+		//document.getMailMerge().setRemoveEmptyParagraphs(true);
 		document.getMailMerge().deleteFields();
 
 		return document;
@@ -1108,9 +999,9 @@ public class AsposeDocFactory extends BaseDocFactory{
 		}
 		//Set up the event handler for image fields and perform mail merge.
 		document.getMailMerge().setFieldMergingCallback(new HandleMergeImageField());
-
+		document.getMailMerge().setCleanupOptions(MailMergeCleanupOptions.REMOVE_EMPTY_PARAGRAPHS);
 		document.getMailMerge().execute(paramName,paramValue);
-		document.getMailMerge().setRemoveEmptyParagraphs(true);
+		//document.getMailMerge().setRemoveEmptyParagraphs(true);
 		document.getMailMerge().deleteFields();
 		return document;
 	}
@@ -1143,10 +1034,12 @@ public class AsposeDocFactory extends BaseDocFactory{
 
 		//Set up the event handler for image fields and perform mail merge.
 		doc.getMailMerge().setFieldMergingCallback(new HandleMergeImageField());
-
+		doc.getMailMerge().setCleanupOptions(MailMergeCleanupOptions.REMOVE_EMPTY_PARAGRAPHS);
+		doc.getMailMerge().setCleanupOptions(MailMergeCleanupOptions.REMOVE_UNUSED_REGIONS);
 		doc.getMailMerge().execute(paramName,paramValue);
-		doc.getMailMerge().setRemoveEmptyParagraphs(true);
-		doc.getMailMerge().setRemoveEmptyRegions(true);
+		
+		//doc.getMailMerge().setRemoveEmptyParagraphs(true);
+		//doc.getMailMerge().setRemoveEmptyRegions(true);
 		doc.getMailMerge().deleteFields();
 		switch(getFormatPosition(this.outputFormat)){
 		case DOC_FORMAT:
@@ -1519,6 +1412,7 @@ public class AsposeDocFactory extends BaseDocFactory{
 
 		//Set up the event handler for image fields and perform mail merge.
 		document.getMailMerge().setFieldMergingCallback(new HandleMergeImageField());
+		document.getMailMerge().setCleanupOptions(MailMergeCleanupOptions.REMOVE_EMPTY_PARAGRAPHS);
 		document.getMailMerge().execute(paramName,paramValue);
 		if(dataSourcesForMergeWithRegions!=null && !dataSourcesForMergeWithRegions.isEmpty())
 		{
@@ -1528,8 +1422,9 @@ public class AsposeDocFactory extends BaseDocFactory{
 				document.getMailMerge().executeWithRegions(iter.next());
 			}
 		}
-		document.getMailMerge().setRemoveEmptyParagraphs(true);
-		document.getMailMerge().setRemoveEmptyRegions(true);
+		document.getMailMerge().setCleanupOptions(MailMergeCleanupOptions.REMOVE_UNUSED_REGIONS);
+		//document.getMailMerge().setRemoveEmptyParagraphs(true);
+		//document.getMailMerge().setRemoveEmptyRegions(true);
 		document.getMailMerge().deleteFields();
 		return document;
 	}

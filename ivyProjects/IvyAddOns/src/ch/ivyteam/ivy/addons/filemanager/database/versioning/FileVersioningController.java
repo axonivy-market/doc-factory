@@ -419,7 +419,6 @@ public class FileVersioningController {
 										// PreparedStatement.RETURN_GENERATED_KEYS
 					// we have to get the inserted Id manually....
 					vid = this.getFileVersionWithParentFileIdAndVersionNumber(fileId, vn).getId();
-					// Ivy.log().info("CREATE VERSION TEST 1");
 				}
 
 				// insert the new version content
@@ -427,15 +426,14 @@ public class FileVersioningController {
 				try {
 					stmt = jdbcConnection.prepareStatement(q2,PreparedStatement.RETURN_GENERATED_KEYS);
 				} catch (SQLFeatureNotSupportedException fex) {
-					stmt = jdbcConnection.prepareStatement(q2);
+					
 					flag = false;
 				}
-
-				// Ivy.log().info("CREATE VERSION QUERY 2 "+q2);
+				if(!flag){
+					stmt = jdbcConnection.prepareStatement(q2);
+				}
 				stmt.setLong(1, fileId);
 				stmt.setLong(2, vid);
-
-				// Ivy.log().info("CREATE VERSION TEST 3");
 				boolean error = false;
 				try {
 					stmt.executeUpdate();
@@ -450,17 +448,16 @@ public class FileVersioningController {
 					try {
 						stmt = jdbcConnection.prepareStatement(q2bis,PreparedStatement.RETURN_GENERATED_KEYS);
 					} catch (SQLFeatureNotSupportedException fex) {
-						stmt = jdbcConnection.prepareStatement(q2bis);
 						flag = false;
 					}
+					if(!flag){
+						stmt = jdbcConnection.prepareStatement(q2bis);
+					}
 
-					// Ivy.log().info("CREATE VERSION QUERY 2 "+q2bis+" file_id = "+fileId+" file_version_id = "+vid);
 					stmt.setLong(1, vid);
 					stmt.setLong(2, fileId);
-					// Ivy.log().info("CREATE VERSION TEST 3");
 					stmt.executeUpdate();
 				}
-				// Ivy.log().info("CREATE VERSION TEST 4");
 				rs = null;
 				try {
 					rs = stmt.getGeneratedKeys();
@@ -471,13 +468,11 @@ public class FileVersioningController {
 				} catch (Exception fex) {// The JDBC Driver doesn't accept the
 											// PreparedStatement.RETURN_GENERATED_KEYS
 					// ignore
-					// Ivy.log().error("CREATE VERSION TEST 5 Exception "+fex.getMessage());
 				}
 
 				if (!flag || vcid <= 0) {// The JDBC Driver doesn't accept the
 											// PreparedStatement.RETURN_GENERATED_KEYS
 					// we have to get the inserted Id manually....
-					// Ivy.log().info("CREATE VERSION TEST 6 No returned file version content");
 					vcid = this.getLastInsertedFileVersionContent(vid);
 				}
 
