@@ -1,5 +1,5 @@
 [Ivy]
-[>Created: Fri Jun 15 14:35:52 CEST 2012]
+[>Created: Wed Nov 07 17:34:09 ICT 2012]
 12844EFAEBB78898 3.17 #module
 >Proto >Proto Collection #zClass
 Es0 EventLogServices Big #zClass
@@ -41,6 +41,11 @@ Es0 @EndSub f24 '' #zField
 Es0 @GridStep f26 '' #zField
 Es0 @PushWFArc f31 '' #zField
 Es0 @PushWFArc f22 '' #zField
+Es0 @StartSub f23 '' #zField
+Es0 @EndSub f25 '' #zField
+Es0 @GridStep f28 '' #zField
+Es0 @PushWFArc f29 '' #zField
+Es0 @PushWFArc f27 '' #zField
 >Proto Es0 Es0 EventLogServices #zField
 Es0 f0 inParamDecl '<ch.ivyteam.ivy.addons.data.technical.eventlog.EventLogSearchByCaseId searchByCaseId> param;' #txt
 Es0 f0 inParamTable 'out.caseId=param.searchByCaseId.caseId;
@@ -64,10 +69,10 @@ Es0 f0 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-Es0 f0 67 27 26 26 14 0 #rect
+Es0 f0 355 27 26 26 14 0 #rect
 Es0 f0 @|StartSubIcon #fIcon
 Es0 f1 type ch.ivyteam.ivy.addons.data.restricted.technical.EventLogServices #txt
-Es0 f1 211 267 26 26 14 0 #rect
+Es0 f1 499 267 26 26 14 0 #rect
 Es0 f1 @|EndSubIcon #fIcon
 Es0 f3 inParamDecl '<ch.ivyteam.ivy.addons.data.technical.eventlog.EventLogData eventLogData> param;' #txt
 Es0 f3 inParamTable 'out.createWithHistory=true;
@@ -92,7 +97,7 @@ Es0 f3 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-Es0 f3 731 27 26 26 14 0 #rect
+Es0 f3 1019 27 26 26 14 0 #rect
 Es0 f3 @|StartSubIcon #fIcon
 Es0 f6 actionDecl 'ch.ivyteam.ivy.addons.data.restricted.technical.EventLogServices out;
 ' #txt
@@ -155,10 +160,10 @@ Es0 f6 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-Es0 f6 726 100 36 24 20 -2 #rect
+Es0 f6 1014 100 36 24 20 -2 #rect
 Es0 f6 @|StepIcon #fIcon
 Es0 f13 expr out #txt
-Es0 f13 744 53 744 100 #arcP
+Es0 f13 1032 53 1032 100 #arcP
 Es0 f30 actionDecl 'ch.ivyteam.ivy.addons.data.restricted.technical.EventLogServices out;
 ' #txt
 Es0 f30 actionTable 'out=in;
@@ -210,10 +215,10 @@ and prepare the result</name>
     </language>
 </elementInfo>
 ' #txt
-Es0 f30 206 148 36 24 20 -2 #rect
+Es0 f30 494 148 36 24 20 -2 #rect
 Es0 f30 @|StepIcon #fIcon
 Es0 f2 expr out #txt
-Es0 f2 224 172 224 267 #arcP
+Es0 f2 512 172 512 267 #arcP
 Es0 f55 inParamDecl '<ch.ivyteam.ivy.addons.data.technical.eventlog.EventLogSearchByTaskId searchByTaskId> param;' #txt
 Es0 f55 inParamTable 'out.taskId=param.searchByTaskId.taskId;
 ' #txt
@@ -236,10 +241,10 @@ Es0 f55 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-Es0 f55 211 27 26 26 14 0 #rect
+Es0 f55 499 27 26 26 14 0 #rect
 Es0 f55 @|StartSubIcon #fIcon
 Es0 f8 type ch.ivyteam.ivy.addons.data.restricted.technical.EventLogServices #txt
-Es0 f8 731 267 26 26 14 0 #rect
+Es0 f8 1019 267 26 26 14 0 #rect
 Es0 f8 @|EndSubIcon #fIcon
 Es0 f10 actionDecl 'ch.ivyteam.ivy.addons.data.restricted.technical.EventLogServices out;
 ' #txt
@@ -282,16 +287,16 @@ Es0 f10 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-Es0 f10 726 164 36 24 20 -2 #rect
+Es0 f10 1014 164 36 24 20 -2 #rect
 Es0 f10 @|StepIcon #fIcon
 Es0 f11 expr out #txt
-Es0 f11 744 124 744 164 #arcP
+Es0 f11 1032 124 1032 164 #arcP
 Es0 f4 expr out #txt
-Es0 f4 744 188 744 267 #arcP
+Es0 f4 1032 188 1032 267 #arcP
 Es0 f9 expr out #txt
-Es0 f9 89 48 210 148 #arcP
+Es0 f9 377 48 498 148 #arcP
 Es0 f12 expr out #txt
-Es0 f12 224 53 224 148 #arcP
+Es0 f12 512 53 512 148 #arcP
 Es0 f14 inParamDecl '<java.lang.Number eventLogId> param;' #txt
 Es0 f14 inParamTable 'out.eventLogId=param.eventLogId;
 ' #txt
@@ -314,12 +319,12 @@ Es0 f14 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-Es0 f14 355 27 26 26 14 0 #rect
+Es0 f14 643 27 26 26 14 0 #rect
 Es0 f14 @|StartSubIcon #fIcon
 Es0 f19 expr out #txt
-Es0 f19 358 48 238 148 #arcP
+Es0 f19 646 48 526 148 #arcP
 Es0 f7 type ch.ivyteam.ivy.addons.data.restricted.technical.EventLogServices #txt
-Es0 f7 1003 267 26 26 14 0 #rect
+Es0 f7 1291 267 26 26 14 0 #rect
 Es0 f7 @|EndSubIcon #fIcon
 Es0 f15 inParamDecl '<java.lang.Number eventLogId,ch.ivyteam.ivy.addons.eventlog.data.technical.EventLogStatus newStatus> param;' #txt
 Es0 f15 inParamTable 'out.eventLogId=param.eventLogId;
@@ -344,7 +349,7 @@ Only event log entries that have ''MESSAGE'' as type have a status.</desc>
     </language>
 </elementInfo>
 ' #txt
-Es0 f15 1003 27 26 26 14 0 #rect
+Es0 f15 1291 27 26 26 14 0 #rect
 Es0 f15 @|StartSubIcon #fIcon
 Es0 f16 actionDecl 'ch.ivyteam.ivy.addons.data.restricted.technical.EventLogServices out;
 ' #txt
@@ -385,12 +390,12 @@ Es0 f16 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-Es0 f16 998 132 36 24 20 -2 #rect
+Es0 f16 1286 132 36 24 20 -2 #rect
 Es0 f16 @|StepIcon #fIcon
 Es0 f20 expr out #txt
-Es0 f20 1016 156 1016 267 #arcP
+Es0 f20 1304 156 1304 267 #arcP
 Es0 f5 expr out #txt
-Es0 f5 1016 53 1016 132 #arcP
+Es0 f5 1304 53 1304 132 #arcP
 Es0 f17 inParamDecl '<ch.ivyteam.ivy.addons.data.technical.eventlog.EventLogData eventLogData> param;' #txt
 Es0 f17 inParamTable 'out.createWithHistory=false;
 out.eventLog.data=param.eventLogData;
@@ -415,10 +420,10 @@ The event log case and task history tables are not filled.</desc>
     </language>
 </elementInfo>
 ' #txt
-Es0 f17 803 27 26 26 14 0 #rect
+Es0 f17 1091 27 26 26 14 0 #rect
 Es0 f17 @|StartSubIcon #fIcon
 Es0 f18 expr out #txt
-Es0 f18 806 49 756 100 #arcP
+Es0 f18 1094 49 1044 100 #arcP
 Es0 f21 inParamDecl '<ch.ivyteam.ivy.addons.data.technical.eventlog.EventLogSearchByCaseId searchByCaseId> param;' #txt
 Es0 f21 inParamTable 'out.readListId=param.searchByCaseId.caseId;
 ' #txt
@@ -441,10 +446,10 @@ Es0 f21 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-Es0 f21 467 27 26 26 14 0 #rect
+Es0 f21 755 27 26 26 14 0 #rect
 Es0 f21 @|StartSubIcon #fIcon
 Es0 f24 type ch.ivyteam.ivy.addons.data.restricted.technical.EventLogServices #txt
-Es0 f24 467 267 26 26 14 0 #rect
+Es0 f24 755 267 26 26 14 0 #rect
 Es0 f24 @|EndSubIcon #fIcon
 Es0 f26 actionDecl 'ch.ivyteam.ivy.addons.data.restricted.technical.EventLogServices out;
 ' #txt
@@ -461,7 +466,7 @@ out.events.clear();
 
 try
 {
-	ICase wfCase = PublicAPIHelper.findCaseAsSystemUser(in.readListId);
+	ICase wfCase = PublicAPIHelper.findCase(in.readListId);
 	out.eventLogs.clear();
 	out.eventLogs.addAll(EventLogHelper.findBusinessEventLogsAsSystemUser(wfCase));
 	out.ivyResultStatus.successful = true;
@@ -488,12 +493,100 @@ Es0 f26 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-Es0 f26 462 116 36 24 20 -2 #rect
+Es0 f26 750 116 36 24 20 -2 #rect
 Es0 f26 @|StepIcon #fIcon
 Es0 f31 expr out #txt
-Es0 f31 480 53 480 116 #arcP
+Es0 f31 768 53 768 116 #arcP
 Es0 f22 expr out #txt
-Es0 f22 480 140 480 267 #arcP
+Es0 f22 768 140 768 267 #arcP
+Es0 f23 inParamDecl '<ch.ivyteam.ivy.addons.data.technical.eventlog.EventLogSearchByBusinessObject businessObject> param;' #txt
+Es0 f23 inParamTable 'out.businessObject=param.businessObject;
+' #txt
+Es0 f23 outParamDecl '<List<ch.ivyteam.ivy.addons.data.technical.eventlog.EventLog> eventLogEntries,ch.ivyteam.ivy.addons.data.technical.IvyResultStatus ivyResultStatus> result;
+' #txt
+Es0 f23 outParamTable 'result.eventLogEntries=in.eventLogs;
+result.ivyResultStatus=in.ivyResultStatus;
+' #txt
+Es0 f23 actionDecl 'ch.ivyteam.ivy.addons.data.restricted.technical.EventLogServices out;
+' #txt
+Es0 f23 callSignature readBusinessEventListByBusinessObject(ch.ivyteam.ivy.addons.data.technical.eventlog.EventLogSearchByBusinessObject) #txt
+Es0 f23 type ch.ivyteam.ivy.addons.data.restricted.technical.EventLogServices #txt
+Es0 f23 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>readBusinessEventListByBusinessObject</name>
+        <nameStyle>37,5,7
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
+Es0 f23 99 27 26 26 14 0 #rect
+Es0 f23 @|StartSubIcon #fIcon
+Es0 f25 type ch.ivyteam.ivy.addons.data.restricted.technical.EventLogServices #txt
+Es0 f25 99 267 26 26 14 0 #rect
+Es0 f25 @|EndSubIcon #fIcon
+Es0 f28 actionDecl 'ch.ivyteam.ivy.addons.data.restricted.technical.EventLogServices out;
+' #txt
+Es0 f28 actionTable 'out=in;
+' #txt
+Es0 f28 actionCode 'import ch.ivyteam.ivy.addons.technical.MessageCodes;
+import ch.ivyteam.ivy.addons.data.technical.IvyResultStatusSeverity;
+import ch.ivyteam.ivy.addons.restricted.eventlog.EventLogSearchHelper;
+import ch.ivyteam.ivy.addons.data.technical.eventlog.EventLogSearchCriteria;
+import ch.ivyteam.ivy.addons.restricted.eventlog.EventLogHelper;
+import ch.ivyteam.logicalexpression.RelationalOperator;
+import ch.ivyteam.ivy.addons.application.EnvironmentHelper;
+import ch.ivyteam.ivy.workflow.eventlog.EventLogProperty;
+import ch.ivyteam.ivy.workflow.IPropertyFilter;
+
+MessageCodes code;
+
+IPropertyFilter filter = null;
+String applicationName = ivy.wf.getApplication().getName();
+String activeEnvironment = EnvironmentHelper.getActiveEnvironment();
+String tower = in.businessObject.tower;
+String objectId = in.businessObject.objectId;
+
+EventLogSearchCriteria searchCriteria = new EventLogSearchCriteria();
+searchCriteria.application = applicationName;
+searchCriteria.environment = activeEnvironment;
+searchCriteria.tower = in.businessObject.tower;
+searchCriteria.objectId = in.businessObject.objectId;
+searchCriteria.isBusinessEvent = true;
+
+try {
+	out.eventLogs = EventLogSearchHelper.search(searchCriteria);
+	out.ivyResultStatus.successful = true;
+} catch (Exception e) {
+	out.ivyResultStatus.severity = IvyResultStatusSeverity.FATAL;
+	out.ivyResultStatus.successful = false;
+	out.ivyResultStatus.javaException = e;
+	out.ivyResultStatus.detail = e.getClass().getName() + " - " + e.getMessage() + " - " + e.getCause();
+	code = MessageCodes.XIVY_ADD_EVT_002;
+	out.ivyResultStatus.code = code.toString();
+	out.ivyResultStatus.message = ivy.cms.co("/messages/" + code);
+	
+	ivy.log.error(code.toString() + " - " + out.ivyResultStatus.message + " - " + out.ivyResultStatus.detail, e);
+}
+' #txt
+Es0 f28 type ch.ivyteam.ivy.addons.data.restricted.technical.EventLogServices #txt
+Es0 f28 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>Select data and
+prepare the result</name>
+        <nameStyle>16,7
+18,7
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
+Es0 f28 94 140 36 24 20 -2 #rect
+Es0 f28 @|StepIcon #fIcon
+Es0 f29 expr out #txt
+Es0 f29 112 53 112 140 #arcP
+Es0 f27 expr out #txt
+Es0 f27 112 164 112 267 #arcP
 >Proto Es0 .type ch.ivyteam.ivy.addons.data.restricted.technical.EventLogServices #txt
 >Proto Es0 .processKind CALLABLE_SUB #txt
 >Proto Es0 .xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -527,3 +620,7 @@ Es0 f21 mainOut f31 tail #connect
 Es0 f31 head f26 mainIn #connect
 Es0 f26 mainOut f22 tail #connect
 Es0 f22 head f24 mainIn #connect
+Es0 f23 mainOut f29 tail #connect
+Es0 f29 head f28 mainIn #connect
+Es0 f28 mainOut f27 tail #connect
+Es0 f27 head f25 mainIn #connect

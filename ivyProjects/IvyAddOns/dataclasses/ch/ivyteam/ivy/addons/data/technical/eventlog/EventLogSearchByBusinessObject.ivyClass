@@ -1,0 +1,9 @@
+EventLogSearchByBusinessObject #class
+'References uniquely a Business Object to retrieve its related events.' #classComment
+ch.ivyteam.ivy.addons.data.technical.eventlog #namespace
+tower String #field
+tower 'The name of the XpertLine tower or the software name ex: XFIN, XDOC, XCRM,....' #fieldComment
+tower PERSISTENT #fieldModifier
+objectId String #field
+objectId 'Identifier of the object reference' #fieldComment
+objectId PERSISTENT #fieldModifier
