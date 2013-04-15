@@ -724,10 +724,12 @@ import ch.ivyteam.ivy.richdialog.config.IProjectRichDialogManager;
 import ch.ivyteam.ivy.project.IIvyProject;
 import ch.ivyteam.ivy.scripting.dataclass.IDataClass;
 
-
+IIvyProject project;
+IProjectRichDialogManager rdManager;
 Set dataClasses;
+String className;
 
-IIvyProject project =  ivy.request.getProject();
+project =  ivy.request.getProject();
 
 // Get all dataclasses
 for (IDataClass dataClass : project.getProjectDataClassManager().getDataClasses(null))
@@ -736,7 +738,7 @@ for (IDataClass dataClass : project.getProjectDataClassManager().getDataClasses(
 }	
 // Remove dataclasses that are in RDC
 for (IRichDialog rdc : project.getProjectRichDialogManager().getRichDialogs(null)) {
-  String className = rdc.getId() + "." + rdc.getSimpleName() + "Data";
+  className = rdc.getPanelClass().getPackage().getName() + "." + rdc.getSimpleName() + "Data";
 	dataClasses.remove(className);
 }
 

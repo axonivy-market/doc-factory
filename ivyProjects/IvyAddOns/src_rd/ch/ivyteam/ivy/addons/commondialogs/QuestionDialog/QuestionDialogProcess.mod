@@ -1,5 +1,5 @@
 [Ivy]
-[>Created: Fri Aug 10 16:16:44 EDT 2012]
+[>Created: Tue Feb 19 12:30:06 EST 2013]
 1180E439FFBB432D 3.17 #module
 >Proto >Proto Collection #zClass
 Qs0 QuestionDialogProcess Big #zClass
@@ -145,14 +145,18 @@ for (int i=0; i<in.actionCommandsForButtons.size(); i++)
 
 
 // display the text
-panel.questionTextHtmlPane.setText(HTMLUtilities.convertToHtml(in.questionText));
+if(in.questionText.toLowerCase().startsWith("<html>")){
+	panel.questionTextHtmlPane.setText(in.questionText);
+}else{
+	panel.questionTextHtmlPane.setText(HTMLUtilities.convertToHtml(in.questionText));
+}
 ' #txt
 Qs0 f6 type ch.ivyteam.ivy.addons.commondialogs.QuestionDialog.QuestionDialogData #txt
 Qs0 f6 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
         <name>setup buttons</name>
-        <nameStyle>13,9
+        <nameStyle>13,7,9
 </nameStyle>
     </language>
 </elementInfo>

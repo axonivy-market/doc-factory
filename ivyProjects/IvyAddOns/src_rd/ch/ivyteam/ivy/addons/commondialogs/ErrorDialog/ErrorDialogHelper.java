@@ -13,7 +13,9 @@ import ch.ivyteam.ivy.addons.data.technical.IvyResultStatus;
  */
 public class ErrorDialogHelper {
 
-	/**
+	private static final String NOT_DEFINED = "Not defined.";
+
+        /**
 	 * It return the formatted string representation of the IvyResultStatus
 	 * 
 	 * @param ivyResultStatus is the source to format
@@ -30,10 +32,10 @@ public class ErrorDialogHelper {
 
 		while (ivyResultStatus != null && ivyResultStatusHashSet.add(ivyResultStatus))
 		{	
-			stringWriter.write("MESSAGE: " + ivyResultStatus.getMessage() + "\n");
-			stringWriter.write("CODE: " + ivyResultStatus.getCode() + "\n");
-			stringWriter.write("SEVERITY: " + ivyResultStatus.getSeverity().toString() + "\n");
-			stringWriter.write("DETAIL:" + ivyResultStatus.getDetail() + "\n");				
+			stringWriter.write("MESSAGE: " + (ivyResultStatus.getMessage() != null? ivyResultStatus.getMessage(): NOT_DEFINED) + "\n");
+			stringWriter.write("CODE: " + (ivyResultStatus.getCode() != null? ivyResultStatus.getCode(): NOT_DEFINED) + "\n");
+			stringWriter.write("SEVERITY: " + (ivyResultStatus.getSeverity() != null? ivyResultStatus.getSeverity().toString(): NOT_DEFINED) + "\n");
+			stringWriter.write("DETAIL:" + (ivyResultStatus.getDetail() != null? ivyResultStatus.getDetail(): NOT_DEFINED) + "\n");				
 			
 			// if the Java exception is available, the include it to the output
 			if (ivyResultStatus.getJavaException() != null)

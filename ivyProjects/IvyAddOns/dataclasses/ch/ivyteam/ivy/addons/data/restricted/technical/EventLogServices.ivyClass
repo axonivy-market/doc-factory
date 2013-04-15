@@ -10,3 +10,5 @@ newStatus ch.ivyteam.ivy.addons.eventlog.data.technical.EventLogStatus #field
 createWithHistory Boolean #field
 readListId Number #field
 events List<ch.ivyteam.ivy.workflow.eventlog.IEventLog> #field
+businessObject ch.ivyteam.ivy.addons.data.technical.eventlog.EventLogSearchByBusinessObject #field
+businessObject 'Object contain information to search event log entries' #fieldComment

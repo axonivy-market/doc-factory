@@ -509,7 +509,8 @@ public class TextField extends FieldComponent
     return getTextField().isEditable();
   }
 
-  @Override
+  @SuppressWarnings("restriction")
+@Override
   protected void postInitializeField()
   {
     if (getParameters().isBackgroundTransparent())

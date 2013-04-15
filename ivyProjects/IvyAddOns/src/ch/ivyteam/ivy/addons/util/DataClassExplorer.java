@@ -127,29 +127,32 @@ public final class DataClassExplorer<T extends Object>
     do
     {
       currentPath = path;
-      if (!clazz.equals(Class.class))
+      if (clazz != null)
       {
-        if (!name.equals(""))
+        if (!clazz.equals(Class.class))
         {
-          currentPath = currentPath + "/" + name;
+          if (!name.equals(""))
+          {
+            currentPath = currentPath + "/" + name;
+          }
+  
+          handlerParam = null;
+          if (usePropertyDescriptor)
+          {
+            handlerParam = (T) property;
+          }
+          else if (useClass)
+          {
+            handlerParam = (T) clazz;
+          }
+  
+          if (handler.startNode(handlerParam, name, currentPath))
+          {
+            exploreAttribute(clazz, parentClass, currentPath, property);
+          }
+  
+          handler.endNode(handlerParam, name, currentPath);
         }
-
-        handlerParam = null;
-        if (usePropertyDescriptor)
-        {
-          handlerParam = (T) property;
-        }
-        else if (useClass)
-        {
-          handlerParam = (T) clazz;
-        }
-
-        if (handler.startNode(handlerParam, name, currentPath))
-        {
-          exploreAttribute(clazz, parentClass, currentPath, property);
-        }
-
-        handler.endNode(handlerParam, name, currentPath);
       }
     } while (handler.redoSameNode());
   }

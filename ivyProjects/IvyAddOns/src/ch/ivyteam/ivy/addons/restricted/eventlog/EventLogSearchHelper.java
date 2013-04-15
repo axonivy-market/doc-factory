@@ -219,7 +219,7 @@ public class EventLogSearchHelper
     addStringCriteria(criteria, filters, EventLogProperty.CONTEXT, RelationalOperator.EQUAL, criteria
             .getContext());
     addBooleanCriteria(criteria, filters, EventLogProperty.IS_BUSINESS_EVENT, RelationalOperator.EQUAL,
-            criteria.getIsBusinessEvent());
+            (criteria.getIsBusinessEvent() != null && criteria.getIsBusinessEvent())? new Integer(1): new Integer(0));
     addStringCriteria(criteria, filters, EventLogProperty.EVENT_TYPE, RelationalOperator.EQUAL, criteria
             .getEventType());
     addStringCriteria(criteria, filters, EventLogProperty.EVENT_SUB_TYPE, RelationalOperator.EQUAL, criteria
@@ -272,15 +272,16 @@ public class EventLogSearchHelper
       filters.add(Ivy.wf().createEventLogPropertyFilter(property, operator, date));
     }
   }
-
-  private static void addBooleanCriteria(
-          ch.ivyteam.ivy.addons.data.technical.eventlog.EventLogSearchCriteria criteria,
+  
+  private static void addBooleanCriteria(EventLogSearchCriteria criteria,
           List<IPropertyFilter<EventLogProperty>> filters, EventLogProperty property,
-          RelationalOperator operator, Boolean bool)
+          RelationalOperator operator, Integer value)
   {
-    if (bool != null)
+    if (value != null)
     {
-      filters.add(Ivy.wf().createEventLogPropertyFilter(property, operator, bool));
-    }
+      filters.add(Ivy.wf().createEventLogPropertyFilter(property, operator, value));
+    } 
+    
   }
+  
 }

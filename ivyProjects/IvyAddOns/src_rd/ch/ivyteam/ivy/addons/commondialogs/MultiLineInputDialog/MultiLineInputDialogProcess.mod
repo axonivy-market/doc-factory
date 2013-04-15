@@ -1,5 +1,5 @@
 [Ivy]
-[>Created: Fri Aug 10 16:16:31 EDT 2012]
+[>Created: Mon Apr 15 14:34:35 CEST 2013]
 11812581269404BC 3.17 #module
 >Proto >Proto Collection #zClass
 Ss0 SingleLineInputDialogProcess Big #zClass
@@ -30,8 +30,7 @@ Ss0 @PushWFArc f12 '' #zField
 Ss0 @RichDialogInitStart f9 '' #zField
 Ss0 @PushWFArc f13 '' #zField
 Ss0 @RichDialogInitStart f14 '' #zField
-Ss0 @RichDialogProcessEnd f15 '' #zField
-Ss0 @PushWFArc f16 '' #zField
+Ss0 @PushWFArc f15 '' #zField
 >Proto Ss0 Ss0 SingleLineInputDialogProcess #zField
 Ss0 f0 guid 118121E168071765 #txt
 Ss0 f0 type ch.ivyteam.ivy.addons.commondialogs.MultiLineInputDialog.MultiLineInputDialogData #txt
@@ -104,8 +103,15 @@ for (int i=0; i<in.actionCommandsForButtons.size(); i++)
 	String buttonName = in.actionCommandsForButtons.get(i);
 	
 	button = new RButton();
-	
-	button.text = in.isCustomButtonsMode? in.textsForButtons.get(i): "<%= ivy.cms.co(\"/ch/ivyteam/ivy/addons/strings/buttons/" + buttonName + "\")%>";	
+	if(in.isCustomButtonsMode)
+	{
+		button.text=in.textsForButtons.get(i);
+	}//avoid getting annoying warning if the content cannot be found....
+	else if(ivy.cms.findContentObject("/ch/ivyteam/ivy/addons/strings/buttons/" + buttonName)!=null)
+	{
+		button.text = "<%= ivy.cms.co(\"/ch/ivyteam/ivy/addons/strings/buttons/" + buttonName + "\")%>";
+	}
+	//button.text = in.isCustomButtonsMode? in.textsForButtons.get(i): "<%= ivy.cms.co(\"/ch/ivyteam/ivy/addons/strings/buttons/" + buttonName + "\")%>";	
 	// if the cms entries does not exist, just put the button name
 	if (button.text.length() == 0)
 	{
@@ -114,10 +120,10 @@ for (int i=0; i<in.actionCommandsForButtons.size(); i++)
 	
 	button.actionCommand = buttonName;
 	
-	// set the icon uri
-	if (in.isCustomButtonsMode && in.iconUrisForButtons.get(i).length() > 0)
+	// define the icon uri
+	if (in.isCustomButtonsMode && in.iconUrisForButtons.size()>i && in.iconUrisForButtons.get(i).length() > 0)
 	{
-		button.setIconUri(in.iconUrisForButtons.get(i));	
+		button.setIconUri(in.iconUrisForButtons.get(i));
 	}
 	
 	panel.buttonPane.add(button);
@@ -136,7 +142,7 @@ Ss0 f6 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
         <name>setup buttons</name>
-        <nameStyle>13,9
+        <nameStyle>13,7,9
 </nameStyle>
     </language>
 </elementInfo>
@@ -236,7 +242,7 @@ Ss0 f13 expr out #txt
 Ss0 f13 288 170 82 192 #arcP
 Ss0 f13 1 288 192 #addKink
 Ss0 f13 1 0.40234048306786263 0 0 #arcLabel
-Ss0 f14 guid 139122E450D288E5 #txt
+Ss0 f14 guid 13E0DB0876FB2944 #txt
 Ss0 f14 type ch.ivyteam.ivy.addons.commondialogs.MultiLineInputDialog.MultiLineInputDialogData #txt
 Ss0 f14 method start() #txt
 Ss0 f14 disableUIEvents true #txt
@@ -252,13 +258,10 @@ Ss0 f14 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-Ss0 f14 214 246 20 20 13 0 #rect
+Ss0 f14 150 214 20 20 13 0 #rect
 Ss0 f14 @|RichDialogInitStartIcon #fIcon
-Ss0 f15 type ch.ivyteam.ivy.addons.commondialogs.MultiLineInputDialog.MultiLineInputDialogData #txt
-Ss0 f15 214 310 20 20 13 0 #rect
-Ss0 f15 @|RichDialogProcessEndIcon #fIcon
-Ss0 f16 expr out #txt
-Ss0 f16 224 266 224 310 #arcP
+Ss0 f15 expr out #txt
+Ss0 f15 150 227 76 251 #arcP
 >Proto Ss0 .xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -294,5 +297,5 @@ Ss0 f8 mainOut f12 tail #connect
 Ss0 f12 head f10 mainIn #connect
 Ss0 f9 mainOut f13 tail #connect
 Ss0 f13 head f6 mainIn #connect
-Ss0 f14 mainOut f16 tail #connect
-Ss0 f16 head f15 mainIn #connect
+Ss0 f14 mainOut f15 tail #connect
+Ss0 f15 head f1 mainIn #connect

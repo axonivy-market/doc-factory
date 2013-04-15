@@ -4,7 +4,8 @@
     <autoScreenshot>true</autoScreenshot>
     <method>
         <name>getWfCase</name>
-        <description></description>
+        <description>This method return the case &#xD;
+that has event logs are being displayed</description>
         <outputParameter>
             <name>wfCase</name>
             <description></description>
@@ -55,6 +56,28 @@ False value is used for WFUI integration...</description>
             <nullPermitted>false</nullPermitted>
         </outputParameter>
     </method>
+    <method>
+        <name>getBusinessObject</name>
+        <description>This method return the business object &#xD;
+that has event logs are being displayed.</description>
+        <outputParameter>
+            <name>businessObject</name>
+            <description></description>
+            <parameterType>ch.ivyteam.ivy.addons.data.technical.eventlog.EventLogSearchByBusinessObject</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </outputParameter>
+    </method>
+    <method>
+        <name>setBusinessObject</name>
+        <description>This method set the business object &#xD;
+to display.</description>
+        <inputParameter>
+            <name>businessObject</name>
+            <description></description>
+            <parameterType>ch.ivyteam.ivy.addons.data.technical.eventlog.EventLogSearchByBusinessObject</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </inputParameter>
+    </method>
     <startMethod>
         <name>start</name>
         <description>It starts and load all events related to the specified ICase.</description>
@@ -77,6 +100,30 @@ This method can not be changed or deleted!</description>
             <name>wfCase</name>
             <description></description>
             <parameterType>ch.ivyteam.ivy.workflow.ICase</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </inputParameter>
+    </startMethod>
+    <startMethod>
+        <name>startWithBusinessEventsOnly</name>
+        <description>This method will display the events related to the specified tower&#xD;
+and Business Object within the current ivy &quot;Application&quot;&#xD;
+and ivy &quot;Environment&quot;, whatever the event type or event subtype is.</description>
+        <inputParameter>
+            <name>businessObject</name>
+            <description>Object contain information to get event logs.</description>
+            <parameterType>ch.ivyteam.ivy.addons.data.technical.eventlog.EventLogSearchByBusinessObject</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </inputParameter>
+        <inputParameter>
+            <name>columns</name>
+            <description>List of the column to display in the right sequence. Only EVENT_DATE, EVENT_TIME, EVENT_TYPE, EVENT_SUB_TYPE, OBJECT_ID, MESSAGE, SEVERITY, GROUPID, IS_BUSINESS_EVENT, INITIATOR, USER_NAME, SOURCE, STATUS can be used.</description>
+            <parameterType>List&lt;ch.ivyteam.ivy.addons.eventlog.EventLogProperty&gt;</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </inputParameter>
+        <inputParameter>
+            <name>headerCmsUri</name>
+            <description>Where the column headers can be found in the CMS. The content should be structured as /ch/ivyteam/ivy/addons/eventlog/EventLogDisplayTree/plainStrings.</description>
+            <parameterType>String</parameterType>
             <nullPermitted>false</nullPermitted>
         </inputParameter>
     </startMethod>
