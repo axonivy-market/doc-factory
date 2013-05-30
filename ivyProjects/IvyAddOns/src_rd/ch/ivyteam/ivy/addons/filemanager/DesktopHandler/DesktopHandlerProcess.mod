@@ -1,5 +1,5 @@
 [Ivy]
-[>Created: Tue Mar 19 10:05:16 EDT 2013]
+[>Created: Thu May 30 10:46:26 EDT 2013]
 125F850DA67753A5 3.17 #module
 >Proto >Proto Collection #zClass
 Ds0 DesktopHandlerProcess Big #zClass
@@ -212,6 +212,11 @@ Ds0 @PushWFArc f193 '' #zField
 Ds0 @RichDialogProcessEnd f194 '' #zField
 Ds0 @PushWFArc f195 '' #zField
 Ds0 @AnnotationArc f196 '' #zField
+Ds0 @RichDialogMethodStart f197 '' #zField
+Ds0 @RichDialogProcessStep f198 '' #zField
+Ds0 @PushWFArc f199 '' #zField
+Ds0 @RichDialogProcessEnd f200 '' #zField
+Ds0 @PushWFArc f201 '' #zField
 >Proto Ds0 Ds0 DesktopHandlerProcess #zField
 Ds0 f0 guid 11E20AE1BA5352AB #txt
 Ds0 f0 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
@@ -347,7 +352,7 @@ Ds0 f10 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-Ds0 f10 270 110 20 20 -24 -31 #rect
+Ds0 f10 294 110 20 20 -24 -31 #rect
 Ds0 f10 @|RichDialogMethodStartIcon #fIcon
 Ds0 f11 actionDecl 'ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData out;
 ' #txt
@@ -393,15 +398,15 @@ Ds0 f11 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <language/>
 </elementInfo>
 ' #txt
-Ds0 f11 262 172 36 24 20 -2 #rect
+Ds0 f11 286 172 36 24 20 -2 #rect
 Ds0 f11 @|RichDialogProcessStepIcon #fIcon
 Ds0 f12 expr out #txt
-Ds0 f12 280 130 280 172 #arcP
+Ds0 f12 304 130 304 172 #arcP
 Ds0 f13 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
-Ds0 f13 267 227 26 26 14 0 #rect
+Ds0 f13 291 227 26 26 14 0 #rect
 Ds0 f13 @|RichDialogProcessEndIcon #fIcon
 Ds0 f14 expr out #txt
-Ds0 f14 280 196 280 227 #arcP
+Ds0 f14 304 196 304 227 #arcP
 Ds0 f15 guid 11E20D8DC0F20905 #txt
 Ds0 f15 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
 Ds0 f15 method getClientTempPath() #txt
@@ -422,7 +427,7 @@ Ds0 f15 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-Ds0 f15 942 86 20 20 -41 -38 #rect
+Ds0 f15 966 86 20 20 -41 -38 #rect
 Ds0 f15 @|RichDialogMethodStartIcon #fIcon
 Ds0 f16 guid 11E20D8FD9FE0681 #txt
 Ds0 f16 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
@@ -444,7 +449,7 @@ Ds0 f16 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-Ds0 f16 1054 86 20 20 -35 -34 #rect
+Ds0 f16 1078 86 20 20 -35 -34 #rect
 Ds0 f16 @|RichDialogMethodStartIcon #fIcon
 Ds0 f17 guid 11E20D9167627AC6 #txt
 Ds0 f17 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
@@ -466,7 +471,7 @@ Ds0 f17 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-Ds0 f17 942 206 20 20 -38 -36 #rect
+Ds0 f17 966 206 20 20 -38 -36 #rect
 Ds0 f17 @|RichDialogMethodStartIcon #fIcon
 Ds0 f18 guid 11E20D9276D7A136 #txt
 Ds0 f18 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
@@ -479,7 +484,7 @@ Ds0 f18 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-Ds0 f18 270 358 20 20 -13 -35 #rect
+Ds0 f18 294 358 20 20 -13 -35 #rect
 Ds0 f18 @|RichDialogMethodStartIcon #fIcon
 Ds0 f19 actionDecl 'ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData out;
 ' #txt
@@ -494,15 +499,15 @@ Ds0 f19 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <language/>
 </elementInfo>
 ' #txt
-Ds0 f19 262 428 36 24 20 -2 #rect
+Ds0 f19 286 428 36 24 20 -2 #rect
 Ds0 f19 @|RichDialogProcessStepIcon #fIcon
 Ds0 f20 expr out #txt
-Ds0 f20 280 378 280 428 #arcP
+Ds0 f20 304 378 304 428 #arcP
 Ds0 f21 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
-Ds0 f21 267 499 26 26 14 0 #rect
+Ds0 f21 291 499 26 26 14 0 #rect
 Ds0 f21 @|RichDialogProcessEndIcon #fIcon
 Ds0 f22 expr out #txt
-Ds0 f22 280 452 280 499 #arcP
+Ds0 f22 304 452 304 499 #arcP
 Ds0 f23 guid 11E20DA1FCC491C2 #txt
 Ds0 f23 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
 Ds0 f23 method mailWithParameters(List<String>) #txt
@@ -523,7 +528,7 @@ Ds0 f23 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-Ds0 f23 382 358 20 20 -62 -38 #rect
+Ds0 f23 406 358 20 20 -62 -38 #rect
 Ds0 f23 @|RichDialogMethodStartIcon #fIcon
 Ds0 f24 actionDecl 'ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData out;
 ' #txt
@@ -548,15 +553,15 @@ Ds0 f24 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <language/>
 </elementInfo>
 ' #txt
-Ds0 f24 374 428 36 24 20 -2 #rect
+Ds0 f24 398 428 36 24 20 -2 #rect
 Ds0 f24 @|RichDialogProcessStepIcon #fIcon
 Ds0 f25 expr out #txt
-Ds0 f25 392 378 392 428 #arcP
+Ds0 f25 416 378 416 428 #arcP
 Ds0 f26 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
-Ds0 f26 379 499 26 26 14 0 #rect
+Ds0 f26 403 499 26 26 14 0 #rect
 Ds0 f26 @|RichDialogProcessEndIcon #fIcon
 Ds0 f27 expr out #txt
-Ds0 f27 392 452 392 499 #arcP
+Ds0 f27 416 452 416 499 #arcP
 Ds0 f28 guid 11E20DE9CAA33F43 #txt
 Ds0 f28 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
 Ds0 f28 method openFile(java.io.File) #txt
@@ -577,30 +582,59 @@ Ds0 f28 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-Ds0 f28 382 110 20 20 -31 -29 #rect
+Ds0 f28 406 110 20 20 -31 -29 #rect
 Ds0 f28 @|RichDialogMethodStartIcon #fIcon
 Ds0 f29 actionDecl 'ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData out;
 ' #txt
 Ds0 f29 actionTable 'out=in;
 ' #txt
 Ds0 f29 actionCode 'import ch.ivyteam.ivy.addons.filemanager.FileHandler;
+import ch.ivyteam.ivy.addons.filemanager.FileCouple;
+import ch.ivyteam.ivy.addons.filemanager.FileAndTempDirCouple;
 in.baseTempDir=FileHandler.formatPathWithEndSeparator(in.clientTempPath+in.clientApplicationTempDir,false);
 if(!in.userPropertiesHandler.getUserTempDir().trim().equalsIgnoreCase("")){
 	in.clientTempPath=in.userPropertiesHandler.getUserTempDir();
 }
 boolean b = false;
+boolean alreadyOpened=false;
 if(in.#fileToWorkWith!=null){
-
+	for(FileCouple f: in.filesInReading){
+		//we found that this file is currently edited
+		if(f.getServerFile().getPath().equals(in.fileToWorkWith.getPath())){
+			alreadyOpened = true;
+			//we open the file where she is
+			if(in.#DesktopHandlerObject!=null){
+				in.DesktopHandlerObject.openFile(f.clientFile,true);
+			}
+			if(alreadyOpened){
+				break;
+			}
+		}
+	}
+	if(!alreadyOpened){
+		// if not already opened, we make the unique temp dir for it
+		// the temp dir manager will inform the RDPanel as soon as the temp dir was created,
+		// we will then open the file in read only mode
+		String s= System.nanoTime().toString();
+		FileAndTempDirCouple ftd = new FileAndTempDirCouple();
+		ftd.file = in.fileToWorkWith;
+		ftd.tempDirName = s;
+		ftd.isFileEditable = false;
+		in.filesToEdit.add(ftd);
+		in.userTempDirectoryManager.makeTempDir(s);
+	}
+	/*
 	b=FileHandler.download(in.fileToWorkWith,in.clientTempPath);
 	if(b){
 		java.io.File file = new java.io.File(in.clientTempPath+in.fileToWorkWith.getName());
 		if(in.#DesktopHandlerObject!=null){
-			in.DesktopHandlerObject.openFile(file);
-	}else{
-		in.errorMessage="Could''nt download the file "+in.fileToWorkWith.getPath();
-	panel._DesktopException(in.errorMessage);
+			in.DesktopHandlerObject.openFile(file, true);
+		}else{
+			in.errorMessage="Could''nt download the file "+in.fileToWorkWith.getPath();
+			panel._DesktopException(in.errorMessage);
+		}
 	}
-}
+	*/
 }else{
 	in.errorMessage="No file selected";
 	panel._DesktopException(in.errorMessage);
@@ -612,30 +646,30 @@ Ds0 f29 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <language/>
 </elementInfo>
 ' #txt
-Ds0 f29 374 172 36 24 20 -2 #rect
+Ds0 f29 398 172 36 24 20 -2 #rect
 Ds0 f29 @|RichDialogProcessStepIcon #fIcon
 Ds0 f30 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
-Ds0 f30 379 227 26 26 14 0 #rect
+Ds0 f30 403 227 26 26 14 0 #rect
 Ds0 f30 @|RichDialogProcessEndIcon #fIcon
 Ds0 f31 expr out #txt
-Ds0 f31 392 196 392 227 #arcP
+Ds0 f31 416 196 416 227 #arcP
 Ds0 f32 expr out #txt
-Ds0 f32 392 130 392 172 #arcP
+Ds0 f32 416 130 416 172 #arcP
 Ds0 f33 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
-Ds0 f33 939 123 26 26 14 0 #rect
+Ds0 f33 963 123 26 26 14 0 #rect
 Ds0 f33 @|RichDialogProcessEndIcon #fIcon
 Ds0 f34 expr out #txt
-Ds0 f34 952 106 952 123 #arcP
+Ds0 f34 976 106 976 123 #arcP
 Ds0 f35 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
-Ds0 f35 1051 131 26 26 14 0 #rect
+Ds0 f35 1075 131 26 26 14 0 #rect
 Ds0 f35 @|RichDialogProcessEndIcon #fIcon
 Ds0 f36 expr out #txt
-Ds0 f36 1064 106 1064 131 #arcP
+Ds0 f36 1088 106 1088 131 #arcP
 Ds0 f37 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
-Ds0 f37 939 267 26 26 14 0 #rect
+Ds0 f37 963 267 26 26 14 0 #rect
 Ds0 f37 @|RichDialogProcessEndIcon #fIcon
 Ds0 f38 expr out #txt
-Ds0 f38 952 226 952 267 #arcP
+Ds0 f38 976 226 976 267 #arcP
 Ds0 f39 guid 11E20E0E4AD76A1D #txt
 Ds0 f39 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
 Ds0 f39 method setClientTempPath(String) #txt
@@ -656,7 +690,7 @@ Ds0 f39 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-Ds0 f39 942 366 20 20 -47 -32 #rect
+Ds0 f39 966 366 20 20 -47 -32 #rect
 Ds0 f39 @|RichDialogMethodStartIcon #fIcon
 Ds0 f40 actionDecl 'ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData out;
 ' #txt
@@ -670,15 +704,15 @@ Ds0 f40 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <language/>
 </elementInfo>
 ' #txt
-Ds0 f40 934 420 36 24 20 -2 #rect
+Ds0 f40 958 420 36 24 20 -2 #rect
 Ds0 f40 @|RichDialogProcessStepIcon #fIcon
 Ds0 f41 expr out #txt
-Ds0 f41 952 386 952 420 #arcP
+Ds0 f41 976 386 976 420 #arcP
 Ds0 f42 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
-Ds0 f42 939 475 26 26 14 0 #rect
+Ds0 f42 963 475 26 26 14 0 #rect
 Ds0 f42 @|RichDialogProcessEndIcon #fIcon
 Ds0 f43 expr out #txt
-Ds0 f43 952 444 952 475 #arcP
+Ds0 f43 976 444 976 475 #arcP
 Ds0 f44 guid 11E20E27CB19B4F7 #txt
 Ds0 f44 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
 Ds0 f44 method setEmailParamList(List<String>) #txt
@@ -699,13 +733,13 @@ Ds0 f44 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-Ds0 f44 1086 366 20 20 -59 -30 #rect
+Ds0 f44 1110 366 20 20 -59 -30 #rect
 Ds0 f44 @|RichDialogMethodStartIcon #fIcon
 Ds0 f45 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
-Ds0 f45 1083 419 26 26 14 0 #rect
+Ds0 f45 1107 419 26 26 14 0 #rect
 Ds0 f45 @|RichDialogProcessEndIcon #fIcon
 Ds0 f46 expr out #txt
-Ds0 f46 1096 386 1096 419 #arcP
+Ds0 f46 1120 386 1120 419 #arcP
 Ds0 f47 guid 11E25D87AE87DE1E #txt
 Ds0 f47 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
 Ds0 f47 method getEditCheckPeriod() #txt
@@ -726,7 +760,7 @@ Ds0 f47 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-Ds0 f47 1086 510 20 20 -46 -35 #rect
+Ds0 f47 1110 510 20 20 -46 -35 #rect
 Ds0 f47 @|RichDialogMethodStartIcon #fIcon
 Ds0 f48 guid 11E25D897B786215 #txt
 Ds0 f48 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
@@ -748,7 +782,7 @@ Ds0 f48 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-Ds0 f48 942 550 20 20 -45 -32 #rect
+Ds0 f48 966 550 20 20 -45 -32 #rect
 Ds0 f48 @|RichDialogMethodStartIcon #fIcon
 Ds0 f49 actionDecl 'ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData out;
 ' #txt
@@ -761,20 +795,20 @@ Ds0 f49 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <language/>
 </elementInfo>
 ' #txt
-Ds0 f49 934 596 36 24 20 -2 #rect
+Ds0 f49 958 596 36 24 20 -2 #rect
 Ds0 f49 @|RichDialogProcessStepIcon #fIcon
 Ds0 f50 expr out #txt
-Ds0 f50 952 570 952 596 #arcP
+Ds0 f50 976 570 976 596 #arcP
 Ds0 f51 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
-Ds0 f51 939 643 26 26 14 0 #rect
+Ds0 f51 963 643 26 26 14 0 #rect
 Ds0 f51 @|RichDialogProcessEndIcon #fIcon
 Ds0 f52 expr out #txt
-Ds0 f52 952 620 952 643 #arcP
+Ds0 f52 976 620 976 643 #arcP
 Ds0 f53 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
-Ds0 f53 1083 571 26 26 14 0 #rect
+Ds0 f53 1107 571 26 26 14 0 #rect
 Ds0 f53 @|RichDialogProcessEndIcon #fIcon
 Ds0 f54 expr out #txt
-Ds0 f54 1096 530 1096 571 #arcP
+Ds0 f54 1120 530 1120 571 #arcP
 Ds0 f55 guid 11E25DD5BF874B46 #txt
 Ds0 f55 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
 Ds0 f55 method removeFileToEdit(java.io.File) #txt
@@ -795,7 +829,7 @@ Ds0 f55 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-Ds0 f55 262 566 20 20 -29 -29 #rect
+Ds0 f55 286 566 20 20 -29 -29 #rect
 Ds0 f55 @|RichDialogMethodStartIcon #fIcon
 Ds0 f56 actionDecl 'ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData out;
 ' #txt
@@ -814,15 +848,15 @@ Ds0 f56 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <language/>
 </elementInfo>
 ' #txt
-Ds0 f56 254 628 36 24 20 -2 #rect
+Ds0 f56 278 628 36 24 20 -2 #rect
 Ds0 f56 @|RichDialogProcessStepIcon #fIcon
 Ds0 f57 expr out #txt
-Ds0 f57 272 586 272 628 #arcP
+Ds0 f57 296 586 296 628 #arcP
 Ds0 f58 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
-Ds0 f58 259 691 26 26 14 0 #rect
+Ds0 f58 283 691 26 26 14 0 #rect
 Ds0 f58 @|RichDialogProcessEndIcon #fIcon
 Ds0 f59 expr out #txt
-Ds0 f59 272 652 272 691 #arcP
+Ds0 f59 296 652 296 691 #arcP
 Ds0 f60 guid 11E2651C12166606 #txt
 Ds0 f60 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
 Ds0 f60 method startVisible(Boolean) #txt
@@ -869,13 +903,13 @@ Ds0 f62 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-Ds0 f62 1078 206 20 20 -49 -33 #rect
+Ds0 f62 1102 206 20 20 -49 -33 #rect
 Ds0 f62 @|RichDialogMethodStartIcon #fIcon
 Ds0 f63 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
-Ds0 f63 1075 267 26 26 14 0 #rect
+Ds0 f63 1099 267 26 26 14 0 #rect
 Ds0 f63 @|RichDialogProcessEndIcon #fIcon
 Ds0 f64 expr out #txt
-Ds0 f64 1088 226 1088 267 #arcP
+Ds0 f64 1112 226 1112 267 #arcP
 Ds0 f65 guid 11E2653B73A762C3 #txt
 Ds0 f65 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
 Ds0 f65 actionDecl 'ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData out;
@@ -891,7 +925,7 @@ Ds0 f65 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-Ds0 f65 1270 86 20 20 -63 -27 #rect
+Ds0 f65 1294 86 20 20 -63 -27 #rect
 Ds0 f65 @|RichDialogProcessStartIcon #fIcon
 Ds0 f66 actionDecl 'ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData out;
 ' #txt
@@ -913,15 +947,15 @@ Ds0 f66 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <language/>
 </elementInfo>
 ' #txt
-Ds0 f66 1262 148 36 24 20 -2 #rect
+Ds0 f66 1286 148 36 24 20 -2 #rect
 Ds0 f66 @|RichDialogProcessStepIcon #fIcon
 Ds0 f67 expr out #txt
-Ds0 f67 1280 106 1280 148 #arcP
+Ds0 f67 1304 106 1304 148 #arcP
 Ds0 f68 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
-Ds0 f68 1267 211 26 26 14 0 #rect
+Ds0 f68 1291 211 26 26 14 0 #rect
 Ds0 f68 @|RichDialogProcessEndIcon #fIcon
 Ds0 f69 expr out #txt
-Ds0 f69 1280 172 1280 211 #arcP
+Ds0 f69 1304 172 1304 211 #arcP
 Ds0 f70 guid 11E266DD83AC3F4A #txt
 Ds0 f70 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
 Ds0 f70 method getTableVisible() #txt
@@ -942,13 +976,13 @@ Ds0 f70 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-Ds0 f70 1070 638 20 20 -34 -29 #rect
+Ds0 f70 1094 638 20 20 -34 -29 #rect
 Ds0 f70 @|RichDialogMethodStartIcon #fIcon
 Ds0 f71 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
-Ds0 f71 1067 691 26 26 14 0 #rect
+Ds0 f71 1091 691 26 26 14 0 #rect
 Ds0 f71 @|RichDialogProcessEndIcon #fIcon
 Ds0 f72 expr out #txt
-Ds0 f72 1080 658 1080 691 #arcP
+Ds0 f72 1104 658 1104 691 #arcP
 Ds0 f75 guid 11E442096AC9C7C0 #txt
 Ds0 f75 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
 Ds0 f75 method getOSUserName() #txt
@@ -969,7 +1003,7 @@ Ds0 f75 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-Ds0 f75 942 766 20 20 -35 -32 #rect
+Ds0 f75 966 766 20 20 -35 -32 #rect
 Ds0 f75 @|RichDialogMethodStartIcon #fIcon
 Ds0 f76 guid 11E4420E9E8584FC #txt
 Ds0 f76 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
@@ -991,7 +1025,7 @@ Ds0 f76 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-Ds0 f76 1070 766 20 20 -37 -31 #rect
+Ds0 f76 1094 766 20 20 -37 -31 #rect
 Ds0 f76 @|RichDialogMethodStartIcon #fIcon
 Ds0 f77 actionDecl 'ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData out;
 ' #txt
@@ -1011,7 +1045,7 @@ Ds0 f77 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <language/>
 </elementInfo>
 ' #txt
-Ds0 f77 934 828 36 24 20 -2 #rect
+Ds0 f77 958 828 36 24 20 -2 #rect
 Ds0 f77 @|RichDialogProcessStepIcon #fIcon
 Ds0 f78 actionDecl 'ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData out;
 ' #txt
@@ -1031,22 +1065,22 @@ Ds0 f78 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <language/>
 </elementInfo>
 ' #txt
-Ds0 f78 1062 828 36 24 20 -2 #rect
+Ds0 f78 1086 828 36 24 20 -2 #rect
 Ds0 f78 @|RichDialogProcessStepIcon #fIcon
 Ds0 f79 expr out #txt
-Ds0 f79 1080 786 1080 828 #arcP
+Ds0 f79 1104 786 1104 828 #arcP
 Ds0 f80 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
-Ds0 f80 1067 899 26 26 14 0 #rect
+Ds0 f80 1091 899 26 26 14 0 #rect
 Ds0 f80 @|RichDialogProcessEndIcon #fIcon
 Ds0 f81 expr out #txt
-Ds0 f81 1080 852 1080 899 #arcP
+Ds0 f81 1104 852 1104 899 #arcP
 Ds0 f82 expr out #txt
-Ds0 f82 952 786 952 828 #arcP
+Ds0 f82 976 786 976 828 #arcP
 Ds0 f83 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
-Ds0 f83 939 899 26 26 14 0 #rect
+Ds0 f83 963 899 26 26 14 0 #rect
 Ds0 f83 @|RichDialogProcessEndIcon #fIcon
 Ds0 f84 expr out #txt
-Ds0 f84 952 852 952 899 #arcP
+Ds0 f84 976 852 976 899 #arcP
 Ds0 f85 guid 11E451F87364E245 #txt
 Ds0 f85 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
 Ds0 f85 method _getUserNameCallBack(String) #txt
@@ -1067,10 +1101,10 @@ Ds0 f85 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-Ds0 f85 1278 318 20 20 -61 -32 #rect
+Ds0 f85 1302 318 20 20 -61 -32 #rect
 Ds0 f85 @|RichDialogMethodStartIcon #fIcon
 Ds0 f86 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
-Ds0 f86 1275 427 26 26 14 0 #rect
+Ds0 f86 1299 427 26 26 14 0 #rect
 Ds0 f86 @|RichDialogProcessEndIcon #fIcon
 Ds0 f88 guid 11E451FE94A46377 #txt
 Ds0 f88 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
@@ -1092,10 +1126,10 @@ Ds0 f88 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-Ds0 f88 1278 518 20 20 -62 -32 #rect
+Ds0 f88 1302 518 20 20 -62 -32 #rect
 Ds0 f88 @|RichDialogMethodStartIcon #fIcon
 Ds0 f89 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
-Ds0 f89 1275 587 26 26 14 0 #rect
+Ds0 f89 1299 587 26 26 14 0 #rect
 Ds0 f89 @|RichDialogProcessEndIcon #fIcon
 Ds0 f4 expr out #txt
 Ds0 f4 104 220 104 267 #arcP
@@ -1115,12 +1149,12 @@ Ds0 f73 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-Ds0 f73 1270 364 36 24 20 -2 #rect
+Ds0 f73 1294 364 36 24 20 -2 #rect
 Ds0 f73 @|RichDialogFireEventIcon #fIcon
 Ds0 f74 expr out #txt
-Ds0 f74 1288 338 1288 364 #arcP
+Ds0 f74 1312 338 1312 364 #arcP
 Ds0 f87 expr out #txt
-Ds0 f87 1288 388 1288 427 #arcP
+Ds0 f87 1312 388 1312 427 #arcP
 Ds0 f91 actionDecl 'String userTempDir;
 ' #txt
 Ds0 f91 actionTable 'userTempDir=in.clientTempPath;
@@ -1137,12 +1171,12 @@ Ds0 f91 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-Ds0 f91 1270 548 36 24 20 -2 #rect
+Ds0 f91 1294 548 36 24 20 -2 #rect
 Ds0 f91 @|RichDialogFireEventIcon #fIcon
 Ds0 f92 expr out #txt
-Ds0 f92 1288 538 1288 548 #arcP
+Ds0 f92 1312 538 1312 548 #arcP
 Ds0 f90 expr out #txt
-Ds0 f90 1288 572 1288 587 #arcP
+Ds0 f90 1312 572 1312 587 #arcP
 Ds0 f93 guid 11E4978B10DDCEE3 #txt
 Ds0 f93 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
 Ds0 f93 method unLockSelectedDocumentsOnServer(List<ch.ivyteam.ivy.addons.filemanager.DocumentOnServer>) #txt
@@ -1163,7 +1197,7 @@ Ds0 f93 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-Ds0 f93 1438 86 20 20 -65 -30 #rect
+Ds0 f93 1462 86 20 20 -65 -30 #rect
 Ds0 f93 @|RichDialogMethodStartIcon #fIcon
 Ds0 f94 actionDecl 'ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData out;
 ' #txt
@@ -1240,16 +1274,16 @@ fireForceDocsUnlock@SUBSC</name>
     </language>
 </elementInfo>
 ' #txt
-Ds0 f94 1430 148 36 24 20 -17 #rect
+Ds0 f94 1454 148 36 24 20 -17 #rect
 Ds0 f94 @|RichDialogProcessStepIcon #fIcon
 Ds0 f94 -5972572|-1|-16777216 #nodeStyle
 Ds0 f95 expr out #txt
-Ds0 f95 1448 106 1448 148 #arcP
+Ds0 f95 1472 106 1472 148 #arcP
 Ds0 f96 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
-Ds0 f96 1435 251 26 26 14 0 #rect
+Ds0 f96 1459 251 26 26 14 0 #rect
 Ds0 f96 @|RichDialogProcessEndIcon #fIcon
 Ds0 f97 expr out #txt
-Ds0 f97 1448 172 1448 251 #arcP
+Ds0 f97 1472 172 1472 251 #arcP
 Ds0 f98 guid 11E498BA948EAA2A #txt
 Ds0 f98 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
 Ds0 f98 method forceUnlock(List<ch.ivyteam.ivy.addons.filemanager.DocumentOnServer>) #txt
@@ -1270,7 +1304,7 @@ Ds0 f98 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-Ds0 f98 1694 86 20 20 -40 -27 #rect
+Ds0 f98 1718 86 20 20 -40 -27 #rect
 Ds0 f98 @|RichDialogMethodStartIcon #fIcon
 Ds0 f99 actionDecl 'ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData out;
 ' #txt
@@ -1304,15 +1338,15 @@ Ds0 f99 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <language/>
 </elementInfo>
 ' #txt
-Ds0 f99 1686 140 36 24 20 -2 #rect
+Ds0 f99 1710 140 36 24 20 -2 #rect
 Ds0 f99 @|RichDialogProcessStepIcon #fIcon
 Ds0 f100 expr out #txt
-Ds0 f100 1704 106 1704 140 #arcP
+Ds0 f100 1728 106 1728 140 #arcP
 Ds0 f101 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
-Ds0 f101 1691 251 26 26 14 0 #rect
+Ds0 f101 1715 251 26 26 14 0 #rect
 Ds0 f101 @|RichDialogProcessEndIcon #fIcon
 Ds0 f102 expr out #txt
-Ds0 f102 1704 164 1704 251 #arcP
+Ds0 f102 1728 164 1728 251 #arcP
 Ds0 f103 guid 11E8D0044582C100 #txt
 Ds0 f103 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
 Ds0 f103 actionDecl 'ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData out;
@@ -1354,13 +1388,13 @@ Ds0 f103 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-Ds0 f103 1438 334 20 20 -37 -30 #rect
+Ds0 f103 1462 334 20 20 -37 -30 #rect
 Ds0 f103 @|RichDialogProcessStartIcon #fIcon
 Ds0 f104 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
-Ds0 f104 1435 395 26 26 14 0 #rect
+Ds0 f104 1459 395 26 26 14 0 #rect
 Ds0 f104 @|RichDialogProcessEndIcon #fIcon
 Ds0 f105 expr out #txt
-Ds0 f105 1448 354 1448 395 #arcP
+Ds0 f105 1472 354 1472 395 #arcP
 Ds0 f106 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -1374,7 +1408,7 @@ if the incoming parameter is a ch.ivyteam.ivy.addons.filemanager.FileCouple</nam
     </language>
 </elementInfo>
 ' #txt
-Ds0 f106 1507 323 426 90 -208 -40 #rect
+Ds0 f106 1531 323 426 90 -208 -40 #rect
 Ds0 f106 @|IBIcon #fIcon
 Ds0 f106 -985168|-1|-16777216 #nodeStyle
 Ds0 f107 guid 11F7F76AA31F2186 #txt
@@ -1397,13 +1431,13 @@ Ds0 f107 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-Ds0 f107 942 974 20 20 -30 -34 #rect
+Ds0 f107 966 974 20 20 -30 -34 #rect
 Ds0 f107 @|RichDialogMethodStartIcon #fIcon
 Ds0 f108 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
-Ds0 f108 939 1019 26 26 14 0 #rect
+Ds0 f108 963 1019 26 26 14 0 #rect
 Ds0 f108 @|RichDialogProcessEndIcon #fIcon
 Ds0 f109 expr out #txt
-Ds0 f109 952 994 952 1019 #arcP
+Ds0 f109 976 994 976 1019 #arcP
 Ds0 f110 guid 120C25EF9A6B2E23 #txt
 Ds0 f110 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
 Ds0 f110 method printFile(java.io.File) #txt
@@ -1424,7 +1458,7 @@ Ds0 f110 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-Ds0 f110 518 278 20 20 -31 -30 #rect
+Ds0 f110 542 278 20 20 -31 -30 #rect
 Ds0 f110 @|RichDialogMethodStartIcon #fIcon
 Ds0 f111 actionDecl 'ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData out;
 ' #txt
@@ -1459,15 +1493,15 @@ Ds0 f111 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <language/>
 </elementInfo>
 ' #txt
-Ds0 f111 510 324 36 24 20 -2 #rect
+Ds0 f111 534 324 36 24 20 -2 #rect
 Ds0 f111 @|RichDialogProcessStepIcon #fIcon
 Ds0 f112 expr out #txt
-Ds0 f112 528 298 528 324 #arcP
+Ds0 f112 552 298 552 324 #arcP
 Ds0 f113 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
-Ds0 f113 515 379 26 26 14 0 #rect
+Ds0 f113 539 379 26 26 14 0 #rect
 Ds0 f113 @|RichDialogProcessEndIcon #fIcon
 Ds0 f114 expr out #txt
-Ds0 f114 528 348 528 379 #arcP
+Ds0 f114 552 348 552 379 #arcP
 Ds0 f116 actionDecl 'ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData out;
 ' #txt
 Ds0 f116 actionTable 'out=in;
@@ -1481,13 +1515,13 @@ Ds0 f116 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <language/>
 </elementInfo>
 ' #txt
-Ds0 f116 374 636 36 24 20 -2 #rect
+Ds0 f116 398 636 36 24 20 -2 #rect
 Ds0 f116 @|RichDialogProcessStepIcon #fIcon
 Ds0 f118 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
-Ds0 f118 382 686 20 20 13 0 #rect
+Ds0 f118 406 686 20 20 13 0 #rect
 Ds0 f118 @|RichDialogProcessEndIcon #fIcon
 Ds0 f119 expr out #txt
-Ds0 f119 392 660 392 686 #arcP
+Ds0 f119 416 660 416 686 #arcP
 Ds0 f121 actionDecl 'ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData out;
 ' #txt
 Ds0 f121 actionTable 'out=in;
@@ -1501,10 +1535,10 @@ Ds0 f121 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <language/>
 </elementInfo>
 ' #txt
-Ds0 f121 446 684 36 24 20 -2 #rect
+Ds0 f121 470 684 36 24 20 -2 #rect
 Ds0 f121 @|RichDialogProcessStepIcon #fIcon
 Ds0 f123 expr out #txt
-Ds0 f123 446 696 402 696 #arcP
+Ds0 f123 470 696 426 696 #arcP
 Ds0 f124 guid 1242429CF98236D6 #txt
 Ds0 f124 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
 Ds0 f124 method editFiles(List<java.io.File>) #txt
@@ -1525,10 +1559,10 @@ Ds0 f124 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-Ds0 f124 382 566 20 20 -21 -30 #rect
+Ds0 f124 406 566 20 20 -21 -30 #rect
 Ds0 f124 @|RichDialogMethodStartIcon #fIcon
 Ds0 f115 expr out #txt
-Ds0 f115 392 586 392 636 #arcP
+Ds0 f115 416 586 416 636 #arcP
 Ds0 f117 guid 124242A24219071A #txt
 Ds0 f117 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
 Ds0 f117 method printFiles(List<java.io.File>) #txt
@@ -1549,10 +1583,10 @@ Ds0 f117 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-Ds0 f117 454 598 20 20 -52 -32 #rect
+Ds0 f117 478 598 20 20 -52 -32 #rect
 Ds0 f117 @|RichDialogMethodStartIcon #fIcon
 Ds0 f120 expr out #txt
-Ds0 f120 464 618 464 684 #arcP
+Ds0 f120 488 618 488 684 #arcP
 Ds0 f122 guid 12451D3D1FE937EA #txt
 Ds0 f122 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
 Ds0 f122 method _newTempDirCreated(String) #txt
@@ -1576,7 +1610,7 @@ Ds0 f122 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-Ds0 f122 1566 462 20 20 13 0 #rect
+Ds0 f122 1590 462 20 20 13 0 #rect
 Ds0 f122 @|RichDialogMethodStartIcon #fIcon
 Ds0 f132 guid 12456E720A4E0F04 #txt
 Ds0 f132 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
@@ -1624,7 +1658,7 @@ Ds0 f132 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-Ds0 f132 270 814 20 20 -101 -32 #rect
+Ds0 f132 294 814 20 20 -101 -32 #rect
 Ds0 f132 @|RichDialogMethodStartIcon #fIcon
 Ds0 f133 actionDecl 'ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData out;
 ' #txt
@@ -1651,10 +1685,10 @@ Ds0 f133 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-Ds0 f133 262 860 36 24 20 -2 #rect
+Ds0 f133 286 860 36 24 20 -2 #rect
 Ds0 f133 @|RichDialogProcessStepIcon #fIcon
 Ds0 f134 expr out #txt
-Ds0 f134 280 834 280 860 #arcP
+Ds0 f134 304 834 304 860 #arcP
 Ds0 f135 actionDecl 'ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData out;
 ' #txt
 Ds0 f135 actionTable 'out=in;
@@ -1685,15 +1719,15 @@ Ds0 f135 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <language/>
 </elementInfo>
 ' #txt
-Ds0 f135 262 916 36 24 20 -2 #rect
+Ds0 f135 286 916 36 24 20 -2 #rect
 Ds0 f135 @|RichDialogProcessStepIcon #fIcon
 Ds0 f136 expr out #txt
-Ds0 f136 280 884 280 916 #arcP
+Ds0 f136 304 884 304 916 #arcP
 Ds0 f137 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
-Ds0 f137 270 966 20 20 13 0 #rect
+Ds0 f137 294 966 20 20 13 0 #rect
 Ds0 f137 @|RichDialogProcessEndIcon #fIcon
 Ds0 f138 expr out #txt
-Ds0 f138 280 940 280 966 #arcP
+Ds0 f138 304 940 304 966 #arcP
 Ds0 f139 guid 12457C101E93E026 #txt
 Ds0 f139 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
 Ds0 f139 method mail(ch.ivyteam.ivy.addons.filemanager.EmailContainer) #txt
@@ -1714,10 +1748,10 @@ Ds0 f139 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-Ds0 f139 350 830 20 20 13 0 #rect
+Ds0 f139 374 830 20 20 13 0 #rect
 Ds0 f139 @|RichDialogMethodStartIcon #fIcon
 Ds0 f140 expr out #txt
-Ds0 f140 350 843 298 865 #arcP
+Ds0 f140 374 843 322 865 #arcP
 Ds0 f142 guid 12470AC9EECD878D #txt
 Ds0 f142 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
 Ds0 f142 method _callBackIsFileEditable(Boolean) #txt
@@ -1738,7 +1772,7 @@ Ds0 f142 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-Ds0 f142 1582 662 20 20 13 0 #rect
+Ds0 f142 1606 662 20 20 13 0 #rect
 Ds0 f142 @|RichDialogMethodStartIcon #fIcon
 Ds0 f141 guid 12470AD216A66171 #txt
 Ds0 f141 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
@@ -1760,7 +1794,7 @@ Ds0 f141 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-Ds0 f141 1806 662 20 20 13 0 #rect
+Ds0 f141 1830 662 20 20 13 0 #rect
 Ds0 f141 @|RichDialogMethodStartIcon #fIcon
 Ds0 f143 guid 12470AD2CB42C825 #txt
 Ds0 f143 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
@@ -1782,7 +1816,7 @@ Ds0 f143 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-Ds0 f143 270 1070 20 20 -42 -29 #rect
+Ds0 f143 294 1070 20 20 -42 -29 #rect
 Ds0 f143 @|RichDialogMethodStartIcon #fIcon
 Ds0 f144 guid 12470AD3C741EEB7 #txt
 Ds0 f144 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
@@ -1804,7 +1838,7 @@ Ds0 f144 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-Ds0 f144 430 1070 20 20 -41 -30 #rect
+Ds0 f144 454 1070 20 20 -41 -30 #rect
 Ds0 f144 @|RichDialogMethodStartIcon #fIcon
 Ds0 f145 actionDecl 'ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData out;
 ' #txt
@@ -1830,19 +1864,19 @@ Ds0 f145 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <language/>
 </elementInfo>
 ' #txt
-Ds0 f145 262 1124 36 24 20 -2 #rect
+Ds0 f145 286 1124 36 24 20 -2 #rect
 Ds0 f145 @|RichDialogProcessStepIcon #fIcon
 Ds0 f146 expr out #txt
-Ds0 f146 280 1090 280 1124 #arcP
+Ds0 f146 304 1090 304 1124 #arcP
 Ds0 f147 actionDecl 'ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData out;
 ' #txt
 Ds0 f147 actionTable 'out=in;
 ' #txt
 Ds0 f147 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
-Ds0 f147 422 1124 36 24 20 -2 #rect
+Ds0 f147 446 1124 36 24 20 -2 #rect
 Ds0 f147 @|RichDialogProcessStepIcon #fIcon
 Ds0 f148 expr out #txt
-Ds0 f148 440 1090 440 1124 #arcP
+Ds0 f148 464 1090 464 1124 #arcP
 Ds0 f149 guid 12470C241D2BA484 #txt
 Ds0 f149 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
 Ds0 f149 disableUIEvents false #txt
@@ -1853,31 +1887,31 @@ Ds0 f149 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-Ds0 f149 1870 86 20 20 13 0 #rect
+Ds0 f149 1894 86 20 20 13 0 #rect
 Ds0 f149 @|RichDialogMethodStartIcon #fIcon
 Ds0 f150 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
-Ds0 f150 1870 142 20 20 13 0 #rect
+Ds0 f150 1894 142 20 20 13 0 #rect
 Ds0 f150 @|RichDialogProcessEndIcon #fIcon
 Ds0 f151 expr out #txt
-Ds0 f151 1880 106 1880 142 #arcP
+Ds0 f151 1904 106 1904 142 #arcP
 Ds0 f152 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
-Ds0 f152 270 1182 20 20 13 0 #rect
+Ds0 f152 294 1182 20 20 13 0 #rect
 Ds0 f152 @|RichDialogProcessEndIcon #fIcon
 Ds0 f153 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
-Ds0 f153 430 1182 20 20 13 0 #rect
+Ds0 f153 454 1182 20 20 13 0 #rect
 Ds0 f153 @|RichDialogProcessEndIcon #fIcon
 Ds0 f154 expr out #txt
-Ds0 f154 440 1148 440 1182 #arcP
+Ds0 f154 464 1148 464 1182 #arcP
 Ds0 f155 expr out #txt
-Ds0 f155 280 1148 280 1182 #arcP
+Ds0 f155 304 1148 304 1182 #arcP
 Ds0 f156 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
-Ds0 f156 1582 774 20 20 13 0 #rect
+Ds0 f156 1606 774 20 20 13 0 #rect
 Ds0 f156 @|RichDialogProcessEndIcon #fIcon
 Ds0 f158 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
-Ds0 f158 1806 774 20 20 13 0 #rect
+Ds0 f158 1830 774 20 20 13 0 #rect
 Ds0 f158 @|RichDialogProcessEndIcon #fIcon
 Ds0 f159 expr out #txt
-Ds0 f159 1816 682 1816 774 #arcP
+Ds0 f159 1840 682 1840 774 #arcP
 Ds0 f160 actionDecl 'Boolean isFileEditable;
 ' #txt
 Ds0 f160 actionTable 'isFileEditable=in.isFileEditable;
@@ -1895,12 +1929,12 @@ SUBSCRIBERS</name>
     </language>
 </elementInfo>
 ' #txt
-Ds0 f160 1574 716 36 24 21 -11 #rect
+Ds0 f160 1598 716 36 24 21 -11 #rect
 Ds0 f160 @|RichDialogFireEventIcon #fIcon
 Ds0 f161 expr out #txt
-Ds0 f161 1592 682 1592 716 #arcP
+Ds0 f161 1616 682 1616 716 #arcP
 Ds0 f157 expr out #txt
-Ds0 f157 1592 740 1592 774 #arcP
+Ds0 f157 1616 740 1616 774 #arcP
 Ds0 f162 actionDecl 'ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData out;
 ' #txt
 Ds0 f162 actionTable 'out=in;
@@ -1920,6 +1954,7 @@ if(!in.lastCreatedTempDir.trim().equalsIgnoreCase("")){
 		if(s.equalsIgnoreCase(ftd.tempDirName)){
 			java.io.File file = new java.io.File(in.lastCreatedTempDir+ftd.file.getName());
 		  b=FileHandler.download(ftd.file,in.lastCreatedTempDir);
+			//The file will be edited
 			fc.serverFile=ftd.file;
 			if(ftd.#documentOnServer!=null){
 				fc.serverSidePath = ftd.documentOnServer.path;
@@ -1931,19 +1966,20 @@ if(!in.lastCreatedTempDir.trim().equalsIgnoreCase("")){
 			found=true;
 			if(in.#DesktopHandlerObject!=null){
 				if(b){
-					//workaround to pb with files that are not viewed as editable
 					if(ftd.isFileEditable){
-						in.DesktopHandlerObject.editFile(file);
-					}else{
+						//workaround to pb with files that are not viewed as editable
 						in.DesktopHandlerObject.openFile(file);
+						in.editedFileList.add(fc);
+						panel.fileEditorCheckerPanel.setFileCouplesList(in.editedFileList);
+					}else{
+						//The file will be opened in read Only mode
+						in.DesktopHandlerObject.openFile(file,true);
+						in.filesInReading.add(fc);
 					}
-					in.editedFileList.add(fc);
-					panel.fileEditorCheckerPanel.setFileCouplesList(in.editedFileList);
+				}else{
+						ivy.log.error("File not downloaded");
+					}
 				}
-				else{
-					ivy.log.error("File not downloaded");
-				}
-			}
 			break;	
 		}
 		i++;
@@ -1963,15 +1999,15 @@ File to edit</name>
     </language>
 </elementInfo>
 ' #txt
-Ds0 f162 1558 508 36 24 20 -2 #rect
+Ds0 f162 1582 508 36 24 20 -2 #rect
 Ds0 f162 @|RichDialogProcessStepIcon #fIcon
 Ds0 f163 expr out #txt
-Ds0 f163 1576 482 1576 508 #arcP
+Ds0 f163 1600 482 1600 508 #arcP
 Ds0 f128 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
-Ds0 f128 1567 558 19 20 13 0 #rect
+Ds0 f128 1591 558 19 20 13 0 #rect
 Ds0 f128 @|RichDialogProcessEndIcon #fIcon
 Ds0 f164 expr out #txt
-Ds0 f164 1576 532 1575 558 #arcP
+Ds0 f164 1600 532 1599 558 #arcP
 Ds0 f165 guid 125F972066FB9D12 #txt
 Ds0 f165 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
 Ds0 f165 method startWithClientTempDirectory(String) #txt
@@ -2018,7 +2054,7 @@ Ds0 f167 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-Ds0 f167 942 1086 20 20 13 0 #rect
+Ds0 f167 966 1086 20 20 13 0 #rect
 Ds0 f167 @|RichDialogMethodStartIcon #fIcon
 Ds0 f168 guid 125F9B75E38FE206 #txt
 Ds0 f168 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
@@ -2031,13 +2067,13 @@ Ds0 f168 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-Ds0 f168 942 1174 20 20 13 0 #rect
+Ds0 f168 966 1174 20 20 13 0 #rect
 Ds0 f168 @|RichDialogMethodStartIcon #fIcon
 Ds0 f169 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
-Ds0 f169 942 1134 20 20 13 0 #rect
+Ds0 f169 966 1134 20 20 13 0 #rect
 Ds0 f169 @|RichDialogProcessEndIcon #fIcon
 Ds0 f170 expr out #txt
-Ds0 f170 952 1106 952 1134 #arcP
+Ds0 f170 976 1106 976 1134 #arcP
 Ds0 f171 actionDecl 'ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData out;
 ' #txt
 Ds0 f171 actionTable 'out=in;
@@ -2055,15 +2091,15 @@ Ds0 f171 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <language/>
 </elementInfo>
 ' #txt
-Ds0 f171 934 1220 36 24 20 -2 #rect
+Ds0 f171 958 1220 36 24 20 -2 #rect
 Ds0 f171 @|RichDialogProcessStepIcon #fIcon
 Ds0 f172 expr out #txt
-Ds0 f172 952 1194 952 1220 #arcP
+Ds0 f172 976 1194 976 1220 #arcP
 Ds0 f173 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
-Ds0 f173 942 1270 20 20 13 0 #rect
+Ds0 f173 966 1270 20 20 13 0 #rect
 Ds0 f173 @|RichDialogProcessEndIcon #fIcon
 Ds0 f174 expr out #txt
-Ds0 f174 952 1244 952 1270 #arcP
+Ds0 f174 976 1244 976 1270 #arcP
 Ds0 f175 guid 126AC1E262850A49 #txt
 Ds0 f175 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
 Ds0 f175 method openFileAndCheckForChanges(java.io.File) #txt
@@ -2084,7 +2120,7 @@ Ds0 f175 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-Ds0 f175 518 110 20 20 -63 -27 #rect
+Ds0 f175 542 110 20 20 -63 -27 #rect
 Ds0 f175 @|RichDialogMethodStartIcon #fIcon
 Ds0 f176 actionDecl 'ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData out;
 ' #txt
@@ -2130,15 +2166,15 @@ Ds0 f176 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <language/>
 </elementInfo>
 ' #txt
-Ds0 f176 510 156 36 24 20 -2 #rect
+Ds0 f176 534 156 36 24 20 -2 #rect
 Ds0 f176 @|RichDialogProcessStepIcon #fIcon
 Ds0 f177 expr out #txt
-Ds0 f177 528 130 528 156 #arcP
+Ds0 f177 552 130 552 156 #arcP
 Ds0 f178 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
-Ds0 f178 518 222 20 20 13 0 #rect
+Ds0 f178 542 222 20 20 13 0 #rect
 Ds0 f178 @|RichDialogProcessEndIcon #fIcon
 Ds0 f179 expr out #txt
-Ds0 f179 528 180 528 222 #arcP
+Ds0 f179 552 180 552 222 #arcP
 Ds0 f180 guid 12784AD53A052E0C #txt
 Ds0 f180 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
 Ds0 f180 method openBrowser(String) #txt
@@ -2159,7 +2195,7 @@ Ds0 f180 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-Ds0 f180 270 1238 20 20 13 0 #rect
+Ds0 f180 294 1238 20 20 13 0 #rect
 Ds0 f180 @|RichDialogMethodStartIcon #fIcon
 Ds0 f183 actionDecl 'ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData out;
 ' #txt
@@ -2172,15 +2208,15 @@ Ds0 f183 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <language/>
 </elementInfo>
 ' #txt
-Ds0 f183 262 1332 36 24 20 -2 #rect
+Ds0 f183 286 1332 36 24 20 -2 #rect
 Ds0 f183 @|RichDialogProcessStepIcon #fIcon
 Ds0 f185 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
-Ds0 f185 270 1382 20 20 13 0 #rect
+Ds0 f185 294 1382 20 20 13 0 #rect
 Ds0 f185 @|RichDialogProcessEndIcon #fIcon
 Ds0 f186 expr out #txt
-Ds0 f186 280 1356 280 1382 #arcP
+Ds0 f186 304 1356 304 1382 #arcP
 Ds0 f187 expr out #txt
-Ds0 f187 280 1258 280 1332 #arcP
+Ds0 f187 304 1258 304 1332 #arcP
 Ds0 f125 guid 12E5145D2E125DBE #txt
 Ds0 f125 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
 Ds0 f125 method _getClientFileSeparatorCallBack(String) #txt
@@ -2201,7 +2237,7 @@ Ds0 f125 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-Ds0 f125 1278 662 20 20 13 0 #rect
+Ds0 f125 1302 662 20 20 13 0 #rect
 Ds0 f125 @|RichDialogMethodStartIcon #fIcon
 Ds0 f126 actionDecl 'ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData out;
 ' #txt
@@ -2210,10 +2246,10 @@ Ds0 f126 actionTable 'out=in;
 Ds0 f126 actionCode 'panel.fileEditorCheckerPanel.setClientFileSeparator(in.clientFileSeparator);
 in.DesktopHandlerObject.setClientFileSeparator(in.clientFileSeparator);' #txt
 Ds0 f126 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
-Ds0 f126 1270 708 36 24 20 -2 #rect
+Ds0 f126 1294 708 36 24 20 -2 #rect
 Ds0 f126 @|RichDialogProcessStepIcon #fIcon
 Ds0 f127 expr out #txt
-Ds0 f127 1288 682 1288 708 #arcP
+Ds0 f127 1312 682 1312 708 #arcP
 Ds0 f129 actionDecl 'String clientFileSparator;
 ' #txt
 Ds0 f129 actionTable 'clientFileSparator=in.clientFileSeparator;
@@ -2230,15 +2266,15 @@ Ds0 f129 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-Ds0 f129 1270 764 36 24 20 -3 #rect
+Ds0 f129 1294 764 36 24 20 -3 #rect
 Ds0 f129 @|RichDialogFireEventIcon #fIcon
 Ds0 f130 expr out #txt
-Ds0 f130 1288 732 1288 764 #arcP
+Ds0 f130 1312 732 1312 764 #arcP
 Ds0 f131 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
-Ds0 f131 1278 822 20 20 13 0 #rect
+Ds0 f131 1302 822 20 20 13 0 #rect
 Ds0 f131 @|RichDialogProcessEndIcon #fIcon
 Ds0 f181 expr out #txt
-Ds0 f181 1288 788 1288 822 #arcP
+Ds0 f181 1312 788 1312 822 #arcP
 Ds0 f182 guid 1300C71DF9C90201 #txt
 Ds0 f182 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
 Ds0 f182 method openDocumentOnServerAndCheckForChanges(ch.ivyteam.ivy.addons.filemanager.DocumentOnServer) #txt
@@ -2261,7 +2297,7 @@ AndCheckForChanges
     </language>
 </elementInfo>
 ' #txt
-Ds0 f182 702 102 20 20 20 -24 #rect
+Ds0 f182 726 102 20 20 20 -24 #rect
 Ds0 f182 @|RichDialogMethodStartIcon #fIcon
 Ds0 f182 -613726|-613726|-16777216 #nodeStyle
 Ds0 f184 actionDecl 'ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData out;
@@ -2333,7 +2369,7 @@ if(in.#documentOnServerToWorkWith!=null &&
 		in.documentOnServerToWorkWith.lockingUserID=ivy.session.getSessionUserName();
 		ftd.documentOnServer = in.documentOnServerToWorkWith.clone();
 		ftd.tempDirName = s;
-		ftd.isFileEditable = false;
+		ftd.isFileEditable = true;
 		in.filesToEdit.add(ftd);
 		in.userTempDirectoryManager.makeTempDir(s);
 		
@@ -2341,17 +2377,17 @@ if(in.#documentOnServerToWorkWith!=null &&
 	
 }' #txt
 Ds0 f184 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
-Ds0 f184 694 156 36 24 20 -2 #rect
+Ds0 f184 718 156 36 24 20 -2 #rect
 Ds0 f184 @|RichDialogProcessStepIcon #fIcon
 Ds0 f184 -613726|-613726|-16777216 #nodeStyle
 Ds0 f188 expr out #txt
-Ds0 f188 712 122 712 156 #arcP
+Ds0 f188 736 122 736 156 #arcP
 Ds0 f189 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
-Ds0 f189 702 214 20 20 13 0 #rect
+Ds0 f189 726 214 20 20 13 0 #rect
 Ds0 f189 @|RichDialogProcessEndIcon #fIcon
 Ds0 f189 -613726|-613726|-16777216 #nodeStyle
 Ds0 f190 expr out #txt
-Ds0 f190 712 180 712 214 #arcP
+Ds0 f190 736 180 736 214 #arcP
 Ds0 f191 guid 13020E29F2FD9AB9 #txt
 Ds0 f191 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
 Ds0 f191 method printDocumentOnServer(ch.ivyteam.ivy.addons.filemanager.DocumentOnServer) #txt
@@ -2373,7 +2409,7 @@ Ds0 f191 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-Ds0 f191 702 278 20 20 13 0 #rect
+Ds0 f191 726 278 20 20 13 0 #rect
 Ds0 f191 @|RichDialogMethodStartIcon #fIcon
 Ds0 f191 -613726|-613726|-16777216 #nodeStyle
 Ds0 f192 actionDecl 'ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData out;
@@ -2414,17 +2450,123 @@ if(in.#documentOnServerToWorkWith!=null){
 	panel._DesktopException(in.errorMessage);
 }' #txt
 Ds0 f192 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
-Ds0 f192 694 324 36 24 20 -2 #rect
+Ds0 f192 718 324 36 24 20 -2 #rect
 Ds0 f192 @|RichDialogProcessStepIcon #fIcon
 Ds0 f192 -613726|-613726|-16777216 #nodeStyle
 Ds0 f193 expr out #txt
-Ds0 f193 712 298 712 324 #arcP
+Ds0 f193 736 298 736 324 #arcP
 Ds0 f194 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
-Ds0 f194 702 374 20 20 13 0 #rect
+Ds0 f194 726 374 20 20 13 0 #rect
 Ds0 f194 @|RichDialogProcessEndIcon #fIcon
 Ds0 f195 expr out #txt
-Ds0 f195 712 348 712 374 #arcP
-Ds0 f196 1507 368 1457 347 #arcP
+Ds0 f195 736 348 736 374 #arcP
+Ds0 f196 1531 368 1481 347 #arcP
+Ds0 f197 guid 13E4281C7637EFA5 #txt
+Ds0 f197 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
+Ds0 f197 method openDocumentOnServerReadOnly(ch.ivyteam.ivy.addons.filemanager.DocumentOnServer) #txt
+Ds0 f197 disableUIEvents false #txt
+Ds0 f197 inParameterDecl 'ch.ivyteam.ivy.richdialog.exec.RdMethodCallEvent methodEvent = event as ch.ivyteam.ivy.richdialog.exec.RdMethodCallEvent;
+<ch.ivyteam.ivy.addons.filemanager.DocumentOnServer documentOnServer> param = methodEvent.getInputArguments();
+' #txt
+Ds0 f197 inParameterMapAction 'out.documentOnServerToWorkWith=param.documentOnServer;
+' #txt
+Ds0 f197 outParameterDecl '<> result;
+' #txt
+Ds0 f197 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>openDocumentOnServerReadOnly(DocumentOnServer)</name>
+        <nameStyle>46,5,7
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
+Ds0 f197 726 446 20 20 -149 -28 #rect
+Ds0 f197 @|RichDialogMethodStartIcon #fIcon
+Ds0 f198 actionDecl 'ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData out;
+' #txt
+Ds0 f198 actionTable 'out=in;
+' #txt
+Ds0 f198 actionCode 'import ch.ivyteam.ivy.addons.filemanager.FileCouple;
+import ch.ivyteam.ivy.addons.filemanager.FileAndTempDirCouple;
+import ch.ivyteam.ivy.addons.filemanager.FileHandler;
+
+FileCouple fc = new FileCouple();
+boolean b = false;
+boolean alreadyOpened=false;
+
+if(in.#documentOnServerToWorkWith!=null && 
+	(
+		(in.#documentOnServerToWorkWith.#ivyFile!=null && in.documentOnServerToWorkWith.ivyFile.exists()) || 
+		(in.#documentOnServerToWorkWith.#javaFile!=null && in.documentOnServerToWorkWith.javaFile.isFile())
+	))
+	{
+	if(in.#documentOnServerToWorkWith.#javaFile!=null)
+	{// if the java File is not null it means that we work with a physically stored file
+		for(FileCouple f: in.editedFileList){
+			//we found that this file is currently edited
+			if(f.serverSidePath.equals(in.documentOnServerToWorkWith.path)){
+				alreadyOpened = true;
+				//we open the file where she is
+				if(in.#DesktopHandlerObject!=null){
+					in.DesktopHandlerObject.openFile(f.clientFile, true);
+				}
+				if(alreadyOpened){
+					break;
+				}
+			}
+		}
+	}
+	else
+	{// we certainly work with files stored in DB => for the duration of the edition these files are transformed as non persistent ivy files.
+		for(FileCouple f: in.editedFileList){
+			//we found that this file is currently edited
+			if(f.serverSidePath.equals(in.documentOnServerToWorkWith.path)){
+				alreadyOpened = true;
+				//we open the file where she is
+				if(in.#DesktopHandlerObject!=null){
+					in.DesktopHandlerObject.openFile(f.clientFile, true);
+				}
+				if(alreadyOpened){
+					break;
+				}
+			}
+		}
+	}
+	
+	if(!alreadyOpened){
+		// if not already opened, we make the unique temp dir for it
+		// the temp dir manager will inform the RDPanel as soon as the temp dir was created,
+		// we will then edit the file
+		String s= System.nanoTime().toString();
+		FileAndTempDirCouple ftd = new FileAndTempDirCouple();
+		
+		if(in.#documentOnServerToWorkWith.#javaFile!=null)
+		{// if the java File is not null it means that we work with a physically stored file
+			ftd.file = in.documentOnServerToWorkWith.javaFile;
+		}else
+		{// we certainly work with files stored in DB => for the duration of the edition these files are transformed as non persistent ivy files.
+			ftd.file = in.documentOnServerToWorkWith.ivyFile.getJavaFile();
+		}
+		ftd.documentOnServer = in.documentOnServerToWorkWith.clone();
+		ftd.tempDirName = s;
+		ftd.isFileEditable = false;
+		in.filesToEdit.add(ftd);
+		in.userTempDirectoryManager.makeTempDir(s);
+		
+	}
+	
+}' #txt
+Ds0 f198 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
+Ds0 f198 718 508 36 24 20 -2 #rect
+Ds0 f198 @|RichDialogProcessStepIcon #fIcon
+Ds0 f199 expr out #txt
+Ds0 f199 736 466 736 508 #arcP
+Ds0 f200 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
+Ds0 f200 726 574 20 20 13 0 #rect
+Ds0 f200 @|RichDialogProcessEndIcon #fIcon
+Ds0 f201 expr out #txt
+Ds0 f201 736 532 736 574 #arcP
 >Proto Ds0 .rdData2UIAction 'panel.fileEditedTable.listData=in.editedFileList;
 panel.visible=in.tableVisible;
 ' #txt
@@ -2438,7 +2580,7 @@ panel.visible=in.tableVisible;
         <swimlaneLabel>getter and setter</swimlaneLabel>
         <swimlaneLabel></swimlaneLabel>
     </language>
-    <swimlaneSize>217</swimlaneSize>
+    <swimlaneSize>240</swimlaneSize>
     <swimlaneSize>656</swimlaneSize>
     <swimlaneSize>295</swimlaneSize>
     <swimlaneColor>-26266</swimlaneColor>
@@ -2604,3 +2746,7 @@ Ds0 f192 mainOut f195 tail #connect
 Ds0 f195 head f194 mainIn #connect
 Ds0 f106 ao f196 tail #connect
 Ds0 f196 head f103 @CG|ai #connect
+Ds0 f197 mainOut f199 tail #connect
+Ds0 f199 head f198 mainIn #connect
+Ds0 f198 mainOut f201 tail #connect
+Ds0 f201 head f200 mainIn #connect

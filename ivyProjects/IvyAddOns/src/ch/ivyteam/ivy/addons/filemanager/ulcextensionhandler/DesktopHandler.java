@@ -6,7 +6,7 @@ import ch.ivyteam.ivy.richdialog.exec.panel.IRichDialogPanel;
 import ch.ivyteam.ivy.addons.filemanager.EmailContainer;
 import ch.ivyteam.ivy.addons.util.RDCallbackMethodHandler;
 import ch.ivyteam.ivy.environment.Ivy;
-import ch.xpertline.ulc.server.headless.ULCXJava6Desktop;
+import ch.xpertline.ulc.server.headless.ULCXDesktop;
 
 
 
@@ -21,7 +21,6 @@ import ch.xpertline.ulc.server.headless.ULCXJava6Desktop;
  * - the methods are declared in the public rich dialog interface.
  *
  */
-@SuppressWarnings("deprecation")
 public class DesktopHandler<T extends IRichDialogPanel> {
 	/** The parent Rich Dialog where the DesktopHandler object is used*/
 	protected T parentRD;
@@ -43,7 +42,7 @@ public class DesktopHandler<T extends IRichDialogPanel> {
 	/** the file separator at client side: "/" by Unix systems and "\" by Windows systems, default is the windows' one */
 	private String clientFileSeparator = "\\";
 	/** the ULCXDesktop object*/
-	ULCXJava6Desktop javaDesktop=null;
+	ULCXDesktop javaDesktop=null;
 	
 	private long time;
 
@@ -83,42 +82,71 @@ public class DesktopHandler<T extends IRichDialogPanel> {
 	 * @param isFileEditableCallbackMethod: Callback method to indicate if a File is editable
 	 * @param isFilePrintableCallbackMethod: Callback method to indicate if a File is printable 
 	 */
-	public DesktopHandler(T parent, String _errorMethodName,String _isFileEditableCallbackMethod, String _isFilePrintableCallbackMethod, boolean _useJava6){
-    	this.parentRD=parent;
-    	this.errorMethodName=_errorMethodName!=null?_errorMethodName:"";
-    	this.isFileEditableCallbackMethod = _isFileEditableCallbackMethod!=null?_isFileEditableCallbackMethod:"";
-    	this.isFilePrintableCallbackMethod = _isFilePrintableCallbackMethod!=null?_isFilePrintableCallbackMethod:"";
-    	
-    
-    		javaDesktop = new ULCXJava6Desktop();
-    		javaDesktop.addOnDesktopExceptionListener(new ULCXJava6Desktop.OnDesktopExceptionListener(){
-    			public void desktopException(ULCXJava6Desktop.OnDesktopExceptionEvent event) {
-    				sendErrorMessage(event.getDesktopExceptionMessage());
-    			}
-    		});
-    		
-    		javaDesktop.addIsFileEditableReturnListener(new ULCXJava6Desktop.IsFileEditableReturnListener(){
-    			public void fileEditable(ULCXJava6Desktop.IsFileEditableReturnEvent event) {
-    				Boolean b = event.getIsFileEditable();
-    				sendIsFileEditable(b);
-    			}
-    		});
-    		
-    		javaDesktop.addIsFilePrintableReturnListener(new ULCXJava6Desktop.IsFilePrintableReturnListener(){
-    			public void filePrintable(ULCXJava6Desktop.IsFilePrintableReturnEvent event) {
-    				Boolean b = event.getIsFilePrintable();
-    				sendIsFilePrintable(b);
-    			}
-    		});
-    	
-    }
+	public DesktopHandler(T parent, String _errorMethodName,
+			String _isFileEditableCallbackMethod,
+			String _isFilePrintableCallbackMethod, boolean _useJava6) {
+		this.parentRD = parent;
+		this.errorMethodName = _errorMethodName != null ? _errorMethodName : "";
+		this.isFileEditableCallbackMethod = _isFileEditableCallbackMethod != null ? _isFileEditableCallbackMethod
+				: "";
+		this.isFilePrintableCallbackMethod = _isFilePrintableCallbackMethod != null ? _isFilePrintableCallbackMethod
+				: "";
+
+		this.javaDesktop = new ULCXDesktop();
+		this.javaDesktop
+				.addOnDesktopExceptionListener(new ULCXDesktop.OnDesktopExceptionListener() {
+					public void desktopException(
+							ULCXDesktop.OnDesktopExceptionEvent event) {
+						sendErrorMessage(event.getDesktopExceptionMessage());
+					}
+				});
+
+		this.javaDesktop
+				.addIsFileEditableReturnListener(new ULCXDesktop.IsFileEditableReturnListener() {
+					public void fileEditable(
+							ULCXDesktop.IsFileEditableReturnEvent event) {
+						Boolean b = event.getIsFileEditable();
+						sendIsFileEditable(b);
+					}
+				});
+
+		this.javaDesktop
+				.addIsFilePrintableReturnListener(new ULCXDesktop.IsFilePrintableReturnListener() {
+					public void filePrintable(
+							ULCXDesktop.IsFilePrintableReturnEvent event) {
+						Boolean b = event.getIsFilePrintable();
+						sendIsFilePrintable(b);
+					}
+				});
+
+	}
     
     /**
      * Open a File at Client side in read only mode
      * @param _file the java.io.File to open
      */
     public void openFile(File _file){
-    		javaDesktop.openFile(_file);
+    	this.javaDesktop.openFile(_file);
+    }
+    
+    /**
+     * Open a File at Client side in read only mode
+     * @param _file the java.io.File to open
+     */
+    public void openFile(File _file, boolean setReadOnly){
+    	Object[] o = {_file, setReadOnly};
+    	if(UlcExtentionCheckUtil.invokeMethod(this.javaDesktop, "openFile", o, java.io.File.class, boolean.class)==null){
+    		this.javaDesktop.openFile(_file);
+    		//this.javaDesktop.openFile(_file, setReadOnly);
+    	}
+    }
+    
+    /**
+     * returns true if the ulc.extensions implements the new readOnly file method.
+     * @return
+     */
+    public static boolean openFileReadOnlyMethodExist(){
+    	return UlcExtentionCheckUtil.ulcMethodExist("ch.xpertline.ulc.server.headless.ULCXDesktop","openFile", java.io.File.class, boolean.class);
     }
     
     /**
@@ -126,7 +154,7 @@ public class DesktopHandler<T extends IRichDialogPanel> {
      * @param _file the java.io.File to edit
      */
     public void editFile(File _file){
-    		javaDesktop.editFile(_file);
+    	this.javaDesktop.editFile(_file);
     }
     
     /**
@@ -134,7 +162,7 @@ public class DesktopHandler<T extends IRichDialogPanel> {
      *
      */
     public void mail(){
-    		javaDesktop.mail();
+    	this.javaDesktop.mail();
     }
     
     /**
@@ -147,7 +175,7 @@ public class DesktopHandler<T extends IRichDialogPanel> {
      * @param _attachments: The attachments are Files that must be present at client side
      */
     public void mailMessage(String _subject, String _body, String _to, String _cc, String _bcc, String _attachments){
-    		javaDesktop.mailMessage(_subject, _body, _to, _cc, _bcc, _attachments);
+    	this.javaDesktop.mailMessage(_subject, _body, _to, _cc, _bcc, _attachments);
     }
     
     /**
@@ -166,7 +194,7 @@ public class DesktopHandler<T extends IRichDialogPanel> {
     		for(String s:_mailContainer.getCc()){cc+=s+";";}
     		for(String s:_mailContainer.getBcc()){bcc+=s+";";}
     		for(java.io.File f:_mailContainer.getAttachments()){attach+=f.getPath()+";";}
-    			javaDesktop.mailMessage(
+    		this.javaDesktop.mailMessage(
         				_mailContainer.getSubject(),
         				_mailContainer.getBody(),
         				to,
@@ -187,7 +215,7 @@ public class DesktopHandler<T extends IRichDialogPanel> {
     	if(! _www.trim().startsWith("http://")&& ! _www.trim().startsWith("https://") && ! _www.trim().startsWith("ftp://")){
     		_www = "http://"+_www;
     	}
-    		javaDesktop.browse(_www);
+    	this.javaDesktop.browse(_www);
     }
 
     /**
@@ -199,7 +227,7 @@ public class DesktopHandler<T extends IRichDialogPanel> {
      * @param _file the java.io.File that is going to be check whether it is editable or not.
      */
     public void isFileEditable(java.io.File _file){
-    		javaDesktop.isFileEditable(_file);
+    	this.javaDesktop.isFileEditable(_file);
     }
     
     /**
@@ -211,7 +239,7 @@ public class DesktopHandler<T extends IRichDialogPanel> {
      * @param _file the java.io.File that is going to be check wether it is Printable or not.
      */
     public void isFilePrintable(java.io.File _file){
-    		javaDesktop.isFilePrintable(_file);
+    	this.javaDesktop.isFilePrintable(_file);
     }
     
     /**
@@ -219,7 +247,7 @@ public class DesktopHandler<T extends IRichDialogPanel> {
      * @param _file
      */
     public void print(java.io.File _file){
-    		javaDesktop.print(_file);
+    	this.javaDesktop.print(_file);
     }
 
     /**
@@ -323,7 +351,7 @@ public class DesktopHandler<T extends IRichDialogPanel> {
 	 * @return @return the client file separator
 	 */
 	public String getClientFileSeparator() {
-		return clientFileSeparator;
+		return this.clientFileSeparator;
 	}
 
 	/**
