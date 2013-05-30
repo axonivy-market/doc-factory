@@ -472,6 +472,16 @@ else if the Ivy File of the documetnOnServer is setted then we print this File.<
             <nullPermitted>false</nullPermitted>
         </inputParameter>
     </method>
+    <method>
+        <name>openDocumentOnServerReadOnly</name>
+        <description>Opens a documentOnServer at client side in read only mode</description>
+        <inputParameter>
+            <name>documentOnServer</name>
+            <description></description>
+            <parameterType>ch.ivyteam.ivy.addons.filemanager.DocumentOnServer</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </inputParameter>
+    </method>
     <startMethod>
         <name>startVisible</name>
         <description>Start method with visibility boolean.&#xD;

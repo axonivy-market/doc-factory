@@ -48,3 +48,5 @@ www String #field
 www 'used to browse an URL' #fieldComment
 clientFileSeparator String #field
 clientFileSeparator 'the file separator at client side: "/" by Unix systems and "\" by Windows systems' #fieldComment
+filesInReading List<ch.ivyteam.ivy.addons.filemanager.FileCouple> #field
+filesInReading PERSISTENT #fieldModifier

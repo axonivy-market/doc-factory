@@ -36,6 +36,19 @@ public class FileActionHistoryController implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 8399180559766999962L;
+	
+	public static short FILE_CREATED_ACTION = 1;
+	public static short FILE_CONTENT_CHANGED_ACTION = 2;
+	public static short FILE_DESCRIPTION_CHANGED_ACTION = 3;
+	public static short FILE_RENAMED_ACTION = 4;
+	public static short FILE_DELETED_ACTION = 5;
+	public static short FILE_DOWNLOADED_ACTION = 6;
+	public static short FILE_PRINTED_ACTION = 7;
+	public static short FILE_OPENED_ACTION = 8;
+	public static short FILE_COPY_PASTE_ACTION = 9;
+	public static short FILE_MOVED_ACTION = 10;
+	public static short FILE_NEW_VERSION_ACTION = 11;
+	public static short FILE_VERSION_ROLLBACK_ACTION = 12;
 
 	
 	private IExternalDatabase database=null;

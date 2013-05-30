@@ -10,6 +10,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.sql.Blob;
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -250,10 +251,16 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 			this.securityActivated=_securityActivated;
 		}
 		this.makeSecurityController();
+		this.adaptEscapeChar();
+	}
+	
+	private void adaptEscapeChar() throws Exception{
 		IExternalDatabaseRuntimeConnection connection = null;
 		try {
 			connection = this.getDatabase().getAndLockConnection();
-			if(connection.getDatabaseConnection().getMetaData().getDatabaseProductName().toLowerCase().contains("mysql")){
+			DatabaseMetaData dbmd = connection.getDatabaseConnection().getMetaData();
+			String prod = dbmd.getDatabaseProductName().toLowerCase();
+			if(prod.contains("mysql") || (prod.contains("postgre") && Double.valueOf(dbmd.getDatabaseMajorVersion()+"."+dbmd.getDatabaseMinorVersion())<9.2 )){
 				setEscapeChar("\\\\");
 				this.securityController.setEscapeChar("\\\\");
 			}
@@ -628,8 +635,8 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 						stmt.executeUpdate();
 						if(deleteHistory)
 						{
-							super.getFileActionHistoryController().createNewActionHistory(ids[i], (short) 5, 
-									Ivy.session().getSessionUserName(), "Delete all files under "+_directoryPath,jdbcConnection);
+							super.getFileActionHistoryController().createNewActionHistory(ids[i], FileActionHistoryController.FILE_DELETED_ACTION, 
+									Ivy.session().getSessionUserName(), _directoryPath,jdbcConnection);
 						}
 					}
 					if(this.activateFileVersioning)
@@ -745,7 +752,8 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 		{
 			if(super.getFileActionHistoryController()!=null && super.getFileActionHistoryController().getConfig().isDeleteFileTracked())
 			{
-				super.getFileActionHistoryController().createNewActionHistory(Long.parseLong(doc.getFileID()), (short) 12, Ivy.session().getSessionUserName(), "Version "+doc.getVersionnumber().intValue());
+				super.getFileActionHistoryController().createNewActionHistory(Long.parseLong(doc.getFileID()), FileActionHistoryController.FILE_VERSION_ROLLBACK_ACTION,
+						Ivy.session().getSessionUserName(), "Version "+doc.getVersionnumber().intValue());
 			}
 			message.setType(FileHandler.SUCCESS_MESSAGE);
 			message.setText("The document was successfuly rolledback to its previous version.");
@@ -2359,7 +2367,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 							}
 							if(super.getFileActionHistoryController()!=null && super.getFileActionHistoryController().getConfig().isFileCreationTracked())
 							{
-								super.getFileActionHistoryController().createNewActionHistory(id, (short) 1, doc.getUserID(), "",jdbcConnection);
+								super.getFileActionHistoryController().createNewActionHistory(id, FileActionHistoryController.FILE_CREATED_ACTION, doc.getUserID(), "",jdbcConnection);
 							}
 						}
 
@@ -2465,7 +2473,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 					stmt.executeUpdate();
 					if(super.getFileActionHistoryController()!=null && super.getFileActionHistoryController().getConfig().isFileCreationTracked())
 					{
-						super.getFileActionHistoryController().createNewActionHistory(insertedId, (short) 1, user, "",jdbcConnection);
+						super.getFileActionHistoryController().createNewActionHistory(insertedId, FileActionHistoryController.FILE_CREATED_ACTION, user, "",jdbcConnection);
 					}
 				}
 			}finally{
@@ -2569,7 +2577,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 					stmt.executeUpdate();
 					if(this.getFileActionHistoryController()!=null && this.getFileActionHistoryController().getConfig().isFileCreationTracked())
 					{
-						this.getFileActionHistoryController().createNewActionHistory(insertedId, (short) 1, _user, "",jdbcConnection);
+						this.getFileActionHistoryController().createNewActionHistory(insertedId, FileActionHistoryController.FILE_CREATED_ACTION, _user, "",jdbcConnection);
 					}
 				}
 
@@ -2675,7 +2683,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 								stmt2.executeUpdate();
 								if(super.getFileActionHistoryController()!=null && super.getFileActionHistoryController().getConfig().isFileCreationTracked())
 								{
-									super.getFileActionHistoryController().createNewActionHistory(id, (short) 1, _user, "", jdbcConnection);
+									super.getFileActionHistoryController().createNewActionHistory(id, FileActionHistoryController.FILE_CREATED_ACTION, _user, "", jdbcConnection);
 								}
 							}finally{
 								if(is!=null){
@@ -2792,7 +2800,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 								stmt2.executeUpdate();
 								if(historyDelete)
 								{
-									super.getFileActionHistoryController().createNewActionHistory(id, (short) 1, _user, "", jdbcConnection);
+									super.getFileActionHistoryController().createNewActionHistory(id, FileActionHistoryController.FILE_CREATED_ACTION, _user, "", jdbcConnection);
 								}
 							}finally{
 								if(is!=null){
@@ -2935,7 +2943,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 					}
 					if(super.getFileActionHistoryController()!=null && super.getFileActionHistoryController().getConfig().isFileCreationTracked())
 					{
-						super.getFileActionHistoryController().createNewActionHistory(insertedId, (short) 1, _document.getUserID(), "",jdbcConnection);
+						super.getFileActionHistoryController().createNewActionHistory(insertedId, FileActionHistoryController.FILE_CREATED_ACTION, _document.getUserID(), "",jdbcConnection);
 					}
 				}
 			}finally{
@@ -3441,8 +3449,8 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 				pasteDocs.add(docJ);
 				if(super.getFileActionHistoryController()!=null && super.getFileActionHistoryController().getConfig().isCopyFileTracked())
 				{
-					super.getFileActionHistoryController().createNewActionHistory(j, (short) 1, Ivy.session().getSessionUserName(), "Copy of / Kopie von / copie de: "+doc.getPath());
-					super.getFileActionHistoryController().createNewActionHistory(Long.parseLong(doc.getFileID()), (short) 9, Ivy.session().getSessionUserName(), docJ.getPath());
+					super.getFileActionHistoryController().createNewActionHistory(j, FileActionHistoryController.FILE_CREATED_ACTION, Ivy.session().getSessionUserName(), "Copy of / Kopie von / copie de: "+doc.getPath());
+					super.getFileActionHistoryController().createNewActionHistory(Long.parseLong(doc.getFileID()), FileActionHistoryController.FILE_COPY_PASTE_ACTION, Ivy.session().getSessionUserName(), docJ.getPath());
 				}
 				//Ivy.cms().findContentObjectValue("", Locale.ENGLISH).getContentAsString();
 			}
@@ -3733,7 +3741,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 						}else{
 							l = Long.parseLong(_doc.getFileID());
 						}
-						super.getFileActionHistoryController().createNewActionHistory(l, (short) 4, _userID, _doc.getFilename() +" -> "+_newName+ext);
+						super.getFileActionHistoryController().createNewActionHistory(l, FileActionHistoryController.FILE_RENAMED_ACTION, _userID, _doc.getFilename() +" -> "+_newName+ext);
 					}
 				}
 			}
@@ -3806,7 +3814,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 						}else{
 							l = Long.parseLong(_doc.getFileID());
 						}
-						super.getFileActionHistoryController().createNewActionHistory(l, (short) 4, Ivy.session().getSessionUserName(), _doc.getFilename() +" -> "+newName+ext);
+						super.getFileActionHistoryController().createNewActionHistory(l, FileActionHistoryController.FILE_RENAMED_ACTION, Ivy.session().getSessionUserName(), _doc.getFilename() +" -> "+newName+ext);
 					}
 				}
 			}finally{
@@ -4026,7 +4034,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 				{
 					long l  = this.getDocIdWithPath(path);
 
-					super.getFileActionHistoryController().createNewActionHistory(l, (short) 3, Ivy.session().getSessionUserName(), "");
+					super.getFileActionHistoryController().createNewActionHistory(l, FileActionHistoryController.FILE_DESCRIPTION_CHANGED_ACTION, Ivy.session().getSessionUserName(), "");
 				}
 			}finally{
 				DatabaseUtil.close(stmt);
@@ -4100,7 +4108,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 				}
 				if(super.getFileActionHistoryController()!=null && super.getFileActionHistoryController().getConfig().isChangeFileDescriptionTracked())
 				{
-					super.getFileActionHistoryController().createNewActionHistory(id, (short) 3, Ivy.session().getSessionUserName(), "");
+					super.getFileActionHistoryController().createNewActionHistory(id, FileActionHistoryController.FILE_DESCRIPTION_CHANGED_ACTION, Ivy.session().getSessionUserName(), "");
 				}
 			}finally{
 				DatabaseUtil.close(stmt);
@@ -4142,7 +4150,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 				stmt.executeUpdate();
 				if(super.getFileActionHistoryController()!=null&& super.getFileActionHistoryController().getConfig().isMoveFileTracked())
 				{
-					super.getFileActionHistoryController().createNewActionHistory(Long.parseLong(document.getFileID()), (short) 10, Ivy.session().getSessionUserName(), document.getPath() +" -> "+destination+document.getFilename());
+					super.getFileActionHistoryController().createNewActionHistory(Long.parseLong(document.getFileID()), FileActionHistoryController.FILE_MOVED_ACTION, Ivy.session().getSessionUserName(), document.getPath() +" -> "+destination+document.getFilename());
 				}
 				if(this.securityActivated)
 				{
@@ -4533,7 +4541,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 					deletedFiles+=stmt2.executeUpdate();
 					if(deleteHistory)
 					{
-						super.getFileActionHistoryController().createNewActionHistory(id, (short) 5, Ivy.session().getSessionUserName(), doc.getPath(),con);
+						super.getFileActionHistoryController().createNewActionHistory(id, FileActionHistoryController.FILE_DELETED_ACTION, Ivy.session().getSessionUserName(), doc.getPath(),con);
 					}
 					if(this.activateFileVersioning)
 					{
@@ -4595,7 +4603,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 					if(deleteHistory)
 					{
 						super.getFileActionHistoryController().
-							createNewActionHistory(id, (short) 5, Ivy.session().getSessionUserName(), (parentDirectoryPath==null?
+							createNewActionHistory(id, FileActionHistoryController.FILE_DELETED_ACTION, Ivy.session().getSessionUserName(), (parentDirectoryPath==null?
 								file.getPath():parentDirectoryPath+file.getName()),con);
 					}
 					if(this.activateFileVersioning)
@@ -4802,7 +4810,7 @@ public class FileStoreDBHandler extends AbstractFileManagementHandler {
 				stmt.executeUpdate();
 				if(super.getFileActionHistoryController()!=null && super.getFileActionHistoryController().getConfig().isDeleteFileTracked())
 				{
-					super.getFileActionHistoryController().createNewActionHistory(id, (short) 5, Ivy.session().getSessionUserName(), path, con);
+					super.getFileActionHistoryController().createNewActionHistory(id, FileActionHistoryController.FILE_DELETED_ACTION, Ivy.session().getSessionUserName(), path, con);
 				}
 				if(this.activateFileVersioning)
 				{
