@@ -184,7 +184,7 @@ public class DynamicDialogManagerPanel extends RichDialogGridBagPanel implements
       parameterScrollPane.setName("parameterScrollPane");
       parameterScrollPane.setStyleProperties("{/fill \"BOTH\"/weightY \".7\"/weightX \"1\"}");
       parameterScrollPane.setVerticalScrollBarPolicy(ULCScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-      parameterScrollPane.setName("ScrollPane");
+      parameterScrollPane.setName("parameterScrollPane");
       parameterScrollPane.setViewPortView(getParameterTableTree());
     }
     return parameterScrollPane;
@@ -224,7 +224,6 @@ public class DynamicDialogManagerPanel extends RichDialogGridBagPanel implements
     {
       popupMenu = new RPopupMenu();
       popupMenu.setName("popupMenu");
-      popupMenu.setName("PopupMenu");
       popupMenu.add(getRefreshMenuItem());
       popupMenu.add(getRemoveMenuItem());
       popupMenu.add(getMenuSeparator());
@@ -339,7 +338,6 @@ public class DynamicDialogManagerPanel extends RichDialogGridBagPanel implements
       attributeScrollPane = new RScrollPane();
       attributeScrollPane.setName("attributeScrollPane");
       attributeScrollPane.setViewPortView(getAttributeTableTree());
-      attributeScrollPane.setName("ScrollPane1");
     }
     return attributeScrollPane;
   }
@@ -430,7 +428,6 @@ public class DynamicDialogManagerPanel extends RichDialogGridBagPanel implements
       topSplitPane = new RSplitPane();
       topSplitPane.setName("topSplitPane");
       topSplitPane.setStyleProperties("{/dividerLocation \".5\"}");
-      topSplitPane.setName("SplitPane1");
       topSplitPane.setRightComponent(getCmsContentScrollPane());
       topSplitPane.setLeftComponent(getAttributeScrollPane());
     }
@@ -449,7 +446,6 @@ public class DynamicDialogManagerPanel extends RichDialogGridBagPanel implements
       cmsContentScrollPane = new RScrollPane();
       cmsContentScrollPane.setName("cmsContentScrollPane");
       cmsContentScrollPane.setViewPortView(getCmsContextList());
-      cmsContentScrollPane.setName("ScrollPane2");
     }
     return cmsContentScrollPane;
   }
