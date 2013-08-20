@@ -8,7 +8,7 @@
         <attachment>
             <name>criteria</name>
             <description></description>
-            <parameterType>ch.ivyteam.ivy.addons.technical.eventlog.EventLogSearchCriteria</parameterType>
+            <parameterType>ch.ivyteam.ivy.addons.data.technical.eventlog.EventLogSearchCriteria</parameterType>
             <nullPermitted>true</nullPermitted>
         </attachment>
     </acceptedBroadcast>

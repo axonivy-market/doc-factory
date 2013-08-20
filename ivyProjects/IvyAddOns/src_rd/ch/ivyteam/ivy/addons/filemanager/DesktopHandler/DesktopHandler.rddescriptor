@@ -529,7 +529,7 @@ This method can not be changed or deleted!</description>
         <attachment>
             <name>listOfFileToUnlock</name>
             <description></description>
-            <parameterType>List&lt;ch.xpertline.common.ria.component.FileCouple&gt;</parameterType>
+            <parameterType>List&lt;ch.ivyteam.ivy.addons.filemanager.FileCouple&gt;</parameterType>
             <nullPermitted>true</nullPermitted>
         </attachment>
     </firedEvent>
