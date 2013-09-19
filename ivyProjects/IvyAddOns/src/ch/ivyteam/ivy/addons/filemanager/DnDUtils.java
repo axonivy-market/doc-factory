@@ -73,6 +73,10 @@ public class DnDUtils {
 		return getDnDTransferData(transferData, DataFlavor.DRAG_FLAVOR);
 	}
 	
+	public static List<?> getDroppedTransferData(final Transferable transferData) {
+		return getDnDTransferData(transferData, DataFlavor.DROP_FLAVOR).values;
+	}
+	
 	private static DnDTransferData getDnDTransferData(final Transferable transferData, final DataFlavor flavor)
 	{
 		if(transferData == null)
@@ -128,6 +132,7 @@ public class DnDUtils {
 			result.values = values;
 			result.data = (DnDData) data;
 		}
+		
 		return result;
 	}
 	

@@ -21,7 +21,7 @@ import ch.ivyteam.db.jdbc.DatabaseUtil;
 import ch.ivyteam.ivy.addons.filemanager.DocumentOnServer;
 import ch.ivyteam.ivy.addons.filemanager.FileHandler;
 import ch.ivyteam.ivy.addons.filemanager.FileVersion;
-import ch.ivyteam.ivy.addons.filemanager.database.AbstractFileManagementHandler;
+import ch.ivyteam.ivy.addons.filemanager.util.PathUtil;
 
 import ch.ivyteam.ivy.db.IExternalDatabase;
 import ch.ivyteam.ivy.db.IExternalDatabaseApplicationContext;
@@ -37,7 +37,7 @@ import ch.ivyteam.ivy.scripting.objects.Time;
  * @author ec
  * 
  */
-public class FileVersioningController {
+public class FileVersioningController extends AbstractFileVersioningController {
 
 	private String ivyDBConnectionName = null;
 	private String fileTableName = null;
@@ -169,22 +169,7 @@ public class FileVersioningController {
 		}
 	}
 
-	/**
-	 * Returns the versions of a given file from the file management system.<br />
-	 * The returned FileVersion Objects do not contain any File Content.<br />
-	 * This method is designed to display such a list to a user for example.<br />
-	 * The List is returned with the last created File version at first, and the
-	 * very first version at the end.
-	 * 
-	 * @param fileId
-	 *            the id of the file as stored in the table whose name is
-	 *            defined in the ivy var:
-	 *            "xivy_addons_fileManager_fileMetaDataTableName"
-	 * @return an empty list if the given fileID < 0 or if no version exists for
-	 *         the file.
-	 * @throws Exception
-	 *             in case of a Persistence or SQLException
-	 */
+	@Override
 	public List<FileVersion> getFileVersions(long fileId) throws Exception {
 
 		IExternalDatabaseRuntimeConnection connection = null;
@@ -198,24 +183,8 @@ public class FileVersioningController {
 			}
 		}
 	}
-	/**
-	 * Returns the versions of a given file from the file management system.<br />
-	 * The returned FileVersion Objects do not contain any File Content.<br />
-	 * This method is designed to display such a list to a user for example.<br />
-	 * The List is returned with the last created File version at first, and the
-	 * very first version at the end.<br />
-	 * This method does not release the given java.sql.Connection Object. The calling method has to do that.
-	 * @param fileId fileId
-	 *            the id of the file as stored in the table whose name is
-	 *            defined in the ivy var:
-	 *            "xivy_addons_fileManager_fileMetaDataTableName"
-	 * @param con java.sql.Connection Object.
-	 * @return an empty list if the given fileID < 0 or if no version exists for
-	 *         the file.
-	 * @throws Exception
-	 *             in case of a Persistence or SQLException
-	 * @throws Exception
-	 */
+	
+	@Override
 	public List<FileVersion> getFileVersions(long fileId, java.sql.Connection con) throws Exception {
 		if(con==null || con.isClosed())
 		{
@@ -333,19 +302,10 @@ public class FileVersioningController {
 		return nvn;
 	}
 
-	/**
-	 * Creates a new version based on the actual file stored in the
-	 * xivy_addons_fileManager_fileMetaDataTableName table
-	 * 
-	 * @param fileId
-	 *            the file ID that has to be versioned
-	 * @return the new FileVersion object with its id. The Object does not
-	 *         contain any content. null if the given fileId <=0
-	 * @throws Exception
-	 *             in case of a Persistence or SQLException
-	 */
+	@Override
 	public FileVersion createNewVersion(long fileId) throws Exception {
 		// Ivy.persistence().get("").createEntityManager();
+		
 		if (fileId <= 0) {
 			return null;
 		}
@@ -378,7 +338,7 @@ public class FileVersioningController {
 				+ " SET versionnumber=?, creationdate = ?, creationtime = ?, "
 				+ "creationuserid = ?, modificationdate = ?, modificationtime = ?, modificationuserid = ?  WHERE fileid=?";
 		IExternalDatabaseRuntimeConnection connection = null;
-
+		Ivy.log().info("CREATING VERSION for "+doc.getFileID());
 		try {
 			connection = getDatabase().getAndLockConnection();
 			Connection jdbcConnection = connection.getDatabaseConnection();
@@ -420,7 +380,7 @@ public class FileVersioningController {
 					// we have to get the inserted Id manually....
 					vid = this.getFileVersionWithParentFileIdAndVersionNumber(fileId, vn).getId();
 				}
-
+				Ivy.log().info("File Version id created "+vid);
 				// insert the new version content
 				flag = true;
 				try {
@@ -458,6 +418,7 @@ public class FileVersioningController {
 					stmt.setLong(2, fileId);
 					stmt.executeUpdate();
 				}
+				Ivy.log().info("File Version created "+vid);
 				rs = null;
 				try {
 					rs = stmt.getGeneratedKeys();
@@ -484,9 +445,12 @@ public class FileVersioningController {
 
 				// update the version number in the main file table
 				stmt = jdbcConnection.prepareStatement(q4);
+				
 				vn += 1;// increment the new version number of the main file
 				Date d = new Date();
 				Time t = new Time();
+				Ivy.log().info(q4);
+				Ivy.log().info("CREATING VERSION for "+fileId +" New version number is "+vn);
 				stmt.setInt(1, vn);
 				stmt.setString(2, d.format("dd.MM.yyyy"));
 				stmt.setString(3, t.format("HH:mm:ss"));
@@ -496,6 +460,13 @@ public class FileVersioningController {
 				stmt.setString(7, Ivy.session().getSessionUserName());
 				stmt.setLong(8, fileId);
 				stmt.executeUpdate();
+				fv = new FileVersion();
+				fv.setDate(d);
+				fv.setFileid(fileId);
+				fv.setFilename(doc.getFilename());
+				fv.setTime(t);
+				fv.setUser(Ivy.session().getSessionUserName());
+				fv.setVersionNumber(vn);
 			} finally {
 				DatabaseUtil.close(stmt);
 			}
@@ -507,15 +478,7 @@ public class FileVersioningController {
 		return fv;
 	}
 
-	/**
-	 * returns a DocumentOnServer Object with its Id. The DocumentOnServer
-	 * Object Type is the parent of the FileVersion. It represents a File on the
-	 * Server.
-	 * 
-	 * @param fileId
-	 * @return
-	 * @throws Exception
-	 */
+	@Override
 	public DocumentOnServer getParentFileWithoutContent(long fileId)
 			throws Exception {
 
@@ -579,21 +542,7 @@ public class FileVersioningController {
 		return doc;
 	}
 
-	/**
-	 * Returns the FileVersion object corresponding to the parent fileID and to
-	 * the versionNumber.<br />
-	 * This object does not contain any content or java.io.File reference.<br />
-	 * 
-	 * @see the getFileVersionWithJavaFile method.
-	 * @param fileId
-	 *            the parent file ID contained in the table denoted by the Ivy
-	 *            var: xivy_addons_fileManager_fileMetaDataTableName.<br />
-	 * @param versionNumber
-	 *            the version number to be retrieved
-	 * @return the FileVersion object or null if problem occurred
-	 * @throws Exception
-	 *             in case of a Persistence or SQLException
-	 */
+	@Override
 	public FileVersion getFileVersionWithParentFileIdAndVersionNumber(
 			long fileId, int versionNumber) throws Exception {
 		FileVersion fv = null;
@@ -647,26 +596,8 @@ public class FileVersioningController {
 		return fv;
 	}
 
-	/**
-	 * Allows extracting all the versions related to a specified FileID.<br />
-	 * The extracted files are going to be stored to the given path.<br />
-	 * The versions files names ends with "#"+version number.<br />
-	 * For example, the versions of example.doc are going to be extracted as
-	 * example#1.doc, example#2.doc etc...<br />
-	 * This method returns a List of extracted FileVersion objects. Each
-	 * FileVersion contains a reference to its extracted java.io.File in its
-	 * javaFile field.
-	 * 
-	 * @param parentFileId
-	 *            : the fileID which versions have to be extracted.
-	 * @param _path
-	 *            : the path where to extract the files on the server.
-	 * @return List of extracted FileVersion objects.
-	 * @throws Exception
-	 *             in case of a Persistence or SQLException, or if the
-	 *             parameters are not valid (Id <=0 or path is null or empty
-	 *             String).
-	 */
+
+	@Override
 	public List<FileVersion> extractVersionsToPath(long parentFileId,
 			String _path) throws Exception {
 		if (parentFileId <= 0 || _path == null || _path.trim().length() == 0) {
@@ -710,8 +641,7 @@ public class FileVersioningController {
 			connection = getDatabase().getAndLockConnection();
 			Connection jdbcConnection = connection.getDatabaseConnection();
 			PreparedStatement stmt = null;
-			String path = AbstractFileManagementHandler
-					.formatPathForDirectory(dir.getPath());
+			String path = PathUtil.formathPathForDirectoryWithoutFirstSeparatorWithEndSeparator(dir.getPath());
 			try {
 				stmt = jdbcConnection.prepareStatement(q1);
 				stmt.setLong(1, parentFileId);
@@ -829,22 +759,7 @@ public class FileVersioningController {
 		return versions;
 	}
 
-	/**
-	 * Returns the file version corresponding to the given fileVersionId. The
-	 * fileVersion object contains the reference<br />
-	 * to the IvyFile and the corresponding java.io.File.<br />
-	 * The IvyFile / java.io.File is created dynamically by copying all the
-	 * bytes contained in the BLOB version content table field.<br />
-	 * The IvyFile is going to be created in the Ivy Session Server directory
-	 * and will be temporary: it will be deleted<br />
-	 * after the Ivy Session has been closed.<br />
-	 * 
-	 * @param fileVersionId
-	 *            the file version id
-	 * @return the FileVersion object or null if a problem occurred.
-	 * @throws Exception
-	 *             in case of a Persistence or SQLException
-	 */
+	@Override
 	public FileVersion getFileVersionWithJavaFile(long fileVersionId)
 			throws Exception {
 		FileVersion fv = null;
@@ -879,14 +794,7 @@ public class FileVersioningController {
 		return fv;
 	}
 
-	/**
-	 * This method deletes all the versions from a given file denoted by its id.<br />
-	 * Do nothing if the fileID <=0 or if no version are found for this id.<br />
-	 * It does not delete the file from the main table (last version).
-	 * 
-	 * @param fileId the file id from the files main table
-	 * @throws Exception in case of a Persistence or SQLException
-	 */
+	@Override
 	public void deleteAllVersionsFromFile(long fileId) throws Exception {
 		IExternalDatabaseRuntimeConnection connection = null;
 		try {
@@ -900,15 +808,7 @@ public class FileVersioningController {
 		}
 	}
 	
-	/**
-	 * This method deletes all the versions from a given file denoted by its id.<br />
-	 * Do nothing if the fileID <=0 or if no version are found for this id.<br />
-	 * It does not delete the file from the main table (last version).<br />
-	 * This method does not release the given java.sql.Connection Object. The calling method has to do that.
-	 * @param fileId the file id from the files main table
-	 * @param con java.sql.Connection Object to communicate with the DB.<br />
-	 * @throws Exception in case of a Persistence or SQLException
-	 */
+	@Override
 	public void deleteAllVersionsFromFile(long fileId, java.sql.Connection con) throws Exception {
 		if(con==null || con.isClosed())
 		{
@@ -950,6 +850,7 @@ public class FileVersioningController {
 	 * @return true if success else false
 	 * @throws Exception
 	 */
+	@Override
 	public boolean rollbackLastVersionAsActiveDocument(long fileId)throws Exception {
 
 		if (fileId <= 0) {

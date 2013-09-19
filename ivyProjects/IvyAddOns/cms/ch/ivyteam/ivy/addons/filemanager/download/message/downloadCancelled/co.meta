@@ -1,0 +1,4 @@
+co: name={downloadCancelled} description={} changed={2013-07-18 20:27:47 CEST} changedby={ec} visualorder={0} guid={13FF308F1DA6F5D9} parentguid={} typeguid={E6AFEA2034301F66} id={} parentid={} typeid={}
+val: guid={13FF308F1E688FF6} datatype={} isdefault={true} langid={en} description={} validfrom={2013-07-18 20:23:46 CEST} validto={} changed={2013-07-18 20:27:47 CEST} changedby={ec} properties={} id={}
+val: guid={13FF308F1DE7051D} datatype={} isdefault={false} langid={fr} description={} validfrom={2013-07-18 20:24:00 CEST} validto={} changed={2013-07-18 20:27:47 CEST} changedby={ec} properties={} id={}
+val: guid={13FF308F1EF261E2} datatype={} isdefault={false} langid={de} description={} validfrom={2013-07-18 20:24:02 CEST} validto={} changed={2013-07-18 20:27:47 CEST} changedby={ec} properties={} id={}

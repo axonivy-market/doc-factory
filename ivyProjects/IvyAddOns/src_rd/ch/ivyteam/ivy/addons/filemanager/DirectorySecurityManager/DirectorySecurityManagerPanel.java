@@ -16,6 +16,7 @@ import com.ulcjava.base.application.border.ULCTitledBorder;
 import com.ulcjava.base.application.util.Font;
 import ch.ivyteam.ivy.richdialog.widgets.containers.RSplitPane;
 import com.ulcjava.base.application.ULCSplitPane;
+import com.ulcjava.base.application.border.ULCMatteBorder;
 
 /**
  * <p>DirectorySecurityManagerPanel is a rich dialog panel implementation.
@@ -48,6 +49,14 @@ private RLabel iconLabel = null;
 private RSplitPane SplitPane = null;
 private RGridBagLayoutPane leftGridBagLayoutPane = null;
 private RGridBagLayoutPane rightGridBagLayoutPane = null;
+private RCheckBox crdCheckBox = null;
+private RCheckBox ccdCheckBox = null;
+private RCheckBox ctdCheckBox = null;
+private RCheckBox ccfCheckBox = null;
+private RCheckBox cufCheckBox = null;
+private RGridLayoutPane updatedirectoryGridLayoutPane = null;
+private RGridLayoutPane filesGridLayoutPane = null;
+private RCheckBox adminCheckBox = null;
 /**
    * Create a new instance of DirectorySecurityManagerPanel
    */
@@ -191,13 +200,17 @@ private RGridBagLayoutPane getActionsGridBagLayoutPane() {
 		actionsGridBagLayoutPane.setStyleProperties("{/fill \"BOTH\"/weightY \"1\"/weightX \"1\"}");
 		actionsGridBagLayoutPane.setCornerRadius(0);
 		actionsGridBagLayoutPane.setBorder(BorderFactory.createTitledBorder(null, "", ULCTitledBorder.DEFAULT_JUSTIFICATION, ULCTitledBorder.DEFAULT_POSITION, new Font("Tahoma", Font.PLAIN, 11), new Color(23, 64, 140)));
-		actionsGridBagLayoutPane.add(Filler1, new com.ulcjava.base.application.GridBagConstraints(1, 6, 1, 1, -1, -1, com.ulcjava.base.application.GridBagConstraints.CENTER, com.ulcjava.base.application.GridBagConstraints.NONE, new com.ulcjava.base.application.util.Insets(0,0,0,0), 0, 0));
-		actionsGridBagLayoutPane.add(getCodCheckBox(), new com.ulcjava.base.application.GridBagConstraints(0, 1, 1, 1, -1, -1, com.ulcjava.base.application.GridBagConstraints.CENTER, com.ulcjava.base.application.GridBagConstraints.NONE, new com.ulcjava.base.application.util.Insets(0,0,0,0), 0, 0));
-		actionsGridBagLayoutPane.add(getCudCheckBox(), new com.ulcjava.base.application.GridBagConstraints(0, 2, 1, 1, -1, -1, com.ulcjava.base.application.GridBagConstraints.CENTER, com.ulcjava.base.application.GridBagConstraints.NONE, new com.ulcjava.base.application.util.Insets(0,0,0,0), 0, 0));
-		actionsGridBagLayoutPane.add(getCddCheckBox(), new com.ulcjava.base.application.GridBagConstraints(0, 3, 1, 1, -1, -1, com.ulcjava.base.application.GridBagConstraints.CENTER, com.ulcjava.base.application.GridBagConstraints.NONE, new com.ulcjava.base.application.util.Insets(0,0,0,0), 0, 0));
-		actionsGridBagLayoutPane.add(getCwfCheckBox(), new com.ulcjava.base.application.GridBagConstraints(0, 4, 1, 1, -1, -1, com.ulcjava.base.application.GridBagConstraints.CENTER, com.ulcjava.base.application.GridBagConstraints.NONE, new com.ulcjava.base.application.util.Insets(0,0,0,0), 0, 0));
-		actionsGridBagLayoutPane.add(getCdfCheckBox(), new com.ulcjava.base.application.GridBagConstraints(0, 5, 1, 1, -1, -1, com.ulcjava.base.application.GridBagConstraints.CENTER, com.ulcjava.base.application.GridBagConstraints.NONE, new com.ulcjava.base.application.util.Insets(0,0,0,0), 0, 0));
+		actionsGridBagLayoutPane.add(Filler1, new com.ulcjava.base.application.GridBagConstraints(1, 17, 1, 1, -1, -1, com.ulcjava.base.application.GridBagConstraints.CENTER, com.ulcjava.base.application.GridBagConstraints.NONE, new com.ulcjava.base.application.util.Insets(0,0,0,0), 0, 0));
+		actionsGridBagLayoutPane.add(getCodCheckBox(), new com.ulcjava.base.application.GridBagConstraints(0, 2, 1, 1, -1, -1, com.ulcjava.base.application.GridBagConstraints.CENTER, com.ulcjava.base.application.GridBagConstraints.NONE, new com.ulcjava.base.application.util.Insets(0,0,0,0), 0, 0));
+		actionsGridBagLayoutPane.add(getCudCheckBox(), new com.ulcjava.base.application.GridBagConstraints(0, 3, 1, 1, -1, -1, com.ulcjava.base.application.GridBagConstraints.CENTER, com.ulcjava.base.application.GridBagConstraints.NONE, new com.ulcjava.base.application.util.Insets(0,0,0,0), 0, 0));
+		actionsGridBagLayoutPane.add(getCddCheckBox(), new com.ulcjava.base.application.GridBagConstraints(0, 9, 1, 1, -1, -1, com.ulcjava.base.application.GridBagConstraints.CENTER, com.ulcjava.base.application.GridBagConstraints.NONE, new com.ulcjava.base.application.util.Insets(0,0,0,0), 0, 0));
+		actionsGridBagLayoutPane.add(getCwfCheckBox(), new com.ulcjava.base.application.GridBagConstraints(0, 10, 1, 1, -1, -1, com.ulcjava.base.application.GridBagConstraints.CENTER, com.ulcjava.base.application.GridBagConstraints.NONE, new com.ulcjava.base.application.util.Insets(0,0,0,0), 0, 0));
+		actionsGridBagLayoutPane.add(getCdfCheckBox(), new com.ulcjava.base.application.GridBagConstraints(0, 15, 1, 1, -1, -1, com.ulcjava.base.application.GridBagConstraints.CENTER, com.ulcjava.base.application.GridBagConstraints.NONE, new com.ulcjava.base.application.util.Insets(0,0,0,0), 0, 0));
 		actionsGridBagLayoutPane.add(getLabel(), new com.ulcjava.base.application.GridBagConstraints(0, 0, 1, 1, -1, -1, com.ulcjava.base.application.GridBagConstraints.CENTER, com.ulcjava.base.application.GridBagConstraints.NONE, new com.ulcjava.base.application.util.Insets(0,0,0,0), 0, 0));
+		actionsGridBagLayoutPane.add(getCtdCheckBox(), new com.ulcjava.base.application.GridBagConstraints(0, 8, 1, 1, -1, -1, com.ulcjava.base.application.GridBagConstraints.CENTER, com.ulcjava.base.application.GridBagConstraints.NONE, new com.ulcjava.base.application.util.Insets(0,0,0,0), 0, 0));
+		actionsGridBagLayoutPane.add(getUpdatedirectoryGridLayoutPane(), new com.ulcjava.base.application.GridBagConstraints(0, 4, 1, 1, -1, -1, com.ulcjava.base.application.GridBagConstraints.CENTER, com.ulcjava.base.application.GridBagConstraints.NONE, new com.ulcjava.base.application.util.Insets(0,0,0,0), 0, 0));
+		actionsGridBagLayoutPane.add(getFilesGridLayoutPane(), new com.ulcjava.base.application.GridBagConstraints(0, 11, 1, 1, -1, -1, com.ulcjava.base.application.GridBagConstraints.CENTER, com.ulcjava.base.application.GridBagConstraints.NONE, new com.ulcjava.base.application.util.Insets(0,0,0,0), 0, 0));
+		actionsGridBagLayoutPane.add(getAdminCheckBox(), new com.ulcjava.base.application.GridBagConstraints(0, 1, 1, 1, -1, -1, com.ulcjava.base.application.GridBagConstraints.CENTER, com.ulcjava.base.application.GridBagConstraints.NONE, new com.ulcjava.base.application.util.Insets(0,0,0,0), 0, 0));
 	}
 	return actionsGridBagLayoutPane;
 }
@@ -316,7 +329,7 @@ private RSplitPane getSplitPane() {
 	if (SplitPane == null) {
 		SplitPane = new RSplitPane();
 		SplitPane.setName("SplitPane");
-		SplitPane.setStyleProperties("{/dividerLocation \"0.5\"/orientation \"HORIZONTAL_SPLIT\"/fill \"BOTH\"}");
+		SplitPane.setStyleProperties("{/orientation \"HORIZONTAL_SPLIT\"/dividerLocation \"0.3\"/fill \"BOTH\"/weightY \"1\"/weightX \"1\"}");
 		SplitPane.setDividerLocation(300);
 		SplitPane.setRightComponent(getRightGridBagLayoutPane());
 		SplitPane.setLeftComponent(getLeftGridBagLayoutPane());
@@ -352,5 +365,130 @@ private RGridBagLayoutPane getRightGridBagLayoutPane() {
 		rightGridBagLayoutPane.add(getActionsGridBagLayoutPane(), new com.ulcjava.base.application.GridBagConstraints(0, 1, 1, 1, -1, -1, com.ulcjava.base.application.GridBagConstraints.CENTER, com.ulcjava.base.application.GridBagConstraints.NONE, new com.ulcjava.base.application.util.Insets(0,0,0,0), 0, 0));
 	}
 	return rightGridBagLayoutPane;
+}
+
+/**
+ * This method initializes crdCheckBox	
+ * 	
+ * @return ch.ivyteam.ivy.richdialog.widgets.components.RCheckBox	
+ */
+private RCheckBox getCrdCheckBox() {
+	if (crdCheckBox == null) {
+		crdCheckBox = new RCheckBox();
+		crdCheckBox.setName("crdCheckBox");
+		crdCheckBox.setStyleProperties("{/insetsTop \"5\"/fill \"HORIZONTAL\"/insetsLeft \"5\"/weightX \"1\"}");
+		crdCheckBox.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/messages/security/renameDirectoryRight\")%>");
+	}
+	return crdCheckBox;
+}
+
+/**
+ * This method initializes ccdCheckBox	
+ * 	
+ * @return ch.ivyteam.ivy.richdialog.widgets.components.RCheckBox	
+ */
+private RCheckBox getCcdCheckBox() {
+	if (ccdCheckBox == null) {
+		ccdCheckBox = new RCheckBox();
+		ccdCheckBox.setName("ccdCheckBox");
+		ccdCheckBox.setStyleProperties("{/insetsTop \"5\"/fill \"HORIZONTAL\"/insetsLeft \"5\"/weightX \"1\"}");
+		ccdCheckBox.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/messages/security/createDirectoryRight\")%>");
+	}
+	return ccdCheckBox;
+}
+
+/**
+ * This method initializes ctdCheckBox	
+ * 	
+ * @return ch.ivyteam.ivy.richdialog.widgets.components.RCheckBox	
+ */
+private RCheckBox getCtdCheckBox() {
+	if (ctdCheckBox == null) {
+		ctdCheckBox = new RCheckBox();
+		ctdCheckBox.setName("ctdCheckBox");
+		ctdCheckBox.setStyleProperties("{/insetsTop \"5\"/fill \"HORIZONTAL\"/insetsLeft \"5\"/weightX \"1\"}");
+		ctdCheckBox.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/messages/security/translateDirectoryRight\")%>");
+	}
+	return ctdCheckBox;
+}
+
+/**
+ * This method initializes ccfCheckBox	
+ * 	
+ * @return ch.ivyteam.ivy.richdialog.widgets.components.RCheckBox	
+ */
+private RCheckBox getCcfCheckBox() {
+	if (ccfCheckBox == null) {
+		ccfCheckBox = new RCheckBox();
+		ccfCheckBox.setName("ccfCheckBox");
+		ccfCheckBox.setStyleProperties("{/insetsTop \"5\"/fill \"HORIZONTAL\"/insetsLeft \"5\"/weightX \"1\"}");
+		ccfCheckBox.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/messages/security/createFiles\")%>");
+	}
+	return ccfCheckBox;
+}
+
+/**
+ * This method initializes cufCheckBox	
+ * 	
+ * @return ch.ivyteam.ivy.richdialog.widgets.components.RCheckBox	
+ */
+private RCheckBox getCufCheckBox() {
+	if (cufCheckBox == null) {
+		cufCheckBox = new RCheckBox();
+		cufCheckBox.setName("cufCheckBox");
+		cufCheckBox.setStyleProperties("{/insetsTop \"5\"/fill \"HORIZONTAL\"/insetsLeft \"5\"/weightX \"1\"}");
+		cufCheckBox.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/messages/security/updateFiles\")%>");
+	}
+	return cufCheckBox;
+}
+
+/**
+ * This method initializes updatedirectoryGridLayoutPane	
+ * 	
+ * @return ch.ivyteam.ivy.richdialog.widgets.containers.RGridLayoutPane	
+ */
+private RGridLayoutPane getUpdatedirectoryGridLayoutPane() {
+	if (updatedirectoryGridLayoutPane == null) {
+		updatedirectoryGridLayoutPane = new RGridLayoutPane();
+		updatedirectoryGridLayoutPane.setName("updatedirectoryGridLayoutPane");
+		updatedirectoryGridLayoutPane.setStyleProperties("{/columns \"1\"/hgap \"10\"/rows \"2\"/fill \"HORIZONTAL\"/insetsLeft \"20\"/weightX \"1\"}");
+		updatedirectoryGridLayoutPane.setRows(2);
+		updatedirectoryGridLayoutPane.setBorder(BorderFactory.createMatteBorder(0, 1, 0, 0, Color.gray));
+		updatedirectoryGridLayoutPane.add(getCrdCheckBox());
+		updatedirectoryGridLayoutPane.add(getCcdCheckBox());
+	}
+	return updatedirectoryGridLayoutPane;
+}
+
+/**
+ * This method initializes filesGridLayoutPane	
+ * 	
+ * @return ch.ivyteam.ivy.richdialog.widgets.containers.RGridLayoutPane	
+ */
+private RGridLayoutPane getFilesGridLayoutPane() {
+	if (filesGridLayoutPane == null) {
+		filesGridLayoutPane = new RGridLayoutPane();
+		filesGridLayoutPane.setName("filesGridLayoutPane");
+		filesGridLayoutPane.setStyleProperties("{/rows \"2\"/fill \"HORIZONTAL\"/insetsLeft \"20\"/weightX \"1\"}");
+		filesGridLayoutPane.setBorder(BorderFactory.createMatteBorder(0, 1, 0, 0, Color.gray));
+		filesGridLayoutPane.add(getCcfCheckBox());
+		filesGridLayoutPane.add(getCufCheckBox());
+	}
+	return filesGridLayoutPane;
+}
+
+/**
+ * This method initializes adminCheckBox	
+ * 	
+ * @return ch.ivyteam.ivy.richdialog.widgets.components.RCheckBox	
+ */
+private RCheckBox getAdminCheckBox() {
+	if (adminCheckBox == null) {
+		adminCheckBox = new RCheckBox();
+		adminCheckBox.setText("<%= ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/messages/security/adminDirectoryRight\") %>");
+		adminCheckBox.setStyleProperties("{/insetsTop \"5\"/fill \"HORIZONTAL\"/insetsLeft \"5\"}");
+		adminCheckBox.setName("adminCheckBox");
+	}
+	return adminCheckBox;
 }
 }  //  @jve:decl-index=0:visual-constraint="10,10"

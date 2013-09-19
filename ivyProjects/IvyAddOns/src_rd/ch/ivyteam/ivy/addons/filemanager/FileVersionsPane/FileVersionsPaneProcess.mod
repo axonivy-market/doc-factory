@@ -1,5 +1,5 @@
 [Ivy]
-[>Created: Mon Feb 13 12:47:56 EST 2012]
+[>Created: Mon Jul 08 11:28:10 EDT 2013]
 13577559B1E4552F 3.17 #module
 >Proto >Proto Collection #zClass
 Fs0 FileVersionsPaneProcess Big #zClass
@@ -128,7 +128,8 @@ Fs0 f5 actionDecl 'ch.ivyteam.ivy.addons.filemanager.FileVersionsPane.FileVersio
 ' #txt
 Fs0 f5 actionTable 'out=in;
 ' #txt
-Fs0 f5 actionCode 'import ch.ivyteam.ivy.addons.filemanager.database.versioning.FileVersioningController;
+Fs0 f5 actionCode '
+import ch.ivyteam.ivy.addons.filemanager.database.versioning.FileVersioningController;
 try{
 	if(in.parentDocumentOnServer.fileID.trim().length()>0)
 	{
@@ -137,7 +138,9 @@ try{
 			in.fileVersioningController=new FileVersioningController();
 		}
 		if(in.parentDocumentOnServer.filename.trim().length()==0){
-			out.parentDocumentOnServer = in.fileVersioningController.getParentFileWithoutContent(Long.parseLong(in.parentDocumentOnServer.fileID));
+			if(in.fileVersioningController instanceof FileVersioningController) {
+				out.parentDocumentOnServer = in.fileVersioningController.getParentFileWithoutContent(Long.parseLong(in.parentDocumentOnServer.fileID));
+			}
 		}
 	}
 }catch(Throwable t){
@@ -152,7 +155,7 @@ Fs0 f5 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
         <name>depending on the start method used
 set the fileVersioningController and 
 get the parent DocumentOnServer Object</name>
-        <nameStyle>111
+        <nameStyle>111,7
 </nameStyle>
     </language>
 </elementInfo>

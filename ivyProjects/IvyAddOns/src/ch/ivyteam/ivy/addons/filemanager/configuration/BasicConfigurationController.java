@@ -4,8 +4,14 @@
 package ch.ivyteam.ivy.addons.filemanager.configuration;
 
 
+import java.util.List;
+
 import ch.ivyteam.ivy.addons.filemanager.database.AbstractFileManagementHandler;
 import ch.ivyteam.ivy.addons.filemanager.database.fileaction.FileActionConfiguration;
+import ch.ivyteam.ivy.addons.filemanager.database.security.DocumentFilter;
+import ch.ivyteam.ivy.addons.filemanager.database.security.SecurityHandler;
+import ch.ivyteam.ivy.addons.filemanager.listener.FileActionListener;
+import ch.ivyteam.ivy.addons.filemanager.util.PathUtil;
 import ch.ivyteam.ivy.environment.Ivy;
 
 /**
@@ -41,6 +47,12 @@ public class BasicConfigurationController{
 	 * If true the security management on the directories will be activated. storeFilesInDB must be true.
 	 */
 	private boolean activateSecurity = false;
+	
+	/**
+	 * The security Handler responsible for computing the FileManager rights
+	 */
+	private SecurityHandler securityHandler;
+	
 	/**
 	 * If true the File version feature will be activated. storeFilesInDB must be true.
 	 */
@@ -54,6 +66,9 @@ public class BasicConfigurationController{
 	 * If true, the file types feature will be activated.
 	 */
 	private boolean activateFileType = false;
+	
+	private boolean activateFileTypeTranslation = false;
+	
 	/**
 	 * If true, the file tags feature will be activated.
 	 */
@@ -68,7 +83,7 @@ public class BasicConfigurationController{
 	 * The name of the Ivy database Configuration name used to connect to the database.<br>
 	 * Default is the value of the xivy_addons_fileManager_ivyDatabaseConnectionName global variable.
 	 */
-	private String IvyDBConnectionName=Ivy.var().get("xivy_addons_fileManager_ivyDatabaseConnectionName").trim();
+	private String ivyDBConnectionName=Ivy.var().get("xivy_addons_fileManager_ivyDatabaseConnectionName").trim();
 
 	/**
 	 * The name of the database schema that may be used if the tables are stored in a schema<br>
@@ -113,6 +128,25 @@ public class BasicConfigurationController{
 	 * Default is the value of the xivy_addons_fileManager_fileTagsTableName global variable.
 	 */
 	private String fileTagsTableName =Ivy.var().get("xivy_addons_fileManager_fileTagsTableName").trim();
+	
+	/**
+	 * Name of the DB Table that stores the languages ISO Code supported by the filemanager
+	 * Default is "fmlanguages"
+	 */
+	private String languageTableName = "fmlanguages";
+	
+	/**
+	 * Name of the DB Table that stores the directories names translations
+	 * Default is "dirtranslation"
+	 */
+	private String directoriesTranslationTableName = "dirtranslation";
+	
+	/**
+	 * Name of the DB Table that stores the filetypes names translations
+	 * Default is "fttranslation"
+	 */
+	private String fileTypesTranslationTableName = "fttranslation";
+	
 	/**
 	 * The rootPath is the directory entry path.
 	 */
@@ -127,6 +161,22 @@ public class BasicConfigurationController{
 	 * FileActionConfiguration object that controls the file history tracking feature
 	 */
 	private FileActionConfiguration fileActionHistoryConfiguration = new FileActionConfiguration();
+	
+	/**
+	 * If true the directories can be translated.<br> To be able to activate this feature, the storeFilesInDB must be true.<br>
+	 * The default value is false.
+	 */
+	private boolean activateDirectoryTranslation = false;
+	
+	/**
+	 * This should only be used if you want to override completely the way the file manager retrieves the files and manages the directories and the files.<br>
+	 * This is only here to allow getting an extension point. 
+	 */
+	private AbstractFileManagementHandler fileManagementHandler=null;
+	
+	private List<FileActionListener> fileActionListeners;
+	
+	private DocumentFilter documentFilter=null;
 
 	/**
 	 * 
@@ -208,6 +258,20 @@ public class BasicConfigurationController{
 	}
 
 	/**
+	 * @return the securityHandler
+	 */
+	public SecurityHandler getSecurityHandler() {
+		return securityHandler;
+	}
+
+	/**
+	 * @param securityHandlern the securityHandler to set
+	 */
+	public void setSecurityHandler(SecurityHandler securityHandler) {
+		this.securityHandler = securityHandler;
+	}
+
+	/**
 	 * Tells if the file version feature is activated.
 	 * As prerequisite the storeFilesInDB attribute must be true, so if you set the file version feature to true,<br>
 	 * and isStoreFilesInDB() returns false, then this method will still returns false 
@@ -269,6 +333,23 @@ public class BasicConfigurationController{
 	}
 
 	/**
+	 * @return the activateFileTypeTranslation
+	 */
+	public boolean isActivateFileTypeTranslation() {
+		return (this.isStoreFilesInDB() && this.activateFileType && this.activateFileTypeTranslation);
+	}
+
+	/**
+	 * @param activateFileTypeTranslation the activateFileTypeTranslation to set
+	 */
+	public void setActivateFileTypeTranslation(boolean activateFileTypeTranslation) {
+		this.activateFileTypeTranslation = activateFileTypeTranslation;
+		if(this.activateFileTypeTranslation) {
+			this.activateFileType = true;
+		}
+	}
+
+	/**
 	 * Tells if the file type feature is activated.
 	 * As prerequisite the storeFilesInDB attribute must be true, so if you set the file type feature to true,<br>
 	 * and isStoreFilesInDB() returns false, then this method will still returns false 
@@ -302,6 +383,25 @@ public class BasicConfigurationController{
 	}
 
 	/**
+	 * Tells if the directories translation feature is activated.<br>
+	 * As prerequisite the storeFilesInDB attribute must be true.
+	 * @return the activateDirectoryTranslation flag value.
+	 */
+	public boolean isActivateDirectoryTranslation() {
+		return (this.storeFilesInDB && activateDirectoryTranslation);
+	}
+
+	/**
+	 * Activates or deactivates the directory translation feature.<br>
+	 * As prerequisite the storeFilesInDB attribute must be true.
+	 * @param activateDirectoryTranslation
+	 */
+	public void setActivateDirectoryTranslation(
+			boolean activateDirectoryTranslation) {
+		this.activateDirectoryTranslation = activateDirectoryTranslation;
+	}
+
+	/**
 	 * Returns the Ivy role name that grants its users the management of the file manager security.
 	 * @return the adminRole
 	 */
@@ -322,27 +422,26 @@ public class BasicConfigurationController{
 	 * @return the ivyDBConnectionName
 	 */
 	public String getIvyDBConnectionName() {
-		return IvyDBConnectionName;
+		return this.ivyDBConnectionName;
 	}
 
 	/**
 	 * @param _ivyDBConnectionName the ivyDBConnectionName to set
 	 */
 	public void setIvyDBConnectionName(String _ivyDBConnectionName) {
-		if(_ivyDBConnectionName== null || _ivyDBConnectionName.trim().length()==0)
-		{
-			this.IvyDBConnectionName = Ivy.var().get("xivy_addons_fileManager_ivyDatabaseConnectionName").trim();
-		}else{
-			this.IvyDBConnectionName = _ivyDBConnectionName.trim();
+		if(_ivyDBConnectionName== null || _ivyDBConnectionName.trim().length()==0) {
+			this.ivyDBConnectionName = Ivy.var().get("xivy_addons_fileManager_ivyDatabaseConnectionName").trim();
+		}else {
+			this.ivyDBConnectionName = _ivyDBConnectionName.trim();
 		}
-		this.fileActionHistoryConfiguration.setIvyDBConnectionName(this.IvyDBConnectionName);
+		this.fileActionHistoryConfiguration.setIvyDBConnectionName(this.ivyDBConnectionName);
 	}
 
 	/**
 	 * @return the filesTableName
 	 */
 	public String getFilesTableName() {
-		return filesTableName;
+		return this.filesTableName;
 	}
 
 	/**
@@ -351,10 +450,9 @@ public class BasicConfigurationController{
 	 * @param _filesTableName the filesTableName to set
 	 */
 	public void setFilesTableName(String _filesTableName) {
-		if(_filesTableName==null || _filesTableName.trim().length()==0)
-		{
+		if(_filesTableName==null || _filesTableName.trim().length()==0) {
 			this.filesTableName = Ivy.var().get("xivy_addons_fileManager_fileMetaDataTableName").trim();
-		}else{
+		}else {
 			this.filesTableName = _filesTableName.trim();
 		}
 	}
@@ -363,7 +461,7 @@ public class BasicConfigurationController{
 	 * @return the directoriesTableName
 	 */
 	public String getDirectoriesTableName() {
-		return directoriesTableName;
+		return this.directoriesTableName;
 	}
 
 	/**
@@ -373,10 +471,9 @@ public class BasicConfigurationController{
 	 * @param _directoriesTableName the directoriesTableName to set
 	 */
 	public void setDirectoriesTableName(String _directoriesTableName) {
-		if(_directoriesTableName==null || _directoriesTableName.trim().length()==0)
-		{
+		if(_directoriesTableName==null || _directoriesTableName.trim().length()==0) {
 			this.directoriesTableName = Ivy.var().get("xivy_addons_fileManager_directoriesTableName").trim();
-		}else{
+		}else {
 			this.directoriesTableName = _directoriesTableName;
 		}
 	}
@@ -385,7 +482,7 @@ public class BasicConfigurationController{
 	 * @return the filesContentTableName
 	 */
 	public String getFilesContentTableName() {
-		return filesContentTableName;
+		return this.filesContentTableName;
 	}
 
 	/**
@@ -395,10 +492,9 @@ public class BasicConfigurationController{
 	 * @param _filesContentTableName the filesContentTableName to set
 	 */
 	public void setFilesContentTableName(String _filesContentTableName) {
-		if(_filesContentTableName== null || _filesContentTableName.trim().length()==0)
-		{
+		if(_filesContentTableName== null || _filesContentTableName.trim().length()==0) {
 			this.filesContentTableName = Ivy.var().get("xivy_addons_fileManager_fileContentTableName").trim();
-		}else{
+		}else {
 			this.filesContentTableName = _filesContentTableName;
 		}
 	}
@@ -407,7 +503,7 @@ public class BasicConfigurationController{
 	 * @return the filesVersionTableName
 	 */
 	public String getFilesVersionTableName() {
-		return filesVersionTableName;
+		return this.filesVersionTableName;
 	}
 
 	/**
@@ -428,7 +524,7 @@ public class BasicConfigurationController{
 	 * @return the filesVersionContentTableName
 	 */
 	public String getFilesVersionContentTableName() {
-		return filesVersionContentTableName;
+		return this.filesVersionContentTableName;
 	}
 
 	/**
@@ -459,7 +555,7 @@ public class BasicConfigurationController{
 	 * @return the fileTypeTableName
 	 */
 	public String getFileTypeTableName() {
-		return fileTypeTableName;
+		return this.fileTypeTableName;
 	}
 
 	/**
@@ -473,7 +569,45 @@ public class BasicConfigurationController{
 	 * @return the fileTagsTableName
 	 */
 	public String getFileTagsTableName() {
-		return fileTagsTableName;
+		return this.fileTagsTableName;
+	}
+
+	public String getLanguageTableName() {
+		return languageTableName;
+	}
+
+	public void setLanguageTableName(String languageTableName) {
+		this.languageTableName = languageTableName;
+	}
+
+	/**
+	 * @return the directoriesTranslationTableName
+	 */
+	public String getDirectoriesTranslationTableName() {
+		return directoriesTranslationTableName;
+	}
+
+	/**
+	 * @param directoriesTranslationTableName the directoriesTranslationTableName to set
+	 */
+	public void setDirectoriesTranslationTableName(
+			String directoriesTranslationTableName) {
+		this.directoriesTranslationTableName = directoriesTranslationTableName;
+	}
+
+	/**
+	 * @return the fileTypesTranslationTableName
+	 */
+	public String getFileTypesTranslationTableName() {
+		return fileTypesTranslationTableName;
+	}
+
+	/**
+	 * @param fileTypesTranslationTableName the fileTypesTranslationTableName to set
+	 */
+	public void setFileTypesTranslationTableName(
+			String fileTypesTranslationTableName) {
+		this.fileTypesTranslationTableName = fileTypesTranslationTableName;
 	}
 
 	/**
@@ -486,7 +620,7 @@ public class BasicConfigurationController{
 		{
 			this.rootPath ="";
 		}else{
-			this.rootPath = AbstractFileManagementHandler.formatPathForDirectory(_rootPath);
+			this.rootPath = PathUtil.formatPathForDirectory(_rootPath);
 		}
 	}
 
@@ -494,14 +628,14 @@ public class BasicConfigurationController{
 	 * @return the rootPath
 	 */
 	public String getRootPath() {
-		return rootPath;
+		return this.rootPath;
 	}
 
 	/**
 	 * @return the databaseSchemaName
 	 */
 	public String getDatabaseSchemaName() {
-		return databaseSchemaName;
+		return this.databaseSchemaName;
 	}
 
 	/**
@@ -512,6 +646,7 @@ public class BasicConfigurationController{
 		if(_databaseSchemaName==null)
 		{
 			this.databaseSchemaName="";
+			return;
 		}
 		this.databaseSchemaName = _databaseSchemaName.trim();
 		this.fileActionHistoryConfiguration.setSchemaName(this.databaseSchemaName);
@@ -528,10 +663,19 @@ public class BasicConfigurationController{
 
 	/**
 	 * The max file size the user is allowed to upload in Kb. 0 means no limit.<br>
-	 * This size can be set to limit the files upload.
+	 * This size can be set to limit the files upload.<br>
+	 * New: if the maxFileSize was set to 0, then the global variable Ivy.var().get("xivy_addons_fileManager_max_upload_size")
+	 * will be returned.
 	 * @return the maxFileSize
 	 */
 	public int getMaxFileUploadSize() {
+		if(this.maxFileUploadSize<=0) {
+			try{
+				maxFileUploadSize = Integer.parseInt(Ivy.var().get("xivy_addons_fileManager_max_upload_size"));
+			}catch(Exception ex){
+				Ivy.log().error("Cannot set the max size. "+ ex.getMessage(),ex);
+			}
+		}
 		return maxFileUploadSize;
 	}
 
@@ -548,7 +692,15 @@ public class BasicConfigurationController{
 	 * @return the fileActionHistoryConfiguration
 	 */
 	public FileActionConfiguration getFileActionHistoryConfiguration() {
-		return fileActionHistoryConfiguration;
+		return this.fileActionHistoryConfiguration;
+	}
+
+	public DocumentFilter getDocumentFilter() {
+		return documentFilter;
+	}
+
+	public void setDocumentFilter(DocumentFilter documentFilter) {
+		this.documentFilter = documentFilter;
 	}
 
 	/**
@@ -561,13 +713,47 @@ public class BasicConfigurationController{
 	{
 		return (this.isUseIvySystemDB() || 
 				(
-						this.IvyDBConnectionName.length()>0 &&
+						this.ivyDBConnectionName.length()>0 &&
 						this.filesTableName.length()>0 &&
 						(!this.isStoreFilesInDB() || (this.filesContentTableName.length()>0 && this.directoriesTableName.length()>0)) &&
 						(!this.isActivateFileVersioning() || (this.filesVersionTableName.length()>0 && this.filesVersionContentTableName.length()>0))
 				)
 		);
 	}
+
+	/**
+	 * If you want to override completely the way the file manager retrieves the files and manages the directories and the files, you may have set your own AbstractFileManagementHandler.<br>
+	 * This method returns the overriding AbstractFileManagementHandler or null if you let the file manager decides which handler has to be used (most common case).
+	 * @return the fileManagementHandler
+	 */
+	public AbstractFileManagementHandler getFileManagementHandler() {
+		return this.fileManagementHandler;
+	}
+
+	/**
+	 * If you want to override completely the way the file manager retrieves the files and manages the directories and the files, you may set your own AbstractFileManagementHandler.<br>
+	 * This method lets you overriding the default FileManagementHandler that the file manager decides to use.
+	 * @param fileManagementHandler the fileManagementHandler to set
+	 */
+	public void setFileManagementHandler(AbstractFileManagementHandler fileManagementHandler) {
+		this.fileManagementHandler = fileManagementHandler;
+	}
+
+	/**
+	 * @return the fileActionListeners
+	 */
+	public List<FileActionListener> getFileActionListeners() {
+		return this.fileActionListeners;
+	}
+
+	/**
+	 * @param fileActionListeners the fileActionListeners to set
+	 */
+	public void setFileActionListeners(List<FileActionListener> fileActionListeners) {
+		this.fileActionListeners = fileActionListeners;
+	}
+	
+	
 
 
 }

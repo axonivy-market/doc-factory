@@ -109,7 +109,7 @@ public class FileCoupleChecker<T extends IRichDialogPanel>{
 				hash.clear();
 				hash.putAll(event.getFilesChecksums());
 				//after the HashMap of the changed client Files was updated, we upload those files on the server. 
-				Ivy.log().info("File changed reported in FileCoupleChecker");
+				Ivy.log().debug("File changed reported in FileCoupleChecker");
 				uploadChangedFiles();
 			}
 		});
@@ -170,7 +170,7 @@ public class FileCoupleChecker<T extends IRichDialogPanel>{
 
 									final String finalFilename= filePath.substring(filePath.lastIndexOf(fileSeparator)+1);
 									final java.io.File sFile = fileCouples.get(i).getServerFile();
-									Ivy.log().info("File uploaded from Client from following path "+filePath);
+									Ivy.log().debug("File uploaded from Client from following path "+filePath);
 									ClientContext.setFileTransferMode(ClientContext.ASYNCHRONOUS_MODE);
 									ClientContext.loadFile(new IFileLoadHandler(){
 										public void onFailure(int reason, String description)
@@ -183,11 +183,11 @@ public class FileCoupleChecker<T extends IRichDialogPanel>{
 										{
 											OutputStream server =null;
 											try{
-												Ivy.log().info("Try to upload file from Client To Server at "+path.toString());
+												Ivy.log().debug("Try to upload file from Client To Server at "+path.toString());
 												BufferedInputStream preparedFile = new BufferedInputStream(ins[0]);
 												path.append(finalFilename);
 												File serverFile = new File(path.toString());
-												Ivy.log().info("File uploaded from Client To Server at "+path.toString());
+												Ivy.log().debug("File uploaded from Client To Server at "+path.toString());
 												server = new BufferedOutputStream(new FileOutputStream(serverFile));
 												byte b[] = new byte[1024];
 												int intRead; 

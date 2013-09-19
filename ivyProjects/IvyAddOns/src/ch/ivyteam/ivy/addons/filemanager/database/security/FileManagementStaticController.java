@@ -14,7 +14,7 @@ import ch.ivyteam.db.jdbc.DatabaseUtil;
 import ch.ivyteam.ivy.addons.filemanager.DocumentOnServer;
 import ch.ivyteam.ivy.addons.filemanager.FileHandler;
 import ch.ivyteam.ivy.addons.filemanager.ReturnedMessage;
-import ch.ivyteam.ivy.addons.filemanager.database.AbstractFileManagementHandler;
+import ch.ivyteam.ivy.addons.filemanager.util.PathUtil;
 import ch.ivyteam.ivy.db.IExternalDatabase;
 import ch.ivyteam.ivy.db.IExternalDatabaseRuntimeConnection;
 import ch.ivyteam.ivy.environment.Ivy;
@@ -74,6 +74,7 @@ public abstract class FileManagementStaticController {
 	 * @return
 	 * @throws Exception
 	 */
+	@Deprecated
 	public static ArrayList<DocumentOnServer> getDocumentsInPath(IExternalDatabase database, String tableNameSpace, String _path,
 			boolean _isRecursive, String escapeChar) throws Exception {
 		if(_path==null || _path.trim().length()==0)
@@ -86,8 +87,8 @@ public abstract class FileManagementStaticController {
 		}
 		ArrayList<DocumentOnServer>  al = new ArrayList<DocumentOnServer>();
 
-		String folderPath = AbstractFileManagementHandler.formatPathForDirectoryWithoutLastSeparator(_path)+"/";
-		folderPath=AbstractFileManagementHandler.escapeUnderscoreInPath(folderPath);
+		String folderPath = PathUtil.formatPathForDirectoryWithoutLastSeparator(_path)+"/";
+		folderPath=PathUtil.escapeUnderscoreInPath(folderPath);
 		List<Record> recordList= (List<Record>) List.create(Record.class);
 
 		String query="";
@@ -200,7 +201,7 @@ public abstract class FileManagementStaticController {
 						stmt.executeUpdate();
 					}
 				}
-				_directoryPath=AbstractDirectorySecurityController.escapeUnderscoreInPath(_directoryPath);
+				_directoryPath=PathUtil.escapeUnderscoreInPath(_directoryPath);
 				stmt = jdbcConnection.prepareStatement(base);
 				stmt.setString(1, _directoryPath+"/%");
 				stmt.executeUpdate();
@@ -232,7 +233,7 @@ public abstract class FileManagementStaticController {
 		{
 			escapeChar="\\";
 		}
-		_path=AbstractDirectorySecurityController.escapeUnderscoreInPath(_path);
+		_path=PathUtil.escapeUnderscoreInPath(_path);
 		String query="";
 
 		IExternalDatabaseRuntimeConnection connection = null;
@@ -241,7 +242,7 @@ public abstract class FileManagementStaticController {
 			connection = database.getAndLockConnection();
 			Connection jdbcConnection=connection.getDatabaseConnection();
 
-			query="SELECT FileId FROM "+tableNameSpace+" WHERE FilePath LIKE ? ESCAPE '"+escapeChar+"'";;
+			query="SELECT FileId FROM "+tableNameSpace+" WHERE FilePath LIKE ? ESCAPE '"+escapeChar+"'";
 			PreparedStatement stmt = null;
 			try{
 				stmt = jdbcConnection.prepareStatement(query);

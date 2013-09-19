@@ -1,5 +1,5 @@
 [Ivy]
-[>Created: Thu May 30 10:46:26 EDT 2013]
+[>Created: Mon Aug 26 13:17:09 CEST 2013]
 125F850DA67753A5 3.17 #module
 >Proto >Proto Collection #zClass
 Ds0 DesktopHandlerProcess Big #zClass
@@ -157,9 +157,6 @@ Ds0 @RichDialogProcessStep f145 '' #zField
 Ds0 @PushWFArc f146 '' #zField
 Ds0 @RichDialogProcessStep f147 '' #zField
 Ds0 @PushWFArc f148 '' #zField
-Ds0 @RichDialogMethodStart f149 '' #zField
-Ds0 @RichDialogProcessEnd f150 '' #zField
-Ds0 @PushWFArc f151 '' #zField
 Ds0 @RichDialogProcessEnd f152 '' #zField
 Ds0 @RichDialogProcessEnd f153 '' #zField
 Ds0 @PushWFArc f154 '' #zField
@@ -217,6 +214,12 @@ Ds0 @RichDialogProcessStep f198 '' #zField
 Ds0 @PushWFArc f199 '' #zField
 Ds0 @RichDialogProcessEnd f200 '' #zField
 Ds0 @PushWFArc f201 '' #zField
+Ds0 @RichDialogMethodStart f202 '' #zField
+Ds0 @RichDialogProcessEnd f203 '' #zField
+Ds0 @PushWFArc f204 '' #zField
+Ds0 @RichDialogMethodStart f149 '' #zField
+Ds0 @RichDialogProcessEnd f150 '' #zField
+Ds0 @PushWFArc f151 '' #zField
 >Proto Ds0 Ds0 DesktopHandlerProcess #zField
 Ds0 f0 guid 11E20AE1BA5352AB #txt
 Ds0 f0 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
@@ -1364,13 +1367,13 @@ if(e.getParameter() instanceof java.io.File){
 	for(FileCouple f: in.editedFileList){
 		if(fc.serverSidePath.compareTo(f.serverSidePath)==0){
 			if(f.hasChanged){
-				ivy.log.info("File has at least already changed "+fc.getServerSidePath());
+				ivy.log.debug("File has at least already changed "+fc.getServerSidePath());
 				fc.hasChanged=true;
 				panel.fireFileCoupleModifiedReported(fc);
 			}else{
 				panel.fireFileCoupleModifiedReported(fc);
 				//f.setHasChanged(true);
-				ivy.log.info("File has just changed "+fc.getServerSidePath());
+				ivy.log.debug("File has just changed "+fc.getServerSidePath());
 			}
 		}
 	}
@@ -1877,23 +1880,6 @@ Ds0 f147 446 1124 36 24 20 -2 #rect
 Ds0 f147 @|RichDialogProcessStepIcon #fIcon
 Ds0 f148 expr out #txt
 Ds0 f148 464 1090 464 1124 #arcP
-Ds0 f149 guid 12470C241D2BA484 #txt
-Ds0 f149 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
-Ds0 f149 disableUIEvents false #txt
-Ds0 f149 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<elementInfo>
-    <language>
-        <name>_privateIsFileEditable()</name>
-    </language>
-</elementInfo>
-' #txt
-Ds0 f149 1894 86 20 20 13 0 #rect
-Ds0 f149 @|RichDialogMethodStartIcon #fIcon
-Ds0 f150 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
-Ds0 f150 1894 142 20 20 13 0 #rect
-Ds0 f150 @|RichDialogProcessEndIcon #fIcon
-Ds0 f151 expr out #txt
-Ds0 f151 1904 106 1904 142 #arcP
 Ds0 f152 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
 Ds0 f152 294 1182 20 20 13 0 #rect
 Ds0 f152 @|RichDialogProcessEndIcon #fIcon
@@ -2567,6 +2553,60 @@ Ds0 f200 726 574 20 20 13 0 #rect
 Ds0 f200 @|RichDialogProcessEndIcon #fIcon
 Ds0 f201 expr out #txt
 Ds0 f201 736 532 736 574 #arcP
+Ds0 f202 guid 13F4315678A65E0F #txt
+Ds0 f202 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
+Ds0 f202 method getClientDesktopCommunicator() #txt
+Ds0 f202 disableUIEvents false #txt
+Ds0 f202 inParameterDecl 'ch.ivyteam.ivy.richdialog.exec.RdMethodCallEvent methodEvent = event as ch.ivyteam.ivy.richdialog.exec.RdMethodCallEvent;
+<> param = methodEvent.getInputArguments();
+' #txt
+Ds0 f202 outParameterDecl '<ch.ivyteam.ivy.addons.filemanager.ulcextensionhandler.DesktopHandler clientDesktopCommunicator> result;
+' #txt
+Ds0 f202 outParameterMapAction 'result.clientDesktopCommunicator=in.DesktopHandlerObject;
+' #txt
+Ds0 f202 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>getClientDesktopCommunicator()</name>
+        <nameStyle>30,5,7
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
+Ds0 f202 2006 214 20 20 13 0 #rect
+Ds0 f202 @|RichDialogMethodStartIcon #fIcon
+Ds0 f203 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
+Ds0 f203 2006 278 20 20 13 0 #rect
+Ds0 f203 @|RichDialogProcessEndIcon #fIcon
+Ds0 f204 expr out #txt
+Ds0 f204 2016 234 2016 278 #arcP
+Ds0 f149 guid 140BA56DC1A6DA86 #txt
+Ds0 f149 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
+Ds0 f149 method setDocumentFilter(ch.ivyteam.ivy.addons.filemanager.database.security.DocumentFilter) #txt
+Ds0 f149 disableUIEvents false #txt
+Ds0 f149 inParameterDecl 'ch.ivyteam.ivy.richdialog.exec.RdMethodCallEvent methodEvent = event as ch.ivyteam.ivy.richdialog.exec.RdMethodCallEvent;
+<ch.ivyteam.ivy.addons.filemanager.database.security.DocumentFilter documentFilter> param = methodEvent.getInputArguments();
+' #txt
+Ds0 f149 inParameterMapAction 'out.documentFilter=param.documentFilter;
+' #txt
+Ds0 f149 outParameterDecl '<> result;
+' #txt
+Ds0 f149 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>setDocumentFilter(DocumentFilter)</name>
+        <nameStyle>33,5,7
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
+Ds0 f149 726 662 20 20 13 0 #rect
+Ds0 f149 @|RichDialogMethodStartIcon #fIcon
+Ds0 f150 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
+Ds0 f150 726 726 20 20 13 0 #rect
+Ds0 f150 @|RichDialogProcessEndIcon #fIcon
+Ds0 f151 expr out #txt
+Ds0 f151 736 682 736 726 #arcP
 >Proto Ds0 .rdData2UIAction 'panel.fileEditedTable.listData=in.editedFileList;
 panel.visible=in.tableVisible;
 ' #txt
@@ -2698,8 +2738,6 @@ Ds0 f143 mainOut f146 tail #connect
 Ds0 f146 head f145 mainIn #connect
 Ds0 f144 mainOut f148 tail #connect
 Ds0 f148 head f147 mainIn #connect
-Ds0 f149 mainOut f151 tail #connect
-Ds0 f151 head f150 mainIn #connect
 Ds0 f147 mainOut f154 tail #connect
 Ds0 f154 head f153 mainIn #connect
 Ds0 f145 mainOut f155 tail #connect
@@ -2750,3 +2788,7 @@ Ds0 f197 mainOut f199 tail #connect
 Ds0 f199 head f198 mainIn #connect
 Ds0 f198 mainOut f201 tail #connect
 Ds0 f201 head f200 mainIn #connect
+Ds0 f202 mainOut f204 tail #connect
+Ds0 f204 head f203 mainIn #connect
+Ds0 f149 mainOut f151 tail #connect
+Ds0 f151 head f150 mainIn #connect

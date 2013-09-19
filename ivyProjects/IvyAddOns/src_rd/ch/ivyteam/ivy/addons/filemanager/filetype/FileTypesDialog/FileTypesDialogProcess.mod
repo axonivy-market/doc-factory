@@ -1,5 +1,5 @@
 [Ivy]
-[>Created: Wed Jun 20 12:30:52 EDT 2012]
+[>Created: Mon Jul 08 11:12:29 EDT 2013]
 137EFFFAE6078CBB 3.17 #module
 >Proto >Proto Collection #zClass
 Fs0 FileTypesDialogProcess Big #zClass
@@ -151,9 +151,9 @@ Fs0 f5 actionDecl 'ch.ivyteam.ivy.addons.filemanager.filetype.FileTypesDialog.Fi
 ' #txt
 Fs0 f5 actionTable 'out=in;
 ' #txt
-Fs0 f5 actionCode 'import ch.ivyteam.ivy.addons.filemanager.database.filetype.FileTypesController;
+Fs0 f5 actionCode 'import ch.ivyteam.ivy.addons.filemanager.FileManagementHandlersFactory;
 try{
-	in.fileTypesController = new FileTypesController(in.configurationController);
+	in.fileTypesController = FileManagementHandlersFactory.getFileTypesControllerInstance(in.configurationController);
 	out.fileTypesList = in.fileTypesController.getAllFileTypes();
 }catch(Throwable t)
 {

@@ -1,5 +1,5 @@
 [Ivy]
-[>Created: Sat Mar 23 22:08:35 EDT 2013]
+[>Created: Fri Jun 28 09:32:38 EDT 2013]
 125FDB0198DDACE8 3.17 #module
 >Proto >Proto Collection #zClass
 Fs0 FileListTableProcess Big #zClass
@@ -3403,7 +3403,7 @@ try{
 				try
 				{
 					long id = Long.parseLong(fc.getReferencedDocumentOnServer().fileID);
-					in.fileManagementHandler.fileActionHistoryController.createNewActionHistory(id,2,ivy.session.getSessionUserName(),"");
+					in.fileManagementHandler.getFileActionHistoryController().createNewActionHistory(id,2,ivy.session.getSessionUserName(),"");
 				}catch(Throwable t)
 				{
 					ivy.log.error("File List Table error: an error occurred while writing file changed history. "+t.getMessage());
@@ -3420,7 +3420,7 @@ try{
 			try
 			{
 				long id = Long.parseLong(doc.fileID);
-				in.fileManagementHandler.fileActionHistoryController.createNewActionHistory(id,2,ivy.session.getSessionUserName(),"");
+				in.fileManagementHandler.getFileActionHistoryController().createNewActionHistory(id,2,ivy.session.getSessionUserName(),"");
 			}catch(Throwable t)
 			{
 				ivy.log.error("File List table error: an error occurred while writing file changed history. "+t.getMessage());

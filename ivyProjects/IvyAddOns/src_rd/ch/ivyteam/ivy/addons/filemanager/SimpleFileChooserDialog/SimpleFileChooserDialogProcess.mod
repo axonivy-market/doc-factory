@@ -1,5 +1,5 @@
 [Ivy]
-[>Created: Sat Mar 23 17:57:15 EDT 2013]
+[>Created: Fri Jun 28 09:33:19 EDT 2013]
 125FE384C5BE80F0 3.17 #module
 >Proto >Proto Collection #zClass
 Fs0 FileChooserDialogProcess Big #zClass
@@ -660,11 +660,11 @@ Fs0 f63 actionTable 'out=in;
 ' #txt
 Fs0 f63 actionCode 'panel.desktopHandlerPanel.openFile(in.fileChoosed);
 
-if(in.fileManagementHandler.fileActionHistoryController.config.activateFileActionHistory)
+if(in.fileManagementHandler.fileActionHistoryController.getConfig().activateFileActionHistory)
 {
 	try{
 		long id = long.parseLong(in.selectedDocumentOnServer.fileID);
-		in.fileManagementHandler.getFileActionHistoryController().createNewActionHistory(id,8,ivy.session.getSessionUserName(),"");
+		in.fileManagementHandler.fileActionHistoryController.createNewActionHistory(id,8,ivy.session.getSessionUserName(),"");
 	}catch(Throwable t){
 		ivy.log.error("Error in writing activity in SimpleFileChooser dialog. "+t.getMessage(),t);
 	}
