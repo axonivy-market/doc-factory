@@ -54,9 +54,29 @@ This method can not be changed or deleted!</description>
             <nullPermitted>false</nullPermitted>
         </inputParameter>
     </startMethod>
+    <startMethod>
+        <name>start</name>
+        <description></description>
+        <inputParameter>
+            <name>configuration</name>
+            <description></description>
+            <parameterType>ch.ivyteam.ivy.addons.filemanager.configuration.BasicConfigurationController</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </inputParameter>
+    </startMethod>
     <firedEvent>
         <name>hiddeMe</name>
         <description></description>
+    </firedEvent>
+    <firedEvent>
+        <name>folderRightsChanged</name>
+        <description></description>
+        <attachment>
+            <name>folder</name>
+            <description></description>
+            <parameterType>ch.ivyteam.ivy.addons.filemanager.FolderOnServer</parameterType>
+            <nullPermitted>true</nullPermitted>
+        </attachment>
     </firedEvent>
     <property>
         <name>guid</name>

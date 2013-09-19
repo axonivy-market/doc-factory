@@ -11,19 +11,25 @@
 
 package ch.ivyteam.ivy.addons.filemanager;
 
-import static java.lang.Math.floor;
 import static java.lang.Math.round;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 
 import ch.ivyteam.ivy.addons.docfactory.FileOperationMessage;
+import ch.ivyteam.ivy.addons.filemanager.util.PathUtil;
 import ch.ivyteam.ivy.addons.util.RDCallbackMethodHandler;
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.richdialog.exec.panel.IRichDialogPanel;
+import ch.xpertline.ulc.server.headless.ULCXDesktop;
+import ch.xpertline.ulc.server.headless.ULCXDesktop.OnDesktopExceptionEvent;
+import ch.xpertline.ulc.server.headless.ULCXDesktop.OnDesktopExceptionListener;
 
 import com.ulcjava.base.application.ClientContext;
 import com.ulcjava.base.application.ULCComponent;
@@ -56,14 +62,20 @@ import com.ulcjava.base.shared.FileChooserConfig;
  * For security purposes, if the server path is set to null or points to the root of the server, it takes automatically a default value.
  * 
  */
-public class FileDownloadHandler<T extends ULCComponent & IRichDialogPanel> {
+public class FileDownloadHandler<T extends ULCComponent & IRichDialogPanel>  implements OnDesktopExceptionListener /*implements GetFilesListReturnedListener*/{
 	private String serverPath;
 	private T ulcPane = null;
-	private String errorMethodeName, downloadSuccessMethodeName, progressMethodName;
+	private String errorMethodeName, downloadSuccessMethodeName, progressMethodName, callbackForOverriding;
 	private FileOperationMessage fileOperationMessage;
 	private String downloadTitle="";
 	private String chooseButton="";
 	final ULCPollingTimer timer =new ULCPollingTimer(100,null);
+	private ULCXDesktop desktop=null;
+	private Method dGetFilesAtClientSideMethod = null;
+	@SuppressWarnings("unused")
+	private DownloadGetDirectoryInfoListener listener = null;
+	private List<File> preparedFiles;
+	private String preparedPath;
 	
 	public FileDownloadHandler(){
 		this(null, "", "", "","");
@@ -115,10 +127,18 @@ public class FileDownloadHandler<T extends ULCComponent & IRichDialogPanel> {
 		this.downloadTitle =Ivy.cms().co("/ch/ivyteam/ivy/addons/filemanager/download/label/chooseDirectory");
 		this.chooseButton = Ivy.cms().co("/ch/ivyteam/ivy/addons/filemanager/download/label/chooseButton");
 		timer.setRepeats(false);
+		
+		this.desktop=new ULCXDesktop();
+		try{
+			this.dGetFilesAtClientSideMethod = this.desktop.getClass().getMethod("getDirectoryInfoUnderPath", String.class);
+			this.listener=new DownloadGetDirectoryInfoListener(this.desktop, this);
+		}catch (Exception ex) {
+			Ivy.log().info("The method getDirectoryInfoUnderPath is not implemented in the ULC exctension.");
+		}
 	}
 	
 	/**
-	 * Downloads a File directly to the client. The parameter is just the String name of the choosen File to download.<br>
+	 * Downloads a File directly to the client. The parameter is just the String name of the chosen File to download.<br>
 	 * If the FileDownloadHandler was instantiated with a parent RD reference and callbackmethods names,<br>
 	 * it will be able to communicate with its parent RD<br>
 	 * No progress is shown for one File download.<br>
@@ -142,22 +162,7 @@ public class FileDownloadHandler<T extends ULCComponent & IRichDialogPanel> {
 		try {
 			ClientContext.storeFile(new IFileStoreHandler() {
 				public void onFailure(int reason, String description) {
-					String msg = "";
-					switch (reason) {
-					case CANCELLED:
-						msg = "The Download has failed. CAUSE: Action canceled.";
-						break;
-					case FAILED:
-						msg = "The Download has failed. CAUSE: unknown";
-						break;
-					default:
-						msg = "The Download has failed. CAUSE: unknown.";
-						break;
-					}
-					fileOperationMessage.setType(FileOperationMessage.ERROR_MESSAGE);
-            		fileOperationMessage.setMessage(msg);
-            		fileOperationMessage.emptyFileList();
-            		RDCallbackMethodHandler.callRDMethod(ulcPane, errorMethodeName, new Object[] { fileOperationMessage });
+					makeError(reason,description);
 				}
 
 				public void prepareFile(OutputStream data) {
@@ -234,22 +239,7 @@ public class FileDownloadHandler<T extends ULCComponent & IRichDialogPanel> {
 		try {
 			ClientContext.storeFile(new IFileStoreHandler() {
 				public void onFailure(int reason, String description) {
-					String msg = "";
-					switch (reason) {
-					case CANCELLED:
-						msg = "The Download has failed. CAUSE: Action canceled.";
-						break;
-					case FAILED:
-						msg = "The Download has failed. CAUSE: unknown";
-						break;
-					default:
-						msg = "The Download has failed. CAUSE: unknown.";
-						break;
-					}
-					fileOperationMessage.setType(FileOperationMessage.ERROR_MESSAGE);
-            		fileOperationMessage.setMessage(msg);
-            		fileOperationMessage.emptyFileList();
-            		RDCallbackMethodHandler.callRDMethod(ulcPane, errorMethodeName, new Object[] { fileOperationMessage });
+					makeError(reason,description);
 				}
 
 				public void prepareFile(OutputStream data) {
@@ -327,22 +317,7 @@ public class FileDownloadHandler<T extends ULCComponent & IRichDialogPanel> {
 			ClientContext.storeFile(new IFileStoreHandler() {
 				
 				public void onFailure(int reason, String description) {
-					String msg = "";
-					switch (reason) {
-					case CANCELLED:
-						msg = "The Download has failed. CAUSE: Action canceled.";
-						break;
-					case FAILED:
-						msg = "The Download has failed. CAUSE: unknown.";
-						break;
-					default:
-						msg = "The Download has failed. CAUSE: unknown.";
-						break;
-					}
-					fileOperationMessage.setType(FileOperationMessage.ERROR_MESSAGE);
-            		fileOperationMessage.setMessage(msg);
-            		fileOperationMessage.emptyFileList();
-            		RDCallbackMethodHandler.callRDMethod(ulcPane, errorMethodeName, new Object[] { fileOperationMessage });
+					makeError(reason,description);
 				}
 
 				public void prepareFile(OutputStream data) {
@@ -396,89 +371,8 @@ public class FileDownloadHandler<T extends ULCComponent & IRichDialogPanel> {
 	 * @param files: a List<File> Object. The list of the files to be downloaded.
 	 */
 	public void downloadFiles(final List<File> files){
-		ClientContext.setFileTransferMode(ClientContext.SYNCHRONOUS_MODE);
-    	final FileChooserConfig fcConfig = new FileChooserConfig();
-    	
-		fcConfig.setDialogTitle(this.downloadTitle);
-		fcConfig.setFileSelectionMode(FileChooserConfig.DIRECTORIES_ONLY);
-		fcConfig.setMultiSelectionEnabled(false); // We accept just one directory at time
-		fcConfig.setApproveButtonText(this.chooseButton);
-		ClientContext.chooseFile(new IFileChooseHandler(){
-
-			public void onFailure(int reason, String description) {
-				String msg = "";
-				switch (reason) {
-				case CANCELLED:
-					msg = "The choice of a directory has failed. CAUSE: Action canceled.";
-					break;
-				case FAILED:
-					msg = "The choice of a directory has failed. CAUSE: unknown.";
-					break;
-				default:
-					msg = "The choice of a directory has failed. CAUSE: unknown.";
-					break;
-				}
-				fileOperationMessage.setType(FileOperationMessage.ERROR_MESSAGE);
-        		fileOperationMessage.setMessage(msg);
-        		fileOperationMessage.emptyFileList();
-        		RDCallbackMethodHandler.callRDMethod(ulcPane, errorMethodeName, new Object[] { fileOperationMessage });
-			}
-
-			public void onSuccess(String[] arg0, String[] arg1) {
-				
-				final String path= arg0[0];
-				final StringBuilder sb = new StringBuilder();
-				
-				cleanTimer();
-				timer.addActionListener(new IActionListener() {
-					private static final long serialVersionUID = 0L;
-					boolean done=false;
-					int nb= files.size();
-					int step=round(nb/10); 
-					int percentStep=10;
-					int percentDone=0;
-					int i=0, a=0;
-					public void actionPerformed(ActionEvent arg0) {
-						if(step<1){
-							step=1;
-							percentStep=(int) floor(100/nb);
-						}
-						while(!done && a<step){
-							if(i<nb){
-								if(!FileHandler.download(files.get(i), path))
-									sb.append(files.get(i).getName()+"; ");
-								a++;
-								i++;
-							}else
-								done=true;
-						}
-						if(!done){
-							a=0;
-							if(percentDone<100)
-								percentDone=percentDone+percentStep;
-							RDCallbackMethodHandler.callRDMethod(ulcPane,progressMethodName, new Object[] { percentDone });
-	                    		timer.restart(); // restart the timer because the file is not completely uploaded
-						}else{
-							if(sb.length()>0){
-								RDCallbackMethodHandler.callRDMethod(ulcPane, progressMethodName, new Object[] { 100 });
-								fileOperationMessage.setType(FileOperationMessage.ERROR_MESSAGE);
-		                        fileOperationMessage.setMessage("The following Files could'nt be downloaded: "+sb.toString());
-		                        fileOperationMessage.emptyFileList();
-		                        RDCallbackMethodHandler.callRDMethod(ulcPane, errorMethodeName, new Object[] { fileOperationMessage });
-							}else{
-								fileOperationMessage.setType(FileOperationMessage.SUCCESS_MESSAGE);
-		                        fileOperationMessage.setMessage("The Files were successfully downloaded.");
-		                        fileOperationMessage.emptyFileList();
-		                        Ivy.log().info("Download successful");
-		                        RDCallbackMethodHandler.callRDMethod(ulcPane, downloadSuccessMethodeName, new Object[] { fileOperationMessage });
-							}
-						}//end if else
-					}
-				});
-				timer.start();
-			}
-			
-		}, fcConfig, ulcPane);
+		this.preparedFiles = files;
+		this.selectDestinationDirectory();
 	}
 	
 	/**
@@ -503,22 +397,7 @@ public class FileDownloadHandler<T extends ULCComponent & IRichDialogPanel> {
 		ClientContext.chooseFile(new IFileChooseHandler(){
 
 			public void onFailure(int reason, String description) {
-				String msg = "";
-				switch (reason) {
-				case CANCELLED:
-					msg = "The choice of a directory has failed. CAUSE: Action canceled.";
-					break;
-				case FAILED:
-					msg = "The choice of a directory has failed. CAUSE: unknown.";
-					break;
-				default:
-					msg = "The choice of a directory has failed. CAUSE: unknown.";
-					break;
-				}
-				fileOperationMessage.setType(FileOperationMessage.ERROR_MESSAGE);
-        		fileOperationMessage.setMessage(msg);
-        		fileOperationMessage.emptyFileList();
-        		RDCallbackMethodHandler.callRDMethod(ulcPane, errorMethodeName, new Object[] { fileOperationMessage });
+				makeError(reason,description);
 			}
 
 			public void onSuccess(String[] arg0, String[] arg1) {
@@ -612,11 +491,305 @@ public class FileDownloadHandler<T extends ULCComponent & IRichDialogPanel> {
         this.progressMethodName = name.trim();
     }
     
-    private void cleanTimer(){
+    public String getCallbackForOverriding() {
+		return callbackForOverriding;
+	}
+
+	public void setCallbackForOverriding(String callbackForOverriding) {
+		this.callbackForOverriding = callbackForOverriding;
+	}
+
+	private void cleanTimer(){
 		IActionListener [] ia = timer.getActionListeners();
 		for(IActionListener i: ia){
 			timer.removeActionListener(i);
 		}
 	}
     
+    private void selectDestinationDirectory() {
+    	final FileChooserConfig fcConfig = new FileChooserConfig();
+
+    	fcConfig.setDialogTitle(this.downloadTitle);
+    	fcConfig.setFileSelectionMode(FileChooserConfig.DIRECTORIES_ONLY);
+    	fcConfig.setMultiSelectionEnabled(false); // We accept just one directory at time
+    	fcConfig.setApproveButtonText(this.chooseButton);
+    	ClientContext.chooseFile(new IFileChooseHandler(){
+    		public void onFailure(int reason, String description) {
+    			makeError(reason,description);
+    		}
+
+    		public void onSuccess(String[] arg0, String[] arg1) {
+
+    			final String path= arg0[0];
+    			preparedPath=path;
+    			boolean flag = false;
+    			if(dGetFilesAtClientSideMethod!=null) {
+    				try{
+    					dGetFilesAtClientSideMethod.invoke(desktop, path);
+    					flag =true;
+    				}catch(Exception ex) {
+    					Ivy.log().debug("The method getFilesListUnderPath is not implemented in the ULC exctension.");
+    				}
+    			}
+    			if(!flag) {
+    				downloadFilesAfterOverridingCheck(preparedFiles);
+    			}
+    		}
+
+    	}, fcConfig, ulcPane);
+    }
+    
+    private ch.ivyteam.ivy.scripting.objects.List<File> getIfDownloadOverrideFiles(String[] paths) {
+    	ch.ivyteam.ivy.scripting.objects.List<File> files = ch.ivyteam.ivy.scripting.objects.List.create(java.io.File.class);
+    	if(paths!=null) {
+    		for(int i=0; i<paths.length;i++) {
+    			String fname = new java.io.File(paths[i]).getName();
+    			for(File f: this.preparedFiles) {
+    				if(fname.compareToIgnoreCase(f.getName())==0) {
+    					Ivy.log().info("File 2 get "+f);
+    					files.add(f);
+    					break;
+    				}
+    			}
+    		}
+    	}
+    	return files;
+    }
+    
+	/**
+	 * <font color="red"><b>NOT PUBLIC API<b></font>, Do not call it
+	 */
+	public void clientDirectoryInfoReturned(String[] paths, boolean hasWriteRight) {
+		Ivy.log().debug("File list get "+paths);
+		if(!hasWriteRight){
+			this.makeError(IFileStoreHandler.FAILED, "Caused by: java.security.PrivilegedActionException");
+			return;
+		}
+		ch.ivyteam.ivy.scripting.objects.List<File> files = this.getIfDownloadOverrideFiles(paths);
+		if(files.isEmpty()) {
+			this.downloadFilesAfterOverridingCheck(this.preparedFiles);
+		} else {
+			fileOperationMessage.setFiles(files);
+			String message = Ivy.cms().co("/ch/ivyteam/ivy/addons/filemanager/download/message/overwriteExistingFiles");
+			
+			fileOperationMessage.setMessage(message);
+			Ivy.log().info("Calling {0} "+ this.callbackForOverriding);
+			RDCallbackMethodHandler.callRDMethod(ulcPane, this.callbackForOverriding, new Object[] { fileOperationMessage });
+		}
+	}
+	
+	/**
+	 * Download Files that were prepared with the possibility to exclude the given list of files.<br>
+	 * If this list is null or empty, then all the preparedFiles will be downloaded.
+	 * @param files
+	 */
+	public void downloadPreparedFilesWithPossibilityToExclude(ch.ivyteam.ivy.scripting.objects.List<File> files) {
+		if(files==null || files.isEmpty()) {
+			this.downloadFilesAfterOverridingCheck(this.preparedFiles);
+		}else{
+			List<File> fl = new ArrayList<File>();
+			for(File f : this.preparedFiles) {
+				boolean found = false;
+				for(File f1: files) {
+					if(f.getName().equalsIgnoreCase(f1.getName())) {
+						found=true;
+						break;
+					}
+				}
+				if(!found) {
+					fl.add(f);
+				}
+			}
+			this.downloadFilesAfterOverridingCheck(fl);
+		}
+	}
+	
+	private void downloadFilesAfterOverridingCheck (final List<File> files){
+		this.preparedPath = PathUtil.formatPathForDirectoryAllowingSlashesAndBackslashesAtBeginOfPath(this.preparedPath);
+		cleanTimer();
+		timer.addActionListener(new IActionListener() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 6672475106005492782L;
+			int percentDone=0;
+			int nb= files.size();
+			int fileValue = round(100/nb);
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				try{
+					if(!downloadFile(files.get(0), preparedPath)) {
+						return;
+					}
+				}catch(Exception ex){
+					return;
+				}
+				files.remove(0);
+				if(!files.isEmpty()){
+					percentDone+=fileValue;
+					RDCallbackMethodHandler.callRDMethod(ulcPane,progressMethodName, new Object[] { percentDone });
+            		timer.restart(); // restart the timer because the file is not completely uploaded
+				}
+			}
+			
+		});
+		timer.start();
+	}
+	
+	private boolean downloadFile(final java.io.File file, String clientPath) throws Exception{
+		clientPath= PathUtil.formatPathForDirectoryAllowingSlashesAndBackslashesAtBeginOfPath(clientPath);
+		clientPath= clientPath+file.getName();
+		final boolean[] response = {true};
+		ClientContext.setFileTransferMode(ClientContext.SYNCHRONOUS_MODE);
+		ClientContext.storeFile(new IFileStoreHandler(){
+			public void onFailure(int reason, String description)
+			{
+				Ivy.log().error(description);
+				makeError(reason,description);
+				response[0]=false;
+			}
+
+			public void prepareFile(OutputStream data) {
+				String fileOnServerPath= PathUtil.formatPath(file.getPath());
+				File f = new File(fileOnServerPath);
+				if(!f.exists()){
+					this.onFailure(IFileStoreHandler.FAILED, "File not found");
+				}
+				FileInputStream fis = null;
+				try {
+					fis = new FileInputStream(f);
+					byte b[] = new byte[1024]; 
+					int c=0;
+					while((c= fis.read(b)) != -1){
+						data.write(b,0,c);
+					}
+					
+				} catch (FileNotFoundException e) {
+					this.onFailure(IFileStoreHandler.FAILED, "FileNotFoundException File not found");
+				} catch (IOException ioe){
+					this.onFailure(IFileStoreHandler.FAILED, "IOException : "+ioe.getMessage());
+				} finally {
+					if(fis !=null) {
+						try {
+							fis.close();
+						} catch (IOException e) {}
+					}
+				}
+			}
+			public void onSuccess(String filePath, String fileName){
+				if(file!=null && file.getName().trim().length()>0) {
+					fileOperationMessage.setType(FileOperationMessage.SUCCESS_MESSAGE);
+					fileOperationMessage.setMessage(Ivy.cms().co("/ch/ivyteam/ivy/addons/filemanager/download/message/downloadSuccess").replace("FFILE", "\""+file.getName()+"\""));
+					fileOperationMessage.emptyFileList();
+					RDCallbackMethodHandler.callRDMethod(ulcPane, downloadSuccessMethodeName, new Object[] { fileOperationMessage });
+				}
+			}
+		},clientPath);
+		return response[0];
+	}
+	
+	protected void makeError(int reason, String description) {
+		if(reason==IFileStoreHandler.CANCELLED){
+			return;
+		}
+		String msg = "";
+		ReturnedMessage message = new ReturnedMessage();
+		String add="";
+		ClientContext.getSystemProperty("");
+		if(description!=null) {
+			if(description.equals("Caused by: java.security.PrivilegedActionException"))
+			{
+				add= " "+Ivy.cms().co("/ch/ivyteam/ivy/addons/filemanager/download/message/clientSideRightException");
+			} else if(description.contains("Caused by: java.security.PrivilegedActionException")) {
+				String s = description.substring(description.indexOf("Caused by: java.security.PrivilegedActionException"));
+				if(s.contains("\n")){
+					s = s.substring(0, s.indexOf("\n"));
+				}else if(s.contains("\r")) {
+					s = s.substring(0, s.indexOf("\r"));
+				}
+				s=s.replace("Caused by: java.security.PrivilegedActionException", "");
+				if(s.startsWith(": java.")){
+					s=s.substring(2);
+					if(s.contains(": ")) {
+						s=s.substring(s.indexOf(": ")+2);
+					}
+				}
+				add="<br>"+s;
+			} else if(description.equals("No read privilege")) {
+				add= " "+Ivy.cms().co("/ch/ivyteam/ivy/addons/filemanager/download/message/clientSideNoReadRightException");
+			}
+		}
+		switch (reason) {
+		case IFileStoreHandler.FAILED:
+			msg = Ivy.cms().co("/ch/ivyteam/ivy/addons/filemanager/download/message/downloadFailed")+add;
+			break;
+		default:
+			msg = Ivy.cms().co("/ch/ivyteam/ivy/addons/filemanager/download/message/downloadFailed")+add;
+			break;
+		}
+		message.setType(FileOperationMessage.ERROR_MESSAGE);
+		message.setText(msg);
+		RDCallbackMethodHandler.callRDMethod(ulcPane, errorMethodeName, new Object[] { message });
+	}
+
+	protected class DownloadGetDirectoryInfoListener {
+		ULCXDesktop desktop=null;
+		boolean result = false;
+		protected DownloadGetDirectoryInfoListener(ULCXDesktop _desktop, final FileDownloadHandler<?> _handler) {
+			desktop = _desktop;
+			Class<?> c1=null;
+			Object myListener;
+			try{
+				try {
+					c1 = Class.forName("ch.xpertline.ulc.server.headless.ULCXDesktop$GetDirectoryInfoListener");
+					result = true;
+				} catch(Exception ex) {
+					Ivy.log().debug("Class ch.xpertline.ulc.server.headless.ULCXDesktop$GetDirectoryInfoListener cannot be found.",ex);
+				}
+				if(result) {
+					myListener = java.lang.reflect.Proxy.newProxyInstance(c1.getClassLoader(), new java.lang.Class[] { c1 }, new java.lang.reflect.InvocationHandler() {
+
+						@Override
+						public Object invoke(Object proxy, Method method, Object[] args)
+						throws Throwable {
+							if(method.getName().equals("directoryInfoReturned")) {
+								if(args==null || args.length==0) {
+									_handler.clientDirectoryInfoReturned(null,false);
+									return null;
+								}else{
+									Class<?> c2 = Thread.currentThread().getContextClassLoader().loadClass("ch.xpertline.ulc.server.headless.ULCXDesktop$DirectoryInfoReturnedEvent");
+									Object arg = args[0];
+									Object event = c2.cast(arg);
+									Method m = c2.getMethod("getReturnedFilesPaths", new Class<?>[0] );
+									String[] paths = (String[]) m.invoke(event, new Object[0]);
+									m = c2.getMethod("getWriteRight", new Class<?>[0]);
+									boolean b = (Boolean) m.invoke(event, new Object[0]);
+									_handler.clientDirectoryInfoReturned(paths,b);
+									return paths;
+								}
+							}
+							return null;
+						}
+
+					});
+					Method add = desktop.getClass().getMethod("addGetDirectoryInfoListener", c1);
+					add.invoke(desktop, myListener);
+				}
+			}
+			catch(Exception ex) {
+				Ivy.log().error("Error in Proxy "+ex.getMessage(),ex);
+			}
+		}
+	}
+    
+	@Override
+	public void desktopException(OnDesktopExceptionEvent arg0) {
+		if(arg0.getDesktopExceptionMessage().contains("Exception occured while trying to list")) {
+			this.makeError(IFileStoreHandler.FAILED, "No read privilege");
+		}else {
+			this.makeError(IFileStoreHandler.FAILED, "");
+		}
+		
+	}
+	
 }

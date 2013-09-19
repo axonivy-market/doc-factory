@@ -4,9 +4,9 @@
 package ch.ivyteam.ivy.addons.filemanager.database.security;
 
 import java.util.ArrayList;
-import java.util.Scanner;
 
 import ch.ivyteam.ivy.addons.filemanager.FolderOnServer;
+import ch.ivyteam.ivy.addons.filemanager.util.PathUtil;
 import ch.ivyteam.ivy.db.IExternalDatabase;
 import ch.ivyteam.ivy.scripting.objects.List;
 
@@ -14,48 +14,80 @@ import ch.ivyteam.ivy.scripting.objects.List;
  * @author ec
  * Abstract Class that declares the methods to control the security in the FileManagement
  */
-public abstract class AbstractDirectorySecurityController {
+public abstract class AbstractDirectorySecurityController implements SecurityHandler{
 	
-	/**
-	 * final parameters to easily points the different rights managed in the File Management System
+	/*
+	 * final parameters to easily points the different rights managed in the
+	 * File Management System
 	 */
-	public final int MANAGE_SECURITY_RIGHT = 1;
-	public final int OPEN_DIRECTORY_RIGHT = 2;
-	public final int UPDATE_DIRECTORY_RIGHT = 3;
-	public final int DELETE_DIRECTORY_RIGHT = 4;
-	public final int WRITE_FILES_RIGHT = 5;
-	public final int DELETE_FILES_RIGHT = 6;
+	/**
+	 * the administrator security right, the administrator has all the rights
+	 */
+	static public final int MANAGE_SECURITY_RIGHT = 1;
+	/**
+	 * this right gives the possibility to open the directory,<br>
+	 * to read, print and download its files, <br>
+	 * to read the files' metadatas (description, tags, file type), to copy the
+	 * files to be able to paste them in another location with
+	 * CREATE_FILES_RIGHT
+	 */
+	static public final int OPEN_DIRECTORY_RIGHT = 2;
+	/**
+	 * Deprecated it is split in 2 rights: CREATE_DIRECTORY_RIGHT and
+	 * RENAME_DIRECTORY_RIGHT
+	 */
+	static public final int UPDATE_DIRECTORY_RIGHT = 3;
+	/**
+	 * this right gives the possibility to delete the directory if it is empty.<br>
+	 * It implies that the user is also granted the OPEN-, CREATE- and
+	 * RENAME_DIRECTORY_RIGHT
+	 */
+	static public final int DELETE_DIRECTORY_RIGHT = 4;
+	/**
+	 * Deprecated it is split in 2 rights: CREATE_FILES_RIGHT and
+	 * UPDATE_FILES_RIGHT
+	 */
+	static public final int WRITE_FILES_RIGHT = 5;
+	/**
+	 * this right gives the possibility to edit the files: rename the files,
+	 * edit the files' content, edit the files' metadata, overwrite files.<br>
+	 * It implies that the user is also granted the OPEN_DIRECTORY_RIGHT.
+	 */
+	static public final int DELETE_FILES_RIGHT = 6;
+	/**
+	 * this right gives the possibility to create sub-directories in the
+	 * directory.<br>
+	 * It implies that the user is also granted the OPEN_DIRECTORY_RIGHT
+	 */
+	static public final int CREATE_DIRECTORY_RIGHT = 7;
+	/**
+	 * this right gives the possibility to rename the directory.<br>
+	 * It implies that the user is also granted the OPEN_DIRECTORY_RIGHT
+	 */
+	static public final int RENAME_DIRECTORY_RIGHT = 8;
+	/**
+	 * this right gives the possibility to translate the directory.<br>
+	 * It implies that the user is also granted the OPEN and
+	 * RENAME_DIRECTORY_RIGHT
+	 */
+	static public final int TRANSLATE_DIRECTORY_RIGHT = 9;
+	/**
+	 * this right gives the possibility to creates files (upload, dnd, paste).<br>
+	 * It implies that the user is also granted the OPEN_DIRECTORY_RIGHT.
+	 */
+	static public final int CREATE_FILES_RIGHT = 10;
+	/**
+	 * this right gives the possibility to edit the files: rename the files,
+	 * edit the files' content, edit the files' metadata, overwrite files.<br>
+	 * It implies that the user is also granted the OPEN_DIRECTORY_RIGHT.
+	 */
+	static public final int UPDATE_FILES_RIGHT = 11;
 	
 	private String escapeChar="\\";
 	
 	protected IExternalDatabase database=null;
 	
-	/**
-	 * Activates the security on the given directory.
-	 * @param _path: the path of the directory
-	 * @return true if operation succeeded, else false.
-	 * @throws Exception
-	 
-	public abstract boolean activateSecurityOnDirectory(String _path) throws Exception;
-	*/
-	/**
-	 * Deactivates the security on the given directory. The directory will not be protected anymore.
-	 * @param _path: the path of the directory
-	 * @return true if operation succeeded, else false.
-	 * @throws Exception
-	 
-	public abstract boolean deactivateSecurityOnDirectory(String _path) throws Exception;
-	*/
 	
-	/**
-	 * Tells if a directory is protected or not.<br>
-	 * In general the security should be able to be switched on or off on a particular directory.<br>
-	 * @param _path: the directory path
-	 * @return: true if the security is on or false if it is off on this particular directory.
-	 * @throws Exception
-	 
-	public abstract boolean isDirectoryProtected(String _path) throws Exception;
-	*/
 	/**
 	 * Check if user has at least one Ivy Role granted to open a given directory.
 	 * @param _path: the directory path
@@ -187,6 +219,20 @@ public abstract class AbstractDirectorySecurityController {
 	public abstract boolean canRoleDeleteFilesInDirectory(String _path, String _ivyRoleName) throws Exception;
 	
 	/**
+	 * Fills the FolderOnServer boolean fields about the user rights.<br>
+	 * For example: if the user can open a directory,<br>
+	 * then at least one of his Ivy Role is listed in the Can Open Dir -cod field of the FolderOnServer object. <br>
+	 * In such a case this method will put true in the canUserOpenDirectory attribute of the FolderOnServer object.
+	 * @param _fos: the FolderOnServer Object which user rights boolean fields have to be set. If null, null will be returned.
+	 * @param ivyUserName: the Ivy User name whose rights will be checked. If null the Ivy.session().getSessionUserName() will be taken.
+	 * @return the FolderOnServer with  boolean fields about the user rights completed.
+	 */
+	public abstract FolderOnServer getUserRightsInFolderOnServer(FolderOnServer fos, String ivyUserName);
+	
+	/**
+	 * Deprecated: Please use the AbstractFileSecurityHandler corresponding method: 
+	 * AddRightOnDirectoryForIvyRole(path, SecurityRightsEnum.OPEN_DIRECTORY_RIGHT, ivyRoleName);<br>
+	 * This method is especially implemented in the FileStoreDHHandler class.<br><br>
 	 * Grant the given Ivy Role the right to open the given directory.
 	 * @param _path: the directory path
 	 * @param _ivyRoleName: ivy role name 
@@ -194,9 +240,13 @@ public abstract class AbstractDirectorySecurityController {
 	 * Returns false if the _path or _ivyRoleName is Null or don't exist.
 	 * @throws Exception if an Exception is thrown while accessing and creating the data in the database.
 	 */
+	@Deprecated
 	public abstract boolean addRoleToOpenDirectory(String _path, String _ivyRoleName) throws Exception;
 	
 	/**
+	 * Deprecated: Please use the AbstractFileSecurityHandler corresponding method: 
+	 * AddRightOnDirectoryForIvyRole(path, SecurityRightsEnum.UPDATE_DIRECTORY_RIGHT, ivyRoleName);<br>
+	 * This method is especially implemented in the FileStoreDHHandler class.<br><br>
 	 * Grant the given Ivy Role the right to update (rename + create sub-directories) the given directory.<br>
 	 * This will grant also can openDirectory.
 	 * @param _path: the directory path
@@ -205,9 +255,13 @@ public abstract class AbstractDirectorySecurityController {
 	 * Returns false if the _path or _ivyRoleName is Null or don't exist.
 	 * @throws Exception if an Exception is thrown while accessing and creating the data in the database.
 	 */
+	@Deprecated
 	public abstract boolean addRoleToUpdateDirectory(String _path, String _ivyRoleName) throws Exception;
 	
 	/**
+	 * Deprecated: Please use the AbstractFileSecurityHandler corresponding method: 
+	 * AddRightOnDirectoryForIvyRole(path, SecurityRightsEnum.DELETE_DIRECTORY_RIGHT, ivyRoleName);<br>
+	 * This method is especially implemented in the FileStoreDHHandler class.<br><br>
 	 * Grant the given Ivy Role the right to delete the given directory.<br>
 	 * This will grant also can openDirectory and can updateDirectory.
 	 * @param _path: the directory path
@@ -216,9 +270,13 @@ public abstract class AbstractDirectorySecurityController {
 	 * Returns false if the _path or _ivyRoleName is Null or don't exist.
 	 * @throws Exception if an Exception is thrown while accessing and creating the data in the database.
 	 */
+	@Deprecated
 	public abstract boolean addRoleToDeleteDirectory(String _path, String _ivyRoleName) throws Exception;
 	
 	/**
+	 * Deprecated: Please use the AbstractFileSecurityHandler corresponding method: 
+	 * AddRightOnDirectoryForIvyRole(path, SecurityRightsEnum.MANAGE_SECURITY_RIGHT, ivyRoleName);<br>
+	 * This method is especially implemented in the FileStoreDHHandler class.<br><br>
 	 * Grant the given Ivy Role the right to manage the given directory's security.<br>
 	 * This will grant also all the other rights.
 	 * @param _path: the directory path
@@ -227,9 +285,13 @@ public abstract class AbstractDirectorySecurityController {
 	 * Returns false if the _path or _ivyRoleName is Null or don't exist.
 	 * @throws Exception if an Exception is thrown while accessing and creating the data in the database.
 	 */
+	@Deprecated
 	public abstract boolean addRoleToManageDirectorySecurity(String _path, String _ivyRoleName) throws Exception;
 	
 	/**
+	 * Deprecated: Please use the AbstractFileSecurityHandler corresponding method: 
+	 * AddRightOnDirectoryForIvyRole(path, SecurityRightsEnum.WRITE_FILES_RIGHT, ivyRoleName);<br>
+	 * This method is especially implemented in the FileStoreDHHandler class.<br><br>
 	 * Grant the given Ivy Role the right to edit/rename/copy/upload the files in the given directory.<br>
 	 * This will grant also can openDirectory.
 	 * @param _path: the directory path
@@ -238,9 +300,13 @@ public abstract class AbstractDirectorySecurityController {
 	 * Returns false if the _path or _ivyRoleName is Null or don't exist.
 	 * @throws Exception if an Exception is thrown while accessing and creating the data in the database.
 	 */
+	@Deprecated
 	public abstract boolean addRoleToEditFilesInDirectory(String _path, String _ivyRoleName) throws Exception;
 	
 	/**
+	 * Deprecated: Please use the AbstractFileSecurityHandler corresponding method: 
+	 * AddRightOnDirectoryForIvyRole(path, SecurityRightsEnum.DELETE_FILES_RIGHT, ivyRoleName);<br>
+	 * This method is especially implemented in the FileStoreDBHandler class.<br><br>
 	 * Grant the given Ivy Role the right to delete the files in the given directory.<br>
 	 * This will grant also can openDirectory and can writeFiles.
 	 * @param _path: the directory path
@@ -249,9 +315,14 @@ public abstract class AbstractDirectorySecurityController {
 	 * Returns false if the _path or _ivyRoleName is Null or don't exist.
 	 * @throws Exception if an Exception is thrown while accessing and creating the data in the database.
 	 */
+	@Deprecated
 	public abstract boolean addRoleToDeleteFilesInDirectory(String _path, String _ivyRoleName) throws Exception;
 	
 	/**
+	 * Deprecated: Please use the AbstractFileSecurityHandler corresponding method: 
+	 * removeRightOnDirectory(String _path, SecurityRightsEnum rightType, List<String> disallowedIvyRoleNames);<br>
+	 * This method is especially implemented in the FileStoreDBHandler class.<br><br>
+	 * 
 	 * Disallow the given Ivy Role the right to open the given directory.<br>
 	 * Implies disallowing all the other rights.
 	 * @param _path: the directory path
@@ -260,9 +331,13 @@ public abstract class AbstractDirectorySecurityController {
 	 * Returns false if the _path or _ivyRoleName is Null or don't exist.
 	 * @throws Exception if an Exception is thrown while accessing and creating the data in the database.
 	 */
+	@Deprecated
 	public abstract boolean removeRoleFromOpenDirectory(String _path, String _ivyRoleName) throws Exception;
 	
 	/**
+	 * Deprecated: Please use the AbstractFileSecurityHandler corresponding method: 
+	 * removeRightOnDirectory(String _path, SecurityRightsEnum rightType, List<String> disallowedIvyRoleNames);<br>
+	 * This method is especially implemented in the FileStoreDBHandler class.<br><br>
 	 * Disallow the given Ivy Role the right to update the given directory.<br>
 	 * Implies disallowing the delete directory and manage security Right.
 	 * @param _path: the directory path
@@ -271,9 +346,13 @@ public abstract class AbstractDirectorySecurityController {
 	 * Returns false if the _path or _ivyRoleName is Null or don't exist.
 	 * @throws Exception if an Exception is thrown while accessing and creating the data in the database.
 	 */
+	@Deprecated
 	public abstract boolean removeRoleFromUpdateDirectory(String _path, String _ivyRoleName) throws Exception;
 	
 	/**
+	 * Deprecated: Please use the AbstractFileSecurityHandler corresponding method: 
+	 * removeRightOnDirectory(String _path, SecurityRightsEnum rightType, List<String> disallowedIvyRoleNames);<br>
+	 * This method is especially implemented in the FileStoreDBHandler class.<br><br>
 	 * Disallow the given Ivy Role the right to delete the given directory.<br>
 	 * Implies disallowing the manage security Right.
 	 * @param _path: the directory path
@@ -282,9 +361,13 @@ public abstract class AbstractDirectorySecurityController {
 	 * Returns false if the _path or _ivyRoleName is Null or don't exist.
 	 * @throws Exception if an Exception is thrown while accessing and creating the data in the database.
 	 */
+	@Deprecated
 	public abstract boolean removeRoleFromDeleteDirectory(String _path, String _ivyRoleName) throws Exception;
 	
 	/**
+	 * Deprecated: Please use the AbstractFileSecurityHandler corresponding method: 
+	 * removeRightOnDirectory(String _path, SecurityRightsEnum rightType, List<String> disallowedIvyRoleNames);<br>
+	 * This method is especially implemented in the FileStoreDBHandler class.<br><br>
 	 * Disallow the given Ivy Role the right to manage the security on the given directory.
 	 * @param _path: the directory path
 	 * @param _ivyRoleName: ivy role name 
@@ -292,9 +375,13 @@ public abstract class AbstractDirectorySecurityController {
 	 * Returns false if the _path or _ivyRoleName is Null or don't exist.
 	 * @throws Exception if an Exception is thrown while accessing and creating the data in the database.
 	 */
+	@Deprecated
 	public abstract boolean removeRoleFromManageDirectorySecurity(String _path, String _ivyRoleName) throws Exception;
 	
 	/**
+	 * Deprecated: Please use the AbstractFileSecurityHandler corresponding method: 
+	 * removeRightOnDirectory(String _path, SecurityRightsEnum rightType, List<String> disallowedIvyRoleNames);<br>
+	 * This method is especially implemented in the FileStoreDBHandler class.<br><br>
 	 * Disallow the given Ivy Role the right to edit the files in the given directory.<br>
 	 * Implies disallowing the delete files right.
 	 * @param _path: the directory path
@@ -303,9 +390,13 @@ public abstract class AbstractDirectorySecurityController {
 	 * Returns false if the _path or _ivyRoleName is Null or don't exist.
 	 * @throws Exception if an Exception is thrown while accessing and creating the data in the database.
 	 */
+	@Deprecated
 	public abstract boolean removeRoleFromEditFilesInDirectory(String _path, String _ivyRoleName) throws Exception;
 	
 	/**
+	 * Deprecated: Please use the AbstractFileSecurityHandler corresponding method: 
+	 * removeRightOnDirectory(String _path, SecurityRightsEnum rightType, List<String> disallowedIvyRoleNames);<br>
+	 * This method is especially implemented in the FileStoreDBHandler class.<br><br>
 	 * 
 	 * Disallow the given Ivy Role the right to delete the files in the given directory.
 	 * @param _path: the directory path
@@ -314,18 +405,30 @@ public abstract class AbstractDirectorySecurityController {
 	 * Returns false if the _path or _ivyRoleName is Null or don't exist.
 	 * @throws Exception if an Exception is thrown while accessing and creating the data in the database.
 	 */
+	@Deprecated
 	public abstract boolean removeRoleFromDeleteFilesInDirectory(String _path, String _ivyRoleName) throws Exception;
 	
 	/**
+	 * Deprecated: Please use the AbstractFileSecurityHandler corresponding method: 
+	 * setRightOnDirectory(String _path, SecurityRightsEnum rightType, List<String> allowedIvyRoleNames);<br>
+	 * This method is especially implemented in the FileStoreDBHandler class.<br><br>
+	 * 
 	 * Set the given right on the directory denoted by the given path.<br>
 	 * The right type is given by one of the following numeric parameter: <br>
 	 * <ul>
 	 * <li>public final int MANAGE_SECURITY_RIGHT = 1; (implies all the other rights)
 	 * <li>public final int OPEN_DIRECTORY_RIGHT = 2;
-	 * <li>public final int UPDATE_DIRECTORY_RIGHT = 3; (implies OPEN_DIRECTORY_RIGHT)
+	 * <li>public final int UPDATE_DIRECTORY_RIGHT = 3; Deprecated it is split in 2 rights: CREATE_DIRECTORY_RIGHT and
+	 * RENAME_DIRECTORY_RIGHT
 	 * <li>public final int DELETE_DIRECTORY_RIGHT = 4; (implies OPEN_DIRECTORY_RIGHT and UPDATE DIRECTORY)
-	 * <li>public final int WRITE_FILES_RIGHT = 5; (implies OPEN_DIRECTORY_RIGHT)
+	 * <li>public final int WRITE_FILES_RIGHT = 5; Deprecated it is split in 2 rights: CREATE_FILES_RIGHT and
+	 * UPDATE_FILES_RIGHT
 	 * <li>public final int DELETE_FILES_RIGHT = 6; (implies OPEN_DIRECTORY_RIGHT and WRITE FILES)
+	 * <li>public final int CREATE_DIRECTORY_RIGHT = 7; (implies OPEN_DIRECTORY_RIGHT)
+	 * <li>public final int RENAME_DIRECTORY_RIGHT = 8; (implies OPEN_DIRECTORY_RIGHT)
+	 * <li>public final int TRANSLATE_DIRECTORY_RIGHT = 9; (implies OPEN_DIRECTORY_RIGHT  and RENAME_DIRECTORY_RIGHT)
+	 * <li>public final int CREATE_FILES_RIGHT = 10; (implies OPEN_DIRECTORY_RIGHT)
+	 * <li>public final int UPDATE_FILES_RIGHT = 11; (implies OPEN_DIRECTORY_RIGHT and WRITE FILES)
 	 * </ul>
 	 * @param _path: the directory path
 	 * @param rightType: int indicating the right
@@ -335,18 +438,30 @@ public abstract class AbstractDirectorySecurityController {
 	 * @throws Exception if the directory Path is null or an empty String,<br>
 	 *  Or if an Exception is thrown while accessing and creating the data in the database.
 	 */
+	@Deprecated
 	public abstract List<String> setRightOnDirectory(String _path, int rightType, List<String> allowedIvyRoleNames) throws Exception;
 	
 	/**
+	 * Deprecated: Please use the AbstractFileSecurityHandler corresponding method: 
+	 * AddRightOnDirectoryForIvyRole(String _path, SecurityRightsEnum rightType, String ivyRoleName);<br>
+	 * This method is especially implemented in the FileStoreDBHandler class.<br><br>
+	 * 
 	 * Grants a given IvyRole a right on a given directory.<br>
 	 * The right type is given by one of the following numeric parameter: <br>
 	 * <ul>
 	 * <li>public final int MANAGE_SECURITY_RIGHT = 1; (implies all the other rights)
 	 * <li>public final int OPEN_DIRECTORY_RIGHT = 2;
-	 * <li>public final int UPDATE_DIRECTORY_RIGHT = 3; (implies OPEN_DIRECTORY_RIGHT)
+	 * <li>public final int UPDATE_DIRECTORY_RIGHT = 3; Deprecated it is split in 2 rights: CREATE_DIRECTORY_RIGHT and
+	 * RENAME_DIRECTORY_RIGHT
 	 * <li>public final int DELETE_DIRECTORY_RIGHT = 4; (implies OPEN_DIRECTORY_RIGHT and UPDATE DIRECTORY)
-	 * <li>public final int WRITE_FILES_RIGHT = 5; (implies OPEN_DIRECTORY_RIGHT)
+	 * <li>public final int WRITE_FILES_RIGHT = 5; Deprecated it is split in 2 rights: CREATE_FILES_RIGHT and
+	 * UPDATE_FILES_RIGHT
 	 * <li>public final int DELETE_FILES_RIGHT = 6; (implies OPEN_DIRECTORY_RIGHT and WRITE FILES)
+	 * <li>public final int CREATE_DIRECTORY_RIGHT = 7; (implies OPEN_DIRECTORY_RIGHT)
+	 * <li>public final int RENAME_DIRECTORY_RIGHT = 8; (implies OPEN_DIRECTORY_RIGHT)
+	 * <li>public final int TRANSLATE_DIRECTORY_RIGHT = 9; (implies OPEN_DIRECTORY_RIGHT  and RENAME_DIRECTORY_RIGHT)
+	 * <li>public final int CREATE_FILES_RIGHT = 10; (implies OPEN_DIRECTORY_RIGHT)
+	 * <li>public final int UPDATE_FILES_RIGHT = 11; (implies OPEN_DIRECTORY_RIGHT and WRITE FILES)
 	 * </ul>
 	 * @param _path: the directory path
 	 * @param rightType: int indicating the right
@@ -358,18 +473,30 @@ public abstract class AbstractDirectorySecurityController {
 	 * @throws Exception if the directory Path is null or an empty String,<br>
 	 *  Or if an Exception is thrown while accessing and creating the data in the database.
 	 */
+	@Deprecated
 	public abstract List<String> AddRightOnDirectoryForIvyRole(String _path, int rightType, String ivyRoleName) throws Exception;
 	
 	/**
+	 * Deprecated: Please use the AbstractFileSecurityHandler corresponding method: 
+	 * removeRightOnDirectory(String _path, SecurityRightsEnum rightType, List<String> disallowedIvyRoleNames);<br>
+	 * This method is especially implemented in the FileStoreDBHandler class.<br><br>
+	 * 
 	 * Removes the given right on the directory denoted by the given path.<br>
 	 * The right type is given by one of the following numeric parameter: <br>
 	 * <ul>
 	 * <li>public final int MANAGE_SECURITY_RIGHT = 1; (implies all the other rights)
 	 * <li>public final int OPEN_DIRECTORY_RIGHT = 2;
-	 * <li>public final int UPDATE_DIRECTORY_RIGHT = 3; (implies OPEN_DIRECTORY_RIGHT)
+	 * <li>public final int UPDATE_DIRECTORY_RIGHT = 3; Deprecated it is split in 2 rights: CREATE_DIRECTORY_RIGHT and
+	 * RENAME_DIRECTORY_RIGHT
 	 * <li>public final int DELETE_DIRECTORY_RIGHT = 4; (implies OPEN_DIRECTORY_RIGHT and UPDATE DIRECTORY)
-	 * <li>public final int WRITE_FILES_RIGHT = 5; (implies OPEN_DIRECTORY_RIGHT)
+	 * <li>public final int WRITE_FILES_RIGHT = 5; Deprecated it is split in 2 rights: CREATE_FILES_RIGHT and
+	 * UPDATE_FILES_RIGHT
 	 * <li>public final int DELETE_FILES_RIGHT = 6; (implies OPEN_DIRECTORY_RIGHT and WRITE FILES)
+	 * <li>public final int CREATE_DIRECTORY_RIGHT = 7; (implies OPEN_DIRECTORY_RIGHT)
+	 * <li>public final int RENAME_DIRECTORY_RIGHT = 8; (implies OPEN_DIRECTORY_RIGHT)
+	 * <li>public final int TRANSLATE_DIRECTORY_RIGHT = 9; (implies OPEN_DIRECTORY_RIGHT  and RENAME_DIRECTORY_RIGHT)
+	 * <li>public final int CREATE_FILES_RIGHT = 10; (implies OPEN_DIRECTORY_RIGHT)
+	 * <li>public final int UPDATE_FILES_RIGHT = 11; (implies OPEN_DIRECTORY_RIGHT and WRITE FILES)
 	 * </ul>
 	 * @param _path: the directory path
 	 * @param rightType: int indicating the right
@@ -379,6 +506,7 @@ public abstract class AbstractDirectorySecurityController {
 	 * @throws Exception if the directory Path is null or an empty String,<br>
 	 *  Or if an Exception is thrown while accessing and creating the data in the database.
 	 */
+	@Deprecated
 	public abstract List<String> removeRightOnDirectory(String _path, int rightType, List<String> disallowedIvyRoleNames) throws Exception;
 	
 	/**
@@ -387,10 +515,17 @@ public abstract class AbstractDirectorySecurityController {
 	 * <ul>
 	 * <li>public final int MANAGE_SECURITY_RIGHT = 1; (implies all the other rights)
 	 * <li>public final int OPEN_DIRECTORY_RIGHT = 2;
-	 * <li>public final int UPDATE_DIRECTORY_RIGHT = 3; (implies OPEN_DIRECTORY_RIGHT)
+	 * <li>public final int UPDATE_DIRECTORY_RIGHT = 3; Deprecated it is split in 2 rights: CREATE_DIRECTORY_RIGHT and
+	 * RENAME_DIRECTORY_RIGHT
 	 * <li>public final int DELETE_DIRECTORY_RIGHT = 4; (implies OPEN_DIRECTORY_RIGHT and UPDATE DIRECTORY)
-	 * <li>public final int WRITE_FILES_RIGHT = 5; (implies OPEN_DIRECTORY_RIGHT)
+	 * <li>public final int WRITE_FILES_RIGHT = 5; Deprecated it is split in 2 rights: CREATE_FILES_RIGHT and
+	 * UPDATE_FILES_RIGHT
 	 * <li>public final int DELETE_FILES_RIGHT = 6; (implies OPEN_DIRECTORY_RIGHT and WRITE FILES)
+	 * <li>public final int CREATE_DIRECTORY_RIGHT = 7; (implies OPEN_DIRECTORY_RIGHT)
+	 * <li>public final int RENAME_DIRECTORY_RIGHT = 8; (implies OPEN_DIRECTORY_RIGHT)
+	 * <li>public final int TRANSLATE_DIRECTORY_RIGHT = 9; (implies OPEN_DIRECTORY_RIGHT  and RENAME_DIRECTORY_RIGHT)
+	 * <li>public final int CREATE_FILES_RIGHT = 10; (implies OPEN_DIRECTORY_RIGHT)
+	 * <li>public final int UPDATE_FILES_RIGHT = 11; (implies OPEN_DIRECTORY_RIGHT and WRITE FILES)
 	 * </ul>
 	 * @param _path: the directory path
 	 * @param rightType: int indicating the right
@@ -401,6 +536,10 @@ public abstract class AbstractDirectorySecurityController {
 	public abstract List<String> getRolesNamesAllowedForRightOnDirectory(String _path, int rightType) throws Exception;
 	
 	/**
+	 * Deprecated: Please use the AbstractFileSecurityHandler corresponding method: 
+	 * createIndestructibleDirectory(directoryPath,allowedIvyRoleNames);<br>
+	 * This method is especially implemented in the FileStoreDBHandler class.<br><br>
+	 * 
 	 * Creates a directory that nobody can delete or rename, all the files rights are granted to the given list of Ivy roles.
 	 * @param directoryPath: the directory path to create
 	 * @param allowedIvyRoleNames: List of Ivy roles that can open and work on the files in this directory.
@@ -410,17 +549,33 @@ public abstract class AbstractDirectorySecurityController {
 	 * @throws Exception if the directory Path is null or an empty String,<br>
 	 *  Or if an Exception is thrown while accessing and creating the data in the database.
 	 */
+	@Deprecated
 	public abstract FolderOnServer createIndestructibleDirectory(String directoryPath, List<String> allowedIvyRoleNames) throws Exception;
 	
 	/**
+	 * Deprecated: Please use the AbstractFileSecurityHandler corresponding method: 
+	 * createOpenDirectory(directoryPath);<br>
+	 * This method is especially implemented in the FileStoreDBHandler class.<br><br>
+	 * 
 	 * Creates a directory that everybody can delete or rename, all the files rights are granted to everybody also.
 	 * @param directoryPath: the directory path to create
 	 * @throws Exception if the directory Path is null or an empty String,<br>
 	 *  Or if an Exception is thrown while accessing and creating the data in the database.
 	 */
+	@Deprecated
 	public abstract FolderOnServer createOpenDirectory(String directoryPath) throws Exception;
 	
 	/**
+	 * Deprecated: Please use the AbstractFileSecurityHandler corresponding method: 
+	 * createDirectory(String _directoryPath, 
+			List<String> grantedIvyRoleNamesToManageRights, 
+			List<String> grantedIvyRoleNamesToDeleteDirectory,
+			List<String> grantedIvyRoleNamesToUpdateDirectory,
+			List<String> grantedIvyRoleNamesToOpenDirectory,
+			List<String> grantedIvyRoleNamesToWriteFiles,
+			List<String> grantedIvyRoleNamesToDeleteFiles);<br>
+	 * This method is especially implemented in the FileStoreDBHandler class.<br><br>
+	 * 
 	 * Creates a directory with detailed security management. 
 	 * @param _directoryPath: the path of the new directory
 	 * @param grantedIvyRoleNamesToManageRights: list of ivy roles names that are granted to this right.
@@ -433,6 +588,7 @@ public abstract class AbstractDirectorySecurityController {
 	 * @throws Exception if the directory Path is null or an empty String,<br>
 	 *  Or if an Exception is thrown while accessing and creating the data in the database.
 	 */
+	@Deprecated
 	public abstract FolderOnServer createDirectory(String _directoryPath, 
 			List<String> grantedIvyRoleNamesToManageRights, 
 			List<String> grantedIvyRoleNamesToDeleteDirectory,
@@ -442,6 +598,24 @@ public abstract class AbstractDirectorySecurityController {
 			List<String> grantedIvyRoleNamesToDeleteFiles) throws Exception;
 	
 	/**
+	 * Deprecated: Please use the AbstractFileSecurityHandler corresponding method: 
+	 * createDirectory(FolderOnServer fos);<br>
+	 * This method is especially implemented in the FileStoreDBHandler class.<br><br>
+	 * 
+	 * Creates a directory with detailed security management.
+	 * @param fos the FOlderOnServer to create. It holds the path of the new directory to create and
+	 *  all the List<String> of roles names granted for the different actions.
+	 * @return the created FolderOnServer object
+	 * @throws Exception
+	 */
+	@Deprecated
+	public abstract FolderOnServer createDirectory(FolderOnServer fos) throws Exception;
+	
+	/**
+	 * Deprecated: Please use the AbstractFileSecurityHandler corresponding method: 
+	 * createDirectoryWithParentSecurity(String _directoryPath);<br>
+	 * This method is especially implemented in the FileStoreDBHandler class.<br><br>
+	 * 
 	 * Creates a directory with the security settings of the parent dir. <br>
 	 * If this directory is a root one, then it is the same as createIndestructibleDirectory method. <br>
 	 * If this directory's parent does not exist, all the directories (parent and this one) will be created with <br>
@@ -451,9 +625,14 @@ public abstract class AbstractDirectorySecurityController {
 	 * @throws Exception if the directory Path is null or an empty String,<br>
 	 *  Or if an Exception is thrown while accessing and creating the data in the database.
 	 */
+	@Deprecated
 	public abstract FolderOnServer createDirectoryWithParentSecurity(String _directoryPath) throws Exception;
 	
 	/**
+	 * Deprecated: Please use the AbstractFileSecurityHandler corresponding method: 
+	 * createDirectoryWithUserAsRightsGuideline(String _directoryPath, String _ivyUserName);<br>
+	 * This method is especially implemented in the FileStoreDBHandler class.<br><br>
+	 * 
 	 * Creates a new Directory with rights driven by the given user.<br>
 	 * The roles owned by this user other than 'everybody' will to be able to open the directory and to work on the files (edit + delete).<br>
 	 * These roles are not going to be able to delete or rename the directory.<br>
@@ -467,9 +646,14 @@ public abstract class AbstractDirectorySecurityController {
 	 *  or the userName is null or an empty String, or the userName do not correspond to a valid Ivy User,<br>
 	 *  or if an Exception is thrown while accessing and creating the data in the database.
 	 */
+	@Deprecated
 	public abstract FolderOnServer createDirectoryWithUserAsRightsGuideline(String _directoryPath, String _ivyUserName) throws Exception;
 	
 	/**
+	 * Deprecated: Please use the AbstractFileSecurityHandler corresponding method: 
+	 * getDirectoryWithPath(String _directoryPath);<br>
+	 * This method is especially implemented in the FileStoreDBHandler class.<br><br>
+	 * 
 	 * Gets the directory with its path.<br>
 	 * @param _directoryPath: the directory Path
 	 * @return ch.ivyteam.ivy.addons.filemanager.FolderOnServer which path is _directoryPath.<br>
@@ -478,9 +662,28 @@ public abstract class AbstractDirectorySecurityController {
 	 * @throws Exception if the directory Path is null or an empty String,<br>
 	 *  Or if an Exception is thrown while accessing and creating the data in the database.
 	 */
+	@Deprecated
 	public abstract FolderOnServer getDirectoryWithPath(String _directoryPath) throws Exception;
 	
 	/**
+	 * Deprecated: Please use the AbstractFileSecurityHandler corresponding method: 
+	 * saveFolderOnServer(FolderOnServer fos);<br>
+	 * This method is especially implemented in the FileStoreDBHandler class.<br><br>
+	 * 
+	 * This method saves the given FolderOnServer security roles lists.<br>
+	 * If the given directory does not exit, it creates a new one.
+	 * @param fos
+	 * @return
+	 * @throws Exception
+	 */
+	@Deprecated
+	public abstract FolderOnServer saveFolderOnServer(FolderOnServer fos) throws Exception;
+	
+	/**
+	 * Deprecated: Please use the AbstractFileSecurityHandler corresponding method: 
+	 * getListDirectoriesUnderPathWithSecurityInfos(String rootPath, String ivyUserName);<br>
+	 * This method is especially implemented in the FileStoreDBHandler class.<br><br>
+	 * 
 	 * Retrieves the list of directories (FolderOnServer Objects) under a given Path.<br>
 	 * The FolderOnServer Objects contain informations about the given user rights on the different actions (delete directory, open...).<br>
 	 * If the given User name is empty or null, the Ivy session User will be used for that.<br>
@@ -491,9 +694,14 @@ public abstract class AbstractDirectorySecurityController {
 	 * @return the ArrayList of directories (FolderOnServer Objects) under the given Path.
 	 * @throws Exception : if an Exception is thrown while accessing and creating the data in the database.
 	 */
+	@Deprecated
 	public abstract ArrayList<FolderOnServer> getListDirectoriesUnderPath(String rootPath, String ivyUserName) throws Exception;
 	
 	/**
+	 * Deprecated: Please use the AbstractFileSecurityHandler corresponding method: 
+	 * directoryExists(String _path);<br>
+	 * This method is especially implemented in the FileStoreDBHandler class.<br><br>
+	 * 
 	 * Checks if the directory exists.<br>
 	 * @param _directoryPath: the directory Path
 	 * @return true if the directory exists.<br>
@@ -501,6 +709,7 @@ public abstract class AbstractDirectorySecurityController {
 	 * @throws Exception if the directory Path is null or an empty String,<br>
 	 *  Or if an Exception is thrown while accessing and creating the data in the database.
 	 */
+	@Deprecated
 	public abstract boolean directoryExists(String _directoryPath) throws Exception;
 	
 	/**
@@ -570,81 +779,51 @@ public abstract class AbstractDirectorySecurityController {
 	}
 	
 	/**
+	 * Deprecated use PathUtil.returnStringFromList(stringList) instead.<br>
 	 * Returns a String composed by String members of a list of String objects each separated by a colon.
 	 * @param stringList
 	 * @return
 	 */
+	@Deprecated
 	public String returnStringFromList(List<String> stringList)
 	{
-		if(stringList ==null || stringList.isEmpty()){
-			return "";
-		}
-		StringBuilder sb = new StringBuilder();
-		int n = stringList.size()-1;
-		for(int i =0; i<n;i++){
-			sb.append(stringList.get(i)+",");
-		}
-		sb.append(stringList.get(n));
-		return sb.toString();
+		return PathUtil.returnStringFromList(stringList);
 	}
 	
 	/**
-	 * makes a List<String> from a String containing tokens separated by a given separator.
+	 * Deprecated use PathUtil.getListFromString(listString, separator) instead.<br>
+	 * Makes a List<String> from a String containing tokens separated by a given separator.
 	 * @param listString: the String that represents a list. If null or empty an empty list will be returned.
 	 * @param separator: the separator, if null "," will be used by default.
 	 * @return the List of String elements 
 	 */
+	@Deprecated
 	public List<String> returnListFromStringWithSeparator(String listString, String separator)
 	{
-		List<String> stringList = List.create(String.class);
-		if(listString==null || listString.trim().length()==0)
-		{
-			return stringList;
-		}
-		if(separator==null)
-		{
-			separator=",";
-		}
-		Scanner sc = new Scanner(listString);
-		sc.useDelimiter(separator);
-		while(sc.hasNext())
-		{
-			stringList.add(sc.next().trim());
-		}
-		sc.close();
-		return stringList;
+		return PathUtil.getListFromString(listString, separator);
 	}
 	
 	/**
+	 * Deprecated use PathUtil.getDirectoryNameFromPath(directoryPath) instead.<br>
 	 * returns the directory name from a directory path.
 	 * @param directoryPath: the directory path
 	 * @return the directory name from a directory path. Empty String if the directoryPath parameter is Null or an empty String.
 	 */
+	@Deprecated
 	public String getDirectoryNameFromPath(String directoryPath){
-		if(directoryPath==null || directoryPath.trim().length()==0)
-		{
-			return "";
-		}
-		directoryPath=formatPathForDirectoryWithoutLastSeparator(directoryPath);
-		if(!directoryPath.contains("/"))
-		{
-			return directoryPath;
-		}else{
-			return directoryPath.substring(directoryPath.lastIndexOf("/")+1);
-		}
+		return PathUtil.getDirectoryNameFromPath(directoryPath);
 		
 	}
 	
 	/**
+	 * Deprecated use PathUtil.escapeUnderscoreInPath(_path) instead.<br>
 	 * escape the underscore sign in paths to be able to perform LIKE sql searches.
 	 * @param _path
 	 * @return
 	 */
+	@Deprecated
 	public static String escapeUnderscoreInPath(String _path) {
-		if (_path != null && !_path.trim().equals("")) {
-			_path=_path.replaceAll("_", "\\\\_");
-		}
-		return _path;
+		return PathUtil.escapeUnderscoreInPath(_path);
 	}
 
 	public String getEscapeChar() {

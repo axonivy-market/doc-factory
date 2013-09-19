@@ -7,7 +7,8 @@ error ch.ivyteam.ivy.addons.filemanager.ErrorUtil #field
 isLoaded boolean #field
 isVisible boolean #field
 folderOnServer ch.ivyteam.ivy.addons.filemanager.FolderOnServer #field
-ivyConnectionName String #field
-dirTableName String #field
-schemaName String #field
-securityController ch.ivyteam.ivy.addons.filemanager.database.security.AbstractDirectorySecurityController #field
+securityController ch.ivyteam.ivy.addons.filemanager.database.AbstractFileSecurityHandler #field
+version Number #field
+rightType Number #field
+shouldAddRight Boolean #field
+config ch.ivyteam.ivy.addons.filemanager.configuration.BasicConfigurationController #field

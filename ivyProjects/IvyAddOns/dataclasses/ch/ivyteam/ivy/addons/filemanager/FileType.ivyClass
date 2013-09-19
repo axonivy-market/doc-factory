@@ -11,10 +11,11 @@ Important: The file types name and application name association must be unique (
 ch.ivyteam.ivy.addons.filemanager #namespace
 id Long #field
 id 'the id of the fileType' #fieldComment
-id PERSISTENT #fieldModifier
 fileTypeName String #field
 fileTypeName 'the name of the file Type' #fieldComment
-fileTypeName PERSISTENT #fieldModifier
 applicationName String #field
 applicationName 'the name of the application to which the file type refers. It may be empty or null.' #fieldComment
-applicationName PERSISTENT #fieldModifier
+translation ch.ivyteam.ivy.addons.filemanager.ItemTranslation #field
+translation 'The translation of the filetype if this feature is activated' #fieldComment
+displayName String #field
+displayName 'Name to be displayed. If the translation feature is activated, this displayName may be different than the name.' #fieldComment

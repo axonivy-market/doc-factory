@@ -50,3 +50,7 @@ clientFileSeparator String #field
 clientFileSeparator 'the file separator at client side: "/" by Unix systems and "\" by Windows systems' #fieldComment
 filesInReading List<ch.ivyteam.ivy.addons.filemanager.FileCouple> #field
 filesInReading PERSISTENT #fieldModifier
+documentFilter ch.ivyteam.ivy.addons.filemanager.database.security.DocumentFilter #field
+documentFilter 'DocumentFilter object that may be used to filter some files action' #fieldComment
+documentFilterAnswer ch.ivyteam.ivy.addons.filemanager.database.security.DocumentFilterAnswer #field
+documentFilterAnswer 'documentFilterAnswer given by the DocumentFilter, this answer will be propagated to subscribers' #fieldComment

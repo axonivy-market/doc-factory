@@ -9,13 +9,16 @@ import java.util.ArrayList;
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.scripting.objects.List;
 import ch.ivyteam.ivy.scripting.objects.Tree;
+import ch.ivyteam.ivy.addons.filemanager.FileManagementHandlersFactory;
 import ch.ivyteam.ivy.addons.filemanager.FolderOnServer;
 import ch.ivyteam.ivy.addons.filemanager.KeyValuePair;
 import ch.ivyteam.ivy.addons.filemanager.DocumentOnServer;
 import ch.ivyteam.ivy.addons.filemanager.ReturnedMessage;
 import ch.ivyteam.ivy.addons.filemanager.configuration.BasicConfigurationController;
+import ch.ivyteam.ivy.addons.filemanager.database.fileaction.AbstractFileActionHistoryController;
 import ch.ivyteam.ivy.addons.filemanager.database.fileaction.FileActionHistoryController;
 import ch.ivyteam.ivy.addons.filemanager.database.security.AbstractDirectorySecurityController;
+import ch.ivyteam.ivy.addons.filemanager.util.PathUtil;
 
 /**
  * @author ec<br>
@@ -54,15 +57,28 @@ public abstract class AbstractFileManagementHandler {
 	 */
 	public static int file_content_storage_type = FILE_STORAGE_FILESYSTEM;
 
-	private FileActionHistoryController fileActionHistoryController = null;
+	private AbstractFileActionHistoryController fileActionHistoryController = null;
 
 	/**
 	 * @return the FileActionHistoryController or null if it was not set
 	 */
-	public FileActionHistoryController getFileActionHistoryController() {
+	public AbstractFileActionHistoryController getFileActionHistoryController() {
 		return fileActionHistoryController;
 	}
 
+	/**
+	 * Deprecated use the setFileActionHistoryController(AbstractFileActionHistoryController fac) instead<br>
+	 * Set the FileActionHistoryController if the file Management system uses
+	 * the action history feature,
+	 * 
+	 * @param fac
+	 *            the fac to set
+	 */
+	@Deprecated
+	public void setFileActionHistoryController(FileActionHistoryController fac) {
+		this.fileActionHistoryController = fac;
+	}
+	
 	/**
 	 * Set the FileActionHistoryController if the file Management system uses
 	 * the action history feature,
@@ -70,7 +86,7 @@ public abstract class AbstractFileManagementHandler {
 	 * @param fac
 	 *            the fac to set
 	 */
-	public void setFileActionHistoryController(FileActionHistoryController fac) {
+	public void setFileActionHistoryController(AbstractFileActionHistoryController fac) {
 		this.fileActionHistoryController = fac;
 	}
 
@@ -1006,26 +1022,28 @@ public abstract class AbstractFileManagementHandler {
 	 * @return the String with all its backslashes replaced by "/" char
 	 */
 	static public String escapeBackSlash(String _s) {
-		if (_s != null) {
-			_s = _s.replaceAll("\\\\", "/");
-		}
-		return _s;
+		return PathUtil.escapeBackSlash(_s);
 	}
 
 	/**
+	 * This method is deprecated.<br> 
+	 * Please use the ch.ivyteam.ivy.addons.filemanager.util.PathUtil.formatPath(String path) method instead. <br> 
 	 * Formats a given path with "/" as separator<br>
-	 * so that it is always compatible for Windows, Linux and Mac OS.<br>
-	 * It doesn't check if there is a File.separator at the end of the path.<br>
+	 * so that it is always compatible for Windows, Linux and Mac OS for creating a new File object.<br>
 	 * 
 	 * @param _path
 	 * @return formatted path with the system File.separator
 	 */
+	@Deprecated
 	public static String formatPath(String _path) {
-		_path = formatPathForDirectoryWithoutLastSeparator(_path);
-		return _path;
+		return PathUtil.formatPath(_path);
 	}
 
 	/**
+	 * This method is deprecated.<br> 
+	 * Please use the 
+	 * ch.ivyteam.ivy.addons.filemanager.util.PathUtil.formathPathForDirectoryWithoutFirstSeparatorWithEndSeparator(String path) 
+	 * method instead.<br> 
 	 * Formats a given directory path with "/" as separator<br>
 	 * so that it is always compatible for Windows, Linux and Mac OS.<br>
 	 * The resulting path never begins with "/"<br>
@@ -1037,44 +1055,32 @@ public abstract class AbstractFileManagementHandler {
 	 * @param _path
 	 * @return formatted path with "/"
 	 */
+	@Deprecated
 	public static String formatPathForDirectory(String _path) {
-		_path = formatPathForDirectoryWithoutLastSeparator(_path);
-		if (_path != null && !_path.trim().equals("")) {
-			if (!_path.endsWith("/")) {
-				_path = _path + "/";
-			}
-		}
-		return _path;
+		return PathUtil.formathPathForDirectoryWithoutFirstSeparatorWithEndSeparator(_path);
 	}
 
 	/**
+	 * This method is deprecated.<br> 
+	 * Please use the 
+	 * ch.ivyteam.ivy.addons.filemanager.util.PathUtil.formatPathForDirectoryWithoutLastAndFirstSeparator(String path)
+	 *  method instead.<br> 
 	 * Formats a given directory path with "/" as separator<br>
-	 * so that it is always compatible for Windows, Linux and Mac OS.<br>
+	 * so that it is always compatible for Windows, Linux and Mac OS for creating a new File object.<br>
 	 * The resulting path never ends or begins with "/"<br>
-	 * Example: if you give "\\root\\test\\test1\\" the result will be
-	 * "root/test/test1". If you enter "//////", empty String "" will be
-	 * returned..
+	 * Example: <br>
+	 * if you give "\\root\\test\\test1\\" the result will be "root/test/test1". <br>
+	 * If you enter "//////", an empty String "" will be returned...<br>
 	 * 
 	 * @param _path
 	 * @return formatted path with "/"
 	 */
+	@Deprecated
 	public static String formatPathForDirectoryWithoutLastSeparator(String _path) {
-		if (_path != null && !_path.trim().equals("")) {
-			_path = _path.trim();
-			_path = org.apache.commons.lang.StringUtils.replace(_path, "\\",
-					"/");
-			while (_path.endsWith("/") && _path.length() > 1) {
-				_path = _path.substring(0, _path.length() - 1);
-			}
-			while (_path.startsWith("/") && _path.length() > 1) {
-				_path = _path.substring(1);
-			}
-			if (_path.startsWith("/")) {
-				_path = "";
-			}
-		}
-		return _path;
+		return PathUtil.formatPathForDirectoryWithoutLastAndFirstSeparator(_path);
 	}
+	
+	
 
 	/**
 	 * escape the underscore sign in paths to be able to perform LIKE sql searches.
@@ -1082,10 +1088,7 @@ public abstract class AbstractFileManagementHandler {
 	 * @return
 	 */
 	public static String escapeUnderscoreInPath(String _path) {
-		if (_path != null && !_path.trim().equals("")) {
-			_path=_path.replaceAll("_", "\\\\_");
-		}
-		return _path;
+		return PathUtil.escapeUnderscoreInPath(_path);
 	}
 
 	/**
@@ -1143,24 +1146,7 @@ public abstract class AbstractFileManagementHandler {
 	 */
 	public static AbstractFileManagementHandler getInstance(
 			BasicConfigurationController conf) throws Exception {
-		AbstractFileManagementHandler fileManagementHandler = null;
-		if (conf == null) {
-			throw new Exception(
-					"InvalidConfigurationException: the configuration provided to get the FileManagementHandler instance is null.");
-		} else if (!conf.isConfigurationCorrect()) {
-			throw new Exception(
-					"InvalidConfigurationException: the configuration provided to get the FileManagementHandler instance is not consistant.");
-		} else {
-			if (conf.isUseIvySystemDB()) {
-				fileManagementHandler = new FileManagementIvySystemDBHandler();
-			} else if (conf.isStoreFilesInDB()) {
-				fileManagementHandler = new FileStoreDBHandler(conf);
-			} else {
-				fileManagementHandler = new FileManagementDBHandlerUniversal(conf);
-			}
-			
-		}
-		return fileManagementHandler;
+		return FileManagementHandlersFactory.getFileManagementHandlerInstance(conf);
 	}
 
 	/**

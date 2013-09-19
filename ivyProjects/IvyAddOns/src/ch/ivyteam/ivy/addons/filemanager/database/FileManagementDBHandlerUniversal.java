@@ -35,6 +35,7 @@ import ch.ivyteam.ivy.addons.filemanager.ZipHandler;
 import ch.ivyteam.ivy.addons.filemanager.configuration.BasicConfigurationController;
 import ch.ivyteam.ivy.addons.filemanager.database.security.AbstractDirectorySecurityController;
 import ch.ivyteam.ivy.addons.filemanager.database.security.FileManagementStaticController;
+import ch.ivyteam.ivy.addons.filemanager.util.PathUtil;
 
 
 /**
@@ -876,7 +877,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		if(_user==null || _user.trim().equals("")){
 			_user= Ivy.session().getSessionUserName();
 		}
-		_destinationPath = formatPathForDirectory(_destinationPath);
+		_destinationPath = PathUtil.formatPathForDirectory(_destinationPath);
 		IExternalDatabaseRuntimeConnection connection=null;
 		try {
 			connection = getDatabase().getAndLockConnection();
@@ -1096,7 +1097,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		{
 			_destinationPath=FileHandler.getFileDirectoryPath(_files.get(0));
 		}
-		_destinationPath = formatPathForDirectory(_destinationPath);
+		_destinationPath = PathUtil.formatPathForDirectory(_destinationPath);
 		IExternalDatabaseRuntimeConnection connection=null;
 		try {
 			connection = getDatabase().getAndLockConnection();
@@ -1583,7 +1584,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 			throw new IllegalArgumentException("One of the parameters in "+this.getClass().getName()+", method createDirectory(String destinationPath, String newDirectoryName) is not set.");
 		}
 
-		return this.createDirectory(formatPathForDirectory(destinationPath)+newDirectoryName.trim());
+		return this.createDirectory(PathUtil.formatPathForDirectory(destinationPath)+newDirectoryName.trim());
 
 	}
 
@@ -1600,7 +1601,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		ReturnedMessage message = new ReturnedMessage();
 		message.setFiles(List.create(java.io.File.class));
 
-		java.io.File dir = new java.io.File(formatPathForDirectory(_newDirectoryPath));
+		java.io.File dir = new java.io.File(PathUtil.formatPathForDirectory(_newDirectoryPath));
 		if(dir.isDirectory())
 		{//already exists
 			message.setType(FileHandler.INFORMATION_MESSAGE);
@@ -1632,7 +1633,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		}
 		ReturnedMessage message = new ReturnedMessage();
 		message.setFiles(List.create(java.io.File.class));
-		java.io.File dir = new java.io.File(formatPathForDirectory(directoryPath));
+		java.io.File dir = new java.io.File(PathUtil.formatPathForDirectory(directoryPath));
 		if(!dir.isDirectory())
 		{//Not a directory
 			message.setType(FileHandler.INFORMATION_MESSAGE);
@@ -1740,13 +1741,13 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 	@Override
 	public Tree getDirectoryTree(String rootPath) throws Exception {
 		Tree RDTree = new Tree();
-		String entryPath = formatPath(rootPath);
+		String entryPath = PathUtil.formatPath(rootPath);
 		File dir = new File(entryPath);
 		if(!dir.exists())
 			dir.mkdirs();
 		FolderOnServer o = new FolderOnServer();
 		o.setName(dir.getName());
-		o.setPath(formatPath(dir.getPath()));
+		o.setPath(PathUtil.formatPath(dir.getPath()));
 		o.setIsRoot(true);
 		RDTree.setValue(o);
 		RDTree.setInfo(o.getName());
@@ -1761,7 +1762,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		{
 			return false;
 		}
-		_dirPath = formatPathForDirectoryWithoutLastSeparator(_dirPath);
+		_dirPath = PathUtil.formatPathForDirectoryWithoutLastSeparator(_dirPath);
 		if(new java.io.File(_dirPath).isDirectory()){
 			return true;
 		}else{
@@ -1776,7 +1777,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 	 */
 	private static void fillRDTree(String entryPoint, Tree myTree)
 	{
-		String entryPath = formatPath(entryPoint);
+		String entryPath = PathUtil.formatPath(entryPoint);
 		File dir = new File(entryPath);
 		if(!dir.exists() || !dir.isDirectory())
 		{
@@ -1796,7 +1797,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 			{
 				FolderOnServer o = new FolderOnServer();
 				o.setName(files[i].getName());
-				o.setPath(formatPath(files[i].getPath()));
+				o.setPath(PathUtil.formatPath(files[i].getPath()));
 				myTree.createChild(o, files[i].getName());
 				fillRDTree(files[i].getPath(), myTree.getLastChild());
 			}
@@ -2011,7 +2012,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		{
 			message.setType(FileHandler.SUCCESS_MESSAGE);
 			this.renameDocument(document, newName+ext, Ivy.session().getSessionUserName());
-			document.setPath(formatPath(dest.getPath()));
+			document.setPath(PathUtil.formatPath(dest.getPath()));
 			document.setFilename(newDest);
 			message.setDocumentOnServer(document);		
 		}else
@@ -2075,8 +2076,8 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 			document.setDescription("");
 		}
 
-		fileDestinationPath=formatPath(fileDestinationPath);
-		String docPath = formatPathForDirectory(FileHandler.getFileDirectoryPath(new java.io.File(document.getPath())))+document.getFilename();
+		fileDestinationPath=PathUtil.formatPath(fileDestinationPath);
+		String docPath = PathUtil.formatPathForDirectory(FileHandler.getFileDirectoryPath(new java.io.File(document.getPath())))+document.getFilename();
 		//Ivy.log().info(fileDestinationPath +" vs "+docPath );
 		if(!docPath.equalsIgnoreCase(fileDestinationPath))
 		{//here we move the file
@@ -2269,7 +2270,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 			return message;
 		}
 		List<DocumentOnServer> pasteDocs = List.create(DocumentOnServer.class);
-		String dest = formatPathForDirectory(fileDestinationPath);
+		String dest = PathUtil.formatPathForDirectory(fileDestinationPath);
 		String date = new Date().format("dd.MM.yyyy");
 		String time = new Time().format("HH:mm:ss");
 		String user="IVYSYSTEM";
@@ -2288,7 +2289,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 			{
 				continue;
 			}
-			java.io.File copiedFile = new java.io.File(formatPath(doc.getPath()));
+			java.io.File copiedFile = new java.io.File(PathUtil.formatPath(doc.getPath()));
 			if(copiedFile.isFile())
 			{
 				String newFile=dest;
@@ -2325,7 +2326,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 					nDoc.setModificationDate(date);
 					nDoc.setModificationTime(time);
 					nDoc.setModificationUserID(user);
-					nDoc.setPath(formatPath(pasteFile.getPath()));
+					nDoc.setPath(PathUtil.formatPath(pasteFile.getPath()));
 					nDoc.setUserID(user);
 					try{
 						nDoc.setExtension(nDoc.getFilename().substring(nDoc.getFilename().lastIndexOf(".")+1));
@@ -2364,7 +2365,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 			throw new IllegalArgumentException("One of the parameter is not set in zipDocumentOnServers(List<DocumentOnServer> documents, String dirPath, String zipName,boolean checkIfExists) in "+ this.getClass());
 		}
 
-		dirPath=formatPathForDirectory(dirPath);
+		dirPath=PathUtil.formatPathForDirectory(dirPath);
 		zipName = zipName.endsWith(".zip")?zipName:zipName+".zip";
 		java.io.File zip = new java.io.File(dirPath+zipName);
 		boolean exists = zip.isFile();
@@ -2406,7 +2407,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		{
 			return false;
 		}
-		_filepath = formatPath(_filepath);
+		_filepath = PathUtil.formatPath(_filepath);
 		java.io.File f = new java.io.File(_filepath);
 		if(!f.isFile())
 		{
@@ -2460,7 +2461,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		{
 			return doc;
 		}
-		String path = formatPath(doc.getPath().trim());
+		String path = PathUtil.formatPath(doc.getPath().trim());
 		java.io.File f = new java.io.File(path);
 		if(f.isFile())
 		{
@@ -2478,7 +2479,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		{
 			return null;
 		}
-		String path = formatPath(filePath.trim());
+		String path = PathUtil.formatPath(filePath.trim());
 
 		DocumentOnServer doc = this.getDocumentOnServer(path);
 		return getDocumentOnServerWithJavaFile(doc);
@@ -2535,7 +2536,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		{
 			return false;
 		}
-		path=formatPathForDirectory(path);
+		path=PathUtil.formatPathForDirectory(path);
 		java.io.File f = new java.io.File(path+document.getFilename().trim());
 
 		return f.isFile();
@@ -2609,7 +2610,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		{
 			return false;
 		}
-		filePath = formatPath(filePath);		
+		filePath = PathUtil.formatPath(filePath);		
 		return new java.io.File(filePath).isFile();
 	}
 
@@ -2634,7 +2635,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 			throw new IllegalArgumentException(
 					"The path argument is null or is an empty String.");
 		}
-		path = formatPathForDirectory(path);
+		path = PathUtil.formatPathForDirectory(path);
 		java.io.File dir = new java.io.File(path);
 		ArrayList<FolderOnServer> fos = new ArrayList<FolderOnServer>();
 		if (dir.isDirectory()) {
@@ -2648,6 +2649,18 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 					fos.add(fo);
 				}
 			}
+		}
+		return fos;
+	}
+
+	public FolderOnServer getDirectoryWithPath(String _directoryPath)
+			throws Exception {
+		_directoryPath = PathUtil.formatPathForDirectory(_directoryPath);
+		java.io.File dir = new java.io.File(_directoryPath);
+		FolderOnServer fos = new FolderOnServer();
+		if(dir.isDirectory()) {
+			fos.setName(dir.getName());
+			fos.setPath(PathUtil.formatPathForDirectoryWithoutLastSeparator(_directoryPath));
 		}
 		return fos;
 	}

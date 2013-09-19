@@ -8,6 +8,7 @@ import java.util.Iterator;
 import org.apache.commons.io.FileUtils;
 
 import ch.ivyteam.ivy.addons.filemanager.database.AbstractFileManagementHandler;
+import ch.ivyteam.ivy.addons.filemanager.util.PathUtil;
 import ch.ivyteam.ivy.environment.Ivy;
 
 /**
@@ -78,14 +79,15 @@ public class DirectoryHelper {
 		{
 			throw new java.lang.IllegalArgumentException("Illegal argument: the directory path is null or empty.");
 		}
-		_path = AbstractFileManagementHandler.formatPathForDirectoryWithoutLastSeparator(_path);
+		_path = PathUtil.formatPathForDirectoryWithoutLastSeparator(_path);
 		if(_path.contains("/"))
 		{
 			return _path.substring(_path.lastIndexOf("/")+1);
 		}else{
 			return _path;
 		}
-		
 	}
+	
+	
 
 }

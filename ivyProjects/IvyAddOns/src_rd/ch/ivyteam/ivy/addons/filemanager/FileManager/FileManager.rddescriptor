@@ -939,16 +939,6 @@ See ch.xpertline.updownload.FileDownloadHandler javadoc.</description>
         </outputParameter>
     </method>
     <method>
-        <name>_filesSelectedForUpload</name>
-        <description>Callback method used from uploadHandler class to inform the Panel that the user has selected some files for upload.</description>
-        <inputParameter>
-            <name>selectedFiles</name>
-            <description></description>
-            <parameterType>List&lt;java.io.File&gt;</parameterType>
-            <nullPermitted>false</nullPermitted>
-        </inputParameter>
-    </method>
-    <method>
         <name>getDocumentsWithSQLConditions</name>
         <description>*** FOR ADVANCED USERS ONLY ***&#xD;
 Allows you to specify a list of SQL Query Conditions to be able to make a search on the FileManager Files DB.&#xD;
@@ -1015,12 +1005,13 @@ This callback method is used when the files are stored in the database and not i
     </method>
     <method>
         <name>getFileManagerSecurityController</name>
-        <description></description>
+        <description>Returns the SecurityController in charge of the security if this feature is activated.&#xD;
+If the security is deactivated, then returns null.</description>
         <outputParameter>
             <name>fileManagerSecurityController</name>
             <description></description>
             <parameterType>ch.ivyteam.ivy.addons.filemanager.database.security.AbstractDirectorySecurityController</parameterType>
-            <nullPermitted>false</nullPermitted>
+            <nullPermitted>true</nullPermitted>
         </outputParameter>
     </method>
     <method>
@@ -1068,6 +1059,65 @@ Used to re-route the refresh action in case of file versioning extended use.</de
         <name>_readSelectedFile</name>
         <description>For internal use only&#xD;
 Used to re-route the refresh action in case of file versioning extended use.</description>
+    </method>
+    <method>
+        <name>getFileUploadManager</name>
+        <description></description>
+        <outputParameter>
+            <name>fileUploadManager</name>
+            <description></description>
+            <parameterType>ch.ivyteam.ivy.addons.filemanager.FileUploadHandler</parameterType>
+            <nullPermitted>true</nullPermitted>
+        </outputParameter>
+    </method>
+    <method>
+        <name>getFileDownloadManager</name>
+        <description></description>
+        <outputParameter>
+            <name>fileDownloadManager</name>
+            <description></description>
+            <parameterType>ch.ivyteam.ivy.addons.filemanager.FileDownloadHandler</parameterType>
+            <nullPermitted>true</nullPermitted>
+        </outputParameter>
+    </method>
+    <method>
+        <name>getClientDesktopCommunicator</name>
+        <description></description>
+        <outputParameter>
+            <name>clientDesktopCommunicator</name>
+            <description></description>
+            <parameterType>ch.ivyteam.ivy.addons.filemanager.ulcextensionhandler.DesktopHandler</parameterType>
+            <nullPermitted>true</nullPermitted>
+        </outputParameter>
+    </method>
+    <method>
+        <name>_askForDownloadOverride</name>
+        <description></description>
+        <inputParameter>
+            <name>fileOperationMessage</name>
+            <description></description>
+            <parameterType>ch.ivyteam.ivy.addons.docfactory.FileOperationMessage</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </inputParameter>
+    </method>
+    <method>
+        <name>_filesSelectedForUpload</name>
+        <description>Callback method used from uploadHandler class to inform the Panel that the user has selected some files for upload.&#xD;
+2 list of files are provided in the List parameter: &#xD;
+the accepted files for upload (first list), and the possible filtered and rejected files (second list) if a DocumentFilter &#xD;
+is set in the Configuration object.</description>
+        <inputParameter>
+            <name>acceptedFiles</name>
+            <description></description>
+            <parameterType>List&lt;java.io.File&gt;</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </inputParameter>
+        <inputParameter>
+            <name>rejectedFiles</name>
+            <description></description>
+            <parameterType>List&lt;java.io.File&gt;</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </inputParameter>
     </method>
     <startMethod>
         <name>startAsPathChooser</name>

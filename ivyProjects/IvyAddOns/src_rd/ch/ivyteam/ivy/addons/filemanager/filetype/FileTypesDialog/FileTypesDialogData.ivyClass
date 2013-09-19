@@ -5,7 +5,7 @@ configurationController 'The basic needed to get the file list table name, the f
 choosedFileType ch.ivyteam.ivy.addons.filemanager.FileType #field
 fileTypesList List<ch.ivyteam.ivy.addons.filemanager.FileType> #field
 actionCancelled Boolean #field
-fileTypesController ch.ivyteam.ivy.addons.filemanager.database.filetype.FileTypesController #field
+fileTypesController ch.ivyteam.ivy.addons.filemanager.database.filetype.AbstractFileTypesController #field
 editedFileType ch.ivyteam.ivy.addons.filemanager.FileType #field
 errorUtil ch.ivyteam.ivy.addons.filemanager.ErrorUtil #field
 modCancelled Boolean #field

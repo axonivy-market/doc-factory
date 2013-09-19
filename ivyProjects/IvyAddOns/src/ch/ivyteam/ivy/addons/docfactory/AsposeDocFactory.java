@@ -77,19 +77,10 @@ public class AsposeDocFactory extends BaseDocFactory{
 	 */
 	public AsposeDocFactory(){
 		super();
-		license = new com.aspose.words.License();
-		try {
-			InputStream in = ThirdPartyLicenses.getDocumentFactoryLicense();
-			license.setLicense(in);
-			in.close();
-		} catch (Exception e) {
-			Ivy.log().error("Aspose Words Licence error "+e);
-		}catch (Throwable t) {
-			Ivy.log().error("Aspose Words Licence error "+t);
-		}
+		parseLicence();
 
 	}
-
+	
 	/**
 	 * Constructor with the following parameters:
 	 * @param parent : the IRichDialogPanel from the RIA where this docFactory is used. Usefull to communicate through callback methods.
@@ -99,12 +90,15 @@ public class AsposeDocFactory extends BaseDocFactory{
 	 */
 	public AsposeDocFactory(IRichDialogPanel parent, String errorMethod, String successMethod, String progressMethod){
 		super(parent, errorMethod, successMethod, progressMethod);
-		license = new com.aspose.words.License();
+		parseLicence();
+	}
+	
+	private void parseLicence() {
+		this.license = new com.aspose.words.License();
 		try {
 			InputStream in = ThirdPartyLicenses.getDocumentFactoryLicense();
-			license.setLicense(in);
+			this.license.setLicense(in);
 			in.close();
-
 		} catch (Exception e) {
 			Ivy.log().error("Aspose Words Licence error "+e);
 			this.fileOperationMessage.setType(ch.ivyteam.ivy.addons.docfactory.FileOperationMessage.ERROR_MESSAGE);

@@ -1,0 +1,4 @@
+co: name={downloadSuccess} description={} changed={2013-07-21 01:55:57 CEST} changedby={ec} visualorder={0} guid={13FFE704AB462523} parentguid={} typeguid={E6AFEA2034301F66} id={} parentid={} typeid={}
+val: guid={13FFE704ABCC01DD} datatype={} isdefault={true} langid={en} description={} validfrom={2013-07-18 20:23:46 CEST} validto={} changed={2013-07-21 01:55:57 CEST} changedby={ec} properties={} id={}
+val: guid={13FFE704ACE6B3D6} datatype={} isdefault={false} langid={de} description={} validfrom={2013-07-18 20:24:02 CEST} validto={} changed={2013-07-21 01:55:57 CEST} changedby={ec} properties={} id={}
+val: guid={13FFE704AC575B30} datatype={} isdefault={false} langid={fr} description={} validfrom={2013-07-18 20:24:00 CEST} validto={} changed={2013-07-21 01:55:57 CEST} changedby={ec} properties={} id={}

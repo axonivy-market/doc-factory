@@ -1,5 +1,5 @@
 [Ivy]
-[>Created: Thu Aug 16 18:17:39 EDT 2012]
+[>Created: Wed Sep 18 21:35:44 EDT 2013]
 132D1B65FEDF11D7 3.17 #module
 >Proto >Proto Collection #zClass
 Ds0 DirectorySecurityManagerProcess Big #zClass
@@ -23,27 +23,11 @@ Ds0 @RichDialogProcessStart f8 '' #zField
 Ds0 @RichDialogProcessStep f9 '' #zField
 Ds0 @PushWFArc f10 '' #zField
 Ds0 @RichDialogProcessEnd f11 '' #zField
-Ds0 @PushWFArc f12 '' #zField
-Ds0 @RichDialogProcessStart f13 '' #zField
-Ds0 @RichDialogProcessStart f14 '' #zField
-Ds0 @RichDialogProcessStart f15 '' #zField
-Ds0 @RichDialogProcessStart f16 '' #zField
-Ds0 @RichDialogProcessStart f17 '' #zField
-Ds0 @RichDialogProcessStep f18 '' #zField
-Ds0 @Alternative f28 '' #zField
-Ds0 @PushWFArc f29 '' #zField
-Ds0 @PushWFArc f19 '' #zField
-Ds0 @RichDialogProcessStep f30 '' #zField
-Ds0 @PushWFArc f31 '' #zField
 Ds0 @RichDialogInitStart f32 '' #zField
 Ds0 @RichDialogProcessStep f33 '' #zField
 Ds0 @PushWFArc f34 '' #zField
 Ds0 @PushWFArc f35 '' #zField
-Ds0 @PushWFArc f2 '' #zField
 Ds0 @RichDialogMethodStart f36 '' #zField
-Ds0 @RichDialogProcessEnd f37 '' #zField
-Ds0 @PushWFArc f38 '' #zField
-Ds0 @PushWFArc f39 '' #zField
 Ds0 @RichDialogMethodStart f40 '' #zField
 Ds0 @RichDialogProcessStep f41 '' #zField
 Ds0 @PushWFArc f42 '' #zField
@@ -51,34 +35,9 @@ Ds0 @RichDialog f43 '' #zField
 Ds0 @PushWFArc f44 '' #zField
 Ds0 @RichDialogProcessEnd f45 '' #zField
 Ds0 @PushWFArc f46 '' #zField
-Ds0 @RichDialogProcessStep f20 '' #zField
-Ds0 @RichDialogProcessStep f21 '' #zField
-Ds0 @Alternative f23 '' #zField
-Ds0 @PushWFArc f24 '' #zField
-Ds0 @PushWFArc f25 '' #zField
-Ds0 @PushWFArc f47 '' #zField
-Ds0 @RichDialogProcessStep f48 '' #zField
-Ds0 @RichDialogProcessStep f49 '' #zField
-Ds0 @Alternative f51 '' #zField
-Ds0 @PushWFArc f52 '' #zField
-Ds0 @PushWFArc f53 '' #zField
-Ds0 @PushWFArc f56 '' #zField
-Ds0 @RichDialogProcessStep f57 '' #zField
-Ds0 @RichDialogProcessStep f58 '' #zField
-Ds0 @Alternative f60 '' #zField
-Ds0 @PushWFArc f61 '' #zField
-Ds0 @PushWFArc f62 '' #zField
-Ds0 @PushWFArc f65 '' #zField
-Ds0 @RichDialogProcessStep f66 '' #zField
-Ds0 @RichDialogProcessStep f67 '' #zField
-Ds0 @Alternative f69 '' #zField
-Ds0 @PushWFArc f70 '' #zField
-Ds0 @PushWFArc f71 '' #zField
-Ds0 @PushWFArc f74 '' #zField
 Ds0 @RichDialogProcessStep f75 '' #zField
 Ds0 @PushWFArc f76 '' #zField
 Ds0 @RichDialogProcessEnd f77 '' #zField
-Ds0 @PushWFArc f78 '' #zField
 Ds0 @RichDialogProcessStart f79 '' #zField
 Ds0 @RichDialogFireEvent f80 '' #zField
 Ds0 @PushWFArc f81 '' #zField
@@ -97,14 +56,29 @@ Ds0 @RichDialogProcessStep f92 '' #zField
 Ds0 @PushWFArc f93 '' #zField
 Ds0 @RichDialogProcessEnd f94 '' #zField
 Ds0 @PushWFArc f95 '' #zField
-Ds0 @PushWFArc f22 '' #zField
-Ds0 @PushWFArc f26 '' #zField
-Ds0 @PushWFArc f27 '' #zField
-Ds0 @PushWFArc f50 '' #zField
-Ds0 @PushWFArc f54 '' #zField
-Ds0 @PushWFArc f55 '' #zField
-Ds0 @PushWFArc f59 '' #zField
-Ds0 @PushWFArc f63 '' #zField
+Ds0 @RichDialogProcessStep f64 '' #zField
+Ds0 @PushWFArc f68 '' #zField
+Ds0 @PushWFArc f2 '' #zField
+Ds0 @RichDialogProcessStart f72 '' #zField
+Ds0 @Alternative f73 '' #zField
+Ds0 @PushWFArc f96 '' #zField
+Ds0 @RichDialogProcessStep f97 '' #zField
+Ds0 @RichDialogProcessEnd f99 '' #zField
+Ds0 @PushWFArc f101 '' #zField
+Ds0 @RichDialogProcessStep f102 '' #zField
+Ds0 @PushWFArc f104 '' #zField
+Ds0 @RichDialogProcessStep f100 '' #zField
+Ds0 @PushWFArc f105 '' #zField
+Ds0 @RichDialogFireEvent f13 '' #zField
+Ds0 @PushWFArc f14 '' #zField
+Ds0 @PushWFArc f15 '' #zField
+Ds0 @PushWFArc f16 '' #zField
+Ds0 @RichDialogInitStart f17 '' #zField
+Ds0 @PushWFArc f18 '' #zField
+Ds0 @PushWFArc f19 '' #zField
+Ds0 @RichDialogProcessStep f20 '' #zField
+Ds0 @PushWFArc f21 '' #zField
+Ds0 @PushWFArc f12 '' #zField
 >Proto Ds0 Ds0 DirectorySecurityManagerProcess #zField
 Ds0 f0 guid 132D1B66000F11BB #txt
 Ds0 f0 type ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData #txt
@@ -125,16 +99,19 @@ Ds0 f0 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 Ds0 f0 90 40 20 20 13 0 #rect
 Ds0 f0 @|RichDialogInitStartIcon #fIcon
 Ds0 f1 type ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData #txt
-Ds0 f1 126 174 20 20 13 0 #rect
+Ds0 f1 126 206 20 20 13 0 #rect
 Ds0 f1 @|RichDialogProcessEndIcon #fIcon
 Ds0 f3 actionDecl 'ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData out;
 ' #txt
 Ds0 f3 actionTable 'out=in;
 ' #txt
 Ds0 f3 actionCode 'import ch.ivyteam.ivy.addons.filemanager.database.security.IvyRoleHelper;
-if(!in.isLoaded)
-	{
-	try{
+
+
+if(!in.isLoaded){
+	try{ 
+		import ch.ivyteam.ivy.addons.filemanager.database.security.DirectorySecurityController;
+		out.version=(in.securityController.getSecurityController() as DirectorySecurityController).getSecurityVersion();
 			out.ivyRolesTree=IvyRoleHelper.buildIvyRolesTree();
 			out.isLoaded=true;
 			
@@ -146,10 +123,10 @@ if(!in.isLoaded)
 }
 
 out.isVisible=!in.isVisible;
-panel.SplitPane.setDividerLocation(0.5);
+
 ' #txt
 Ds0 f3 type ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData #txt
-Ds0 f3 318 116 36 24 20 -2 #rect
+Ds0 f3 318 92 36 24 20 -2 #rect
 Ds0 f3 @|RichDialogProcessStepIcon #fIcon
 Ds0 f4 guid 132D1C1EEB662BC2 #txt
 Ds0 f4 type ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData #txt
@@ -165,9 +142,9 @@ Ds0 f4 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 Ds0 f4 326 38 20 20 13 0 #rect
 Ds0 f4 @|RichDialogMethodStartIcon #fIcon
 Ds0 f5 expr out #txt
-Ds0 f5 336 58 336 116 #arcP
+Ds0 f5 336 58 336 92 #arcP
 Ds0 f6 type ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData #txt
-Ds0 f6 326 206 20 20 13 0 #rect
+Ds0 f6 326 190 20 20 13 0 #rect
 Ds0 f6 @|RichDialogProcessEndIcon #fIcon
 Ds0 f8 guid 132D41EFC77B64BF #txt
 Ds0 f8 type ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData #txt
@@ -210,167 +187,8 @@ Ds0 f9 @|RichDialogProcessStepIcon #fIcon
 Ds0 f10 expr out #txt
 Ds0 f10 472 58 472 92 #arcP
 Ds0 f11 type ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData #txt
-Ds0 f11 462 166 20 20 13 0 #rect
+Ds0 f11 462 182 20 20 13 0 #rect
 Ds0 f11 @|RichDialogProcessEndIcon #fIcon
-Ds0 f12 expr out #txt
-Ds0 f12 472 116 472 166 #arcP
-Ds0 f13 guid 132D45D0C3215E42 #txt
-Ds0 f13 type ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData #txt
-Ds0 f13 actionDecl 'ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData out;
-' #txt
-Ds0 f13 actionTable 'out=in;
-' #txt
-Ds0 f13 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<elementInfo>
-    <language>
-        <name>openDirectory</name>
-        <nameStyle>13,5,7
-</nameStyle>
-    </language>
-</elementInfo>
-' #txt
-Ds0 f13 606 38 20 20 13 0 #rect
-Ds0 f13 @|RichDialogProcessStartIcon #fIcon
-Ds0 f14 guid 132D45D3F01A553C #txt
-Ds0 f14 type ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData #txt
-Ds0 f14 actionDecl 'ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData out;
-' #txt
-Ds0 f14 actionTable 'out=in;
-' #txt
-Ds0 f14 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<elementInfo>
-    <language>
-        <name>updateDirectory</name>
-        <nameStyle>15,5,7
-</nameStyle>
-    </language>
-</elementInfo>
-' #txt
-Ds0 f14 750 38 20 20 13 0 #rect
-Ds0 f14 @|RichDialogProcessStartIcon #fIcon
-Ds0 f15 guid 132D45D79EFA5FFC #txt
-Ds0 f15 type ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData #txt
-Ds0 f15 actionDecl 'ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData out;
-' #txt
-Ds0 f15 actionTable 'out=in;
-' #txt
-Ds0 f15 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<elementInfo>
-    <language>
-        <name>deleteDirectory</name>
-        <nameStyle>15,5,7
-</nameStyle>
-    </language>
-</elementInfo>
-' #txt
-Ds0 f15 902 38 20 20 13 0 #rect
-Ds0 f15 @|RichDialogProcessStartIcon #fIcon
-Ds0 f16 guid 132D45DA9C660750 #txt
-Ds0 f16 type ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData #txt
-Ds0 f16 actionDecl 'ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData out;
-' #txt
-Ds0 f16 actionTable 'out=in;
-' #txt
-Ds0 f16 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<elementInfo>
-    <language>
-        <name>writeFiles</name>
-        <nameStyle>10,5,7
-</nameStyle>
-    </language>
-</elementInfo>
-' #txt
-Ds0 f16 1054 38 20 20 13 0 #rect
-Ds0 f16 @|RichDialogProcessStartIcon #fIcon
-Ds0 f17 guid 132D45DDF47A300C #txt
-Ds0 f17 type ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData #txt
-Ds0 f17 actionDecl 'ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData out;
-' #txt
-Ds0 f17 actionTable 'out=in;
-' #txt
-Ds0 f17 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<elementInfo>
-    <language>
-        <name>deleteFiles</name>
-        <nameStyle>11,5,7
-</nameStyle>
-    </language>
-</elementInfo>
-' #txt
-Ds0 f17 1182 38 20 20 13 0 #rect
-Ds0 f17 @|RichDialogProcessStartIcon #fIcon
-Ds0 f18 actionDecl 'ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData out;
-' #txt
-Ds0 f18 actionTable 'out=in;
-' #txt
-Ds0 f18 actionCode 'if(in.selectedIRole!= null && in.selectedIRole.getName().trim().length()>0){
-	try{
-		in.securityController.addRoleToOpenDirectory(in.folderOnServer.path,in.selectedIRole.getName().trim());
-	}catch(Throwable t){
-		in.error.errorOccurred=true;
-		in.error.message=t.getMessage();
-		in.error.throwable=t;
-		panel.showError();
-	}
-}' #txt
-Ds0 f18 type ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData #txt
-Ds0 f18 558 140 36 24 20 -2 #rect
-Ds0 f18 @|RichDialogProcessStepIcon #fIcon
-Ds0 f28 type ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData #txt
-Ds0 f28 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<elementInfo>
-    <language>
-        <name>Checked?</name>
-        <nameStyle>8
-</nameStyle>
-    </language>
-</elementInfo>
-' #txt
-Ds0 f28 602 82 28 28 14 0 #rect
-Ds0 f28 @|AlternativeIcon #fIcon
-Ds0 f29 expr out #txt
-Ds0 f29 616 58 616 82 #arcP
-Ds0 f19 expr in #txt
-Ds0 f19 outCond panel.codCheckBox.isSelected() #txt
-Ds0 f19 .xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<elementInfo>
-    <language>
-        <name>YES</name>
-        <nameStyle>3
-</nameStyle>
-    </language>
-</elementInfo>
-' #txt
-Ds0 f19 610 104 585 140 #arcP
-Ds0 f30 actionDecl 'ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData out;
-' #txt
-Ds0 f30 actionTable 'out=in;
-' #txt
-Ds0 f30 actionCode 'if(in.selectedIRole!= null && in.selectedIRole.getName().trim().length()>0){
-		try{
-		in.securityController.removeRoleFromOpenDirectory(in.folderOnServer.path,in.selectedIRole.getName().trim());
-	}catch(Throwable t){
-		in.error.errorOccurred=true;
-		in.error.message=t.getMessage();
-		in.error.throwable=t;
-		panel.showError();
-	}
-}' #txt
-Ds0 f30 type ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData #txt
-Ds0 f30 638 140 36 24 20 -2 #rect
-Ds0 f30 @|RichDialogProcessStepIcon #fIcon
-Ds0 f31 expr in #txt
-Ds0 f31 .xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<elementInfo>
-    <language>
-        <name>NO</name>
-        <nameStyle>2
-</nameStyle>
-    </language>
-</elementInfo>
-' #txt
-Ds0 f31 622 104 647 140 #arcP
-Ds0 f31 0 0.4948461719995635 3 -2 #arcLabel
 Ds0 f32 guid 132D463DF0C46A88 #txt
 Ds0 f32 type ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData #txt
 Ds0 f32 method start(String,String,String) #txt
@@ -378,9 +196,11 @@ Ds0 f32 disableUIEvents true #txt
 Ds0 f32 inParameterDecl 'ch.ivyteam.ivy.richdialog.exec.RdMethodCallEvent methodEvent = event as ch.ivyteam.ivy.richdialog.exec.RdMethodCallEvent;
 <java.lang.String ivyDBConnexionName,java.lang.String dirTableName,java.lang.String schemaName> param = methodEvent.getInputArguments();
 ' #txt
-Ds0 f32 inParameterMapAction 'out.dirTableName=param.dirTableName;
-out.ivyConnectionName=param.ivyDBConnexionName;
-out.schemaName=param.schemaName;
+Ds0 f32 inParameterMapAction 'out.config.activateSecurity=true;
+out.config.databaseSchemaName=param.schemaName;
+out.config.directoriesTableName=param.dirTableName;
+out.config.ivyDBConnectionName=param.ivyDBConnexionName;
+out.config.storeFilesInDB=true;
 ' #txt
 Ds0 f32 outParameterDecl '<> result;
 ' #txt
@@ -400,12 +220,13 @@ Ds0 f33 actionDecl 'ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.D
 ' #txt
 Ds0 f33 actionTable 'out=in;
 ' #txt
-Ds0 f33 actionCode 'import ch.ivyteam.ivy.security.IRole;
-import ch.ivyteam.ivy.addons.filemanager.database.security.DirectorySecurityController;
-if(in.#dirTableName==null || in.dirTableName.trim().equalsIgnoreCase("")){
-		in.dirTableName=ivy.var.xivy_addons_fileManager_directoriesTableName.trim();
-	}
-out.securityController = new DirectorySecurityController(in.ivyConnectionName,in.dirTableName,in.schemaName);
+Ds0 f33 actionCode 'import ch.ivyteam.ivy.addons.filemanager.FileManagementHandlersFactory;
+import ch.ivyteam.ivy.addons.filemanager.configuration.BasicConfigurationController;
+import ch.ivyteam.ivy.security.IRole;
+
+
+in.securityController = FileManagementHandlersFactory.getFileSecurityHandlerInstance(in.config);
+
 panel.actionsGridBagLayoutPane.enabled=false;
 try{
 	out.selectedIRole = panel.rolesTree.getTreeData().value as IRole;
@@ -419,7 +240,7 @@ Ds0 f33 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
         <name>make securityController</name>
-        <nameStyle>23
+        <nameStyle>23,7
 </nameStyle>
     </language>
 </elementInfo>
@@ -430,8 +251,6 @@ Ds0 f34 expr out #txt
 Ds0 f34 178 64 145 108 #arcP
 Ds0 f35 expr out #txt
 Ds0 f35 104 58 130 108 #arcP
-Ds0 f2 expr out #txt
-Ds0 f2 136 132 136 174 #arcP
 Ds0 f36 guid 132D469EE2FDD752 #txt
 Ds0 f36 type ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData #txt
 Ds0 f36 method mapSelectedIRoleRights() #txt
@@ -443,15 +262,8 @@ Ds0 f36 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-Ds0 f36 462 278 20 20 13 0 #rect
+Ds0 f36 462 230 20 20 13 0 #rect
 Ds0 f36 @|RichDialogMethodStartIcon #fIcon
-Ds0 f37 type ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData #txt
-Ds0 f37 606 198 20 20 13 0 #rect
-Ds0 f37 @|RichDialogProcessEndIcon #fIcon
-Ds0 f38 expr out #txt
-Ds0 f38 585 164 610 199 #arcP
-Ds0 f39 expr out #txt
-Ds0 f39 647 164 621 199 #arcP
 Ds0 f40 guid 132D46E5157A7030 #txt
 Ds0 f40 type ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData #txt
 Ds0 f40 method showError() #txt
@@ -505,305 +317,31 @@ Ds0 f45 286 590 20 20 13 0 #rect
 Ds0 f45 @|RichDialogProcessEndIcon #fIcon
 Ds0 f46 expr out #txt
 Ds0 f46 296 548 296 590 #arcP
-Ds0 f20 actionDecl 'ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData out;
-' #txt
-Ds0 f20 actionTable 'out=in;
-' #txt
-Ds0 f20 actionCode '
-if(in.selectedIRole!= null && in.selectedIRole.getName().trim().length()>0){
-	try{
-		in.securityController.addRoleToUpdateDirectory(in.folderOnServer.path,in.selectedIRole.getName().trim());
-	}catch(Throwable t){
-		in.error.errorOccurred=true;
-		in.error.message=t.getMessage();
-		in.error.throwable=t;
-		panel.showError();
-	}
-	
-}
-' #txt
-Ds0 f20 type ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData #txt
-Ds0 f20 702 156 36 24 20 -2 #rect
-Ds0 f20 @|RichDialogProcessStepIcon #fIcon
-Ds0 f21 actionDecl 'ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData out;
-' #txt
-Ds0 f21 actionTable 'out=in;
-' #txt
-Ds0 f21 actionCode 'if(in.selectedIRole!= null && in.selectedIRole.getName().trim().length()>0){
-	try
-	{
-		in.securityController.removeRoleFromUpdateDirectory(in.folderOnServer.path,in.selectedIRole.getName().trim());
-	}catch(Throwable t){
-		in.error.errorOccurred=true;
-		in.error.message=t.getMessage();
-		in.error.throwable=t;
-		panel.showError();
-	}
-}' #txt
-Ds0 f21 type ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData #txt
-Ds0 f21 782 156 36 24 20 -2 #rect
-Ds0 f21 @|RichDialogProcessStepIcon #fIcon
-Ds0 f23 type ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData #txt
-Ds0 f23 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<elementInfo>
-    <language>
-        <name>Checked?</name>
-        <nameStyle>8
-</nameStyle>
-    </language>
-</elementInfo>
-' #txt
-Ds0 f23 746 98 28 28 14 0 #rect
-Ds0 f23 @|AlternativeIcon #fIcon
-Ds0 f24 expr in #txt
-Ds0 f24 outCond panel.cudCheckBox.isSelected() #txt
-Ds0 f24 .xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<elementInfo>
-    <language>
-        <name>YES</name>
-        <nameStyle>3
-</nameStyle>
-    </language>
-</elementInfo>
-' #txt
-Ds0 f24 754 120 729 156 #arcP
-Ds0 f25 expr in #txt
-Ds0 f25 .xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<elementInfo>
-    <language>
-        <name>NO</name>
-        <nameStyle>2
-</nameStyle>
-    </language>
-</elementInfo>
-' #txt
-Ds0 f25 766 120 791 156 #arcP
-Ds0 f47 expr out #txt
-Ds0 f47 760 58 760 98 #arcP
-Ds0 f48 actionDecl 'ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData out;
-' #txt
-Ds0 f48 actionTable 'out=in;
-' #txt
-Ds0 f48 actionCode 'if(in.selectedIRole!= null && in.selectedIRole.getName().trim().length()>0){
-	try{
-		in.securityController.addRoleToDeleteDirectory(in.folderOnServer.path,in.selectedIRole.getName().trim());
-	}catch(Throwable t){
-		in.error.errorOccurred=true;
-		in.error.message=t.getMessage();
-		in.error.throwable=t;
-		panel.showError();
-	}
-}' #txt
-Ds0 f48 type ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData #txt
-Ds0 f48 854 156 36 24 20 -2 #rect
-Ds0 f48 @|RichDialogProcessStepIcon #fIcon
-Ds0 f49 actionDecl 'ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData out;
-' #txt
-Ds0 f49 actionTable 'out=in;
-' #txt
-Ds0 f49 actionCode 'if(in.selectedIRole!= null && in.selectedIRole.getName().trim().length()>0){
-	try{
-		in.securityController.removeRoleFromDeleteDirectory(in.folderOnServer.path,in.selectedIRole.getName().trim());
-	}catch(Throwable t){
-		in.error.errorOccurred=true;
-		in.error.message=t.getMessage();
-		in.error.throwable=t;
-		panel.showError();
-	}
-}' #txt
-Ds0 f49 type ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData #txt
-Ds0 f49 934 156 36 24 20 -2 #rect
-Ds0 f49 @|RichDialogProcessStepIcon #fIcon
-Ds0 f51 type ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData #txt
-Ds0 f51 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<elementInfo>
-    <language>
-        <name>Checked?</name>
-        <nameStyle>8
-</nameStyle>
-    </language>
-</elementInfo>
-' #txt
-Ds0 f51 898 98 28 28 14 0 #rect
-Ds0 f51 @|AlternativeIcon #fIcon
-Ds0 f52 expr in #txt
-Ds0 f52 outCond panel.cddCheckBox.isSelected() #txt
-Ds0 f52 .xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<elementInfo>
-    <language>
-        <name>YES</name>
-        <nameStyle>3
-</nameStyle>
-    </language>
-</elementInfo>
-' #txt
-Ds0 f52 906 120 881 156 #arcP
-Ds0 f53 expr in #txt
-Ds0 f53 .xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<elementInfo>
-    <language>
-        <name>NO</name>
-        <nameStyle>2
-</nameStyle>
-    </language>
-</elementInfo>
-' #txt
-Ds0 f53 918 120 943 156 #arcP
-Ds0 f56 expr out #txt
-Ds0 f56 912 58 912 98 #arcP
-Ds0 f57 actionDecl 'ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData out;
-' #txt
-Ds0 f57 actionTable 'out=in;
-' #txt
-Ds0 f57 actionCode 'if(in.selectedIRole!= null && in.selectedIRole.getName().trim().length()>0){
-	try{	
-		in.securityController.addRoleToEditFilesInDirectory(in.folderOnServer.path,in.selectedIRole.getName().trim());
-	}catch(Throwable t){
-		in.error.errorOccurred=true;
-		in.error.message=t.getMessage();
-		in.error.throwable=t;
-		panel.showError();
-	}
-}' #txt
-Ds0 f57 type ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData #txt
-Ds0 f57 1006 164 36 24 20 -2 #rect
-Ds0 f57 @|RichDialogProcessStepIcon #fIcon
-Ds0 f58 actionDecl 'ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData out;
-' #txt
-Ds0 f58 actionTable 'out=in;
-' #txt
-Ds0 f58 actionCode 'if(in.selectedIRole!= null && in.selectedIRole.getName().trim().length()>0){
-	try{
-		in.securityController.removeRoleFromEditFilesInDirectory(in.folderOnServer.path,in.selectedIRole.getName().trim());
-	}catch(Throwable t){
-		in.error.errorOccurred=true;
-		in.error.message=t.getMessage();
-		in.error.throwable=t;
-		panel.showError();
-	}
-}' #txt
-Ds0 f58 type ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData #txt
-Ds0 f58 1086 164 36 24 20 -2 #rect
-Ds0 f58 @|RichDialogProcessStepIcon #fIcon
-Ds0 f60 type ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData #txt
-Ds0 f60 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<elementInfo>
-    <language>
-        <name>Checked?</name>
-        <nameStyle>8
-</nameStyle>
-    </language>
-</elementInfo>
-' #txt
-Ds0 f60 1050 106 28 28 14 0 #rect
-Ds0 f60 @|AlternativeIcon #fIcon
-Ds0 f61 expr in #txt
-Ds0 f61 outCond panel.cwfCheckBox.isSelected() #txt
-Ds0 f61 .xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<elementInfo>
-    <language>
-        <name>YES</name>
-        <nameStyle>3
-</nameStyle>
-    </language>
-</elementInfo>
-' #txt
-Ds0 f61 1058 128 1033 164 #arcP
-Ds0 f62 expr in #txt
-Ds0 f62 .xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<elementInfo>
-    <language>
-        <name>NO</name>
-        <nameStyle>2
-</nameStyle>
-    </language>
-</elementInfo>
-' #txt
-Ds0 f62 1070 128 1095 164 #arcP
-Ds0 f65 expr out #txt
-Ds0 f65 1064 58 1064 106 #arcP
-Ds0 f66 actionDecl 'ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData out;
-' #txt
-Ds0 f66 actionTable 'out=in;
-' #txt
-Ds0 f66 actionCode 'if(in.selectedIRole!= null && in.selectedIRole.getName().trim().length()>0){
-	try{
-		in.securityController.addRoleToDeleteFilesInDirectory(in.folderOnServer.path,in.selectedIRole.getName().trim());
-	}catch(Throwable t){
-		in.error.errorOccurred=true;
-		in.error.message=t.getMessage();
-		in.error.throwable=t;
-		panel.showError();
-	}
-}' #txt
-Ds0 f66 type ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData #txt
-Ds0 f66 1134 172 36 24 20 -2 #rect
-Ds0 f66 @|RichDialogProcessStepIcon #fIcon
-Ds0 f67 actionDecl 'ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData out;
-' #txt
-Ds0 f67 actionTable 'out=in;
-' #txt
-Ds0 f67 actionCode 'if(in.selectedIRole!= null && in.selectedIRole.getName().trim().length()>0){
-	try{
-		in.securityController.removeRoleFromDeleteFilesInDirectory(in.folderOnServer.path,in.selectedIRole.getName().trim());
-	}catch(Throwable t){
-		in.error.errorOccurred=true;
-		in.error.message=t.getMessage();
-		in.error.throwable=t;
-		panel.showError();
-	}
-}' #txt
-Ds0 f67 type ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData #txt
-Ds0 f67 1214 172 36 24 20 -2 #rect
-Ds0 f67 @|RichDialogProcessStepIcon #fIcon
-Ds0 f69 type ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData #txt
-Ds0 f69 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<elementInfo>
-    <language>
-        <name>Checked?</name>
-        <nameStyle>8
-</nameStyle>
-    </language>
-</elementInfo>
-' #txt
-Ds0 f69 1178 114 28 28 14 0 #rect
-Ds0 f69 @|AlternativeIcon #fIcon
-Ds0 f70 expr in #txt
-Ds0 f70 outCond panel.cdfCheckBox.isSelected() #txt
-Ds0 f70 .xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<elementInfo>
-    <language>
-        <name>YES</name>
-        <nameStyle>3
-</nameStyle>
-    </language>
-</elementInfo>
-' #txt
-Ds0 f70 1186 136 1161 172 #arcP
-Ds0 f71 expr in #txt
-Ds0 f71 .xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<elementInfo>
-    <language>
-        <name>NO</name>
-        <nameStyle>2
-</nameStyle>
-    </language>
-</elementInfo>
-' #txt
-Ds0 f71 1198 136 1223 172 #arcP
-Ds0 f74 expr out #txt
-Ds0 f74 1192 58 1192 114 #arcP
 Ds0 f75 actionDecl 'ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData out;
 ' #txt
 Ds0 f75 actionTable 'out=in;
 ' #txt
-Ds0 f75 actionCode 'try{
+Ds0 f75 actionCode 'import ch.ivyteam.ivy.addons.filemanager.database.security.SecurityHandler;
+try{
 		if(in.#folderOnServer!=null && in.folderOnServer.path.trim().length()>0 && in.#selectedIRole!= null && in.selectedIRole.getName().trim().length()>0){	
-			panel.codCheckBox.setSelected(in.securityController.canRoleOpenDirectory(in.folderOnServer.path,in.selectedIRole.getName()));
-			panel.cudCheckBox.setSelected(in.securityController.canRoleUpdateDirectory(in.folderOnServer.path,in.selectedIRole.getName()));
-			panel.cddCheckBox.setSelected(in.securityController.canRoleDeleteDirectory(in.folderOnServer.path,in.selectedIRole.getName()));
-			panel.cwfCheckBox.setSelected(in.securityController.canRoleEditFilesInDirectory(in.folderOnServer.path,in.selectedIRole.getName()));
-			panel.cdfCheckBox.setSelected(in.securityController.canRoleDeleteFilesInDirectory(in.folderOnServer.path,in.selectedIRole.getName()));
+			String role = in.selectedIRole.getName();
+			boolean isAdminSelected = role.compareTo(in.config.adminRole)==0;
+			panel.adminCheckBox.selected= isAdminSelected || in.folderOnServer.cmrd.contains(role);
+			
+			panel.codCheckBox.selected= isAdminSelected || in.folderOnServer.cod.contains(role);
+			panel.cudCheckBox.selected= isAdminSelected || in.folderOnServer.cud.contains(role);
+			panel.cddCheckBox.selected= isAdminSelected ||in.folderOnServer.cdd.contains(role);
+			panel.cwfCheckBox.selected= isAdminSelected ||in.folderOnServer.cwf.contains(role);
+			panel.cdfCheckBox.selected= isAdminSelected ||in.folderOnServer.cdf.contains(role);
+			if(in.version>1){
+				panel.crdCheckBox.selected= isAdminSelected ||in.folderOnServer.crd.contains(role);
+				panel.ccdCheckBox.selected= isAdminSelected ||in.folderOnServer.ccd.contains(role);
+				panel.ctdCheckBox.selected= isAdminSelected ||in.folderOnServer.ctd.contains(role);
+				panel.cufCheckBox.selected= isAdminSelected ||in.folderOnServer.cuf.contains(role);
+				panel.ccfCheckBox.selected= isAdminSelected ||in.folderOnServer.ccf.contains(role);
+			}
+			
+			panel.actionsGridBagLayoutPane.enabled=!isAdminSelected;
 		}
 	}catch(Throwable t){
 		in.error.errorOccurred=true;
@@ -813,15 +351,13 @@ Ds0 f75 actionCode 'try{
 }
 panel._makeSelectedChekBoxesConsistent();' #txt
 Ds0 f75 type ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData #txt
-Ds0 f75 454 332 36 24 20 -2 #rect
+Ds0 f75 454 284 36 24 20 -2 #rect
 Ds0 f75 @|RichDialogProcessStepIcon #fIcon
 Ds0 f76 expr out #txt
-Ds0 f76 472 298 472 332 #arcP
+Ds0 f76 472 250 472 284 #arcP
 Ds0 f77 type ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData #txt
-Ds0 f77 462 398 20 20 13 0 #rect
+Ds0 f77 462 342 20 20 13 0 #rect
 Ds0 f77 @|RichDialogProcessEndIcon #fIcon
-Ds0 f78 expr out #txt
-Ds0 f78 472 356 472 398 #arcP
 Ds0 f79 guid 132D48B28BEB3352 #txt
 Ds0 f79 type ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData #txt
 Ds0 f79 actionDecl 'ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData out;
@@ -867,7 +403,7 @@ Ds0 f84 disableUIEvents false #txt
 Ds0 f84 inParameterDecl 'ch.ivyteam.ivy.richdialog.exec.RdMethodCallEvent methodEvent = event as ch.ivyteam.ivy.richdialog.exec.RdMethodCallEvent;
 <ch.ivyteam.ivy.addons.filemanager.FolderOnServer selectedFolderOnServer> param = methodEvent.getInputArguments();
 ' #txt
-Ds0 f84 inParameterMapAction 'out.folderOnServer=param.selectedFolderOnServer.clone();
+Ds0 f84 inParameterMapAction 'out.folderOnServer=param.selectedFolderOnServer;
 ' #txt
 Ds0 f84 outParameterDecl '<> result;
 ' #txt
@@ -890,15 +426,37 @@ Ds0 f85 actionCode 'import ch.ivyteam.ivy.security.IRole;
 
 if(in.isVisible){
 	panel.mapSelectedIRoleRights();
+	if(in.#selectedIRole!= null && in.selectedIRole.getName().trim().length()>0){	
+			
+			panel.actionsGridBagLayoutPane.enabled=in.selectedIRole.getName().compareTo(in.config.adminRole)!=0;
+	}
+	if(panel.adminCheckBox.selected) {
+		panel.codCheckBox.enabled=false;
+		panel.cudCheckBox.enabled=false;
+		panel.cddCheckBox.enabled=false;
+		panel.cudCheckBox.enabled=false;
+		panel.crdCheckBox.enabled=false;
+		panel.ccdCheckBox.enabled=false;
+		panel.ctdCheckBox.enabled=false;
+		panel.ccfCheckBox.enabled=false;
+		panel.cufCheckBox.enabled=false;
+		panel.cwfCheckBox.enabled=false;
+		panel.cdfCheckBox.enabled=false;
+		panel.codCheckBox.selected=true;
+		panel.cudCheckBox.selected=true;
+		panel.cddCheckBox.selected=true;
+		panel.cudCheckBox.selected=true;
+		panel.crdCheckBox.selected=true;
+		panel.ccdCheckBox.selected=true;
+		panel.ctdCheckBox.selected=true;
+		panel.ccfCheckBox.selected=true;
+		panel.cufCheckBox.selected=true;
+		panel.cwfCheckBox.selected=true;
+		panel.cdfCheckBox.selected=true;
+	}
 }
 
-/*
-if(panel.rolesTree.getSelectedTreeNode() != null && panel.rolesTree.getSelectedTreeNode().value != null && panel.rolesTree.getSelectedTreeNode().value instanceof IRole
-		&& in.#folderOnServer!=null && in.folderOnServer.id>0){
-	panel.actionsGridBagLayoutPane.enabled=true;
-}else{
-	panel.actionsGridBagLayoutPane.enabled=false;
-}*/' #txt
+' #txt
 Ds0 f85 type ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData #txt
 Ds0 f85 454 516 36 24 20 -2 #rect
 Ds0 f85 @|RichDialogProcessStepIcon #fIcon
@@ -917,11 +475,12 @@ Ds0 f89 actionCode 'import ch.ivyteam.ivy.security.IRole;
 try{
 	if(in.#selectedIRole==null)
 	{
-		in.selectedIRole = panel.rolesTree.getTreeData().value as IRole;
+		ivy.log.info(in.ivyRolesTree.getRoot().toString()+" "+in.ivyRolesTree.getRoot().getValue());
+		out.selectedIRole = in.ivyRolesTree.getRoot().getValue() as IRole;
 	}
 }catch(Throwable t)
 {
-		
+		ivy.log.error("Error in DirectorySecurity Manager, load(), cannot select the root IRole",t);
 }
 if(in.isVisible){
 	panel.mapSelectedIRoleRights();
@@ -929,12 +488,12 @@ if(in.isVisible){
 
 ' #txt
 Ds0 f89 type ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData #txt
-Ds0 f89 318 156 36 24 20 -2 #rect
+Ds0 f89 318 132 36 24 20 -2 #rect
 Ds0 f89 @|RichDialogProcessStepIcon #fIcon
 Ds0 f90 expr out #txt
-Ds0 f90 336 140 336 156 #arcP
+Ds0 f90 336 116 336 132 #arcP
 Ds0 f7 expr out #txt
-Ds0 f7 336 180 336 206 #arcP
+Ds0 f7 336 156 336 190 #arcP
 Ds0 f91 guid 132F87FC44BAF0F8 #txt
 Ds0 f91 type ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData #txt
 Ds0 f91 method _makeSelectedChekBoxesConsistent() #txt
@@ -946,87 +505,523 @@ Ds0 f91 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-Ds0 f91 894 310 20 20 -101 -31 #rect
+Ds0 f91 862 422 20 20 -101 -31 #rect
 Ds0 f91 @|RichDialogMethodStartIcon #fIcon
 Ds0 f92 actionDecl 'ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData out;
 ' #txt
 Ds0 f92 actionTable 'out=in;
 ' #txt
-Ds0 f92 actionCode 'panel.codCheckBox.enabled=true;
-panel.cudCheckBox.enabled=true;
-panel.cddCheckBox.enabled=true;
-panel.cwfCheckBox.enabled=true;
-panel.cdfCheckBox.enabled=true;
-if(panel.cudCheckBox.selected || panel.cddCheckBox.selected || panel.cwfCheckBox.selected || panel.cdfCheckBox.selected){
-	panel.codCheckBox.selected=true;
+Ds0 f92 actionCode 'if(panel.adminCheckBox.selected) {
 	panel.codCheckBox.enabled=false;
+	panel.cudCheckBox.enabled=false;
+	panel.cddCheckBox.enabled=false;
+	panel.cudCheckBox.enabled=false;
+	panel.crdCheckBox.enabled=false;
+	panel.ccdCheckBox.enabled=false;
+	panel.ctdCheckBox.enabled=false;
+	panel.ccfCheckBox.enabled=false;
+	panel.cufCheckBox.enabled=false;
+	panel.cwfCheckBox.enabled=false;
+	panel.cdfCheckBox.enabled=false;
+	panel.codCheckBox.selected=true;
+	panel.cudCheckBox.selected=true;
+	panel.cddCheckBox.selected=true;
+	panel.cudCheckBox.selected=true;
+	panel.crdCheckBox.selected=true;
+	panel.ccdCheckBox.selected=true;
+	panel.ctdCheckBox.selected=true;
+	panel.ccfCheckBox.selected=true;
+	panel.cufCheckBox.selected=true;
+	panel.cwfCheckBox.selected=true;
+	panel.cdfCheckBox.selected=true;
+} else {
 	
-	if(panel.cddCheckBox.selected){
-		panel.cudCheckBox.selected=true;
-		panel.cudCheckBox.enabled=false;
+	panel.codCheckBox.enabled=true;
+	panel.cudCheckBox.enabled=true;
+	panel.cddCheckBox.enabled=true;
+	panel.cudCheckBox.enabled=true;
+	panel.crdCheckBox.enabled=true;
+	panel.ccdCheckBox.enabled=true;
+	panel.ctdCheckBox.enabled=true;
+	panel.ccfCheckBox.enabled=true;
+	panel.cufCheckBox.enabled=true;
+	panel.cwfCheckBox.enabled=true;
+	panel.cdfCheckBox.enabled=true;
+	
+	if(panel.cwfCheckBox.selected){
+		panel.cufCheckBox.selected=true;
+		panel.cufCheckBox.enabled=false;
+		panel.ccfCheckBox.selected=true;
+		panel.ccfCheckBox.enabled=false;
+	}else if(in.version==1){
+		panel.cufCheckBox.selected=false;
+		panel.ccfCheckBox.selected=false;
 	}
-	
-	if(panel.cdfCheckBox.selected){
-		panel.cwfCheckBox.selected=true;
-		panel.cwfCheckBox.enabled=false;
+	if(panel.cudCheckBox.selected){
+		panel.ccdCheckBox.selected=true;
+		panel.ccdCheckBox.enabled=false;
+		panel.crdCheckBox.selected=true;
+		panel.crdCheckBox.enabled=false;
+	}else if(in.version==1){
+		panel.ccdCheckBox.selected=false;
+		panel.crdCheckBox.selected=false;
+	}
+	if(panel.cudCheckBox.selected || panel.crdCheckBox.selected || panel.ccdCheckBox.selected || panel.ctdCheckBox.selected || 
+			panel.cddCheckBox.selected || panel.cwfCheckBox.selected || panel.ccfCheckBox.selected || panel.cufCheckBox.selected || panel.cdfCheckBox.selected){
+		panel.codCheckBox.selected=true;
+		panel.codCheckBox.enabled=false;
+		
+		if(panel.cddCheckBox.selected){
+			panel.cudCheckBox.selected=true;
+			panel.cudCheckBox.enabled=false;
+			panel.ccdCheckBox.selected=true;
+			panel.ccdCheckBox.enabled=false;
+			panel.crdCheckBox.selected=true;
+			panel.crdCheckBox.enabled=false;
+		} else if(panel.ctdCheckBox.selected){
+			panel.crdCheckBox.selected=true;
+			panel.crdCheckBox.enabled=false;
+		}
+		
+		if(panel.cdfCheckBox.selected){
+			panel.cwfCheckBox.selected=true;
+			panel.cwfCheckBox.enabled=false;
+			panel.cufCheckBox.selected=true;
+			panel.cufCheckBox.enabled=false;
+			panel.ccfCheckBox.selected=true;
+			panel.ccfCheckBox.enabled=false;
+		}
 	}
 }
 ' #txt
 Ds0 f92 type ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData #txt
-Ds0 f92 886 364 36 24 20 -2 #rect
+Ds0 f92 854 476 36 24 20 -2 #rect
 Ds0 f92 @|RichDialogProcessStepIcon #fIcon
 Ds0 f93 expr out #txt
-Ds0 f93 904 330 904 364 #arcP
+Ds0 f93 872 442 872 476 #arcP
 Ds0 f94 type ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData #txt
-Ds0 f94 894 422 20 20 13 0 #rect
+Ds0 f94 862 534 20 20 13 0 #rect
 Ds0 f94 @|RichDialogProcessEndIcon #fIcon
 Ds0 f95 expr out #txt
-Ds0 f95 904 388 904 422 #arcP
-Ds0 f22 expr out #txt
-Ds0 f22 1232 196 922 376 #arcP
-Ds0 f22 1 1232 376 #addKink
-Ds0 f22 1 0.2194745945261758 0 0 #arcLabel
-Ds0 f26 expr out #txt
-Ds0 f26 1152 196 922 375 #arcP
-Ds0 f26 1 1152 360 #addKink
-Ds0 f26 1 0.14512914891334647 0 0 #arcLabel
-Ds0 f27 expr out #txt
-Ds0 f27 1104 188 922 373 #arcP
-Ds0 f27 1 1104 344 #addKink
-Ds0 f27 1 0.08621557907420534 0 0 #arcLabel
-Ds0 f50 expr out #txt
-Ds0 f50 1024 188 922 371 #arcP
-Ds0 f50 1 1024 344 #addKink
-Ds0 f50 0 0.8674388077280981 0 0 #arcLabel
-Ds0 f54 expr out #txt
-Ds0 f54 952 180 886 369 #arcP
-Ds0 f54 1 952 256 #addKink
-Ds0 f54 2 784 256 #addKink
-Ds0 f54 3 784 328 #addKink
-Ds0 f54 2 0.30734644957087953 0 0 #arcLabel
-Ds0 f55 expr out #txt
-Ds0 f55 872 180 886 372 #arcP
-Ds0 f55 1 872 232 #addKink
-Ds0 f55 2 768 232 #addKink
-Ds0 f55 3 768 344 #addKink
-Ds0 f55 2 0.6790115728840114 0 0 #arcLabel
-Ds0 f59 expr out #txt
-Ds0 f59 800 180 886 374 #arcP
-Ds0 f59 1 800 216 #addKink
-Ds0 f59 2 744 216 #addKink
-Ds0 f59 3 744 360 #addKink
-Ds0 f59 2 0.8621443368078544 0 0 #arcLabel
-Ds0 f63 expr out #txt
-Ds0 f63 720 180 886 376 #arcP
-Ds0 f63 1 720 376 #addKink
-Ds0 f63 0 0.9416918949060414 0 0 #arcLabel
->Proto Ds0 .rdData2UIAction 'panel.Label.text=IF(in.folderOnServer.name.trim().length()>0, in.folderOnServer.name,"");
+Ds0 f95 872 500 872 534 #arcP
+Ds0 f64 actionDecl 'ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData out;
+' #txt
+Ds0 f64 actionTable 'out=in;
+' #txt
+Ds0 f64 type ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData #txt
+Ds0 f64 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>get the 
+security version</name>
+        <nameStyle>25,7
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
+Ds0 f64 118 156 36 24 20 -2 #rect
+Ds0 f64 @|RichDialogProcessStepIcon #fIcon
+Ds0 f68 expr out #txt
+Ds0 f68 136 132 136 156 #arcP
+Ds0 f2 expr out #txt
+Ds0 f2 136 180 136 206 #arcP
+Ds0 f72 guid 13F1C25223748BF5 #txt
+Ds0 f72 type ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData #txt
+Ds0 f72 actionDecl 'ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData out;
+' #txt
+Ds0 f72 actionTable 'out=in;
+' #txt
+Ds0 f72 actionCode 'import ch.ivyteam.ivy.addons.filemanager.database.security.AbstractDirectorySecurityController;
+import ch.ivyteam.ivy.addons.filemanager.database.security.SecurityRightsEnum;
+import ch.ivyteam.ivy.richdialog.widgets.components.RCheckBox;
+import ch.ivyteam.ivy.richdialog.exec.RdEvent;
+
+Object source = event.getSource();
+out.rightType=-1;
+if(source instanceof RCheckBox){
+	RCheckBox chb = source as RCheckBox;
+	in.shouldAddRight=chb.isSelected();
+	if(chb.getName().compareTo(panel.adminCheckBox.getName())==0){
+		out.rightType = AbstractDirectorySecurityController.MANAGE_SECURITY_RIGHT;
+	} else if(chb.getName().compareTo(panel.codCheckBox.getName())==0){
+		out.rightType = AbstractDirectorySecurityController.OPEN_DIRECTORY_RIGHT;
+	} else if(chb.getName().compareTo(panel.cudCheckBox.getName())==0){
+		out.rightType = AbstractDirectorySecurityController.UPDATE_DIRECTORY_RIGHT;
+	} else if(chb.getName().compareTo(panel.crdCheckBox.getName())==0){
+		out.rightType = AbstractDirectorySecurityController.RENAME_DIRECTORY_RIGHT;
+	} else if(chb.getName().compareTo(panel.ccdCheckBox.getName())==0){
+		out.rightType = AbstractDirectorySecurityController.CREATE_DIRECTORY_RIGHT;
+	} else if(chb.getName().compareTo(panel.ctdCheckBox.getName())==0){
+		out.rightType = AbstractDirectorySecurityController.TRANSLATE_DIRECTORY_RIGHT;
+	} else if(chb.getName().compareTo(panel.cddCheckBox.getName())==0){
+		out.rightType = AbstractDirectorySecurityController.DELETE_DIRECTORY_RIGHT;
+	} else if(chb.getName().compareTo(panel.cwfCheckBox.getName())==0){
+		out.rightType = AbstractDirectorySecurityController.WRITE_FILES_RIGHT;
+	} else if(chb.getName().compareTo(panel.ccfCheckBox.getName())==0){
+		out.rightType = AbstractDirectorySecurityController.CREATE_FILES_RIGHT;
+	} else if(chb.getName().compareTo(panel.cufCheckBox.getName())==0){
+		out.rightType = AbstractDirectorySecurityController.UPDATE_FILES_RIGHT;
+	} else if(chb.getName().compareTo(panel.cdfCheckBox.getName())==0){
+		out.rightType = AbstractDirectorySecurityController.DELETE_FILES_RIGHT;
+	}
+}' #txt
+Ds0 f72 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>checkBoxStateChange</name>
+        <nameStyle>19,5,7
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
+Ds0 f72 758 30 20 20 -62 -28 #rect
+Ds0 f72 @|RichDialogProcessStartIcon #fIcon
+Ds0 f73 type ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData #txt
+Ds0 f73 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>right type null?</name>
+        <nameStyle>16,7
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
+Ds0 f73 754 74 28 28 14 0 #rect
+Ds0 f73 @|AlternativeIcon #fIcon
+Ds0 f96 expr out #txt
+Ds0 f96 768 50 768 74 #arcP
+Ds0 f97 actionDecl 'ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData out;
+' #txt
+Ds0 f97 actionTable 'out=in;
+' #txt
+Ds0 f97 actionCode 'out.folderOnServer = in.securityController.saveFolderOnServer(in.folderOnServer);
+' #txt
+Ds0 f97 type ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData #txt
+Ds0 f97 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>save the folderonserver</name>
+        <nameStyle>23,7
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
+Ds0 f97 750 252 36 24 20 -2 #rect
+Ds0 f97 @|RichDialogProcessStepIcon #fIcon
+Ds0 f99 type ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData #txt
+Ds0 f99 758 358 20 20 13 0 #rect
+Ds0 f99 @|RichDialogProcessEndIcon #fIcon
+Ds0 f101 expr in #txt
+Ds0 f101 754 88 758 368 #arcP
+Ds0 f101 1 704 88 #addKink
+Ds0 f101 2 704 368 #addKink
+Ds0 f101 1 0.3315683917577097 0 0 #arcLabel
+Ds0 f102 actionDecl 'ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData out;
+' #txt
+Ds0 f102 actionTable 'out=in;
+' #txt
+Ds0 f102 actionCode 'if(panel.adminCheckBox.selected) {
+	panel.codCheckBox.enabled=false;
+	panel.cudCheckBox.enabled=false;
+	panel.cddCheckBox.enabled=false;
+	panel.cudCheckBox.enabled=false;
+	panel.crdCheckBox.enabled=false;
+	panel.ccdCheckBox.enabled=false;
+	panel.ctdCheckBox.enabled=false;
+	panel.ccfCheckBox.enabled=false;
+	panel.cufCheckBox.enabled=false;
+	panel.cwfCheckBox.enabled=false;
+	panel.cdfCheckBox.enabled=false;
+	
+	panel.codCheckBox.selected=true;
+	panel.cudCheckBox.selected=true;
+	panel.cddCheckBox.selected=true;
+	panel.cudCheckBox.selected=true;
+	panel.crdCheckBox.selected=true;
+	panel.ccdCheckBox.selected=true;
+	panel.ctdCheckBox.selected=true;
+	panel.ccfCheckBox.selected=true;
+	panel.cufCheckBox.selected=true;
+	panel.cwfCheckBox.selected=true;
+	panel.cdfCheckBox.selected=true;
+	
+} else {
+
+	panel.codCheckBox.enabled=true;
+	panel.cudCheckBox.enabled=true;
+	panel.cddCheckBox.enabled=true;
+	panel.cudCheckBox.enabled=true;
+	panel.crdCheckBox.enabled=true;
+	panel.ccdCheckBox.enabled=true;
+	panel.ctdCheckBox.enabled=true;
+	panel.ccfCheckBox.enabled=true;
+	panel.cufCheckBox.enabled=true;
+	panel.cwfCheckBox.enabled=true;
+	panel.cdfCheckBox.enabled=true;
+	
+	if(panel.cwfCheckBox.selected){
+		panel.cufCheckBox.selected=true;
+		panel.cufCheckBox.enabled=false;
+		panel.ccfCheckBox.selected=true;
+		panel.ccfCheckBox.enabled=false;
+	}
+	if(panel.cudCheckBox.selected){
+		panel.ccdCheckBox.selected=true;
+		panel.ccdCheckBox.enabled=false;
+		panel.crdCheckBox.selected=true;
+		panel.crdCheckBox.enabled=false;
+	}
+			
+	if(panel.cudCheckBox.selected || panel.crdCheckBox.selected || panel.ccdCheckBox.selected || panel.ctdCheckBox.selected || 
+			panel.cddCheckBox.selected || panel.cwfCheckBox.selected || panel.ccfCheckBox.selected || panel.cufCheckBox.selected || panel.cdfCheckBox.selected){
+		panel.codCheckBox.selected=true;
+		panel.codCheckBox.enabled=false;
+			
+		if(panel.cddCheckBox.selected){
+			panel.cudCheckBox.selected=true;
+			panel.cudCheckBox.enabled=false;
+			panel.ccdCheckBox.selected=true;
+			panel.ccdCheckBox.enabled=false;
+			panel.crdCheckBox.selected=true;
+			panel.crdCheckBox.enabled=false;
+		} else if(panel.ctdCheckBox.selected){
+			panel.crdCheckBox.selected=true;
+			panel.crdCheckBox.enabled=false;
+		}
+		
+		if(panel.cdfCheckBox.selected){
+			panel.cwfCheckBox.selected=true;
+			panel.cwfCheckBox.enabled=false;
+			panel.cufCheckBox.selected=true;
+			panel.cufCheckBox.enabled=false;
+			panel.ccfCheckBox.selected=true;
+			panel.ccfCheckBox.enabled=false;
+		}
+	}
+}' #txt
+Ds0 f102 type ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData #txt
+Ds0 f102 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>set consistency by checkboxes selection</name>
+        <nameStyle>39,7
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
+Ds0 f102 750 132 36 24 20 -2 #rect
+Ds0 f102 @|RichDialogProcessStepIcon #fIcon
+Ds0 f104 expr in #txt
+Ds0 f104 outCond 'in.rightType !=-1' #txt
+Ds0 f104 .xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>NO</name>
+        <nameStyle>2,7
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
+Ds0 f104 768 102 768 132 #arcP
+Ds0 f100 actionDecl 'ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData out;
+' #txt
+Ds0 f100 actionTable 'out=in;
+' #txt
+Ds0 f100 actionCode 'String rolename = in.selectedIRole.getName();
+
+if(panel.codCheckBox.selected){
+	if(!in.folderOnServer.cod.contains(rolename)){
+		in.folderOnServer.cod.add(rolename);
+	}
+	if(panel.adminCheckBox.selected){
+		if(!in.folderOnServer.cmrd.contains(rolename)){
+			in.folderOnServer.cmrd.add(rolename);
+		}
+	}else{
+		in.folderOnServer.cmrd.remove(rolename);
+	}
+	if(panel.ctdCheckBox.selected){
+		if(!in.folderOnServer.ctd.contains(rolename)){
+			in.folderOnServer.ctd.add(rolename);
+		}
+	}else{
+		in.folderOnServer.ctd.remove(rolename);
+	}
+	if(panel.ccdCheckBox.selected){
+		if(!in.folderOnServer.ccd.contains(rolename)){
+			in.folderOnServer.ccd.add(rolename);
+		}
+	}else{
+		in.folderOnServer.ccd.remove(rolename);
+	}
+	if(panel.cudCheckBox.selected){
+		if(!in.folderOnServer.cud.contains(rolename)){
+			in.folderOnServer.cud.add(rolename);
+		}
+	}else{
+		in.folderOnServer.cud.remove(rolename);
+	}
+	if(panel.crdCheckBox.selected){
+		if(!in.folderOnServer.crd.contains(rolename)){
+			in.folderOnServer.crd.add(rolename);
+		}
+	}else{
+		in.folderOnServer.crd.remove(rolename);
+	}
+	if(panel.cddCheckBox.selected){
+		if(!in.folderOnServer.cdd.contains(rolename)){
+			in.folderOnServer.cdd.add(rolename);
+		}
+	}else{
+		in.folderOnServer.cdd.remove(rolename);
+	}
+	if(panel.cufCheckBox.selected){
+		if(!in.folderOnServer.cuf.contains(rolename)){
+			in.folderOnServer.cuf.add(rolename);
+		}
+	}else{
+		in.folderOnServer.cuf.remove(rolename);
+	}
+	if(panel.cwfCheckBox.selected){
+		if(!in.folderOnServer.cwf.contains(rolename)){
+			in.folderOnServer.cwf.add(rolename);
+		}
+	}else{
+		in.folderOnServer.cwf.remove(rolename);
+	}
+	if(panel.ccfCheckBox.selected){
+		if(!in.folderOnServer.ccf.contains(rolename)){
+			in.folderOnServer.ccf.add(rolename);
+		}
+	}else{
+		in.folderOnServer.ccf.remove(rolename);
+	}
+	if(panel.cdfCheckBox.selected){
+		if(!in.folderOnServer.cdf.contains(rolename)){
+			in.folderOnServer.cdf.add(rolename);
+		}
+	}else{
+		in.folderOnServer.cdf.remove(rolename);
+	}
+}else{
+	in.folderOnServer.cmrd.remove(rolename);
+	in.folderOnServer.cdd.remove(rolename);
+	in.folderOnServer.ctd.remove(rolename);
+	in.folderOnServer.crd.remove(rolename);
+	in.folderOnServer.ccd.remove(rolename);
+	in.folderOnServer.cud.remove(rolename);
+	in.folderOnServer.cod.remove(rolename);
+	in.folderOnServer.cuf.remove(rolename);
+	in.folderOnServer.cwf.remove(rolename);
+	in.folderOnServer.ccf.remove(rolename);
+	in.folderOnServer.cdf.remove(rolename);
+}' #txt
+Ds0 f100 type ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData #txt
+Ds0 f100 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>map folderonserver</name>
+        <nameStyle>18,7
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
+Ds0 f100 750 180 36 24 20 -2 #rect
+Ds0 f100 @|RichDialogProcessStepIcon #fIcon
+Ds0 f105 expr out #txt
+Ds0 f105 768 156 768 180 #arcP
+Ds0 f13 actionDecl 'ch.ivyteam.ivy.addons.filemanager.FolderOnServer folder;
+' #txt
+Ds0 f13 actionTable 'folder=in.folderOnServer;
+' #txt
+Ds0 f13 actionCode panel.fireFolderRightsChanged(folder); #txt
+Ds0 f13 type ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData #txt
+Ds0 f13 fireEvent folderRightsChanged(ch.ivyteam.ivy.addons.filemanager.FolderOnServer) #txt
+Ds0 f13 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>folderRightsChanged@SUBSC</name>
+        <nameStyle>25,7
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
+Ds0 f13 750 300 36 24 20 -2 #rect
+Ds0 f13 @|RichDialogFireEventIcon #fIcon
+Ds0 f14 expr out #txt
+Ds0 f14 768 276 768 300 #arcP
+Ds0 f15 expr out #txt
+Ds0 f15 768 324 768 358 #arcP
+Ds0 f16 expr out #txt
+Ds0 f16 768 204 768 252 #arcP
+Ds0 f17 guid 140A511139181B2D #txt
+Ds0 f17 type ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData #txt
+Ds0 f17 method start(ch.ivyteam.ivy.addons.filemanager.configuration.BasicConfigurationController) #txt
+Ds0 f17 disableUIEvents true #txt
+Ds0 f17 inParameterDecl 'ch.ivyteam.ivy.richdialog.exec.RdMethodCallEvent methodEvent = event as ch.ivyteam.ivy.richdialog.exec.RdMethodCallEvent;
+<ch.ivyteam.ivy.addons.filemanager.configuration.BasicConfigurationController configuration> param = methodEvent.getInputArguments();
+' #txt
+Ds0 f17 inParameterMapAction 'out.config=param.configuration;
+' #txt
+Ds0 f17 outParameterDecl '<> result;
+' #txt
+Ds0 f17 embeddedRdInitializations '* ' #txt
+Ds0 f17 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>start(BasicConfigurationController)</name>
+        <nameStyle>35,5,7
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
+Ds0 f17 30 286 20 20 13 0 #rect
+Ds0 f17 @|RichDialogInitStartIcon #fIcon
+Ds0 f18 expr out #txt
+Ds0 f18 40 286 118 120 #arcP
+Ds0 f18 1 40 120 #addKink
+Ds0 f18 0 0.7688011836477041 0 0 #arcLabel
+Ds0 f19 expr out #txt
+Ds0 f19 472 308 472 342 #arcP
+Ds0 f20 actionDecl 'ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData out;
+' #txt
+Ds0 f20 actionTable 'out=in;
+' #txt
+Ds0 f20 actionCode 'if(in.#selectedIRole!=null && in.selectedIRole.getName().compareTo(in.config.adminRole)==0){
+	panel.actionsGridBagLayoutPane.enabled=false;
+	}' #txt
+Ds0 f20 type ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData #txt
+Ds0 f20 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>if adminRole selected
+disable</name>
+        <nameStyle>22,7
+7,7
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
+Ds0 f20 454 140 36 24 20 -2 #rect
+Ds0 f20 @|RichDialogProcessStepIcon #fIcon
+Ds0 f21 expr out #txt
+Ds0 f21 472 116 472 140 #arcP
+Ds0 f12 expr out #txt
+Ds0 f12 472 164 472 182 #arcP
+>Proto Ds0 .rdData2UIAction 'panel.ccdCheckBox.visible=in.version>1;
+panel.ccfCheckBox.visible=in.version>1;
+panel.crdCheckBox.visible=in.version>1;
+panel.ctdCheckBox.visible=in.version>1;
+panel.cufCheckBox.visible=in.version>1;
+panel.Label.text=IF(in.folderOnServer.name.trim().length()>0, in.folderOnServer.name,"");
 panel.ManagedActionsLabel.text=IF(in.#selectedIRole!=null && in.selectedIRole.getName().length()>0, 
 ivy.cms.co("/ch/ivyteam/ivy/addons/filemanager/fileManagement/plainStrings/allowedActions")+" "+
 ivy.cms.co("/ch/ivyteam/ivy/addons/filemanager/fileManagement/plainStrings/forRole") +" "+in.selectedIRole.getName(),
 ivy.cms.co("/ch/ivyteam/ivy/addons/filemanager/fileManagement/plainStrings/allowedActions")
 );
 panel.rolesTree.treeData=in.ivyRolesTree;
+panel.updatedirectoryGridLayoutPane.visible=in.version>1;
+panel.filesGridLayoutPane.visible=in.version>1;
 ' #txt
 >Proto Ds0 .type ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData #txt
 >Proto Ds0 .processKind RICH_DIALOG #txt
@@ -1036,58 +1031,18 @@ Ds0 f4 mainOut f5 tail #connect
 Ds0 f5 head f3 mainIn #connect
 Ds0 f8 mainOut f10 tail #connect
 Ds0 f10 head f9 mainIn #connect
-Ds0 f9 mainOut f12 tail #connect
-Ds0 f12 head f11 mainIn #connect
-Ds0 f13 mainOut f29 tail #connect
-Ds0 f29 head f28 in #connect
-Ds0 f28 out f19 tail #connect
-Ds0 f19 head f18 mainIn #connect
-Ds0 f28 out f31 tail #connect
-Ds0 f31 head f30 mainIn #connect
 Ds0 f32 mainOut f34 tail #connect
 Ds0 f34 head f33 mainIn #connect
 Ds0 f0 mainOut f35 tail #connect
 Ds0 f35 head f33 mainIn #connect
-Ds0 f33 mainOut f2 tail #connect
-Ds0 f2 head f1 mainIn #connect
-Ds0 f18 mainOut f38 tail #connect
-Ds0 f38 head f37 mainIn #connect
-Ds0 f30 mainOut f39 tail #connect
-Ds0 f39 head f37 mainIn #connect
 Ds0 f40 mainOut f42 tail #connect
 Ds0 f42 head f41 mainIn #connect
 Ds0 f41 mainOut f44 tail #connect
 Ds0 f44 head f43 mainIn #connect
 Ds0 f43 mainOut f46 tail #connect
 Ds0 f46 head f45 mainIn #connect
-Ds0 f23 out f24 tail #connect
-Ds0 f24 head f20 mainIn #connect
-Ds0 f23 out f25 tail #connect
-Ds0 f25 head f21 mainIn #connect
-Ds0 f14 mainOut f47 tail #connect
-Ds0 f47 head f23 in #connect
-Ds0 f51 out f52 tail #connect
-Ds0 f52 head f48 mainIn #connect
-Ds0 f51 out f53 tail #connect
-Ds0 f53 head f49 mainIn #connect
-Ds0 f15 mainOut f56 tail #connect
-Ds0 f56 head f51 in #connect
-Ds0 f60 out f61 tail #connect
-Ds0 f61 head f57 mainIn #connect
-Ds0 f60 out f62 tail #connect
-Ds0 f62 head f58 mainIn #connect
-Ds0 f16 mainOut f65 tail #connect
-Ds0 f65 head f60 in #connect
-Ds0 f69 out f70 tail #connect
-Ds0 f70 head f66 mainIn #connect
-Ds0 f69 out f71 tail #connect
-Ds0 f71 head f67 mainIn #connect
-Ds0 f17 mainOut f74 tail #connect
-Ds0 f74 head f69 in #connect
 Ds0 f36 mainOut f76 tail #connect
 Ds0 f76 head f75 mainIn #connect
-Ds0 f75 mainOut f78 tail #connect
-Ds0 f78 head f77 mainIn #connect
 Ds0 f79 mainOut f81 tail #connect
 Ds0 f81 head f80 mainIn #connect
 Ds0 f80 mainOut f83 tail #connect
@@ -1104,19 +1059,29 @@ Ds0 f91 mainOut f93 tail #connect
 Ds0 f93 head f92 mainIn #connect
 Ds0 f92 mainOut f95 tail #connect
 Ds0 f95 head f94 mainIn #connect
-Ds0 f67 mainOut f22 tail #connect
-Ds0 f22 head f92 mainIn #connect
-Ds0 f66 mainOut f26 tail #connect
-Ds0 f26 head f92 mainIn #connect
-Ds0 f58 mainOut f27 tail #connect
-Ds0 f27 head f92 mainIn #connect
-Ds0 f57 mainOut f50 tail #connect
-Ds0 f50 head f92 mainIn #connect
-Ds0 f49 mainOut f54 tail #connect
-Ds0 f54 head f92 mainIn #connect
-Ds0 f48 mainOut f55 tail #connect
-Ds0 f55 head f92 mainIn #connect
-Ds0 f21 mainOut f59 tail #connect
-Ds0 f59 head f92 mainIn #connect
-Ds0 f20 mainOut f63 tail #connect
-Ds0 f63 head f92 mainIn #connect
+Ds0 f33 mainOut f68 tail #connect
+Ds0 f68 head f64 mainIn #connect
+Ds0 f64 mainOut f2 tail #connect
+Ds0 f2 head f1 mainIn #connect
+Ds0 f72 mainOut f96 tail #connect
+Ds0 f96 head f73 in #connect
+Ds0 f101 head f99 mainIn #connect
+Ds0 f73 out f104 tail #connect
+Ds0 f104 head f102 mainIn #connect
+Ds0 f73 out f101 tail #connect
+Ds0 f102 mainOut f105 tail #connect
+Ds0 f105 head f100 mainIn #connect
+Ds0 f97 mainOut f14 tail #connect
+Ds0 f14 head f13 mainIn #connect
+Ds0 f13 mainOut f15 tail #connect
+Ds0 f15 head f99 mainIn #connect
+Ds0 f100 mainOut f16 tail #connect
+Ds0 f16 head f97 mainIn #connect
+Ds0 f17 mainOut f18 tail #connect
+Ds0 f18 head f33 mainIn #connect
+Ds0 f75 mainOut f19 tail #connect
+Ds0 f19 head f77 mainIn #connect
+Ds0 f9 mainOut f21 tail #connect
+Ds0 f21 head f20 mainIn #connect
+Ds0 f20 mainOut f12 tail #connect
+Ds0 f12 head f11 mainIn #connect

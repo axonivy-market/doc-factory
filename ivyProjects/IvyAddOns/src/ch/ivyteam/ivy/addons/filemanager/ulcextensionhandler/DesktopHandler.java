@@ -1,9 +1,13 @@
 package ch.ivyteam.ivy.addons.filemanager.ulcextensionhandler;
 
 import java.io.File;
+import java.util.Observable;
 
 import ch.ivyteam.ivy.richdialog.exec.panel.IRichDialogPanel;
+import ch.ivyteam.ivy.scripting.objects.List;
 import ch.ivyteam.ivy.addons.filemanager.EmailContainer;
+import ch.ivyteam.ivy.addons.filemanager.observer.FileActionEnum;
+import ch.ivyteam.ivy.addons.filemanager.observer.ObservableFileAction;
 import ch.ivyteam.ivy.addons.util.RDCallbackMethodHandler;
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.xpertline.ulc.server.headless.ULCXDesktop;
@@ -21,7 +25,7 @@ import ch.xpertline.ulc.server.headless.ULCXDesktop;
  * - the methods are declared in the public rich dialog interface.
  *
  */
-public class DesktopHandler<T extends IRichDialogPanel> {
+public class DesktopHandler<T extends IRichDialogPanel> extends Observable{
 	/** The parent Rich Dialog where the DesktopHandler object is used*/
 	protected T parentRD;
 	/** The callback method from the parent Rich Dialog that is called in case of error.<br>
@@ -46,6 +50,7 @@ public class DesktopHandler<T extends IRichDialogPanel> {
 	
 	private long time;
 
+	
 
 	/**
 	 * Default constructor
@@ -247,6 +252,7 @@ public class DesktopHandler<T extends IRichDialogPanel> {
      * @param _file
      */
     public void print(java.io.File _file){
+    	this.notifyMyObservers(_file);
     	this.javaDesktop.print(_file);
     }
 
@@ -365,4 +371,42 @@ public class DesktopHandler<T extends IRichDialogPanel> {
 		}
 		this.clientFileSeparator = _clientFileSeparator;
 	}
+	
+	/**
+	 * Notify the observers.
+	 * 
+	 * @param arg
+	 *            the argument can be a java.io.File, <br>
+	 *            an array of String (String[]) containing the paths of the
+	 *            files that will be uploaded,<br>
+	 *            or a java.util.List<java.io.File> containing the files that
+	 *            will be uploaded.<br>
+	 *            If the arg parameter is null, then the empty method
+	 *            notifyObservers() will be used.
+	 */
+	private final void notifyMyObservers(Object arg) {
+		setChanged();
+		ObservableFileAction ofa = null;
+		if (arg != null) {
+			if (arg instanceof String) {
+				ofa = new ObservableFileAction(FileActionEnum.PRINT,
+						(String) arg);
+			} else if (arg instanceof String[]) {
+				ofa = new ObservableFileAction(FileActionEnum.PRINT,
+						(String[]) arg);
+			} else if (arg instanceof File) {
+				ofa = new ObservableFileAction(FileActionEnum.PRINT,
+						(File) arg);
+			} else if (arg instanceof List<?>) {
+				ofa = new ObservableFileAction(FileActionEnum.PRINT,
+						(List<?>) arg);
+			}
+		}
+		if (ofa == null) {
+			notifyObservers();
+		} else {
+			notifyObservers(ofa);
+		}
+	}
+	
 }

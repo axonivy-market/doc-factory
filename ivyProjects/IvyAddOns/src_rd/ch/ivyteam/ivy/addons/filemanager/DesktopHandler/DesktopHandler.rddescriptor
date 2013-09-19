@@ -482,6 +482,26 @@ else if the Ivy File of the documetnOnServer is setted then we print this File.<
             <nullPermitted>false</nullPermitted>
         </inputParameter>
     </method>
+    <method>
+        <name>getClientDesktopCommunicator</name>
+        <description></description>
+        <outputParameter>
+            <name>clientDesktopCommunicator</name>
+            <description></description>
+            <parameterType>ch.ivyteam.ivy.addons.filemanager.ulcextensionhandler.DesktopHandler</parameterType>
+            <nullPermitted>true</nullPermitted>
+        </outputParameter>
+    </method>
+    <method>
+        <name>setDocumentFilter</name>
+        <description>Set the documentFIlter object if some actions should be filtered.</description>
+        <inputParameter>
+            <name>documentFilter</name>
+            <description></description>
+            <parameterType>ch.ivyteam.ivy.addons.filemanager.database.security.DocumentFilter</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </inputParameter>
+    </method>
     <startMethod>
         <name>startVisible</name>
         <description>Start method with visibility boolean.&#xD;
@@ -610,6 +630,16 @@ This helps for a second problem: a user after system crash is not logged in. Its
             <name>documentsOnServerList</name>
             <description></description>
             <parameterType>List&lt;ch.ivyteam.ivy.addons.filemanager.DocumentOnServer&gt;</parameterType>
+            <nullPermitted>true</nullPermitted>
+        </attachment>
+    </firedEvent>
+    <firedEvent>
+        <name>documentActionRefused</name>
+        <description></description>
+        <attachment>
+            <name>documentFilterAnswer</name>
+            <description></description>
+            <parameterType>ch.ivyteam.ivy.addons.filemanager.database.security.DocumentFilterAnswer</parameterType>
             <nullPermitted>true</nullPermitted>
         </attachment>
     </firedEvent>

@@ -3,25 +3,21 @@
  */
 package ch.ivyteam.ivy.addons.filemanager.database.security;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
+import java.sql.DatabaseMetaData;
 import java.util.ArrayList;
-import java.util.Scanner;
-import java.util.concurrent.Callable;
-import ch.ivyteam.db.jdbc.DatabaseUtil;
+import java.util.HashSet;
+import java.util.Iterator;
+
+import ch.ivyteam.ivy.addons.filemanager.FileManagementHandlersFactory;
 import ch.ivyteam.ivy.addons.filemanager.FolderOnServer;
-import ch.ivyteam.ivy.addons.filemanager.LockedFolder;
-import ch.ivyteam.ivy.db.IExternalDatabase;
-import ch.ivyteam.ivy.db.IExternalDatabaseApplicationContext;
-import ch.ivyteam.ivy.db.IExternalDatabaseRuntimeConnection;
+import ch.ivyteam.ivy.addons.filemanager.configuration.BasicConfigurationController;
+import ch.ivyteam.ivy.addons.filemanager.database.AbstractFileSecurityHandler;
+import ch.ivyteam.ivy.addons.filemanager.database.PersistenceConnectionManagerFactory;
+import ch.ivyteam.ivy.addons.filemanager.database.persistence.IPersistenceConnectionManager;
+import ch.ivyteam.ivy.addons.filemanager.util.PathUtil;
 import ch.ivyteam.ivy.environment.EnvironmentNotAvailableException;
 import ch.ivyteam.ivy.environment.Ivy;
-import ch.ivyteam.ivy.persistence.PersistencyException;
 import ch.ivyteam.ivy.scripting.objects.List;
-import ch.ivyteam.ivy.scripting.objects.Record;
 import ch.ivyteam.ivy.security.IRole;
 import ch.ivyteam.ivy.security.IUser;
 
@@ -35,11 +31,38 @@ import ch.ivyteam.ivy.security.IUser;
 public class DirectorySecurityController extends AbstractDirectorySecurityController {
 
 	private String ivyDBConnectionName = null; // the user friendly connection name to Database in Ivy
-	
+
 	private String dirTableName = null; // the table that stores directories infos
-	private String dirTableNameSpace = null; // equals to dirTableName if schemaName == null, else schemaName.dirTableName
 	private String schemaName=null;
 	private String securityAdmin="";
+	private int secVersion=1;
+	private AbstractFileSecurityHandler fileSecurityHandler =null;
+	private BasicConfigurationController config;
+
+
+	/**
+	 * empty default constructor
+	 */
+	public DirectorySecurityController() {
+		this(null,null,null);
+	}
+	
+	/**
+	 * Constructor
+	 * @param _ivyDBConnectionName
+	 * @param _dirTableName
+	 * @param _schemaName
+	 * @param _securityAdmin
+	 */
+	public DirectorySecurityController(String _ivyDBConnectionName,
+			String _dirTableName, String _schemaName, String _securityAdmin) {
+		this.ivyDBConnectionName = _ivyDBConnectionName;
+		this.dirTableName = _dirTableName;
+		this.schemaName = _schemaName;
+		this.securityAdmin = _securityAdmin;
+		this.makeConfigurationObject();
+		this.computeSecVersion();
+	}
 
 	/**
 	 * Constructor
@@ -61,317 +84,207 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 			this.dirTableName=Ivy.var().get("xivy_addons_fileManager_directoriesTableName");
 		}else{
 			this.dirTableName=_dirTableName.trim();
-			this.dirTableNameSpace = this.dirTableName;
 		}
 		if(_schemaName!=null && _schemaName.trim().length()>0)
 		{//set the schema name variable
 
 			this.schemaName = _schemaName.trim();
-			//since the schema name is for now only use in PostGreSQL, 
-			//we escape the schema and table name to be able to support non lower case schemas
-			this.dirTableNameSpace="\""+this.schemaName+"\""+"."+"\""+this.dirTableName+"\"";
+
 		}else if(Ivy.var().get("xivy_addons_fileManager_databaseSchemaName")!=null && 
 				Ivy.var().get("xivy_addons_fileManager_databaseSchemaName").trim().length()>0)
 		{
 			this.schemaName=Ivy.var().get("xivy_addons_fileManager_databaseSchemaName").trim();
-			this.dirTableNameSpace="\""+this.schemaName+"\""+"."+"\""+this.dirTableName+"\"";
 		}
-		
+
 		try{
 			this.securityAdmin=Ivy.var().get("xivy_addons_fileManager_admin_roleName");
 		}catch(EnvironmentNotAvailableException ex)
 		{
 			Ivy.log().error("Error in constructor DirectorySecurityController. "+ex.getMessage(),ex);
 		}
+		this.makeConfigurationObject();
+		
+		this.computeSecVersion();
+	}
+
+	private void makeConfigurationObject() {
+		this.config = new BasicConfigurationController();
+		config.setStoreFilesInDB(true);
+		config.setIvyDBConnectionName(this.ivyDBConnectionName);
+		config.setActivateSecurity(true);
+		config.setDatabaseSchemaName(this.schemaName);
+		config.setDirectoriesTableName(this.dirTableName);
+		config.setAdminRole(this.securityAdmin);
+	}
+	
+	private void makeFileSecurityHandlerIfNull() throws Exception {
+		if(this.fileSecurityHandler==null){
+			this.fileSecurityHandler = FileManagementHandlersFactory.getFileSecurityHandlerInstance(config,this);
+		}
 	}
 
 	/**
-	 * used to get Ivy IExternalDatabase object with given user friendly name of Ivy Database configuration
-	 * @param _nameOfTheDatabaseConnection: the user friendly name of Ivy Database configuration
-	 * @return the IExternalDatabase object
-	 * @throws Exception 
-	 * @throws EnvironmentNotAvailableException 
+	 * Compute the internal security version. 
 	 */
-	private IExternalDatabase getDatabase() throws Exception{
-		if(database==null){
-			final String _nameOfTheDatabaseConnection = this.ivyDBConnectionName;
-			database = Ivy.session().getSecurityContext().executeAsSystemUser(new Callable<IExternalDatabase>(){
-				public IExternalDatabase call() throws Exception {
-					IExternalDatabaseApplicationContext context = (IExternalDatabaseApplicationContext)Ivy.wf().getApplication().getAdapter(IExternalDatabaseApplicationContext.class);
-					return context.getExternalDatabase(_nameOfTheDatabaseConnection);
+	private void computeSecVersion() {
+		IPersistenceConnectionManager<?> conManager=null;
+		try {
+			conManager = PersistenceConnectionManagerFactory.getPersistenceConnectionManagerInstance(this.config);
+			if(conManager.getConnection() instanceof java.sql.Connection){
+				DatabaseMetaData dbmd = ((java.sql.Connection) conManager.getConnection()).getMetaData();
+				if(dbmd.getColumns(null, this.schemaName, this.dirTableName, "ctd").next()){
+					this.secVersion=2;
 				}
-			});
+			}
+		} catch (Exception e) {
+			//Ivy.log().error("Error while computing the internal security version in computeSecVersion from DirectorySecurityController. "+e.getMessage(),e);
+		}finally {
+			if(conManager!=null ) {
+				try {
+					conManager.closeConnection();
+				} catch (Exception e) {
+					//Ivy.log().error("Could not release the connection Manager in computeSecVersion from DirectorySecurityController.", e);
+				}
+			}
 		}
-		return database;	
 	}
 	
 	/**
-	 * 
-	 * allows executing a prepareStatement and returns the resulting list of records.<br>
-	 * If the preparedStatement execution returns an empty Resultset then the list of records will be empty.<br>
-	 * The calling method is responsible to give back the preparedStatement with DatabaseUtil.close(stmt);
-	 * @param _stmt the PreparedStatement to execute
-	 * @return List<Record> list of records
-	 * @throws Exception
+	 * Returns the security version. This version is internally computed.
+	 * @return
 	 */
-	private static List<Record> executeStmt(PreparedStatement _stmt) throws Exception{
-
-		if(_stmt == null){
-			throw(new SQLException("Invalid PreparedStatement","PreparedStatement Null"));
-		}
-
-		ResultSet rst = null;
-		rst=_stmt.executeQuery();
-		List<Record> recordList= (List<Record>) List.create(Record.class);
-		try{
-			ResultSetMetaData rsmd = rst.getMetaData();
-			int numCols = rsmd.getColumnCount();
-			List<String> colNames= List.create(String.class);
-			for(int i=1; i<=numCols; i++){
-				colNames.add(rsmd.getColumnName(i));
-			}
-			while(rst.next()){
-				List<Object> values = List.create(numCols);
-				for(int i=1; i<=numCols; i++){
-					if(rst.getString(i)==null)
-						values.add(" ");
-					else values.add(rst.getString(i));
-				}
-				Record rec = new Record(colNames,values);
-				recordList.add(rec);
-			}
-		}catch(Exception ex){
-			Ivy.log().error(ex.getMessage(), ex);
-		}finally
-		{
-			DatabaseUtil.close(rst);
-		}
-		return recordList;
+	public int getSecurityVersion(){
+		return this.secVersion;
 	}
 
+	private SecurityRightsEnum getRight(int type) {
+		SecurityRightsEnum right = null;
+		switch(type){
+		case AbstractDirectorySecurityController.CREATE_DIRECTORY_RIGHT:
+			right =  SecurityRightsEnum.CREATE_DIRECTORY_RIGHT;
+			break;
+		case AbstractDirectorySecurityController.CREATE_FILES_RIGHT:
+			right = SecurityRightsEnum.CREATE_FILES_RIGHT;
+			break;
+		case AbstractDirectorySecurityController.DELETE_DIRECTORY_RIGHT:
+			right = SecurityRightsEnum.DELETE_DIRECTORY_RIGHT;
+			break;
+		case AbstractDirectorySecurityController.DELETE_FILES_RIGHT:
+			right = SecurityRightsEnum.DELETE_FILES_RIGHT;
+			break;
+		case AbstractDirectorySecurityController.MANAGE_SECURITY_RIGHT:
+			right = SecurityRightsEnum.MANAGE_SECURITY_RIGHT;
+			break;
+		case AbstractDirectorySecurityController.OPEN_DIRECTORY_RIGHT:
+			right = SecurityRightsEnum.OPEN_DIRECTORY_RIGHT;
+			break;
+		case AbstractDirectorySecurityController.RENAME_DIRECTORY_RIGHT:
+			right = SecurityRightsEnum.RENAME_DIRECTORY_RIGHT;
+			break;
+		case AbstractDirectorySecurityController.TRANSLATE_DIRECTORY_RIGHT:
+			right = SecurityRightsEnum.TRANSLATE_DIRECTORY_RIGHT;
+			break;
+		case AbstractDirectorySecurityController.UPDATE_DIRECTORY_RIGHT:
+			right = SecurityRightsEnum.UPDATE_DIRECTORY_RIGHT;
+			break;
+		case AbstractDirectorySecurityController.UPDATE_FILES_RIGHT:
+			right = SecurityRightsEnum.UPDATE_FILES_RIGHT;
+			break;
+		case AbstractDirectorySecurityController.WRITE_FILES_RIGHT:
+			right = SecurityRightsEnum.WRITE_FILES_RIGHT;
+			break;
+		default:
+			right = SecurityRightsEnum.OPEN_DIRECTORY_RIGHT;
+		}
+		return right;
+	}
+	
 	@Override
+	@Deprecated
 	public List<String> AddRightOnDirectoryForIvyRole(String path,
 			int rightType, String ivyRoleName) throws Exception {
-
-		path=formatPathForDirectoryWithoutLastSeparator(path);	
-		if(path==null || path.length()==0 || ivyRoleName==null || ivyRoleName.trim().length()==0)
-		{
-			throw  new IllegalArgumentException("One of the parameter is not set in method AddRightOnDirectoryForIvyRole(String path, " +
-					"int rightType, String ivyRoleName) in "+this.getClass());
-		}
-
-		if(rightType<1 || rightType>DELETE_FILES_RIGHT )
-		{
-			throw  new IllegalArgumentException("The right type parameter is not valid in method AddRightOnDirectoryForIvyRole(String path, " +
-					"int rightType, String ivyRoleName) in "+this.getClass());
-		}
-
-		ivyRoleName=ivyRoleName.trim();
-		List<String> roles = this.getRolesNamesAllowedForRightOnDirectory(path, rightType);
-		StringBuilder concat =new StringBuilder("");
-		if(roles.contains(ivyRoleName))
-		{// the role is already granted
-			return roles;
-		}else if(roles.isEmpty())
-		{//no roles
-			concat.append(ivyRoleName);
-		}else
-		{
-			for(String s:roles)
-			{
-				concat.append(s);
-				concat.append(",");
-			}
-			concat.append(ivyRoleName);
-		}
-		String query="";
-		IExternalDatabaseRuntimeConnection connection = null;
-		try {
-			connection = getDatabase().getAndLockConnection();
-			Connection jdbcConnection=connection.getDatabaseConnection();
-			PreparedStatement stmt = null;
-			try{			
-
-				if(rightType == DELETE_DIRECTORY_RIGHT)
-				{
-					query="UPDATE "+this.dirTableNameSpace+" SET cdd = ? WHERE dir_path = ?";
-				}else if( rightType == DELETE_FILES_RIGHT)
-				{
-					query="UPDATE "+this.dirTableNameSpace+" SET cdf = ? WHERE dir_path = ?";
-				}
-				else if( rightType == OPEN_DIRECTORY_RIGHT)
-				{
-					query="UPDATE "+this.dirTableNameSpace+" SET cod = ? WHERE dir_path = ?";
-				}
-				else if( rightType == UPDATE_DIRECTORY_RIGHT)
-				{
-					query="UPDATE "+this.dirTableNameSpace+" SET cud = ? WHERE dir_path = ?";
-				}
-				else if( rightType == WRITE_FILES_RIGHT)
-				{
-					query="UPDATE "+this.dirTableNameSpace+" SET cwf = ? WHERE dir_path = ?";
-				}else if( rightType == MANAGE_SECURITY_RIGHT)
-				{
-					query="UPDATE "+this.dirTableNameSpace+" SET cmdr = ? WHERE dir_path = ?";
-				}
-				stmt = jdbcConnection.prepareStatement(query);
-				stmt.setString(1, concat.toString());
-				stmt.setString(2, path);
-
-				stmt.executeUpdate();
-			}
-			finally{
-				DatabaseUtil.close(stmt);
-			}
-		} 
-		finally{
-			if(connection!=null ){
-				database.giveBackAndUnlockConnection(connection);
-			}
-		}
-		return  this.getRolesNamesAllowedForRightOnDirectory(path, rightType);
+		
+		makeFileSecurityHandlerIfNull();
+		return this.fileSecurityHandler.AddRightOnDirectoryForIvyRole(path, getRight(rightType), ivyRoleName);
+		
 	}
 
 	/* (non-Javadoc)
 	 * @see ch.ivyteam.ivy.addons.filemanager.database.security.AbstractFileSecurityController#addRoleToDeleteDirectory(java.lang.String, java.lang.String)
 	 */
 	@Override
+	@Deprecated
 	public boolean addRoleToDeleteDirectory(String path, String ivyRoleName)
-	throws Exception {
-		path=formatPathForDirectoryWithoutLastSeparator(path);
-		if(path==null || path.length()==0 || ivyRoleName==null || ivyRoleName.trim().length()==0)
-		{
-			return false;
-		}
-		//add automatically open and update
-		this.AddRightOnDirectoryForIvyRole(path, OPEN_DIRECTORY_RIGHT, ivyRoleName);
-		this.AddRightOnDirectoryForIvyRole(path, UPDATE_DIRECTORY_RIGHT, ivyRoleName);
-		//add the right
-		List<String> roles = this.AddRightOnDirectoryForIvyRole(path, DELETE_DIRECTORY_RIGHT, ivyRoleName);
-		//Check if success
-		if(roles.contains(ivyRoleName))
-		{
-			return true;
-		}else{
-			return false;
-		}
+			throws Exception {
+		makeFileSecurityHandlerIfNull();
+		this.fileSecurityHandler.AddRightOnDirectoryForIvyRole(path, SecurityRightsEnum.DELETE_DIRECTORY_RIGHT, ivyRoleName);
+		return true;
+		
 	}
 
 	/* (non-Javadoc)
 	 * @see ch.ivyteam.ivy.addons.filemanager.database.security.AbstractFileSecurityController#addRoleToDeleteFilesInDirectory(java.lang.String, java.lang.String)
 	 */
 	@Override
+	@Deprecated
 	public boolean addRoleToDeleteFilesInDirectory(String path,
 			String ivyRoleName) throws Exception {
-		path=formatPathForDirectoryWithoutLastSeparator(path);
-		if(path==null || path.length()==0 || ivyRoleName==null || ivyRoleName.trim().length()==0)
-		{
-			return false;
-		}
-		//add automatically open directory and write files
-		this.AddRightOnDirectoryForIvyRole(path, OPEN_DIRECTORY_RIGHT, ivyRoleName);
-		this.AddRightOnDirectoryForIvyRole(path, WRITE_FILES_RIGHT, ivyRoleName);
-		//add the right
-		List<String> roles = this.AddRightOnDirectoryForIvyRole(path, DELETE_FILES_RIGHT , ivyRoleName);
-		//Check if success
-		if(roles.contains(ivyRoleName))
-		{
-			return true;
-		}else{
-			return false;
-		}
+		makeFileSecurityHandlerIfNull();
+		this.fileSecurityHandler.AddRightOnDirectoryForIvyRole(path, SecurityRightsEnum.DELETE_FILES_RIGHT, ivyRoleName);
+		return true;
+		
 	}
 
 	/* (non-Javadoc)
 	 * @see ch.ivyteam.ivy.addons.filemanager.database.security.AbstractFileSecurityController#addRoleToEditFilesInDirectory(java.lang.String, java.lang.String)
 	 */
 	@Override
+	@Deprecated
 	public boolean addRoleToEditFilesInDirectory(String path, String ivyRoleName)
-	throws Exception {
-		path=formatPathForDirectoryWithoutLastSeparator(path);
-		if(path==null || path.length()==0 || ivyRoleName==null || ivyRoleName.trim().length()==0)
-		{
-			return false;
-		}
-		//add automatically open directory
-		this.AddRightOnDirectoryForIvyRole(path, OPEN_DIRECTORY_RIGHT, ivyRoleName);
-		//add the right
-		List<String> roles = this.AddRightOnDirectoryForIvyRole(path, WRITE_FILES_RIGHT , ivyRoleName);
-		//Check if success
-		if(roles.contains(ivyRoleName))
-		{
-			return true;
-		}else{
-			return false;
-		}
+			throws Exception {
+		makeFileSecurityHandlerIfNull();
+		this.fileSecurityHandler.AddRightOnDirectoryForIvyRole(path, SecurityRightsEnum.WRITE_FILES_RIGHT, ivyRoleName);
+		return true;
+		
 	}
 
 	/* (non-Javadoc)
 	 * @see ch.ivyteam.ivy.addons.filemanager.database.security.AbstractFileSecurityController#addRoleToManageDirectorySecurity(java.lang.String, java.lang.String)
 	 */
 	@Override
+	@Deprecated
 	public boolean addRoleToManageDirectorySecurity(String path,
 			String ivyRoleName) throws Exception {
-		path=formatPathForDirectoryWithoutLastSeparator(path);
-		if(path==null || path.length()==0 || ivyRoleName==null || ivyRoleName.trim().length()==0)
-		{
-			return false;
-		}
-		//add the right
-		List<String> roles = this.AddRightOnDirectoryForIvyRole(path, MANAGE_SECURITY_RIGHT , ivyRoleName);
-		//Check if success
-		if(roles.contains(ivyRoleName))
-		{
-			return true;
-		}else{
-			return false;
-		}
+		makeFileSecurityHandlerIfNull();
+		this.fileSecurityHandler.AddRightOnDirectoryForIvyRole(path, SecurityRightsEnum.MANAGE_SECURITY_RIGHT, ivyRoleName);
+		return true;
+		
 	}
 
 	/* (non-Javadoc)
 	 * @see ch.ivyteam.ivy.addons.filemanager.database.security.AbstractFileSecurityController#addRoleToOpenDirectory(java.lang.String, java.lang.String)
 	 */
 	@Override
+	@Deprecated
 	public boolean addRoleToOpenDirectory(String path, String ivyRoleName)
-	throws Exception {
-		path=formatPathForDirectoryWithoutLastSeparator(path);
-		if(path==null || path.length()==0 || ivyRoleName==null || ivyRoleName.trim().length()==0)
-		{
-			return false;
-		}
-		//add the right
-		List<String> roles = this.AddRightOnDirectoryForIvyRole(path, OPEN_DIRECTORY_RIGHT , ivyRoleName);
-		//Check if success
-		if(roles.contains(ivyRoleName))
-		{
-			return true;
-		}else{
-			return false;
-		}
+			throws Exception {
+		makeFileSecurityHandlerIfNull();
+		this.fileSecurityHandler.AddRightOnDirectoryForIvyRole(path, SecurityRightsEnum.OPEN_DIRECTORY_RIGHT, ivyRoleName);
+		return true;
+		
 	}
 
 	/* (non-Javadoc)
 	 * @see ch.ivyteam.ivy.addons.filemanager.database.security.AbstractFileSecurityController#addRoleToUpdateDirectory(java.lang.String, java.lang.String)
 	 */
 	@Override
+	@Deprecated
 	public boolean addRoleToUpdateDirectory(String path, String ivyRoleName)
-	throws Exception {
-		path=formatPathForDirectoryWithoutLastSeparator(path);
-		if(path==null || path.length()==0 || ivyRoleName==null || ivyRoleName.trim().length()==0)
-		{
-			return false;
-		}
-		//add automatically open directory
-		this.AddRightOnDirectoryForIvyRole(path, OPEN_DIRECTORY_RIGHT, ivyRoleName);
-		//add the right
-		List<String> roles = this.AddRightOnDirectoryForIvyRole(path, UPDATE_DIRECTORY_RIGHT , ivyRoleName);
-		//Check if success
-		if(roles.contains(ivyRoleName))
-		{
-			return true;
-		}else{
-			return false;
-		}
+			throws Exception {
+		makeFileSecurityHandlerIfNull();
+		this.fileSecurityHandler.AddRightOnDirectoryForIvyRole(path, SecurityRightsEnum.UPDATE_DIRECTORY_RIGHT, ivyRoleName);
+		return true;
+		
 	}
 
 	/* (non-Javadoc)
@@ -379,14 +292,14 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 	 */
 	@Override
 	public boolean canRoleDeleteDirectory(String path, String ivyRoleName)
-	throws Exception {
+			throws Exception {
 		path=formatPathForDirectoryWithoutLastSeparator(path);
 		if(path==null || path.length()==0 || ivyRoleName==null || ivyRoleName.trim().length()==0)
 		{
 			throw  new IllegalArgumentException("One of the parameter is not set in method canRoleDeleteDirectory(String path, String ivyRoleName) " +
 					" in "+this.getClass());
 		}
-		if(ivyRoleName.trim().equals(Ivy.var().get("xivy_addons_fileManager_admin_roleName")))
+		if(ivyRoleName.trim().equals(this.securityAdmin))
 		{
 			return true;
 		}
@@ -403,14 +316,14 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 	 */
 	@Override
 	public boolean canRoleDeleteFilesInDirectory(String path, String ivyRoleName)
-	throws Exception {
+			throws Exception {
 		path=formatPathForDirectoryWithoutLastSeparator(path);
 		if(path==null || path.length()==0 || ivyRoleName==null || ivyRoleName.trim().length()==0)
 		{
 			throw  new IllegalArgumentException("One of the parameter is not set in method canRoleDeleteFilesInDirectory(String path, String ivyRoleName) " +
 					" in "+this.getClass());
 		}
-		if(ivyRoleName.trim().equals(Ivy.var().get("xivy_addons_fileManager_admin_roleName")))
+		if(ivyRoleName.trim().equals(this.securityAdmin))
 		{
 			return true;
 		}
@@ -427,14 +340,14 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 	 */
 	@Override
 	public boolean canRoleEditFilesInDirectory(String path, String ivyRoleName)
-	throws Exception {
+			throws Exception {
 		path=formatPathForDirectoryWithoutLastSeparator(path);
 		if(path==null || path.length()==0 || ivyRoleName==null || ivyRoleName.trim().length()==0)
 		{
 			throw  new IllegalArgumentException("One of the parameter is not set in method canRoleEditFilesInDirectory(String path, String ivyRoleName) " +
 					" in "+this.getClass());
 		}
-		if(ivyRoleName.trim().equals(Ivy.var().get("xivy_addons_fileManager_admin_roleName")))
+		if(ivyRoleName.trim().equals(this.securityAdmin))
 		{
 			return true;
 		}
@@ -458,7 +371,7 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 			throw  new IllegalArgumentException("One of the parameter is not set in method canRoleManageDirectorySecurity(String path, String ivyRoleName) " +
 					" in "+this.getClass());
 		}
-		if(ivyRoleName.trim().equals(Ivy.var().get("xivy_addons_fileManager_admin_roleName")))
+		if(ivyRoleName.trim().equals(this.securityAdmin))
 		{
 			return true;
 		}
@@ -475,14 +388,14 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 	 */
 	@Override
 	public boolean canRoleOpenDirectory(String path, String ivyRoleName)
-	throws Exception {
+			throws Exception {
 		path=formatPathForDirectoryWithoutLastSeparator(path);
 		if(path==null || path.length()==0 || ivyRoleName==null || ivyRoleName.trim().length()==0)
 		{
 			throw  new IllegalArgumentException("One of the parameter is not set in method canRoleOpenDirectory(String path, String ivyRoleName) " +
 					" in "+this.getClass());
 		}
-		if(ivyRoleName.trim().equals(Ivy.var().get("xivy_addons_fileManager_admin_roleName")))
+		if(ivyRoleName.trim().equals(this.securityAdmin))
 		{
 			return true;
 		}
@@ -499,14 +412,14 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 	 */
 	@Override
 	public boolean canRoleUpdateDirectory(String path, String ivyRoleName)
-	throws Exception {
+			throws Exception {
 		path=formatPathForDirectoryWithoutLastSeparator(path);
 		if(path==null || path.length()==0 || ivyRoleName==null || ivyRoleName.trim().length()==0)
 		{
 			throw  new IllegalArgumentException("One of the parameter is not set in method canRoleUpdateDirectory(String path, String ivyRoleName) " +
 					" in "+this.getClass());
 		}
-		if(ivyRoleName.trim().equals(Ivy.var().get("xivy_addons_fileManager_admin_roleName")))
+		if(ivyRoleName.trim().equals(this.securityAdmin))
 		{
 			return true;
 		}
@@ -523,7 +436,7 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 	 */
 	@Override
 	public boolean canUserDeleteDirectory(String path, String ivyUserName)
-	throws Exception {
+			throws Exception {
 		path=formatPathForDirectoryWithoutLastSeparator(path);
 		if(path==null || path.length()==0 || ivyUserName==null || ivyUserName.trim().length()==0)
 		{
@@ -540,8 +453,7 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 
 		}
 		boolean found = false;
-		if(userRoles==null || userRoles.isEmpty())
-		{
+		if(userRoles==null || userRoles.isEmpty()) {
 			return false;
 		}
 		else{
@@ -565,7 +477,7 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 	 */
 	@Override
 	public boolean canUserDeleteFilesInDirectory(String path, String ivyUserName)
-	throws Exception {
+			throws Exception {
 		path=formatPathForDirectoryWithoutLastSeparator(path);
 		if(path==null || path.length()==0 || ivyUserName==null || ivyUserName.trim().length()==0)
 		{
@@ -607,7 +519,7 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 	 */
 	@Override
 	public boolean canUserEditFilesInDirectory(String path, String ivyUserName)
-	throws Exception {
+			throws Exception {
 		path=formatPathForDirectoryWithoutLastSeparator(path);
 		if(path==null || path.length()==0 || ivyUserName==null || ivyUserName.trim().length()==0)
 		{
@@ -691,7 +603,7 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 	 */
 	@Override
 	public boolean canUserOpenDirectory(String path, String ivyUserName)
-	throws Exception {
+			throws Exception {
 		path=formatPathForDirectoryWithoutLastSeparator(path);
 		if(path==null || path.length()==0 || ivyUserName==null || ivyUserName.trim().length()==0)
 		{
@@ -733,7 +645,7 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 	 */
 	@Override
 	public boolean canUserUpdateDirectory(String path, String ivyUserName)
-	throws Exception {
+			throws Exception {
 		path=formatPathForDirectoryWithoutLastSeparator(path);
 		if(path==null || path.length()==0 || ivyUserName==null || ivyUserName.trim().length()==0)
 		{
@@ -774,6 +686,7 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 	 * @see ch.ivyteam.ivy.addons.filemanager.database.security.AbstractFileSecurityController#createDirectory(java.lang.String, ch.ivyteam.ivy.scripting.objects.List, ch.ivyteam.ivy.scripting.objects.List, ch.ivyteam.ivy.scripting.objects.List, ch.ivyteam.ivy.scripting.objects.List, ch.ivyteam.ivy.scripting.objects.List, ch.ivyteam.ivy.scripting.objects.List)
 	 */
 	@Override
+	@Deprecated
 	public FolderOnServer createDirectory(String directoryPath,
 			List<String> grantedIvyRoleNamesToManageRights,
 			List<String> grantedIvyRoleNamesToDeleteDirectory,
@@ -787,228 +700,64 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 			throw  new IllegalArgumentException("The parameter 'directoryPath' is null in method createDirectory " +
 					" in "+this.getClass());
 		}
-
-
-		if(this.directoryExists(directoryPath))
-		{// if directory exists we just return the existing directory 
-			return getDirectoryWithPath(directoryPath);
-		}
-		//Check recursively if dir structure exists
-		String parent = getParentDirectoryPath(directoryPath);
-		if(parent.trim().length()>0 && !this.directoryExists(parent))
-		{
-			createDirectory(parent,
-					grantedIvyRoleNamesToManageRights,
-					grantedIvyRoleNamesToDeleteDirectory,
-					grantedIvyRoleNamesToUpdateDirectory,
-					grantedIvyRoleNamesToOpenDirectory,
-					grantedIvyRoleNamesToWriteFiles,
-					grantedIvyRoleNamesToDeleteFiles);
-		}
-		//Ivy.log().info("grantedIvyRoleNamesToDeleteDirectory 1 "+grantedIvyRoleNamesToDeleteDirectory);
-		grantedIvyRoleNamesToManageRights = ensureAdminRoleInList(grantedIvyRoleNamesToManageRights);
-		grantedIvyRoleNamesToDeleteDirectory = ensureAdminRoleInList(grantedIvyRoleNamesToDeleteDirectory);
-		grantedIvyRoleNamesToUpdateDirectory = ensureAdminRoleInList(grantedIvyRoleNamesToUpdateDirectory);
-		grantedIvyRoleNamesToOpenDirectory = ensureAdminRoleInList(grantedIvyRoleNamesToOpenDirectory);
-		grantedIvyRoleNamesToWriteFiles = ensureAdminRoleInList(grantedIvyRoleNamesToWriteFiles);
-		grantedIvyRoleNamesToDeleteFiles = ensureAdminRoleInList(grantedIvyRoleNamesToDeleteFiles);
-		//Ivy.log().info("grantedIvyRoleNamesToDeleteDirectory 2 "+grantedIvyRoleNamesToDeleteDirectory);
 		FolderOnServer fos = new FolderOnServer();
-		directoryPath=formatPathForDirectoryWithoutLastSeparator(directoryPath);
-		String dirName=getDirectoryNameFromPath(directoryPath);
-		String query="INSERT INTO "+this.dirTableNameSpace+" (dir_name, dir_path, creation_user_id, creation_date, creation_time, modification_user_id, modification_date," +
-		"modification_time,is_protected, cmdr, cod, cud, cdd, cwf, cdf) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-		java.util.Date d = new java.util.Date();
-		IExternalDatabaseRuntimeConnection connection=null;
-		try {
-			connection = getDatabase().getAndLockConnection();
-			Connection jdbcConnection=connection.getDatabaseConnection();
-			PreparedStatement stmt = null;
-			try{
-				stmt = jdbcConnection.prepareStatement(query);
-
-				fos.setName(dirName);
-				fos.setCdd(grantedIvyRoleNamesToDeleteDirectory);
-				fos.setCdf(grantedIvyRoleNamesToDeleteFiles);
-				fos.setCmrd(grantedIvyRoleNamesToManageRights);
-				fos.setCod(grantedIvyRoleNamesToOpenDirectory);
-				fos.setCud(grantedIvyRoleNamesToUpdateDirectory);
-				fos.setCwf(grantedIvyRoleNamesToWriteFiles);
-				fos.setIs_protected(true);
-				fos.setPath(directoryPath);
-				ensureRightsIntegrityInDirectory(fos);	
-
-				stmt.setString(1, dirName);
-				stmt.setString(2, directoryPath);
-				stmt.setString(3, Ivy.session().getSessionUserName());
-				stmt.setDate(4, new java.sql.Date(d.getTime()));
-				stmt.setTime(5, new java.sql.Time(d.getTime()));
-				stmt.setString(6, Ivy.session().getSessionUserName());
-				stmt.setDate(7, new java.sql.Date(d.getTime()));
-				stmt.setTime(8, new java.sql.Time(d.getTime()));
-				stmt.setInt(9, 1);
-				stmt.setString(10, returnStringFromList(fos.getCmrd()));
-				stmt.setString(11, returnStringFromList(fos.getCod()));
-				stmt.setString(12, returnStringFromList(fos.getCud()));
-				stmt.setString(13, returnStringFromList(fos.getCdd()));
-				stmt.setString(14, returnStringFromList(fos.getCwf()));
-				stmt.setString(15, returnStringFromList(fos.getCdf()));
-				stmt.executeUpdate();
-				fos=getDirectoryWithPath(directoryPath);
-				/*
-				 int i = stmt.executeUpdate();
-				 if(i>0)
-				{
-					fos.setId(i);
-				}
-				else
-				{
-					fos=getDirectoryWithPath(directoryPath);
-				}*/
-
-			}finally{
-				DatabaseUtil.close(stmt);
-			}
-		}finally{
-			if(connection!=null ){
-				database.giveBackAndUnlockConnection(connection);
-			}
+		fos.setPath(directoryPath);
+		fos.setCdd(grantedIvyRoleNamesToDeleteDirectory);
+		fos.setCdf(grantedIvyRoleNamesToDeleteFiles);
+		fos.setCmrd(grantedIvyRoleNamesToManageRights);
+		fos.setCod(grantedIvyRoleNamesToOpenDirectory);
+		fos.setCud(grantedIvyRoleNamesToUpdateDirectory);
+		fos.setCwf(grantedIvyRoleNamesToWriteFiles);
+		fos.setIs_protected(true);
+		fos.setPath(directoryPath);
+		if(this.fileSecurityHandler!=null) {
+			return this.fileSecurityHandler.createDirectory(fos);
 		}
-		return fos;
+		return null;
 	}
-
+	
+	@Override
+	@Deprecated
+	public FolderOnServer createDirectory(FolderOnServer fos) throws Exception {
+		makeFileSecurityHandlerIfNull();
+		return this.fileSecurityHandler.createDirectory(fos);
+	}
+	
+	@Override
+	@Deprecated
+	public FolderOnServer saveFolderOnServer(FolderOnServer fos) throws Exception {
+		makeFileSecurityHandlerIfNull();
+		return this.fileSecurityHandler.saveFolderOnServer(fos);
+	}
 
 	/* (non-Javadoc)
 	 * @see ch.ivyteam.ivy.addons.filemanager.database.security.AbstractFileSecurityController#createDirectoryWithParentSecurity(java.lang.String)
 	 */
 	@Override
+	@Deprecated
 	public FolderOnServer createDirectoryWithParentSecurity(String directoryPath)
-	throws Exception {
-		//Check incoming parameters
-		directoryPath = formatPathForDirectoryWithoutLastSeparator(directoryPath);
-		if(directoryPath == null || directoryPath.length()==0){
-			throw  new IllegalArgumentException("The parameter 'directoryPath' is null in method createDirectoryWithParentSecurity " +
-					" in "+this.getClass());
-		}
-
-		if(!directoryPath.contains("/"))
-		{//the directory has no parent, it is a root directory
-			return createIndestructibleDirectory(directoryPath, null);
-		}
-
-		String parentPath = getParentDirectoryPath(directoryPath);
-		if(!this.directoryExists(parentPath))
-		{//creates recursively all the missing parents
-			createDirectoryWithParentSecurity(parentPath);
-		}
-
-		FolderOnServer parent = getDirectoryWithPath(parentPath);
-
-
-		return this.createDirectory(directoryPath, parent.getCmrd(), parent.getCdd(), parent.getCud(), parent.getCod(),parent.getCwf(), parent.getCdf());
+			throws Exception {
+		makeFileSecurityHandlerIfNull();
+		return this.fileSecurityHandler.createDirectoryWithParentSecurity(directoryPath);
 	}
 
 	@Override
-	public FolderOnServer createOpenDirectory(String directoryPath)
-	throws Exception {
-		directoryPath = formatPathForDirectoryWithoutLastSeparator(directoryPath);
-		if(directoryPath == null || directoryPath.length()==0){
-			throw  new IllegalArgumentException("The parameter 'directoryPath' is null in method  createOpenDirectory " +
-					" in "+this.getClass());
-		}
-		String admin = getFileManagerAdminRoleName();
-
-		List<String> l1 = List.create(String.class);
-		List<String> l2 = List.create(String.class);
-		l1.add(admin);
-		l2.add("Everybody");
-
-
-		return this.createDirectory(directoryPath, l1, l2, l2, l2, l2, l2);
-	}
-
-	@Override
+	@Deprecated
 	public FolderOnServer createDirectoryWithUserAsRightsGuideline(
 			String directoryPath, String ivyUserName) throws Exception {
-
-		directoryPath = formatPathForDirectoryWithoutLastSeparator(directoryPath);
-		if(directoryPath == null || directoryPath.length()==0){
-			throw  new IllegalArgumentException("The parameter 'directoryPath' is null in method  createDirectoryWithUserAsRightsGuideline " +
-					" in "+this.getClass());
-		}
-		if(ivyUserName==null || ivyUserName.trim().length()==0)
-		{
-			throw  new IllegalArgumentException("The parameter 'ivyUserName' is null in method  createDirectoryWithUserAsRightsGuideline " +
-					" in "+this.getClass());
-		}
-		IUser user=null;
-		try{
-			user = Ivy.session().getSecurityContext().findUser(ivyUserName);
-		}catch (Exception ex){
-			throw  new Exception("Cannot get the Ivy User associated with the user name in method  createDirectoryWithUserAsRightsGuideline " +
-					" in "+this.getClass() +" "+ex.getMessage());
-		}
-		if(user==null)
-		{
-			throw  new IllegalArgumentException("The parameter 'ivyUserName' is invalid in method  createDirectoryWithUserAsRightsGuideline " +
-					" in "+this.getClass());
-		}
-		List<IRole> roles = List.create(IRole.class);
-		roles.addAll(user.getRoles());
-		List<String> roleNames = List.create(String.class);
-		for(IRole r:roles){
-			if(!r.getName().equalsIgnoreCase("Everybody"))
-			{
-				roleNames.add(r.getName());
-			}
-		}
-
-		return this.createIndestructibleDirectory(directoryPath, roleNames);
+		makeFileSecurityHandlerIfNull();
+		return this.fileSecurityHandler.createDirectoryWithUserAsRightsGuideline(directoryPath,ivyUserName);
 	}
 
 	/* (non-Javadoc)
 	 * @see ch.ivyteam.ivy.addons.filemanager.database.security.AbstractFileSecurityController#createIndestructibleDirectory(java.lang.String, ch.ivyteam.ivy.scripting.objects.List)
 	 */
 	@Override
+	@Deprecated
 	public FolderOnServer createIndestructibleDirectory(String directoryPath,
 			List<String> allowedIvyRoleNames) throws Exception {
-		//Check incoming parameters
-		directoryPath = formatPathForDirectoryWithoutLastSeparator(directoryPath);
-		if(directoryPath == null || directoryPath.length()==0){
-			throw  new IllegalArgumentException("The parameter 'directoryPath' is null in method createIndestructibleDirectory " +
-					" in "+this.getClass());
-		}
-		if(allowedIvyRoleNames==null || allowedIvyRoleNames.isEmpty())
-		{
-			allowedIvyRoleNames = List.create(String.class);
-			allowedIvyRoleNames.add("Everybody");
-		}
-		directoryPath = formatPathForDirectoryWithoutLastSeparator(directoryPath);
-
-		//Gives all the rights to the admin and file rights to the given allowedIvyRoleNames List
-		List<String> grantedIvyRoleNamesToManageRights = List.create(String.class);
-		List<String> grantedIvyRoleNamesToDeleteDirectory = List.create(String.class);
-		List<String> grantedIvyRoleNamesToUpdateDirectory = List.create(String.class);
-		List<String> grantedIvyRoleNamesToOpenDirectory = List.create(String.class);
-		List<String> grantedIvyRoleNamesToWriteFiles = List.create(String.class);
-		List<String> grantedIvyRoleNamesToDeleteFiles  = List.create(String.class);
-
-		String admin = getFileManagerAdminRoleName();
-		grantedIvyRoleNamesToManageRights.add(admin);
-		grantedIvyRoleNamesToDeleteDirectory.add(admin);
-		grantedIvyRoleNamesToUpdateDirectory.add(admin);
-		grantedIvyRoleNamesToOpenDirectory.addAll(allowedIvyRoleNames);
-		grantedIvyRoleNamesToWriteFiles.addAll(allowedIvyRoleNames);
-		grantedIvyRoleNamesToDeleteFiles.addAll(allowedIvyRoleNames);
-
-
-		return createDirectory(directoryPath,
-				grantedIvyRoleNamesToManageRights,
-				grantedIvyRoleNamesToDeleteDirectory,
-				grantedIvyRoleNamesToUpdateDirectory,
-				grantedIvyRoleNamesToOpenDirectory,
-				grantedIvyRoleNamesToWriteFiles,
-				grantedIvyRoleNamesToDeleteFiles);
+		makeFileSecurityHandlerIfNull();
+		return this.fileSecurityHandler.createIndestructibleDirectory(directoryPath,allowedIvyRoleNames);
 	}
 
 	/**
@@ -1040,7 +789,7 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 
 	/**
 	 * Ensure the rights integrity is followed in the different rights lists of the given FolderOnServer
-	 * @param _directory: the directory represented by a ch.ivyteam.ivy.addons.filemanager.FolderOnServer object
+	 * @param fos the directory represented by a ch.ivyteam.ivy.addons.filemanager.FolderOnServer object
 	 * @return the ch.ivyteam.ivy.addons.filemanager.FolderOnServer object which rights lists follow the following rules:
 	 * <ul>
 	 * <li> If a Role is in the admin list, then it will be present in all the other lists (it has all the rights),
@@ -1051,111 +800,183 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 	 * </ul>
 	 * If the given FolderOnServer was null, then null is returned.
 	 */
-	public FolderOnServer ensureRightsIntegrityInDirectory(FolderOnServer _directory)
-	{
-		if(_directory==null)
-		{
+	public FolderOnServer ensureRightsIntegrityInDirectory(FolderOnServer fos) {
+		if (fos == null) {
 			return null;
 		}
 		// check the roles lists objects
-		if(_directory.getCmrd()==null)
-		{
-			_directory.setCmrd(List.create(String.class));
+		if (fos.getCmrd() == null) {
+			fos.setCmrd(List.create(String.class));
 		}
-		if(_directory.getCod()==null)
-		{
-			_directory.setCod(List.create(String.class));
+		if (fos.getCod() == null) {
+			fos.setCod(List.create(String.class));
 		}
-		if(_directory.getCud()==null)
-		{
-			_directory.setCud(List.create(String.class));
+		if (fos.getCud() == null) {
+			fos.setCud(List.create(String.class));
 		}
-		if(_directory.getCdd()==null)
-		{
-			_directory.setCdd(List.create(String.class));
+		if (fos.getCdd() == null) {
+			fos.setCdd(List.create(String.class));
 		}
-		if(_directory.getCdf()==null)
-		{
-			_directory.setCdf(List.create(String.class));
+		if (fos.getCdf() == null) {
+			fos.setCdf(List.create(String.class));
 		}
-		if(_directory.getCwf()==null)
-		{
-			_directory.setCwf(List.create(String.class));
+		if (fos.getCwf() == null) {
+			fos.setCwf(List.create(String.class));
 		}
-
-		//CHeck integrity in the rights
-
-		//ensure admin is in it + administrators should have all the rights
-		_directory.setCmrd(ensureAdminRoleInList(_directory.getCmrd()));
-		for(String s: _directory.getCmrd())
-		{
-			if(!_directory.getCdd().contains(s))
-			{
-				_directory.getCdd().add(s);
-			}
-			if(!_directory.getCud().contains(s))
-			{
-				_directory.getCud().add(s);
-			}
-			if(!_directory.getCod().contains(s))
-			{
-				_directory.getCod().add(s);
-			}
-			if(!_directory.getCdf().contains(s))
-			{
-				_directory.getCdf().add(s);
-			}
-			if(!_directory.getCwf().contains(s))
-			{
-				_directory.getCwf().add(s);
-			}
+		if (fos.getCcd() == null) {
+			fos.setCcd(List.create(String.class));
+		}
+		if (fos.getCrd() == null) {
+			fos.setCrd(List.create(String.class));
+		}
+		if (fos.getCtd() == null) {
+			fos.setCtd(List.create(String.class));
+		}
+		if (fos.getCcf() == null) {
+			fos.setCcf(List.create(String.class));
+		}
+		if (fos.getCuf() == null) {
+			fos.setCuf(List.create(String.class));
 		}
 
-		//Who can delete a directory should be able to open and update it
-		for(String s: _directory.getCdd())
-		{
-			if(!_directory.getCod().contains(s))
-			{
-				_directory.getCod().add(s);
-			}
-			if(!_directory.getCud().contains(s))
-			{
-				_directory.getCud().add(s);
-			}
-		}
+		// CHeck integrity in the rights
 
-		//Who can update a directory should be able to open it
-		for(String s: _directory.getCud())
-		{
-			if(!_directory.getCod().contains(s))
-			{
-				_directory.getCod().add(s);
+		// ensure admin is in it + administrators should have all the rights
+		fos.setCmrd(ensureAdminRoleInList(fos.getCmrd()));
+		for (String s : fos.getCmrd()) {
+			if (!fos.getCdd().contains(s)) {
+				fos.getCdd().add(s);
+			}
+			if (!fos.getCud().contains(s)) {
+				fos.getCud().add(s);
+			}
+			if (!fos.getCod().contains(s)) {
+				fos.getCod().add(s);
+			}
+			if (!fos.getCdf().contains(s)) {
+				fos.getCdf().add(s);
+			}
+			if (!fos.getCwf().contains(s)) {
+				fos.getCwf().add(s);
+			}
+			if (!fos.getCcd().contains(s)) {
+				fos.getCcd().add(s);
+			}
+			if (!fos.getCrd().contains(s)) {
+				fos.getCrd().add(s);
+			}
+			if (!fos.getCtd().contains(s)) {
+				fos.getCtd().add(s);
+			}
+			if (!fos.getCcf().contains(s)) {
+				fos.getCcf().add(s);
+			}
+			if (!fos.getCuf().contains(s)) {
+				fos.getCuf().add(s);
 			}
 		}
 
-		//Who can delete a file should be able to update it and to open the directory
-		for(String s: _directory.getCdf())
-		{
-			if(!_directory.getCod().contains(s))
-			{
-				_directory.getCod().add(s);
+		// Who can delete a directory should be able to open and update it, and if old security version rename it
+		for (String s : fos.getCdd()) {
+			if (!fos.getCod().contains(s)) {
+				fos.getCod().add(s);
 			}
-			if(!_directory.getCwf().contains(s))
-			{
-				_directory.getCwf().add(s);
+			if (!fos.getCud().contains(s)) {
+				fos.getCud().add(s);
+			}
+			if(this.secVersion==1) {
+				if (!fos.getCrd().contains(s)) {
+					fos.getCrd().add(s);
+				}
+			}
+		}
+		
+		// Who can translate a directory should be able to open, rename it
+		for (String s : fos.getCtd()) {
+			if (!fos.getCod().contains(s)) {
+				fos.getCod().add(s);
+			}
+			if (!fos.getCrd().contains(s)) {
+				fos.getCrd().add(s);
 			}
 		}
 
-		//Who can write a file should be able to open the directory
-		for(String s: _directory.getCwf())
-		{
-			if(!_directory.getCod().contains(s))
-			{
-				_directory.getCod().add(s);
+		// Who can rename a directory should be able to open
+		for (String s : fos.getCrd()) {
+			if (!fos.getCod().contains(s)) {
+				fos.getCod().add(s);
 			}
 		}
 
-		return _directory;
+		// Who can create a directory should be able to open and update it
+		for (String s : fos.getCcd()) {
+			if (!fos.getCod().contains(s)) {
+				fos.getCod().add(s);
+			}
+		}
+
+		// Who can update a directory should be able to open it and if old security version rename and create it
+		for (String s : fos.getCud()) {
+			if (!fos.getCod().contains(s)) {
+				fos.getCod().add(s);
+			}
+			if(this.secVersion==1) {
+				if (!fos.getCrd().contains(s)) {
+					fos.getCrd().add(s);
+				}
+				if (!fos.getCcd().contains(s)) {
+					fos.getCcd().add(s);
+				}
+			}
+		}
+		
+		// Who can create a file should be able to open the directory
+		for (String s : fos.getCcf()) {
+			if (!fos.getCod().contains(s)) {
+				fos.getCod().add(s);
+			}
+		}
+		
+		// Who can create a file should be able to open the directory
+		for (String s : fos.getCuf()) {
+			if (!fos.getCod().contains(s)) {
+				fos.getCod().add(s);
+			}
+		}
+
+		// Who can delete a file should be able to update it and to open the
+		// directory
+		for (String s : fos.getCdf()) {
+			if (!fos.getCod().contains(s)) {
+				fos.getCod().add(s);
+			}
+			if (!fos.getCwf().contains(s)) {
+				fos.getCwf().add(s);
+			}
+			if (!fos.getCcf().contains(s)) {
+				fos.getCcf().add(s);
+			}
+			if (!fos.getCuf().contains(s)) {
+				fos.getCuf().add(s);
+			}
+		}
+
+		// Who can write a file should be able to open the directory and if old security version rename and create it
+		for (String s : fos.getCwf()) {
+			if (!fos.getCod().contains(s)) {
+				fos.getCod().add(s);
+			}
+			if(this.secVersion==1) {
+				if (!fos.getCuf().contains(s)) {
+					fos.getCuf().add(s);
+				}
+				if (!fos.getCcf().contains(s)) {
+					fos.getCcf().add(s);
+				}
+			}
+		}
+
+		return fos;
 	}
 
 	/* (non-Javadoc)
@@ -1165,35 +986,23 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 	public String getFileManagerAdminRoleName() throws Exception {
 		return this.securityAdmin;
 	}
-
-	@Override
-	public boolean isUserFileManagerAdmin(String ivyUserName) throws Exception {
-		if(ivyUserName == null || ivyUserName.trim().length()==0)
-		{
-			throw  new IllegalArgumentException("The parameter is not set in method isUserFileManagerAdmin(String ivyUserName) " +
-					" in "+this.getClass());
+	
+	public void setFileManagerAdminRoleName(String adminRole) {
+		if(adminRole !=null && !adminRole.isEmpty()) {
+			this.securityAdmin = adminRole;
 		}
-		if(this.securityAdmin==null || this.securityAdmin.length()==0)
-		{
+	}
+
+	public boolean containsAdminRole(List<IRole> userRoles) {
+		if (this.securityAdmin == null || this.securityAdmin.length() == 0) {
 			return false;
-		}
-		List <IRole> userRoles = List.create(IRole.class);
-		try{
-			userRoles.addAll(Ivy.wf().getSecurityContext().findUser(ivyUserName).getAllRoles());
-		}catch(Throwable t){
-
 		}
 		boolean found = false;
-		if(userRoles==null || userRoles.isEmpty())
-		{
-			Ivy.log().info("isUserFileManagerAdmin user roles empty");
+		if (userRoles == null || userRoles.isEmpty()) {
 			return false;
-		}
-		else{
-			for(IRole r : userRoles)
-			{
-				if(r.getName().equals(this.securityAdmin))
-				{
+		} else {
+			for (IRole r : userRoles) {
+				if (r.getName().equals(this.securityAdmin)) {
 					found = true;
 					break;
 				}
@@ -1201,276 +1010,132 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 		}
 		return found;
 	}
+	
+	@Override
+	public boolean isUserFileManagerAdmin(String ivyUserName) throws Exception {
+		if (ivyUserName == null || ivyUserName.trim().length() == 0) {
+			throw new IllegalArgumentException(
+					"The parameter is not set in method isUserFileManagerAdmin(String ivyUserName) "
+							+ " in " + this.getClass());
+		}
+		List<IRole> userRoles = List.create(IRole.class);
+		try {
+			userRoles.addAll(Ivy.wf().getSecurityContext()
+					.findUser(ivyUserName).getAllRoles());
+		} catch (Throwable t) {
+		}
+		return containsAdminRole(userRoles);
+	}
 
 	/* (non-Javadoc)
 	 * @see ch.ivyteam.ivy.addons.filemanager.database.security.AbstractFileSecurityController#removeRightOnDirectory(java.lang.String, int, ch.ivyteam.ivy.scripting.objects.List)
 	 */
 	@Override
+	@Deprecated
 	public List<String> removeRightOnDirectory(String path, int rightType,
 			List<String> disallowedIvyRoleNames) throws Exception {
-		path=formatPathForDirectoryWithoutLastSeparator(path);	
-		if(path==null || path.length()==0 || disallowedIvyRoleNames==null || disallowedIvyRoleNames.size()==0)
-		{
-			throw  new IllegalArgumentException("One of the parameter is not set in method removeRightOnDirectory(String path, " +
-					"int rightType, List<String> disallowedIvyRoleNames) in "+this.getClass());
-		}
-
-		if(rightType<1 || rightType>DELETE_FILES_RIGHT )
-		{
-			throw  new IllegalArgumentException("The right type parameter is not valid in method removeRightOnDirectory(String path, " +
-					"int rightType, List<String> disallowedIvyRoleNames) in "+this.getClass());
-		}
-
-
-		List<String> roles = this.getRolesNamesAllowedForRightOnDirectory(path, rightType);
-		StringBuilder concat =new StringBuilder("");
-		if(roles.size()==0)
-		{
-			return roles;
-		}
-		roles.removeAll(disallowedIvyRoleNames);
-		if(!roles.isEmpty())
-		{
-			for(int i=0; i<roles.size()-1; i++)
-			{
-				concat.append(roles.get(i));
-				concat.append(",");
-			}
-			concat.append(roles.get(roles.size()-1));
-		}
-
-		String query="";
-		IExternalDatabaseRuntimeConnection connection = null;
-		try {
-			connection = getDatabase().getAndLockConnection();
-			Connection jdbcConnection=connection.getDatabaseConnection();
-			PreparedStatement stmt = null;
-			try{			
-				if(rightType == DELETE_DIRECTORY_RIGHT)
-				{
-					query="UPDATE "+this.dirTableNameSpace+" SET cdd = ? WHERE dir_path = ?";
-				}else if( rightType == DELETE_FILES_RIGHT)
-				{
-					query="UPDATE "+this.dirTableNameSpace+" SET cdf = ? WHERE dir_path = ?";
-				}
-				else if( rightType == OPEN_DIRECTORY_RIGHT)
-				{
-					query="UPDATE "+this.dirTableNameSpace+" SET cod = ? WHERE dir_path = ?";
-				}
-				else if( rightType == UPDATE_DIRECTORY_RIGHT)
-				{
-					query="UPDATE "+this.dirTableNameSpace+" SET cud = ? WHERE dir_path = ?";
-				}
-				else if( rightType == WRITE_FILES_RIGHT)
-				{
-					query="UPDATE "+this.dirTableNameSpace+" SET cwf = ? WHERE dir_path = ?";
-				}else if( rightType == MANAGE_SECURITY_RIGHT)
-				{
-					query="UPDATE "+this.dirTableNameSpace+" SET cmdr = ? WHERE dir_path = ?";
-				}
-				stmt = jdbcConnection.prepareStatement(query);
-				stmt.setString(1, concat.toString());
-				stmt.setString(2, path);
-				stmt.executeUpdate();
-			}
-			finally{
-				DatabaseUtil.close(stmt);
-			}
-		} 
-		finally{
-			if(connection!=null ){
-				database.giveBackAndUnlockConnection(connection);
-			}
-		}
-		return  this.getRolesNamesAllowedForRightOnDirectory(path, rightType);
+		makeFileSecurityHandlerIfNull();
+		return this.fileSecurityHandler.removeRightOnDirectory(path, this.getRight(rightType),disallowedIvyRoleNames);
 	}
 
 	/* (non-Javadoc)
 	 * @see ch.ivyteam.ivy.addons.filemanager.database.security.AbstractFileSecurityController#removeRoleFromDeleteDirectory(java.lang.String, java.lang.String)
 	 */
 	@Override
+	@Deprecated
 	public boolean removeRoleFromDeleteDirectory(String path, String ivyRoleName)
-	throws Exception {
-		path=formatPathForDirectoryWithoutLastSeparator(path);	
-		if(path==null || path.length()==0 || ivyRoleName==null || ivyRoleName.trim().length()==0)
-		{
-			throw  new IllegalArgumentException("One of the parameter is not set in method removeRightOnDirectory(String path, " +
-					"int rightType, List<String> disallowedIvyRoleNames) in "+this.getClass());
-		}
-		List<String> roles = List.create(String.class);
-		roles.add(ivyRoleName);
-		List<String> result = this.removeRightOnDirectory(path, DELETE_DIRECTORY_RIGHT, roles);
-
-
-
-		return !result.contains(ivyRoleName);
+			throws Exception {
+		makeFileSecurityHandlerIfNull();
+		List<String> l = List.create(String.class);
+		l.add(ivyRoleName);
+		List<String> l1 = this.fileSecurityHandler.removeRightOnDirectory(path, SecurityRightsEnum.DELETE_DIRECTORY_RIGHT,l);
+		return !l1.contains(ivyRoleName);
 	}
 
 	/* (non-Javadoc)
 	 * @see ch.ivyteam.ivy.addons.filemanager.database.security.AbstractFileSecurityController#removeRoleFromDeleteFilesInDirectory(java.lang.String, java.lang.String)
 	 */
 	@Override
+	@Deprecated
 	public boolean removeRoleFromDeleteFilesInDirectory(String path,
 			String ivyRoleName) throws Exception {
-		path=formatPathForDirectoryWithoutLastSeparator(path);	
-		if(path==null || path.length()==0 || ivyRoleName==null || ivyRoleName.trim().length()==0)
-		{
-			throw  new IllegalArgumentException("One of the parameter is not set in method removeRightOnDirectory(String path, " +
-					"int rightType, List<String> disallowedIvyRoleNames) in "+this.getClass());
-		}
-		List<String> roles = List.create(String.class);
-		roles.add(ivyRoleName);
-		List<String> result = this.removeRightOnDirectory(path, DELETE_FILES_RIGHT, roles);
-
-		return !result.contains(ivyRoleName);
+		makeFileSecurityHandlerIfNull();
+		List<String> l = List.create(String.class);
+		l.add(ivyRoleName);
+		List<String> l1 = this.fileSecurityHandler.removeRightOnDirectory(path, SecurityRightsEnum.DELETE_FILES_RIGHT,l);
+		return !l1.contains(ivyRoleName);
 	}
 
 	/* (non-Javadoc)
 	 * @see ch.ivyteam.ivy.addons.filemanager.database.security.AbstractFileSecurityController#removeRoleFromEditFilesInDirectory(java.lang.String, java.lang.String)
 	 */
 	@Override
+	@Deprecated
 	public boolean removeRoleFromEditFilesInDirectory(String path,
 			String ivyRoleName) throws Exception {
-		path=formatPathForDirectoryWithoutLastSeparator(path);	
-		if(path==null || path.length()==0 || ivyRoleName==null || ivyRoleName.trim().length()==0)
-		{
-			throw  new IllegalArgumentException("One of the parameter is not set in method removeRightOnDirectory(String path, " +
-					"int rightType, List<String> disallowedIvyRoleNames) in "+this.getClass());
-		}
-		List<String> roles = List.create(String.class);
-		roles.add(ivyRoleName);
-		List<String> result = this.removeRightOnDirectory(path, WRITE_FILES_RIGHT, roles);
-
-		return !result.contains(ivyRoleName);
+		makeFileSecurityHandlerIfNull();
+		List<String> l = List.create(String.class);
+		l.add(ivyRoleName);
+		List<String> l1 = this.fileSecurityHandler.removeRightOnDirectory(path, SecurityRightsEnum.WRITE_FILES_RIGHT,l);
+		return !l1.contains(ivyRoleName);
 	}
 
 	/* (non-Javadoc)
 	 * @see ch.ivyteam.ivy.addons.filemanager.database.security.AbstractFileSecurityController#removeRoleFromManageDirectorySecurity(java.lang.String, java.lang.String)
 	 */
 	@Override
+	@Deprecated
 	public boolean removeRoleFromManageDirectorySecurity(String path,
 			String ivyRoleName) throws Exception {
-		path=formatPathForDirectoryWithoutLastSeparator(path);	
-		if(path==null || path.length()==0 || ivyRoleName==null || ivyRoleName.trim().length()==0)
-		{
-			throw  new IllegalArgumentException("One of the parameter is not set in method removeRightOnDirectory(String path, " +
-					"int rightType, List<String> disallowedIvyRoleNames) in "+this.getClass());
-		}
-		List<String> roles = List.create(String.class);
-		roles.add(ivyRoleName);
-		List<String> result = this.removeRightOnDirectory(path, MANAGE_SECURITY_RIGHT, roles);
-
-		return !result.contains(ivyRoleName);
+		makeFileSecurityHandlerIfNull();
+		List<String> l = List.create(String.class);
+		l.add(ivyRoleName);
+		List<String> l1 = this.fileSecurityHandler.removeRightOnDirectory(path, SecurityRightsEnum.MANAGE_SECURITY_RIGHT,l);
+		return !l1.contains(ivyRoleName);
 	}
 
 	/* (non-Javadoc)
 	 * @see ch.ivyteam.ivy.addons.filemanager.database.security.AbstractFileSecurityController#removeRoleFromOpenDirectory(java.lang.String, java.lang.String)
 	 */
 	@Override
+	@Deprecated
 	public boolean removeRoleFromOpenDirectory(String path, String ivyRoleName)
-	throws Exception {
-		path=formatPathForDirectoryWithoutLastSeparator(path);	
-		if(path==null || path.length()==0 || ivyRoleName==null || ivyRoleName.trim().length()==0)
-		{
-			throw  new IllegalArgumentException("One of the parameter is not set in method removeRightOnDirectory(String path, " +
-					"int rightType, List<String> disallowedIvyRoleNames) in "+this.getClass());
-		}
-		List<String> roles = List.create(String.class);
-		roles.add(ivyRoleName);
-		List<String> result = this.removeRightOnDirectory(path, OPEN_DIRECTORY_RIGHT, roles);
-		return !result.contains(ivyRoleName);
+			throws Exception {
+		makeFileSecurityHandlerIfNull();
+		List<String> l = List.create(String.class);
+		l.add(ivyRoleName);
+		List<String> l1 = this.fileSecurityHandler.removeRightOnDirectory(path, SecurityRightsEnum.OPEN_DIRECTORY_RIGHT,l);
+		return !l1.contains(ivyRoleName);
 	}
 
 	/* (non-Javadoc)
 	 * @see ch.ivyteam.ivy.addons.filemanager.database.security.AbstractFileSecurityController#removeRoleFromUpdateDirectory(java.lang.String, java.lang.String)
 	 */
 	@Override
+	@Deprecated
 	public boolean removeRoleFromUpdateDirectory(String path, String ivyRoleName)
-	throws Exception {
-		path=formatPathForDirectoryWithoutLastSeparator(path);	
-		if(path==null || path.length()==0 || ivyRoleName==null || ivyRoleName.trim().length()==0)
-		{
-			throw  new IllegalArgumentException("One of the parameter is not set in method removeRightOnDirectory(String path, " +
-					"int rightType, List<String> disallowedIvyRoleNames) in "+this.getClass());
-		}
-		List<String> roles = List.create(String.class);
-		roles.add(ivyRoleName);
-		List<String> result = this.removeRightOnDirectory(path, UPDATE_DIRECTORY_RIGHT, roles);
-
-		return !result.contains(ivyRoleName);
+			throws Exception {
+		makeFileSecurityHandlerIfNull();
+		List<String> l = List.create(String.class);
+		l.add(ivyRoleName);
+		List<String> l1 = this.fileSecurityHandler.removeRightOnDirectory(path, SecurityRightsEnum.UPDATE_DIRECTORY_RIGHT,l);
+		return !l1.contains(ivyRoleName);
 	}
 
 	/* (non-Javadoc)
 	 * @see ch.ivyteam.ivy.addons.filemanager.database.security.AbstractFileSecurityController#setRightOnDirectory(java.lang.String, int, ch.ivyteam.ivy.scripting.objects.List)
 	 */
 	@Override
+	@Deprecated
 	public List<String> setRightOnDirectory(String path, int rightType,
 			List<String> allowedIvyRoleNames) throws Exception {
-		path=formatPathForDirectoryWithoutLastSeparator(path);	
-		if(path==null || path.length()==0 || allowedIvyRoleNames==null || allowedIvyRoleNames.size()==0)
-		{
-			throw  new IllegalArgumentException("One of the parameter is not set in method removeRightOnDirectory(String path, " +
-					"int rightType, List<String> disallowedIvyRoleNames) in "+this.getClass());
-		}
-
-		if(rightType<1 || rightType>DELETE_FILES_RIGHT )
-		{
-			throw  new IllegalArgumentException("The right type parameter is not valid in method removeRightOnDirectory(String path, " +
-					"int rightType, List<String> disallowedIvyRoleNames) in "+this.getClass());
-		}
-
-
-		allowedIvyRoleNames = this.ensureAdminRoleInList(allowedIvyRoleNames);
-		String roles = returnStringFromList(allowedIvyRoleNames);
-
-		String query="";
-		IExternalDatabaseRuntimeConnection connection = null;
-		try {
-			connection = getDatabase().getAndLockConnection();
-			Connection jdbcConnection=connection.getDatabaseConnection();
-			PreparedStatement stmt = null;
-			try{			
-				if(rightType == DELETE_DIRECTORY_RIGHT)
-				{
-					query="UPDATE "+this.dirTableNameSpace+" SET cdd = ? WHERE dir_path = ?";
-				}else if( rightType == DELETE_FILES_RIGHT)
-				{
-					query="UPDATE "+this.dirTableNameSpace+" SET cdf = ? WHERE dir_path = ?";
-				}
-				else if( rightType == OPEN_DIRECTORY_RIGHT)
-				{
-					query="UPDATE "+this.dirTableNameSpace+" SET cod = ? WHERE dir_path = ?";
-				}
-				else if( rightType == UPDATE_DIRECTORY_RIGHT)
-				{
-					query="UPDATE "+this.dirTableNameSpace+" SET cud = ? WHERE dir_path = ?";
-				}
-				else if( rightType == WRITE_FILES_RIGHT)
-				{
-					query="UPDATE "+this.dirTableNameSpace+" SET cwf = ? WHERE dir_path = ?";
-				}else if( rightType == MANAGE_SECURITY_RIGHT)
-				{
-					query="UPDATE "+this.dirTableNameSpace+" SET cmdr = ? WHERE dir_path = ?";
-				}
-				stmt = jdbcConnection.prepareStatement(query);
-				stmt.setString(1, roles);
-				stmt.setString(2, path);
-
-				stmt.executeUpdate();
-			}
-			finally{
-				DatabaseUtil.close(stmt);
-			}
-		} 
-		finally{
-			if(connection!=null ){
-				database.giveBackAndUnlockConnection(connection);
-			}
-		}
-		return  this.getRolesNamesAllowedForRightOnDirectory(path, rightType);
+		makeFileSecurityHandlerIfNull();
+		List<String> l1 = this.fileSecurityHandler.setRightOnDirectory(path, this.getRight(rightType),allowedIvyRoleNames);
+		return l1;
 	}
 
 	@Override
+	@Deprecated
 	public List<String> getRolesNamesAllowedForRightOnDirectory(String path,
 			int rightType) throws Exception {
 		path=formatPathForDirectoryWithoutLastSeparator(path);	
@@ -1480,7 +1145,7 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 					"int rightType, List<String> disallowedIvyRoleNames) in "+this.getClass());
 		}
 
-		if(rightType<1 || rightType>DELETE_FILES_RIGHT )
+		if(rightType<1 || rightType>UPDATE_FILES_RIGHT )
 		{
 			throw  new IllegalArgumentException("The right type parameter is not valid in method removeRightOnDirectory(String path, " +
 					"int rightType, List<String> disallowedIvyRoleNames) in "+this.getClass());
@@ -1491,195 +1156,230 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 		{
 			return null;
 		}
-
-		if(rightType == MANAGE_SECURITY_RIGHT && fos.getCmrd()!=null){
-			return fos.getCmrd();
-		}
-		if(rightType == OPEN_DIRECTORY_RIGHT && fos.getCod()!=null){
-			return fos.getCod();
-		}
-		if(rightType == UPDATE_DIRECTORY_RIGHT && fos.getCud()!=null){
-			return fos.getCud();
-		}
-		if(rightType == DELETE_DIRECTORY_RIGHT && fos.getCdd()!=null){
+		switch (rightType){
+		case AbstractDirectorySecurityController.DELETE_DIRECTORY_RIGHT:
 			return fos.getCdd();
-		}
-		if(rightType == WRITE_FILES_RIGHT && fos.getCwf()!=null){
-			return fos.getCwf();
-		}
-		if(rightType == DELETE_FILES_RIGHT && fos.getCdf()!=null){
+		case AbstractDirectorySecurityController.DELETE_FILES_RIGHT:
 			return fos.getCdf();
+		case AbstractDirectorySecurityController.OPEN_DIRECTORY_RIGHT:
+			return fos.getCod();
+		case AbstractDirectorySecurityController.UPDATE_DIRECTORY_RIGHT:
+			return fos.getCud();
+		case AbstractDirectorySecurityController.WRITE_FILES_RIGHT:
+			return fos.getCwf();
+		case AbstractDirectorySecurityController.MANAGE_SECURITY_RIGHT:
+			return fos.getCmrd();
+		case AbstractDirectorySecurityController.CREATE_DIRECTORY_RIGHT:
+			return fos.getCcd();
+		case AbstractDirectorySecurityController.RENAME_DIRECTORY_RIGHT:
+			return fos.getCrd();
+		case AbstractDirectorySecurityController.TRANSLATE_DIRECTORY_RIGHT:
+			return fos.getCtd();
+		case AbstractDirectorySecurityController.CREATE_FILES_RIGHT:
+			return fos.getCcf();
+		case AbstractDirectorySecurityController.UPDATE_FILES_RIGHT:
+			return fos.getCuf();
 		}
+
 		return null;
 	}
+	
+	public List<String> getRolesNamesAllowedForRightOnDirectory(String path,
+			SecurityRightsEnum rightType) throws Exception {
+		path=formatPathForDirectoryWithoutLastSeparator(path);	
+		if(path==null || path.length()==0 )
+		{
+			throw  new IllegalArgumentException("One of the parameter is not set in method removeRightOnDirectory(String path, " +
+					"int rightType, List<String> disallowedIvyRoleNames) in "+this.getClass());
+		}
+
+		FolderOnServer fos = this.getDirectoryWithPath(path);
+		if(fos==null)
+		{
+			return null;
+		}
+		
+		switch(rightType){
+			case MANAGE_SECURITY_RIGHT:
+				return fos.getCmrd();
+			case OPEN_DIRECTORY_RIGHT:
+				return fos.getCod();
+			case UPDATE_DIRECTORY_RIGHT:
+				return fos.getCud();
+			case CREATE_DIRECTORY_RIGHT:
+				return fos.getCcd();
+			case RENAME_DIRECTORY_RIGHT:
+				return fos.getCrd();
+			case TRANSLATE_DIRECTORY_RIGHT:
+				return fos.getCtd();
+			case DELETE_DIRECTORY_RIGHT:
+				return fos.getCdd();
+			case WRITE_FILES_RIGHT:
+				return fos.getCwf();
+			case CREATE_FILES_RIGHT:
+				return fos.getCcf();
+			case UPDATE_FILES_RIGHT:
+				return fos.getCuf();
+			case DELETE_FILES_RIGHT:
+				return fos.getCdf();
+			default:
+				return List.create(String.class);
+		}
+	}
+	
 
 
 	@Override
+	@Deprecated
 	public boolean directoryExists(String _path) throws Exception{
-		boolean b = false;
-		_path=formatPathForDirectoryWithoutLastSeparator(_path);
-		if(_path==null || _path.length()==0)
-		{
-			return false;
-		}
-		String base ="SELECT * FROM "+this.dirTableNameSpace+" WHERE dir_path = ?";
-		IExternalDatabaseRuntimeConnection connection=null;
-		try {
-			connection = getDatabase().getAndLockConnection();
-			Connection jdbcConnection=connection.getDatabaseConnection();
-			PreparedStatement stmt = null;
-			try{
-				stmt = jdbcConnection.prepareStatement(base);
-				stmt.setString(1, _path);
-				ResultSet rst = stmt.executeQuery();
-				if(rst.next()){
-					
-					b=true;
-				}
-			}catch(Exception ex){Ivy.log().error("ERROR 1 isDirectoryExist "+ex.getMessage(),ex);}
-			finally{
-				DatabaseUtil.close(stmt);
-			}
-		}catch(Exception ex){Ivy.log().error("ERROR 2 isDirectoryExist "+ex.getMessage(),ex);}
-		finally{
-			if(connection!=null ){
-				database.giveBackAndUnlockConnection(connection);
-			}
-		}
-		return b;
+		makeFileSecurityHandlerIfNull();
+		return this.fileSecurityHandler.directoryExists(_path);
 	}
 
 	@Override
+	@Deprecated
 	public FolderOnServer getDirectoryWithPath(String _path)
-	throws Exception {
-
-		_path=formatPathForDirectoryWithoutLastSeparator(_path);
-		if(_path==null || _path.length()==0)
-		{
-			return null;
-		}
-
-		String base ="SELECT * FROM "+this.dirTableNameSpace+" WHERE dir_path = ?";
-		IExternalDatabaseRuntimeConnection connection=null;
-		FolderOnServer fos = new FolderOnServer();
-		//List<Record> recordList= (List<Record>) List.create(Record.class);
-		try {
-			connection = getDatabase().getAndLockConnection();		
-			Connection jdbcConnection=connection.getDatabaseConnection();
-			PreparedStatement stmt = null;
-			String user = Ivy.session().getSessionUserName();
-			try{
-				stmt = jdbcConnection.prepareStatement(base);
-				stmt.setString(1, _path);
-				ResultSet rst = stmt.executeQuery();
-				if(rst.next())
-				{
-					fos.setId(rst.getInt("id"));
-					fos.setName(rst.getString("dir_name"));
-					fos.setPath(rst.getString("dir_path"));
-					fos.setIs_protected(rst.getByte("is_protected")==1);
-					fos.setCmrd(returnListFromStringWithSeparator(rst.getString("cmdr"),","));
-					fos.setCdd(returnListFromStringWithSeparator(rst.getString("cdd"),","));
-					fos.setCod(returnListFromStringWithSeparator(rst.getString("cod"),","));
-					fos.setCud(returnListFromStringWithSeparator(rst.getString("cud"),","));
-					fos.setCwf(returnListFromStringWithSeparator(rst.getString("cwf"),","));
-					fos.setCdf(returnListFromStringWithSeparator(rst.getString("cdf"),","));
-					getUserRightsInFolderOnServer(fos,user);
-				}
-			}catch(Exception ex){Ivy.log().error("ERROR 1 getDirectoryWithPath "+ex.getMessage(),ex);}
-			finally{
-				DatabaseUtil.close(stmt);
-			}
-		}catch(Exception ex){Ivy.log().error("ERROR 2 getDirectoryWithPath "+ex.getMessage(),ex);}
-		finally{
-			if(connection!=null ){
-				database.giveBackAndUnlockConnection(connection);
-			}
-		}
-		return fos;
+			throws Exception {
+		makeFileSecurityHandlerIfNull();
+		return this.fileSecurityHandler.getDirectoryWithPath(_path);
 	}
-
-	/**
-	 * Fills the FolderOnServer boolean fields about the user rights.<br>
-	 * For example: if the user can open a directory,<br>
-	 * then at least one of his Ivy Role is listed in the Can Open Dir -cod field of the FolderOnServer object. <br>
-	 * In such a case this method will put true in the canUserOpenDirectory attribute of the FolderOnServer object.
-	 * @param _fos: the FolderOnServer Object which user rights boolean fields have to be set. If null, null will be returned.
-	 * @param ivyUserName: the Ivy User name whose rights will be checked. If null the Ivy.session().getSessionUserName() will be taken.
-	 * @return the FolderOnServer with  boolean fields about the user rights completed.
-	 */
-	public FolderOnServer getUserRightsInFolderOnServer(FolderOnServer _fos, String ivyUserName)
-	{
-		if(_fos==null)
-		{
+	
+	FolderOnServer fillUserRightsInFolderOnServer(FolderOnServer fos, List<IRole> userRoles) {
+		if(fos==null) {
 			return null;
 		}
-		List <IRole> userRoles = List.create(IRole.class);
-		try{
-			if(ivyUserName== null || ivyUserName.trim().length()==0){
-				ivyUserName = Ivy.session().getSessionUserName();
+		try {
+			if(this.containsAdminRole(userRoles)) {
+				fos.setCanUserOpenDir(true);
+				fos.setCanUserUpdateDir(true);
+				fos.setCanUserCreateDirectory(true);
+				fos.setCanUserRenameDirectory(true);
+				fos.setCanUserTranslateDirectory(true);
+				fos.setCanUserDeleteDir(true);
+				fos.setCanUserWriteFiles(true);
+				fos.setCanUserCreateFiles(true);
+				fos.setCanUserUpdateFiles(true);
+				fos.setCanUserDeleteFiles(true);
+				fos.setCanUserManageRights(true);
+				return fos;
 			}
-			if(this.isUserFileManagerAdmin(ivyUserName))
-			{
-				_fos.setCanUserDeleteDir(true);
-				_fos.setCanUserDeleteFiles(true);
-				_fos.setCanUserManageRights(true);
-				_fos.setCanUserOpenDir(true);
-				_fos.setCanUserUpdateDir(true);
-				_fos.setCanUserWriteFiles(true);
-				return _fos;
-			}
-			userRoles.addAll(Ivy.wf().getSecurityContext().findUser(ivyUserName).getAllRoles());
-			
-		}catch(Throwable t)
-		{
+
+		}catch(Throwable t) {
 			//If a problem occurs with the username (no existing IvyUser, null etc...) the returned fos will have false in all the fields.
 		}
 
-		_fos.setCanUserDeleteDir(false);
-		_fos.setCanUserDeleteFiles(false);
-		_fos.setCanUserManageRights(false);
-		_fos.setCanUserOpenDir(false);
-		_fos.setCanUserUpdateDir(false);
-		_fos.setCanUserWriteFiles(false);
-		if(userRoles==null || userRoles.isEmpty())
-		{
-			return _fos;
+		fos.setCanUserOpenDir(false);
+		fos.setCanUserUpdateDir(false);
+		fos.setCanUserCreateDirectory(false);
+		fos.setCanUserRenameDirectory(false);
+		fos.setCanUserTranslateDirectory(false);
+		fos.setCanUserDeleteDir(false);
+		fos.setCanUserWriteFiles(false);
+		fos.setCanUserCreateFiles(false);
+		fos.setCanUserUpdateFiles(false);
+		fos.setCanUserDeleteFiles(false);
+		fos.setCanUserManageRights(false);
+		if(userRoles==null || userRoles.isEmpty()) {
+			return fos;
 		}
-		for(IRole r: userRoles)
-		{
-			try
-			{
+		for(IRole r: userRoles) {
+			try {
 				String roleName = r.getName();
-				if(_fos.getCmrd().contains(roleName))
-				{
-					_fos.setCanUserManageRights(true);
+				if(fos.getCmrd().contains(roleName)) {
+					fos.setCanUserOpenDir(true);
+					fos.setCanUserUpdateDir(true);
+					fos.setCanUserCreateDirectory(true);
+					fos.setCanUserRenameDirectory(true);
+					fos.setCanUserTranslateDirectory(true);
+					fos.setCanUserDeleteDir(true);
+					fos.setCanUserWriteFiles(true);
+					fos.setCanUserCreateFiles(true);
+					fos.setCanUserUpdateFiles(true);
+					fos.setCanUserDeleteFiles(true);
+					fos.setCanUserManageRights(true);
+					return fos;
 				}
-				if(_fos.getCdd().contains(roleName))
-				{
-					_fos.setCanUserDeleteDir(true);
+				if(fos.getCdd().contains(roleName)) {
+					fos.setCanUserDeleteDir(true);
+					fos.setCanUserCreateDirectory(true);
+					fos.setCanUserRenameDirectory(true);
+					fos.setCanUserOpenDir(true);
 				}
-				if(_fos.getCud().contains(roleName))
-				{
-					_fos.setCanUserUpdateDir(true);
+				if(fos.getCud().contains(roleName)) {
+					fos.setCanUserUpdateDir(true);
+					fos.setCanUserOpenDir(true);
+					if(this.secVersion==1) {
+						fos.setCanUserCreateDirectory(true);
+						fos.setCanUserRenameDirectory(true);
+					}
 				}
-				if(_fos.getCod().contains(roleName))
-				{
-					_fos.setCanUserOpenDir(true);
+				if(fos.getCcd().contains(roleName)) {
+					fos.setCanUserCreateDirectory(true);
+					fos.setCanUserOpenDir(true);
 				}
-				if(_fos.getCdf().contains(roleName))
-				{
-					_fos.setCanUserDeleteFiles(true);
+				if(fos.getCrd().contains(roleName)) {
+					fos.setCanUserRenameDirectory(true);
+					fos.setCanUserOpenDir(true);
 				}
-				if(_fos.getCwf().contains(roleName))
+				if(fos.getCtd().contains(roleName)) {
+					fos.setCanUserRenameDirectory(true);
+					fos.setCanUserTranslateDirectory(true);
+					fos.setCanUserOpenDir(true);
+				}
+				if(fos.getCod().contains(roleName))
 				{
-					_fos.setCanUserWriteFiles(true);
+					fos.setCanUserOpenDir(true);
+				}
+				if(fos.getCdf().contains(roleName))
+				{
+					fos.setCanUserDeleteFiles(true);
+					fos.setCanUserOpenDir(true);
+					fos.setCanUserCreateFiles(true);
+					fos.setCanUserUpdateFiles(true);
+					fos.setCanUserWriteFiles(true);
+				}
+				if(fos.getCwf().contains(roleName))
+				{
+					fos.setCanUserWriteFiles(true);
+					fos.setCanUserOpenDir(true);
+					if(this.secVersion==1){
+						fos.setCanUserCreateFiles(true);
+						fos.setCanUserUpdateFiles(true);
+					}
+				}
+				if(fos.getCcf().contains(roleName))
+				{
+					fos.setCanUserCreateFiles(true);
+					fos.setCanUserOpenDir(true);
+				}
+				if(fos.getCuf().contains(roleName))
+				{
+					fos.setCanUserUpdateFiles(true);
+					fos.setCanUserOpenDir(true);
 				}
 			}catch(Exception ex){
 				// if persistencyException, we only try to get the next Role.
 			}
 		}
-		return _fos;
+		return fos;
+
+	}
+
+	@Override
+	public FolderOnServer getUserRightsInFolderOnServer(FolderOnServer fos, String ivyUserName)
+	{
+		List <IRole> userRoles = List.create(IRole.class);
+		try{
+			if(ivyUserName== null || ivyUserName.trim().length()==0){
+				ivyUserName = Ivy.session().getSessionUserName();
+			}
+			userRoles.addAll(Ivy.wf().getSecurityContext().findUser(ivyUserName).getAllRoles());
+
+		}catch(Exception ex){
+			//If a problem occurs with the username (no existing IvyUser, null etc...) the returned fos will have false in all the fields.
+		}
+
+		return fillUserRightsInFolderOnServer(fos, userRoles);
 
 	}
 
@@ -1688,147 +1388,24 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 
 		return this.getDirectoryWithPath(path).getIs_protected();
 	}
-*/
+	 */
 	@Override
+	@Deprecated
 	public ArrayList<FolderOnServer> getListDirectoriesUnderPath(String rootPath, String ivyUserName) throws Exception {
-		ArrayList<FolderOnServer> l = new ArrayList<FolderOnServer>();
-		if(rootPath==null || rootPath.trim().equals("")){
-			return l;
-		}
-		if(ivyUserName==null || ivyUserName.trim().length()==0)
-		{
-			try{
-				ivyUserName=Ivy.session().getSessionUserName();
-			}catch(Exception ex)
-			{
-				throw new Exception("A Problem occurred while retrieving the Ivy Session user name.");
-			}
-		}
-		rootPath = formatPathForDirectoryWithoutLastSeparator(rootPath);
-		String base= "SELECT * FROM "+this.dirTableNameSpace+" WHERE dir_path = ? ORDER BY dir_path ASC"; 
-		IExternalDatabaseRuntimeConnection connection=null;
-
-		List<Record> recordList= (List<Record>) List.create(Record.class);
-		try {
-			connection = getDatabase().getAndLockConnection();
-			Connection jdbcConnection=connection.getDatabaseConnection();
-			PreparedStatement stmt = null;
-			try{
-				stmt = jdbcConnection.prepareStatement(base);
-				//Select the root
-				stmt.setString(1, rootPath);
-				recordList=executeStmt(stmt);
-				if(recordList.size()==1)
-				{// there is one dir with the denoted rootpath
-					Record rec = recordList.get(0);
-					List<String> roles = getListFromString(rec.getField("cod").toString(),",");
-					if(this.isUserFileManagerAdmin(ivyUserName) || this.isOneUserRoleInList(roles, ivyUserName)){
-						FolderOnServer fos = new FolderOnServer();
-						fos.setId(Integer.parseInt(rec.getField("id").toString()));
-						fos.setName(rec.getField("dir_name").toString());
-						fos.setIsRoot(true);
-						fos.setPath(formatPathForDirectoryWithoutLastSeparator(rec.getField("dir_path").toString()));
-						fos.setIs_protected(rec.getField("is_protected").toString().equals("1"));
-						fos.setCmrd(getListFromString(rec.getField("cmdr").toString(),","));
-						fos.setCod(getListFromString(rec.getField("cod").toString(),","));
-						fos.setCud(getListFromString(rec.getField("cud").toString(),","));
-						fos.setCdd(getListFromString(rec.getField("cdd").toString(),","));
-						fos.setCwf(getListFromString(rec.getField("cwf").toString(),","));
-						fos.setCdf(getListFromString(rec.getField("cdf").toString(),","));
-						getUserRightsInFolderOnServer(fos, ivyUserName);
-						l.add(fos);
-					}else{
-						LockedFolder fos = new LockedFolder();
-						fos.setId(Integer.parseInt(rec.getField("id").toString()));
-						fos.setName(rec.getField("dir_name").toString());
-						fos.setIsRoot(true);
-						fos.setPath(formatPathForDirectoryWithoutLastSeparator(rec.getField("dir_path").toString()));
-						fos.setIs_protected(rec.getField("is_protected").toString().equals("1"));
-						fos.setCmrd(getListFromString(rec.getField("cmdr").toString(),","));
-						fos.setCod(getListFromString(rec.getField("cod").toString(),","));
-						fos.setCud(getListFromString(rec.getField("cud").toString(),","));
-						fos.setCdd(getListFromString(rec.getField("cdd").toString(),","));
-						fos.setCwf(getListFromString(rec.getField("cwf").toString(),","));
-						fos.setCdf(getListFromString(rec.getField("cdf").toString(),","));
-						getUserRightsInFolderOnServer(fos, ivyUserName);
-						l.add(fos);
-					}
-					base= "SELECT * FROM "+this.dirTableNameSpace+" WHERE dir_path LIKE ? ESCAPE '"+this.getEscapeChar()+"' ORDER BY dir_path ASC"; 
-					stmt = jdbcConnection.prepareStatement(base);
-					//Select all the children
-					rootPath=escapeUnderscoreInPath(rootPath);
-					stmt.setString(1, rootPath+"/%");
-					recordList=executeStmt(stmt);
-					for(Record rec1: recordList){
-						List<String> roles1 = getListFromString(rec1.getField("cod").toString(),",");
-						if(this.isUserFileManagerAdmin(ivyUserName) || this.isOneUserRoleInList(roles1, ivyUserName)){
-							FolderOnServer fos1 = new FolderOnServer();
-							fos1.setId(Integer.parseInt(rec1.getField("id").toString()));
-							fos1.setName(rec1.getField("dir_name").toString());
-							fos1.setPath(formatPathForDirectoryWithoutLastSeparator(rec1.getField("dir_path").toString()));
-							fos1.setIs_protected(rec1.getField("is_protected").toString().equals("1"));
-							fos1.setCmrd(getListFromString(rec1.getField("cmdr").toString(),","));
-							fos1.setCod(getListFromString(rec1.getField("cod").toString(),","));
-							fos1.setCud(getListFromString(rec1.getField("cud").toString(),","));
-							fos1.setCdd(getListFromString(rec1.getField("cdd").toString(),","));
-							fos1.setCwf(getListFromString(rec1.getField("cwf").toString(),","));
-							fos1.setCdf(getListFromString(rec1.getField("cdf").toString(),","));
-							getUserRightsInFolderOnServer(fos1, ivyUserName);
-							l.add(fos1);
-						}else
-						{
-							LockedFolder fos1 = new LockedFolder();
-							fos1.setId(Integer.parseInt(rec1.getField("id").toString()));
-							fos1.setName(rec1.getField("dir_name").toString());
-							fos1.setPath(formatPathForDirectoryWithoutLastSeparator(rec1.getField("dir_path").toString()));
-							fos1.setIs_protected(rec1.getField("is_protected").toString().equals("1"));
-							fos1.setCmrd(getListFromString(rec1.getField("cmdr").toString(),","));
-							fos1.setCod(getListFromString(rec1.getField("cod").toString(),","));
-							fos1.setCud(getListFromString(rec1.getField("cud").toString(),","));
-							fos1.setCdd(getListFromString(rec1.getField("cdd").toString(),","));
-							fos1.setCwf(getListFromString(rec1.getField("cwf").toString(),","));
-							fos1.setCdf(getListFromString(rec1.getField("cdf").toString(),","));
-							getUserRightsInFolderOnServer(fos1, ivyUserName);
-							l.add(fos1);
-						}
-
-					}
-				}
-			}finally{
-				DatabaseUtil.close(stmt);
-			}
-		}finally{
-			if(connection!=null ){
-				database.giveBackAndUnlockConnection(connection);
-			}
-		}
-		return l;
+		makeFileSecurityHandlerIfNull();
+		return this.fileSecurityHandler.getListDirectoriesUnderPathWithSecurityInfos(rootPath,ivyUserName);
 	}
 
 	/**
+	 * Deprecated: use the PathUtil.getListFromString(s, list_sep) method instead
 	 * transforms a String that represents a list of token separated with a delimiter into a List<String>
 	 * @param s: the String 
 	 * @param list_sep: the delimiter
 	 * @return the List<String>
 	 */
+	@Deprecated
 	public List<String> getListFromString(String s, String list_sep){
-		List<String> l = List.create(String.class);
-		if(s==null || s.trim().equals("") || list_sep==null || list_sep.trim().equals(""))
-		{
-			return l;
-		}
-		Scanner sc = new Scanner(s);
-		sc.useDelimiter(list_sep);
-		while(sc.hasNext()){
-			String t = sc.next().trim();
-
-			if(t.length()>0)
-			{
-				l.add(t);
-			}
-		}
-		sc.close();
-		return l;
+		return PathUtil.getListFromString(s, list_sep);
 	}
 
 	/**
@@ -1855,16 +1432,96 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 		boolean found = false;
 		for(IRole r: userRoles)
 		{
-			try {
-				//Ivy.log().info(r.getName()+" vs "+roles.toString());
-				if(roles.contains(r.getName())){
-					found = true;
-					break;
-				}
-			} catch (PersistencyException e) {
-				//do nothing
+			if(roles.contains(r.getName())){
+				found = true;
+				break;
 			}
 		}
 		return found;
+	}
+
+	private List<String> getRolesInFolderForRight(FolderOnServer fos, SecurityRightsEnum rightType) {
+		if(fos==null){
+			return null;
+		}
+		switch(rightType){
+		case MANAGE_SECURITY_RIGHT:
+			return fos.getCmrd();
+		case OPEN_DIRECTORY_RIGHT:
+			return fos.getCod();
+		case UPDATE_DIRECTORY_RIGHT:
+			return fos.getCud();
+		case CREATE_DIRECTORY_RIGHT:
+			return fos.getCcd();
+		case RENAME_DIRECTORY_RIGHT:
+			return fos.getCrd();
+		case TRANSLATE_DIRECTORY_RIGHT:
+			return fos.getCtd();
+		case DELETE_DIRECTORY_RIGHT:
+			return fos.getCdd();
+		case WRITE_FILES_RIGHT:
+			return fos.getCwf();
+		case CREATE_FILES_RIGHT:
+			return fos.getCcf();
+		case UPDATE_FILES_RIGHT:
+			return fos.getCuf();
+		case DELETE_FILES_RIGHT:
+			return fos.getCdf();
+		default:
+			return List.create(String.class);
+		}
+	}
+	
+	@Override
+	public SecurityResponse hasRight(Iterator<SecurityHandler> handlerInterator, SecurityRightsEnum rightType,
+			FolderOnServer folder, IUser u, java.util.List<String> roles) {
+		boolean b = false;
+		try {
+			HashSet<String> rolesF = new HashSet<String>();
+			if(roles!=null && !roles.isEmpty()){
+				rolesF.addAll(roles);
+			}
+			if(u!=null) {
+				rolesF.addAll(IvyRoleHelper.getUserRolesAsListStrings(u));
+			}
+			if(rolesF.contains(this.securityAdmin)) {
+				b = true;
+			}
+			if(!b) {
+				this.ensureRightsIntegrityInDirectory(folder);
+				List<String> rs = getRolesInFolderForRight(folder, rightType);
+				if (rs != null) {
+					for (String r : rolesF) {
+						//for each roles owned by the user check if it is allowed to perform the action.
+						if (rs.contains(r)) {
+							b = true;
+							break;
+						}
+					}
+				}
+			}
+		} catch (Exception e) {
+			Ivy.log().error(e.getMessage());
+		}
+		SecurityResponse resp = new SecurityResponse();
+		resp.setAllow(b);
+		resp.setMessage(b ? "User has right to perform the operation."
+				: "User does not has right to perform the operation.");
+		return resp;
+	}
+
+	protected AbstractFileSecurityHandler getSecurityHandler() {
+		return fileSecurityHandler;
+	}
+
+	public void setSecurityHandler(AbstractFileSecurityHandler securityHandler) {
+		this.fileSecurityHandler = securityHandler;
+	}
+
+	@Override
+	public FolderOnServer createOpenDirectory(String directoryPath)
+			throws Exception {
+		makeFileSecurityHandlerIfNull();
+		return this.fileSecurityHandler.createOpenDirectory(directoryPath);
 	}
 }

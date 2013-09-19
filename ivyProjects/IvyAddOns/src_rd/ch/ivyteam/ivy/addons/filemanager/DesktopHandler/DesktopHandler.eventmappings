@@ -1,5 +1,5 @@
 # Xpert.ivy RichDialog Event-Mapping Data
-# 2013-04-25 14:43:49 | 5.0.0.42720 | 1.0
+# 2013-08-26 13:16:44 | 5.0.3.43404 | 1.0
 ~.fileEditorCheckerPanel@RD_EVENT[fileCoupleModified]--->ch.ivyteam.ivy.process.ProcessStart:125F850DA67753A5/11E8D0044582C100
 ~.removeFilesMenuItem@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125F850DA67753A5/11E2653B73A762C3
 ~@RD_METHODCALL[_callBackIsFileEditable(Boolean)]--->ch.ivyteam.ivy.process.ProcessStart:125F850DA67753A5/12470AC9EECD878D
@@ -13,6 +13,7 @@
 ~@RD_METHODCALL[editFiles(List<java.io.File>)]--->ch.ivyteam.ivy.process.ProcessStart:125F850DA67753A5/1242429CF98236D6
 ~@RD_METHODCALL[forceUnlock(List<ch.ivyteam.ivy.addons.filemanager.DocumentOnServer>)]--->ch.ivyteam.ivy.process.ProcessStart:125F850DA67753A5/11E498BA948EAA2A
 ~@RD_METHODCALL[getClientApplicationTempDir()]--->ch.ivyteam.ivy.process.ProcessStart:125F850DA67753A5/125F9B74E2AFE84B
+~@RD_METHODCALL[getClientDesktopCommunicator()]--->ch.ivyteam.ivy.process.ProcessStart:125F850DA67753A5/13F4315678A65E0F
 ~@RD_METHODCALL[getClientTempPath()]--->ch.ivyteam.ivy.process.ProcessStart:125F850DA67753A5/11E20D8DC0F20905
 ~@RD_METHODCALL[getEditCheckPeriod()]--->ch.ivyteam.ivy.process.ProcessStart:125F850DA67753A5/11E25D87AE87DE1E
 ~@RD_METHODCALL[getEditedFileList()]--->ch.ivyteam.ivy.process.ProcessStart:125F850DA67753A5/11E20D8FD9FE0681
@@ -37,6 +38,7 @@
 ~@RD_METHODCALL[removeFileToEdit(java.io.File)]--->ch.ivyteam.ivy.process.ProcessStart:125F850DA67753A5/11E25DD5BF874B46
 ~@RD_METHODCALL[setClientApplicationTempDir(String)]--->ch.ivyteam.ivy.process.ProcessStart:125F850DA67753A5/125F9B75E38FE206
 ~@RD_METHODCALL[setClientTempPath(String)]--->ch.ivyteam.ivy.process.ProcessStart:125F850DA67753A5/11E20E0E4AD76A1D
+~@RD_METHODCALL[setDocumentFilter(ch.ivyteam.ivy.addons.filemanager.database.security.DocumentFilter)]--->ch.ivyteam.ivy.process.ProcessStart:125F850DA67753A5/140BA56DC1A6DA86
 ~@RD_METHODCALL[setEditCheckPeriod(Number)]--->ch.ivyteam.ivy.process.ProcessStart:125F850DA67753A5/11E25D897B786215
 ~@RD_METHODCALL[setEmailParamList(List<String>)]--->ch.ivyteam.ivy.process.ProcessStart:125F850DA67753A5/11E20E27CB19B4F7
 ~@RD_METHODCALL[setTableVisible(Boolean)]--->ch.ivyteam.ivy.process.ProcessStart:125F850DA67753A5/11E26530B3EFE0DB

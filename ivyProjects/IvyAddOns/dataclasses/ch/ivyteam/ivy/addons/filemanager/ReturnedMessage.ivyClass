@@ -13,4 +13,5 @@ documentOnServers List<ch.ivyteam.ivy.addons.filemanager.DocumentOnServer> #fiel
 documentOnServers 'List<ch.ivyteam.ivy.addons.filemanager.DocumentOnServer> concerned by the action ' #fieldComment
 documentOnServer ch.ivyteam.ivy.addons.filemanager.DocumentOnServer #field
 documentOnServer 'DocumentOnServer concerned by the action.' #fieldComment
-documentOnServer PERSISTENT #fieldModifier
+files2 List<java.io.File> #field
+files2 'A second List of java.io.File concerned by the action' #fieldComment
