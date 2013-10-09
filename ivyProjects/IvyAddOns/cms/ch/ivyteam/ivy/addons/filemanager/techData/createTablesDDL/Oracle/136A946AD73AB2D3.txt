@@ -1,4 +1,4 @@
-?CREATE TABLE uploadedfiles
+CREATE TABLE uploadedfiles
 (
 	FileId             number(19,0) NOT NULL,
 	FileName           VARCHAR2 (255) NULL,
@@ -29,6 +29,8 @@ BEGIN
     END IF;
 END;
 /
+
+/********* FILE STORED IN DATABASE FEATURE **********/
 
 CREATE TABLE filecontent
 (
@@ -66,8 +68,13 @@ CREATE TABLE directories
 	cmdr                 VARCHAR2 (2048) NULL,
 	cod                  VARCHAR2 (2048) NULL,
 	cud                  VARCHAR2 (2048) NULL,
+	ccd                  VARCHAR2 (2048) NULL,
+	crd                  VARCHAR2 (2048) NULL,
+	ctd                  VARCHAR2 (2048) NULL,
 	cdd                  VARCHAR2 (2048) NULL,
 	cwf                  VARCHAR2 (2048) NULL,
+	ccf                  VARCHAR2 (2048) NULL,
+	cuf                  VARCHAR2 (2048) NULL,
 	cdf                  VARCHAR2 (2048) NULL,
 	CONSTRAINT PK_ PRIMARY KEY (id),
 	CONSTRAINT UQ__FileMana__89DC233C0EA330E9 UNIQUE (dir_path)
@@ -83,6 +90,8 @@ BEGIN
     END IF;
 END;
 /
+
+/********* FILE VERSIONS FEATURE **********/
 
 CREATE TABLE file_versions
 (
@@ -129,6 +138,8 @@ BEGIN
 END;
 /
 
+/********* FILE TYPES FEATURE **********/
+
 CREATE TABLE filetype
 (
 	id      number(19,0) NOT NULL,
@@ -150,6 +161,8 @@ BEGIN
 END;
 /
 
+/********* FILE TAGS FEATURE **********/
+
 CREATE TABLE tags
 (
 	id      number(19,0) NOT NULL,
@@ -170,6 +183,8 @@ BEGIN
     END IF;
 END;
 /
+
+/********* FILE ACTION HISTORY FEATURE **********/
 
 CREATE TABLE fileactiontype
 (
@@ -233,3 +248,74 @@ INSERT INTO fileactiontype (atype,en,de,fr) VALUES (9,'File copied and paste', '
 INSERT INTO fileactiontype (atype,en,de,fr) VALUES (10,'File moved', 'Datei verschoben' , 'Fichier déplacé');
 INSERT INTO fileactiontype (atype,en,de,fr) VALUES (11,'New Version created', 'Neue Version erfasst' , 'Nouvelle version');
 INSERT INTO fileactiontype (atype,en,de,fr) VALUES (12,'Last version rollbacked', 'Letzte Version gelöscht' , 'Dernière version supprimée');
+
+/********* DIRECTORY AND FILETYPES TRANSLATION FEATURES **********/
+
+CREATE TABLE fmlanguages
+(
+	id      number(19,0) NOT NULL,
+	isoname	VARCHAR2 (3) NULL,
+	CONSTRAINT PK_fmlanguages PRIMARY KEY (id),
+	CONSTRAINT fmlanguages_unique UNIQUE(isoname)
+);
+
+CREATE SEQUENCE fmlanguages_id_seq 
+INCREMENT BY 1 START WITH 1 CACHE 20 ;
+
+CREATE TRIGGER fmlanguages_pk_trg
+  BEFORE INSERT ON fmlanguages FOR EACH ROW
+BEGIN 
+    IF :NEW.id IS NULL THEN
+      SELECT fmlanguages_id_seq.NEXTVAL INTO :NEW.id FROM DUAL;
+    END IF;
+END;
+/
+
+INSERT INTO fmlanguages (isoname) VALUES ('EN');
+INSERT INTO fmlanguages (isoname) VALUES ('DE');
+INSERT INTO fmlanguages (isoname) VALUES ('FR');
+
+CREATE TABLE dirtranslation
+(
+	id      number(19,0) NOT NULL,
+	translateditemid number(19,0) NOT NULL,
+	lang	VARCHAR2 (3) NOT NULL,
+	tr	VARCHAR2 (1024) NULL,
+	CONSTRAINT PK_dirtranslation PRIMARY KEY (id),
+	CONSTRAINT dirtranslation_unique UNIQUE(translateditemid,lang)
+);
+
+CREATE SEQUENCE dirtranslation_id_seq 
+INCREMENT BY 1 START WITH 1 CACHE 20 ;
+
+CREATE TRIGGER dirtranslation_pk_trg
+  BEFORE INSERT ON dirtranslation FOR EACH ROW
+BEGIN 
+    IF :NEW.id IS NULL THEN
+      SELECT dirtranslation_id_seq.NEXTVAL INTO :NEW.id FROM DUAL;
+    END IF;
+END;
+/
+
+CREATE TABLE fttranslation
+(
+	id      number(19,0) NOT NULL,
+	translateditemid number(19,0) NOT NULL,
+	lang	VARCHAR2 (3) NOT NULL,
+	tr	VARCHAR2 (1024) NULL,
+	CONSTRAINT PK_fttranslation PRIMARY KEY (id),
+	CONSTRAINT fttranslation_unique UNIQUE(translateditemid,lang)
+);
+
+CREATE SEQUENCE fttranslation_id_seq 
+INCREMENT BY 1 START WITH 1 CACHE 20 ;
+
+CREATE TRIGGER fttranslation_pk_trg
+  BEFORE INSERT ON fttranslation FOR EACH ROW
+BEGIN 
+    IF :NEW.id IS NULL THEN
+      SELECT fttranslation_id_seq.NEXTVAL INTO :NEW.id FROM DUAL;
+    END IF;
+END;
+/
+

@@ -20,6 +20,7 @@ import java.util.List;
 import ch.ivyteam.ivy.addons.filemanager.DocumentOnServer;
 import ch.ivyteam.ivy.addons.filemanager.FileHandler;
 import ch.ivyteam.ivy.addons.filemanager.FileManagementHandlersFactory;
+import ch.ivyteam.ivy.addons.filemanager.FileType;
 import ch.ivyteam.ivy.addons.filemanager.FolderOnServer;
 import ch.ivyteam.ivy.addons.filemanager.KeyValuePair;
 import ch.ivyteam.ivy.addons.filemanager.configuration.BasicConfigurationController;
@@ -319,6 +320,17 @@ public class DocumentOnServerSQLPersistence implements
 			}
 			this.connectionManager.closeConnection();
 		}
+		if(this.configuration.isActivateFileType() && this.fileTypesController!=null) {
+			try{
+				if(doc!=null && doc.getFileType()!=null && doc.getFileType().getId()!=null && doc.getFileType().getId()>0) {
+					doc.setFileType(this.fileTypesController.getFileTypeWithId(doc.getFileType().getId()));
+				}
+			}catch(Exception ex)
+			{
+				//do nothing the file type is not mandatory
+				Ivy.log().warn("WARNING while getting the file type on "+doc.getFilename()+ " "+ex.getMessage(), ex);
+			}
+		}
 		return doc;
 	}
 	
@@ -356,6 +368,17 @@ public class DocumentOnServerSQLPersistence implements
 				}
 			}
 			this.connectionManager.closeConnection();
+		}
+		if(this.configuration.isActivateFileType() && this.fileTypesController!=null) {
+			try{
+				if(doc!=null && doc.getFileType()!=null && doc.getFileType().getId()!=null && doc.getFileType().getId()>0) {
+					doc.setFileType(this.fileTypesController.getFileTypeWithId(doc.getFileType().getId()));
+				}
+			}catch(Exception ex)
+			{
+				//do nothing the file type is not mandatory
+				Ivy.log().warn("WARNING while getting the file type on "+doc.getFilename()+ " "+ex.getMessage(), ex);
+			}
 		}
 		return doc;
 	}
@@ -402,6 +425,19 @@ public class DocumentOnServerSQLPersistence implements
 				}
 			}
 			this.connectionManager.closeConnection();
+		}
+		if(this.configuration.isActivateFileType() && this.fileTypesController!=null) {
+			for(DocumentOnServer doc:docs) {
+				try{
+					if(doc.getFileType()!=null && doc.getFileType().getId()!=null && doc.getFileType().getId()>0) {
+						doc.setFileType(this.fileTypesController.getFileTypeWithId(doc.getFileType().getId()));
+					}
+				}catch(Exception ex)
+				{
+					//do nothing the file type is not mandatory
+					Ivy.log().warn("WARNING while getting the file type on "+doc.getFilename()+ " "+ex.getMessage(), ex);
+				}
+			}
 		}
 		return docs;
 	}
@@ -563,11 +599,14 @@ public class DocumentOnServerSQLPersistence implements
 		doc.setIsLocked(doc.getLocked().compareTo("1")==0);
 		doc.setLockingUserID(rst.getString("LockingUserId"));
 		doc.setDescription(rst.getString("Description"));
+		
 		if(this.configuration.isActivateFileType() && this.fileTypesController!=null) {
 			try{
 				long id = rst.getInt("filetypeid");
 				if(id>0) {
-					doc.setFileType(this.fileTypesController.getFileTypeWithId(id));
+					FileType ft = new FileType();
+					ft.setId(id);
+					doc.setFileType(ft);
 				}
 			}catch(Exception ex)
 			{
@@ -682,6 +721,19 @@ public class DocumentOnServerSQLPersistence implements
 			}
 			this.connectionManager.closeConnection();
 		}
+		if(this.configuration.isActivateFileType() && this.fileTypesController!=null) {
+			for(DocumentOnServer doc:al) {
+				try{
+					if(doc.getFileType()!=null && doc.getFileType().getId()!=null && doc.getFileType().getId()>0) {
+						doc.setFileType(this.fileTypesController.getFileTypeWithId(doc.getFileType().getId()));
+					}
+				}catch(Exception ex)
+				{
+					//do nothing the file type is not mandatory
+					Ivy.log().warn("WARNING while getting the file type on "+doc.getFilename()+ " "+ex.getMessage(), ex);
+				}
+			}
+		}
 		return al;
 	}
 	
@@ -729,18 +781,7 @@ public class DocumentOnServerSQLPersistence implements
 			doc.setLockingUserID(rec.getField("LockingUserId").toString());
 			doc.setDescription(rec.getField("Description").toString());
 			
-			if(this.configuration.isActivateFileType() && this.fileTypesController!=null) {
-				try{
-					long id = Long.parseLong(rec.getField("filetypeid").toString());
-					if(id>0) {
-						doc.setFileType(this.fileTypesController.getFileTypeWithId(id));
-					}
-				}catch(Exception ex)
-				{
-					//do nothing the file type is not mandatory
-					Ivy.log().warn("WARNING while getting the file type on "+doc.getFilename()+ " "+ex.getMessage(), ex);
-				}
-			}
+			
 			try{
 				int i = Integer.parseInt(rec.getField("versionnumber").toString());
 				if(i<=0) {

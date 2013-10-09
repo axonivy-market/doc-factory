@@ -1,5 +1,5 @@
 [Ivy]
-[>Created: Fri Jun 28 09:33:19 EDT 2013]
+[>Created: Mon Oct 07 22:26:10 EDT 2013]
 125FE384C5BE80F0 3.17 #module
 >Proto >Proto Collection #zClass
 Fs0 FileChooserDialogProcess Big #zClass
@@ -660,7 +660,7 @@ Fs0 f63 actionTable 'out=in;
 ' #txt
 Fs0 f63 actionCode 'panel.desktopHandlerPanel.openFile(in.fileChoosed);
 
-if(in.fileManagementHandler.fileActionHistoryController.getConfig().activateFileActionHistory)
+if(in.#fileManagementHandler.#fileActionHistoryController!=null && in.fileManagementHandler.fileActionHistoryController.getConfig().activateFileActionHistory)
 {
 	try{
 		long id = long.parseLong(in.selectedDocumentOnServer.fileID);

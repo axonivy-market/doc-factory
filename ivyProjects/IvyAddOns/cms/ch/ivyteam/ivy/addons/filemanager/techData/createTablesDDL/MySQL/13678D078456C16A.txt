@@ -17,6 +17,8 @@ CREATE TABLE IF NOT EXISTS `uploadedfiles` (
      	PRIMARY KEY (`FileId`) 
 ) ENGINE=InnoDB AUTO_INCREMENT=1 ;
 
+/********* FILE STORED IN DATABASE FEATURE **********/
+
 CREATE TABLE IF NOT EXISTS `directories` (
   	`id` bigint(20) NOT NULL AUTO_INCREMENT,
   	`dir_name` varchar(255) NOT NULL,
@@ -31,8 +33,13 @@ CREATE TABLE IF NOT EXISTS `directories` (
   	`cmdr` varchar(2048) DEFAULT NULL,
   	`cod` varchar(2048) DEFAULT NULL,
   	`cud` varchar(2048) DEFAULT NULL,
+	`ccd` varchar(2048) DEFAULT NULL,
+	`crd` varchar(2048) DEFAULT NULL,
+ 	`ctd` varchar(2048) DEFAULT NULL,
   	`cdd` varchar(2048) DEFAULT NULL,
   	`cwf` varchar(2048) DEFAULT NULL,
+	`ccf` varchar(2048) DEFAULT NULL,
+	`cuf` varchar(2048) DEFAULT NULL,
   	`cdf` varchar(2048) DEFAULT NULL,
   	PRIMARY KEY (`id`),
   	UNIQUE KEY `dir_path` (`dir_path`)
@@ -44,6 +51,8 @@ CREATE TABLE IF NOT EXISTS `filecontent` (
   	`file_content` longblob,
   	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 ;
+
+/********* FILE VERSIONS FEATURE **********/
 
 CREATE TABLE IF NOT EXISTS `file_versions` (
   	`versionid` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -64,6 +73,8 @@ CREATE TABLE IF NOT EXISTS `file_version_content` (
   	PRIMARY KEY (`fvcid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 ;
 
+/********* FILE TYPES FEATURE **********/
+
 CREATE TABLE IF NOT EXISTS `filetype` (
   	`id` bigint(20) NOT NULL AUTO_INCREMENT,
   	`name` varchar(255) NOT NULL,
@@ -72,6 +83,8 @@ CREATE TABLE IF NOT EXISTS `filetype` (
   	UNIQUE KEY `name` (`name`,`appname`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 ;
 
+/********* FILE TAGS FEATURE **********/
+
 CREATE TABLE IF NOT EXISTS `tags` (
   	`id` bigint(20) NOT NULL AUTO_INCREMENT,
   	`fileid` bigint(20) NOT NULL,
@@ -79,6 +92,8 @@ CREATE TABLE IF NOT EXISTS `tags` (
   	PRIMARY KEY (`id`),
   	UNIQUE KEY `tag` (`fileid`,`tag`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 ;
+
+/********* FILE ACTION HISTORY FEATURE **********/
 
 CREATE TABLE IF NOT EXISTS `fileactiontype` (  
 	`id` int(11) NOT NULL AUTO_INCREMENT,  
@@ -115,3 +130,33 @@ INSERT INTO `fileactiontype` (`atype`,`en`,`de`,`fr`) VALUES (9,'File copied and
 INSERT INTO `fileactiontype` (`atype`,`en`,`de`,`fr`) VALUES (10,'File moved', 'Datei verschoben' , 'Fichier déplacé');
 INSERT INTO `fileactiontype` (`atype`,`en`,`de`,`fr`) VALUES (11,'New Version created', 'Neue Version erfasst' , 'Nouvelle version');
 INSERT INTO `fileactiontype` (`atype`,`en`,`de`,`fr`) VALUES (12,'Last version rollbacked', 'Letzte Version gelöscht' , 'Dernière version supprimée');
+
+/********* DIRECTORY AND FILETYPES TRANSLATION FEATURES **********/
+
+CREATE TABLE IF NOT EXISTS `fmlanguages` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `isoname` varchar(3) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `isoname` (`isoname`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+INSERT INTO `fmlanguages`(`isoname`) VALUES ('EN');
+INSERT INTO `fmlanguages`(`isoname`) VALUES ('DE');
+INSERT INTO `fmlanguages`(`isoname`) VALUES ('FR');
+
+CREATE TABLE IF NOT EXISTS `dirtranslation` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `translateditemid` bigint(20) NOT NULL,
+  `lang` varchar(3) NOT NULL,
+  `tr` varchar(1024) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+CREATE TABLE IF NOT EXISTS `fttranslation` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `translateditemid` bigint(20) NOT NULL,
+  `lang` varchar(3) NOT NULL,
+  `tr` varchar(1024) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+

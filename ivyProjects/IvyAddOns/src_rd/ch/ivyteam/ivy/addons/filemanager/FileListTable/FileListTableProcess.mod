@@ -1,5 +1,5 @@
 [Ivy]
-[>Created: Fri Jun 28 09:32:38 EDT 2013]
+[>Created: Mon Oct 07 22:09:59 EDT 2013]
 125FDB0198DDACE8 3.17 #module
 >Proto >Proto Collection #zClass
 Fs0 FileListTableProcess Big #zClass
@@ -75,7 +75,6 @@ Fs0 @RichDialogProcessStep f74 '' #zField
 Fs0 @PushWFArc f76 '' #zField
 Fs0 @RichDialogProcessEnd f77 '' #zField
 Fs0 @RichDialogProcessEnd f80 '' #zField
-Fs0 @PushWFArc f81 '' #zField
 Fs0 @RichDialogMethodStart f82 '' #zField
 Fs0 @RichDialogMethodStart f83 '' #zField
 Fs0 @RichDialogMethodStart f84 '' #zField
@@ -301,6 +300,9 @@ Fs0 @PushWFArc f245 '' #zField
 Fs0 @RichDialogProcessStep f231 '' #zField
 Fs0 @PushWFArc f243 '' #zField
 Fs0 @PushWFArc f247 '' #zField
+Fs0 @RichDialog f264 '' #zField
+Fs0 @PushWFArc f270 '' #zField
+Fs0 @PushWFArc f81 '' #zField
 >Proto Fs0 Fs0 FileListTableProcess #zField
 Fs0 f0 guid 11F6A40F8EC16E70 #txt
 Fs0 f0 type ch.ivyteam.ivy.addons.filemanager.FileListTable.FileListTableData #txt
@@ -915,7 +917,7 @@ Fs0 f61 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-Fs0 f61 1550 358 20 20 -74 -33 #rect
+Fs0 f61 1550 326 20 20 -74 -33 #rect
 Fs0 f61 @|RichDialogMethodStartIcon #fIcon
 Fs0 f62 type ch.ivyteam.ivy.addons.filemanager.FileListTable.FileListTableData #txt
 Fs0 f62 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -1079,8 +1081,6 @@ Fs0 f77 @|RichDialogProcessEndIcon #fIcon
 Fs0 f80 type ch.ivyteam.ivy.addons.filemanager.FileListTable.FileListTableData #txt
 Fs0 f80 1547 411 26 26 14 0 #rect
 Fs0 f80 @|RichDialogProcessEndIcon #fIcon
-Fs0 f81 expr out #txt
-Fs0 f81 1560 378 1560 411 #arcP
 Fs0 f82 guid 11F89E330427923D #txt
 Fs0 f82 type ch.ivyteam.ivy.addons.filemanager.FileListTable.FileListTableData #txt
 Fs0 f82 method addDocumentOnServers(List<ch.ivyteam.ivy.addons.filemanager.DocumentOnServer>) #txt
@@ -3223,10 +3223,12 @@ Fs0 f134 actionCode 'import ch.ivyteam.ivy.addons.filemanager.DocumentOnServer;
 List<DocumentOnServer> l = new List<DocumentOnServer>();
 
 for(DocumentOnServer doc: panel.fileListTable.selectedListEntries){
+	doc.isLocked =false;
 	l.add(doc);
 }
 
-panel.desktopHandlerPanel.unLockSelectedDocumentsOnServer(l);' #txt
+panel.desktopHandlerPanel.unLockSelectedDocumentsOnServer(l);
+' #txt
 Fs0 f134 type ch.ivyteam.ivy.addons.filemanager.FileListTable.FileListTableData #txt
 Fs0 f134 2942 436 36 24 20 -2 #rect
 Fs0 f134 @|RichDialogProcessStepIcon #fIcon
@@ -3700,6 +3702,34 @@ Fs0 f243 expr out #txt
 Fs0 f243 2824 74 2824 84 #arcP
 Fs0 f247 expr out #txt
 Fs0 f247 2824 108 2824 124 #arcP
+Fs0 f264 targetWindow NEW:card: #txt
+Fs0 f264 targetDisplay TOP #txt
+Fs0 f264 richDialogId ch.ivyteam.ivy.addons.filemanager.util.MessageDialog #txt
+Fs0 f264 startMethod start(String,String) #txt
+Fs0 f264 type ch.ivyteam.ivy.addons.filemanager.FileListTable.FileListTableData #txt
+Fs0 f264 requestActionDecl '<String text, String iconUri> param;' #txt
+Fs0 f264 requestMappingAction 'param.iconUri="/ch/ivyteam/ivy/addons/icons/close/48";
+' #txt
+Fs0 f264 requestActionCode 'param.text=in.returnedMessage.text;
+if(in.#returnedMessage.#file!=null) {
+	param.text=param.text.replace("</html>","");
+	param.text+="<br>"+in.returnedMessage.file.getName();
+}
+' #txt
+Fs0 f264 responseActionDecl 'ch.ivyteam.ivy.addons.filemanager.FileListTable.FileListTableData out;
+' #txt
+Fs0 f264 responseMappingAction 'out=in;
+' #txt
+Fs0 f264 windowConfiguration '* ' #txt
+Fs0 f264 isAsynch false #txt
+Fs0 f264 isInnerRd true #txt
+Fs0 f264 userContext '* ' #txt
+Fs0 f264 1542 364 36 24 20 -2 #rect
+Fs0 f264 @|RichDialogIcon #fIcon
+Fs0 f270 expr out #txt
+Fs0 f270 1560 346 1560 364 #arcP
+Fs0 f81 expr out #txt
+Fs0 f81 1560 388 1560 411 #arcP
 >Proto Fs0 .rdData2UIAction 'panel.enablerTextField.visible=false;
 panel.fileListTable.listData=in.documentsInDb;
 panel.ToolbarFlowLayoutPane.visible=in.configurationController.toolBarVisible;
@@ -3765,8 +3795,6 @@ Fs0 f62 out f68 tail #connect
 Fs0 f68 head f66 mainIn #connect
 Fs0 f72 mainOut f76 tail #connect
 Fs0 f76 head f74 mainIn #connect
-Fs0 f61 mainOut f81 tail #connect
-Fs0 f81 head f80 mainIn #connect
 Fs0 f84 mainOut f87 tail #connect
 Fs0 f87 head f86 mainIn #connect
 Fs0 f85 mainOut f89 tail #connect
@@ -3983,3 +4011,7 @@ Fs0 f52 mainOut f243 tail #connect
 Fs0 f243 head f231 mainIn #connect
 Fs0 f231 mainOut f247 tail #connect
 Fs0 f247 head f263 mainIn #connect
+Fs0 f61 mainOut f270 tail #connect
+Fs0 f270 head f264 mainIn #connect
+Fs0 f264 mainOut f81 tail #connect
+Fs0 f81 head f80 mainIn #connect

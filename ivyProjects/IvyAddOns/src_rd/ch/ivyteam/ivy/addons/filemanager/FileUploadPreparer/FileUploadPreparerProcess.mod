@@ -1,5 +1,5 @@
 [Ivy]
-[>Created: Wed Aug 08 21:42:13 EDT 2012]
+[>Created: Mon Oct 07 21:50:04 EDT 2013]
 125FDE1E1CFE410A 3.17 #module
 >Proto >Proto Collection #zClass
 Fs0 FileUploadPreparerProcess Big #zClass
@@ -67,6 +67,11 @@ Fs0 @PushWFArc f49 '' #zField
 Fs0 @RichDialogMethodStart f45 '' #zField
 Fs0 @RichDialogProcessEnd f50 '' #zField
 Fs0 @PushWFArc f51 '' #zField
+Fs0 @RichDialogMethodStart f52 '' #zField
+Fs0 @RichDialog f53 '' #zField
+Fs0 @PushWFArc f54 '' #zField
+Fs0 @RichDialogProcessEnd f55 '' #zField
+Fs0 @PushWFArc f56 '' #zField
 >Proto Fs0 Fs0 FileUploadPreparerProcess #zField
 Fs0 f0 guid 12181518EFF20514 #txt
 Fs0 f0 type ch.ivyteam.ivy.addons.filemanager.FileUploadPreparer.FileUploadPreparerData #txt
@@ -475,13 +480,13 @@ if(in.configurationController.storeFilesInDB)
 	{
 		in.uploadManager = new FileUploadHandler(panel,"_onUploadError","_getUploadedFileFromUploadHandler","_onChangeFile","_onProgress",dir.getAbsolutePath());		
 	}else{
-		in.uploadManager = new FileUploadHandler(panel,"_uploadError","_uploadDone","_askForOverwriteFiles","",in.configurationController.rootPath);
+		in.uploadManager = new FileUploadHandler(panel,"_onUploadError","_uploadDone","_askForOverwriteFiles","",in.configurationController.rootPath);
 	}
 	in.uploadManager.setAreFilesStoredInDB(true);
 	in.uploadManager.setFilesDestinationPathForDB(in.configurationController.rootPath);
 	in.uploadManager.setFileHandlerMgt(in.fileManagementHandler);
 }else{
-	in.uploadManager = new FileUploadHandler(panel,"_uploadError","_uploadDone","_askForOverwriteFiles","",in.configurationController.rootPath);
+	in.uploadManager = new FileUploadHandler(panel,"_onUploadError","_uploadDone","_askForOverwriteFiles","",in.configurationController.rootPath);
 }
 
 ' #txt
@@ -572,6 +577,59 @@ Fs0 f50 470 646 20 20 13 0 #rect
 Fs0 f50 @|RichDialogProcessEndIcon #fIcon
 Fs0 f51 expr out #txt
 Fs0 f51 480 618 480 646 #arcP
+Fs0 f52 guid 14195A6966E1D725 #txt
+Fs0 f52 type ch.ivyteam.ivy.addons.filemanager.FileUploadPreparer.FileUploadPreparerData #txt
+Fs0 f52 method _onUploadError(ch.ivyteam.ivy.addons.filemanager.ReturnedMessage) #txt
+Fs0 f52 disableUIEvents false #txt
+Fs0 f52 inParameterDecl 'ch.ivyteam.ivy.richdialog.exec.RdMethodCallEvent methodEvent = event as ch.ivyteam.ivy.richdialog.exec.RdMethodCallEvent;
+<ch.ivyteam.ivy.addons.filemanager.ReturnedMessage returnedMessage> param = methodEvent.getInputArguments();
+' #txt
+Fs0 f52 inParameterMapAction 'out.returnedMessage=param.returnedMessage;
+' #txt
+Fs0 f52 outParameterDecl '<> result;
+' #txt
+Fs0 f52 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>_onUploadError(ReturnedMessage)</name>
+        <nameStyle>31,5,7
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
+Fs0 f52 358 734 20 20 13 0 #rect
+Fs0 f52 @|RichDialogMethodStartIcon #fIcon
+Fs0 f53 targetWindow NEW:card: #txt
+Fs0 f53 targetDisplay TOP #txt
+Fs0 f53 richDialogId ch.ivyteam.ivy.addons.filemanager.util.MessageDialog #txt
+Fs0 f53 startMethod start(String,String) #txt
+Fs0 f53 type ch.ivyteam.ivy.addons.filemanager.FileUploadPreparer.FileUploadPreparerData #txt
+Fs0 f53 requestActionDecl '<String text, String iconUri> param;' #txt
+Fs0 f53 requestMappingAction 'param.iconUri="/ch/ivyteam/ivy/addons/icons/close/48";
+' #txt
+Fs0 f53 requestActionCode 'param.text=in.returnedMessage.text;
+if(in.#returnedMessage.#file!=null) {
+	param.text=param.text.replace("</html>","");
+	param.text+="<br>"+in.returnedMessage.file.getName();
+}
+' #txt
+Fs0 f53 responseActionDecl 'ch.ivyteam.ivy.addons.filemanager.FileUploadPreparer.FileUploadPreparerData out;
+' #txt
+Fs0 f53 responseMappingAction 'out=in;
+' #txt
+Fs0 f53 windowConfiguration '* ' #txt
+Fs0 f53 isAsynch false #txt
+Fs0 f53 isInnerRd true #txt
+Fs0 f53 userContext '* ' #txt
+Fs0 f53 350 780 36 24 20 -2 #rect
+Fs0 f53 @|RichDialogIcon #fIcon
+Fs0 f54 expr out #txt
+Fs0 f54 368 754 368 780 #arcP
+Fs0 f55 type ch.ivyteam.ivy.addons.filemanager.FileUploadPreparer.FileUploadPreparerData #txt
+Fs0 f55 358 838 20 20 13 0 #rect
+Fs0 f55 @|RichDialogProcessEndIcon #fIcon
+Fs0 f56 expr out #txt
+Fs0 f56 368 804 368 838 #arcP
 >Proto Fs0 .rdData2UIAction 'panel.deleteButton.enabled=IF(in.selectedFiles.isEmpty(), false, true);
 panel.filesTable.listData=in.filesToUpload;
 ' #txt
@@ -637,3 +695,7 @@ Fs0 f46 mainOut f49 tail #connect
 Fs0 f49 head f48 mainIn #connect
 Fs0 f45 mainOut f51 tail #connect
 Fs0 f51 head f50 mainIn #connect
+Fs0 f52 mainOut f54 tail #connect
+Fs0 f54 head f53 mainIn #connect
+Fs0 f53 mainOut f56 tail #connect
+Fs0 f56 head f55 mainIn #connect

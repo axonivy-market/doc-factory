@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import ch.ivyteam.ivy.persistence.PersistencyException;
 import ch.ivyteam.ivy.persistence.db.IPreparedStatementExecutable;
@@ -23,6 +24,8 @@ import ch.ivyteam.ivy.addons.filemanager.FileHandler;
 import ch.ivyteam.ivy.addons.filemanager.ReturnedMessage;
 import ch.ivyteam.ivy.addons.filemanager.ZipHandler;
 import ch.ivyteam.ivy.addons.filemanager.database.security.AbstractDirectorySecurityController;
+import ch.ivyteam.ivy.addons.filemanager.database.security.SecurityHandler;
+import ch.ivyteam.ivy.addons.filemanager.folderonserver.FolderAction;
 import ch.ivyteam.ivy.addons.filemanager.util.PathUtil;
 import ch.ivyteam.ivy.environment.Ivy;
 
@@ -1598,14 +1601,110 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 
 	}
 
-	public ReturnedMessage renameDirectory(String parentPath, 
+	@Override
+	public ReturnedMessage renameDirectory(String path, 
 			String newName) throws Exception {
 		ReturnedMessage message = new ReturnedMessage();
 		message.setFiles(List.create(java.io.File.class));
-		if(parentPath==null ||  newName==null || newName.trim().equals("")){
-			message.setText("");
+		if(path==null || newName==null || newName.trim().equals("")){
+			message.setText("One of the parameter was invalid for the method renameDirectory in "+this.getClass().getName());
 			message.setType(FileHandler.ERROR_MESSAGE);
+			return message;
 		}
+		newName= PathUtil.formatPathForDirectoryWithoutLastAndFirstSeparator(newName);
+		if(newName.contains("/") || newName.contains("\"")){
+			message.setText(Ivy.cms().co("/ch/ivyteam/ivy/addons/filemanager/fileManagement/messages/error/invalidCharacterInDirName"));
+			message.setType(FileHandler.ERROR_MESSAGE);
+			return message;
+		}
+		//format the path
+		String newPath="";
+		path= PathUtil.formatPathForDirectoryWithoutLastSeparator(path);
+		//Ivy.log().info("Formatted path: "+path);
+		if(path.equals(""))
+		{//no valid path was entered ("////" for example)
+			message.setText("One of the parameter was invalid for the method renameDirectory in "+this.getClass().getName());
+			message.setType(FileHandler.ERROR_MESSAGE);
+			return message;
+		}
+		if(!path.contains("/")){//path is composed just by the directory old name
+			newPath=newName;
+		}else{//We get the old directory name
+			newPath= path.substring(0,path.lastIndexOf("/"))+"/"+newName;
+		}
+		//look if directory exists
+		if(!this.directoryExists(path)){
+			message.setText("The directory to rename does not exist.");
+			message.setType(FileHandler.ERROR_MESSAGE);
+			return message;
+		}
+		//Select all the files in the dir structure and put the edited one in hashmap
+		final List<DocumentOnServer> docs = this.getDocumentOnServersInDirectory(path, true);
+		message.setHashMapFiles(new HashMap<java.io.File,java.io.File>());
+		for (DocumentOnServer doc: docs){
+			if(doc.getLocked().equalsIgnoreCase("1")){
+				message.getHashMapFiles().put(new java.io.File(doc.getPath()), new java.io.File(doc.getPath().replaceFirst("\\Q"+path+"/"+"\\E", newPath+"/")));
+			}
+		}
+		//Check if new path exists
+		java.io.File tempDir =null;
+		if(this.directoryExists(newPath)){
+			//Support for case change in the name
+			java.io.File dir = new java.io.File(path);
+			boolean exist = false;
+			ArrayList<FolderOnServer> lfos = this.getListDirectDirectoriesUnderPath(dir.getParent());
+			for(FolderOnServer fos: lfos){
+				if(fos.getName().equals(newName)) {
+					//the new directory exists really....
+					exist=true;
+					break;
+				}
+			}
+			boolean b =false;
+			if(!exist) {
+				tempDir= new java.io.File(path.substring(0,path.lastIndexOf("/"))+"/"+System.nanoTime());
+				b = dir.renameTo(tempDir);
+			}
+			if(!b || exist){
+				message.setText("The directory "+newPath+" already exists. You cannot create a duplicate directory.");
+				message.setType(FileHandler.ERROR_MESSAGE);
+				return message;
+			}
+		}
+		//Now rename the directory
+		java.io.File dir = tempDir==null?new java.io.File(path):tempDir;
+		if(!dir.renameTo(new java.io.File(newPath))) {
+			message.setText("The directory "+path+" cannot be renamed. It is may be already in use by another process.");
+			message.setType(FileHandler.ERROR_MESSAGE);
+			return message;
+		}
+		message.getFiles().add(0, new java.io.File(path));
+		message.getFiles().add(1, new java.io.File(newPath));
+		
+		final String fpath = path;
+		final String fnewPath = newPath;
+		//we update all the contained files
+		IvySystemDBReuser.executePreparedStatement("UPDATE "+this.tableName+" SET FilePath = ? WHERE FileId = ?",
+				new IPreparedStatementExecutable<Integer>(){
+			public Integer execute(PreparedStatement stmt) throws PersistencyException {
+				int i = 0;
+				for (DocumentOnServer doc: docs){
+					try{
+						String p = fpath+"/";
+						String s = doc.getPath().replaceFirst("\\Q"+ p+"\\E", fnewPath+"/");
+						stmt.setString(1, s);
+						stmt.setInt(2, Integer.parseInt(doc.getFileID()));
+						stmt.executeUpdate();
+						i++;
+					}catch(Exception ex){
+						Ivy.log().error("Error in renameDirectory method while renaming the path of a file.", ex);
+					}
+				}
+				return i;
+			}
+		});
+		
+		message.setActionType(FolderAction.RENAME);
 		return message;
 	}
 
@@ -2269,9 +2368,15 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 	}
 
 	@Override
+	@Deprecated
 	public AbstractDirectorySecurityController getSecurityController()
 			throws Exception {
 		
+		return null;
+	}
+	
+	@Override
+	public SecurityHandler getSecurityHandler() {
 		return null;
 	}
 

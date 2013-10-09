@@ -61,6 +61,16 @@ In some processes a user has to choose some Files to upload on the server at a t
             <nullPermitted>false</nullPermitted>
         </inputParameter>
     </method>
+    <method>
+        <name>_onUploadError</name>
+        <description></description>
+        <inputParameter>
+            <name>returnedMessage</name>
+            <description></description>
+            <parameterType>ch.ivyteam.ivy.addons.filemanager.ReturnedMessage</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </inputParameter>
+    </method>
     <startMethod>
         <name>start</name>
         <description>Default Rich Dialog start

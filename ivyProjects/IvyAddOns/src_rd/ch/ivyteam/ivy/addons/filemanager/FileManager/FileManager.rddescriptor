@@ -154,6 +154,16 @@ path of the directory where the files were deleted</description>
             <nullPermitted>true</nullPermitted>
         </attachment>
     </acceptedBroadcast>
+    <acceptedBroadcast>
+        <name>SE_FolderOnServer_changed</name>
+        <description></description>
+        <attachment>
+            <name>returnedMessage</name>
+            <description></description>
+            <parameterType>ch.ivyteam.ivy.addons.filemanager.ReturnedMessage</parameterType>
+            <nullPermitted>true</nullPermitted>
+        </attachment>
+    </acceptedBroadcast>
     <method>
         <name>getLastFileUploaded</name>
         <description>get the last Uploaded File reference.&#xD;
@@ -1674,6 +1684,17 @@ This Event sends the FileManager unique PanelId data so that only other FileMana
             <name>fileId</name>
             <description></description>
             <parameterType>String</parameterType>
+            <nullPermitted>true</nullPermitted>
+        </attachment>
+    </firedEvent>
+    <firedEvent>
+        <name>SE_FolderOnServer_changed</name>
+        <description></description>
+        <scope>SYSTEM</scope>
+        <attachment>
+            <name>returnedMessage</name>
+            <description></description>
+            <parameterType>ch.ivyteam.ivy.addons.filemanager.ReturnedMessage</parameterType>
             <nullPermitted>true</nullPermitted>
         </attachment>
     </firedEvent>

@@ -24,14 +24,32 @@ public class UlcExtentionCheckUtil {
 	 * @param args the arguments Class types. If the method has no arguments, please give null.
 	 * @return returns true if the given method with the arguments types from the specified class can be found, else false.
 	 */
+	@SuppressWarnings("restriction")
 	public static boolean ulcMethodExist(String className, String methodName, Class<?>... args){
 		boolean result = false;
 		try{
+			Ivy.log().info("calling ulcMethodExist {0} {1} {2}",className,methodName,Thread.currentThread().getContextClassLoader());
 			Class<?> c = Thread.currentThread().getContextClassLoader().loadClass(className);
+			
 			c.getDeclaredMethod(methodName, args);
 			result = true;
 		}catch(Exception ex){
 			Ivy.log().debug("The method {0} with the args {1} for the Class {2} does not exist.", className, args, methodName);
+		}
+		if(!result) {
+			try {
+				Ivy.log().info("Test 1");
+				Ivy.log().info("calling ulcMethodExist {0} {1} {2}",className,methodName,Ivy.request().getProject().getProjectClassLoader());
+				Class<?> c = Ivy.request().getProject().getProjectClassLoader().loadClass(className);
+				Ivy.log().info("Test 2");
+				c.getDeclaredMethod(methodName, args);
+				Ivy.log().info("Test 3");
+				result = true;
+			}catch(Exception ex){
+				Ivy.log().debug("The method {0} with the args {1} for the Class {2} does not exist.", className, args, methodName);
+			}finally {
+				
+			}
 		}
 		return result;
 	}
@@ -54,7 +72,7 @@ public class UlcExtentionCheckUtil {
 				result = true;
 			}
 		}catch(Exception ex){
-			Ivy.log().debug("The method {0} with the args {1} for the Object {2} does not exist.", o, args, methodName);
+			Ivy.log().error("The method {0} with the args {1} for the Object {2} does not exist.", o, args, methodName);
 		}
 		return result;
 	}

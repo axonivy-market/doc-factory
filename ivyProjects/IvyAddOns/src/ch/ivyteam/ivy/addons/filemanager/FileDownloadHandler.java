@@ -546,7 +546,7 @@ public class FileDownloadHandler<T extends ULCComponent & IRichDialogPanel>  imp
     			String fname = new java.io.File(paths[i]).getName();
     			for(File f: this.preparedFiles) {
     				if(fname.compareToIgnoreCase(f.getName())==0) {
-    					Ivy.log().info("File 2 get "+f);
+    					Ivy.log().debug("File 2 get "+f);
     					files.add(f);
     					break;
     				}
@@ -569,12 +569,13 @@ public class FileDownloadHandler<T extends ULCComponent & IRichDialogPanel>  imp
 		if(files.isEmpty()) {
 			this.downloadFilesAfterOverridingCheck(this.preparedFiles);
 		} else {
-			fileOperationMessage.setFiles(files);
+			this.fileOperationMessage = new FileOperationMessage();
+			this.fileOperationMessage.setFiles(files);
 			String message = Ivy.cms().co("/ch/ivyteam/ivy/addons/filemanager/download/message/overwriteExistingFiles");
 			
-			fileOperationMessage.setMessage(message);
-			Ivy.log().info("Calling {0} "+ this.callbackForOverriding);
-			RDCallbackMethodHandler.callRDMethod(ulcPane, this.callbackForOverriding, new Object[] { fileOperationMessage });
+			this.fileOperationMessage.setMessage(message);
+			Ivy.log().debug("Calling {0} \n{1} \nAt that point preparedFiles {2}",this.callbackForOverriding,this.fileOperationMessage,this.preparedFiles);
+			RDCallbackMethodHandler.callRDMethod(ulcPane, this.callbackForOverriding, new Object[] { this.fileOperationMessage });
 		}
 	}
 	
@@ -584,6 +585,7 @@ public class FileDownloadHandler<T extends ULCComponent & IRichDialogPanel>  imp
 	 * @param files
 	 */
 	public void downloadPreparedFilesWithPossibilityToExclude(ch.ivyteam.ivy.scripting.objects.List<File> files) {
+		Ivy.log().debug("downloadFilesAfterOverridingCheck \n{0} \npreparedFiles: {1}",files,this.preparedFiles);
 		if(files==null || files.isEmpty()) {
 			this.downloadFilesAfterOverridingCheck(this.preparedFiles);
 		}else{
@@ -605,8 +607,12 @@ public class FileDownloadHandler<T extends ULCComponent & IRichDialogPanel>  imp
 	}
 	
 	private void downloadFilesAfterOverridingCheck (final List<File> files){
+		Ivy.log().debug("downloadFilesAfterOverridingCheck \n{0}",files);
 		this.preparedPath = PathUtil.formatPathForDirectoryAllowingSlashesAndBackslashesAtBeginOfPath(this.preparedPath);
 		cleanTimer();
+		if(files.isEmpty()){
+			return;
+		}
 		timer.addActionListener(new IActionListener() {
 			/**
 			 * 

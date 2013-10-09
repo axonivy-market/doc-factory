@@ -1660,33 +1660,35 @@ public abstract class FileHandler
 
 	/**
 	 * 
-	 * @param f : the File wich length should be returned
+	 * @param f : the File which length should be returned
 	 * @return The String representation of the File Size.<br>
 	 * If the size exceeds the Mb unit, then it will be returned in Mb (e.g. "3.45 Mb")<br>
-	 * If the size exceeds the Kb unit, then it will be returned in Kb (e.g. "10.23 Kb")<br>
+	 * If the size exceeds the Kb unit, then it will be returned in Kb (e.g. "10 Kb"). In that case, the decimal part will not be shown.<br>
 	 * If the size is under the Kb unit, then it will be returned in bytes (e.g. "120 bytes")<br>
 	 */
 	public static String getFileSize(File f){
 		StringBuffer size= new StringBuffer();
-		java.text.NumberFormat formatter = new java.text.DecimalFormat("#.###");
-
 		if(f == null || !f.exists())
 			size.append("0 byte");
 		else{
-			long l = f.length();
+			float l = f.length();
 			if(l>1048576){
-				long s = l/1048576;
+				java.text.NumberFormat formatter = new java.text.DecimalFormat("#.##");
+				float s = l/1048576;
 				String nb =formatter.format(s);
 				size.append(nb);
 				size.append(" Mb");
 			}
 			else if(l>1024){
-				long s = l/1024;
+				java.text.NumberFormat formatter = new java.text.DecimalFormat("#");
+				float s = l/1024;
 				String nb =formatter.format(s);
 				size.append(nb);
 				size.append(" Kb");
 			}else {
-				size.append(l);
+				java.text.NumberFormat formatter = new java.text.DecimalFormat("#");
+				String nb =formatter.format(l);
+				size.append(nb);
 				size.append(" bytes");
 			}
 		}

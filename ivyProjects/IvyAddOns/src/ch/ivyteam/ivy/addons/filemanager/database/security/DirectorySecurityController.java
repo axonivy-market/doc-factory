@@ -5,7 +5,6 @@ package ch.ivyteam.ivy.addons.filemanager.database.security;
 
 import java.sql.DatabaseMetaData;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
 
 import ch.ivyteam.ivy.addons.filemanager.FileManagementHandlersFactory;
@@ -1244,7 +1243,7 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 		return this.fileSecurityHandler.getDirectoryWithPath(_path);
 	}
 	
-	FolderOnServer fillUserRightsInFolderOnServer(FolderOnServer fos, List<IRole> userRoles) {
+	protected FolderOnServer fillUserRightsInFolderOnServer(FolderOnServer fos, List<IRole> userRoles) {
 		if(fos==null) {
 			return null;
 		}
@@ -1477,25 +1476,20 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 			FolderOnServer folder, IUser u, java.util.List<String> roles) {
 		boolean b = false;
 		try {
-			HashSet<String> rolesF = new HashSet<String>();
 			if(roles!=null && !roles.isEmpty()){
-				rolesF.addAll(roles);
-			}
-			if(u!=null) {
-				rolesF.addAll(IvyRoleHelper.getUserRolesAsListStrings(u));
-			}
-			if(rolesF.contains(this.securityAdmin)) {
-				b = true;
-			}
-			if(!b) {
-				this.ensureRightsIntegrityInDirectory(folder);
-				List<String> rs = getRolesInFolderForRight(folder, rightType);
-				if (rs != null) {
-					for (String r : rolesF) {
-						//for each roles owned by the user check if it is allowed to perform the action.
-						if (rs.contains(r)) {
-							b = true;
-							break;
+				if(roles.contains(this.securityAdmin)) {
+					b = true;
+				}
+				if(folder!=null && !b){
+					this.ensureRightsIntegrityInDirectory(folder);
+					List<String> rs = getRolesInFolderForRight(folder, rightType);
+					if (rs != null) {
+						for (String r : roles) {
+							//for each roles owned by the user check if it is allowed to perform the action.
+							if (rs.contains(r)) {
+								b = true;
+								break;
+							}
 						}
 					}
 				}

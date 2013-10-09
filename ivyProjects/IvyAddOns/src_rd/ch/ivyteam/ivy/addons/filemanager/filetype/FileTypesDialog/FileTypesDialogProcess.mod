@@ -1,5 +1,5 @@
 [Ivy]
-[>Created: Mon Jul 08 11:12:29 EDT 2013]
+[>Created: Mon Oct 07 12:14:02 EDT 2013]
 137EFFFAE6078CBB 3.17 #module
 >Proto >Proto Collection #zClass
 Fs0 FileTypesDialogProcess Big #zClass
@@ -78,6 +78,11 @@ Fs0 @RichDialogProcessStep f61 '' #zField
 Fs0 @PushWFArc f62 '' #zField
 Fs0 @PushWFArc f63 '' #zField
 Fs0 @PushWFArc f64 '' #zField
+Fs0 @RichDialogProcessStart f65 '' #zField
+Fs0 @RichDialog f1150 '' #zField
+Fs0 @PushWFArc f66 '' #zField
+Fs0 @RichDialogProcessEnd f67 '' #zField
+Fs0 @PushWFArc f68 '' #zField
 >Proto Fs0 Fs0 FileTypesDialogProcess #zField
 Fs0 f0 guid 137EFFFAE7CFDE05 #txt
 Fs0 f0 type ch.ivyteam.ivy.addons.filemanager.filetype.FileTypesDialog.FileTypesDialogData #txt
@@ -700,10 +705,57 @@ Fs0 f63 expr in #txt
 Fs0 f63 1024 198 1024 228 #arcP
 Fs0 f64 expr out #txt
 Fs0 f64 1024 316 1024 350 #arcP
->Proto Fs0 .rdData2UIAction 'panel.fileTypesTable.listData=in.fileTypesList;
+Fs0 f65 guid 14193B06942BCBF7 #txt
+Fs0 f65 type ch.ivyteam.ivy.addons.filemanager.filetype.FileTypesDialog.FileTypesDialogData #txt
+Fs0 f65 actionDecl 'ch.ivyteam.ivy.addons.filemanager.filetype.FileTypesDialog.FileTypesDialogData out;
+' #txt
+Fs0 f65 actionTable 'out=in;
+' #txt
+Fs0 f65 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>translate</name>
+        <nameStyle>9,5,7
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
+Fs0 f65 1190 70 20 20 13 0 #rect
+Fs0 f65 @|RichDialogProcessStartIcon #fIcon
+Fs0 f1150 targetWindow NEW:card: #txt
+Fs0 f1150 targetDisplay TOP #txt
+Fs0 f1150 richDialogId ch.ivyteam.ivy.addons.filemanager.util.ItemTranslationAdmin #txt
+Fs0 f1150 startMethod start(ch.ivyteam.ivy.addons.filemanager.ItemTranslation,ch.ivyteam.ivy.addons.filemanager.configuration.BasicConfigurationController,ch.ivyteam.ivy.addons.filemanager.database.persistence.TranslatedFileManagerItemsEnum,String) #txt
+Fs0 f1150 type ch.ivyteam.ivy.addons.filemanager.filetype.FileTypesDialog.FileTypesDialogData #txt
+Fs0 f1150 requestActionDecl '<ch.ivyteam.ivy.addons.filemanager.ItemTranslation inputItemTranslation, ch.ivyteam.ivy.addons.filemanager.configuration.BasicConfigurationController configuration, ch.ivyteam.ivy.addons.filemanager.database.persistence.TranslatedFileManagerItemsEnum itemType, String itemMainName> param;' #txt
+Fs0 f1150 requestMappingAction 'param.inputItemTranslation=in.choosedFileType.translation;
+param.configuration=in.configurationController;
+param.itemType=ch.ivyteam.ivy.addons.filemanager.database.persistence.TranslatedFileManagerItemsEnum.FILETYPE;
+param.itemMainName=in.choosedFileType.fileTypeName;
+' #txt
+Fs0 f1150 responseActionDecl 'ch.ivyteam.ivy.addons.filemanager.filetype.FileTypesDialog.FileTypesDialogData out;
+' #txt
+Fs0 f1150 responseMappingAction 'out=in;
+' #txt
+Fs0 f1150 responseActionCode out.choosedFileType.setTranslation(result.outputItemTranslation); #txt
+Fs0 f1150 windowConfiguration '{/title "<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/windowTitles/translate\")%>"/width 0 /height 0 /centered true /resizable true /maximized false /close_after_last_rd true }' #txt
+Fs0 f1150 isAsynch false #txt
+Fs0 f1150 isInnerRd true #txt
+Fs0 f1150 userContext '* ' #txt
+Fs0 f1150 1182 132 36 24 20 -2 #rect
+Fs0 f1150 @|RichDialogIcon #fIcon
+Fs0 f66 expr out #txt
+Fs0 f66 1200 90 1200 132 #arcP
+Fs0 f67 type ch.ivyteam.ivy.addons.filemanager.filetype.FileTypesDialog.FileTypesDialogData #txt
+Fs0 f67 1190 190 20 20 13 0 #rect
+Fs0 f67 @|RichDialogProcessEndIcon #fIcon
+Fs0 f68 expr out #txt
+Fs0 f68 1200 156 1200 190 #arcP
+>Proto Fs0 .rdData2UIAction 'panel.deleteButton.enabled=in.#choosedFileType!=null && in.choosedFileType.id>0;
+panel.fileTypesTable.listData=in.fileTypesList;
 panel.modifyButton.enabled=in.#choosedFileType!=null && in.choosedFileType.id>0;
 panel.selectButton.enabled=in.#choosedFileType!=null && in.choosedFileType.id>0;
-panel.deleteButton.enabled=in.#choosedFileType!=null && in.choosedFileType.id>0;
+panel.translateButton.visible=in.configurationController.activateFileTypeTranslation;
 ' #txt
 >Proto Fs0 .type ch.ivyteam.ivy.addons.filemanager.filetype.FileTypesDialog.FileTypesDialogData #txt
 >Proto Fs0 .processKind RICH_DIALOG #txt
@@ -769,3 +821,7 @@ Fs0 f56 out f63 tail #connect
 Fs0 f63 head f61 mainIn #connect
 Fs0 f60 mainOut f64 tail #connect
 Fs0 f64 head f58 mainIn #connect
+Fs0 f65 mainOut f66 tail #connect
+Fs0 f66 head f1150 mainIn #connect
+Fs0 f1150 mainOut f68 tail #connect
+Fs0 f68 head f67 mainIn #connect

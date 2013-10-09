@@ -28,6 +28,8 @@ CREATE TABLE UploadedFiles
 	OIDS=FALSE
 );
 
+/********* FILE STORED IN DATABASE FEATURE **********/
+
 CREATE SEQUENCE directories_sequence
   INCREMENT 1
   MINVALUE 1
@@ -50,9 +52,14 @@ CREATE TABLE directories
   cmdr character varying(2048),
   cod character varying(2048),
   cud character varying(2048),
+  ccd character varying(2048),
+  crd character varying(2048),
+  ctd character varying(2048),
   cdd character varying(2048),
   cwf character varying(2048),
-  cdf character varying(2048),
+  ccf character varying(2048),
+  cuf character varying(2048),
+  cdf character varying(2048), 
   CONSTRAINT directories_pkey PRIMARY KEY (id),
   CONSTRAINT directories_dir_path_key UNIQUE (dir_path)
   )
@@ -78,6 +85,8 @@ CREATE TABLE filecontent
   WITH (
   OIDS=FALSE
 );
+
+/********* FILE VERSIONS FEATURE **********/
 
 CREATE SEQUENCE fileversions_sequence
         INCREMENT 1
@@ -121,6 +130,8 @@ WITH (
   OIDS=FALSE
 );
 
+/********* FILE TYPES FEATURE **********/
+
 CREATE SEQUENCE filetype_sequence
         INCREMENT 1
         MINVALUE 1
@@ -140,6 +151,8 @@ WITH (
   OIDS=FALSE
 );
 
+/********* FILE TAGS FEATURE **********/
+
 CREATE SEQUENCE filetags_sequence
         INCREMENT 1
         MINVALUE 1
@@ -158,6 +171,8 @@ CREATE TABLE tags
 WITH (
   OIDS=FALSE
 );
+
+/********* FILE ACTION HISTORY FEATURE **********/
 
 CREATE SEQUENCE fileactiontype_sequence
         INCREMENT 1
@@ -215,3 +230,70 @@ INSERT INTO fileactiontype (atype,en,de,fr) VALUES (9,'File copied and paste', '
 INSERT INTO fileactiontype (atype,en,de,fr) VALUES (10,'File moved', 'Datei verschoben' , 'Fichier déplacé');
 INSERT INTO fileactiontype (atype,en,de,fr) VALUES (11,'New Version created', 'Neue Version erfasst' , 'Nouvelle version');
 INSERT INTO fileactiontype (atype,en,de,fr) VALUES (12,'Last version rollbacked', 'Letzte Version gelöscht' , 'Dernière version supprimée');
+
+/********* DIRECTORY AND FILETYPES TRANSLATION FEATURES **********/
+
+CREATE SEQUENCE fmlanguages_sequence
+	INCREMENT 1
+	MINVALUE 1
+	MAXVALUE 9223372036854775807
+	START 1
+	CACHE 1;
+
+CREATE TABLE public.fmlanguages
+(
+   id bigint NOT NULL DEFAULT nextval('fmlanguages_sequence'::regclass), 
+   isoname character varying(3) NOT NULL, 
+   CONSTRAINT fmlanguages_pk PRIMARY KEY (id), 
+   CONSTRAINT unique_isoname_fmlanguages UNIQUE (isoname)
+) 
+WITH (
+  OIDS = FALSE
+)
+;
+
+INSERT INTO fmlanguages(isoname) VALUES ('EN');
+INSERT INTO fmlanguages(isoname) VALUES ('DE');
+INSERT INTO fmlanguages(isoname) VALUES ('FR');
+
+CREATE SEQUENCE dirtranslation_sequence
+	INCREMENT 1
+	MINVALUE 1
+	MAXVALUE 9223372036854775807
+	START 1
+	CACHE 1;
+
+CREATE TABLE public.dirtranslation
+(
+   id bigint NOT NULL DEFAULT nextval('dirtranslation_sequence'::regclass), 
+   translateditemid bigint NOT NULL,
+   lang character varying(3) NOT NULL, 
+   tr character varying(1024) NULL,
+   CONSTRAINT dirtranslation_pk PRIMARY KEY (id), 
+   CONSTRAINT unique_dirtranslation UNIQUE (translateditemid,lang)
+) 
+WITH (
+  OIDS = FALSE
+)
+;
+
+CREATE SEQUENCE fttranslation_sequence
+	INCREMENT 1
+	MINVALUE 1
+	MAXVALUE 9223372036854775807
+	START 1
+	CACHE 1;
+
+CREATE TABLE public.fttranslation
+(
+   id bigint NOT NULL DEFAULT nextval('fttranslation_sequence'::regclass), 
+   translateditemid bigint NOT NULL,
+   lang character varying(3) NOT NULL, 
+   tr character varying(1024) NULL,
+   CONSTRAINT fttranslation_pk PRIMARY KEY (id), 
+   CONSTRAINT unique_fttranslation UNIQUE (translateditemid,lang)
+) 
+WITH (
+  OIDS = FALSE
+)
+;

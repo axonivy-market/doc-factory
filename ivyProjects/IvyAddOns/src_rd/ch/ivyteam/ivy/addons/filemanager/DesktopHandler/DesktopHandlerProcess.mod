@@ -1,5 +1,5 @@
 [Ivy]
-[>Created: Mon Aug 26 13:17:09 CEST 2013]
+[>Created: Mon Oct 07 22:24:30 EDT 2013]
 125F850DA67753A5 3.17 #module
 >Proto >Proto Collection #zClass
 Ds0 DesktopHandlerProcess Big #zClass
@@ -220,6 +220,9 @@ Ds0 @PushWFArc f204 '' #zField
 Ds0 @RichDialogMethodStart f149 '' #zField
 Ds0 @RichDialogProcessEnd f150 '' #zField
 Ds0 @PushWFArc f151 '' #zField
+Ds0 @RichDialogMethodStart f205 '' #zField
+Ds0 @RichDialogProcessEnd f206 '' #zField
+Ds0 @PushWFArc f207 '' #zField
 >Proto Ds0 Ds0 DesktopHandlerProcess #zField
 Ds0 f0 guid 11E20AE1BA5352AB #txt
 Ds0 f0 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
@@ -598,48 +601,21 @@ in.baseTempDir=FileHandler.formatPathWithEndSeparator(in.clientTempPath+in.clien
 if(!in.userPropertiesHandler.getUserTempDir().trim().equalsIgnoreCase("")){
 	in.clientTempPath=in.userPropertiesHandler.getUserTempDir();
 }
-boolean b = false;
-boolean alreadyOpened=false;
-if(in.#fileToWorkWith!=null){
-	for(FileCouple f: in.filesInReading){
-		//we found that this file is currently edited
-		if(f.getServerFile().getPath().equals(in.fileToWorkWith.getPath())){
-			alreadyOpened = true;
-			//we open the file where she is
-			if(in.#DesktopHandlerObject!=null){
-				in.DesktopHandlerObject.openFile(f.clientFile,true);
-			}
-			if(alreadyOpened){
-				break;
-			}
-		}
-	}
-	if(!alreadyOpened){
-		// if not already opened, we make the unique temp dir for it
+
+if(in.#fileToWorkWith!=null && in.fileToWorkWith.exists()){
+	// we make the unique temp dir for it
 		// the temp dir manager will inform the RDPanel as soon as the temp dir was created,
 		// we will then open the file in read only mode
 		String s= System.nanoTime().toString();
 		FileAndTempDirCouple ftd = new FileAndTempDirCouple();
 		ftd.file = in.fileToWorkWith;
 		ftd.tempDirName = s;
+		//We set the isFileEditable to false, so that the possible changes will not be transfered to the server.
 		ftd.isFileEditable = false;
 		in.filesToEdit.add(ftd);
 		in.userTempDirectoryManager.makeTempDir(s);
-	}
-	/*
-	b=FileHandler.download(in.fileToWorkWith,in.clientTempPath);
-	if(b){
-		java.io.File file = new java.io.File(in.clientTempPath+in.fileToWorkWith.getName());
-		if(in.#DesktopHandlerObject!=null){
-			in.DesktopHandlerObject.openFile(file, true);
-		}else{
-			in.errorMessage="Could''nt download the file "+in.fileToWorkWith.getPath();
-			panel._DesktopException(in.errorMessage);
-		}
-	}
-	*/
 }else{
-	in.errorMessage="No file selected";
+	in.errorMessage=ivy.cms.co("/ch/ivyteam/ivy/addons/filemanager/fileManagement/messages/error/fileNotfoundCannotBeOpened");
 	panel._DesktopException(in.errorMessage);
 }
 ' #txt
@@ -2607,6 +2583,37 @@ Ds0 f150 726 726 20 20 13 0 #rect
 Ds0 f150 @|RichDialogProcessEndIcon #fIcon
 Ds0 f151 expr out #txt
 Ds0 f151 736 682 736 726 #arcP
+Ds0 f205 guid 14174D0E73A666EC #txt
+Ds0 f205 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
+Ds0 f205 method _replaceServerFileInClientServerEditCheck(java.util.HashMap) #txt
+Ds0 f205 disableUIEvents false #txt
+Ds0 f205 inParameterDecl 'ch.ivyteam.ivy.richdialog.exec.RdMethodCallEvent methodEvent = event as ch.ivyteam.ivy.richdialog.exec.RdMethodCallEvent;
+<java.util.HashMap oldFilesNewFiles> param = methodEvent.getInputArguments();
+' #txt
+Ds0 f205 inActionCode 'if(panel.fileEditorCheckerPanel.getFileCoupleChecker()!=null) {
+	if(param.oldFilesNewFiles!=null && !param.oldFilesNewFiles.isEmpty()){
+		ivy.log.info("In DesktopHandler panel call fileEditorCheckerPanel.getFileCoupleChecker().replaceServerFiles(param.oldFilesNewFiles) \n{0}",param.oldFilesNewFiles);
+		panel.fileEditorCheckerPanel.getFileCoupleChecker().replaceServerFiles(param.oldFilesNewFiles);
+	}
+}' #txt
+Ds0 f205 outParameterDecl '<> result;
+' #txt
+Ds0 f205 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>_replaceServerFileInClientServerEditCheck(HashMap)</name>
+        <nameStyle>50,5,7
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
+Ds0 f205 1302 894 20 20 13 0 #rect
+Ds0 f205 @|RichDialogMethodStartIcon #fIcon
+Ds0 f206 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
+Ds0 f206 1302 958 20 20 13 0 #rect
+Ds0 f206 @|RichDialogProcessEndIcon #fIcon
+Ds0 f207 expr out #txt
+Ds0 f207 1312 914 1312 958 #arcP
 >Proto Ds0 .rdData2UIAction 'panel.fileEditedTable.listData=in.editedFileList;
 panel.visible=in.tableVisible;
 ' #txt
@@ -2792,3 +2799,5 @@ Ds0 f202 mainOut f204 tail #connect
 Ds0 f204 head f203 mainIn #connect
 Ds0 f149 mainOut f151 tail #connect
 Ds0 f151 head f150 mainIn #connect
+Ds0 f205 mainOut f207 tail #connect
+Ds0 f207 head f206 mainIn #connect

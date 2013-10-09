@@ -1,0 +1,4 @@
+co: name={renameFailSecurityException} description={} changed={2013-10-08 16:44:15 CEST} changedby={ec} visualorder={0} guid={141982B30F941B5C} parentguid={} typeguid={E6AFEA2034301F66} id={} parentid={} typeid={}
+val: guid={141982B3106648F4} datatype={} isdefault={true} langid={en} description={} validfrom={2009-05-19 09:58:39 CEST} validto={} changed={2013-10-08 16:44:15 CEST} changedby={ec} properties={} id={}
+val: guid={141982B311140A9A} datatype={} isdefault={false} langid={de} description={} validfrom={2009-07-14 11:39:02 CEST} validto={} changed={2013-10-08 15:10:02 CEST} changedby={ec} properties={} id={}
+val: guid={141982B30FDD289C} datatype={} isdefault={false} langid={fr} description={} validfrom={2009-07-23 13:56:53 CEST} validto={} changed={2013-10-08 15:10:03 CEST} changedby={ec} properties={} id={}

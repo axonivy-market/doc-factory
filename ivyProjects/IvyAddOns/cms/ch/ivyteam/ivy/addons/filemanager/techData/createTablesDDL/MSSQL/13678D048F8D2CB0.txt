@@ -19,6 +19,7 @@ CREATE TABLE dbo.uploadedfiles
 )
 GO
 
+/********* FILE STORED IN DATABASE FEATURE **********/
 CREATE TABLE dbo.directories
 (
 	id                   INT IDENTITY NOT NULL,
@@ -34,9 +35,14 @@ CREATE TABLE dbo.directories
 	cmdr                 VARCHAR (2048) NULL,
 	cod                  VARCHAR (2048) NULL,
 	cud                  VARCHAR (2048) NULL,
+	ccd                  VARCHAR (2048) NULL,
+	crd                  VARCHAR (2048) NULL,
+ 	ctd                  VARCHAR (2048) NULL,
 	cdd                  VARCHAR (2048) NULL,
 	cwf                  VARCHAR (2048) NULL,
-	cdf                  VARCHAR (2048) NULL,
+	ccf                  VARCHAR (2048) NULL,
+	cuf                  VARCHAR (2048) NULL,
+	cdf                  VARCHAR (2048) NULL,	
 	CONSTRAINT PK__directories PRIMARY KEY (id),
 	CONSTRAINT UQ__directories UNIQUE (dir_path)
 )
@@ -52,6 +58,7 @@ CREATE TABLE dbo.filecontent
 )
 GO
 
+/********* FILE VERSIONS FEATURE **********/
 CREATE TABLE dbo.file_versions
 (
 	versionid      BIGINT IDENTITY NOT NULL,
@@ -75,6 +82,7 @@ CREATE TABLE dbo.file_version_content
 )
 GO
 
+/********* FILE TYPES FEATURE **********/
 CREATE TABLE dbo.filetype
 (
 	id      BIGINT IDENTITY NOT NULL,
@@ -85,6 +93,7 @@ CREATE TABLE dbo.filetype
 )
 GO
 
+/********* FILE TAGS FEATURE **********/
 CREATE TABLE dbo.tags
 (
 	id     BIGINT IDENTITY NOT NULL,
@@ -94,6 +103,8 @@ CREATE TABLE dbo.tags
 	CONSTRAINT UQ__filetags UNIQUE (fileid,tag)
 )
 GO
+
+/********* FILE ACTION HISTORY FEATURE **********/
 
 CREATE TABLE dbo.fileactiontype
 (
@@ -134,3 +145,35 @@ INSERT INTO dbo.fileactiontype (atype,en,de,fr) VALUES (9,'File copied and paste
 INSERT INTO dbo.fileactiontype (atype,en,de,fr) VALUES (10,'File moved', 'Datei verschoben' , 'Fichier déplacé');
 INSERT INTO dbo.fileactiontype (atype,en,de,fr) VALUES (11,'New Version created', 'Neue Version erfasst' , 'Nouvelle version');
 INSERT INTO dbo.fileactiontype (atype,en,de,fr) VALUES (12,'Last version rollbacked', 'Letzte Version gelöscht' , 'Dernière version supprimée');
+
+/********* DIRECTORY AND FILETYPES TRANSLATION FEATURES **********/
+
+CREATE TABLE dbo.fmlanguages(
+	id bigint IDENTITY NOT NULL,
+	isoname nvarchar(3) UNIQUE NOT NULL
+)
+GO
+
+CREATE TABLE dbo.dirtranslation(
+	id bigint IDENTITY NOT NULL,
+	translateditemid bigint NOT NULL,
+	lang character varying(3) NOT NULL, 
+	tr character varying(1024) NULL,
+	CONSTRAINT PK__dirtranslation PRIMARY KEY (id),
+	CONSTRAINT UQ__dirtranslation UNIQUE (translateditemid,lang)
+)
+GO
+
+CREATE TABLE dbo.fttranslation(
+	id bigint IDENTITY NOT NULL,
+	translateditemid bigint NOT NULL,
+	lang character varying(3) NOT NULL, 
+	tr character varying(1024) NULL,
+	CONSTRAINT PK__fttranslation PRIMARY KEY (id),
+	CONSTRAINT UQ__fttranslation UNIQUE (translateditemid,lang)
+)
+GO
+
+INSERT INTO dbo.fmlanguages(isoname) VALUES ('EN');
+INSERT INTO dbo.fmlanguages(isoname) VALUES ('DE');
+INSERT INTO dbo.fmlanguages(isoname) VALUES ('FR');

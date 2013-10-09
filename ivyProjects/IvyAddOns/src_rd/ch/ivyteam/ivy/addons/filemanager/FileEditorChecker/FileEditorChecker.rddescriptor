@@ -93,6 +93,16 @@ This informations comes directly from the Client side with the UserSystemPropert
             <nullPermitted>false</nullPermitted>
         </inputParameter>
     </method>
+    <method>
+        <name>getFileCoupleChecker</name>
+        <description></description>
+        <outputParameter>
+            <name>fileCoupleChecker</name>
+            <description></description>
+            <parameterType>ch.ivyteam.ivy.addons.filemanager.ulcextensionhandler.FileCoupleChecker</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </outputParameter>
+    </method>
     <startMethod>
         <name>start</name>
         <description>Default Rich Dialog start
