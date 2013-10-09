@@ -30,6 +30,12 @@
       time of creation and last modification or if it is already edited (locked) by someone. All
       these meta informations are stored in a database. The documents can be stored as files on the
       fileset or as BLOB in the database.</para>
+    <important>
+      <para>For better maintainability and ease to use the file manager API was extended and
+        re-factored. All these changes have been made with back compatibility in mind. If you have
+        used or extended the API directly before, please read the "API, what has changed"
+      section.</para>
+    </important>
   </sect1>
   <sect1 xml:id="ivy.addons.filemanager.thefilemanagerRDC">
     <title>The FileManager RDC</title>
@@ -49,6 +55,10 @@
       <imageobject><imagedata fileref="images/FileManager/FileManager01.png"/></imageobject>
     </mediaobject>
     <para>All those files' informations are stored in a database.</para>
+    <tip>
+      <para>The IvyDemos provides a filemanager demo. You can use it to try all the main filemanager
+        features. </para>
+    </tip>
     <sect2 xml:id="ivy.addons.filemanager.initialization">
       <title>FileManager RDC Initialization</title>
       <para>This section describes how to start and use the FileManager. </para>
@@ -139,6 +149,21 @@
                   storeFilesInDB must be true to be able to activate this feature.</entry>
                 <entry>false</entry>
                 <entry><link linkend="ivy.addons.filemanager.types">File Types</link></entry>
+              </row>
+              <row>
+                <entry>activateFileTypeTranslation</entry>
+                <entry>Boolean, if true, the file types can be translated. Flag storeFilesInDB must
+                  be true to be able to activate this feature.</entry>
+                <entry>false</entry>
+                <entry><link linkend="ivy.addons.filemanager.types">File Types</link></entry>
+              </row>
+              <row>
+                <entry>activateDirectoryTranslation</entry>
+                <entry>Boolean, if true, the directories can be translated. Flag storeFilesInDB must
+                  be true to be able to activate this feature.</entry>
+                <entry>false</entry>
+                <entry>
+                </entry>
               </row>
               <row>
                 <entry>activateFileVersioning</entry>
@@ -1086,6 +1111,119 @@
           /></imageobject></inlinemediaobject>
       </para>
     </sect2>
+    <sect2 xml:id="ivy.addons.filemanager.apiChanges">
+      <title>API, what has changed...</title>
+      <para>For better maintainability and ease to use the file manager API was extended and
+        re-factored. All these changes have been made with back compatibility in mind. You will need
+        to read this section only if you have extended the API or only if you have used it directly
+        in some of your classes. </para>
+      <sect3>
+        <title>One Factory for all the file management handlers and controllers.</title>
+        <para>The file management system offers several functionality that are controlled by special
+          Java classes: we will call them Handlers. A new Factory class has been developed to create
+          the instances of these handlers for you: <emphasis role="italic"
+            >ch.ivyteam.ivy.addons.filemanager.FileManagementHandlersFactory</emphasis>. All the
+          public methods of this class are statics and takes a configuration Object
+          (ch.ivyteam.ivy.addons.filemanager.configuration.BasicConfigurationController) that holds
+          all the needed information to instantiate such handlers. </para>
+        <para> Here is a list of these Handlers:</para>
+        <itemizedlist>
+          <listitem>
+            <para>
+              <literallayout>The file management Handlers. 
+They are at the heart of the file management control. They perform the Files and directories CRUD functions and they extends the ch.ivyteam.ivy.addons.filemanager.database.AbstractFileManagementHandler abstract class. 
+Once your configuration object is set, you can get the corresponding Handler instance with the following FileManagementHandlersFactory's method: public static AbstractFileManagementHandler getFileManagementHandlerInstance (BasicConfigurationController config) 
+There are for the moment 3 different file management handlers:</literallayout>
+            </para>
+            <itemizedlist>
+              <listitem>
+                <para>The
+                  ch.ivyteam.ivy.addons.filemanager.database.FileManagementIvySystemDBHandler holds
+                  the files meta-information in the Ivy System database. The Files are stored
+                  "physically" on the file system of the server.</para>
+              </listitem>
+              <listitem>
+                <para>The
+                  ch.ivyteam.ivy.addons.filemanager.database.FileManagementDBHandlerUniversal holds
+                  the files meta-information in an external database. The Files are stored
+                  "physically" on the file system of the server.</para>
+              </listitem>
+              <listitem>
+                <para>The ch.ivyteam.ivy.addons.filemanager.database.FileStoreDBHandler holds the
+                  files meta-information in an external database and the files are stored as BLOB in
+                  the database. Only this last king of handler supports all the other file
+                  management features. If the configuration you have set leads to the creation of
+                  other handlers, you won't be able to get other handlers instances with it. </para>
+              </listitem>
+            </itemizedlist>
+          </listitem>
+          <listitem>
+            <para>
+              <literallayout> The file versioning handler. This handler manages the versioning feature. You get an instance of this handler with the following method: 
+public static AbstractFileVersioningController getFileVersioningControllerInstance(BasicConfigurationController config) </literallayout>
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              <literallayout>The file action history handler. This handler manages the history tracking feature. You get an instance of this handler with the following method:
+public static AbstractFileActionHistoryController getFileActionHistoryControllerInstance(BasicConfigurationController config) </literallayout>
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              <literallayout> The file tags handler. This handler manages the files tagging feature. You get an instance of this handler with the following method: 
+public static AbstractFileTagsController getFileTagsControllerInstance (BasicConfigurationController config) </literallayout>
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              <literallayout>The file types handler. This handler manages the file types feature. You get an nstance of this handler with the following method: 
+public static AbstractFileTypesController getFileTypesControllerInstance(BasicConfigurationController config)</literallayout>
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              <literallayout>The file directory security handler. This handler verifies the security rights on the different directories. It should not be used for Create, Update or Delete operations. 
+You get an instance of this handler with the following method: public static AbstractDirectorySecurityController getDirectorySecurityControllerInstance(BasicConfigurationController config)
+This Directory security handler has been re-factored. Please read the next section about the security.</literallayout>
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              <literallayout>The file security handler. This handler creates and updates the security rights on the different directories. 
+The FileStoreDBHandler extends the AbstractFileSecurityHandler and is for the moment the only existing file security handler. 
+This change was made with the Security re-factoring. Please read the next section about the security. 
+You get an instance of this handler with the following method: 
+public static AbstractFileSecurityHandler getFileSecurityHandlerInstance(BasicConfigurationController config)</literallayout>
+            </para>
+          </listitem>
+        </itemizedlist>
+      </sect3>
+      <sect3>
+        <title>Changes in the security management.</title>
+        <para>
+          <literallayout>
+In earlier versions of the security management, only the directory security handler (DirectorySecurityController) was in charge of all the CRUD operations on the Security. 
+The problem was that the FileStoreDBHandler was already in charge of directories CRUD operations.
+            
+Now the FileStoreDBHandler has endorsed all the create and update operations of the DirectorySecurityController and has become an AbstractFileSecurityHandler. 
+This AbstractFileSecurityHandler declares all these create and update methods that were formerly declared in the AbstractDirectorySecurityController. 
+If you need to use the API to directly manage the different rights on the directories, please use the FileSecurityHandler's API.
+            
+The DirectorySecurityController should only be used for Security check purposes now. (Looking if a user has some rights on a given directory, if a role is found in the allowed roles list etc...)
+            
+For backward compatibility reasons, the AbstractDirectorySecurityController still declares all the create and update methods. But there are now deprecated and should not be used anymore. 
+The DirectorySecurityController delegates these operations to the FileSecurityHandler through its "securityHandler member".
+The FileStoreDBHandler still uses the AbstractDirectorySecurityController for security check only through its "securityController member".
+            
+The following classes diagram illustrates the actual relationship between these classes:
+          </literallayout>
+          <mediaobject>
+            <imageobject><imagedata fileref="images/FileManager/SecurityDiagram.png"/></imageobject>
+          </mediaobject>
+        </para>
+      </sect3>
+    </sect2>
     <sect2 xml:id="ivy.addons.filemanager.methods">
       <title>Important methods</title>
       <para>In this section we won't have a look at all the filemanger's methods. please refer to
@@ -1146,9 +1284,7 @@
       <title>The Filemanager Demo</title>
       <para>A demo has been included in the IvyDemo project that comes with the Ivy Designer. This
         demo allows testing the main features of the FileManager (File storage on the database,
-        Security and so on...). <mediaobject>
-          <imageobject><imagedata fileref="images/FileManager/demo.png"/></imageobject>
-        </mediaobject></para>
+        Security and so on...). </para>
     </sect2>
     <sect2 xml:id="ivy.addons.filemanager.miscellaneous">
       <title>Other Informations on the FileManager RDC</title>
