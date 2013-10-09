@@ -18,6 +18,7 @@ import ch.ivyteam.ivy.addons.filemanager.configuration.BasicConfigurationControl
 import ch.ivyteam.ivy.addons.filemanager.database.fileaction.AbstractFileActionHistoryController;
 import ch.ivyteam.ivy.addons.filemanager.database.fileaction.FileActionHistoryController;
 import ch.ivyteam.ivy.addons.filemanager.database.security.AbstractDirectorySecurityController;
+import ch.ivyteam.ivy.addons.filemanager.database.security.SecurityHandler;
 import ch.ivyteam.ivy.addons.filemanager.util.PathUtil;
 
 /**
@@ -996,6 +997,8 @@ public abstract class AbstractFileManagementHandler {
 			String _newName) throws Exception;
 
 	/**
+	 * Deprecated: please use the new getSecurityHandler method to get the SecurityHandler object.<br>
+	 * Such an object has one method that allows getting the rights of a user on a particular FolderOnServer.<br>
 	 * returns the FileManager Security Controller if applicable.<br>
 	 * If the Security controlling is not implemented, this method should return
 	 * null.
@@ -1003,8 +1006,17 @@ public abstract class AbstractFileManagementHandler {
 	 * @return the FileManager Security Controller if applicable, or null
 	 * @throws Exception
 	 */
+	@Deprecated
 	public abstract AbstractDirectorySecurityController getSecurityController()
 			throws Exception;
+	
+	/**
+	 * Returns the SecurityHandler object that controls the security rights, if the security is available.<br>
+	 * Such an object has one method that allows getting the rights of a user on a particular FolderOnServer.
+	 * If the security is not implemented the result will be null.
+	 * @return the SecurityHandler object that controls the security rights
+	 */
+	public abstract SecurityHandler getSecurityHandler();
 
 	/**
 	 * Get the storage type where the files' content is going to be stored

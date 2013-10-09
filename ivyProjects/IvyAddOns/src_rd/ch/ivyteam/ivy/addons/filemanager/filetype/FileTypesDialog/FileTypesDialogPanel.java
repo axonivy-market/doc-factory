@@ -36,6 +36,7 @@ private RFlowLayoutPane chooserFlowLayoutPane = null;
 private RButton selectButton = null;
 private RButton cancelButton = null;
 private RButton deleteButton = null;
+private RButton translateButton = null;
   
   /**
    * Create a new instance of FileTypesDialogPanel
@@ -106,6 +107,7 @@ private RFlowLayoutPane getManagerFlowLayoutPane() {
 		managerFlowLayoutPane.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.gray));
 		managerFlowLayoutPane.add(getNewButton());
 		managerFlowLayoutPane.add(getModifyButton());
+		managerFlowLayoutPane.add(getTranslateButton());
 		managerFlowLayoutPane.add(getDeleteButton());
 		managerFlowLayoutPane.add(getCloseButton());
 	}
@@ -223,5 +225,21 @@ private RButton getDeleteButton() {
 		deleteButton.setName("deleteButton");
 	}
 	return deleteButton;
+}
+
+/**
+ * This method initializes translateButton	
+ * 	
+ * @return ch.ivyteam.ivy.richdialog.widgets.components.RButton	
+ */
+private RButton getTranslateButton() {
+	if (translateButton == null) {
+		translateButton = new RButton();
+		translateButton.setText("<%= ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/buttonLabels/translateDir\") %>");
+		translateButton.setStyleProperties("{/font \"name=Verdana\\nsize=11\\nstyle=PLAIN\"}");
+		translateButton.setIconUri("<%=ivy.cms.cr(\"/ch/ivyteam/ivy/addons/icons/filetypeadmin/24\")%>");
+		translateButton.setName("translateButton");
+	}
+	return translateButton;
 }
 }  //  @jve:decl-index=0:visual-constraint="10,10"

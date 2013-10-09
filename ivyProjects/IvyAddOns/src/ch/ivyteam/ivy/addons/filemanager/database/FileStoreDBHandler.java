@@ -23,14 +23,14 @@ import ch.ivyteam.ivy.addons.filemanager.database.filetype.FileTypesController;
 import ch.ivyteam.ivy.addons.filemanager.database.persistence.IDocumentOnServerPersistence;
 import ch.ivyteam.ivy.addons.filemanager.database.persistence.IFolderOnServerPersistence;
 import ch.ivyteam.ivy.addons.filemanager.database.security.AbstractDirectorySecurityController;
-import ch.ivyteam.ivy.addons.filemanager.database.security.DirectorySecurityController;
-import ch.ivyteam.ivy.addons.filemanager.database.security.IvyRoleHelper;
 import ch.ivyteam.ivy.addons.filemanager.database.security.SecurityHandler;
 import ch.ivyteam.ivy.addons.filemanager.database.security.SecurityHandlerChain;
+import ch.ivyteam.ivy.addons.filemanager.database.security.SecurityResponse;
 import ch.ivyteam.ivy.addons.filemanager.database.security.SecurityRightsEnum;
 import ch.ivyteam.ivy.addons.filemanager.database.versioning.AbstractFileVersioningController;
 import ch.ivyteam.ivy.addons.filemanager.database.versioning.FileVersioningController;
 import ch.ivyteam.ivy.addons.filemanager.exception.FileManagementException;
+import ch.ivyteam.ivy.addons.filemanager.folderonserver.FolderAction;
 import ch.ivyteam.ivy.addons.filemanager.listener.FileActionEvent;
 import ch.ivyteam.ivy.addons.filemanager.listener.FileActionListener;
 import ch.ivyteam.ivy.addons.filemanager.util.PathUtil;
@@ -124,13 +124,13 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 		this.config.setActivateSecurity(_securityActivated);
 		this.securityActivated = this.config.isActivateSecurity();
 		if(this.securityActivated) {
-			this.securityController = FileManagementHandlersFactory.getDirectorySecurityControllerInstance(this.config);
-			if(this.config.getSecurityHandler()==null) {
-				this.config.setSecurityHandler((SecurityHandler) this.securityController);
-			}
-			if(this.securityController instanceof DirectorySecurityController) {
+			this.securityController =new SecurityHandlerChain(null,this.config);
+			//this.securityController = FileManagementHandlersFactory.getDirectorySecurityControllerInstance(this.config);
+			this.config.setSecurityHandler(this.securityController);
+			
+			/*if(this.securityController instanceof DirectorySecurityController) {
 				((DirectorySecurityController) this.securityController).setSecurityHandler(this);
-			}
+			}*/
 			
 		}
 		this.docPersistence = PersistenceConnectionManagerFactory.getIDocumentOnServerPersistenceInstance(this.config);
@@ -149,12 +149,13 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 		if(this.securityActivated) {
 			
 			if(this.config.getSecurityHandler()==null) {
-				this.securityController = FileManagementHandlersFactory.getDirectorySecurityControllerInstance(this.config);
-				this.config.setSecurityHandler((SecurityHandler) this.securityController);
-				if(this.securityController instanceof DirectorySecurityController) {
+				this.securityController =new SecurityHandlerChain(null,this.config);
+				//this.securityController = FileManagementHandlersFactory.getDirectorySecurityControllerInstance(this.config);
+				this.config.setSecurityHandler(this.securityController);
+				/*if(this.securityController instanceof DirectorySecurityController) {
 					((DirectorySecurityController) this.securityController).setSecurityHandler(this);
 					((DirectorySecurityController) this.securityController).setFileManagerAdminRoleName(this.config.getAdminRole());
-				}
+				}*/
 			}else {
 				this.securityController = this.config.getSecurityHandler();
 			}
@@ -163,6 +164,7 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 	}
 	
 	/**
+	 * <b>This is not a Public API method</b><br>This method may change in the future, use at own risk.<br>
 	 * Same behavior as the constructor with the BasicConfigurationController as parameter, 
 	 * except that you pass the AbstractDirectorySecurityController by parameter if the security is activated.<br>
 	 * This Constructor does not instantiate the directorySecurityController if the given one is null.
@@ -177,6 +179,7 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 		
 		this.securityActivated = this.config.isActivateSecurity() && directorySecurityController!=null;
 		this.securityController = directorySecurityController;
+		
 		if(this.securityActivated && this.config.getSecurityHandler()==null) {
 			this.config.setSecurityHandler((SecurityHandler) this.securityController);
 		}
@@ -316,8 +319,7 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 	 * @return
 	 * @throws Exception
 	 */
-	public boolean directoryExists(String _path) throws Exception
-	{
+	public boolean directoryExists(String _path) throws Exception {
 		_path=PathUtil.formatPathForDirectoryWithoutLastAndFirstSeparator(_path);
 		if(_path==null || _path.length()==0)
 		{
@@ -344,14 +346,14 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 			IUser user = Ivy.session().getSessionUser();
 			for(FolderOnServer fos:lFos) {
 				if(!this.config.getSecurityHandler().hasRight(null, SecurityRightsEnum.DELETE_DIRECTORY_RIGHT, 
-						fos, null, IvyRoleHelper.getUserRolesAsListStrings(user)).isAllow()){
+						fos, user, null).isAllow()){
 					message.setType(FileHandler.ERROR_MESSAGE);
 					message.setText("The user '"+user+"' doesn't have the right to delete the directory "+fos.getPath());
 					return message;
 				}
 				if(!this.docPersistence.getList(fos.getPath(), false).isEmpty() && 
 						!this.config.getSecurityHandler().hasRight(null, SecurityRightsEnum.DELETE_FILES_RIGHT, 
-						fos, null, IvyRoleHelper.getUserRolesAsListStrings(user)).isAllow()) {
+						fos, user,null).isAllow()) {
 					message.setType(FileHandler.ERROR_MESSAGE);
 					message.setText("The user '"+user+"' doesn't have the right to delete the files present under "+fos.getPath());
 					return message;
@@ -359,14 +361,14 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 			}
 			FolderOnServer fToDelete = this.dirPersistence.get(_directoryPath);
 			if(!this.config.getSecurityHandler().hasRight(null, SecurityRightsEnum.DELETE_DIRECTORY_RIGHT, 
-					fToDelete, null, IvyRoleHelper.getUserRolesAsListStrings(user)).isAllow()) {
+					fToDelete, user,null).isAllow()) {
 				message.setType(FileHandler.ERROR_MESSAGE);
 				message.setText("The user '"+user+"' doesn't have the right to delete the directory.");
 				return message;
 			}
 			if(!this.docPersistence.getList(fToDelete.getPath(), false).isEmpty() && 
 					!this.config.getSecurityHandler().hasRight(null, SecurityRightsEnum.DELETE_FILES_RIGHT, 
-							fToDelete, null, IvyRoleHelper.getUserRolesAsListStrings(user)).isAllow()) {
+							fToDelete, user,null).isAllow()) {
 				message.setType(FileHandler.ERROR_MESSAGE);
 				message.setText("The user '"+user+"' doesn't have the right to delete the files present under "+fToDelete.getPath());
 				return message;
@@ -849,24 +851,16 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 		l.addAll(this.docPersistence.getList(_path, _isrecursive));
 		java.util.List<FolderOnServer> lFos = new ArrayList<FolderOnServer>();
 		IUser u = null;
-		java.util.List<String> uroles =null;
-		//If the security is activated we have to prepare the security check
-		/*if(this.securityActivated) {
-			lFos.addAll(this.getListDirectoriesUnderPath(_path));
-			u = Ivy.session().getSessionUser();
-			uroles = IvyRoleHelper.getUserRolesAsListStrings(u);
-		}*/
 		if(_isrecursive && this.securityActivated) {
 			lFos.addAll(this.getListDirectoriesUnderPath(_path));
 			u = Ivy.session().getSessionUser();
-			uroles = IvyRoleHelper.getUserRolesAsListStrings(u);
 			for(DocumentOnServer doc:l) {
 				for (FolderOnServer fos: lFos) {
 					if(fos.getPath().equals(PathUtil.getParentDirectoryPath(doc.getPath()))) {
-						if(this.config.getSecurityHandler().hasRight(null, SecurityRightsEnum.OPEN_DIRECTORY_RIGHT, fos, u, uroles).isAllow()) {
-							doc.setCanUserDelete(this.config.getSecurityHandler().hasRight(null, SecurityRightsEnum.DELETE_FILES_RIGHT, fos, u, uroles).isAllow());
+						if(this.config.getSecurityHandler().hasRight(null, SecurityRightsEnum.OPEN_DIRECTORY_RIGHT, fos, u, null).isAllow()) {
+							doc.setCanUserDelete(this.config.getSecurityHandler().hasRight(null, SecurityRightsEnum.DELETE_FILES_RIGHT, fos, u, null).isAllow());
 							doc.setCanUserRead(true);
-							doc.setCanUserWrite(this.config.getSecurityHandler().hasRight(null, SecurityRightsEnum.WRITE_FILES_RIGHT, fos, u, uroles).isAllow());
+							doc.setCanUserWrite(this.config.getSecurityHandler().hasRight(null, SecurityRightsEnum.WRITE_FILES_RIGHT, fos, u, null).isAllow());
 						}
 						break;
 					}
@@ -997,15 +991,11 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 		ArrayList<DocumentOnServer>  al = new ArrayList<DocumentOnServer>();
 		java.util.List<DocumentOnServer> docs = this.docPersistence.getList(_path, _isRecursive);
 		java.util.List<FolderOnServer> l = null;
-		SecurityHandler sh = null;
 		IUser u = null;
-		java.util.List<String> uroles =null;
 		//If the security is activated we have to prepare the security check
 		if(this.securityActivated) {
 			l = this.dirPersistence.getList(_path, _isRecursive);
 			u = Ivy.session().getSessionUser();
-			sh = (SecurityHandler) this.getSecurityController();
-			uroles = IvyRoleHelper.getUserRolesAsListStrings(u);
 		}
 		
 		for(DocumentOnServer doc:docs) {
@@ -1013,10 +1003,10 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 			if(this.securityActivated) {
 				for (FolderOnServer fos: l) {
 					if(fos.getPath().equals(PathUtil.getParentDirectoryPath(doc.getPath()))) {
-						if(sh.hasRight(null, SecurityRightsEnum.OPEN_DIRECTORY_RIGHT, fos, u, uroles).isAllow()) {
-							doc.setCanUserDelete(sh.hasRight(null, SecurityRightsEnum.DELETE_FILES_RIGHT, fos, u, uroles).isAllow());
+						if(this.securityController.hasRight(null, SecurityRightsEnum.OPEN_DIRECTORY_RIGHT, fos, u, null).isAllow()) {
+							doc.setCanUserDelete(this.securityController.hasRight(null, SecurityRightsEnum.DELETE_FILES_RIGHT, fos, u, null).isAllow());
 							doc.setCanUserRead(true);
-							doc.setCanUserWrite(sh.hasRight(null, SecurityRightsEnum.WRITE_FILES_RIGHT, fos, u, uroles).isAllow());
+							doc.setCanUserWrite(this.securityController.hasRight(null, SecurityRightsEnum.WRITE_FILES_RIGHT, fos, u, null).isAllow());
 							al.add(doc);
 						}
 					}
@@ -1341,18 +1331,22 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 		if(doc == null || _userIn == null || _userIn.trim().length()==0) {
 			throw new IllegalArgumentException("Invalid DocumentOnServer Object or invalid username in lockDocument method.");
 		}
-		boolean flag = false;
+		DocumentOnServer docRef = this.docPersistence.get(PathUtil.escapeBackSlash(doc.getPath()));
+		if(docRef==null || (docRef.getIsLocked() && !docRef.getLockingUserID().equals(_userIn))) {
+			return false;
+		}
+		if(docRef.getIsLocked() && !docRef.getLockingUserID().equals(_userIn)) {
+			return true;
+		}
+		
 		if(doc.getFileID()==null || doc.getFileID().trim().length()==0) {
-			doc = this.docPersistence.get(PathUtil.escapeBackSlash(doc.getPath()));
+			doc = docRef;
 		}
-		if(doc!=null && !doc.getIsLocked()) {
-			doc.setIsLocked(true);
-			doc.setLocked("1");
-			doc.setLockingUserID(_userIn);
-			this.docPersistence.update(doc);
-			flag = true;
-		}
-		return flag;
+
+		doc.setIsLocked(true);
+		doc.setLocked("1");
+		doc.setLockingUserID(_userIn);
+		return this.docPersistence.update(doc).getLocked().equals("1");
 	}
 
 	/**
@@ -1533,21 +1527,23 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 		FolderOnServer fos = this.dirPersistence.get(path);
 		//look if directory exists
 		if(fos==null) {
-			message.setText("The directory to rename does not exist.");
+			message.setText(Ivy.cms().co("/ch/ivyteam/ivy/addons/filemanager/fileManagement/messages/folderOnServer/rename/renameFailFolderCannotBeFound").replace("GOAL", path));
 			message.setType(FileHandler.ERROR_MESSAGE);
 			return message;
 		}
 		if(this.securityActivated) {
-			//this.config.getSecurityHandler().hasRight(securityHandlerIterator, rightType, folderOnServer, user, roles)
+			SecurityResponse resp = this.config.getSecurityHandler().hasRight(null, SecurityRightsEnum.RENAME_DIRECTORY_RIGHT, 
+					fos, Ivy.session().getSessionUser(), null);
+			if(!resp.isAllow()){
+				message.setText(Ivy.cms().co("/ch/ivyteam/ivy/addons/filemanager/fileManagement/messages/folderOnServer/rename/renameFailSecurityException").replace("GOAL", fos.getName()));
+				message.setType(FileHandler.ERROR_MESSAGE);
+				return message;
+			}
 		}
 		//format the path
 		String newPath="";
 		path= fos.getPath();
-		if(path.equals("")) {//no valid path was entered ("////" for example)
-			message.setText("One of the parameter was invalid for the method renameDirectory in "+this.getClass().getName());
-			message.setType(FileHandler.ERROR_MESSAGE);
-			return message;
-		}
+		
 		if(!path.contains("/")) {
 			//path is composed just by the directory old name
 			newPath=newName;
@@ -1557,24 +1553,13 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 		}
 		//Check if new path exists
 		if(this.directoryExists(newPath)) {
-			message.setText("The directory "+newPath+" already exists. You cannot create a duplicate directory.");
+			message.setText(Ivy.cms().co("/ch/ivyteam/ivy/addons/filemanager/fileManagement/messages/folderOnServer/rename/renameFailFolderAlreadyExists").replace("GOAL", newPath));
 			message.setType(FileHandler.ERROR_MESSAGE);
 			return message;
 		}
 		//Select all the files in the dir structure. If one file is edited, cannot rename the directory.
 		List<DocumentOnServer> docs = this.getDocumentOnServersInDirectory(path, true);
-		boolean fileEdited=false;
-		for (DocumentOnServer doc: docs) {
-			if(doc.getLocked().equalsIgnoreCase("1")) {
-				fileEdited = true;
-				break;
-			}
-		}
-		if(fileEdited) {
-			message.setText("At least on file contained in the directory or one of its subdirectories is edited. You cannot rename the directory.");
-			message.setType(FileHandler.ERROR_MESSAGE);
-			return message;
-		}
+		
 		String p = path+"/";
 		for(DocumentOnServer doc:docs) {
 			String s = doc.getPath().replaceFirst("\\Q"+ p+"\\E", newPath+"/");
@@ -1593,8 +1578,11 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 		fos.setPath(newPath);
 		fos.setName(newName);
 		this.dirPersistence.update(fos);
+		message.getFiles().add(0, new java.io.File(path));
+		message.getFiles().add(1, new java.io.File(newPath));
+		message.setActionType(FolderAction.RENAME);
 		message.setType(FileHandler.SUCCESS_MESSAGE);
-		message.setText("The directory was successfuly renamed.");
+		message.setText(Ivy.cms().co("/ch/ivyteam/ivy/addons/filemanager/fileManagement/messages/folderOnServer/rename/renameSuccess"));
 		return message;
 	}
 
@@ -2096,8 +2084,7 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 	 */
 	public void setSecurityOn(boolean securityOn) {
 		this.securityActivated = securityOn;
-		if(this.securityActivated && this.securityController==null)
-		{
+		if(this.securityActivated && this.securityController==null){
 			try {
 				this.securityController = FileManagementHandlersFactory.getDirectorySecurityControllerInstance(this.config);
 			} catch (Exception e) {
@@ -2192,6 +2179,7 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 	
 
 	@Override
+	@Deprecated
 	public AbstractDirectorySecurityController getSecurityController()
 	throws Exception {
 		if(this.securityController instanceof AbstractDirectorySecurityController) {
@@ -2207,6 +2195,11 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 		}
 		//nothing could be found
 		return null;
+	}
+	
+	@Override
+	public SecurityHandler getSecurityHandler() {
+		return this.securityController;
 	}
 
 	@Override
@@ -2606,46 +2599,23 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 		if(dir==null) {
 			return al;
 		}
+		IUser user = Ivy.session().getSecurityContext().findUser(ivyUserName);
 		dir.setIsRoot(true);
 		java.util.List<FolderOnServer> l = this.dirPersistence.getList(rootPath, true);
 		
 		al.add(dir);
 		al.addAll(l);
-		IUser user = Ivy.session().getSecurityContext().findUser(ivyUserName);
+		
 		for(FolderOnServer d:al) {
 			this.getUserRightsWithSecurityHandlerChain(d,user);
-			//this.securityController.getUserRightsInFolderOnServer(d, ivyUserName);
 		}
 		
-		//ArrayList<FolderOnServer> dirs = this.getListDirectoriesUnderPath(rootPath);
 		ArrayList<FolderOnServer> dirs2 =new ArrayList<FolderOnServer>();
 
 		for(FolderOnServer fos: al) {
 			if(!fos.getCanUserOpenDir()) {
-				LockedFolder fos1 = new LockedFolder();
-				fos1.setCcd(fos.getCcd());
-				fos1.setCcf(fos.getCcf());
-				fos1.setCdd(fos.getCdd());
-				fos1.setCdf(fos.getCdf());
-				fos1.setCmrd(fos.getCmrd());
-				fos1.setCod(fos.getCod());
-				fos1.setCrd(fos.getCrd());
-				fos1.setCtd(fos.getCtd());
-				fos1.setCud(fos.getCud());
-				fos1.setCuf(fos.getCuf());
-				fos1.setCwf(fos.getCwf());
-				fos1.setCreationDate(fos.getCreationDate());
-				fos1.setCreationTime(fos.getCreationTime());
-				fos1.setCreationUser(fos.getCreationUser());
-				fos1.setId(fos.getId());
-				fos1.setName(fos.getName());
-				fos1.setPath(fos.getPath());
-				fos1.setIconPath(fos.getIconPath());
-				fos1.setIs_protected(fos.getIs_protected());
-				fos1.setIsRoot(fos.getIsRoot());
-				fos1.setTranslation(fos.getTranslation());
+				LockedFolder fos1 = new LockedFolder(fos);
 				dirs2.add(fos1);
-				Ivy.log().debug("LockedFolder "+fos.getName()+" "+ivyUserName);
 			} else {
 				dirs2.add(fos);
 			}
@@ -2655,18 +2625,17 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 	}
 
 	private void getUserRightsWithSecurityHandlerChain(FolderOnServer fos, IUser user) {
-		java.util.List<String> roles = IvyRoleHelper.getUserRolesAsListStrings(user);
-		fos.setCanUserCreateDirectory(this.config.getSecurityHandler().hasRight(null, SecurityRightsEnum.CREATE_DIRECTORY_RIGHT, fos, user, roles).isAllow());
-		fos.setCanUserCreateFiles(this.config.getSecurityHandler().hasRight(null, SecurityRightsEnum.CREATE_FILES_RIGHT, fos, user, roles).isAllow());
-		fos.setCanUserDeleteDir(this.config.getSecurityHandler().hasRight(null, SecurityRightsEnum.DELETE_DIRECTORY_RIGHT, fos, user, roles).isAllow());
-		fos.setCanUserDeleteFiles(this.config.getSecurityHandler().hasRight(null, SecurityRightsEnum.DELETE_FILES_RIGHT, fos, user, roles).isAllow());
-		fos.setCanUserManageRights(this.config.getSecurityHandler().hasRight(null, SecurityRightsEnum.MANAGE_SECURITY_RIGHT, fos, user, roles).isAllow());
-		fos.setCanUserOpenDir(this.config.getSecurityHandler().hasRight(null, SecurityRightsEnum.OPEN_DIRECTORY_RIGHT, fos, user, roles).isAllow());
-		fos.setCanUserRenameDirectory(this.config.getSecurityHandler().hasRight(null, SecurityRightsEnum.RENAME_DIRECTORY_RIGHT, fos, user, roles).isAllow());
-		fos.setCanUserTranslateDirectory(this.config.getSecurityHandler().hasRight(null, SecurityRightsEnum.TRANSLATE_DIRECTORY_RIGHT, fos, user, roles).isAllow());
-		fos.setCanUserUpdateDir(this.config.getSecurityHandler().hasRight(null, SecurityRightsEnum.UPDATE_DIRECTORY_RIGHT, fos, user, roles).isAllow());
-		fos.setCanUserUpdateFiles(this.config.getSecurityHandler().hasRight(null, SecurityRightsEnum.UPDATE_FILES_RIGHT, fos, user, roles).isAllow());
-		fos.setCanUserWriteFiles(this.config.getSecurityHandler().hasRight(null, SecurityRightsEnum.WRITE_FILES_RIGHT, fos, user, roles).isAllow());
+		fos.setCanUserCreateDirectory(this.config.getSecurityHandler().hasRight(null, SecurityRightsEnum.CREATE_DIRECTORY_RIGHT, fos, user, null).isAllow());
+		fos.setCanUserCreateFiles(this.config.getSecurityHandler().hasRight(null, SecurityRightsEnum.CREATE_FILES_RIGHT, fos, user, null).isAllow());
+		fos.setCanUserDeleteDir(this.config.getSecurityHandler().hasRight(null, SecurityRightsEnum.DELETE_DIRECTORY_RIGHT, fos, user, null).isAllow());
+		fos.setCanUserDeleteFiles(this.config.getSecurityHandler().hasRight(null, SecurityRightsEnum.DELETE_FILES_RIGHT, fos, user, null).isAllow());
+		fos.setCanUserManageRights(this.config.getSecurityHandler().hasRight(null, SecurityRightsEnum.MANAGE_SECURITY_RIGHT, fos, user, null).isAllow());
+		fos.setCanUserOpenDir(this.config.getSecurityHandler().hasRight(null, SecurityRightsEnum.OPEN_DIRECTORY_RIGHT, fos, user, null).isAllow());
+		fos.setCanUserRenameDirectory(this.config.getSecurityHandler().hasRight(null, SecurityRightsEnum.RENAME_DIRECTORY_RIGHT, fos, user, null).isAllow());
+		fos.setCanUserTranslateDirectory(this.config.getSecurityHandler().hasRight(null, SecurityRightsEnum.TRANSLATE_DIRECTORY_RIGHT, fos, user, null).isAllow());
+		fos.setCanUserUpdateDir(this.config.getSecurityHandler().hasRight(null, SecurityRightsEnum.UPDATE_DIRECTORY_RIGHT, fos, user, null).isAllow());
+		fos.setCanUserUpdateFiles(this.config.getSecurityHandler().hasRight(null, SecurityRightsEnum.UPDATE_FILES_RIGHT, fos, user, null).isAllow());
+		fos.setCanUserWriteFiles(this.config.getSecurityHandler().hasRight(null, SecurityRightsEnum.WRITE_FILES_RIGHT, fos, user, null).isAllow());
 	}
 
 	@Override

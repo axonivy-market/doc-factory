@@ -42,7 +42,7 @@ public interface SecurityHandler {
 	 *  return SecurityResponse with flag to false and a message
 	 * } else {
 	 *   // Here the MyAppSecurityHandler object will be the next called SecurityHandler in the list.
-	 *   return theChain.getNext(this).hasRight(securityHandlerIterator, righttype, folder, user, roles) 
+	 *   return theChain.getNext(this).hasRight(securityHandlerIterator, right type, folder, user, roles) 
 	 * }</pre></code>
 	 * If the folder is not black listed, then the next SecurityHandler will be responsible to compute the right.<br>
 	 * And so on until the last default securityHandler is reached.
@@ -50,8 +50,8 @@ public interface SecurityHandler {
 	 * @param securityHandlerIterator the SecurityHandler Iterator object used to walked through the SecurityHandler List.
 	 * @param rightType int the right type that has to be checked. @see SecurityRightsEnum.
 	 * @param folderOnServer the FolderOnServer Object representing the directory on or in which the action has to be performed
-	 * @param user the user (IUser) that is performing the action
-	 * @param roles the roles names owned by the user.
+	 * @param user the user (IUser) that is performing the action. If null, the Ivy Session User will be used.
+	 * @param roles the roles names owned by the user. The User Ivy Roles are always included. You can add dynamically new roles here.
 	 * @return a SecurityResponse containing a flag reflecting the computed right (false or true)
 	 */
 	public SecurityResponse hasRight(Iterator<SecurityHandler> securityHandlerIterator, SecurityRightsEnum rightType,

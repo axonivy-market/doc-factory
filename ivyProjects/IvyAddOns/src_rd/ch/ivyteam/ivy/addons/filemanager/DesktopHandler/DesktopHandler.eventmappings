@@ -1,5 +1,5 @@
 # Xpert.ivy RichDialog Event-Mapping Data
-# 2013-08-26 13:16:44 | 5.0.3.43404 | 1.0
+# 2013-10-01 12:21:49 | 5.0.3.43404 | 1.0
 ~.fileEditorCheckerPanel@RD_EVENT[fileCoupleModified]--->ch.ivyteam.ivy.process.ProcessStart:125F850DA67753A5/11E8D0044582C100
 ~.removeFilesMenuItem@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125F850DA67753A5/11E2653B73A762C3
 ~@RD_METHODCALL[_callBackIsFileEditable(Boolean)]--->ch.ivyteam.ivy.process.ProcessStart:125F850DA67753A5/12470AC9EECD878D
@@ -9,6 +9,7 @@
 ~@RD_METHODCALL[_getUserNameCallBack(String)]--->ch.ivyteam.ivy.process.ProcessStart:125F850DA67753A5/11E451F87364E245
 ~@RD_METHODCALL[_getUserTempDirCallBack(String)]--->ch.ivyteam.ivy.process.ProcessStart:125F850DA67753A5/11E451FE94A46377
 ~@RD_METHODCALL[_newTempDirCreated(String)]--->ch.ivyteam.ivy.process.ProcessStart:125F850DA67753A5/12451D3D1FE937EA
+~@RD_METHODCALL[_replaceServerFileInClientServerEditCheck(java.util.HashMap)]--->ch.ivyteam.ivy.process.ProcessStart:125F850DA67753A5/14174D0E73A666EC
 ~@RD_METHODCALL[editFile(java.io.File)]--->ch.ivyteam.ivy.process.ProcessStart:125F850DA67753A5/11E20D12C9A6DBB4
 ~@RD_METHODCALL[editFiles(List<java.io.File>)]--->ch.ivyteam.ivy.process.ProcessStart:125F850DA67753A5/1242429CF98236D6
 ~@RD_METHODCALL[forceUnlock(List<ch.ivyteam.ivy.addons.filemanager.DocumentOnServer>)]--->ch.ivyteam.ivy.process.ProcessStart:125F850DA67753A5/11E498BA948EAA2A

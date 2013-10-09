@@ -4,11 +4,13 @@
 package ch.ivyteam.ivy.addons.filemanager.configuration;
 
 
+import java.util.HashSet;
 import java.util.List;
 
 import ch.ivyteam.ivy.addons.filemanager.database.AbstractFileManagementHandler;
 import ch.ivyteam.ivy.addons.filemanager.database.fileaction.FileActionConfiguration;
 import ch.ivyteam.ivy.addons.filemanager.database.security.DocumentFilter;
+import ch.ivyteam.ivy.addons.filemanager.database.security.IvyRoleHelper;
 import ch.ivyteam.ivy.addons.filemanager.database.security.SecurityHandler;
 import ch.ivyteam.ivy.addons.filemanager.listener.FileActionListener;
 import ch.ivyteam.ivy.addons.filemanager.util.PathUtil;
@@ -695,10 +697,18 @@ public class BasicConfigurationController{
 		return this.fileActionHistoryConfiguration;
 	}
 
+	/**
+	 * <b>NOT PUBLIC API FOR THE MOMENT</b>
+	 * @return
+	 */
 	public DocumentFilter getDocumentFilter() {
 		return documentFilter;
 	}
 
+	/**
+	 * <b>NOT PUBLIC API FOR THE MOMENT</b>
+	 * @param documentFilter
+	 */
 	public void setDocumentFilter(DocumentFilter documentFilter) {
 		this.documentFilter = documentFilter;
 	}

@@ -18,8 +18,6 @@ import ch.ivyteam.ivy.addons.filemanager.database.AbstractFileManagementHandler;
 import ch.ivyteam.ivy.addons.filemanager.database.security.DocumentFilter;
 import ch.ivyteam.ivy.addons.filemanager.database.security.DocumentFilterActionEnum;
 import ch.ivyteam.ivy.addons.filemanager.database.security.DocumentFilterAnswer;
-import ch.ivyteam.ivy.addons.filemanager.observer.FileActionEnum;
-import ch.ivyteam.ivy.addons.filemanager.observer.ObservableFileAction;
 import ch.ivyteam.ivy.addons.filemanager.util.PathUtil;
 import ch.ivyteam.ivy.addons.util.RDCallbackMethodHandler;
 import ch.ivyteam.ivy.environment.Ivy;
@@ -34,12 +32,13 @@ import com.ulcjava.base.application.ULCPollingTimer;
 import com.ulcjava.base.shared.FileChooserConfig;
 
 import java.io.*;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Observable;
 
 import com.ulcjava.base.application.event.ActionEvent;
 import com.ulcjava.base.application.event.IActionListener;
 import com.ulcjava.base.application.util.IFileLoadHandler;
+import com.ulcjava.base.application.util.IFileChooseHandler;
 
 /**
  * 
@@ -60,8 +59,7 @@ import com.ulcjava.base.application.util.IFileLoadHandler;
  * For security purposes, if the server path is set to null or points to the root of the server, it takes automatically a default value ("uploadedFiles").
  * <br>
  */
-@SuppressWarnings({"unchecked" })
-public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel> extends Observable
+public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel>
 {
 	private java.io.File uploadedFile;
 	private String serverPath;
@@ -78,21 +76,20 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel> extend
 	private AbstractFileManagementHandler fileHandlerMgt=null;
 	public int fileUnit=100;
 	private BasicConfigurationController config;
-	
-	private final int FILE_FILTERED = 1000000;
 
+	//private final int FILE_FILTERED = 1000000;
 
 	private String MULTIFILE_UPLOAD_WINDOW_TITLE = Ivy.cms().co("/ch/ivyteam/ivy/addons/filemanager/fileManagement/windowTitles/chooseSomeFileToUpload");
 	private String SINGLEFILE_UPLOAD_WINDOW_TITLE = Ivy.cms().co("/ch/ivyteam/ivy/addons/filemanager/fileManagement/windowTitles/chooseOneFileToUpload");
 	private String UPLOAD_BUTTON = Ivy.cms().co("/ch/ivyteam/ivy/addons/filemanager/fileManagement/buttonLabels/upload") ;
 	private String ACTION_CANCELLED = Ivy.cms().co("/ch/ivyteam/ivy/addons/filemanager/fileManagement/messages/information/actionCancelled");
 	private String FILESIZE_TOO_BIG = Ivy.cms().co("/ch/ivyteam/ivy/addons/filemanager/fileManagement/messages/error/uploadFailedfileTooBig");
-	private String FILE_UPLOAD_FILTERED = Ivy.cms().co("/ch/ivyteam/ivy/addons/filemanager/upload/message/fileUploadNotAllowForThisFile");
 	private String ERROR_UNKOWN= Ivy.cms().co("/ch/ivyteam/ivy/addons/filemanager/fileManagement/messages/error/errorUnknown");
 	private String UPLOAD_SUCCESSFUL= Ivy.cms().co("/ch/ivyteam/ivy/addons/filemanager/fileManagement/messages/information/uploadSuccess");
 	private String FILE_ALREADY_EXISTS= Ivy.cms().co("/ch/ivyteam/ivy/addons/filemanager/fileManagement/messages/information/fileAlreadyExists");
 	private String MAX_SINGLEFILESIZE_ALLOWED=Ivy.cms().co("/ch/ivyteam/ivy/addons/filemanager/fileManagement/windowTitles/chooseOneFileToUploadLimitedSize");
 	private String MAX_MULTIPLEFILESIZE_ALLOWED=Ivy.cms().co("/ch/ivyteam/ivy/addons/filemanager/fileManagement/windowTitles/chooseSomeFileToUploadLimitedSize");
+	private String PREPARING_NEXT_FILE_UPLOAD = Ivy.cms().co("/ch/ivyteam/ivy/addons/filemanager/fileManagement/messages/information/preparingNextFileUpload");
 
 
 	private T ulcPane;
@@ -175,7 +172,11 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel> extend
 		else
 			serverPath = _filePath;
 		formatServerPath();
-		
+		try{
+			this.maxSize = Integer.parseInt(Ivy.var().get("xivy_addons_fileManager_max_upload_size"));
+		}catch(Exception ex){
+			Ivy.log().error("Cannot set the max size. "+ ex.getMessage(),ex);
+		}
 	}
 
 	/**
@@ -219,6 +220,11 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel> extend
 		areFilesStoredInDB=_areFilesStoredInDb;
 		timer=new ULCPollingTimer(100,null);
 		timer.setRepeats(false);
+		try{
+			this.maxSize = Integer.parseInt(Ivy.var().get("xivy_addons_fileManager_max_upload_size"));
+		}catch(Exception ex){
+			Ivy.log().error("Cannot set the max size. "+ ex.getMessage(),ex);
+		}
 	}
 
 	/**
@@ -244,124 +250,7 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel> extend
 	 */
 	public ReturnedMessage upload()
 	{
-		returnedMessage.setType(FileHandler.INFORMATION_MESSAGE);
-		returnedMessage.setText("");
-		returnedMessage.setFile(null);
-		uploadedFile = null;
-
-		FileChooserConfig fcConfig = new FileChooserConfig();
-		fcConfig.setDialogTitle(SINGLEFILE_UPLOAD_WINDOW_TITLE);
-		fcConfig.setFileSelectionMode(FileChooserConfig.FILES_ONLY);
-		fcConfig.setApproveButtonText(UPLOAD_BUTTON);
-		fcConfig.setMultiSelectionEnabled(false);
-		ClientContext.setFileTransferMode(ClientContext.SYNCHRONOUS_MODE);
-		ClientContext.loadFile(new IFileLoadHandler(){
-			public void onFailure(int reason, String description) {
-				onFailureCall(reason);
-			}
-
-			public void onSuccess(InputStream ins[], String filePaths[], String fileNames[]){
-				try{
-					final BufferedInputStream preparedFile = new BufferedInputStream(ins[0]);
-					serverFilePath = fileNames[0];
-					boolean goesOn = true;
-					formatServerPath();
-					serverFilePath = (new StringBuilder(String.valueOf(serverPath))).append(serverFilePath).toString();
-					final java.io.File serverFile = new java.io.File(serverFilePath);
-					
-					DocumentFilterAnswer answer = checkUploadFilteringReturnIfFileAccepted(serverFile, serverPath);
-					if(!answer.isAllow()){
-						onFailure(FILE_FILTERED, answer.getMessage());
-						return;
-					}
-					
-					goesOn = checkExistingFile(filePaths, fileNames, goesOn,
-							serverFile);
-					
-					
-					if(goesOn) {//the file does not exists already
-						//notify the observers
-						notifyMyObservers(filePaths);
-						uploadedFile = serverFile;
-						final java.io.File choosedFile= new java.io.File(filePaths[0]);
-						final String fileName = fileNames[0];
-						fileUnit = getInputStreamPercentLength(ins[0],20);
-						Ivy.log().debug("BufferedInputStream preparedFile: {0} fileUnit = {1}",fileNames[0],fileUnit);
-						cleanTimer();
-						timer.addActionListener(new IActionListener() {
-							BufferedOutputStream server = new BufferedOutputStream(new FileOutputStream(serverFile));
-							private static final long serialVersionUID = -3025252014358720080L;
-							byte b[] = new byte[1024];
-							int totalKBUploaded =0 ;
-							int intRead;
-							boolean done=false;
-
-							public void actionPerformed(ActionEvent arg0) {
-								int progressDone =0;
-								try{
-									while(!done && progressDone< fileUnit) {	
-										if((intRead= preparedFile.read(b)) != -1){
-											server.write(b,0,intRead);
-											progressDone++;
-											totalKBUploaded++;
-										}else { 
-											done=true;
-											server.close();
-										}
-									}
-									if(!done) {
-										progressDone=0;
-									}
-								}catch(IOException e) {
-									done=true;
-									try {
-										server.close();
-									} catch (IOException e1) {
-										//ignore
-									}
-									callPanelErrorMethode(e.getMessage());
-								}// end try/catch
-								if(!done) {
-									String s = fileName+" "+totalKBUploaded+" Kb uploaded";
-									RDCallbackMethodHandler.callRDMethod(ulcPane, progressMethodName, new Object[] { s });
-									timer.restart(); // restart the timer because the file is not completely uploaded
-								}else {
-									try {
-										String s = fileName+" upload finished";
-										List<java.io.File> lFiles = List.create(java.io.File.class);
-										lFiles.add(serverFile);
-										returnedMessage.setType(FileHandler.SUCCESS_MESSAGE);
-										returnedMessage.setText(UPLOAD_SUCCESSFUL+" "+choosedFile.getName());
-										returnedMessage.setFile(serverFile);
-										returnedMessage.setFiles(lFiles);
-
-										RDCallbackMethodHandler.callRDMethod(ulcPane, progressMethodName, new Object[] { s });
-										if(areFilesStoredInDB){
-											createReturnedMessageForUploadToDB(lFiles);
-											callPanelUploadSuccessMethod(returnedMessage);
-											
-										}else {
-											callPanelUploadSuccessMethod(lFiles);
-										}
-
-									}catch(Exception e){
-										callPanelErrorMethode(e.getMessage());
-									}
-								}//end if else
-							}// end of actionPerformed
-						});// end of timer
-						timer.start();
-
-					}// end of else
-				}// end of try	
-				catch(IOException ioe) {
-					callPanelErrorMethode(ioe.getMessage());
-				}catch(Exception e) { 
-					callPanelErrorMethode(e.getMessage());
-				}
-			}
-		}, fcConfig, ulcPane);// end of ClientContext.loadFile
-		return returnedMessage;
+		return this.uploadMultiFile(false);
 	}
 
 	/**
@@ -417,54 +306,50 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel> extend
 	 */
 	public ReturnedMessage uploadMultiFile(boolean multipleFile, int _maxSize)
 	{
-		this.maxSize=_maxSize*1024;
-		returnedMessage.setType(FileHandler.INFORMATION_MESSAGE);
-		returnedMessage.setText("");
-		returnedMessage.setFile(null);
+		if(_maxSize>0)
+			this.maxSize=_maxSize*1024;
+
+		this.returnedMessage = new ReturnedMessage();
+		this.returnedMessage.setType(FileHandler.INFORMATION_MESSAGE);
+		this.returnedMessage.setText("");
+		this.returnedMessage.setFile(null);
+		this.returnedMessage.setFiles(List.create(java.io.File.class));
 		uploadedFile = null;
 		final boolean multiFile= multipleFile;
 		FileChooserConfig fcConfig = new FileChooserConfig();
 
 		fcConfig.setFileSelectionMode(FileChooserConfig.FILES_ONLY);
 
-		if(multiFile) {
+		if(multiFile){
 			fcConfig.setDialogTitle(MAX_MULTIPLEFILESIZE_ALLOWED+" "+_maxSize+" Kb.");
 		}
-		else {
+		else{
 			fcConfig.setDialogTitle(MAX_SINGLEFILESIZE_ALLOWED+" "+_maxSize+" Kb.");
 		}
 		fcConfig.setMultiSelectionEnabled(multiFile);        
 		fcConfig.setApproveButtonText(UPLOAD_BUTTON);
 		ClientContext.setFileTransferMode(ClientContext.SYNCHRONOUS_MODE);
 		ClientContext.loadFile(new IFileLoadHandler(){
-			public void onFailure(int reason, String description) {
+			public void onFailure(int reason, String description)
+			{
 				onFailureCall(reason);
 			}
 
 			public void onSuccess(InputStream ins[], String filePaths[], String fileNames[]){
 
+				final int n = ins.length;
+				final InputStream fIns[] = ins;
+				//final String fFilePaths[] = filePaths;
+				final String fFileNames[]= fileNames;
 				formatServerPath();
+
 				try{
-					java.util.List<Object> files =checkUploadFilteringReturnAcceptedAndRejectedFiles(ins, filePaths, serverPath);
-					final List<java.io.File> acceptedFiles = (List<File>) files.get(0);
-					final List<java.io.File> rejectedFiles = (List<File>) files.get(1);
-					final InputStream fIns[] = (InputStream[]) files.get(2);
-					final int n = fIns.length;
-					if(!rejectedFiles.isEmpty()) {
-						//TODO
-					}
-					if(acceptedFiles.isEmpty()) {
-						return;
-					}
-					
-					boolean goesOn = checkExistingFiles(acceptedFiles);
+					boolean goesOn = choosedFilesExist(filePaths, fileNames).getExistingDocs().isEmpty();
 					if(goesOn) { //we can upload without asking for overwriting files
-						//notify the observers
-						notifyMyObservers(makeFilePaths(acceptedFiles));
 						cleanTimer();
 						callPanelReleaseUploadUIMethod(false); //disables the Upload GUI launchers
 						fileUnit = getInputStreamPercentLength(fIns[0],20);
-						Ivy.log().debug("BufferedInputStream preparedFile: {0} fileUnit = {1}", acceptedFiles.get(0).getName(),fileUnit);
+						Ivy.log().debug("BufferedInputStream preparedFile: {0} fileUnit = {1}",fFileNames[0],fileUnit);
 						timer.addActionListener(new IActionListener() {
 							private static final long serialVersionUID = -3025252014358720080L;
 							byte b[] = new byte[1024];
@@ -476,8 +361,8 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel> extend
 							BufferedInputStream preparedFile = new BufferedInputStream(fIns[0]);
 							ArrayList<java.io.File> files= new ArrayList<java.io.File>();
 							//we prepare the first File on the server
-							String fileOnServer = serverPath + acceptedFiles.get(0).getName();
-							String fileName=  acceptedFiles.get(0).getName();
+							String fileOnServer = serverPath + fFileNames[0];
+							String fileName= fFileNames[0];
 							java.io.File serverFile = new java.io.File(fileOnServer);
 
 							BufferedOutputStream server = new BufferedOutputStream(new FileOutputStream(serverFile));
@@ -506,10 +391,10 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel> extend
 												preparedFile = new BufferedInputStream(fIns[fileNumber]);
 												fileUnit = getInputStreamPercentLength(fIns[fileNumber],20);
 												Ivy.log().debug("BufferedInputStream preparedFile: {0} fileUnit = {1}", preparedFile.toString(),fileUnit);
-												fileOnServer = serverPath +  acceptedFiles.get(fileNumber).getName();
+												fileOnServer = serverPath + fFileNames[fileNumber];
 												serverFile = new java.io.File(fileOnServer);
 												server = new BufferedOutputStream(new FileOutputStream(serverFile));
-												fileName=  acceptedFiles.get(fileNumber).getName();
+												fileName= fFileNames[fileNumber];
 												totalKBUploaded =0 ;
 											}
 										}
@@ -532,14 +417,10 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel> extend
 										returnedMessage.setText(UPLOAD_SUCCESSFUL);
 										returnedMessage.setFile(serverFile);
 										RDCallbackMethodHandler.callRDMethod(ulcPane, progressMethodName, new Object[] { s });
-										if(!rejectedFiles.isEmpty()) {
-											//TODO
-											Ivy.log().info("File rejected");
-										}
 										if(areFilesStoredInDB){
-											createReturnedMessageForUploadToDB(lFiles);
-											callPanelUploadSuccessMethod(returnedMessage);
-											
+											ReturnedMessage msg = createReturnedMessageForUploadToDB(lFiles);
+											msg.setFile(serverFile);
+											callPanelUploadSuccessMethod(msg);
 										}else{
 											callPanelUploadSuccessMethod(lFiles);
 										}
@@ -559,7 +440,7 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel> extend
 					callPanelErrorMethode(e.getMessage());
 				}
 			}//end of onSuccess
-		}, fcConfig, ulcPane, this.maxSize);// end of ClientContext.loadFile
+		}, fcConfig, ulcPane, new Integer(this.maxSize));// end of ClientContext.loadFile
 		return returnedMessage;	
 	}
 
@@ -584,7 +465,69 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel> extend
 	 */
 	public ReturnedMessage uploadWithoutShowingProgress()
 	{
-		return this.uploadWithoutShowingProgress(false,true);
+		this.returnedMessage = new ReturnedMessage();
+		this.returnedMessage.setType(FileHandler.INFORMATION_MESSAGE);
+		this.returnedMessage.setText("");
+		this.returnedMessage.setFile(null);
+		this.returnedMessage.setFiles(List.create(java.io.File.class));
+		uploadedFile = null;
+
+		FileChooserConfig fcConfig = new FileChooserConfig();
+		fcConfig.setDialogTitle(SINGLEFILE_UPLOAD_WINDOW_TITLE);
+		fcConfig.setApproveButtonText(UPLOAD_BUTTON);
+		fcConfig.setFileSelectionMode(FileChooserConfig.FILES_ONLY);
+		fcConfig.setMultiSelectionEnabled(false);
+		ClientContext.setFileTransferMode(ClientContext.ASYNCHRONOUS_MODE);
+		ClientContext.loadFile(new IFileLoadHandler(){
+			public void onFailure(int reason, String description){
+				onFailureCall(reason);
+			}
+
+			public void onSuccess(InputStream ins[], String filePaths[], String fileNames[]){
+				try{
+					final BufferedInputStream preparedFile = new BufferedInputStream(ins[0]);
+					serverFilePath = fileNames[0];
+					formatServerPath();
+					serverFilePath = (new StringBuilder(String.valueOf(serverPath))).append(serverFilePath).toString();
+					Ivy.log().debug("File to upload: "+serverFilePath.toString());
+					final java.io.File serverFile = new java.io.File(serverFilePath);
+					boolean goesOn = choosedFilesExist(filePaths, fileNames).getExistingDocs().isEmpty();
+					if(goesOn)
+					{//the file does not exists already
+						Ivy.log().debug("File doesn't exist: "+serverFilePath.toString());
+						uploadedFile = serverFile;
+						final BufferedOutputStream server = new BufferedOutputStream(new FileOutputStream(serverFile));
+						callPanelReleaseUploadUIMethod(false); //disables the Upload GUI launchers
+						int intRead;
+						byte b[] = new byte[1024];
+						while((intRead= preparedFile.read(b)) != -1){
+							server.write(b,0,intRead);
+						}
+						server.close();    			
+						try{
+							List<java.io.File> lFiles = List.create(java.io.File.class);
+							lFiles.add(serverFile);			
+							if(areFilesStoredInDB){
+								callPanelUploadSuccessMethod(createReturnedMessageForUploadToDB(lFiles));
+							}else{
+								callPanelUploadSuccessMethod(lFiles);
+							}
+						}catch(Exception e){
+							callPanelErrorMethode(e.getMessage());
+						}
+					}//end if else
+
+				}// end of try	
+				catch(IOException ioe){
+					callPanelErrorMethode(ioe.getMessage());
+				}catch(Exception e) { 
+					callPanelErrorMethode(e.getMessage());
+				}finally{
+					callPanelReleaseUploadUIMethod(true); //enables the Upload GUI launchers
+				}
+			}
+		}, fcConfig, ulcPane,new Integer(this.maxSize));// end of ClientContext.loadFile
+		return returnedMessage;
 	}
 
 	/**
@@ -608,7 +551,7 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel> extend
 	 * In this case, the File Object has no signification because it contains just the last File uploaded
 	 */
 	public ReturnedMessage uploadWithoutShowingProgress(boolean multiFile){
-		return this.uploadWithoutShowingProgress(multiFile, true);
+		return this.uploadWithoutShowingProgress(multiFile, false);
 	}
 
 	/**
@@ -636,10 +579,11 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel> extend
 	 */
 	public ReturnedMessage uploadWithoutShowingProgress(boolean multiFile, boolean synchrone){
 
-		returnedMessage.setType(FileHandler.INFORMATION_MESSAGE);
-		returnedMessage.setText("");
-		returnedMessage.setFile(null);
-		returnedMessage.getFiles().clear();
+		this.returnedMessage = new ReturnedMessage();
+		this.returnedMessage.setType(FileHandler.INFORMATION_MESSAGE);
+		this.returnedMessage.setText("");
+		this.returnedMessage.setFile(null);
+		this.returnedMessage.setFiles(List.create(java.io.File.class));
 		uploadedFile = null;
 
 		FileChooserConfig fcConfig = new FileChooserConfig();
@@ -652,80 +596,56 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel> extend
 		fcConfig.setApproveButtonText(UPLOAD_BUTTON);
 		fcConfig.setFileSelectionMode(FileChooserConfig.FILES_ONLY);
 		fcConfig.setMultiSelectionEnabled(multiFile);
-		if(synchrone) {
+		if(synchrone){
 			ClientContext.setFileTransferMode(ClientContext.SYNCHRONOUS_MODE);
 		}else{
 			ClientContext.setFileTransferMode(ClientContext.ASYNCHRONOUS_MODE);
 		}
 
 		ClientContext.loadFile(new IFileLoadHandler(){
-			public void onFailure(int reason, String description) {
+			public void onFailure(int reason, String description)
+			{
 				onFailureCall(reason);
 			}
 
 			public void onSuccess(InputStream ins[], String filePaths[], String fileNames[]){
-				
-				List<DocumentOnServer> choosedDocs = List.create(DocumentOnServer.class);
-				List<DocumentOnServer> existingDocs = List.create(DocumentOnServer.class);
-				formatServerPath();
-				//notify the observers
-				java.util.List<Object> files =checkUploadFilteringReturnAcceptedAndRejectedFiles(ins, filePaths, serverPath);
-				final List<java.io.File> acceptedFiles = (List<File>) files.get(0);
-				final List<java.io.File> rejectedFiles = (List<File>) files.get(1);
-				final InputStream fIns[] = (InputStream[]) files.get(2);
-				final int n = fIns.length;
-				if(!rejectedFiles.isEmpty()) {
-					//TODO
-				}
-				if(acceptedFiles.isEmpty()) {
-					return;
-				}
-				
-				boolean goesOn = false;
-				try {
-					goesOn = checkExistingFiles(acceptedFiles);
-				} catch (Exception e1) {
-					callPanelErrorMethode(e1.getMessage());
-				}
-				if(!goesOn){//We have to ask if override
-					callPanelOverridingFiles(choosedDocs, existingDocs,
-							acceptedFiles);
-					callPanelReleaseUploadUIMethod(true); //enables the Upload GUI launchers
-				}else{//no file to override
+				int n = ins.length;
+				boolean goesOn=choosedFilesExist(filePaths, fileNames).getExistingDocs().isEmpty();
+				if(goesOn){
+					//no file to override
 					callPanelReleaseUploadUIMethod(false); //disables the Upload GUI launchers
-					notifyMyObservers(makeFilePaths(acceptedFiles));
 					for(int i=0; i<n; i++){
 						try{
-							final BufferedInputStream preparedFile = new BufferedInputStream(fIns[i]);
-							serverFilePath = acceptedFiles.get(i).getName();
-							
+							final BufferedInputStream preparedFile = new BufferedInputStream(ins[i]);
+							serverFilePath = fileNames[i];
+							formatServerPath();
 							serverFilePath = FileHandler.formatPath((new StringBuilder(String.valueOf(serverPath))).append(serverFilePath).toString());
 							Ivy.log().debug("File to upload in: "+serverFilePath.toString());
 							final java.io.File serverFile = new java.io.File(serverFilePath);
 							uploadedFile = serverFile;
-							
+
 							final BufferedOutputStream server = new BufferedOutputStream(new FileOutputStream(serverFile));
 							//final java.io.File choosedFile= new java.io.File(filePaths[i]);
 							int intRead;
 							byte b[] = new byte[1024];
 							while((intRead= preparedFile.read(b)) != -1){
 								server.write(b,0,intRead);
-								//Ivy.log().debug("Writing the File: "+serverFilePath.toString());
+								//Ivy.log().info("Writing the File: "+serverFilePath.toString());
 							}
 							server.close();    			
-							try {
+							try
+							{
 								List<java.io.File> lFiles = List.create(java.io.File.class);
 								lFiles.add(serverFile);			
 								if(areFilesStoredInDB){
-									createReturnedMessageForUploadToDB(lFiles);
-									callPanelUploadSuccessMethod(returnedMessage);
-									
+									callPanelUploadSuccessMethod(createReturnedMessageForUploadToDB(lFiles));
 								}else{
 									callPanelUploadSuccessMethod(lFiles);
 								}
 							}catch(Exception e){
 								callPanelErrorMethode(e.getMessage());
 							}
+
 						}// end of try	
 						catch(IOException ioe){
 							callPanelErrorMethode(ioe.getMessage());
@@ -735,11 +655,9 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel> extend
 							callPanelReleaseUploadUIMethod(true); //enables the Upload GUI launchers
 						}
 					}
-					
 				}
-
 			}
-		}, fcConfig, ulcPane);// end of ClientContext.loadFile
+		}, fcConfig, ulcPane, new Integer(this.maxSize));// end of ClientContext.loadFile
 
 		return returnedMessage;
 	}
@@ -763,17 +681,20 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel> extend
 	 */
 	public ReturnedMessage forceUpload()
 	{
-		uploadedFile=null;
-		returnedMessage.setType(FileHandler.INFORMATION_MESSAGE);
-		returnedMessage.setText("");
-		returnedMessage.setFile(null);
+		this.returnedMessage = new ReturnedMessage();
+		this.returnedMessage.setType(FileHandler.INFORMATION_MESSAGE);
+		this.returnedMessage.setText("");
+		this.returnedMessage.setFile(null);
+		this.returnedMessage.setFiles(List.create(java.io.File.class));
+		uploadedFile = null;
 		FileChooserConfig fcConfig = new FileChooserConfig();
 		fcConfig.setDialogTitle(SINGLEFILE_UPLOAD_WINDOW_TITLE);
 		fcConfig.setApproveButtonText(UPLOAD_BUTTON);
 		fcConfig.setFileSelectionMode(FileChooserConfig.FILES_ONLY);
 		fcConfig.setMultiSelectionEnabled(false);
 		ClientContext.loadFile(new IFileLoadHandler() {
-			public void onFailure(int reason, String description) {
+			public void onFailure(int reason, String description)
+			{
 				onFailureCall(reason);
 			}
 
@@ -784,20 +705,19 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel> extend
 					fileUnit = getInputStreamPercentLength(ins[0],20);
 					Ivy.log().debug("BufferedInputStream preparedFile: {0} fileUnit = {1}", preparedFile.toString(),fileUnit);
 					serverFilePath = fileNames[0];
-					//notify the observers
-					notifyMyObservers(filePaths);
 					formatServerPath();
 					serverFilePath = (new StringBuilder(String.valueOf(serverPath))).append(serverFilePath).toString();
 					final java.io.File serverFile = new java.io.File(serverFilePath);
 					uploadedFile = serverFile;
-					//final BufferedOutputStream server = new BufferedOutputStream(new FileOutputStream(serverFile));
+					@SuppressWarnings("resource")
+					final BufferedOutputStream server = new BufferedOutputStream(new FileOutputStream(serverFile));
 					final java.io.File choosedFile= new java.io.File(filePaths[0]);
 					final String fileName = fileNames[0];
 					cleanTimer();
 					timer.addActionListener(new IActionListener() {
 						private static final long serialVersionUID = -3025252014358720080L;
 						byte b[] = new byte[1024];
-						BufferedOutputStream server = new BufferedOutputStream(new FileOutputStream(serverFile));
+
 						int totalKBUploaded =0 ;
 						int intRead;
 						boolean done=false;
@@ -840,9 +760,7 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel> extend
 									List<java.io.File> lFiles = List.create(java.io.File.class);
 									lFiles.add(serverFile);			
 									if(areFilesStoredInDB){
-										createReturnedMessageForUploadToDB(lFiles);
-										callPanelUploadSuccessMethod(returnedMessage);
-										
+										callPanelUploadSuccessMethod(createReturnedMessageForUploadToDB(lFiles));
 									}else{
 										callPanelUploadSuccessMethod(lFiles);
 									}
@@ -863,7 +781,7 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel> extend
 					callPanelReleaseUploadUIMethod(true); //disables the Upload GUI launchers
 				}
 			}
-		}, fcConfig, ulcPane);
+		}, fcConfig, ulcPane,new Integer(this.maxSize));
 		return returnedMessage;
 	}
 
@@ -882,24 +800,27 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel> extend
 	 */
 	public ReturnedMessage prepareUpload()
 	{
-		returnedMessage.setType(FileHandler.INFORMATION_MESSAGE);
-		returnedMessage.setText("");
-		returnedMessage.setFile(null);
-		uploadedFile=null;
+		this.returnedMessage = new ReturnedMessage();
+		this.returnedMessage.setType(FileHandler.INFORMATION_MESSAGE);
+		this.returnedMessage.setText("");
+		this.returnedMessage.setFile(null);
+		this.returnedMessage.setFiles(List.create(java.io.File.class));
+		uploadedFile = null;
 		FileChooserConfig fcConfig = new FileChooserConfig();
 		fcConfig.setDialogTitle(SINGLEFILE_UPLOAD_WINDOW_TITLE);
 		fcConfig.setApproveButtonText(UPLOAD_BUTTON);
 		fcConfig.setFileSelectionMode(FileChooserConfig.FILES_ONLY);
-		ClientContext.loadFile(new IFileLoadHandler(){
+		ClientContext.chooseFile(new IFileChooseHandler(){
 
-			public void onFailure(int reason, String description) {
+			public void onFailure(int reason, String description)
+			{
 				onFailureCall(reason);
 			}
 
-			public void onSuccess(InputStream ins[], String filePaths[], String fileNames[]) {
+			public void onSuccess(String filePaths[], String fileNames[])
+			{
 				try{
 					uploadedFile = new java.io.File(filePaths[0]);
-					
 					returnedMessage.setType(FileHandler.SUCCESS_MESSAGE);
 					returnedMessage.setText("The java.io.File was successfully prepared for future upload or use.");
 					returnedMessage.setFile(uploadedFile);
@@ -918,8 +839,47 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel> extend
 	 * @param callbackMethodName: the name of the method from the RDPanel that should receive the choose files.
 	 * @return the list of choose java.io.File
 	 */
-	public ArrayList<java.io.File> prepareFilesForUpload(final ULCComponent panel, final String callbackMethodName) {
-		return this.prepareFilesForUpload(panel, callbackMethodName, 0);
+	public ArrayList<java.io.File> prepareFilesForUpload(final ULCComponent panel, final String callbackMethodName){
+		final ArrayList<java.io.File> files = new ArrayList<java.io.File>();
+
+		FileChooserConfig fcConfig = new FileChooserConfig();
+
+		fcConfig.setDialogTitle(MULTIFILE_UPLOAD_WINDOW_TITLE);
+
+
+		fcConfig.setApproveButtonText(UPLOAD_BUTTON); 
+		fcConfig.setFileSelectionMode(FileChooserConfig.FILES_ONLY);
+		fcConfig.setMultiSelectionEnabled(true);
+		ClientContext.setFileTransferMode(ClientContext.SYNCHRONOUS_MODE);
+		ClientContext.chooseFile(new IFileChooseHandler(){
+			@Override
+			public void onFailure(int reason, String description) {
+				onFailureCall(reason);
+			}
+
+			@Override
+			public void onSuccess(String[] filePaths, String[] fileNames) {
+				Ivy.log().debug("Number of Files choosed: "+filePaths.length);
+				try{
+					for(int i=0; i<filePaths.length; i++){
+						Ivy.log().debug(filePaths[i]);
+						files.add(new java.io.File(filePaths[i]));
+					}
+					if(!callbackMethodName.trim().equals(""))
+					{
+						List<java.io.File> f = List.create(java.io.File.class);
+						f.addAll(files);
+						RDCallbackMethodHandler.callRDMethodFromULCComponent(panel, callbackMethodName, new Object[] { f });
+					}
+
+				}
+				catch(Exception exception) { 
+					callPanelErrorMethode(exception.getMessage());
+				}
+			}
+		}
+		, fcConfig, panel);
+		return files;
 	}
 
 	/**
@@ -933,36 +893,37 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel> extend
 		final ArrayList<java.io.File> files = new ArrayList<java.io.File>();
 
 		FileChooserConfig fcConfig = new FileChooserConfig();
-		this.maxSize=_maxSize*1024;
-		if(this.maxSize>0) {
-			fcConfig.setDialogTitle(MAX_MULTIPLEFILESIZE_ALLOWED+" "+_maxSize+" Kb.");
-		} else {
-			fcConfig.setDialogTitle(MULTIFILE_UPLOAD_WINDOW_TITLE);
-		}
+		if(_maxSize>0)
+			this.maxSize=_maxSize*1024;
+		fcConfig.setDialogTitle(MAX_MULTIPLEFILESIZE_ALLOWED+" "+_maxSize+" Kb.");
 
 		fcConfig.setApproveButtonText(UPLOAD_BUTTON); 
 		fcConfig.setFileSelectionMode(FileChooserConfig.FILES_ONLY);
 		fcConfig.setMultiSelectionEnabled(true);
 		ClientContext.setFileTransferMode(ClientContext.SYNCHRONOUS_MODE);
 
-		ClientContext.loadFile(new IFileLoadHandler(){
+		ClientContext.chooseFile(new IFileChooseHandler(){
 
-			public void onFailure(int reason, String description){
+			public void onFailure(int reason, String description)
+			{
 				onFailureCall(reason);
 			}
 
-			public void onSuccess(InputStream ins[], String filePaths[], String fileNames[])
+			public void onSuccess(String filePaths[], String fileNames[])
 			{
 				Ivy.log().debug("Number of Files choosed: "+filePaths.length);
 				try{
-					java.util.List<Object> check = checkUploadFilteringReturnAcceptedAndRejectedFiles(ins, filePaths, serverPath);
-					final List<java.io.File> acceptedFiles = (List<File>) check.get(0);
-					final List<java.io.File> rejectedFiles = (List<File>) check.get(1);
-					files.addAll(acceptedFiles);
-					if(!callbackMethodName.trim().equals("")){
-						Ivy.log().info("To upload {0} {1}",acceptedFiles, callbackMethodName);
-						RDCallbackMethodHandler.callRDMethodFromULCComponent(panel, callbackMethodName, new Object[] {acceptedFiles, rejectedFiles});
+					for(int i=0; i<filePaths.length; i++){
+						Ivy.log().debug(filePaths[i]);
+						files.add(new java.io.File(filePaths[i]));
 					}
+					if(!callbackMethodName.trim().equals(""))
+					{
+						List<java.io.File> f = List.create(java.io.File.class);
+						f.addAll(files);
+						RDCallbackMethodHandler.callRDMethodFromULCComponent(panel, callbackMethodName, new Object[] { f });
+					}
+
 				}
 				catch(Exception exception) { 
 					callPanelErrorMethode(exception.getMessage());
@@ -992,18 +953,21 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel> extend
 	 */
 	public ReturnedMessage uploadPreparedUpload(final java.io.File f)
 	{
-		returnedMessage.setType(FileHandler.INFORMATION_MESSAGE);
-		returnedMessage.setText("");
-		returnedMessage.setFile(null);
+		this.returnedMessage = new ReturnedMessage();
+		this.returnedMessage.setType(FileHandler.INFORMATION_MESSAGE);
+		this.returnedMessage.setText("");
+		this.returnedMessage.setFile(null);
+		this.returnedMessage.setFiles(List.create(java.io.File.class));
+		uploadedFile = null;
 		String filePath = f.getPath().replace("\\", "/");
-		//notify the observers
-		notifyMyObservers(f);
 		ClientContext.loadFile(new IFileLoadHandler(){
-			public void onFailure(int reason, String description){
+			public void onFailure(int reason, String description)
+			{
 				onFailureCall(reason);
 			}
 
-			public void onSuccess(InputStream ins[], String filePaths[], String fileNames[]){
+			public void onSuccess(InputStream ins[], String filePaths[], String fileNames[])
+			{
 				try{
 					callPanelReleaseUploadUIMethod(false); //disables the Upload GUI launchers
 					uploadedFile = f;
@@ -1016,7 +980,8 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel> extend
 					serverFilePath = (new StringBuilder(String.valueOf(serverPath))).append(serverFilePath).toString();
 					final java.io.File serverFile = new java.io.File(serverFilePath);
 					uploadedFile = new java.io.File(serverFilePath);
-					//final BufferedOutputStream server = new BufferedOutputStream(new FileOutputStream(serverFile));
+					@SuppressWarnings("resource")
+					final BufferedOutputStream server = new BufferedOutputStream(new FileOutputStream(serverFile));
 					cleanTimer();
 					timer.addActionListener(new IActionListener() {
 						private static final long serialVersionUID = -3025252014358720080L;
@@ -1024,7 +989,6 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel> extend
 						int totalKBUploaded =0 ;
 						int intRead;
 						boolean done=false;
-						BufferedOutputStream server = new BufferedOutputStream(new FileOutputStream(serverFile));
 						public void actionPerformed(ActionEvent arg0) {
 							int progressDone =0;
 							try{
@@ -1064,9 +1028,9 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel> extend
 									List<java.io.File> lFiles = List.create(java.io.File.class);
 									lFiles.add(serverFile);			
 									if(areFilesStoredInDB){
-										createReturnedMessageForUploadToDB(lFiles);
-										callPanelUploadSuccessMethod(returnedMessage);
-										
+										ReturnedMessage msg = createReturnedMessageForUploadToDB(lFiles);
+										msg.setFile(serverFile);
+										callPanelUploadSuccessMethod(msg);
 									}else{
 										callPanelUploadSuccessMethod(lFiles);
 									}
@@ -1085,83 +1049,93 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel> extend
 					callPanelReleaseUploadUIMethod(true); //disables the Upload GUI launchers
 				}
 			}
-		}, filePath);// end of ClientContext.loadFile
+		}, filePath, new Integer(this.maxSize));// end of ClientContext.loadFile
 		return returnedMessage;
 	}
 
 	/**
 	 * uploadPreparedFiles to the server path directory
-	 * @param choosedFiles
+	 * @param files
 	 */
-	public void uploadPreparedFiles(List<java.io.File> choosedFiles){
-
-		this.uploadPreparedFiles(choosedFiles, 0);
+	public void uploadPreparedFiles(List<java.io.File> files){
+		this.uploadPreparedFiles(files, 0);
 	}
 
 	/**
 	 * uploadPreparedFiles to the server path directory
-	 * @param choosedFiles
+	 * @param files
 	 * @param _maxSize
 	 */
-	public void uploadPreparedFiles(List<java.io.File> choosedFiles, final int _maxSize) {
-		this.uploadPreparedFiles(choosedFiles,_maxSize,true);
+	public void uploadPreparedFiles(final List<java.io.File> files, final int _maxSize){
+		this.uploadPreparedFiles(files, _maxSize, true);
 	}
-	
-	protected void uploadPreparedFiles(List<java.io.File> choosedFiles, final int _maxSize, boolean synchrone) {
-		this.maxSize=_maxSize*1024;
-		ClientContext.setFileTransferMode(synchrone?ClientContext.SYNCHRONOUS_MODE:ClientContext.ASYNCHRONOUS_MODE);
-		//notify the observers
-		notifyMyObservers(choosedFiles);
-		if(choosedFiles != null && choosedFiles.size()>0){
-			//final java.io.File filesToUpload [] = choosedFiles.toArray();
-			final List<java.io.File> files = choosedFiles;
-			String filePath = choosedFiles.get(0).getPath().replace("\\","/");
-			Ivy.log().debug("Choosed File path: "+filePath);
-			final java.io.File f = choosedFiles.get(0);
-			ClientContext.loadFile(new IFileLoadHandler(){
-				public void onFailure(int reason, String description)
-				{
-					if(files.size()>0){
-						onFailureCall(reason, files.get(0).getName());
-					}else
-					{
-						onFailureCall(reason);
-					}
 
-					if(files.size()>1){
-						files.remove(0);
-						uploadPreparedFiles(files, _maxSize);
-					}else{
-						callPanelReleaseUploadUIMethod(true); //disables the Upload GUI launchers
+	private void uploadPreparedFiles(final List<java.io.File> files, final int _maxSize, boolean clearList){
+		if(clearList) {
+			this.returnedMessage = new ReturnedMessage();
+			this.returnedMessage.setType(FileHandler.INFORMATION_MESSAGE);
+			this.returnedMessage.setText("");
+			this.returnedMessage.setFile(null);
+			this.returnedMessage.setFiles(List.create(java.io.File.class));
+			// we exclude all null files from the list.
+			if(files!=null) {
+				List<java.io.File> purge = List.create(java.io.File.class);
+				for(java.io.File f : files) {
+					if(f!=null){
+						purge.add(f);
+					}
+				}
+				files.clear();
+				files.addAll(purge);
+			}
+
+		}
+
+		if(_maxSize>0)
+			this.maxSize=_maxSize*1024;
+
+		ClientContext.setFileTransferMode(ClientContext.SYNCHRONOUS_MODE);
+		if(files != null && files.size()>0){
+			final String filePath = files.get(0).getPath().replace("\\","/");
+			Ivy.log().debug("Choosed File path: "+filePath);
+			files.remove(0);
+			ClientContext.loadFile(new IFileLoadHandler(){
+				public void onFailure(int reason, String description) {
+					onFailureCall(reason, new java.io.File(filePath).getName());
+					if(files.size()>0){
+						//upload the next files
+						Ivy.log().debug("Calling recursively uploadPreparedFiles from onFailure {0}",files);
+						String s = PREPARING_NEXT_FILE_UPLOAD.concat(" ").concat(files.get(0).getName());
+						RDCallbackMethodHandler.callRDMethod(ulcPane, progressMethodName, new Object[] { s });
+						uploadPreparedFiles(files, _maxSize, false);
+					}else {
+						//This was the last file to upload: we call the callback methods
+						if(areFilesStoredInDB) {
+							callPanelUploadSuccessMethod(createReturnedMessageForUploadToDB(returnedMessage.getFiles()));
+						}else {
+							callPanelUploadSuccessMethod(returnedMessage.getFiles());
+						}
+						//enables the Upload GUI launchers
+						callPanelReleaseUploadUIMethod(true); 
 					}
 				}
 
 				public void onSuccess(InputStream ins[], String filePaths[], String fileNames[]){
 					try{
-						uploadedFile = f;
-						final String fileName= f.getName();
+						Ivy.log().debug("Uploading begin preparedFile: {0}", filePaths[0]);
+						final java.io.File fileToUpload = new java.io.File(filePath);
+						final String fileName= fileToUpload.getName();
 						final BufferedInputStream preparedFile = new BufferedInputStream(ins[0]);
 						fileUnit = getInputStreamPercentLength(ins[0],20);
 						Ivy.log().debug("BufferedInputStream preparedFile: {0} fileUnit = {1}", preparedFile.toString(),fileUnit);
-						serverFilePath = uploadedFile.getName();
-						if(!System.getProperty("os.name").contains("Window")){
-							//get file name only
-							//ex C:\Users\kqbao\test.txt -> test.txt
-							int lastSlashIndex = serverFilePath.lastIndexOf("\\");
-							serverFilePath = serverFilePath.substring(lastSlashIndex + 1, serverFilePath.length());
-
-						}
-
 						formatServerPath();
-						serverFilePath = (new StringBuilder(String.valueOf(serverPath))).append(serverFilePath).toString();
-						final java.io.File serverFile = new java.io.File(serverFilePath);
-						uploadedFile = new java.io.File(serverFilePath);
-						//final BufferedOutputStream serverBOS = new BufferedOutputStream(new FileOutputStream(serverFile));
+						final java.io.File serverFile = new java.io.File(serverPath.concat(fileNames[0]));
+						@SuppressWarnings("resource")
+						final BufferedOutputStream serverBOS = new BufferedOutputStream(new FileOutputStream(serverFile));
 						Ivy.log().debug("BufferedOutputStream serverBOS: "+serverFile);
 						cleanTimer();
 						callPanelReleaseUploadUIMethod(false); //disables the Upload GUI launchers
 						timer.addActionListener(new IActionListener() {
-							BufferedOutputStream serverBOS = new BufferedOutputStream(new FileOutputStream(serverFile));
 							private static final long serialVersionUID = -3025252014358720080L;
 							byte b[] = new byte[1024];
 							int totalKBUploaded =0 ;
@@ -1177,7 +1151,11 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel> extend
 											totalKBUploaded++;
 										}else{ 
 											done=true;
-											serverBOS.close();
+											try {
+												serverBOS.close();
+											} catch (IOException e1) {
+												Ivy.log().error("Error while trying to close BufferedOutputStream after upload for {0}",serverFile);
+											}
 										}
 									}
 									if(!done){
@@ -1188,6 +1166,7 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel> extend
 									try {
 										serverBOS.close();
 									} catch (IOException e1) {
+										Ivy.log().error("Error while trying to close BufferedOutputStream after upload for {0}",serverFile);
 									}
 									callPanelErrorMethode(e.getMessage());
 								}// end try/catch
@@ -1196,33 +1175,28 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel> extend
 									RDCallbackMethodHandler.callRDMethod(ulcPane, progressMethodName, new Object[] { s });
 									timer.restart(); // restart the timer because the file is not completely uploaded
 								}else{
-									String s = fileName+" upload finished";
+									//The file was uploaded completely
+
 									returnedMessage.setType(FileHandler.SUCCESS_MESSAGE);
 									returnedMessage.setText(UPLOAD_SUCCESSFUL);
-									returnedMessage.setFile(serverFile);
-									RDCallbackMethodHandler.callRDMethod(ulcPane, progressMethodName, new Object[] { s });
-									List<java.io.File> lFiles = List.create(java.io.File.class);
-									lFiles.add(serverFile);
-									if(areFilesStoredInDB){
-										try {
-											createReturnedMessageForUploadToDB(lFiles);
-											
-										} catch (Exception e) {
-
+									returnedMessage.getFiles().add(serverFile);
+									//RDCallbackMethodHandler.callRDMethod(ulcPane, progressMethodName, new Object[] { s });
+									if(files.size()>0){
+										//upload the next files
+										Ivy.log().debug("Calling recursively uploadPreparedFiles from onSuccess {0}",files);
+										String s = PREPARING_NEXT_FILE_UPLOAD.concat(" ").concat(files.get(0).getName());
+										RDCallbackMethodHandler.callRDMethod(ulcPane, progressMethodName, new Object[] { s });
+										uploadPreparedFiles(files, _maxSize, false);
+									}else {
+										//This was the last file to upload: we call the callback methods
+										if(areFilesStoredInDB) {
+											callPanelUploadSuccessMethod(createReturnedMessageForUploadToDB(returnedMessage.getFiles()));
+										}else {
+											callPanelUploadSuccessMethod(returnedMessage.getFiles());
 										}
-										callPanelUploadSuccessMethod(returnedMessage);
-									}else{
-										callPanelUploadSuccessMethod(lFiles);
+										//enables the Upload GUI launchers
+										callPanelReleaseUploadUIMethod(true); 
 									}
-
-									// try recursivity
-									if(files.size()>1){
-										files.remove(0);
-										uploadPreparedFiles(files, _maxSize);
-									}else{
-										callPanelReleaseUploadUIMethod(true); //disables the Upload GUI launchers
-									}
-
 								}//end if else
 							}// end of actionPerformed
 						});// end of timer
@@ -1233,11 +1207,12 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel> extend
 					}catch(Exception e) { 
 						callPanelErrorMethode(e.getMessage());
 					}
-
 				}//end of onSuccess
-			}, filePath,this.maxSize);// end of ClientContext.loadFile
+			}, filePath, new Integer(this.maxSize));// end of ClientContext.loadFile
 		}
+
 	}
+
 	/**
 	 * This method allows to upload a java.io.File from the client Filesystem to the server Filesystem.<br>
 	 * The uploaded java.io.File is given as input parameter. No Filechooser appears.<br>
@@ -1258,16 +1233,16 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel> extend
 	 */
 	public ReturnedMessage uploadPreparedUploadWithoutShowingProgress(final java.io.File f)
 	{
-		returnedMessage.setType(FileHandler.INFORMATION_MESSAGE);
-		returnedMessage.setText("");
-		returnedMessage.setFile(null);
+		this.returnedMessage = new ReturnedMessage();
+		this.returnedMessage.setType(FileHandler.INFORMATION_MESSAGE);
+		this.returnedMessage.setText("");
+		this.returnedMessage.setFile(null);
+		this.returnedMessage.setFiles(List.create(java.io.File.class));
 		String filePath = f.getPath().replace("\\", "/");
-		//notify the observers
-		notifyMyObservers(f);
 		ClientContext.loadFile(new IFileLoadHandler(){
 			public void onFailure(int reason, String description)
 			{
-				onFailureCall(reason);
+				onFailureCall(reason, f!=null?f.getName():"");
 			}
 
 			public void onSuccess(InputStream ins[], String filePaths[], String fileNames[])
@@ -1295,9 +1270,7 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel> extend
 						List<java.io.File> lFiles = List.create(java.io.File.class);
 						lFiles.add(serverFile);			
 						if(areFilesStoredInDB){
-							createReturnedMessageForUploadToDB(lFiles);
-							callPanelUploadSuccessMethod(returnedMessage);
-							
+							callPanelUploadSuccessMethod(createReturnedMessageForUploadToDB(lFiles));
 						}else{
 							callPanelUploadSuccessMethod(lFiles);
 						}
@@ -1311,7 +1284,7 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel> extend
 					callPanelErrorMethode(exception.getMessage());
 				}
 			}
-		}, filePath);// end of ClientContext.loadFile
+		}, filePath ,new Integer(this.maxSize));// end of ClientContext.loadFile
 		return returnedMessage;
 	}
 
@@ -1330,74 +1303,95 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel> extend
 	 * This Object contains the type of message (FileHandler.ERROR_MESSAGE, FileHandler.Information_MESSAGE or FileHandler.SUCCESS_MESSAGE),<br>
 	 * the message text as String and the List of java.io.Files that were successfully uploaded.<br>
 	 */
-	public ReturnedMessage uploadPreparedFilesWithoutShowingProgress(final List<java.io.File> files)
-	{
-		returnedMessage.setType(FileHandler.SUCCESS_MESSAGE);
-		returnedMessage.setText("");
-		returnedMessage.setFile(null);
-		returnedMessage.setFiles(List.create(java.io.File.class));
-		//notify the observers
-		notifyMyObservers(files);
-		ClientContext.setFileTransferMode(ClientContext.ASYNCHRONOUS_MODE);
-		Ivy.log().debug("Starting to upload");
-		if(files!=null && files.size()>0){
-			String filePath = files.get(0).getPath().replace("\\", "/");
-			ClientContext.loadFile(new IFileLoadHandler(){
-				public void onFailure(int reason, String description)
-				{
-					onFailureCall(reason);
-				}
+	public ReturnedMessage uploadPreparedFilesWithoutShowingProgress(final List<java.io.File> files) {
+		return this.uploadPreparedFilesWithoutShowingProgress(files,0);
+	}
 
-				public void onSuccess(InputStream ins[], String filePaths[], String fileNames[])
-				{
-					callPanelReleaseUploadUIMethod(false); //disables the Upload GUI launchers
-					for(java.io.File f: files)
-					{
-						try
-						{
-							uploadedFile = f;
-							BufferedInputStream preparedFile = new BufferedInputStream(new FileInputStream(f));
-							serverFilePath = uploadedFile.getName();
-							formatServerPath();
-							serverFilePath = (new StringBuilder(String.valueOf(serverPath))).append(serverFilePath).toString();
-							java.io.File serverFile = new java.io.File(serverFilePath);
-							uploadedFile = new java.io.File(serverFilePath);
-							final BufferedOutputStream server = new BufferedOutputStream(new FileOutputStream(serverFile));
-							byte b[] = new byte[1024];
-							int intRead;
-							while((intRead= preparedFile.read(b)) != -1)
-							{
-								server.write(b,0,intRead);
-							}
-							server.close();
-							preparedFile.close();
-							returnedMessage.getFiles().add(serverFile);
-							Ivy.log().debug("Upload Stored in DB finished");
-						}// end of try
-						catch(Exception exception) { 
-							Ivy.log().error(exception);
-						}
-					}//end of for
-					if(areFilesStoredInDB){
-						try {
-							createReturnedMessageForUploadToDB(returnedMessage.getFiles());
-							/*if(returnedMessage.getDocumentOnServers()!=null){
-								for(DocumentOnServer doc: returnedMessage.getDocumentOnServers()){
-									fireEvent(new java.io.File(doc.getPath()));
-								}
-							}*/
-						} catch (Exception e) {
+	public ReturnedMessage uploadPreparedFilesWithoutShowingProgress(final List<java.io.File> files,final int _maxSize) {
 
-						}
-						callPanelUploadSuccessMethod(returnedMessage);
-					}else{
-						callPanelUploadSuccessMethod(returnedMessage.getFiles());
-					}
-					callPanelReleaseUploadUIMethod(true); //enables the Upload GUI launchers
-				}
-			}, filePath);// end of ClientContext.loadFile
-		}
+		this.uploadPreparedFilesWithoutShowingProgress(files, _maxSize, true);
+
 		return returnedMessage;
+	}
+
+	private ReturnedMessage uploadPreparedFilesWithoutShowingProgress(final List<java.io.File> files,final int _maxSize, boolean clearList) {
+		if(clearList) {
+			this.returnedMessage = new ReturnedMessage();
+			this.returnedMessage.setType(FileHandler.INFORMATION_MESSAGE);
+			this.returnedMessage.setText("");
+			this.returnedMessage.setFile(null);
+			this.returnedMessage.setFiles(List.create(java.io.File.class));
+		}
+
+		if(_maxSize>0)
+			this.maxSize=_maxSize*1024;
+
+		ClientContext.setFileTransferMode(ClientContext.SYNCHRONOUS_MODE);
+		if(files != null && files.size()>0){
+			final String filePath = files.get(0).getPath().replace("\\","/");
+			Ivy.log().debug("Choosed File path: {0} \n max size {1}",filePath,this.maxSize);
+			files.remove(0);
+			ClientContext.loadFile(new IFileLoadHandler(){
+				public void onFailure(int reason, String description) {
+					onFailureCall(reason, new java.io.File(filePath).getName());
+					if(files.size()>0){
+						//upload the next files
+						Ivy.log().debug("Calling recursively uploadPreparedFiles from onFailure {0}",files);
+						uploadPreparedFiles(files, _maxSize, false);
+					}else {
+						//This was the last file to upload: we call the callback methods
+						if(areFilesStoredInDB) {
+							callPanelUploadSuccessMethod(createReturnedMessageForUploadToDB(returnedMessage.getFiles()));
+						}else {
+							callPanelUploadSuccessMethod(returnedMessage.getFiles());
+						}
+						//enables the Upload GUI launchers
+						callPanelReleaseUploadUIMethod(true); 
+					}
+				}
+
+				public void onSuccess(InputStream ins[], String filePaths[], String fileNames[]){
+					try{
+						Ivy.log().debug("Uploading begin preparedFile: {0}", filePaths[0]);
+						final BufferedInputStream preparedFile = new BufferedInputStream(ins[0]);
+						fileUnit = getInputStreamPercentLength(ins[0],20);
+						Ivy.log().debug("BufferedInputStream preparedFile: {0} fileUnit = {1}", preparedFile.toString(),fileUnit);
+						formatServerPath();
+						final java.io.File serverFile = new java.io.File(serverPath.concat(fileNames[0]));
+						final BufferedOutputStream serverBOS = new BufferedOutputStream(new FileOutputStream(serverFile));
+						Ivy.log().debug("BufferedOutputStream serverBOS: "+serverFile);
+						byte b[] = new byte[1024];
+						int intRead;
+						while((intRead= preparedFile.read(b)) != -1){
+							serverBOS.write(b,0,intRead);
+						}
+						serverBOS.close();
+						returnedMessage.setType(FileHandler.SUCCESS_MESSAGE);
+						returnedMessage.setText(UPLOAD_SUCCESSFUL);
+						returnedMessage.getFiles().add(serverFile);
+						if(files.size()>0){
+							//upload the next files
+							Ivy.log().debug("Calling recursively uploadPreparedFiles from onSuccess {0} \n max size{1}",files,maxSize);
+							uploadPreparedFilesWithoutShowingProgress(files, _maxSize, false);
+						}else {
+							//This was the last file to upload: we call the callback methods
+							if(areFilesStoredInDB) {
+								callPanelUploadSuccessMethod(createReturnedMessageForUploadToDB(returnedMessage.getFiles()));
+							}else {
+								callPanelUploadSuccessMethod(returnedMessage.getFiles());
+							}
+							//enables the Upload GUI launchers
+							callPanelReleaseUploadUIMethod(true); 
+						}
+					}catch(IOException ioe){
+						callPanelErrorMethode(ioe.getMessage());
+					}catch(Exception e) { 
+						callPanelErrorMethode(e.getMessage());
+					}
+				}//end of onSuccess
+			}, filePath,  new Integer(this.maxSize));// end of ClientContext.loadFile
+		}
+		return this.returnedMessage;
 	}
 
 	/**
@@ -1523,7 +1517,7 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel> extend
 	/**
 	 * Allows to delete a java.io.File and its directory if no files anymore
 	 * @param String filepath: the Filepath of the java.io.File to delete.
-	 * If the FileUploadHandler was instanciated with a reference to a RichDialogGridBagPanel, this method will try to call the following<br>
+	 * If the FileUploadHandler was instantiated with a reference to a RichDialogGridBagPanel, this method will try to call the following<br>
 	 * callback methods if they were also referenced:<br>
 	 * <ul>
 	 * <li>errorMethodeName, it will be called when an error occurs with a returnedMessage Object as parameter,<br>
@@ -1532,7 +1526,7 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel> extend
 	 * </ul>
 	 * @return ReturnedMessage
 	 */
-	protected ReturnedMessage deleteFileAndDirectoryIfNoFile(String filepath)
+	public ReturnedMessage deleteFileAndDirectoryIfNoFile(String filepath)
 	{
 		java.io.File fileToDelete = new java.io.File(filepath);
 		String dirPath=null;
@@ -1611,6 +1605,7 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel> extend
 	private void callPanelReleaseUploadUIMethod(Boolean _b){
 		if(_b!=null && this.ulcPane != null && this.releaseUploadUIMethodName!=null && !this.releaseUploadUIMethodName.trim().equals(""))
 		{
+			Ivy.log().debug("callPanelReleaseUploadUIMethod with Boolean {0}",_b);
 			RDCallbackMethodHandler.callRDMethod(ulcPane, this.releaseUploadUIMethodName, new Object[] { _b });
 		}
 	}
@@ -1623,20 +1618,16 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel> extend
 		String msg;
 		switch(reason)
 		{
-		case IFileLoadHandler.CANCELLED:
+		case 1:
 			msg = ACTION_CANCELLED;
 			returnedMessage.setType(FileHandler.INFORMATION_MESSAGE);
 			break;
-		case IFileLoadHandler.FAILED:
+		case 2:
 			msg = ERROR_UNKOWN;
 			returnedMessage.setType(FileHandler.ERROR_MESSAGE);
 			break;
-		case IFileLoadHandler.FILE_SIZE_EXCEEDED:
-			msg = FILESIZE_TOO_BIG;
-			returnedMessage.setType(FileHandler.ERROR_MESSAGE);
-			break;
-		case FILE_FILTERED:
-			msg = FILE_UPLOAD_FILTERED;
+		case 3:
+			msg = FILESIZE_TOO_BIG.replace("FSIZE", this.getMaxUploadSize());
 			returnedMessage.setType(FileHandler.ERROR_MESSAGE);
 			break;
 		default:
@@ -1648,23 +1639,6 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel> extend
 		returnedMessage.setFile(null);
 		callPanelErrorMethode(returnedMessage);
 	}
-	
-	private void onFailureCallWithMessage(int reason, String msg){
-		if(msg == null || msg.trim().length()==0) {
-			this.onFailureCall(reason);
-		}else{
-			if(reason==IFileLoadHandler.CANCELLED) {
-				returnedMessage.setType(FileHandler.INFORMATION_MESSAGE);
-			}else {
-				returnedMessage.setType(FileHandler.ERROR_MESSAGE);
-			}
-			
-			returnedMessage.setText(msg);
-			returnedMessage.setFile(null);
-			callPanelErrorMethode(returnedMessage);
-		}
-		
-	}
 
 	/**
 	 * 
@@ -1673,23 +1647,21 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel> extend
 	 */
 	private void onFailureCall(int reason, String _FileName){
 		String msg;
-
+		Ivy.log().debug("Upload failure on {0} for reason {1}",_FileName,
+				reason==1?"Action Cancelled":
+					reason == 3 ?"File too big":"Error Unknown");
 		switch(reason)
 		{
-		case IFileLoadHandler.CANCELLED:
+		case 1:
 			msg = ACTION_CANCELLED;
 			returnedMessage.setType(FileHandler.INFORMATION_MESSAGE);
 			break;
-		case IFileLoadHandler.FAILED:
+		case 2:
 			msg = ERROR_UNKOWN;
 			returnedMessage.setType(FileHandler.ERROR_MESSAGE);
 			break;
-		case IFileLoadHandler.FILE_SIZE_EXCEEDED:
-			msg = FILESIZE_TOO_BIG;
-			returnedMessage.setType(FileHandler.ERROR_MESSAGE);
-			break;
-		case FILE_FILTERED:
-			msg = FILE_UPLOAD_FILTERED;
+		case 3:
+			msg = FILESIZE_TOO_BIG.replace("FSIZE", this.getMaxUploadSize());
 			returnedMessage.setType(FileHandler.ERROR_MESSAGE);
 			break;
 		default:
@@ -1704,6 +1676,25 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel> extend
 			returnedMessage.setFile(null);
 		}
 		callPanelErrorMethode(returnedMessage);
+	}
+
+	private String getMaxUploadSize() {
+		String s;
+		if(this.maxSize>=1024) {
+			float f = (float) this.maxSize;
+			if(f%1024>0) {
+				Double d = new Double(f/1024);
+				s=new DecimalFormat("0.00").format(d);
+			}else{
+				double i = f/1024.0;
+				Ivy.log().debug("Max size: "+i);
+				s=""+i;
+			}
+			s+=" Mb";
+		}else{
+			s=""+this.maxSize+" Kb";
+		}
+		return s;
 	}
 
 	/**
@@ -1722,22 +1713,6 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel> extend
 			RDCallbackMethodHandler.callRDMethod(ulcPane, askIfOverWriteFileMethodName, new Object[] { allChoosedFiles, allChoosedDocs, docsToOverwrite, destination});
 		}
 	}
-	
-	private void callPanelOverridingFiles(List<DocumentOnServer> choosedDocs,
-			List<DocumentOnServer> existingDocs,
-			List<java.io.File> allChoosedFiles) {
-		returnedMessage.setType(FileHandler.INFORMATION_MESSAGE);
-		returnedMessage.setText(FILE_ALREADY_EXISTS);
-		returnedMessage.setFiles(allChoosedFiles);
-		returnedMessage.setDocumentOnServers(existingDocs);
-		if(!areFilesStoredInDB){
-			RDCallbackMethodHandler.callRDMethod(ulcPane, askIfOverWriteFileMethodName, new Object[] { returnedMessage });
-		}else{
-			Ivy.log().debug("found some files to override");
-			RDCallbackMethodHandler.callRDMethod(ulcPane, askIfOverWriteFileMethodName, new Object[] { returnedMessage });
-			callPanelAskIfOverwriteDocs(allChoosedFiles, choosedDocs,existingDocs,filesDestinationPathForDB);
-		}
-	}
 
 	/**
 	 * 
@@ -1745,6 +1720,7 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel> extend
 	 */
 	private void callPanelUploadSuccessMethod(List<java.io.File> l){
 		if(ulcPane != null && this.uploadSuccessMethodName!=null && this.uploadSuccessMethodName.trim().length()>0 && l!=null){
+			Ivy.log().debug("callPanelUploadSuccessMethod with List<java.io.File> {0}",l);
 			RDCallbackMethodHandler.callRDMethod(ulcPane, uploadSuccessMethodName, new Object[] { l });
 		}
 	}
@@ -1755,7 +1731,7 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel> extend
 	 */
 	private void callPanelUploadSuccessMethod(ReturnedMessage r){
 		if(ulcPane != null && this.uploadSuccessMethodName!=null && this.uploadSuccessMethodName.trim().length()>0 && r!=null){
-			r.getFiles();
+			Ivy.log().debug("callPanelUploadSuccessMethod with returnedMessage {0}",r);
 			RDCallbackMethodHandler.callRDMethod(ulcPane, uploadSuccessMethodName, new Object[] { r });
 		}
 	}
@@ -1780,7 +1756,6 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel> extend
 					}
 				},fcConfig,null);
 	}
-	
 	public String getAskIfOverWriteFileMethodName() {
 		return askIfOverWriteFileMethodName;
 	}
@@ -1851,13 +1826,18 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel> extend
 	 * @param li
 	 * @throws Exception
 	 */
-	private void createReturnedMessageForUploadToDB(List<java.io.File> li) throws Exception
+	private ReturnedMessage createReturnedMessageForUploadToDB(List<java.io.File> li)
 	{
-		if(li!=null && !li.isEmpty())
-		{
-			this.returnedMessage.setDocumentOnServers(List.create(DocumentOnServer.class));
-			this.returnedMessage.setFiles(List.create(java.io.File.class));
-			this.returnedMessage.getFiles().addAll(li);
+		ReturnedMessage msg = new ReturnedMessage();
+		msg.setType(FileHandler.SUCCESS_MESSAGE);
+		msg.setText(this.returnedMessage.getText());
+		if(this.returnedMessage.getFile()!=null) {
+			msg.setFile(this.returnedMessage.getFile());
+		}
+		if(li!=null && !li.isEmpty()) {
+			msg.setDocumentOnServers(List.create(DocumentOnServer.class));
+			msg.setFiles(List.create(java.io.File.class));
+			msg.getFiles().addAll(li);
 
 			String user = Ivy.session().getSessionUserName();
 			String date = new Date().format("dd.MM.yyyy");
@@ -1874,9 +1854,8 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel> extend
 				doc.setCreationTime(time);
 				try{
 					doc.setExtension(f.getName().substring(f.getName().lastIndexOf(".")));
-				}catch(Exception ex)
-				{
-					
+				}catch(Exception ex){
+
 				}
 				doc.setUserID(user);
 				doc.setDescription("");
@@ -1886,9 +1865,11 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel> extend
 				doc.setModificationTime(time);
 				doc.setModificationUserID(user);
 
-				this.returnedMessage.getDocumentOnServers().add(doc);
+				msg.getDocumentOnServers().add(doc);
 			}
 		}
+		this.returnedMessage.getFiles().clear();
+		return msg;
 	}
 	/**
 	 * @return the fileHandlerMgt
@@ -1902,22 +1883,7 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel> extend
 	public void setFileHandlerMgt(AbstractFileManagementHandler fileHandlerMgt) {
 		this.fileHandlerMgt = fileHandlerMgt;
 	}
-	
-	/**
-	 * Get the filemanagement configuration object. This is used especially for the contained DocumentFilter, if file upload filtering is needed.
-	 * @return filemanagement configuration object or null if not set.
-	 */
-	public BasicConfigurationController getConfig() {
-		return config;
-	}
-	
-	/**
-	 * Set the filemanagement configuration object. This is used especially for the contained DocumentFilter, if file upload filtering is needed.
-	 * @param filemanagement configuration object
-	 */
-	public void setConfig(BasicConfigurationController config) {
-		this.config = config;
-	}
+
 	/**
 	 * 
 	 * @param in InputStream which byte length has to be computed
@@ -1939,7 +1905,7 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel> extend
 			while(total<1024000 && (intRead= in.read(b))!=-1){
 				total+=intRead;
 			}
-			
+
 		}catch(Throwable t){
 			total=-1;
 			Ivy.log().error(t.getMessage());
@@ -1958,123 +1924,158 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel> extend
 		}
 		return total;
 	}
-	
 	/**
-	 * Notify the observers.
-	 * 
-	 * @param arg
-	 *            the argument can be a java.io.File, <br>
-	 *            an array of String (String[]) containing the paths of the
-	 *            files that will be uploaded,<br>
-	 *            or a java.util.List<java.io.File> containing the files that
-	 *            will be uploaded.<br>
-	 *            If the arg parameter is null, then the empty method
-	 *            notifyObservers() will be used.
+	 * Upload files from the client to the server.<br>
+	 * The files to upload are selected with the help of a File Chooser
+	 * @param multifiles if true more several files can be uploaded at a time.
+	 * @param maxSize: max file size pro file.
+	 * @param showProgress if true each file upload will be interrupted 5 times to be able to show a progress.
 	 */
-	private final void notifyMyObservers(Object arg) {
-		setChanged();
-		ObservableFileAction ofa = null;
-		if (arg != null) {
-			if (arg instanceof String) {
-				ofa = new ObservableFileAction(FileActionEnum.UPLOAD,
-						(String) arg);
-			} else if (arg instanceof String[]) {
-				ofa = new ObservableFileAction(FileActionEnum.UPLOAD,
-						(String[]) arg);
-			} else if (arg instanceof File) {
-				ofa = new ObservableFileAction(FileActionEnum.UPLOAD,
-						(File) arg);
-			} else if (arg instanceof List<?>) {
-				ofa = new ObservableFileAction(FileActionEnum.UPLOAD,
-						(List<?>) arg);
-			}
-		}
-		if (ofa == null) {
-			notifyObservers();
-		} else {
-			notifyObservers(ofa);
-		}
+	public void uploadFiles(boolean multifiles, final int maxSize, final boolean showProgress) {
+		this.chooseFiles(multifiles, maxSize, showProgress);
 	}
-	private boolean checkExistingFile(String[] filePaths, String[] fileNames,
-			boolean goesOn, final java.io.File serverFile) throws Exception {
-		if(!areFilesStoredInDB){// we check if the file exists on the file set
-			if(serverFile.exists())
-			{
-				Ivy.log().debug("File exists: "+serverFilePath.toString());
-				returnedMessage.setType(FileHandler.INFORMATION_MESSAGE);
-				returnedMessage.setText(FILE_ALREADY_EXISTS);
-				returnedMessage.setFile(serverFile);
-				RDCallbackMethodHandler.callRDMethod(ulcPane, askIfOverWriteFileMethodName, new Object[] { returnedMessage });
-				goesOn=false;
+
+	private void chooseFiles(boolean multifiles, final int maxSize, final boolean showProgress){
+		FileChooserConfig fcConfig = new FileChooserConfig();
+		fcConfig.setDialogTitle(multifiles?MULTIFILE_UPLOAD_WINDOW_TITLE:SINGLEFILE_UPLOAD_WINDOW_TITLE);
+		fcConfig.setMultiSelectionEnabled(multifiles);
+		fcConfig.setFileSelectionMode(FileChooserConfig.FILES_ONLY);
+		ClientContext.setFileTransferMode(ClientContext.ASYNCHRONOUS_MODE);
+		final ArrayList<java.io.File> files = new ArrayList<java.io.File>();
+		ClientContext.chooseFile(new IFileChooseHandler(){
+			@Override
+			public void onFailure(int reason, String description) {
+				onFailureCall(reason);
 			}
-		}// end if
-		else {//we check if the file exists in the DB
-			if(fileHandlerMgt!=null){
-				List<DocumentOnServer> choosedDocs = List.create(DocumentOnServer.class);
-				List<DocumentOnServer> existingDocs = List.create(DocumentOnServer.class);
-				List<java.io.File> allChoosedFiles = List.create(java.io.File.class);
-				allChoosedFiles.add(new java.io.File(filePaths[0]));
-
-				DocumentOnServer doc = new DocumentOnServer();
-				doc.setFilename(fileNames[0]);
-				doc.setPath(filesDestinationPathForDB+fileNames[0]);
-				choosedDocs.add(doc);
-				if(fileHandlerMgt.documentOnServerExists(doc, filesDestinationPathForDB)){
-					existingDocs.add(doc);
-				}	
-
-				if(!existingDocs.isEmpty()) {
-					goesOn=false;
-					callPanelAskIfOverwriteDocs(allChoosedFiles, choosedDocs, existingDocs, filesDestinationPathForDB);
+			@Override
+			public void onSuccess(String[] filePaths, String[] fileNames) {
+				try{
+					for(int i=0; i<filePaths.length; i++) {
+						files.add(new java.io.File(filePaths[i]));
+					}
+					List<java.io.File> fList = List.create(java.io.File.class);
+					fList.addAll(files);
+					if(showProgress) {
+						if(choosedFilesExist(filePaths, fileNames).getExistingDocs().isEmpty()) {
+							Ivy.log().debug("Found NO existing files.");
+							uploadPreparedFiles(fList, maxSize);
+						}else {
+							Ivy.log().debug("Found existing files. chooseFiles method CLientCOntext");
+						}
+					} else {
+						uploadPreparedFilesWithoutShowingProgress(fList, maxSize);
+					}
+				}
+				catch(Exception exception) { 
+					callPanelErrorMethode(exception.getMessage());
 				}
 			}
 		}
-		return goesOn;
+		, fcConfig, this.ulcPane);
 	}
-	
-	private boolean checkExistingFiles(
-			List<java.io.File> allChoosedFiles)
-			throws Exception {
-		boolean goesOn=true;
-		if(!areFilesStoredInDB) {
-			List<java.io.File> existingFiles = List.create(java.io.File.class);
-			
-			//we check if we will overwrite some files
-			for(java.io.File f : allChoosedFiles) {
-				String fileOnServer = serverPath + f.getName();
-				java.io.File serverFile = new java.io.File(fileOnServer);
-				if(serverFile.exists()) {
-					existingFiles.add(serverFile); 
-				}// end if
-			}
-			if(existingFiles.size()>0) { // we try to call the callback method from the RDC to ask if we overwrite 
-				goesOn=false;
-				callPanelAskIfOverwriteFiles(allChoosedFiles, existingFiles);
-			}
-		}else {
-			if(fileHandlerMgt!=null){
-				List<DocumentOnServer> choosedDocs = List.create(DocumentOnServer.class);
-				List<DocumentOnServer> existingDocs = List.create(DocumentOnServer.class);
-				for(java.io.File f : allChoosedFiles){
+
+	protected FileExistingReport choosedFilesExist(String[] paths, String fileNames[]) {
+		List<DocumentOnServer> choosedDocs = List.create(DocumentOnServer.class);
+		List<DocumentOnServer> existingDocs = List.create(DocumentOnServer.class);
+		List<java.io.File> allChoosedFiles = List.create(java.io.File.class);
+		List<java.io.File> existingFiles = List.create(java.io.File.class);
+		FileExistingReport report = new FileExistingReport();
+		ArrayList<Integer> ints = new ArrayList<Integer>();
+		boolean goesOn =true;
+		int n = paths.length;
+		for(int i = 0; i<paths.length;i++){
+			allChoosedFiles.add(new java.io.File(paths[i]));
+		}
+		try{
+			if(!areFilesStoredInDB) {
+				//we check if we will overwrite some files
+				for(int i=0; i<n;i++){
+					String fileOnServer = serverPath + fileNames[i];
+					java.io.File serverFile = new java.io.File(fileOnServer);
 					DocumentOnServer doc = new DocumentOnServer();
-					doc.setFilename(f.getName());
-					doc.setPath(filesDestinationPathForDB+f.getName());
+					doc.setFilename(fileNames[i]);
+					doc.setPath(serverPath + fileNames[i]);
 					choosedDocs.add(doc);
-					if(fileHandlerMgt.documentOnServerExists(doc, filesDestinationPathForDB)){
+					if(serverFile.exists()){
+						existingFiles.add(serverFile); 
+						returnedMessage.setFile(serverFile);
 						existingDocs.add(doc);
-					}	
+					}else {
+						ints.add(i);
+					}
 				}
-				if(!existingDocs.isEmpty()) {
+				if(existingFiles.size()>0){ // we try to call the callback method from the RDC to ask if we overwrite 
 					goesOn=false;
-					callPanelAskIfOverwriteDocs(allChoosedFiles, choosedDocs, existingDocs, filesDestinationPathForDB);
+					//callPanelAskIfOverwriteFiles(allChoosedFiles, existingFiles);
+				}
+			}else{
+				if(fileHandlerMgt!=null){
+					for(int i = 0; i<n;i++){
+						DocumentOnServer doc = new DocumentOnServer();
+						doc.setFilename(fileNames[i]);
+						doc.setPath(filesDestinationPathForDB+fileNames[i]);
+						choosedDocs.add(doc);
+						if(fileHandlerMgt.documentOnServerExists(doc, filesDestinationPathForDB)){
+							Ivy.log().debug("Document Exist !!! {0}",doc);
+							existingDocs.add(doc);
+							Ivy.log().debug("Now existing docs {0}",existingDocs);
+							goesOn=false;
+						}else {
+							ints.add(i);
+						}	
+					}
 				}
 			}
+			if(!goesOn){//We have to ask if override
+				Ivy.log().debug("In under method files found ! {0}",existingDocs);
+				report.getExistingDocs().addAll(existingDocs);
+				ReturnedMessage msg = new ReturnedMessage();
+				msg.setType(FileHandler.INFORMATION_MESSAGE);
+				msg.setText(FILE_ALREADY_EXISTS);
+				msg.setFiles(allChoosedFiles);
+				msg.setDocumentOnServers(existingDocs);
+				if(!areFilesStoredInDB){
+					RDCallbackMethodHandler.callRDMethod(ulcPane, askIfOverWriteFileMethodName, new Object[] { msg });
+					callPanelAskIfOverwriteFiles(allChoosedFiles,existingFiles);
+				}else{
+					Ivy.log().debug("Now existing docs {0}",existingDocs);
+					callPanelAskIfOverwriteDocs(allChoosedFiles, choosedDocs,existingDocs,filesDestinationPathForDB);
+					RDCallbackMethodHandler.callRDMethod(ulcPane, askIfOverWriteFileMethodName, new Object[] { msg });
+				}
+				callPanelReleaseUploadUIMethod(true); //enables the Upload GUI launchers
+			}
+		}catch(Exception ex){
+			Ivy.log().error("Error in UploadHandler protected FileExistingReport choosedFilesExist(String[] paths, String fileNames[])", ex);
+			returnedMessage.setType(FileHandler.ERROR_MESSAGE);
+			returnedMessage.setText("");
+			callPanelErrorMethode(returnedMessage);
+			callPanelReleaseUploadUIMethod(true);
 		}
-		return goesOn;
+		report.setAllDocs(choosedDocs);
+		report.setAllFiles(allChoosedFiles);
+		//report.setExistingDocs(existingDocs);
+		Ivy.log().debug("Report will be sent with {0}",existingDocs);
+		report.setExistingFiles(existingFiles);
+		report.setIndexForInputStreamsWithoutOverwritting(ints);
+		return report;
 	}
-	
+
+	/**
+	 * @return the config
+	 */
+	public BasicConfigurationController getConfig() {
+		return config;
+	}
+	/**
+	 * @param config the config to set
+	 */
+	public void setConfig(BasicConfigurationController config) {
+		this.config = config;
+	}
+
+	@SuppressWarnings("unchecked")
 	protected java.util.List<Object> checkUploadFilteringReturnAcceptedAndRejectedFiles(InputStream ins[], String filePaths[], String serverPath) {
-		
+
 		java.util.List<Object> result = new java.util.ArrayList<Object>() ;
 		result.add(0, List.create(java.io.File.class));
 		result.add(1,  List.create(java.io.File.class));
@@ -2102,9 +2103,9 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel> extend
 		}
 		return result;
 	}
-	
+
 	protected DocumentFilterAnswer checkUploadFilteringReturnIfFileAccepted(java.io.File choosedFile, String serverPath) {
-		
+
 		if(choosedFile!=null && this.config!=null && this.config.getDocumentFilter()!=null) {
 			DocumentFilter filter = this.config.getDocumentFilter();
 
@@ -2119,7 +2120,7 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel> extend
 			return answer;
 		}
 	}
-	
+
 	private List<java.io.File> makeChoosedFiles(String[] filePaths) {
 		List<java.io.File> allChoosedFiles = List.create(java.io.File.class);
 		if(filePaths==null) {
@@ -2130,17 +2131,65 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel> extend
 		}
 		return allChoosedFiles;
 	}
-	
-	private String[] makeFilePaths(List<java.io.File> files) {
-		if(files==null)
-			return null;
-		String[] paths = new String[files.size()];
-		
-		int i =0;
-		for(java.io.File f: files){
-			paths[i]=f.getPath();
-			i++;
+
+	private class FileExistingReport {
+		private ArrayList<Integer> indexForInputStreamsWithoutOverwritting;
+		private List<java.io.File> existingFiles;
+		private List<java.io.File> allFiles;
+		private List<DocumentOnServer> existingDocs;
+		private List<DocumentOnServer> allDocs;
+
+		public FileExistingReport(){
+			indexForInputStreamsWithoutOverwritting = new ArrayList<Integer>();
+			existingFiles = List.create(java.io.File.class);
+			allFiles = List.create(java.io.File.class);
+			existingDocs = List.create(DocumentOnServer.class);
+			allDocs = List.create(DocumentOnServer.class);
 		}
-		return paths;
+		public void setIndexForInputStreamsWithoutOverwritting(
+				ArrayList<Integer> indexForInputStreamsWithoutOverwritting) {
+			this.indexForInputStreamsWithoutOverwritting = indexForInputStreamsWithoutOverwritting;
+		}
+
+		@SuppressWarnings("unused")
+		public ArrayList<Integer> getIndexForInputStreamsWithoutOverwritting() {
+			return indexForInputStreamsWithoutOverwritting;
+		}
+
+		public void setExistingFiles(List<java.io.File> existingFiles) {
+			this.existingFiles = existingFiles;
+		}
+
+		@SuppressWarnings("unused")
+		public List<java.io.File> getExistingFiles() {
+			return existingFiles;
+		}
+
+		public void setAllFiles(List<java.io.File> allFiles) {
+			this.allFiles = allFiles;
+		}
+
+		@SuppressWarnings("unused")
+		public List<java.io.File> getAllFiles() {
+			return allFiles;
+		}
+		@SuppressWarnings("unused")
+		public void setExistingDocs(List<DocumentOnServer> existingDocs) {
+			this.existingDocs = existingDocs;
+		}
+
+		public List<DocumentOnServer> getExistingDocs() {
+			return existingDocs;
+		}
+
+		public void setAllDocs(List<DocumentOnServer> allDocs) {
+			this.allDocs = allDocs;
+		}
+
+		@SuppressWarnings("unused")
+		public java.util.List<DocumentOnServer> getAllDocs() {
+			return allDocs;
+		}
 	}
+
 }

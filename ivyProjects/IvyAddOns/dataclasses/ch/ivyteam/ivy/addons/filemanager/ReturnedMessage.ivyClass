@@ -15,3 +15,8 @@ documentOnServer ch.ivyteam.ivy.addons.filemanager.DocumentOnServer #field
 documentOnServer 'DocumentOnServer concerned by the action.' #fieldComment
 files2 List<java.io.File> #field
 files2 'A second List of java.io.File concerned by the action' #fieldComment
+actionType Integer #field
+actionType 'Type of the action reported.' #fieldComment
+panelId Number #field
+hashMapFiles java.util.HashMap<java.io.File,java.io.File> #field
+hashMapFiles 'This field can be used to return several coupled files. Ex: a file should be moved: oldFile/newFile etc...' #fieldComment

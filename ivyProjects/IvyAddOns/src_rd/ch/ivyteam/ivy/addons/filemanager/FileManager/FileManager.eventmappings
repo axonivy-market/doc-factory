@@ -1,5 +1,5 @@
 # Xpert.ivy RichDialog Event-Mapping Data
-# 2013-08-26 13:05:12 | 5.0.3.43404 | 1.0
+# 2013-10-01 12:16:36 | 5.0.3.43404 | 1.0
 ~.cancelButton@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/121ECCB8283CD1EF
 ~.copyMenuItem@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11ED95C2B7BDD5B8
 ~.delete2Button@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/11D438D57924C5D9
@@ -84,6 +84,7 @@
 ~@RD_BROADCAST[SE_FilesDeleted]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/12BDEFBD2E2716AF
 ~@RD_BROADCAST[SE_FilesUnlocked]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/12BCF883DA0EA60A
 ~@RD_BROADCAST[SE_fileTypeDeleted]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/1380ABCD5804FE38
+~@RD_BROADCAST[SE_FolderOnServer_changed]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/14174CE2D46458CD
 ~@RD_BROADCAST[SE_renameFile]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/12BDDD0C5A62A45F
 ~@RD_METHODCALL[_askForDownloadOverride(ch.ivyteam.ivy.addons.docfactory.FileOperationMessage)]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/13FFED4EFAACAA4B
 ~@RD_METHODCALL[_askIfOverwriteExistingDocumentsOnServer(List<java.io.File>,List<ch.ivyteam.ivy.addons.filemanager.DocumentOnServer>,List<ch.ivyteam.ivy.addons.filemanager.DocumentOnServer>,String)]--->ch.ivyteam.ivy.process.ProcessStart:125FE583DB581114/132876E0A253B0E3

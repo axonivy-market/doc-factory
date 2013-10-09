@@ -1,2 +1,2 @@
-co: name={MySQL} description={} changed={2013-02-22 15:53:06 CET} changedby={ec} visualorder={0} guid={13678D078417BC6B} parentguid={} typeguid={E6AFEA1FBC44F7F7} id={} parentid={} typeid={}
-val: guid={13678D078456C16A} datatype={} isdefault={true} langid={en} description={} validfrom={2012-04-03 17:26:29 CEST} validto={} changed={2013-02-22 15:53:06 CET} changedby={ec} properties={} id={}
+co: name={MySQL} description={} changed={2013-10-09 03:08:57 CEST} changedby={ec} visualorder={0} guid={13678D078417BC6B} parentguid={} typeguid={E6AFEA1FBC44F7F7} id={} parentid={} typeid={}
+val: guid={13678D078456C16A} datatype={} isdefault={true} langid={en} description={} validfrom={2012-04-03 17:26:29 CEST} validto={} changed={2013-10-09 03:08:57 CEST} changedby={ec} properties={} id={}

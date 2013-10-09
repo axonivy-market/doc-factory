@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import ch.xpertline.ulc.server.headless.ULCFileCoupleChecker;
 import ch.xpertline.ulc.server.headless.ULCFileCoupleChecker.ReturnFilesChecksumsEvent;
@@ -41,7 +42,7 @@ public class FileCoupleChecker<T extends IRichDialogPanel>{
 	 * The checking if Files have been modified occurs at client side periodically. See the variable checkPeriod. 
 	 * Every changed File is then uploaded on the server and replaces the old server File Version.
 	 */ 
-	ULCFileCoupleChecker fcc= null;
+	ULCFileCoupleChecker ulcFileCoupeChecker= null;
 
 	/**
 	 * The parent Rich dialog that uses this FileCoupleChecker.
@@ -51,7 +52,7 @@ public class FileCoupleChecker<T extends IRichDialogPanel>{
 
 	/**
 	 * The parent RD fileModified callback method name. If this method's name is not an empty String or null,<br>
-	 * it will be called back whenever a File is modified. It sends the jaav.io.File object that was modified to the RD.
+	 * it will be called back whenever a File is modified. It sends the java.io.File object that was modified to the RD.
 	 */
 	String fileModifiedMethodName;
 
@@ -59,20 +60,21 @@ public class FileCoupleChecker<T extends IRichDialogPanel>{
 	 * HashMap coming from the UI half object when Files are modified at client side.<br>
 	 *  it contains key/value pairs: file path at client side / checksum
 	 */
-	final HashMap<String, Long> hash = new HashMap<String, Long>();
+	final HashMap<String, Long> clientFilePathAndChecksumHashMap = new HashMap<String, Long>();
 
 	/**
-	 * Hashmap from the edited Files at server side
+	 * HashMap from the edited Files at server side.<br>
+	 *  it contains key/value pairs: file path at server side / checksum
 	 */
 	HashMap<String, Long> serverFileCheckSumHashMap = new HashMap<String, Long>();
 
 	/**
-	 * The List of the FileCouple taht represents Client side/Server side Files Couples that are edited.
+	 * The List of the FileCouple that represents Client side/Server side Files Couples that are edited.
 	 */
 	final ArrayList<FileCouple> fileCouples = new ArrayList<FileCouple>();
 
 	/**
-	 * The period of the check for modified Files at client side. Per default 3000 ms (3 Seconds)
+	 * The period of the check for modified Files at client side. Per default 3000 milliseconds (3 Seconds)
 	 */
 	int checkPeriod = 3000;
 
@@ -90,9 +92,9 @@ public class FileCoupleChecker<T extends IRichDialogPanel>{
 	}
 
 	/**
-	 * Constructor with a reference to its parent Rich Dialog and its errormethod callback name
+	 * Constructor with a reference to its parent Rich Dialog and its file modified method callback name
 	 * @param parentRD: the Rich Dialog Panel that implements this object
-	 * @param fileModifiedMethodName: the RD error method name that should be called back in case of an error.
+	 * @param fileModifiedMethodName: the RD file modified method name that should be called back in case a file modification has been detected.
 	 */
 	public FileCoupleChecker(T parentRD, String fileModifiedMethodName) {
 		//initializes the parent Rich Dialog
@@ -101,66 +103,64 @@ public class FileCoupleChecker<T extends IRichDialogPanel>{
 		
 		this.fileModifiedMethodName = fileModifiedMethodName!=null?fileModifiedMethodName.trim():"";
 		// initializes the ULCFileCoulpeChecker half Object
-		fcc= new ULCFileCoupleChecker();
+		ulcFileCoupeChecker= new ULCFileCoupleChecker();
 		// add the Listener responsible for listening to the files' modifications at client side (UI side)
-		fcc.addReturnFilesChecksumsListener(new ULCFileCoupleChecker.ReturnFilesChecksumsListener(){
+		ulcFileCoupeChecker.addReturnFilesChecksumsListener(new ULCFileCoupleChecker.ReturnFilesChecksumsListener(){
 			// everytime a File has changed on the client, the server ULC half object gets a hashMap of the changed Files to upload
 			public synchronized void filesChecksum(ReturnFilesChecksumsEvent event) {
-				hash.clear();
-				hash.putAll(event.getFilesChecksums());
+				clientFilePathAndChecksumHashMap.clear();
+				clientFilePathAndChecksumHashMap.putAll(event.getFilesChecksums());
 				//after the HashMap of the changed client Files was updated, we upload those files on the server. 
-				Ivy.log().debug("File changed reported in FileCoupleChecker");
+				Ivy.log().info("File changed reported in FileCoupleChecker {0}",clientFilePathAndChecksumHashMap);
 				uploadChangedFiles();
 			}
 		});
 	}
 
 	/**
-	 * This method is responsible for uploading the Files that have changed on the Client
+	 * This method is responsible for uploading the Files that have changed at client side
 	 *
 	 */
 	public synchronized void uploadChangedFiles(){
 		// We put all the Client Files path in a Set to be able to iterate it.
-		Set<String> filesSet= hash.keySet();
+		Set<String> filesSet= clientFilePathAndChecksumHashMap.keySet();
 		Iterator<String> filesIterator = filesSet.iterator();
 
 		search:
-			while(filesIterator.hasNext()){
+			while(filesIterator.hasNext()) {
 				// for each changed File at client side, we search it in the fileCouples List. 
 				// If we find it we replace the corresponding server File by automatically uploading the client File.
 				File f = new File(filesIterator.next());
-				//org.apache.commons.lang.StringUtils.replace(sample, "\"", "\"\"")
-				String fPath = f.getPath().contains("\\")?StringUtils.replace(f.getPath(),"\\", this.clientFileSeparator):
+				
+				String fClientPath = f.getPath().contains("\\")?StringUtils.replace(f.getPath(),"\\", this.clientFileSeparator):
 					(f.getPath().contains("/")?StringUtils.replace(f.getPath(),"/", this.clientFileSeparator):
 						f.getPath());
 				
-				for(int i =0; i<fileCouples.size(); i++)
-				{
+				for(int i =0; i<fileCouples.size(); i++) {
 					String fcPath= fileCouples.get(i).getClientFile().getPath().contains("\\")?
 							StringUtils.replace(fileCouples.get(i).getClientFile().getPath(),"\\", this.clientFileSeparator):
 								(fileCouples.get(i).getClientFile().getPath().contains("/")?
 										StringUtils.replace(fileCouples.get(i).getClientFile().getPath(),"/", this.clientFileSeparator):
 											fileCouples.get(i).getClientFile().getPath());
-							Ivy.log().info("File changed reported: "+fcPath);
-							if(fPath.equals(fcPath))
-							{
+							Ivy.log().info("File changed reported: {0}",fileCouples.get(i));
+							if(fClientPath.equals(fcPath)) {
+								if(!fileCouples.get(i).getServerFile().exists()) {
+									Ivy.log().error("The File {0} does not exist anymore on the server. It was may be deleted or moved. Please close and reopen it.");
+									continue;
+								}
 								String dirpath = null;
-								try{
+								try {
 									dirpath= FileHandler.getFileDirectoryPath(fileCouples.get(i).getServerFile());
-								}catch(Exception _ex){
+								}catch(Exception _ex) {
 									Ivy.log().error(_ex.getMessage(), _ex);
 								}
 								if(dirpath!=null){
 									//FileHandler.upload(f, dirpath);
 									final StringBuilder path= new StringBuilder(FileHandler.formatPath(dirpath));
 									String fileSeparator = ClientContext.getSystemProperty("file.separator");
-									if(fileSeparator==null || fileSeparator.trim().length()==0)
-									{
+									if(fileSeparator==null || fileSeparator.trim().length()==0){
 										fileSeparator ="/";
 									}
-									File serverDir = new File(path.toString());
-									if((serverDir.exists() && !serverDir.isDirectory()) || !serverDir.exists())
-										serverDir.mkdirs();
 									if(path.lastIndexOf(File.separator) != path.length() - 1) 
 										path.append(java.io.File.separator);
 
@@ -170,11 +170,10 @@ public class FileCoupleChecker<T extends IRichDialogPanel>{
 
 									final String finalFilename= filePath.substring(filePath.lastIndexOf(fileSeparator)+1);
 									final java.io.File sFile = fileCouples.get(i).getServerFile();
-									Ivy.log().debug("File uploaded from Client from following path "+filePath);
+									Ivy.log().info("File uploaded from Client from following path "+filePath);
 									ClientContext.setFileTransferMode(ClientContext.ASYNCHRONOUS_MODE);
 									ClientContext.loadFile(new IFileLoadHandler(){
-										public void onFailure(int reason, String description)
-										{
+										public void onFailure(int reason, String description){
 											Ivy.log().error("onFailure Exception "+description);
 											return;
 										}
@@ -183,19 +182,18 @@ public class FileCoupleChecker<T extends IRichDialogPanel>{
 										{
 											OutputStream server =null;
 											try{
-												Ivy.log().debug("Try to upload file from Client To Server at "+path.toString());
+												Ivy.log().info("Try to upload file from Client To Server at "+path.toString());
 												BufferedInputStream preparedFile = new BufferedInputStream(ins[0]);
 												path.append(finalFilename);
 												File serverFile = new File(path.toString());
-												Ivy.log().debug("File uploaded from Client To Server at "+path.toString());
+												
 												server = new BufferedOutputStream(new FileOutputStream(serverFile));
 												byte b[] = new byte[1024];
 												int intRead; 
 												while((intRead= preparedFile.read(b)) != -1){
 													server.write(b,0,intRead);
 												}
-												server.close();
-												server=null;
+												Ivy.log().info("File uploaded from Client To Server at "+path.toString());
 												RDCallbackMethodHandler.callRDMethod(parentRD, fileModifiedMethodName, new Object[] { sFile});
 											}
 											catch(Exception _ex) { 
@@ -210,9 +208,7 @@ public class FileCoupleChecker<T extends IRichDialogPanel>{
 												}
 											}
 										}
-									}, filePath);// end of ClientContext.loadFile
-									//RDCallbackMethodHandler.callRDMethod(this.parentRD, this.fileModifiedMethodName, new Object[] { fileCouples.get(i).getServerFile() });
-									//RDCallbackMethodHandler.callRDMethod(this.parentRD, this.fileModifiedMethodName, new Object[] { fileCouples.get(i)});
+									}, filePath);
 								}
 								continue search;
 							}
@@ -227,17 +223,66 @@ public class FileCoupleChecker<T extends IRichDialogPanel>{
 	 * @param list
 	 */
 	public synchronized void setFileCouples(List<FileCouple> list ){
-		fileCouples.clear();
-		serverFileCheckSumHashMap.clear();
-		fileCouples.addAll(list);
-		for(int i=0; i<fileCouples.size(); i++){
-			fileCouples.get(i).setServerFileAdler32(FileHandler.getAdler32(fileCouples.get(i).getServerFile()));
-			String fcPath= fileCouples.get(i).getClientFile().getPath().contains("\\")?StringUtils.replace(fileCouples.get(i).getClientFile().getPath(),"\\", this.clientFileSeparator):
-				(fileCouples.get(i).getClientFile().getPath().contains("/")?StringUtils.replace(fileCouples.get(i).getClientFile().getPath(),"/", this.clientFileSeparator):
-					fileCouples.get(i).getClientFile().getPath());
-			serverFileCheckSumHashMap.put(fcPath, fileCouples.get(i).getServerFileAdler32().longValue());
+		this.fileCouples.clear();
+		this.serverFileCheckSumHashMap.clear();
+		this.fileCouples.addAll(list);
+		for(int i=0; i<this.fileCouples.size(); i++){
+			this.fileCouples.get(i).setServerFileAdler32(FileHandler.getAdler32(this.fileCouples.get(i).getServerFile()));
+			String fcPath= this.fileCouples.get(i).getClientFile().getPath().contains("\\")?StringUtils.replace(this.fileCouples.get(i).getClientFile().getPath(),"\\", this.clientFileSeparator):
+				(this.fileCouples.get(i).getClientFile().getPath().contains("/")?StringUtils.replace(this.fileCouples.get(i).getClientFile().getPath(),"/", this.clientFileSeparator):
+					this.fileCouples.get(i).getClientFile().getPath());
+			this.serverFileCheckSumHashMap.put(fcPath, this.fileCouples.get(i).getServerFileAdler32().longValue());
 		}
-		fcc.setFileChecksumMap(serverFileCheckSumHashMap);
+		this.setUlcFileCoupleCheckerCheckSumMap();
+	}
+	
+	/**
+	 * 
+	 * @param oldFile
+	 * @param newFile
+	 */
+	public synchronized void replaceServerFiles(HashMap<java.io.File,java.io.File> oldFilesNewFiles) {
+		assert(oldFilesNewFiles != null):"NullPointerException in FileCoupleChecker.replaceServerFile(HashMap<java.io.File,java.io.File> oldFilesNewFiles)" +
+				", the parameter is null.";
+		Ivy.log().info("Before replacing server files \nULC FileCheckSumMap: {0}, \n new {1}",this.ulcFileCoupeChecker.getFileChecksumMap(),this.serverFileCheckSumHashMap);
+
+		Iterator<Entry<java.io.File,java.io.File>> iter = oldFilesNewFiles.entrySet().iterator();
+		while(iter.hasNext()) {
+			Entry<java.io.File,java.io.File> entry = iter.next();
+			FileCouple fc = null;
+			for(FileCouple f : this.fileCouples) {
+				Ivy.log().info("Found server file to be relocated? {0} {1}  \n new is {2}",f.getServerFile().getPath().equals(entry.getKey().getPath()),
+						f.getServerFile().getPath(),entry.getValue().getPath());
+				if(f.getServerFile().getPath().equals(entry.getKey().getPath())){
+					fc = f;
+					fc.setServerFile(entry.getValue());
+					f.setServerFile(entry.getValue());
+					fc.setServerSidePath(entry.getValue().getPath());
+					f.setServerSidePath(entry.getValue().getPath());
+					if(f.getReferencedDocumentOnServer()!=null) {
+						f.getReferencedDocumentOnServer().setJavaFile(entry.getValue());
+						f.getReferencedDocumentOnServer().setPath(entry.getValue().getPath());
+						fc.getReferencedDocumentOnServer().setJavaFile(entry.getValue());
+						fc.getReferencedDocumentOnServer().setPath(entry.getValue().getPath());
+					}
+					break;
+				}
+			}
+			if(fc!=null) {
+				this.serverFileCheckSumHashMap.remove(entry.getKey().getPath());
+				this.serverFileCheckSumHashMap.put(entry.getValue().getPath(), (Long) fc.getServerFileAdler32());
+			}
+		}
+		Ivy.log().info("After replacing server files \nULC FileCheckSumMap: {0}, \n new {1}",this.ulcFileCoupeChecker.getFileChecksumMap(),this.serverFileCheckSumHashMap);
+		/*if(hasChanged) {
+			this.setUlcFileCoupleCheckerCheckSumMap();
+		}*/
+		
+	}
+	
+	protected void setUlcFileCoupleCheckerCheckSumMap(){
+		Ivy.log().info("Replacing the ULC FileCheckSumMap: \nold {0}, \n new {1}",this.ulcFileCoupeChecker.getFileChecksumMap(),this.serverFileCheckSumHashMap);
+		this.ulcFileCoupeChecker.setFileChecksumMap(this.serverFileCheckSumHashMap);
 	}
 
 	/**
@@ -282,7 +327,7 @@ public class FileCoupleChecker<T extends IRichDialogPanel>{
 	 */
 	public void setCheckPeriod(int checkPeriod) {
 		this.checkPeriod = checkPeriod;
-		fcc.resetCheckPeriod(checkPeriod);
+		ulcFileCoupeChecker.resetCheckPeriod(checkPeriod);
 	}
 
 	/**
@@ -290,7 +335,7 @@ public class FileCoupleChecker<T extends IRichDialogPanel>{
 	 *
 	 */
 	public void restartFileCheck(){
-		fcc.restartClientTimer();
+		ulcFileCoupeChecker.restartClientTimer();
 	}
 
 	/**
@@ -298,7 +343,7 @@ public class FileCoupleChecker<T extends IRichDialogPanel>{
 	 *
 	 */
 	public void stopFileCheck(){
-		fcc.stopClientTimer();
+		ulcFileCoupeChecker.stopClientTimer();
 	}
 
 	/**
@@ -319,6 +364,10 @@ public class FileCoupleChecker<T extends IRichDialogPanel>{
 			_clientFileSeparator ="\\";
 		}
 		this.clientFileSeparator = _clientFileSeparator;
+	}
+	
+	protected List<FileCouple> getFileCouplesList() {
+		return this.fileCouples;
 	}
 
 

@@ -1,13 +1,14 @@
 # Xpert.ivy RichDialog Event-Mapping Data
-# 2012-06-22 13:51:36 | 4.3.2.39971 | 1.0
+# 2013-10-07 12:15:43 | 5.0.3.43404 | 1.0
 ~.cancelButton@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:137EFFFAE6078CBB/137F0522C6F6791B
 ~.closeButton@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:137EFFFAE6078CBB/137F0522C6F6791B
 ~.deleteButton@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:137EFFFAE6078CBB/137F0DEB855F5E09
-~.fileTypesTable@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:137EFFFAE6078CBB/137F06E01966213C # FileTypesDialogProcess.mod/select
+~.fileTypesTable@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:137EFFFAE6078CBB/137F06E01966213C
 ~.fileTypesTable@LIST_SELECTION[]--->ch.ivyteam.ivy.process.ProcessStart:137EFFFAE6078CBB/137F0A2DEC8265D2
 ~.modifyButton@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:137EFFFAE6078CBB/137F051F555AD2DA
 ~.newButton@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:137EFFFAE6078CBB/137F051D6ACA7C4E
 ~.selectButton@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:137EFFFAE6078CBB/137F06E01966213C
+~.translateButton@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:137EFFFAE6078CBB/14193B06942BCBF7 # FileTypesDialogProcess.mod/translate
 ~@RD_METHODCALL[showError()]--->ch.ivyteam.ivy.process.ProcessStart:137EFFFAE6078CBB/137F0BAA21E4890B
 ~@RD_METHODCALL[start()]--->ch.ivyteam.ivy.process.ProcessStart:137EFFFAE6078CBB/137EFFFAE7CFDE05
 ~@RD_METHODCALL[startAsFileTypeChooser(ch.ivyteam.ivy.addons.filemanager.configuration.BasicConfigurationController)]--->ch.ivyteam.ivy.process.ProcessStart:137EFFFAE6078CBB/137F00D5DBEF6F41

@@ -1,5 +1,5 @@
 [Ivy]
-[>Created: Wed Sep 18 21:35:44 EDT 2013]
+[>Created: Tue Oct 01 21:28:47 EDT 2013]
 132D1B65FEDF11D7 3.17 #module
 >Proto >Proto Collection #zClass
 Ds0 DirectorySecurityManagerProcess Big #zClass
@@ -325,23 +325,25 @@ Ds0 f75 actionCode 'import ch.ivyteam.ivy.addons.filemanager.database.security.S
 try{
 		if(in.#folderOnServer!=null && in.folderOnServer.path.trim().length()>0 && in.#selectedIRole!= null && in.selectedIRole.getName().trim().length()>0){	
 			String role = in.selectedIRole.getName();
-			boolean isAdminSelected = role.compareTo(in.config.adminRole)==0;
-			panel.adminCheckBox.selected= isAdminSelected || in.folderOnServer.cmrd.contains(role);
+			in.isSelectedRoleAdmin = role.compareTo(in.config.adminRole)==0;
+			panel.adminCheckBox.selected= in.isSelectedRoleAdmin || in.folderOnServer.cmrd.contains(role);
 			
-			panel.codCheckBox.selected= isAdminSelected || in.folderOnServer.cod.contains(role);
-			panel.cudCheckBox.selected= isAdminSelected || in.folderOnServer.cud.contains(role);
-			panel.cddCheckBox.selected= isAdminSelected ||in.folderOnServer.cdd.contains(role);
-			panel.cwfCheckBox.selected= isAdminSelected ||in.folderOnServer.cwf.contains(role);
-			panel.cdfCheckBox.selected= isAdminSelected ||in.folderOnServer.cdf.contains(role);
+			panel.codCheckBox.selected= in.isSelectedRoleAdmin || in.folderOnServer.cod.contains(role);
+			panel.cudCheckBox.selected= in.isSelectedRoleAdmin || in.folderOnServer.cud.contains(role);
+			panel.cddCheckBox.selected= in.isSelectedRoleAdmin ||in.folderOnServer.cdd.contains(role);
+			panel.cwfCheckBox.selected= in.isSelectedRoleAdmin ||in.folderOnServer.cwf.contains(role);
+			panel.cdfCheckBox.selected= in.isSelectedRoleAdmin ||in.folderOnServer.cdf.contains(role);
 			if(in.version>1){
-				panel.crdCheckBox.selected= isAdminSelected ||in.folderOnServer.crd.contains(role);
-				panel.ccdCheckBox.selected= isAdminSelected ||in.folderOnServer.ccd.contains(role);
-				panel.ctdCheckBox.selected= isAdminSelected ||in.folderOnServer.ctd.contains(role);
-				panel.cufCheckBox.selected= isAdminSelected ||in.folderOnServer.cuf.contains(role);
-				panel.ccfCheckBox.selected= isAdminSelected ||in.folderOnServer.ccf.contains(role);
+				panel.crdCheckBox.selected= in.isSelectedRoleAdmin ||in.folderOnServer.crd.contains(role);
+				panel.ccdCheckBox.selected= in.isSelectedRoleAdmin ||in.folderOnServer.ccd.contains(role);
+				panel.ctdCheckBox.selected= in.isSelectedRoleAdmin ||in.folderOnServer.ctd.contains(role);
+				panel.cufCheckBox.selected= in.isSelectedRoleAdmin ||in.folderOnServer.cuf.contains(role);
+				panel.ccfCheckBox.selected= in.isSelectedRoleAdmin ||in.folderOnServer.ccf.contains(role);
 			}
 			
-			panel.actionsGridBagLayoutPane.enabled=!isAdminSelected;
+			panel.actionsGridBagLayoutPane.enabled=!in.isSelectedRoleAdmin;
+		}else {
+			in.isSelectedRoleAdmin = false;
 		}
 	}catch(Throwable t){
 		in.error.errorOccurred=true;
@@ -1013,6 +1015,7 @@ panel.ccfCheckBox.visible=in.version>1;
 panel.crdCheckBox.visible=in.version>1;
 panel.ctdCheckBox.visible=in.version>1;
 panel.cufCheckBox.visible=in.version>1;
+panel.filesGridLayoutPane.visible=in.version>1;
 panel.Label.text=IF(in.folderOnServer.name.trim().length()>0, in.folderOnServer.name,"");
 panel.ManagedActionsLabel.text=IF(in.#selectedIRole!=null && in.selectedIRole.getName().length()>0, 
 ivy.cms.co("/ch/ivyteam/ivy/addons/filemanager/fileManagement/plainStrings/allowedActions")+" "+
@@ -1021,7 +1024,7 @@ ivy.cms.co("/ch/ivyteam/ivy/addons/filemanager/fileManagement/plainStrings/allow
 );
 panel.rolesTree.treeData=in.ivyRolesTree;
 panel.updatedirectoryGridLayoutPane.visible=in.version>1;
-panel.filesGridLayoutPane.visible=in.version>1;
+panel.adminCheckBox.enabled=!in.isSelectedRoleAdmin && (in.#folderOnServer!=null && in.#selectedIRole!=null && in.folderOnServer.cmrd.contains(in.selectedIRole.getName()));
 ' #txt
 >Proto Ds0 .type ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData #txt
 >Proto Ds0 .processKind RICH_DIALOG #txt

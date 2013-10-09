@@ -12,3 +12,4 @@ version Number #field
 rightType Number #field
 shouldAddRight Boolean #field
 config ch.ivyteam.ivy.addons.filemanager.configuration.BasicConfigurationController #field
+isSelectedRoleAdmin Boolean #field

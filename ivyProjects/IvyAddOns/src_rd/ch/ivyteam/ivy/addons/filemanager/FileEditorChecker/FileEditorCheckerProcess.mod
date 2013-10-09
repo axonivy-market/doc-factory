@@ -1,5 +1,5 @@
 [Ivy]
-[>Created: Mon Sep 12 12:30:19 EDT 2011]
+[>Created: Tue Oct 01 12:20:58 EDT 2013]
 125F987FBCF8B3EC 3.17 #module
 >Proto >Proto Collection #zClass
 Fs0 FileEditorCheckerProcess Big #zClass
@@ -61,6 +61,9 @@ Fs0 @Alternative f43 '' #zField
 Fs0 @PushWFArc f44 '' #zField
 Fs0 @PushWFArc f41 '' #zField
 Fs0 @PushWFArc f45 '' #zField
+Fs0 @RichDialogMethodStart f46 '' #zField
+Fs0 @RichDialogProcessEnd f47 '' #zField
+Fs0 @PushWFArc f48 '' #zField
 >Proto Fs0 Fs0 FileEditorCheckerProcess #zField
 Fs0 f0 guid 11E259C2E7C3B828 #txt
 Fs0 f0 type ch.ivyteam.ivy.addons.filemanager.FileEditorChecker.FileEditorCheckerData #txt
@@ -462,6 +465,33 @@ Fs0 f45 746 392 747 512 #arcP
 Fs0 f45 1 712 392 #addKink
 Fs0 f45 2 712 512 #addKink
 Fs0 f45 1 0.39419492545379203 0 0 #arcLabel
+Fs0 f46 guid 14174D22EE7F24F3 #txt
+Fs0 f46 type ch.ivyteam.ivy.addons.filemanager.FileEditorChecker.FileEditorCheckerData #txt
+Fs0 f46 method getFileCoupleChecker() #txt
+Fs0 f46 disableUIEvents false #txt
+Fs0 f46 inParameterDecl 'ch.ivyteam.ivy.richdialog.exec.RdMethodCallEvent methodEvent = event as ch.ivyteam.ivy.richdialog.exec.RdMethodCallEvent;
+<> param = methodEvent.getInputArguments();
+' #txt
+Fs0 f46 outParameterDecl '<ch.ivyteam.ivy.addons.filemanager.ulcextensionhandler.FileCoupleChecker fileCoupleChecker> result;
+' #txt
+Fs0 f46 outParameterMapAction 'result.fileCoupleChecker=in.fileCoupleChecker;
+' #txt
+Fs0 f46 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>getFileCoupleChecker()</name>
+        <nameStyle>22,5,7
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
+Fs0 f46 486 486 20 20 13 0 #rect
+Fs0 f46 @|RichDialogMethodStartIcon #fIcon
+Fs0 f47 type ch.ivyteam.ivy.addons.filemanager.FileEditorChecker.FileEditorCheckerData #txt
+Fs0 f47 486 526 20 20 13 0 #rect
+Fs0 f47 @|RichDialogProcessEndIcon #fIcon
+Fs0 f48 expr out #txt
+Fs0 f48 496 506 496 526 #arcP
 >Proto Fs0 .xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -520,3 +550,5 @@ Fs0 f43 out f41 tail #connect
 Fs0 f41 head f33 mainIn #connect
 Fs0 f43 out f45 tail #connect
 Fs0 f45 head f32 mainIn #connect
+Fs0 f46 mainOut f48 tail #connect
+Fs0 f48 head f47 mainIn #connect

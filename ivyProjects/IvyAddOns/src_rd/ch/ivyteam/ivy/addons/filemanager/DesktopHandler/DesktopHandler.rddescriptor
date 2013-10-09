@@ -502,6 +502,23 @@ else if the Ivy File of the documetnOnServer is setted then we print this File.<
             <nullPermitted>false</nullPermitted>
         </inputParameter>
     </method>
+    <method>
+        <name>_replaceServerFileInClientServerEditCheck</name>
+        <description>NOT PUBLIC API.&#xD;
+Allows changing a file at server side in the Edition File Checking process.&#xD;
+Whenever a file is edited, a FileCouple is create: Server File and Client File. Both files are compared every 3 seconds &#xD;
+to be able to detect any change at clientside.&#xD;
+There are situations (renaming a directory at server side, that contains edited files) &#xD;
+where the server file may be changed. This method allows informing the ULC/UI file Checker object that the server File has been&#xD;
+moved.&#xD;
+</description>
+        <inputParameter>
+            <name>oldFilesNewFiles</name>
+            <description>the old file new files map</description>
+            <parameterType>java.util.HashMap</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </inputParameter>
+    </method>
     <startMethod>
         <name>startVisible</name>
         <description>Start method with visibility boolean.&#xD;

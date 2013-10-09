@@ -146,9 +146,7 @@ public class FileTypeSQLPersistence implements IFileTypePersistence {
 				ft.setId(rst.getLong("id"));
 				ft.setApplicationName(rst.getString("appname"));
 				ft.setFileTypeName(rst.getString("name"));
-				if(this.ftI18nPersistence!=null) {
-					this.setFileTypeTranslation(ft);
-				}
+				ft.setDisplayName(rst.getString("name"));
 			}
 		}finally {
 			if(stmt!=null) {
@@ -159,6 +157,9 @@ public class FileTypeSQLPersistence implements IFileTypePersistence {
 				}
 			}
 			this.connectionManager.closeConnection();
+		}
+		if(ft.getId()>0 && this.ftI18nPersistence!=null) {
+			this.setFileTypeTranslation(ft);
 		}
 		return ft;
 	}
@@ -177,9 +178,7 @@ public class FileTypeSQLPersistence implements IFileTypePersistence {
 				ft.setId(id);
 				ft.setApplicationName(rst.getString("appname"));
 				ft.setFileTypeName(rst.getString("name"));
-				if(this.ftI18nPersistence!=null) {
-					this.setFileTypeTranslation(ft);
-				}
+				ft.setDisplayName(rst.getString("name"));
 			}
 		}finally {
 			if(stmt!=null) {
@@ -190,6 +189,9 @@ public class FileTypeSQLPersistence implements IFileTypePersistence {
 				}
 			}
 			this.connectionManager.closeConnection();
+		}
+		if(ft.getId()>0 && this.ftI18nPersistence!=null) {
+			this.setFileTypeTranslation(ft);
 		}
 		return ft;
 	}
@@ -208,9 +210,6 @@ public class FileTypeSQLPersistence implements IFileTypePersistence {
 			stmt = this.connectionManager.getConnection().prepareStatement(query);
 			stmt.setLong(1, fileType.getId());
 			stmt.executeUpdate();
-			if(this.ftI18nPersistence!=null) {
-				this.ftI18nPersistence.delete(fileType.getTranslation());
-			}
 		}finally {
 			if(stmt!=null) {
 				try {
@@ -221,7 +220,9 @@ public class FileTypeSQLPersistence implements IFileTypePersistence {
 			}
 			this.connectionManager.closeConnection();
 		}
-		
+		if(this.ftI18nPersistence!=null) {
+			this.ftI18nPersistence.delete(fileType.getTranslation());
+		}
 		return flag;
 	}
 	
@@ -242,6 +243,7 @@ public class FileTypeSQLPersistence implements IFileTypePersistence {
 				FileType ft = new FileType();
 				ft.setId(rst.getLong("id"));
 				ft.setFileTypeName(rst.getString("name"));
+				ft.setDisplayName(rst.getString("name"));
 				ft.setApplicationName(rst.getString("appname"));
 				ftl.add(ft);
 			}
@@ -274,6 +276,7 @@ public class FileTypeSQLPersistence implements IFileTypePersistence {
 				FileType ft = new FileType();
 				ft.setId(rst.getLong("id"));
 				ft.setFileTypeName(rst.getString("name"));
+				ft.setDisplayName(rst.getString("name"));
 				ft.setApplicationName(rst.getString("appname")==null?"":rst.getString("appname"));
 				ftl.add(ft);
 			}
@@ -366,6 +369,7 @@ public class FileTypeSQLPersistence implements IFileTypePersistence {
 			stmt.setLong(1, typeId);
 			stmt.setLong(2, Long.parseLong(doc.getFileID()));
 			stmt.executeUpdate();
+			Ivy.log().info("File type set {0} for doc {1}",typeId,Long.parseLong(doc.getFileID()));
 		}finally {
 			if(stmt!=null) {
 				try {

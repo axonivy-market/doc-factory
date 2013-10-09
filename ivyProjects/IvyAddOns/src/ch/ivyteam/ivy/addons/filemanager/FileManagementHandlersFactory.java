@@ -22,7 +22,7 @@ import ch.ivyteam.ivy.addons.filemanager.database.versioning.FileVersioningContr
 
 /**
  * This class is an helper class that contains static methods.<br>
- * These method helps getting instances of the different Handlers that can be found in the File Management.<br>
+ * These methods help getting instances of the different Handlers that can be found in the File Management.<br>
  * These getInstance methods take all a Configuration object ({@link ch.ivyteam.ivy.addons.filemanager.configuration.BasicConfigurationController}). <br>
  * The given BasicConfigurationController Object contains all the necessary
  * information to choose among the different possible implementations of
@@ -166,6 +166,8 @@ public class FileManagementHandlersFactory {
 	}
 	
 	/**
+	 * <b>This is not a Public API method</b><br>This method may change in the future, use at own risk.<br>
+	 * 
 	 * If the activateSecurity flag from the configuration parameter is true, this method returns an appropriate instance of an AbstractFileSecurityHandler object.
 	 * The AbstractFileSecurityHandler is responsible for the filemanagement security CRUD functions.
 	 * @param config
