@@ -10,7 +10,7 @@
 	<classpathentry kind="con" path="ULC_CONTAINER"/>
 	<classpathentry kind="src" path="src_wsproc"/>
 	<classpathentry exported="true" kind="lib" path="lib/poi-3.2-FINAL-20081019.jar"/>
-	<classpathentry kind="lib" path="lib/aspose/cells/aspose-cells-7.1.1.jar">
+	<classpathentry kind="lib" exported="true" path="lib/aspose/cells/aspose-cells-7.1.1.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="jar:platform:/resource/IvyAddOns/lib/aspose/javadoc/aspose-cells_7.1.1.zip!/"/>
 		</attributes>
@@ -19,13 +19,13 @@
 	<classpathentry kind="lib" path="lib/aspose/cells/dom4j-1.6.1.jar"/>
 	<classpathentry kind="lib" path="lib/aspose/cells/stax2-api-3.0.2.jar"/>
 	<classpathentry kind="lib" path="lib/aspose/cells/woodstox-core-asl-4.1.1.jar"/>
-	<classpathentry kind="lib" path="lib/aspose/aspose.pdf-3.0.1.jdk16.jar">
+	<classpathentry kind="lib" exported="true" path="lib/aspose/aspose.pdf-3.0.1.jdk16.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="jar:platform:/resource/IvyAddOns/lib/aspose/javadoc/aspose.pdf-3.0.1.zip!/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/aspose/Aspose.Words.jdk16.jar"/>
-	<classpathentry kind="lib" path="lib/ivyThirdPartyLicense.jar"/>
+	<classpathentry kind="lib" exported="true" path="lib/aspose/Aspose.Words.jdk16.jar"/>
+	<classpathentry kind="lib" exported="true" path="lib/ivyThirdPartyLicense.jar"/>
 	<classpathentry kind="con" path="WEBAPP_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="output" path="classes"/>
