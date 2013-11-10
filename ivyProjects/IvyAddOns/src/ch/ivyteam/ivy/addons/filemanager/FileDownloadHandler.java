@@ -245,32 +245,24 @@ public class FileDownloadHandler<T extends ULCComponent & IRichDialogPanel>  imp
 				public void prepareFile(OutputStream data) {
 					try {
 						formatServerPath();
-						File serverDir = new File(serverPath);
-						if((serverDir.exists() && !serverDir.isDirectory()) || !serverDir.exists()){
+						if(!file.exists()){
 							fileOperationMessage.setType(FileOperationMessage.ERROR_MESSAGE);
-		            		fileOperationMessage.setMessage("The directory supposed to contain the File to download doesn't exit. "+serverPath);
-		            		fileOperationMessage.emptyFileList();
-		            		RDCallbackMethodHandler.callRDMethod(ulcPane, errorMethodeName, new Object[] { fileOperationMessage });
-						}
-						else {
-							if(!file.exists()){
-								fileOperationMessage.setType(FileOperationMessage.ERROR_MESSAGE);
-			            		fileOperationMessage.setMessage("The file you try to download doesn't exit.");
-			            		fileOperationMessage.emptyFileList();
-			            		RDCallbackMethodHandler.callRDMethod(ulcPane, errorMethodeName, new Object[] { fileOperationMessage });
-							}else{
-								FileInputStream fis = new FileInputStream(file);
-								byte b[] = new byte[1024]; 
-			            		int c=0;
-			            		while((c= fis.read(b)) != -1){
-			            			data.write(b,0,c);
-			            		}
-			            		fis.close();
-			            		
-								fileOperationMessage.setType(FileOperationMessage.SUCCESS_MESSAGE);
-			            		fileOperationMessage.addFile(file);
+							fileOperationMessage.setMessage("The file you try to download doesn't exit.");
+							fileOperationMessage.emptyFileList();
+							RDCallbackMethodHandler.callRDMethod(ulcPane, errorMethodeName, new Object[] { fileOperationMessage });
+						}else{
+							FileInputStream fis = new FileInputStream(file);
+							byte b[] = new byte[1024]; 
+							int c=0;
+							while((c= fis.read(b)) != -1){
+								data.write(b,0,c);
 							}
+							fis.close();
+
+							fileOperationMessage.setType(FileOperationMessage.SUCCESS_MESSAGE);
+							fileOperationMessage.addFile(file);
 						}
+						
 					} catch (IOException ioe) {
 						fileOperationMessage.setType(FileOperationMessage.ERROR_MESSAGE);
 	            		fileOperationMessage.setMessage(ioe.getMessage());
@@ -528,7 +520,7 @@ public class FileDownloadHandler<T extends ULCComponent & IRichDialogPanel>  imp
     					dGetFilesAtClientSideMethod.invoke(desktop, path);
     					flag =true;
     				}catch(Exception ex) {
-    					Ivy.log().debug("The method getFilesListUnderPath is not implemented in the ULC exctension.");
+    					Ivy.log().info("The method getFilesListUnderPath is not implemented in the ULC exctension.");
     				}
     			}
     			if(!flag) {
@@ -560,7 +552,7 @@ public class FileDownloadHandler<T extends ULCComponent & IRichDialogPanel>  imp
 	 * <font color="red"><b>NOT PUBLIC API<b></font>, Do not call it
 	 */
 	public void clientDirectoryInfoReturned(String[] paths, boolean hasWriteRight) {
-		Ivy.log().debug("File list get "+paths);
+		Ivy.log().info("File list get "+paths);
 		if(!hasWriteRight){
 			this.makeError(IFileStoreHandler.FAILED, "Caused by: java.security.PrivilegedActionException");
 			return;
