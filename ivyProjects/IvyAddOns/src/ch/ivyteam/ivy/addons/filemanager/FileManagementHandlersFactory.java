@@ -19,6 +19,8 @@ import ch.ivyteam.ivy.addons.filemanager.database.security.AbstractDirectorySecu
 import ch.ivyteam.ivy.addons.filemanager.database.security.DirectorySecurityController;
 import ch.ivyteam.ivy.addons.filemanager.database.versioning.AbstractFileVersioningController;
 import ch.ivyteam.ivy.addons.filemanager.database.versioning.FileVersioningController;
+import ch.ivyteam.ivy.addons.filemanager.thumbnailer.persistence.AbstractThumbnailHandler;
+import ch.ivyteam.ivy.addons.filemanager.thumbnailer.persistence.ThumbnailHandler;
 
 /**
  * This class is an helper class that contains static methods.<br>
@@ -163,6 +165,16 @@ public class FileManagementHandlersFactory {
 		} else {
 			return new FileManagementDBHandlerUniversal(config);
 		}
+	}
+	
+	/**
+	 * Returns a new AbstractThumbnailHandler instance (responsible for managing the thumbnails persistence in the database).
+	 * @param config a BasicConfigurationController containing all the necessary infos for instantiating the new AbstractThumbnailHandler.
+	 * @return
+	 * @throws Exception 
+	 */
+	public static AbstractThumbnailHandler getThumbnailHandler(BasicConfigurationController config) throws Exception {
+		return new ThumbnailHandler(config);
 	}
 	
 	/**

@@ -1746,77 +1746,78 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 		return message;
 	}
 
+	/* (non-Javadoc)
+	 * @see ch.ivyteam.ivy.addons.filemanager.database.AbstractFileManagementHandler#saveDocumentOnServer(ch.ivyteam.ivy.addons.filemanager.DocumentOnServer, java.lang.String)
+	 */
 	@Override
 	public ReturnedMessage saveDocumentOnServer(DocumentOnServer document,
 			String fileDestinationPath) throws Exception {
+		return this.saveDocumentOnServer(document, fileDestinationPath, true);
+	}
+	
+	/* (non-Javadoc)
+	 * @see ch.ivyteam.ivy.addons.filemanager.database.AbstractFileManagementHandler#saveDocumentOnServer(ch.ivyteam.ivy.addons.filemanager.DocumentOnServer, java.lang.String, boolean)
+	 */
+	@Override
+	public ReturnedMessage saveDocumentOnServer(DocumentOnServer document,
+			String fileDestinationPath, boolean updateModificationMetaInfos)
+			throws Exception {
 		ReturnedMessage message = new ReturnedMessage();
 		message.setFiles(List.create(java.io.File.class));
 
 		message.setType(FileHandler.SUCCESS_MESSAGE);
 
-		if(document==null || document.getPath()==null || document.getPath().trim().equals(""))
-		{
+		if(document==null || document.getPath()==null || document.getPath().trim().equals("")){
 			message.setType(FileHandler.ERROR_MESSAGE);
 			message.setText("Invalid DocumentOnServer object in saveDocumentOnServer method");
 			return message;
 		}
 
-		if(fileDestinationPath==null || fileDestinationPath.trim().equals(""))
-		{
+		if(fileDestinationPath==null || fileDestinationPath.trim().equals("")){
 			fileDestinationPath=FileHandler.getFileDirectoryPath(new java.io.File(document.getPath()));
 		}
 
 		String date = new Date().format("dd.MM.yyyy");
 		String time = new Time().format("HH:mm:ss");
 		String user = Ivy.session().getSessionUserName();
-		if(document.getCreationDate()==null || document.getCreationDate().trim().equals(""))
-		{
-			document.setCreationDate(date);
-		}
-		if(document.getCreationTime()==null || document.getCreationTime().trim().equals(""))
-		{
-			document.setCreationTime(time);
-		}
-		if(document.getModificationDate()==null || document.getModificationDate().trim().equals(""))
-		{
-			document.setModificationDate(date);
-		}
-		if(document.getModificationTime()==null || document.getModificationTime().trim().equals(""))
-		{
-			document.setModificationTime(time);
-		}
-		if(document.getUserID()==null || document.getUserID().trim().equals(""))
-		{
+		if(document.getUserID()==null || document.getUserID().trim().equals("")){
 			document.setUserID(user);
 		}
-		if(document.getModificationUserID()==null || document.getModificationUserID().trim().equals(""))
-		{
+		if(document.getCreationDate()==null || document.getCreationDate().trim().equals("")){
+			document.setCreationDate(date);
+		}
+		if(document.getCreationTime()==null || document.getCreationTime().trim().equals("")){
+			document.setCreationTime(time);
+		}
+		if(document.getDescription()==null || document.getDescription().trim().equals("")){
+			document.setDescription("");
+		}
+		if(updateModificationMetaInfos || document.getModificationUserID()==null || document.getModificationUserID().trim().equals("")){
 			document.setModificationUserID(user);
 		}
-		if(document.getDescription()==null || document.getDescription().trim().equals(""))
-		{
-			document.setDescription("");
+		if(updateModificationMetaInfos || document.getModificationDate()==null || document.getModificationDate().trim().equals("")){
+			document.setModificationDate(date);
+		}
+		if(updateModificationMetaInfos || document.getModificationTime()==null || document.getModificationTime().trim().equals("")){
+			document.setModificationTime(time);
 		}
 
 		fileDestinationPath=PathUtil.formatPath(fileDestinationPath);
 		String docPath = PathUtil.formatPathForDirectory(FileHandler.getFileDirectoryPath(new java.io.File(document.getPath())))+document.getFilename();
 		Ivy.log().info(fileDestinationPath +" vs "+docPath );
-		if(!docPath.equalsIgnoreCase(fileDestinationPath))
-		{
+		if(!docPath.equalsIgnoreCase(fileDestinationPath)){
 			document.setPath(fileDestinationPath+document.getFilename());
 			message = FileHandler.moveFile(new java.io.File(docPath), fileDestinationPath, false);
 			Ivy.log().info("Message after moving : "+message.getText());
 		}
-		if(message.getType()==FileHandler.SUCCESS_MESSAGE)
-		{
+		if(message.getType()==FileHandler.SUCCESS_MESSAGE){
 			int fileId = 0;
 			try{
 				fileId = Integer.parseInt(document.getFileID());
 			}catch(Exception ex){
 				fileId = 0;
 			}
-			if(fileId==0)
-			{
+			if(fileId==0){
 				this.insertOneDocument(document);
 			}else{
 				List<KeyValuePair> _KVP = List.create(KeyValuePair.class);
@@ -1854,8 +1855,7 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 
 				kvp = new KeyValuePair();
 				kvp.setKey("Locked");
-				if(document.getLocked()==null || document.getLocked().equals("0"))
-				{
+				if(document.getLocked()==null || document.getLocked().equals("0")){
 					kvp.setValue(0);
 				}
 				else{
@@ -1892,8 +1892,7 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 				String con = "FileId = "+fileId;
 				_conditions.add(con);
 
-				for(KeyValuePair k:_KVP)
-				{
+				for(KeyValuePair k:_KVP){
 					Ivy.log().info(k.getKey().toString()+": "+k.getValue().toString());
 				}
 
@@ -1905,7 +1904,7 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 		}
 		return message;
 	}
-	
+
 	@Override
 	public ReturnedMessage setFileDescription(final String path, String description)
 			throws Exception {

@@ -15,7 +15,9 @@ import ch.ivyteam.ivy.addons.filemanager.database.persistence.IFileTypeTranslati
 import ch.ivyteam.ivy.addons.filemanager.database.persistence.IFolderOnServerPersistence;
 import ch.ivyteam.ivy.addons.filemanager.database.persistence.ILanguagePersistence;
 import ch.ivyteam.ivy.addons.filemanager.database.persistence.IPersistenceConnectionManager;
+import ch.ivyteam.ivy.addons.filemanager.database.persistence.IThumbnailPersistence;
 import ch.ivyteam.ivy.addons.filemanager.database.persistence.TranslatedFileManagerItemsEnum;
+import ch.ivyteam.ivy.addons.filemanager.thumbnailer.persistence.ThumbnailSQLPersistence;
 
 /**
  * This class declares static methods allowing to get IItemPersistence instances for the different kind of persistent filemanager objects.
@@ -45,8 +47,9 @@ public class PersistenceConnectionManagerFactory {
 	 * For the moment only a {@link DocumentOnServerSQLPersistence} can be returned.
 	 * @param configuration a {@link BasicConfigurationController} object containing all the necessary information 
 	 * @return
+	 * @throws Exception 
 	 */
-	public static IDocumentOnServerPersistence getIDocumentOnServerPersistenceInstance(BasicConfigurationController configuration) {
+	public static IDocumentOnServerPersistence getIDocumentOnServerPersistenceInstance(BasicConfigurationController configuration) throws Exception {
 		return new DocumentOnServerSQLPersistence(configuration);
 	}
 	
@@ -56,14 +59,14 @@ public class PersistenceConnectionManagerFactory {
 	 * @param configuration a {@link BasicConfigurationController} object containing all the necessary information 
 	 * @return
 	 */
-	public static IFolderOnServerPersistence getIFolderOnServerPersistenceInstance(BasicConfigurationController configuration) {
+	public static IFolderOnServerPersistence getIFolderOnServerPersistenceInstance(BasicConfigurationController configuration) throws Exception {
 		return new FolderOnServerSQLPersistence(configuration);
 	}
 	
 	/**
 	 * Returns the LanguagePersistenceHandler. This class is responsible for CRUD operation on supported languages in the filemanager for translating
 	 * directories and other items.
-	 * @param config a {@link BasicConfigurationController} object containing all the necessary information 
+	 * @param config a {@link BasicConfigurationController} object containing all the necessary information for instantiating the persistence object.
 	 * @return
 	 * @throws Exception
 	 */
@@ -73,7 +76,7 @@ public class PersistenceConnectionManagerFactory {
 	
 	/**
 	 * Returns an {@link IFileTypePersistence} object responsible for managing the persistence of the file types
-	 * @param config a {@link BasicConfigurationController} object containing all the necessary information 
+	 * @param config a {@link BasicConfigurationController} object containing all the necessary information for instantiating the persistence object.
 	 * @return an {@link IFileTypePersistence} object responsible for managing the persistence of the file types
 	 * @throws Exception
 	 */
@@ -82,8 +85,18 @@ public class PersistenceConnectionManagerFactory {
 	}
 	
 	/**
+	 * Returns an {@link IThumbnailPersistence} object responsible for managing the persistence of thumbnails objects in the database.
+	 * @param configuration a {@link BasicConfigurationController} object containing all the necessary information for instantiating the persistence object.
+	 * @return an {@link IThumbnailPersistence} object responsible for managing the persistence of thumbnails objects in the database.
+	 * @throws Exception
+	 */
+	public static IThumbnailPersistence getIThumbnailPersistenceInstance(BasicConfigurationController configuration) throws Exception {
+		return new ThumbnailSQLPersistence(configuration);
+	}
+	
+	/**
 	 * Returns an {@link IFileTypeTranslationPersistence} object responsible for managing the persistence of the file types translation
-	 * @param config a {@link BasicConfigurationController} object containing all the necessary information 
+	 * @param config a {@link BasicConfigurationController} object containing all the necessary information for instantiating the persistence object.
 	 * @param TranslatedFileManagerItemsEnum Enum to be able to choose the right Item as declared see {@link TranslatedFileManagerItemsEnum}
 	 * @return an {@link IFileTypeTranslationPersistence} object responsible for managing the persistence of the file types translation
 	 * @throws Exception
@@ -92,6 +105,11 @@ public class PersistenceConnectionManagerFactory {
 		return new ItemTranslationSQLPersistence(config, itemType);
 	}
 	
+	/**
+	 * Returns an {@link IFileTagPersistence} object responsible for managing the persistence of the file tags.
+	 * @param config a {@link BasicConfigurationController} object containing all the necessary information for instantiating the persistence object.
+	 * @return an {@link IFileTagPersistence} object responsible for managing the persistence of the file tags.
+	 */
 	public static IFileTagPersistence getIFileTagPersistenceInstance(BasicConfigurationController config){
 		return new FileTagSQLPersistence(config);
 	}

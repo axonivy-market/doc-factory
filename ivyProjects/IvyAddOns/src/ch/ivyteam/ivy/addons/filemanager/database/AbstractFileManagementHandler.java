@@ -645,7 +645,8 @@ public abstract class AbstractFileManagementHandler {
 
 	/**
 	 * Saves a ch.ivyteam.ivy.addons.filemanager.DocumentOnServer in the
-	 * persistence System (File System, database...)
+	 * persistence System (File System, database...). It is the equivalent of an update. 
+	 * If the document does not already exists it will be created.
 	 * 
 	 * @param _document
 	 *            : the ch.ivyteam.ivy.addons.filemanager.DocumentOnServer to
@@ -657,13 +658,46 @@ public abstract class AbstractFileManagementHandler {
 	 *            If the destinationPath is different, this method can be used
 	 *            to MOVE a DocumentOnServer. Or it can be used to store the
 	 *            file in a database.
-	 * @return the saved ch.ivyteam.ivy.addons.filemanager.DocumentOnServer
+	 * @return the saved ch.ivyteam.ivy.addons.filemanager.DocumentOnServer is
+	 *         contained in the
+	 *         ch.ivyteam.ivy.addons.filemanager.ReturnedMessage object. 
+	 *         the modification meta infos will be automatically set :<br>
+	 *  		- the modification user Id will be the Ivy session User Id,<br>
+	 *  		- the modification date will be today,<br>
+	 *  		- the modification time will be now,<br>
+	 * @throws Exception
+	 */
+	public abstract ReturnedMessage saveDocumentOnServer(
+			DocumentOnServer _document, String _fileDestinationPath)
+			throws Exception;
+	
+	/**
+	 * Saves a ch.ivyteam.ivy.addons.filemanager.DocumentOnServer in the
+	 * persistence System (File System, database...). It is the equivalent of an update. 
+	 * If the document does not already exists it will be created.
+	 * 
+	 * @param _document
+	 *            : the ch.ivyteam.ivy.addons.filemanager.DocumentOnServer to
+	 *            save
+	 * @param _fileDestinationPath
+	 *            : where to save the DocumentOnServer. If the destinationPath
+	 *            is the same than the DocumentOnServer Path the
+	 *            DocumentOnServer will be updated.<br>
+	 *            If the destinationPath is different, this method can be used
+	 *            to MOVE a DocumentOnServer. Or it can be used to store the
+	 *            file in a database.
+	 * @param updateModificationMetaInfos : boolean flag. If true, the modification meta infos will be automatically set :<br>
+	 *  - the modification user Id will be the Ivy session User Id,<br>
+	 *  - the modification date will be today,<br>
+	 *  - the modification time will be now,<br>
+	 *  If false, the given document's modification meta info will be kept if they exists.
+	 * @return the saved ch.ivyteam.ivy.addons.filemanager.DocumentOnServer is
 	 *         contained in the
 	 *         ch.ivyteam.ivy.addons.filemanager.ReturnedMessage object
 	 * @throws Exception
 	 */
 	public abstract ReturnedMessage saveDocumentOnServer(
-			DocumentOnServer _document, String _fileDestinationPath)
+			DocumentOnServer _document, String _fileDestinationPath, boolean updateModificationMetaInfos)
 			throws Exception;
 
 	/**

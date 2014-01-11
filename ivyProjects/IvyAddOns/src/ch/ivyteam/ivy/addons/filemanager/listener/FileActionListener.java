@@ -11,20 +11,26 @@ public interface FileActionListener {
 
 	/**
 	 * This method should be called whenever the file manager event source creates a new File (after an upload or after a server side creation).
-	 * @param e a FileActionEvent object that holds the file (java.io.File) that was created. The file path is the path of the file in the database.
+	 * @param e a FileActionEvent object that holds the DocumentOnServer that was created. 
 	 */
 	public void fileCreated(FileActionEvent e);
 
 	/**
 	 * This method should be called whenever the file manager event source changes a File (after an upload or after a server side creation).
-	 * @param e a FileActionEvent object that holds the file (java.io.File) that was changed. The file path is the path of the file in the database.
+	 * @param e a FileActionEvent object that holds the DocumentOnServer that was changed. 
 	 */
 	public void fileChanged(FileActionEvent e);
 
 	/**
 	 * This method should be called whenever the file manager event source deletes a File.
-	 * @param e a FileActionEvent object that holds the file (java.io.File) that was deleted. The file path is the path of the file in the database.
+	 * @param e a FileActionEvent object that holds the DocumentOnServer that was deleted. 
 	 */
 	public void fileDeleted(FileActionEvent e);
+	
+	/**
+	 * This method should be called whenever the file manager event source rolls a file version back.
+	 * @param e a FileActionEvent object that holds the DocumentOnServer that is now the current active version. 
+	 */
+	public void fileVersionRollbacked(FileActionEvent e);
 
 }

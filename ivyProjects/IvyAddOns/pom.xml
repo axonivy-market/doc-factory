@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>ch.ivyteam.ivy</groupId>
+        <artifactId>parentIvyMavenPOM</artifactId>
+        <version>1.0</version>
+    </parent>
+    <groupId>ch.ivyteam.ivy.addons</groupId>
+    <artifactId>IvyAddOns</artifactId>
+    <packaging>iar</packaging>
+    <version>5.6.0.2</version>
+    <name>IvyAddOns</name>
+    <dependencies/>
+    <scm>
+        <connection>scm:svn:https://HERE-YOUR-TRUNK-SVN-URL</connection>
+        <developerConnection>scm:svn:https://HERE-YOUR-DEVELOPER-TRUNK-SVN-URL</developerConnection>
+    </scm>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-scm-plugin</artifactId>
+                <version>1.8.1</version>
+                <configuration>
+                    <!-- Default: the trunk url will be the connection one -->
+                    <connectionType>connection</connectionType>
+                    <basedir>${basedir}</basedir>
+                    <message>Commit from the Ivy release plugin.</message>
+                    <tagBase>https://HERE-YOUR-TAG-SVN-URL</tagBase>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

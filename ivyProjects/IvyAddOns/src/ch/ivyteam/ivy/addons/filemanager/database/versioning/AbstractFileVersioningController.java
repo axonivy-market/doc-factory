@@ -7,6 +7,7 @@ import java.util.List;
 
 import ch.ivyteam.ivy.addons.filemanager.DocumentOnServer;
 import ch.ivyteam.ivy.addons.filemanager.FileVersion;
+import ch.ivyteam.ivy.addons.filemanager.document.FilemanagerItemMetaData;
 
 /**
  * @author ec
@@ -44,6 +45,19 @@ public abstract class AbstractFileVersioningController {
 	 *             in case of a Persistence or SQLException
 	 */
 	public abstract FileVersion createNewVersion(long fileId) throws Exception;
+	
+	/**
+	 * Creates a new version based on the actual file stored in the
+	 * xivy_addons_fileManager_fileMetaDataTableName table
+	 * @param fileId
+	 *            the file ID that has to be versioned
+	 * @param filemanagerItemMetaData meta data that has to be used to qualify the new version.<br>
+	 * If this parameter is null the default creation and modification meta data (userId, creation date, time etc...) will be used.
+	 * @return the new FileVersion object with its id. The Object does not
+	 *         contain any content. null if the given fileId <=0
+	 * @throws Exception in case of a Persistence or SQLException
+	 */
+	public abstract FileVersion createNewVersion(long fileId, FilemanagerItemMetaData filemanagerItemMetaData) throws Exception;
 	
 	/**
 	 * Returns the FileVersion object corresponding to the parent fileID and to

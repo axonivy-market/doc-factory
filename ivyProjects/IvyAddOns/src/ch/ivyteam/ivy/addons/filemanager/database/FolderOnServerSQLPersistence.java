@@ -45,14 +45,14 @@ public class FolderOnServerSQLPersistence implements IFolderOnServerPersistence 
 	private IItemTranslationPersistence dirI18nPersistence;
 	
 	@SuppressWarnings("unchecked")
-	protected  FolderOnServerSQLPersistence (BasicConfigurationController config) {
+	protected  FolderOnServerSQLPersistence (BasicConfigurationController config) throws Exception {
 		this.configuration=config;
 		this.connectionManager =  (IPersistenceConnectionManager<Connection>) PersistenceConnectionManagerFactory
 				.getPersistenceConnectionManagerInstance(config);
 		this.initialize();
 	}
 	
-	private void initialize() {
+	private void initialize() throws Exception {
 		if(this.configuration.getDatabaseSchemaName()!=null  && this.configuration.getDatabaseSchemaName().length()>0) {
 			this.directoriesTableNameSpace = this.configuration.getDatabaseSchemaName()+"."+this.configuration.getDirectoriesTableName();
 		}else{
@@ -69,7 +69,7 @@ public class FolderOnServerSQLPersistence implements IFolderOnServerPersistence 
 			DatabaseMetaData dbmd = this.connectionManager.getConnection().getMetaData();
 			String prod = dbmd.getDatabaseProductName().toLowerCase();
 			if(prod.contains("mysql") || (prod.contains("postgre") && 
-					Double.valueOf(dbmd.getDatabaseMajorVersion()+"."+dbmd.getDatabaseMinorVersion())<9.2 )){
+					Double.valueOf(dbmd.getDatabaseMajorVersion()+"."+dbmd.getDatabaseMinorVersion())<9.1 )){
 				this.escapeChar="\\\\";
 			}
 			this.isMsSql = prod.contains("microsoft");
@@ -80,9 +80,7 @@ public class FolderOnServerSQLPersistence implements IFolderOnServerPersistence 
 					this.configuration.getDirectoriesTableName(), "ctd").next()){
 				this.secVersion=2;
 			}
-		} catch(Exception ex) {
-			Ivy.log().error(ex.getMessage(),ex);
-		} finally {
+		}finally {
 			try {
 				this.connectionManager.closeConnection();
 			} catch (Exception e) {
@@ -272,7 +270,9 @@ public class FolderOnServerSQLPersistence implements IFolderOnServerPersistence 
 	 */
 	@Override
 	public FolderOnServer get(String directoryPath) throws Exception {
-		assert (directoryPath!=null && directoryPath.trim().length()>0):"The given directoryPath is invalid.";
+		if(directoryPath==null || directoryPath.trim().isEmpty()){
+			return null;
+		}
 
 		String query =FolderOnServerSQLQueries.SELECT_DIRECTORY_BY_PATH
 				.replace(DocumentOnServerSQLQueries.TABLENAMESPACE_PLACEHOLDER, this.directoriesTableNameSpace);
@@ -310,7 +310,9 @@ public class FolderOnServerSQLPersistence implements IFolderOnServerPersistence 
 	 */
 	@Override
 	public FolderOnServer get(long id) throws Exception {
-		assert id>0:"Illegal argument: the id parameter is invalid in get(long id).";
+		if(id<=0) {
+			return null;
+		}
 		String query =FolderOnServerSQLQueries.SELECT_DIRECTORY_BY_ID
 				.replace(DocumentOnServerSQLQueries.TABLENAMESPACE_PLACEHOLDER, this.directoriesTableNameSpace)
 				.replace(DocumentOnServerSQLQueries.ESCAPECHAR_PLACEHOLDER, this.escapeChar);

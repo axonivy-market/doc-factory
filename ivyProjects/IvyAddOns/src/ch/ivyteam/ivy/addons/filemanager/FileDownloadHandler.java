@@ -77,6 +77,8 @@ public class FileDownloadHandler<T extends ULCComponent & IRichDialogPanel>  imp
 	private List<File> preparedFiles;
 	private String preparedPath;
 	
+	private long errorInterval;
+	
 	public FileDownloadHandler(){
 		this(null, "", "", "","");
 	}
@@ -129,6 +131,7 @@ public class FileDownloadHandler<T extends ULCComponent & IRichDialogPanel>  imp
 		timer.setRepeats(false);
 		
 		this.desktop=new ULCXDesktop();
+		this.desktop.addOnDesktopExceptionListener(this);
 		try{
 			this.dGetFilesAtClientSideMethod = this.desktop.getClass().getMethod("getDirectoryInfoUnderPath", String.class);
 			this.listener=new DownloadGetDirectoryInfoListener(this.desktop, this);
@@ -505,6 +508,7 @@ public class FileDownloadHandler<T extends ULCComponent & IRichDialogPanel>  imp
     	fcConfig.setFileSelectionMode(FileChooserConfig.DIRECTORIES_ONLY);
     	fcConfig.setMultiSelectionEnabled(false); // We accept just one directory at time
     	fcConfig.setApproveButtonText(this.chooseButton);
+    	fcConfig.setDialogType(FileChooserConfig.SAVE_DIALOG);
     	ClientContext.chooseFile(new IFileChooseHandler(){
     		public void onFailure(int reason, String description) {
     			makeError(reason,description);
@@ -517,6 +521,7 @@ public class FileDownloadHandler<T extends ULCComponent & IRichDialogPanel>  imp
     			boolean flag = false;
     			if(dGetFilesAtClientSideMethod!=null) {
     				try{
+    					Ivy.log().info("Before getting Infos on the directory choosed for download");
     					dGetFilesAtClientSideMethod.invoke(desktop, path);
     					flag =true;
     				}catch(Exception ex) {
@@ -524,6 +529,7 @@ public class FileDownloadHandler<T extends ULCComponent & IRichDialogPanel>  imp
     				}
     			}
     			if(!flag) {
+    				Ivy.log().info("Download 3");
     				downloadFilesAfterOverridingCheck(preparedFiles);
     			}
     		}
@@ -715,16 +721,12 @@ public class FileDownloadHandler<T extends ULCComponent & IRichDialogPanel>  imp
 				add="<br>"+s;
 			} else if(description.equals("No read privilege")) {
 				add= " "+Ivy.cms().co("/ch/ivyteam/ivy/addons/filemanager/download/message/clientSideNoReadRightException");
+			} else if(description.contains("The directory does not exist,")){
+				String n = description.substring(description.indexOf(",")+1).trim();
+				add=" "+Ivy.cms().co("/ch/ivyteam/ivy/addons/filemanager/download/message/clientDirectoryCannotBeFound").replace("DDIR", n);
 			}
 		}
-		switch (reason) {
-		case IFileStoreHandler.FAILED:
-			msg = Ivy.cms().co("/ch/ivyteam/ivy/addons/filemanager/download/message/downloadFailed")+add;
-			break;
-		default:
-			msg = Ivy.cms().co("/ch/ivyteam/ivy/addons/filemanager/download/message/downloadFailed")+add;
-			break;
-		}
+		msg = Ivy.cms().co("/ch/ivyteam/ivy/addons/filemanager/download/message/downloadFailed")+add;
 		message.setType(FileOperationMessage.ERROR_MESSAGE);
 		message.setText(msg);
 		RDCallbackMethodHandler.callRDMethod(ulcPane, errorMethodeName, new Object[] { message });
@@ -780,14 +782,37 @@ public class FileDownloadHandler<T extends ULCComponent & IRichDialogPanel>  imp
 		}
 	}
     
+	/**
+	 * <b>NOT PUBLIC API</b>
+	 */
 	@Override
 	public void desktopException(OnDesktopExceptionEvent arg0) {
-		if(arg0.getDesktopExceptionMessage().contains("Exception occured while trying to list")) {
-			this.makeError(IFileStoreHandler.FAILED, "No read privilege");
+		Ivy.log().error(arg0.getDesktopExceptionMessage());
+		if(arg0.getDesktopExceptionMessage().contains("The directory does not exist")) {
+			this.errorInterval = System.nanoTime();
+			String[] cuts = arg0.getDesktopExceptionMessage().split("\\.");
+			String dirname = "";
+			int i = 0;
+			for(String s : cuts) {
+				if(i>0 && i<cuts.length-1) {
+					if(i==1)
+						dirname+=s;
+					else
+						dirname+="."+s;
+				}
+				i++;
+			}
+			this.makeError(IFileStoreHandler.FAILED, "The directory does not exist, "+dirname);
+		}else if(arg0.getDesktopExceptionMessage().contains("Exception occured while trying to list")) {
+			long elapsed =(long) 8E10;
+			if(this.errorInterval>0) {
+				elapsed =System.nanoTime() - this.errorInterval;
+			}
+			if(elapsed> (long) 2E9)
+				this.makeError(IFileStoreHandler.FAILED, "No read privilege");
 		}else {
 			this.makeError(IFileStoreHandler.FAILED, "");
 		}
-		
 	}
 	
 }

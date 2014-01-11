@@ -1,5 +1,5 @@
 [Ivy]
-[>Created: Thu Jun 21 12:47:03 EDT 2012]
+[>Created: Wed Oct 23 07:58:08 EDT 2013]
 138003FAA07A630D 3.17 #module
 >Proto >Proto Collection #zClass
 Fs0 FileTagDialogProcess Big #zClass
@@ -133,7 +133,6 @@ Fs0 f4 actionTable 'out=in;
 Fs0 f4 actionCode 'import ch.ivyteam.ivy.addons.filemanager.database.filetag.FileTagsController;
 
 out.fileTagController = new FileTagsController(in.configurationController);
-
 panel.titelLabel.setText(ivy.cms.co("/ch/ivyteam/ivy/addons/filemanager/fileTags/titleLabel")+" "+ in.parentDocumentOnServer.filename);' #txt
 Fs0 f4 type ch.ivyteam.ivy.addons.filemanager.tag.FileTagDialog.FileTagDialogData #txt
 Fs0 f4 206 212 36 24 20 -2 #rect

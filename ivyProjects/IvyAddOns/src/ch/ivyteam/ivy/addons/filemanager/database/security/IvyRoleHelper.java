@@ -86,12 +86,12 @@ public class IvyRoleHelper {
 	
 	/**
 	 * returns the roles names owned by the given user.
-	 * @param user the IUser. If null, returns null.
+	 * @param user the IUser. If null, returns empty List String.
 	 * @return
 	 */
 	public static java.util.List<String> getUserRolesAsListStrings(IUser user) {
 		if(user==null) {
-			return null;
+			return new ArrayList<String>();
 		}
 		java.util.List<String> roles = new ArrayList<String>();
 		java.util.List<IRole> userRoles = user.getAllRoles();

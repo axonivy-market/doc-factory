@@ -57,16 +57,17 @@ public class DocumentOnServerSQLPersistence implements
 	/**
 	 * 
 	 * @param config
+	 * @throws Exception 
 	 */
 	@SuppressWarnings("unchecked")
-	protected DocumentOnServerSQLPersistence (BasicConfigurationController config) {
+	protected DocumentOnServerSQLPersistence (BasicConfigurationController config) throws Exception {
 		this.configuration=config;
 		this.connectionManager =  (IPersistenceConnectionManager<Connection>) PersistenceConnectionManagerFactory
 				.getPersistenceConnectionManagerInstance(config);
 		this.initialize();
 	}
 	
-	private void initialize() {
+	private void initialize() throws Exception {
 		if(this.configuration.getDatabaseSchemaName()!=null  && this.configuration.getDatabaseSchemaName().length()>0) {
 			this.fileContentTableNameSpace = this.configuration.getDatabaseSchemaName()+"."+this.configuration.getFilesContentTableName();
 			this.fileTableNameSpace = this.configuration.getDatabaseSchemaName()+"."+this.configuration.getFilesTableName();
@@ -85,11 +86,9 @@ public class DocumentOnServerSQLPersistence implements
 			DatabaseMetaData dbmd = this.connectionManager.getConnection().getMetaData();
 			String prod = dbmd.getDatabaseProductName().toLowerCase();
 			if(prod.contains("mysql") || (prod.contains("postgre") && 
-					Double.valueOf(dbmd.getDatabaseMajorVersion()+"."+dbmd.getDatabaseMinorVersion())<9.2 )){
+					Double.valueOf(dbmd.getDatabaseMajorVersion()+"."+dbmd.getDatabaseMinorVersion())<9.1 )){
 				this.escapeChar="\\\\";
 			}
-		} catch(Exception ex) {
-			Ivy.log().error(ex.getMessage(),ex);
 		} finally {
 			try {
 				this.connectionManager.closeConnection();
@@ -108,7 +107,7 @@ public class DocumentOnServerSQLPersistence implements
 	 */
 	@Override
 	public DocumentOnServer create(DocumentOnServer document) throws Exception {
-		assert(document != null):"The document to create is null.";
+		this.checkDocumentOnServer(document);
 		//make sure the document is new
 		if(this.get(document.getPath())!=null) {
 			// this document exists already
@@ -119,8 +118,7 @@ public class DocumentOnServerSQLPersistence implements
 		
 		String query = DocumentOnServerSQLQueries.INSERT_Q
 				.replace(DocumentOnServerSQLQueries.TABLENAMESPACE_PLACEHOLDER, this.fileTableNameSpace);
-		String date = new Date().format("dd.MM.yyyy");
-		String time = new Time().format("HH:mm:ss");
+		this.setDocumentDatesAndTimes(document);
 		PreparedStatement stmt=null;
 		try {
 			boolean flag = true;
@@ -137,14 +135,14 @@ public class DocumentOnServerSQLPersistence implements
 			stmt.setString(2, PathUtil.escapeBackSlash(document.getPath()));
 			stmt.setString(3, (document.getUserID()==null || document.getUserID().trim().length()==0)?
 					Ivy.session().getSessionUserName():document.getUserID());
-			stmt.setString(4, date);
-			stmt.setString(5, time);
+			stmt.setString(4,document.getCreationDate());
+			stmt.setString(5, document.getCreationTime());
 			stmt.setString(6, document.getFileSize());
 			stmt.setInt(7, 0);
 			stmt.setString(8, "");
 			stmt.setString(9, document.getUserID());
-			stmt.setString(10, date);
-			stmt.setString(11, time);
+			stmt.setString(10, document.getModificationDate());
+			stmt.setString(11, document.getModificationTime());
 			stmt.setString(12, document.getDescription()==null?"":document.getDescription());
 
 			stmt.executeUpdate();
@@ -200,6 +198,44 @@ public class DocumentOnServerSQLPersistence implements
 		}
 		return document;
 	}
+	
+	/**
+	 * <b>Not public API<b>
+	 * @param docsWithJavaFile
+	 * @throws Exception
+	 */
+	protected void insertContentInBlob(List<DocumentOnServer> docsWithJavaFile) throws Exception{
+		PreparedStatement stmt=null;
+		try{
+			String query = DocumentOnServerSQLQueries.INSERT_CONTENT_Q
+					.replace(DocumentOnServerSQLQueries.TABLENAMESPACE_PLACEHOLDER, this.fileContentTableNameSpace);
+			stmt = this.connectionManager.getConnection().prepareStatement(query);
+			for(DocumentOnServer doc: docsWithJavaFile) {
+				if(doc.getJavaFile()!=null && doc.getJavaFile().isFile()) {
+					FileInputStream is=null;
+					try {
+						is = new FileInputStream ( doc.getJavaFile() );   
+						stmt.setLong(1, Long.parseLong(doc.getFileID()));
+						stmt.setBinaryStream (2, is, (int) doc.getJavaFile().length()); 
+						stmt.executeUpdate();
+					} finally {
+						if(is!=null) {
+							is.close();
+						}
+					}
+				}
+			}
+		} finally {
+			if(stmt!=null) {
+				try {
+					stmt.close();
+				} catch( SQLException ex) {
+					Ivy.log().error("PreparedStatement cannot be closed in create method.",ex);
+				}
+			}
+			this.connectionManager.closeConnection();
+		}
+	}
 
 	private java.io.File docToJavaFile(DocumentOnServer document)
 			throws FileNotFoundException {
@@ -228,24 +264,29 @@ public class DocumentOnServerSQLPersistence implements
 	@Override
 	public DocumentOnServer update(DocumentOnServer document)
 			throws Exception {
-		assert(document != null):"The document to save is null.";
+		if(document == null || document.getFileID()==null || document.getFileID().trim().isEmpty() ||
+				Long.parseLong(document.getFileID())<=0){
+			throw new IllegalArgumentException("The documentOnServer must not be null and its id must be greater than zero.");
+		}
 		String query = DocumentOnServerSQLQueries.UPDATE_BY_ID_Q
 				.replace(DocumentOnServerSQLQueries.TABLENAMESPACE_PLACEHOLDER, this.fileTableNameSpace);
 		PreparedStatement stmt=null;
+		this.setDocumentDatesAndTimes(document);
 		try {
 			stmt = this.connectionManager.getConnection().prepareStatement(query);
 			stmt.setString(1, document.getFilename());
 			stmt.setString(2, document.getPath());
 			stmt.setString(3, document.getFileSize());
 			stmt.setInt(4, Integer.parseInt(document.getLocked()));
-			stmt.setString(5, document.getLockingUserID());
-			stmt.setString(6, document.getModificationUserID());
+			stmt.setString(5, document.getLockingUserID()== null?"":document.getLockingUserID());
+			stmt.setString(6, (document.getModificationUserID() == null || document.getModificationUserID().trim().isEmpty())?
+					Ivy.session().getSessionUserName():document.getModificationUserID());
 			stmt.setString(7, document.getModificationDate());
 			stmt.setString(8, document.getModificationTime());
 			stmt.setString(9, document.getDescription());
 			stmt.setInt(10, document.getVersionnumber()!=null?document.getVersionnumber().intValue():1);
 			stmt.setInt(11, document.getFileType()!=null && document.getFileType().getId()!=null? document.getFileType().getId().intValue():0);
-			stmt.setLong(12, Long.decode(document.getFileID()));
+			stmt.setLong(12, Long.parseLong(document.getFileID()));
 			stmt.executeUpdate();
 			if(this.configuration.isStoreFilesInDB() && document.getJavaFile()!=null && document.getJavaFile().isFile()) {
 				query = DocumentOnServerSQLQueries.UPDATE_CONTENT_Q
@@ -370,12 +411,11 @@ public class DocumentOnServerSQLPersistence implements
 			this.connectionManager.closeConnection();
 		}
 		if(this.configuration.isActivateFileType() && this.fileTypesController!=null) {
-			try{
+			try {
 				if(doc!=null && doc.getFileType()!=null && doc.getFileType().getId()!=null && doc.getFileType().getId()>0) {
 					doc.setFileType(this.fileTypesController.getFileTypeWithId(doc.getFileType().getId()));
 				}
-			}catch(Exception ex)
-			{
+			}catch(Exception ex) {
 				//do nothing the file type is not mandatory
 				Ivy.log().warn("WARNING while getting the file type on "+doc.getFilename()+ " "+ex.getMessage(), ex);
 			}
@@ -456,6 +496,8 @@ public class DocumentOnServerSQLPersistence implements
 				return false;
 			}
 			docToDelete.setFileID(doc.getFileID());
+		}else if(this.get(Long.parseLong(docToDelete.getFileID()))==null){
+			return false;
 		}
 		String query = DocumentOnServerSQLQueries.DELETE_FILE_Q
 				.replace(DocumentOnServerSQLQueries.TABLENAMESPACE_PLACEHOLDER, this.fileTableNameSpace);
@@ -464,18 +506,17 @@ public class DocumentOnServerSQLPersistence implements
 		try{
 			stmt = this.connectionManager.getConnection().prepareStatement(query);
 			stmt.setLong(1, Long.decode(docToDelete.getFileID()));
-			stmt.executeUpdate();
+			flag = stmt.executeUpdate()>0;
 			if(this.configuration.isStoreFilesInDB()) {
 				String query2 = DocumentOnServerSQLQueries.DELETE_CONTENT_FILE_Q
 						.replace(DocumentOnServerSQLQueries.TABLENAMESPACE_PLACEHOLDER, this.fileContentTableNameSpace);
 				stmt = this.connectionManager.getConnection().prepareStatement(query2);
 				stmt.setLong(1, Long.decode(docToDelete.getFileID()));
 				stmt.executeUpdate();
-			}else{
+			}else {
 				java.io.File f = new java.io.File(docToDelete.getPath());
 				f.delete();
 			}
-			flag = true;
 		} finally {
 			if(stmt!=null) {
 				try {
@@ -706,6 +747,7 @@ public class DocumentOnServerSQLPersistence implements
 		PreparedStatement stmt = null;
 		try {
 			stmt = this.connectionManager.getConnection().prepareStatement(query.toString());
+			Ivy.log().info(query.toString());
 			ResultSet rst = stmt.executeQuery();
 			recordList=SqlPersistenceHelper.getRecordsListFromResulSet(rst);
 			if(recordList!=null) {
@@ -730,7 +772,7 @@ public class DocumentOnServerSQLPersistence implements
 				}catch(Exception ex)
 				{
 					//do nothing the file type is not mandatory
-					Ivy.log().warn("WARNING while getting the file type on "+doc.getFilename()+ " "+ex.getMessage(), ex);
+					Ivy.log().debug("WARNING while getting the file type on "+doc.getFilename()+ " "+ex.getMessage(), ex);
 				}
 			}
 		}
@@ -781,21 +823,35 @@ public class DocumentOnServerSQLPersistence implements
 			doc.setLockingUserID(rec.getField("LockingUserId").toString());
 			doc.setDescription(rec.getField("Description").toString());
 			
-			
 			try{
 				int i = Integer.parseInt(rec.getField("versionnumber").toString());
 				if(i<=0) {
 					i=1;
 				}
 				doc.setVersionnumber(i);
-			}catch(Exception ex)
-			{
+			}catch(Exception ex){
 				doc.setVersionnumber(1);
 			}
 			try{
 				doc.setExtension(doc.getFilename().substring(doc.getFilename().lastIndexOf(".")+1));
 			}catch(Exception ex){
 				//Ignore the Exception here
+			}
+			if(this.configuration.isActivateFileType() && this.fileTypesController!=null) {
+				try{
+					String fileTypeId = rec.getField("filetypeid").toString();
+					if(!fileTypeId.trim().isEmpty()) {
+						long id = Long.parseLong(rec.getField("filetypeid").toString());
+						if(id>0) {
+							FileType ft = new FileType();
+							ft.setId(id);
+							doc.setFileType(ft);
+						}
+					}
+				}catch(Exception ex){
+					//do nothing the file type is not mandatory
+					Ivy.log().warn("WARNING while getting the file type on "+doc.getFilename()+ " "+ex.getMessage(), ex);
+				}
 			}
 			al.add(doc);
 		}
@@ -810,9 +866,13 @@ public class DocumentOnServerSQLPersistence implements
 		//build the SQL Query with the keyValue pairs and the list of conditions
 		StringBuilder sql = new StringBuilder("UPDATE "+this.fileTableNameSpace+" SET");
 
+
 		for(KeyValuePair kvp: _KVP) {
-			//sql.append(" "+kvp.getKey().toString()+"='"+escapeForMSSQL(kvp.getValue().toString())+"', ");
-			sql.append(" "+kvp.getKey().toString()+"= "+kvp.getValue()+" ,");
+			if(kvp.getValue() instanceof String) {
+				sql.append(" "+kvp.getKey().toString()+"= '"+kvp.getValue()+"' ,");
+			} else {
+				sql.append(" "+kvp.getKey().toString()+"= "+kvp.getValue()+" ,");
+			}
 		}
 		sql=sql.deleteCharAt(sql.lastIndexOf(","));
 
@@ -828,6 +888,15 @@ public class DocumentOnServerSQLPersistence implements
 		return rows;
 	}
 	
+	/**
+	 * In development
+	 * @param stmt
+	 * @param index
+	 * @param value
+	 * @return
+	 * @throws SQLException
+	 */
+	@SuppressWarnings("unused")
 	private PreparedStatement setPreparedStatement(PreparedStatement stmt, int index, Object value) throws SQLException {
 		if(value instanceof Short) {
 			stmt.setShort(index, (Short) value);
@@ -850,6 +919,56 @@ public class DocumentOnServerSQLPersistence implements
 	protected String getEscapeChar() {
 		return this.escapeChar;
 	}
+	
+	protected IPersistenceConnectionManager<Connection> getConnectionManager(){
+		return this.connectionManager;
+	}
+	
+	private DocumentOnServer setDocumentDatesAndTimes(DocumentOnServer doc){
+		String date = new Date().format("dd.MM.yyyy");
+		if(doc.getCreationDate()==null || doc.getCreationDate().trim().isEmpty()){
+			doc.setCreationDate(date);
+		}else {
+			doc.setCreationDate(new Date(doc.getCreationDate()).format("dd.MM.yyyy"));
+		}
+		if(doc.getModificationDate()==null || doc.getModificationDate().trim().isEmpty()){
+			doc.setModificationDate(date);
+		}else{
+			doc.setModificationDate(new Date(doc.getModificationDate()).format("dd.MM.yyyy"));
+		}
+		doc.setCreationTime(this.formatTime(doc.getCreationTime()));
+		doc.setModificationTime(this.formatTime(doc.getModificationTime()));
+		return doc;
+	}
+	
+	private String formatTime(String time){
+		if(time==null || !time.contains(":")){
+			return new Time().format("HH:mm:ss");
+		}
+		String [] ts = time.split(":");
+		for(int i= 0;i<ts.length;i++){
+			ts[i]=ts[i].trim().length()==0?"00":(ts[i].trim().length()==1?"0"+ts[i]:ts[i].trim().substring(0, 2));
+		}
+		if(ts.length==2) {
+			return ts[0]+":"+ts[1]+":00";
+		}
+		if(ts.length==3) {
+			return ts[0]+":"+ts[1]+":"+ts[2];
+		}
+		return new Time().format("HH:mm:ss");
+	}
 
+	private void checkDocumentOnServer(DocumentOnServer document) {
+		if(document == null) {
+			throw new IllegalArgumentException("The Document to create must not be null.");
+		}
+		if(document.getPath()==null || document.getPath().trim().isEmpty()) {
+			throw new IllegalArgumentException("The Document's path must not be null or an empty String.");
+		}
+		if((document.getFilename()==null || document.getFilename().trim().isEmpty()) && document.getJavaFile()==null) {
+			throw new IllegalArgumentException("The Document's filename must not be null or an empty String, " +
+					"or in that case it should at least references a java.io.File.");
+		}
+	}
 
 }

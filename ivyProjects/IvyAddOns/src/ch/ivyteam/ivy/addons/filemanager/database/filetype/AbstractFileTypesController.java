@@ -150,5 +150,6 @@ public abstract class AbstractFileTypesController {
 	 * @return the DocumentOnServer whose FileType attribute has been updated
 	 * @throws Exception
 	 */
+	@Deprecated
 	public abstract DocumentOnServer setDocumentFileType(DocumentOnServer doc, long fileTypeId, java.sql.Connection con) throws Exception;
 }

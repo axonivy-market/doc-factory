@@ -71,7 +71,7 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 	 * 
 	 */
 	public FileStoreDBHandler() throws Exception {
-		this(null,null,null,null,null,false);
+		this(new BasicConfigurationController());
 	}
 
 	/**
@@ -82,7 +82,7 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 	 * @throws Exception 
 	 */
 	public FileStoreDBHandler(String _ivyDBConnectionName, String _tableName) throws Exception {
-		this(_ivyDBConnectionName,_tableName,null,null,null,false);
+		this(_ivyDBConnectionName,_tableName,null,null,null,new BasicConfigurationController().isActivateSecurity());
 	}
 
 
@@ -99,7 +99,7 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 	public FileStoreDBHandler(String _ivyDBConnectionName, String _fileTableName, String _fileContentTableName, String _dirTableName, 
 			String _schemaName) 
 					throws Exception {
-		this(_ivyDBConnectionName,_fileTableName,_fileContentTableName,_dirTableName,_schemaName,false);
+		this(_ivyDBConnectionName,_fileTableName,_fileContentTableName,_dirTableName,_schemaName,new BasicConfigurationController().isActivateSecurity());
 	}
 
 	/**
@@ -254,11 +254,14 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 			throw new Exception("File null or doesn't exist, or userID null in changeModificationInformations method.");
 		}
 		DocumentOnServer doc = this.docPersistence.get(escapeBackSlash(_file.getPath()));
+		if(doc==null) {
+			return;
+		}
 		doc.setModificationDate(new Date().format("dd.MM.yyyy"));
 		doc.setModificationTime(new Time().format("HH:mm.ss"));
 		doc.setModificationUserID(_userID);
 		this.docPersistence.update(doc);
-		this.fireChangedEvent(doc);
+		this.fireChangedEvent(doc,false);
 	}
 
 	/* (non-Javadoc)
@@ -360,6 +363,11 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 				}
 			}
 			FolderOnServer fToDelete = this.dirPersistence.get(_directoryPath);
+			if(fToDelete==null) {
+				message.setType(FileHandler.INFORMATION_MESSAGE);
+				message.setText("The directory to delete '"+_directoryPath+"' doesn't exist");
+				return message;
+			}
 			if(!this.config.getSecurityHandler().hasRight(null, SecurityRightsEnum.DELETE_DIRECTORY_RIGHT, 
 					fToDelete, user,null).isAllow()) {
 				message.setType(FileHandler.ERROR_MESSAGE);
@@ -390,7 +398,8 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 		ReturnedMessage message = new ReturnedMessage();
 		message.setFiles(List.create(java.io.File.class));
 		//Check if the directory exists, if not return
-		if(!this.directoryExists(_directoryPath)) {
+		FolderOnServer fos = this.dirPersistence.get(_directoryPath);
+		if(fos==null) {
 			message.setType(FileHandler.ERROR_MESSAGE);
 			message.setText("The directory to delete does not exist.");
 			return message;
@@ -401,10 +410,11 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 		}
 		
 		java.util.List<FolderOnServer> lFos = this.dirPersistence.getList(_directoryPath, true);
-		for(FolderOnServer fos:lFos) {
-			this.dirPersistence.delete(fos);
+		for(FolderOnServer fols:lFos) {
+			this.dirPersistence.delete(fols);
 		}
-		FolderOnServer fos = this.dirPersistence.get(_directoryPath);
+		
+		
 		this.dirPersistence.delete(fos);
 		return message;
 	}
@@ -424,7 +434,6 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 			message.setText("The directory to delete does not exist.");
 			return message;
 		}
-		boolean deleteHistory=this.config.getFileActionHistoryConfiguration().isActivateFileActionHistory() && super.getFileActionHistoryController().getConfig().isDeleteFileTracked();
 		java.util.List<DocumentOnServer> docs = this.docPersistence.getList(_directoryPath, true);
 		for(DocumentOnServer doc: docs) {
 			if(!doc.getLocked().equals("0")) {
@@ -435,17 +444,7 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 			}
 		}
 		try{
-			for(DocumentOnServer doc: docs) {
-				this.docPersistence.delete(doc);
-				fireDeleteEvent(doc);
-				if(deleteHistory) {
-					super.getFileActionHistoryController().createNewActionHistory(Long.decode(doc.getFileID()), FileActionHistoryController.FILE_DELETED_ACTION, 
-							Ivy.session().getSessionUserName(), _directoryPath);
-				}
-				if(this.activateFileVersioning) {
-					this.fvc.deleteAllVersionsFromFile(Long.decode(doc.getFileID()));
-				}
-			}
+			this.deleteDocumentsRefactored(docs);
 		}catch (Exception ex) {
 			message.setType(FileHandler.ERROR_MESSAGE);
 			message.setText("An Exception occured while deleting the files in "+_directoryPath);
@@ -467,8 +466,9 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 		message.setFiles(List.create(java.io.File.class));
 		message.setType(FileHandler.SUCCESS_MESSAGE);
 		try {
-			this.docPersistence.delete(document);
-			this.fireDeleteEvent(document);
+			java.util.List<DocumentOnServer> docs = new ArrayList<DocumentOnServer>();
+			docs.add(document);
+			this.deleteDocumentsRefactored(docs);
 		}catch(Exception ex) {
 			message.setType(FileHandler.ERROR_MESSAGE);
 			message.setText(ex.getMessage());
@@ -529,7 +529,9 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 				super.getFileActionHistoryController().createNewActionHistory(Long.parseLong(doc.getFileID()), FileActionHistoryController.FILE_VERSION_ROLLBACK_ACTION,
 						Ivy.session().getSessionUserName(), "Version "+doc.getVersionnumber().intValue());
 			}
-			this.fireChangedEvent(doc);
+			DocumentOnServer rolledbackDoc = this.docPersistence.get(id);
+			this.fireRollBackVersionEvent(rolledbackDoc);
+			
 			message.setType(FileHandler.SUCCESS_MESSAGE);
 			message.setText("The document was successfully rolledback to its previous version.");
 			return message;
@@ -861,11 +863,11 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 							doc.setCanUserDelete(this.config.getSecurityHandler().hasRight(null, SecurityRightsEnum.DELETE_FILES_RIGHT, fos, u, null).isAllow());
 							doc.setCanUserRead(true);
 							doc.setCanUserWrite(this.config.getSecurityHandler().hasRight(null, SecurityRightsEnum.WRITE_FILES_RIGHT, fos, u, null).isAllow());
+							al.add(doc);
 						}
 						break;
 					}
 				}
-				al.add(doc);
 			}
 		}else {
 			al.addAll(l);
@@ -1057,10 +1059,14 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 		int insertedIDs = -1;
 		if(_documents==null || _documents.size()==0)
 			return 0;
-
+		boolean doHist = super.getFileActionHistoryController()!=null && super.getFileActionHistoryController().getConfig().isFileCreationTracked();
+		this.deleteDocumentsRefactored(_documents);
 		for(DocumentOnServer doc : _documents) {
-			this.docPersistence.delete(doc);
 			this.docPersistence.create(doc);
+			if(doHist) {
+				super.getFileActionHistoryController().createNewActionHistory(Long.parseLong(doc.getFileID()), 
+						FileActionHistoryController.FILE_CREATED_ACTION, doc.getUserID(), "");
+			}
 			this.fireCreatedEvent(doc);
 		}
 		return insertedIDs;
@@ -1095,12 +1101,11 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 	public int insertFile(java.io.File _file, String _destinationPath, String _user)throws Exception {
 		assert (_file != null && _destinationPath!=null):"";
 		
-		if(!_file.exists())
-		{
+		if(!_file.exists()) {
 			throw new FileNotFoundException("The file that should be inserted does not exist.");
 		}
 		_destinationPath=PathUtil.formathPathForDirectoryWithoutFirstSeparatorWithEndSeparator(_destinationPath);
-		if(!this.directoryExists(_destinationPath)){
+		if(!this.directoryExists(_destinationPath)) {
 			this.createDirectory(_destinationPath);
 		}
 		DocumentOnServer doc = new DocumentOnServer();
@@ -1111,8 +1116,14 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 		doc.setModificationUserID(_user);
 		doc.setFileSize(FileHandler.getFileSize(_file));
 		doc.setJavaFile(_file);
-		this.docPersistence.delete(doc);
+		//Delete the document in case it already exists
+		this.deleteDocumentOnServer(doc);
+		
 		doc = this.docPersistence.create(doc);
+		if(super.getFileActionHistoryController()!=null && super.getFileActionHistoryController().getConfig().isFileCreationTracked()) {
+			super.getFileActionHistoryController().createNewActionHistory(Long.parseLong(doc.getFileID()), 
+					FileActionHistoryController.FILE_CREATED_ACTION, doc.getUserID(), "");
+		}
 		this.fireCreatedEvent(doc);
 		return Integer.parseInt(doc.getFileID());
 	}
@@ -1168,49 +1179,20 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 	public int insertOneDocument(DocumentOnServer _document)throws Exception {
 		if(_document== null) 
 			return 0;
-		this.docPersistence.delete(_document);
+		this.deleteDocumentOnServer(_document);
 		DocumentOnServer doc = this.docPersistence.create(_document);
 		
-		if(this.activateFileType && doc.getFileType() !=null && doc.getFileType().getId() != null && doc.getFileType().getId()>0)
-		{
+		if(this.activateFileType && doc.getFileType() !=null && doc.getFileType().getId() != null && doc.getFileType().getId()>0) {
 			ftController.setDocumentFileType(doc, doc.getFileType().getId());
 		}
-		if(super.getFileActionHistoryController()!=null && super.getFileActionHistoryController().getConfig().isFileCreationTracked())
-		{
-			super.getFileActionHistoryController().createNewActionHistory(Integer.parseInt(doc.getFileID()), 
+		if(super.getFileActionHistoryController()!=null && super.getFileActionHistoryController().getConfig().isFileCreationTracked()) {
+			super.getFileActionHistoryController().createNewActionHistory(Long.parseLong(doc.getFileID()), 
 					FileActionHistoryController.FILE_CREATED_ACTION, doc.getUserID(), "");
 		}
 		this.fireCreatedEvent(doc);
 		return 1;
 	}
-
-	/**
-	 * Private use only.
-	 * Insert a  DocumentOnServer Object into the DB storing System.<br>
-	 * To be able to store the content of the File in the DB, this method works as following:<br>
-	 * - if the given DocumentOnServer object contains a valid Ivy File Object, then its content will be stored in the DB,<br>
-	 * - else if the given DocumentOnServer object contains a valid java.io.File Object, then its content will be stored in the DB,<br>
-	 * - else it will use the path of the DocumentOnServer object, to retrieve the java.io.File<br>
-	 * - if no content can be found, it will throw an Exception.
-	 * @param _document: DocumentOnServer that has to be inserted into the File storing system
-	 * @return 1 if successful
-	 * @throws Exception 
-	 */
-	private int insertOneDocumentWithoutHistory(DocumentOnServer _document)throws Exception {
-		if(_document== null) 
-			return 0;
-		this.docPersistence.delete(_document);
-		DocumentOnServer doc = this.docPersistence.create(_document);
-		
-		if(this.activateFileType && doc.getFileType() !=null && doc.getFileType().getId() != null && doc.getFileType().getId()>0)
-		{
-			ftController.setDocumentFileType(doc, doc.getFileType().getId());
-		}
-		this.fireCreatedEvent(doc);
-				
-		return 1;
-	}
-
+	
 	/**
 	 * Looks if a DocumentOnServer is actually Locked by a user<br>
 	 * If you don't have a locking System for File edition, just override this method with no action in it and return always false.
@@ -1223,7 +1205,8 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 			throw new IllegalArgumentException("Invalid DocumentOnServer Object or invalid username in isDocumentOnServerLocked method.");
 		}
 		DocumentOnServer doc = this.docPersistence.get(PathUtil.formatPath(_doc.getPath()));
-		return (doc.getIsLocked());
+		
+		return (doc!=null &&  doc.getIsLocked());
 	}
 
 	/* (non-Javadoc)
@@ -1236,7 +1219,7 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 			throw new IllegalArgumentException("Invalid DocumentOnServer Object or invalid username in isDocumentOnServerLocked method.");
 		}
 		DocumentOnServer doc = this.docPersistence.get(PathUtil.formatPath(_doc.getPath()));
-		return (doc.getIsLocked() && !doc.getLockingUserID().equals(_user));
+		return (doc!=null && doc.getIsLocked() && !doc.getLockingUserID().equals(_user));
 	}
 
 	/**
@@ -1250,8 +1233,9 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 	/**
 	 * set the Ivy DB connection name
 	 * @param _ivyDBConnectionName as String
+	 * @throws Exception 
 	 */
-	public void setIvyDBConnectionName(String _ivyDBConnectionName) {
+	public void setIvyDBConnectionName(String _ivyDBConnectionName) throws Exception {
 		if(_ivyDBConnectionName==null || _ivyDBConnectionName.trim().length()==0)
 		{
 			return;
@@ -1271,8 +1255,9 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 	/**
 	 * set the Database table name used to store the properties of the files
 	 * @param _tableName as String
+	 * @throws Exception 
 	 */
-	public void setTableName(String _tableName) {
+	public void setTableName(String _tableName) throws Exception {
 		if(_tableName== null || _tableName.trim().length()==0)
 		{
 			return;
@@ -1301,7 +1286,8 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 		if(_file == null) {
 			throw new IllegalArgumentException("Invalid file Object in isFileLocked method.");
 		}
-		return this.docPersistence.get(PathUtil.escapeBackSlash(_file.getPath())).getIsLocked();
+		DocumentOnServer doc = this.docPersistence.get(PathUtil.escapeBackSlash(_file.getPath()));
+		return (doc!=null &&  doc.getIsLocked());
 	}
 
 	/**
@@ -1317,7 +1303,7 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 			return false;
 		}
 		DocumentOnServer doc = this.docPersistence.get(PathUtil.escapeBackSlash(_file.getPath()));
-		return (doc.getIsLocked() && doc.getLockingUserID().equals(_user));
+		return (doc!=null && doc.getIsLocked() && doc.getLockingUserID().equals(_user));
 	}
 
 	/**
@@ -1431,36 +1417,61 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 			docJ.setPath(newFile);
 			docJ.setJavaFile(docJ.getJavaFile());
 			docJ.setFileType(doc.getFileType());
-			if(this.securityActivated)
-			{
+			if(this.securityActivated) {
 				FolderOnServer fos = this.getDirectoryWithPath(fileDestinationPath);
 				docJ.setCanUserDelete(fos.getCanUserDeleteFiles());
 				docJ.setCanUserRead(fos.getCanUserOpenDir());
 				docJ.setCanUserWrite(fos.getCanUserWriteFiles());
-			}else{
+			}else {
 				docJ.setCanUserDelete(true);
 				docJ.setCanUserRead(true);
 				docJ.setCanUserWrite(true);
 			}
-			try{
+			try {
 				docJ.setExtension(docJ.getFilename().substring(docJ.getFilename().lastIndexOf(".")+1));
-			}catch(Exception ex){
+			}catch(Exception ex) {
 				//Ignore the Exception here
 			}
 			docJ.setUserID(user);
 			int j = this.insertOneDocumentWithoutHistory(docJ);
-			if(j>0){
+			if(j>0) {
 				pasteDocs.add(docJ);
-				if(super.getFileActionHistoryController()!=null && super.getFileActionHistoryController().getConfig().isCopyFileTracked())
-				{
-					super.getFileActionHistoryController().createNewActionHistory(j, FileActionHistoryController.FILE_CREATED_ACTION, Ivy.session().getSessionUserName(), "Copy of / Kopie von / copie de: "+doc.getPath());
-					super.getFileActionHistoryController().createNewActionHistory(Long.parseLong(doc.getFileID()), FileActionHistoryController.FILE_COPY_PASTE_ACTION, Ivy.session().getSessionUserName(), docJ.getPath());
+				if(super.getFileActionHistoryController()!=null && super.getFileActionHistoryController().getConfig().isCopyFileTracked()) {
+					super.getFileActionHistoryController().createNewActionHistory(Long.parseLong(docJ.getFileID()), FileActionHistoryController.FILE_CREATED_ACTION, 
+							Ivy.session().getSessionUserName(), "Copy of / Kopie von / copie de: "+doc.getPath());
+					super.getFileActionHistoryController().createNewActionHistory(Long.parseLong(doc.getFileID()), FileActionHistoryController.FILE_COPY_PASTE_ACTION, 
+							Ivy.session().getSessionUserName(), docJ.getPath());
 				}
-				//Ivy.cms().findContentObjectValue("", Locale.ENGLISH).getContentAsString();
 			}
+			this.fireCreatedEventFromCopy(docJ, doc);
 		}
 		message.getDocumentOnServers().addAll(pasteDocs);
 		return message;
+	}
+	
+	/**
+	 * Private use only.
+	 * Insert a  DocumentOnServer Object into the DB storing System.<br>
+	 * To be able to store the content of the File in the DB, this method works as following:<br>
+	 * - if the given DocumentOnServer object contains a valid Ivy File Object, then its content will be stored in the DB,<br>
+	 * - else if the given DocumentOnServer object contains a valid java.io.File Object, then its content will be stored in the DB,<br>
+	 * - else it will use the path of the DocumentOnServer object, to retrieve the java.io.File<br>
+	 * - if no content can be found, it will throw an Exception.
+	 * @param _document: DocumentOnServer that has to be inserted into the File storing system
+	 * @return 1 if successful
+	 * @throws Exception 
+	 */
+	private int insertOneDocumentWithoutHistory(DocumentOnServer _document)throws Exception {
+		if(_document== null) 
+			return 0;
+		this.deleteDocumentOnServer(_document);
+		DocumentOnServer doc = this.docPersistence.create(_document);
+		
+		if(this.activateFileType && doc.getFileType() !=null && doc.getFileType().getId() != null && doc.getFileType().getId()>0)
+		{
+			ftController.setDocumentFileType(doc, doc.getFileType().getId());
+		}
+		return 1;
 	}
 
 	/**
@@ -1480,7 +1491,8 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 			return 0;
 		}
 		
-		String s1= escapeUnderscoreInPath(_dest+search)+"%";
+		String s1= PathUtil.escapeSpecialSQLSignsInPath(_dest+search)+"%";
+		
 		java.util.List<String> conditions = new ArrayList<String>();
 		conditions.add("FilePath LIKE '"+s1+"' ESCAPE '"+this.getEscapeChar()+"'");
 		conditions.add("FilePath NOT LIKE '"+s1+"/%' ESCAPE '"+this.getEscapeChar()+"'");
@@ -1603,16 +1615,17 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 		if(this.docPersistence.get(newPath)!=null) {
 			throw new FileManagementException(Ivy.cms().co("/ch/ivyteam/ivy/addons/filemanager/fileManagement/messages/error/RenameFileAlreadyExists"));
 		}
+		String oldName = _doc.getFilename();
 		_doc.setPath(newPath);
 		_doc.setFilename(newName.endsWith(ext)?newName:newName+ext);
 		_doc.setModificationDate( new Date().format("dd.MM.yyyy"));
 		_doc.setModificationTime(new Time().format("HH:mm.ss"));
 		_doc.setModificationUserID((_userID!=null && _userID.trim().length()>0)?_userID:Ivy.session().getSessionUserName());
 		this.docPersistence.update(_doc);
-		this.fireChangedEvent(_doc);
+		this.fireChangedEvent(_doc,false);
 		if(super.getFileActionHistoryController()!=null && super.getFileActionHistoryController().getConfig().isRenameFileTracked())
 		{
-			super.getFileActionHistoryController().createNewActionHistory(Long.decode(_doc.getFileID()), FileActionHistoryController.FILE_RENAMED_ACTION, Ivy.session().getSessionUserName(), _doc.getFilename() +" -> "+newName+ext);
+			super.getFileActionHistoryController().createNewActionHistory(Long.decode(_doc.getFileID()), FileActionHistoryController.FILE_RENAMED_ACTION, Ivy.session().getSessionUserName(), oldName +" -> "+newName+ext);
 		}
 		return true;
 
@@ -1643,13 +1656,23 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 	@Override
 	public ReturnedMessage saveDocumentOnServer(DocumentOnServer document,
 			String fileDestinationPath) throws Exception {
+		return this.saveDocumentOnServer(document, fileDestinationPath, true);
+	}
+	
+	/* (non-Javadoc)
+	 * @see ch.ivyteam.ivy.addons.filemanager.database.AbstractFileManagementHandler#saveDocumentOnServer(ch.ivyteam.ivy.addons.filemanager.DocumentOnServer, java.lang.String, boolean)
+	 */
+	@Override
+	public ReturnedMessage saveDocumentOnServer(DocumentOnServer document,
+			String fileDestinationPath, boolean updateModificationMetaInfos) throws Exception {
 		ReturnedMessage message = new ReturnedMessage();
 		message.setType(FileHandler.SUCCESS_MESSAGE);
 		message.setFiles(List.create(java.io.File.class));
 		if(document == null || document.getPath()==null || document.getPath().trim().equals("") || document.getFilename()==null
 				|| document.getFilename().trim().equals("")) {
 			message.setType(FileHandler.ERROR_MESSAGE);
-			message.setText("Unable to save the given DocumentOnServer. One of the parameter is invalid in saveDocumentOnServer(DocumentOnServer document, String fileDestinationPath) in class "+this.getClass().getName());
+			message.setText("Unable to save the given DocumentOnServer. It may be null, or its path or filename field is null or empty. " +
+					"saveDocumentOnServer(DocumentOnServer document, String fileDestinationPath) in class "+this.getClass().getName());
 			return message;
 		}
 
@@ -1660,7 +1683,7 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 			// format the destinationPath to fit to the file management path convention
 			fileDestinationPath= PathUtil.formatPath(fileDestinationPath);
 		}
-
+		
 		if(document.getJavaFile()==null || !document.getJavaFile().isFile()) {
 			if(document.getIvyFile()!=null && document.getIvyFile().isFile()) {
 				document.setJavaFile(document.getIvyFile().getJavaFile());
@@ -1684,12 +1707,24 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 			}
 			if(id<=0) {
 				//new
-				int j =this.insertOneDocument(document);
+				this.insertOneDocument(document);
+				doc = this.getDocumentOnServer(document.getPath().trim());
+				long j = 0;
+				if(doc!=null && doc.getFileID()!=null) {
+					try {
+						j=Long.parseLong(doc.getFileID().trim());
+					} catch(Exception ex) { 
+						/* do nothing, we suppose it is a new document */
+					}
+				}
 				if(j>0) {
+					if(super.getFileActionHistoryController()!=null && super.getFileActionHistoryController().getConfig().isFileCreationTracked()){
+						
+						super.getFileActionHistoryController().createNewActionHistory(j, FileActionHistoryController.FILE_CREATED_ACTION, 
+								Ivy.session().getSessionUserName(), "");
+					}
 					//Success
-					document.setFileID(String.valueOf(j));
-					message.setDocumentOnServer(document);
-					this.fireCreatedEvent(document);
+					message.setDocumentOnServer(doc);
 					return message;
 				} else {
 					//error
@@ -1703,20 +1738,22 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 			}
 		}
 		// id is set, we update the existing DocumentOnServer
-		
-		String date = new Date().format("dd.MM.yyyy");
-		String time = new Time().format("HH:mm:ss");
-		String user = Ivy.session().getSessionUserName();
-		document.setModificationDate(date);
-		document.setModificationTime(time);
-		document.setModificationUserID(user);
+		if(updateModificationMetaInfos) {
+			String date = new Date().format("dd.MM.yyyy");
+			String time = new Time().format("HH:mm:ss");
+			String user = Ivy.session().getSessionUserName();
+			document.setModificationDate(date);
+			document.setModificationTime(time);
+			document.setModificationUserID(user);
+		}
 		if(!fileDestinationPath.endsWith(document.getFilename())) {
 			//the file path has to include the filename
 			fileDestinationPath = fileDestinationPath+"/"+document.getFilename();
 		}
 		document.setPath(fileDestinationPath);
 		this.docPersistence.update(document);
-		this.fireChangedEvent(document);
+		this.fireChangedEvent(document,(document.getJavaFile()!=null && document.getJavaFile().isFile()));
+		
 		if(this.activateFileType) {
 			long ftId =0;
 			if(document.getFileType() != null && document.getFileType().getId()!=null) {
@@ -1726,6 +1763,7 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 		}
 		return message;
 	}
+	
 
 	@Override
 	public ReturnedMessage setFileDescription(String path, String description)
@@ -1768,38 +1806,40 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 		if(super.getFileActionHistoryController()!=null && super.getFileActionHistoryController().getConfig().isChangeFileDescriptionTracked()) {
 			super.getFileActionHistoryController().createNewActionHistory(Long.decode(document.getFileID()), FileActionHistoryController.FILE_DESCRIPTION_CHANGED_ACTION, Ivy.session().getSessionUserName(), "");
 		}
-		this.fireChangedEvent(document);
+		this.fireChangedEvent(document, false);
 		message.setDocumentOnServer(document);
 		return message;
 	}
 
 	@Override
-	public ReturnedMessage moveDocumentOnServer(DocumentOnServer document, String destination) throws Exception
-	{
+	public ReturnedMessage moveDocumentOnServer(DocumentOnServer document, String destination) throws Exception {
 		ReturnedMessage message = new ReturnedMessage();
 		message.setType(FileHandler.SUCCESS_MESSAGE);
 		message.setFiles(List.create(java.io.File.class));
 		if(document == null || document.getPath()==null || document.getPath().trim().equals("") || document.getFilename()==null
-				|| document.getFilename().trim().equals("") || destination==null || destination.trim().equals("")){
+				|| document.getFilename().trim().equals("") || destination==null || destination.trim().equals("")) {
 			message.setType(FileHandler.ERROR_MESSAGE);
-			message.setText("Unable to save the given DocumentOnServer. One of the parameter is invalid in saveDocumentOnServer(DocumentOnServer document, String fileDestinationPath) in class "+this.getClass().getName());
+			message.setText("Unable to save the given DocumentOnServer. " +
+					"One of the parameter is invalid in saveDocumentOnServer(DocumentOnServer document, String fileDestinationPath) " +
+					"in class "+this.getClass().getName());
 			return message;
 		}
+		String oldPlace = document.getPath();
 		destination = PathUtil.formathPathForDirectoryWithoutFirstSeparatorWithEndSeparator(destination);
 		document.setPath(destination+document.getFilename());
 		this.docPersistence.update(document);
-		this.fireChangedEvent(document);
-		if(super.getFileActionHistoryController()!=null&& super.getFileActionHistoryController().getConfig().isMoveFileTracked())
-		{
-			super.getFileActionHistoryController().createNewActionHistory(Long.parseLong(document.getFileID()), FileActionHistoryController.FILE_MOVED_ACTION, Ivy.session().getSessionUserName(), document.getPath() +" -> "+destination+document.getFilename());
+		this.fireChangedEvent(document, false);
+		if(super.getFileActionHistoryController()!=null && super.getFileActionHistoryController().getConfig().isMoveFileTracked()) {
+			super.getFileActionHistoryController().createNewActionHistory(Long.parseLong(document.getFileID()), 
+					FileActionHistoryController.FILE_MOVED_ACTION, 
+					Ivy.session().getSessionUserName(), oldPlace +" -> "+destination+document.getFilename());
 		}
-		if(this.securityActivated)
-		{
+		if(this.securityActivated) {
 			FolderOnServer fos = this.getDirectoryWithPath(destination);
 			document.setCanUserDelete(fos.getCanUserDeleteFiles());
 			document.setCanUserRead(fos.getCanUserOpenDir());
 			document.setCanUserWrite(fos.getCanUserWriteFiles());
-		}else{
+		}else {
 			document.setCanUserDelete(true);
 			document.setCanUserRead(true);
 			document.setCanUserWrite(true);
@@ -1937,14 +1977,11 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 	/**
 	 * Similar to the deleteFilesInDBOnly(List<java.io.File> _files,String parentDirectoryPath, Connection con) method.<br>
 	 * For private use only.<br>
-	 * deletes the given documents by using the given java.sql.Connection object.<br>
-	 * @param _documents the list of the DocumentOnServer to delet
-	 * @param con the java.sql.Connection to the database.<br> 
-	 * THIS METHOD DOES NOT RELEASE THIS CONNECTION. THIS SHOULD BE DONE IN THE CALLING METHOD.
+	 * @param _documents the list of the DocumentOnServer to delete
 	 * @return the number of items deleted
 	 * @throws Exception
 	 */
-	private int deleteDocumentsRefactored(List<DocumentOnServer> _documents) throws Exception {
+	private int deleteDocumentsRefactored(java.util.List<DocumentOnServer> _documents) throws Exception {
 		if(_documents==null || _documents.size()==0) {
 			return 0;
 		}
@@ -1959,15 +1996,25 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 				id=this.getDocIdWithPath(escapeBackSlash(doc.getPath()));
 			}
 			if(id>0) {
-				this.docPersistence.delete(doc);
-				this.fireDeleteEvent(doc);
-				if(deleteHistory) {
-					super.getFileActionHistoryController().createNewActionHistory(id, 
-							FileActionHistoryController.FILE_DELETED_ACTION, Ivy.session().getSessionUserName(), 
-							doc.getPath());
-				}
-				if(this.activateFileVersioning) {
-					this.fvc.deleteAllVersionsFromFile(id);
+				if(this.docPersistence.delete(doc)) {
+					this.fireDeleteEvent(doc);
+					if(deleteHistory) {
+						try{
+							super.getFileActionHistoryController().createNewActionHistory(id, 
+								FileActionHistoryController.FILE_DELETED_ACTION, Ivy.session().getSessionUserName(), 
+								doc.getPath());
+						}catch(Exception ex) {
+							Ivy.log().warn("Error occurred by creating delete event in the history for doc to delete. Id: ".concat(doc.getFileID()), ex);
+						}
+					}
+					if(this.activateFileVersioning) {
+						try{
+							this.fvc.deleteAllVersionsFromFile(id);
+						}catch(Exception ex) {
+							Ivy.log().warn("Error occurred by deleting all versions for document to delete. Id: ".concat(doc.getFileID()), ex);
+						}
+					}
+					deletedFiles++;
 				}
 			}
 		}
@@ -2027,8 +2074,9 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 
 	/**
 	 * @param dirTableName the dirTableName to set
+	 * @throws Exception 
 	 */
-	public void setDirTableName(String dirTableName) {
+	public void setDirTableName(String dirTableName) throws Exception {
 		this.config.setDirectoriesTableName(dirTableName);
 		this.dirPersistence =  PersistenceConnectionManagerFactory.getIFolderOnServerPersistenceInstance(this.config);
 	}
@@ -2043,8 +2091,9 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 
 	/**
 	 * @param dirTableNameSpace the dirTableNameSpace to set
+	 * @throws Exception 
 	 */
-	public void setDirTableNameSpace(String dirTableNameSpace) {
+	public void setDirTableNameSpace(String dirTableNameSpace) throws Exception {
 		if(dirTableNameSpace==null || dirTableNameSpace.trim().length()==0 || dirTableNameSpace.trim().equals(".")) {
 			return;
 		}
@@ -2223,8 +2272,9 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 		}
 	}
 	
-	private synchronized void fireChangedEvent(DocumentOnServer doc) {
+	private synchronized void fireChangedEvent(DocumentOnServer doc, boolean contentChanged) {
 		FileActionEvent event = new FileActionEvent(doc);
+		event.setContentChanged(contentChanged);
 		Iterator<FileActionListener> i = listeners.iterator();
 		while(i.hasNext())  {
 			((FileActionListener) i.next()).fileChanged(event);
@@ -2236,6 +2286,24 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 		Iterator<FileActionListener> i = listeners.iterator();
 		while(i.hasNext())  {
 			((FileActionListener) i.next()).fileCreated(event);
+		}
+	}
+	
+	private synchronized void fireCreatedEventFromCopy(DocumentOnServer doc, DocumentOnServer parentDoc) {
+		FileActionEvent event = new FileActionEvent(doc);
+		event.setFileACopy(true);
+		event.setCopiedDocumentOnServer(parentDoc);
+		Iterator<FileActionListener> i = listeners.iterator();
+		while(i.hasNext())  {
+			((FileActionListener) i.next()).fileCreated(event);
+		}
+	}
+	
+	private synchronized void fireRollBackVersionEvent(DocumentOnServer doc) {
+		FileActionEvent event = new FileActionEvent(doc);
+		Iterator<FileActionListener> i = listeners.iterator();
+		while(i.hasNext())  {
+			((FileActionListener) i.next()).fileVersionRollbacked(event);
 		}
 	}
 
@@ -2565,7 +2633,8 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 	public FolderOnServer getDirectoryWithPath(String _directoryPath)
 			throws Exception {
 		FolderOnServer fos = this.dirPersistence.get(_directoryPath);
-		if(this.config.isActivateSecurity()) {
+		
+		if(fos!=null && this.config.isActivateSecurity()) {
 			//this.securityController.getUserRightsInFolderOnServer(fos, Ivy.session().getSessionUserName());
 			this.getUserRightsOnFolderOnServer(fos, Ivy.session().getSessionUser());
 		}
@@ -2625,6 +2694,9 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 	}
 
 	private void getUserRightsWithSecurityHandlerChain(FolderOnServer fos, IUser user) {
+		if(fos==null) {
+			return;
+		}
 		fos.setCanUserCreateDirectory(this.config.getSecurityHandler().hasRight(null, SecurityRightsEnum.CREATE_DIRECTORY_RIGHT, fos, user, null).isAllow());
 		fos.setCanUserCreateFiles(this.config.getSecurityHandler().hasRight(null, SecurityRightsEnum.CREATE_FILES_RIGHT, fos, user, null).isAllow());
 		fos.setCanUserDeleteDir(this.config.getSecurityHandler().hasRight(null, SecurityRightsEnum.DELETE_DIRECTORY_RIGHT, fos, user, null).isAllow());
@@ -2919,6 +2991,9 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 	}
 	
 	private void getUserRightsOnFolderOnServer(FolderOnServer fos, IUser user) {
+		if(fos==null){
+			return;
+		}
 		fos.setCanUserCreateDirectory(this.securityController.hasRight(null, 
 				SecurityRightsEnum.CREATE_DIRECTORY_RIGHT, fos, user, null).isAllow());
 		fos.setCanUserCreateFiles(this.securityController.hasRight(null, 

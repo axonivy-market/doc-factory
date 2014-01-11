@@ -199,10 +199,23 @@ public class PathUtil {
 	public static String escapeSpecialSQLSignsInPath(String _path) {
 		if (_path != null && !_path.trim().equals("")) {
 			_path=_path.replaceAll("_", "\\\\_");
-			_path=_path.replaceAll("(", "\\\\(");
-			_path=_path.replaceAll(")", "\\\\)");
+			_path=_path.replaceAll("\\(", "\\\\(");
+			_path=_path.replaceAll("\\)", "\\\\)");
+			_path=_path.replaceAll("'", "''");
 		}
 		return _path;
+	}
+	
+	/**
+	 * escape the ' sign in paths to be able to perform LIKE sql searches.
+	 * @param s
+	 * @return
+	 */
+	public static String escapeSingleQuotesInStringForSQL(String s) {
+		if (s != null && !s.trim().equals("")) {
+			s=s.replaceAll("'", "''");
+		}
+		return s;
 	}
 	
 	/**

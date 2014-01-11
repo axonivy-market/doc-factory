@@ -351,7 +351,9 @@ public class FileTypeSQLPersistence implements IFileTypePersistence {
 	@Override
 	public DocumentOnServer setDocumentFileType(DocumentOnServer doc,
 			long typeId) throws Exception {
-		assert(doc!=null && doc.getFileID()!=null && Long.parseLong(doc.getFileID())>0):"IllegalArgumentException in setDocumentFileType FileTypeSQLPersistence.";
+		if(doc==null || doc.getFileID()==null || Long.parseLong(doc.getFileID())<=0){
+			throw new IllegalArgumentException("The documentOnServer must not be null and its id must be greater than zero.");
+		}
 		String query = FileTypesSQLQueries.UPDATE_DOCUMENT_FILETYPE.replace(FileTypesSQLQueries.TABLENAMESPACE_PLACEHOLDER, this.filesTableNameSpace);
 		FileType ft;
 		if(typeId <=0) {
@@ -369,7 +371,6 @@ public class FileTypeSQLPersistence implements IFileTypePersistence {
 			stmt.setLong(1, typeId);
 			stmt.setLong(2, Long.parseLong(doc.getFileID()));
 			stmt.executeUpdate();
-			Ivy.log().info("File type set {0} for doc {1}",typeId,Long.parseLong(doc.getFileID()));
 		}finally {
 			if(stmt!=null) {
 				try {
