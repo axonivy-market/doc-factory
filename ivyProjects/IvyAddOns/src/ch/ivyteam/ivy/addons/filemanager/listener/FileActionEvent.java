@@ -18,6 +18,12 @@ public class FileActionEvent extends java.util.EventObject{
 	
 	private DocumentOnServer doc;
 	
+	private boolean isContentChanged;
+	
+	private boolean isFileACopy;
+	
+	private DocumentOnServer copiedDocumentOnServer;
+	
 	/**
 	 * FileActionEvent constructor
 	 * @param file
@@ -36,6 +42,58 @@ public class FileActionEvent extends java.util.EventObject{
 	 */
 	public DocumentOnServer getDocument() {
 		return this.doc;
+	}
+
+	/**
+	 * returns true if the file content as been changed in a fileChanged event. <br>
+	 * If false it means that only the meta data of the files has been changed.
+	 * @return the isContentChanged
+	 */
+	public boolean isContentChanged() {
+		return isContentChanged;
+	}
+
+	/**
+	 * Sets if the file content as been changed in a fileChanged event.<br>
+	 * If false it means that only the meta data of the files has been changed.
+	 * @param isContentChanged the isContentChanged to set
+	 */
+	public void setContentChanged(boolean isContentChanged) {
+		this.isContentChanged = isContentChanged;
+	}
+
+	/**
+	 * This flag is useful in create events to know if the created file is a copy from an existing file, or if it is a brand new file.<br>
+	 * If this flag is true, then the getCopiedDocumentOnServer() method should returns the copied Document. If not this object is null.
+	 * @return the isFileACopy
+	 */
+	public boolean isFileACopy() {
+		return isFileACopy;
+	}
+
+	/**
+	 * Sets if the created file is a copy from an existing file, or if it is a brand new file.
+	 * @param isFileACopy the isFileACopy to set
+	 */
+	public void setFileACopy(boolean isFileACopy) {
+		this.isFileACopy = isFileACopy;
+	}
+
+	/**
+	 * In the case of a create event if the created document is a copy from another document, then this method returns the copied Document.<br>
+	 * Else this method returns null.
+	 * @return the copiedDocumentOnServer
+	 */
+	public DocumentOnServer getCopiedDocumentOnServer() {
+		return copiedDocumentOnServer;
+	}
+
+	/**
+	 * In the case of a create event if the created document is a copy from another document, then this method is used to set the copied Document.<br>
+	 * @param copiedDocumentOnServer the copiedDocumentOnServer to set
+	 */
+	public void setCopiedDocumentOnServer(DocumentOnServer copiedDocumentOnServer) {
+		this.copiedDocumentOnServer = copiedDocumentOnServer;
 	}
 
 }

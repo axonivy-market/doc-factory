@@ -21,6 +21,7 @@ import ch.ivyteam.db.jdbc.DatabaseUtil;
 import ch.ivyteam.ivy.addons.filemanager.DocumentOnServer;
 import ch.ivyteam.ivy.addons.filemanager.FileHandler;
 import ch.ivyteam.ivy.addons.filemanager.FileVersion;
+import ch.ivyteam.ivy.addons.filemanager.document.FilemanagerItemMetaData;
 import ch.ivyteam.ivy.addons.filemanager.util.PathUtil;
 
 import ch.ivyteam.ivy.db.IExternalDatabase;
@@ -306,6 +307,14 @@ public class FileVersioningController extends AbstractFileVersioningController {
 	public FileVersion createNewVersion(long fileId) throws Exception {
 		// Ivy.persistence().get("").createEntityManager();
 		
+		return this.createNewVersion(fileId, null);
+	}
+	
+	
+
+	@Override
+	public FileVersion createNewVersion(long fileId,
+			FilemanagerItemMetaData filemanagerItemMetaData) throws Exception {
 		if (fileId <= 0) {
 			return null;
 		}
@@ -452,20 +461,29 @@ public class FileVersioningController extends AbstractFileVersioningController {
 				Ivy.log().info(q4);
 				Ivy.log().info("CREATING VERSION for "+fileId +" New version number is "+vn);
 				stmt.setInt(1, vn);
-				stmt.setString(2, d.format("dd.MM.yyyy"));
-				stmt.setString(3, t.format("HH:mm:ss"));
-				stmt.setString(4, Ivy.session().getSessionUserName());
-				stmt.setString(5, d.format("dd.MM.yyyy"));
-				stmt.setString(6, t.format("HH:mm:ss"));
-				stmt.setString(7, Ivy.session().getSessionUserName());
+				stmt.setString(2, (filemanagerItemMetaData==null || filemanagerItemMetaData.getCreationDate()==null)?
+						d.format("dd.MM.yyyy"):filemanagerItemMetaData.getCreationDate().format("dd.MM.yyyy"));
+				stmt.setString(3, (filemanagerItemMetaData==null || filemanagerItemMetaData.getCreationTime()==null)?
+						t.format("HH:mm:ss"):filemanagerItemMetaData.getCreationTime().format("HH:mm:ss"));
+				stmt.setString(4, (filemanagerItemMetaData==null || filemanagerItemMetaData.getCreationUserId().isEmpty())?
+						Ivy.session().getSessionUserName():filemanagerItemMetaData.getCreationUserId());
+				stmt.setString(5, (filemanagerItemMetaData==null || filemanagerItemMetaData.getModificationDate()==null)?
+						d.format("dd.MM.yyyy"):filemanagerItemMetaData.getModificationDate().format("dd.MM.yyyy"));
+				stmt.setString(6, (filemanagerItemMetaData==null || filemanagerItemMetaData.getModificationTime()==null)?
+						t.format("HH:mm:ss"):filemanagerItemMetaData.getModificationTime().format("HH:mm:ss"));
+				stmt.setString(7, filemanagerItemMetaData==null || filemanagerItemMetaData.getModificationUserId().isEmpty()?
+						Ivy.session().getSessionUserName():filemanagerItemMetaData.getModificationUserId());
 				stmt.setLong(8, fileId);
 				stmt.executeUpdate();
 				fv = new FileVersion();
-				fv.setDate(d);
+				fv.setDate((filemanagerItemMetaData==null || filemanagerItemMetaData.getCreationDate()==null)?
+						d:filemanagerItemMetaData.getCreationDate());
 				fv.setFileid(fileId);
 				fv.setFilename(doc.getFilename());
-				fv.setTime(t);
-				fv.setUser(Ivy.session().getSessionUserName());
+				fv.setTime((filemanagerItemMetaData==null || filemanagerItemMetaData.getCreationTime()==null)?
+						t:filemanagerItemMetaData.getCreationTime());
+				fv.setUser((filemanagerItemMetaData==null || filemanagerItemMetaData.getCreationUserId().isEmpty())?
+						Ivy.session().getSessionUserName():filemanagerItemMetaData.getCreationUserId());
 				fv.setVersionNumber(vn);
 			} finally {
 				DatabaseUtil.close(stmt);

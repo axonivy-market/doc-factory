@@ -7,6 +7,7 @@ import ch.ivyteam.ivy.richdialog.exec.panel.IRichDialogPanel;
 import ch.ivyteam.ivy.richdialog.rdpanels.RichDialogGridBagPanel;
 
 import com.ulcjava.base.application.AbstractAction;
+import com.ulcjava.base.application.ULCAbstractButton;
 import com.ulcjava.base.application.ULCComponent;
 
 import com.ulcjava.base.application.dnd.DataFlavor;
@@ -51,6 +52,7 @@ import ch.ivyteam.ivy.richdialog.exec.panel.RichDialogPanelFactory;
 import ch.ivyteam.ivy.richdialog.widgets.containers.RBoxPane;
 import ch.ivyteam.ivy.richdialog.widgets.components.RHyperlink;
 import ch.ivyteam.ivy.scripting.objects.List;
+import ch.ivyteam.ivy.system.IProperty;
 import ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerPanel;
 
 
@@ -156,6 +158,7 @@ private RMenuItem showHistoryMenuItem = null;
 private RMenuItem renameDirMenuItem = null;
 private RMenuItem readFileMenuItem = null;
 private RMenuItem translateDirMenuItem = null;
+private boolean xpertlineLF=false;
 /**
    * Create a new instance of FileManagerPanePanel
    */
@@ -172,6 +175,12 @@ private RMenuItem translateDirMenuItem = null;
    */
   private void initialize()
   {
+	  IProperty prop = Ivy.wf().getApplication().getConfigurationProperty("ria.lookandfeel");
+		if(prop!=null) {
+			if(prop.getValue()!=null && prop.getValue().toLowerCase().contains("xpertlinestandardlookandfeel")) {
+				xpertlineLF = true;
+			}
+		}
         this.setPreferredSize(new com.ulcjava.base.application.util.Dimension(871,431));
         this.setStyle("fill-both");
         this.setPreferredSize(new com.ulcjava.base.application.util.Dimension(597,132));
@@ -1080,7 +1089,6 @@ private RMenuItem getRefreshDirMenuItem() {
 private RButton getUnlockButton() {
 	if (unlockButton == null) {
 		unlockButton = new RButton();
-		unlockButton.setBorderPainted(false);
 		unlockButton.setName("unlockButton");
 		unlockButton.setToolTipText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tooltips/unlockFiles\")%>");
 		unlockButton.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/buttonLabels/unlockSelectedFiles\")%>");
@@ -1090,6 +1098,7 @@ private RButton getUnlockButton() {
 		unlockButton.setEnabler(getFileNameInvisibleTextField());
 		unlockButton.setStyleProperties("{/horizontalAlignment \"LEFT\"/font {/name \"Tahoma\"/size \"10\"/style \"PLAIN\"}/insetsBottom \"0\"/insetsTop \"0\"/fill \"HORIZONTAL\"/insetsRight \"0\"/insetsLeft \"0\"/weightX \"1\"}");
 		unlockButton.setStyle("toolBarSmall");
+		this.fixXpertlineLookAndFeel(unlockButton);
 	}
 	return unlockButton;
 }
@@ -1103,7 +1112,6 @@ private RButton getDownloadButton() {
 	if (downloadButton == null) {
 		downloadButton = new RButton();
 		downloadButton.setName("downloadButton");
-		downloadButton.setBorderPainted(false);
 		downloadButton.setToolTipText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tooltips/download\")%>");
 		downloadButton.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/buttonLabels/download\")%>");
 		downloadButton.setStyle("toolBarSmall");
@@ -1112,6 +1120,7 @@ private RButton getDownloadButton() {
 		downloadButton.setStyleProperties("{/horizontalAlignment \"LEFT\"/font {/name \"Tahoma\"/size \"10\"/style \"PLAIN\"}/insetsBottom \"0\"/insetsTop \"0\"/fill \"HORIZONTAL\"/insetsRight \"0\"/insetsLeft \"0\"/weightX \"1\"}");
 		downloadButton.setEnabler(getFileNameInvisibleTextField());
 		downloadButton.setIconUri("<%=ivy.cms.cr(\"/ch/ivyteam/ivy/addons/icons/down/16\")%>");
+		this.fixXpertlineLookAndFeel(downloadButton);
 	}
 	return downloadButton;
 }
@@ -1125,12 +1134,12 @@ private RButton getEditButton() {
 	if (editButton == null) {
 		editButton = new RButton();
 		editButton.setName("editButton");
-		editButton.setBorderPainted(false);
 		editButton.setToolTipText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tooltips/edit\")%>");
 		editButton.setStyle("toolBarBig");
 		editButton.setStyleProperties("{/anchor \"CENTER\"/insetsTop \"0\"/fill \"NONE\"/insetsLeft \"0\"}");
 		editButton.setEnabler(getFileNameInvisibleTextField());
 		editButton.setIconUri("<%=ivy.cms.cr(\"/ch/ivyteam/ivy/addons/icons/write/48\")%>");
+		this.fixXpertlineLookAndFeel(editButton);
 	}
 	return editButton;
 }
@@ -1144,7 +1153,6 @@ private RButton getNewCopyButton() {
 	if (newCopyButton == null) {
 		newCopyButton = new RButton();
 		newCopyButton.setName("newCopyButton");
-		newCopyButton.setBorderPainted(false);
 		newCopyButton.setToolTipText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tooltips/copyFiles\")%>");
 		newCopyButton.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/buttonLabels/copy\")%>");
 		newCopyButton.setStyleProperties("{/horizontalAlignment \"LEFT\"/font {/name \"Tahoma\"/size \"10\"/style \"PLAIN\"}/insetsBottom \"0\"/insetsTop \"0\"/fill \"HORIZONTAL\"/insetsRight \"0\"/insetsLeft \"0\"/weightX \"1\"}");
@@ -1153,6 +1161,7 @@ private RButton getNewCopyButton() {
 		newCopyButton.setRolloverIconUri("<%=ivy.cms.cr(\"/ch/ivyteam/ivy/addons/icons/copy/24\")%>");
 		newCopyButton.setEnabler(getFileNameInvisibleTextField());
 		newCopyButton.setIconUri("<%=ivy.cms.cr(\"/ch/ivyteam/ivy/addons/icons/copy/16\")%>");
+		this.fixXpertlineLookAndFeel(newCopyButton);
 	}
 	return newCopyButton;
 }
@@ -1166,7 +1175,6 @@ private RButton getDeleteButton() {
 	if (deleteButton == null) {
 		deleteButton = new RButton();
 		deleteButton.setName("deleteButton");
-		deleteButton.setBorderPainted(false);
 		deleteButton.setToolTipText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tooltips/deleteFiles\")%>");
 		deleteButton.setStyle("toolBarSmall");
 		deleteButton.setPressedIconUri("<%=ivy.cms.cr(\"/ch/ivyteam/ivy/addons/icons/delete/24\")%>");
@@ -1176,8 +1184,7 @@ private RButton getDeleteButton() {
 		deleteButton.setEnabled(true);
 		deleteButton.setEnabler(getFileNameInvisibleTextField());
 		deleteButton.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/buttonLabels/deleteFiles\")%>");
-		//deleteButton.setEnabler(getFileNameInvisibleTextField());
-		//deleteButton.registerKeyboardAction(getActionForDeleteButton(), KeyStroke.getKeyStroke(KeyEvent.VK_DELETE,0), WHEN_IN_FOCUSED_WINDOW);
+		this.fixXpertlineLookAndFeel(deleteButton);
 		
 	}
 	return deleteButton;
@@ -1191,7 +1198,6 @@ private RButton getDeleteButton() {
 private RButton getRefreshSelectedFolderButton() {
 	if (refreshSelectedFolderButton == null) {
 		refreshSelectedFolderButton = new RButton();
-		refreshSelectedFolderButton.setBorderPainted(false);
 		refreshSelectedFolderButton.setName("refreshSelectedFolderButton");
 		refreshSelectedFolderButton.setToolTipText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tooltips/refresh\")%>");
 		refreshSelectedFolderButton.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/buttonLabels/refreshFiles\")%>");
@@ -1200,6 +1206,7 @@ private RButton getRefreshSelectedFolderButton() {
 		refreshSelectedFolderButton.setRolloverIconUri("<%=ivy.cms.cr(\"/ch/ivyteam/ivy/addons/icons/refresh/24\")%>");
 		refreshSelectedFolderButton.setStyleProperties("{/horizontalAlignment \"LEFT\"/font {/name \"Tahoma\"/size \"10\"/style \"PLAIN\"}/insetsBottom \"0\"/insetsTop \"0\"/insetsRight \"0\"/fill \"HORIZONTAL\"/insetsLeft \"0\"}");
 		refreshSelectedFolderButton.setIconUri("<%=ivy.cms.cr(\"/ch/ivyteam/ivy/addons/icons/refresh/16\")%>");
+		this.fixXpertlineLookAndFeel(refreshSelectedFolderButton);
 	}
 	return refreshSelectedFolderButton;
 }
@@ -1213,12 +1220,12 @@ private RButton getPrintButton() {
 	if (printButton == null) {
 		printButton = new RButton();
 		printButton.setName("printButton");
-		printButton.setBorderPainted(false);
 		printButton.setToolTipText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tooltips/print\")%>");
 		printButton.setStyle("toolBarBig");
 		printButton.setStyleProperties("{/anchor \"CENTER\"/insetsTop \"0\"/fill \"NONE\"/insetsLeft \"0\"}");
 		printButton.setEnabler(getFileNameInvisibleTextField());
 		printButton.setIconUri("<%=ivy.cms.cr(\"/ch/ivyteam/ivy/addons/icons/print/48\")%>");
+		this.fixXpertlineLookAndFeel(printButton);
 	}
 	return printButton;
 }
@@ -1236,6 +1243,7 @@ private RButton getMakeNewDirButton() {
 		makeNewDirButton.setToolTipText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tooltips/makeNewDir\")%>");
 		makeNewDirButton.setStyleProperties("{/anchor \"CENTER\"/insetsTop \"0\"/fill \"NONE\"/insetsLeft \"0\"/weightX \"0\"}");
 		makeNewDirButton.setIconUri("<%=ivy.cms.cr(\"/ch/ivyteam/ivy/addons/icons/folder/48\")%>");
+		this.fixXpertlineLookAndFeel(makeNewDirButton);
 	}
 	return makeNewDirButton;
 }
@@ -1265,13 +1273,13 @@ private RButton getDeleteDirButton() {
 	if (deleteDirButton == null) {
 		deleteDirButton = new RButton();
 		deleteDirButton.setName("deleteDirButton");
-		deleteDirButton.setBorderPainted(false);
 		deleteDirButton.setToolTipText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tooltips/deleteFolder\")%>");
 		deleteDirButton.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/buttonLabels/delete\")%>");
 		deleteDirButton.setStyleProperties("{/horizontalAlignment \"LEFT\"/font {/name \"Tahoma\"/size \"10\"/style \"PLAIN\"}/fill \"HORIZONTAL\"}");
 		deleteDirButton.setPressedIconUri("<%=ivy.cms.cr(\"/ch/ivyteam/ivy/addons/icons/delete/24\")%>");
 		deleteDirButton.setRolloverIconUri("<%=ivy.cms.cr(\"/ch/ivyteam/ivy/addons/icons/delete/24\")%>");
 		deleteDirButton.setIconUri("<%=ivy.cms.cr(\"/ch/ivyteam/ivy/addons/icons/delete/16\")%>");
+		this.fixXpertlineLookAndFeel(deleteDirButton);
 	}
 	return deleteDirButton;
 }
@@ -1303,13 +1311,13 @@ private RButton getRefreshDirsButton() {
 	if (refreshDirsButton == null) {
 		refreshDirsButton = new RButton();
 		refreshDirsButton.setName("refreshDirsButton");
-		refreshDirsButton.setBorderPainted(false);
 		refreshDirsButton.setToolTipText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tooltips/refreshAll\")%>");
 		refreshDirsButton.setStyleProperties("{/horizontalAlignment \"LEFT\"/fill \"NONE\"}");
 		refreshDirsButton.setPressedIconUri("<%=ivy.cms.cr(\"/ch/ivyteam/ivy/addons/icons/refresh/24\")%>");
 		refreshDirsButton.setRolloverIconUri("<%=ivy.cms.cr(\"/ch/ivyteam/ivy/addons/icons/refresh/24\")%>");
 		refreshDirsButton.setText(" ");
 		refreshDirsButton.setIconUri("<%=ivy.cms.cr(\"/ch/ivyteam/ivy/addons/icons/refresh/16\")%>");
+		this.fixXpertlineLookAndFeel(refreshDirsButton);
 	}
 	return refreshDirsButton;
 }
@@ -1322,7 +1330,6 @@ private RButton getRefreshDirsButton() {
 private RButton getDownloadAllFilesButton() {
 	if (downloadAllFilesButton == null) {
 		downloadAllFilesButton = new RButton();
-		downloadAllFilesButton.setBorderPainted(false);
 		downloadAllFilesButton.setName("downloadAllFilesButton");
 		downloadAllFilesButton.setToolTipText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tooltips/downloadContentOfFolder\")%>");
 		downloadAllFilesButton.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/buttonLabels/download\")%>");
@@ -1330,6 +1337,7 @@ private RButton getDownloadAllFilesButton() {
 		downloadAllFilesButton.setPressedIconUri("<%=ivy.cms.cr(\"/ch/ivyteam/ivy/addons/icons/files/24\")%>");
 		downloadAllFilesButton.setRolloverIconUri("<%=ivy.cms.cr(\"/ch/ivyteam/ivy/addons/icons/files/24\")%>");
 		downloadAllFilesButton.setIconUri("<%=ivy.cms.cr(\"/ch/ivyteam/ivy/addons/icons/files/16\")%>");
+		this.fixXpertlineLookAndFeel(downloadAllFilesButton);
 	}
 	return downloadAllFilesButton;
 }
@@ -1342,10 +1350,10 @@ private RButton getDownloadAllFilesButton() {
 private RButton getToogleFileListingButton() {
 	if (toogleFileListingButton == null) {
 		toogleFileListingButton = new RButton();
-		toogleFileListingButton.setBorderPainted(false);
 		toogleFileListingButton.setName("toogleFileListingButton");
 		toogleFileListingButton.setStyleProperties("{/horizontalAlignment \"LEFT\"}");
 		toogleFileListingButton.setText(" ");
+		this.fixXpertlineLookAndFeel(toogleFileListingButton);
 	}
 	return toogleFileListingButton;
 }
@@ -1359,7 +1367,6 @@ private RButton getPasteButton() {
 	if (pasteButton == null) {
 		pasteButton = new RButton();
 		pasteButton.setName("pasteButton");
-		pasteButton.setBorderPainted(false);
 		pasteButton.setToolTipText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tooltips/pasteFiles\")%>");
 		pasteButton.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/buttonLabels/Paste\")%>");
 		pasteButton.setStyle("toolBarSmall");
@@ -1368,6 +1375,7 @@ private RButton getPasteButton() {
 		pasteButton.setStyleProperties("{/horizontalAlignment \"LEFT\"/font {/name \"Tahoma\"/size \"10\"/style \"PLAIN\"}/insetsBottom \"0\"/insetsTop \"0\"/insetsRight \"0\"/fill \"HORIZONTAL\"/insetsLeft \"0\"}");
 		pasteButton.setEnabler(getFileNameInvisibleTextField());
 		pasteButton.setIconUri("<%=ivy.cms.cr(\"/ch/ivyteam/ivy/addons/icons/copy/16\")%>");
+		this.fixXpertlineLookAndFeel(pasteButton);
 	}
 	return pasteButton;
 }
@@ -1573,12 +1581,11 @@ private RButton getUploadButton() {
 	if (uploadButton == null) {
 		uploadButton = new RButton();
 		uploadButton.setName("uploadButton");
-		//mailButton.setEventDeliveryMode(UlcEventCategories.ACTION_EVENT_CATEGORY, UlcEventConstants.ASYNCHRONOUS_MODE);
-		uploadButton.setBorderPainted(false);
 		uploadButton.setStyleProperties("{/fill \"BOTH\"}");
 		uploadButton.setToolTipText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tooltips/upload\")%>");
 		uploadButton.setStyle("toolBarBig");
 		uploadButton.setIconUri("<%=ivy.cms.cr(\"/ch/ivyteam/ivy/addons/icons/up/48\")%>");
+		this.fixXpertlineLookAndFeel(uploadButton);
 	}
 	return uploadButton;
 }
@@ -2128,6 +2135,10 @@ private RMenuItem getTranslateDirMenuItem() {
 		translateDirMenuItem.setToolTipText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tooltips/translateDir\")%>");
 	}
 	return translateDirMenuItem;
+}
+
+private void fixXpertlineLookAndFeel(ULCAbstractButton co){
+	co.setBorderPainted(this.xpertlineLF);
 }
 
 

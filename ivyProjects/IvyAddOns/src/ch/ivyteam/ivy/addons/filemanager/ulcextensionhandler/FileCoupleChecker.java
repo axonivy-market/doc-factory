@@ -145,7 +145,7 @@ public class FileCoupleChecker<T extends IRichDialogPanel>{
 							Ivy.log().info("File changed reported: {0}",fileCouples.get(i));
 							if(fClientPath.equals(fcPath)) {
 								if(!fileCouples.get(i).getServerFile().exists()) {
-									Ivy.log().error("The File {0} does not exist anymore on the server. It was may be deleted or moved. Please close and reopen it.");
+									Ivy.log().error("The File {0} does not exist anymore on the server. It was may be deleted or moved. Please close and reopen it.",fileCouples.get(i).getServerFile());
 									continue;
 								}
 								String dirpath = null;
@@ -170,7 +170,7 @@ public class FileCoupleChecker<T extends IRichDialogPanel>{
 
 									final String finalFilename= filePath.substring(filePath.lastIndexOf(fileSeparator)+1);
 									final java.io.File sFile = fileCouples.get(i).getServerFile();
-									Ivy.log().info("File uploaded from Client from following path "+filePath);
+									Ivy.log().debug("File uploaded from Client from following path "+filePath);
 									ClientContext.setFileTransferMode(ClientContext.ASYNCHRONOUS_MODE);
 									ClientContext.loadFile(new IFileLoadHandler(){
 										public void onFailure(int reason, String description){
@@ -182,7 +182,7 @@ public class FileCoupleChecker<T extends IRichDialogPanel>{
 										{
 											OutputStream server =null;
 											try{
-												Ivy.log().info("Try to upload file from Client To Server at "+path.toString());
+												Ivy.log().debug("Try to upload file from Client To Server at "+path.toString());
 												BufferedInputStream preparedFile = new BufferedInputStream(ins[0]);
 												path.append(finalFilename);
 												File serverFile = new File(path.toString());
@@ -193,7 +193,7 @@ public class FileCoupleChecker<T extends IRichDialogPanel>{
 												while((intRead= preparedFile.read(b)) != -1){
 													server.write(b,0,intRead);
 												}
-												Ivy.log().info("File uploaded from Client To Server at "+path.toString());
+												Ivy.log().debug("File uploaded from Client To Server at "+path.toString());
 												RDCallbackMethodHandler.callRDMethod(parentRD, fileModifiedMethodName, new Object[] { sFile});
 											}
 											catch(Exception _ex) { 
@@ -251,9 +251,9 @@ public class FileCoupleChecker<T extends IRichDialogPanel>{
 			Entry<java.io.File,java.io.File> entry = iter.next();
 			FileCouple fc = null;
 			for(FileCouple f : this.fileCouples) {
-				Ivy.log().info("Found server file to be relocated? {0} {1}  \n new is {2}",f.getServerFile().getPath().equals(entry.getKey().getPath()),
-						f.getServerFile().getPath(),entry.getValue().getPath());
 				if(f.getServerFile().getPath().equals(entry.getKey().getPath())){
+					Ivy.log().info("Found server file to be relocated: {0} \n new is {1}",
+							f.getServerFile().getPath(),entry.getValue().getPath());
 					fc = f;
 					fc.setServerFile(entry.getValue());
 					f.setServerFile(entry.getValue());

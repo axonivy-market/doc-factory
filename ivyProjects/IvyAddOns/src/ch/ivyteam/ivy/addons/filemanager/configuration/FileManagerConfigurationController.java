@@ -17,7 +17,6 @@ public class FileManagerConfigurationController extends
 	/**
 	 * 
 	 */
-	@SuppressWarnings("unused")
 	private static final long serialVersionUID = 2041056437350105136L;
 	/**
 	 * If true then the folder tree is visible. Default is true.
@@ -250,5 +249,13 @@ public class FileManagerConfigurationController extends
 		return super.getFileActionHistoryConfiguration().isActivateFileActionHistory() && showFileHistoryMenuItem;
 	}
 	
-
+	/**
+	 * Returns a new FileManagerConfigurationController object with the same properties as this one.
+	 */
+	@Override
+	public FileManagerConfigurationController clone(){
+		return (FileManagerConfigurationController) org.apache.commons.lang.SerializationUtils.clone(this);
+		
+	}
+	
 }

@@ -157,7 +157,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		
 	}
 	
-	private void initialize()
+	private void initialize() throws Exception
 	{
 		IExternalDatabaseRuntimeConnection connection = null;
 		try {
@@ -165,9 +165,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 			if(connection.getDatabaseConnection().getMetaData().getDatabaseProductName().toLowerCase().contains("mysql")){
 				setEscapeChar("\\\\");
 			}
-		} catch (Exception e) {
-			Ivy.log().error("Error while getting the database product name");
-		}finally{
+		} finally{
 			if(connection!=null ){
 				this.database.giveBackAndUnlockConnection(connection);
 			}
@@ -203,6 +201,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 	 * @return an ArrayList of {@link DocumentOnServer} Objects. Each DocumentOnServer object represents a File with several informations (name, path, size, creationdate, creationUser...)
 	 * @throws Exception 
 	 */
+	@SuppressWarnings("deprecation")
 	public ArrayList<DocumentOnServer> getDocumentsInPath(String _path, boolean _isrecursive) throws Exception{
 		return FileManagementStaticController.getDocumentsInPath(this.getDatabase(), tableNameSpace, _path, _isrecursive, this.getEscapeChar());
 	}
@@ -2128,77 +2127,78 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		return message;
 	}
 
+	/* (non-Javadoc)
+	 * @see ch.ivyteam.ivy.addons.filemanager.database.AbstractFileManagementHandler#saveDocumentOnServer(ch.ivyteam.ivy.addons.filemanager.DocumentOnServer, java.lang.String)
+	 */
 	@Override
 	public ReturnedMessage saveDocumentOnServer(DocumentOnServer document,
 			String fileDestinationPath) throws Exception {
+		return this.saveDocumentOnServer(document, fileDestinationPath, true);
+	}
+	
+	/* (non-Javadoc)
+	 * @see ch.ivyteam.ivy.addons.filemanager.database.AbstractFileManagementHandler#saveDocumentOnServer(ch.ivyteam.ivy.addons.filemanager.DocumentOnServer, java.lang.String, boolean)
+	 */
+	@Override
+	public ReturnedMessage saveDocumentOnServer(DocumentOnServer document,
+			String fileDestinationPath, boolean updateModificationMetaInfos)
+			throws Exception {
 		ReturnedMessage message = new ReturnedMessage();
 		message.setFiles(List.create(java.io.File.class));
 
 		message.setType(FileHandler.SUCCESS_MESSAGE);
 
-		if(document==null || document.getPath()==null || document.getPath().trim().equals(""))
-		{
+		if(document==null || document.getPath()==null || document.getPath().trim().equals("")){
 			message.setType(FileHandler.ERROR_MESSAGE);
 			message.setText("Invalid DocumentOnServer object in saveDocumentOnServer method");
 			return message;
 		}
 
-		if(fileDestinationPath==null || fileDestinationPath.trim().equals(""))
-		{
+		if(fileDestinationPath==null || fileDestinationPath.trim().equals("")){
 			fileDestinationPath=FileHandler.getFileDirectoryPath(new java.io.File(document.getPath()));
 		}
 
 		String date = new Date().format("dd.MM.yyyy");
 		String time = new Time().format("HH:mm:ss");
 		String user = Ivy.session().getSessionUserName();
-		if(document.getCreationDate()==null || document.getCreationDate().trim().equals(""))
-		{
-			document.setCreationDate(date);
-		}
-		if(document.getCreationTime()==null || document.getCreationTime().trim().equals(""))
-		{
-			document.setCreationTime(time);
-		}
-		if(document.getModificationDate()==null || document.getModificationDate().trim().equals(""))
-		{
-			document.setModificationDate(date);
-		}
-		if(document.getModificationTime()==null || document.getModificationTime().trim().equals(""))
-		{
-			document.setModificationTime(time);
-		}
-		if(document.getUserID()==null || document.getUserID().trim().equals(""))
-		{
+		if(document.getUserID()==null || document.getUserID().trim().equals("")){
 			document.setUserID(user);
 		}
-		if(document.getModificationUserID()==null || document.getModificationUserID().trim().equals(""))
-		{
+		if(document.getCreationDate()==null || document.getCreationDate().trim().equals("")){
+			document.setCreationDate(date);
+		}
+		if(document.getCreationTime()==null || document.getCreationTime().trim().equals("")){
+			document.setCreationTime(time);
+		}
+		if(document.getDescription()==null || document.getDescription().trim().equals("")){
+			document.setDescription("");
+		}
+		if(updateModificationMetaInfos || document.getModificationUserID()==null || document.getModificationUserID().trim().equals("")){
 			document.setModificationUserID(user);
 		}
-		if(document.getDescription()==null || document.getDescription().trim().equals(""))
-		{
-			document.setDescription("");
+		if(updateModificationMetaInfos || document.getModificationDate()==null || document.getModificationDate().trim().equals("")){
+			document.setModificationDate(date);
+		}
+		if(updateModificationMetaInfos || document.getModificationTime()==null || document.getModificationTime().trim().equals("")){
+			document.setModificationTime(time);
 		}
 
 		fileDestinationPath=PathUtil.formatPath(fileDestinationPath);
 		String docPath = PathUtil.formatPathForDirectory(FileHandler.getFileDirectoryPath(new java.io.File(document.getPath())))+document.getFilename();
 		//Ivy.log().info(fileDestinationPath +" vs "+docPath );
-		if(!docPath.equalsIgnoreCase(fileDestinationPath))
-		{//here we move the file
+		if(!docPath.equalsIgnoreCase(fileDestinationPath)){//here we move the file
 			document.setPath(fileDestinationPath+document.getFilename());
 			message = FileHandler.moveFile(new java.io.File(docPath), fileDestinationPath, false);
 			//Ivy.log().info("Message after moving : "+message.getText());
 		}
-		if(message.getType()==FileHandler.SUCCESS_MESSAGE)
-		{
+		if(message.getType()==FileHandler.SUCCESS_MESSAGE){
 			int fileId = 0;
 			try{
 				fileId = Integer.parseInt(document.getFileID());
 			}catch(Exception ex){
 				fileId = 0;
 			}
-			if(fileId==0)
-			{
+			if(fileId==0){
 				this.insertOneDocument(document);
 			}else{
 				List<KeyValuePair> _KVP = List.create(KeyValuePair.class);
@@ -2273,17 +2273,15 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 				List<String> _conditions = List.create(String.class);
 				String con = "FileId = "+fileId;
 				_conditions.add(con);
-
 				this.updateDocuments(_KVP, _conditions);
 				message.setDocumentOnServer(document);
 				message.setDocumentOnServers(List.create(DocumentOnServer.class));
 				message.getDocumentOnServers().add(document);
-
-
 			}
 		}
 		return message;
 	}
+
 
 	@Override
 	public ReturnedMessage setFileDescription(DocumentOnServer document,

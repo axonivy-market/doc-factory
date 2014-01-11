@@ -127,22 +127,23 @@ public class DesktopHandler<T extends IRichDialogPanel> extends Observable{
 	}
     
     /**
-     * Open a File at Client side in read only mode
+     * Open a File at Client side 
      * @param _file the java.io.File to open
      */
     public void openFile(File _file){
     	this.javaDesktop.openFile(_file);
     }
     
-    /**
-     * Open a File at Client side in read only mode
-     * @param _file the java.io.File to open
-     */
+   /**
+    * Open a file at client Side with the possibility to set it read-only
+    * @param _file the java.io.File to open.
+    * @param setReadOnly boolean. If true the file will be opened in read-only mode.<br> Note: the javaDesktop ULC Extension must offer this new Method.
+    * If not, the file will be opened with the old openFile method.
+    */
     public void openFile(File _file, boolean setReadOnly){
     	Object[] o = {_file, setReadOnly};
     	if(UlcExtentionCheckUtil.invokeMethod(this.javaDesktop, "openFile", o, java.io.File.class, boolean.class)==null){
     		this.javaDesktop.openFile(_file);
-    		//this.javaDesktop.openFile(_file, setReadOnly);
     	}
     }
     

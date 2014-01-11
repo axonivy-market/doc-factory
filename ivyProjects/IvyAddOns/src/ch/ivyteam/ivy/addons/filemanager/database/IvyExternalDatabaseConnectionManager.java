@@ -89,4 +89,9 @@ public class IvyExternalDatabaseConnectionManager implements
 		return this.database;
 	}
 
+	@Override
+	public Class<Connection> getConnectionType() throws Exception {
+		return Connection.class;
+	}
+
 }

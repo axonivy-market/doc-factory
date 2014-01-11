@@ -3,16 +3,17 @@
  */
 package ch.ivyteam.ivy.addons.filemanager.configuration;
 
-
-import java.util.HashSet;
+import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+
+import org.apache.commons.beanutils.BeanUtils;
 
 import ch.ivyteam.ivy.addons.filemanager.database.AbstractFileManagementHandler;
 import ch.ivyteam.ivy.addons.filemanager.database.fileaction.FileActionConfiguration;
 import ch.ivyteam.ivy.addons.filemanager.database.security.DocumentFilter;
-import ch.ivyteam.ivy.addons.filemanager.database.security.IvyRoleHelper;
 import ch.ivyteam.ivy.addons.filemanager.database.security.SecurityHandler;
-import ch.ivyteam.ivy.addons.filemanager.listener.FileActionListener;
+import ch.ivyteam.ivy.addons.filemanager.listener.AbstractFileActionListener;
 import ch.ivyteam.ivy.addons.filemanager.util.PathUtil;
 import ch.ivyteam.ivy.environment.Ivy;
 
@@ -24,12 +25,11 @@ import ch.ivyteam.ivy.environment.Ivy;
  * For example, the FileManager RDC uses the FileManagerConfigurationController that extends this BasicConfigurationController.
  *
  */
-public class BasicConfigurationController{
+public class BasicConfigurationController implements Serializable{
 
 	/**
 	 * The auto generated serial Version ID
 	 */
-	@SuppressWarnings("unused")
 	private static final long serialVersionUID = 6999167937669289180L;
 
 	/**
@@ -37,18 +37,18 @@ public class BasicConfigurationController{
 	 * Per default, the value is set to false.<br/>
 	 * If this is true, then the storeFilesInDB, activateSecurity and activateFileVersioning are false. 
 	 */
-	private boolean useIvySystemDB = false;
+	private boolean useIvySystemDB = Ivy.var().get("xivy_addons_fileManager_activateUseOfIvySystemDatabase").trim().equals("1");
 
 	/**
 	 * If true, the files content is stored as BLOB into the Table which name is set in filesContentTableName.<br />
 	 * If true, then useIvySystemDB is false,<br />
 	 * If false, then activateSecurity and activateFileVersioning are false.
 	 */
-	private boolean storeFilesInDB = false;
+	private boolean storeFilesInDB = Ivy.var().get("xivy_addons_fileManager_activateFileContentInDatabase").trim().equals("1");;
 	/**
 	 * If true the security management on the directories will be activated. storeFilesInDB must be true.
 	 */
-	private boolean activateSecurity = false;
+	private boolean activateSecurity = Ivy.var().get("xivy_addons_fileManager_activateSecurity").trim().equals("1");
 	
 	/**
 	 * The security Handler responsible for computing the FileManager rights
@@ -58,7 +58,7 @@ public class BasicConfigurationController{
 	/**
 	 * If true the File version feature will be activated. storeFilesInDB must be true.
 	 */
-	private boolean activateFileVersioning = false;
+	private boolean activateFileVersioning = Ivy.var().get("xivy_addons_fileManager_activateFileVersioning").trim().equals("1");
 	/**
 	 * If true the activateFileVersioning flag is automatically set to true.<br>  storeFilesInDB must be true.<br>
 	 * This flag is used to activate some extended functionalities in the file version feature.
@@ -176,9 +176,11 @@ public class BasicConfigurationController{
 	 */
 	private AbstractFileManagementHandler fileManagementHandler=null;
 	
-	private List<FileActionListener> fileActionListeners;
+	private List<AbstractFileActionListener> fileActionListeners;
 	
 	private DocumentFilter documentFilter=null;
+	
+	private String ThumbnailTableName = Ivy.var().get("xivy_addons_fileManager_thumbnailTableName").trim();
 
 	/**
 	 * 
@@ -208,7 +210,7 @@ public class BasicConfigurationController{
 	 * @return the useIvySystemDB
 	 */
 	public boolean isUseIvySystemDB() {
-		return useIvySystemDB;
+		return !this.storeFilesInDB && useIvySystemDB;
 	}
 
 	/**
@@ -613,6 +615,22 @@ public class BasicConfigurationController{
 	}
 
 	/**
+	 * 
+	 * @return
+	 */
+	public String getThumbnailTableName() {
+		return ThumbnailTableName;
+	}
+
+	/**
+	 * 
+	 * @param thumbnailTableName
+	 */
+	public void setThumbnailTableName(String thumbnailTableName) {
+		ThumbnailTableName = thumbnailTableName;
+	}
+
+	/**
 	 * Set the rootPath attribute. The root path is considered to be the root directory of the file manager.<br>
 	 * This path will be automatically formatted so it contains only "/" as separator and ends always with "/"
 	 * @param _rootPath the rootPath to set
@@ -752,18 +770,34 @@ public class BasicConfigurationController{
 	/**
 	 * @return the fileActionListeners
 	 */
-	public List<FileActionListener> getFileActionListeners() {
+	public List<AbstractFileActionListener> getFileActionListeners() {
 		return this.fileActionListeners;
 	}
 
 	/**
 	 * @param fileActionListeners the fileActionListeners to set
 	 */
-	public void setFileActionListeners(List<FileActionListener> fileActionListeners) {
+	public void setFileActionListeners(List<AbstractFileActionListener> fileActionListeners) {
 		this.fileActionListeners = fileActionListeners;
 	}
 	
-	
+	/**
+	 * Returns a new BasicConfigurationController object with the same properties as this one.
+	 * @throws InvocationTargetException 
+	 * @throws IllegalAccessException 
+	 */
+	public BasicConfigurationController cloneConfig() throws IllegalAccessException, InvocationTargetException{
+		BasicConfigurationController conf = new BasicConfigurationController();
+		BeanUtils.copyProperties(conf, this);
+		FileActionConfiguration fac = this.getFileActionHistoryConfiguration();
+		if(fac!=null) {
+			FileActionConfiguration facClone = new FileActionConfiguration();
+			BeanUtils.copyProperties(facClone, fac);
+			conf.setFileActionHistoryConfiguration(facClone);
+		}
+		
+		return conf;
+	}
 
 
 }

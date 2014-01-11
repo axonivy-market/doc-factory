@@ -1,5 +1,5 @@
 [Ivy]
-[>Created: Tue Oct 01 21:28:47 EDT 2013]
+[>Created: Sun Nov 17 22:38:40 EST 2013]
 132D1B65FEDF11D7 3.17 #module
 >Proto >Proto Collection #zClass
 Ds0 DirectorySecurityManagerProcess Big #zClass
@@ -405,7 +405,7 @@ Ds0 f84 disableUIEvents false #txt
 Ds0 f84 inParameterDecl 'ch.ivyteam.ivy.richdialog.exec.RdMethodCallEvent methodEvent = event as ch.ivyteam.ivy.richdialog.exec.RdMethodCallEvent;
 <ch.ivyteam.ivy.addons.filemanager.FolderOnServer selectedFolderOnServer> param = methodEvent.getInputArguments();
 ' #txt
-Ds0 f84 inParameterMapAction 'out.folderOnServer=param.selectedFolderOnServer;
+Ds0 f84 inParameterMapAction 'out.folderOnServer=param.selectedFolderOnServer.clone();
 ' #txt
 Ds0 f84 outParameterDecl '<> result;
 ' #txt
@@ -696,7 +696,8 @@ Ds0 f97 actionDecl 'ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.D
 ' #txt
 Ds0 f97 actionTable 'out=in;
 ' #txt
-Ds0 f97 actionCode 'out.folderOnServer = in.securityController.saveFolderOnServer(in.folderOnServer);
+Ds0 f97 actionCode '//ivy.log.info("We will save the following folder: {0}",in.folderOnServer);
+out.folderOnServer = in.securityController.saveFolderOnServer(in.folderOnServer);
 ' #txt
 Ds0 f97 type ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData #txt
 Ds0 f97 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -727,11 +728,6 @@ Ds0 f102 actionCode 'if(panel.adminCheckBox.selected) {
 	panel.cudCheckBox.enabled=false;
 	panel.cddCheckBox.enabled=false;
 	panel.cudCheckBox.enabled=false;
-	panel.crdCheckBox.enabled=false;
-	panel.ccdCheckBox.enabled=false;
-	panel.ctdCheckBox.enabled=false;
-	panel.ccfCheckBox.enabled=false;
-	panel.cufCheckBox.enabled=false;
 	panel.cwfCheckBox.enabled=false;
 	panel.cdfCheckBox.enabled=false;
 	
@@ -739,16 +735,23 @@ Ds0 f102 actionCode 'if(panel.adminCheckBox.selected) {
 	panel.cudCheckBox.selected=true;
 	panel.cddCheckBox.selected=true;
 	panel.cudCheckBox.selected=true;
-	panel.crdCheckBox.selected=true;
-	panel.ccdCheckBox.selected=true;
-	panel.ctdCheckBox.selected=true;
-	panel.ccfCheckBox.selected=true;
-	panel.cufCheckBox.selected=true;
 	panel.cwfCheckBox.selected=true;
 	panel.cdfCheckBox.selected=true;
 	
+	if(in.version>1) {
+		panel.crdCheckBox.enabled=false;
+		panel.ccdCheckBox.enabled=false;
+		panel.ctdCheckBox.enabled=false;
+		panel.ccfCheckBox.enabled=false;
+		panel.cufCheckBox.enabled=false;
+		
+		panel.crdCheckBox.selected=true;
+		panel.ccdCheckBox.selected=true;
+		panel.ctdCheckBox.selected=true;
+		panel.ccfCheckBox.selected=true;
+		panel.cufCheckBox.selected=true;
+	}
 } else {
-
 	panel.codCheckBox.enabled=true;
 	panel.cudCheckBox.enabled=true;
 	panel.cddCheckBox.enabled=true;
@@ -842,33 +845,12 @@ if(panel.codCheckBox.selected){
 	}else{
 		in.folderOnServer.cmrd.remove(rolename);
 	}
-	if(panel.ctdCheckBox.selected){
-		if(!in.folderOnServer.ctd.contains(rolename)){
-			in.folderOnServer.ctd.add(rolename);
-		}
-	}else{
-		in.folderOnServer.ctd.remove(rolename);
-	}
-	if(panel.ccdCheckBox.selected){
-		if(!in.folderOnServer.ccd.contains(rolename)){
-			in.folderOnServer.ccd.add(rolename);
-		}
-	}else{
-		in.folderOnServer.ccd.remove(rolename);
-	}
 	if(panel.cudCheckBox.selected){
 		if(!in.folderOnServer.cud.contains(rolename)){
 			in.folderOnServer.cud.add(rolename);
 		}
 	}else{
 		in.folderOnServer.cud.remove(rolename);
-	}
-	if(panel.crdCheckBox.selected){
-		if(!in.folderOnServer.crd.contains(rolename)){
-			in.folderOnServer.crd.add(rolename);
-		}
-	}else{
-		in.folderOnServer.crd.remove(rolename);
 	}
 	if(panel.cddCheckBox.selected){
 		if(!in.folderOnServer.cdd.contains(rolename)){
@@ -877,13 +859,6 @@ if(panel.codCheckBox.selected){
 	}else{
 		in.folderOnServer.cdd.remove(rolename);
 	}
-	if(panel.cufCheckBox.selected){
-		if(!in.folderOnServer.cuf.contains(rolename)){
-			in.folderOnServer.cuf.add(rolename);
-		}
-	}else{
-		in.folderOnServer.cuf.remove(rolename);
-	}
 	if(panel.cwfCheckBox.selected){
 		if(!in.folderOnServer.cwf.contains(rolename)){
 			in.folderOnServer.cwf.add(rolename);
@@ -891,19 +866,49 @@ if(panel.codCheckBox.selected){
 	}else{
 		in.folderOnServer.cwf.remove(rolename);
 	}
-	if(panel.ccfCheckBox.selected){
-		if(!in.folderOnServer.ccf.contains(rolename)){
-			in.folderOnServer.ccf.add(rolename);
-		}
-	}else{
-		in.folderOnServer.ccf.remove(rolename);
-	}
 	if(panel.cdfCheckBox.selected){
 		if(!in.folderOnServer.cdf.contains(rolename)){
 			in.folderOnServer.cdf.add(rolename);
 		}
 	}else{
 		in.folderOnServer.cdf.remove(rolename);
+	}
+	if(in.version>1){
+		if(panel.ctdCheckBox.selected){
+			if(!in.folderOnServer.ctd.contains(rolename)){
+				in.folderOnServer.ctd.add(rolename);
+			}
+		}else{
+			in.folderOnServer.ctd.remove(rolename);
+		}
+		if(panel.crdCheckBox.selected){
+			if(!in.folderOnServer.crd.contains(rolename)){
+				in.folderOnServer.crd.add(rolename);
+			}
+		}else{
+			in.folderOnServer.crd.remove(rolename);
+		}
+		if(panel.cufCheckBox.selected){
+			if(!in.folderOnServer.cuf.contains(rolename)){
+				in.folderOnServer.cuf.add(rolename);
+			}
+		}else{
+			in.folderOnServer.cuf.remove(rolename);
+		}
+		if(panel.ccfCheckBox.selected){
+			if(!in.folderOnServer.ccf.contains(rolename)){
+				in.folderOnServer.ccf.add(rolename);
+			}
+		}else{
+			in.folderOnServer.ccf.remove(rolename);
+		}
+		if(panel.ccdCheckBox.selected){
+			if(!in.folderOnServer.ccd.contains(rolename)){
+				in.folderOnServer.ccd.add(rolename);
+			}
+		}else{
+			in.folderOnServer.ccd.remove(rolename);
+		}
 	}
 }else{
 	in.folderOnServer.cmrd.remove(rolename);
@@ -917,7 +922,8 @@ if(panel.codCheckBox.selected){
 	in.folderOnServer.cwf.remove(rolename);
 	in.folderOnServer.ccf.remove(rolename);
 	in.folderOnServer.cdf.remove(rolename);
-}' #txt
+}
+' #txt
 Ds0 f100 type ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData #txt
 Ds0 f100 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>

@@ -218,8 +218,6 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel>
 		formatServerPath();
 
 		areFilesStoredInDB=_areFilesStoredInDb;
-		timer=new ULCPollingTimer(100,null);
-		timer.setRepeats(false);
 		try{
 			this.maxSize = Integer.parseInt(Ivy.var().get("xivy_addons_fileManager_max_upload_size"));
 		}catch(Exception ex){
@@ -308,7 +306,6 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel>
 	{
 		if(_maxSize>0)
 			this.maxSize=_maxSize*1024;
-
 		this.returnedMessage = new ReturnedMessage();
 		this.returnedMessage.setType(FileHandler.INFORMATION_MESSAGE);
 		this.returnedMessage.setText("");
@@ -321,10 +318,10 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel>
 		fcConfig.setFileSelectionMode(FileChooserConfig.FILES_ONLY);
 
 		if(multiFile){
-			fcConfig.setDialogTitle(MAX_MULTIPLEFILESIZE_ALLOWED+" "+_maxSize+" Kb.");
+			fcConfig.setDialogTitle(MAX_MULTIPLEFILESIZE_ALLOWED+" "+this.getMaxUploadSize());
 		}
 		else{
-			fcConfig.setDialogTitle(MAX_SINGLEFILESIZE_ALLOWED+" "+_maxSize+" Kb.");
+			fcConfig.setDialogTitle(MAX_SINGLEFILESIZE_ALLOWED+" "+this.getMaxUploadSize());
 		}
 		fcConfig.setMultiSelectionEnabled(multiFile);        
 		fcConfig.setApproveButtonText(UPLOAD_BUTTON);
@@ -633,8 +630,7 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel>
 								//Ivy.log().info("Writing the File: "+serverFilePath.toString());
 							}
 							server.close();    			
-							try
-							{
+							try {
 								List<java.io.File> lFiles = List.create(java.io.File.class);
 								lFiles.add(serverFile);			
 								if(areFilesStoredInDB){
@@ -895,7 +891,7 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel>
 		FileChooserConfig fcConfig = new FileChooserConfig();
 		if(_maxSize>0)
 			this.maxSize=_maxSize*1024;
-		fcConfig.setDialogTitle(MAX_MULTIPLEFILESIZE_ALLOWED+" "+_maxSize+" Kb.");
+		fcConfig.setDialogTitle(MAX_MULTIPLEFILESIZE_ALLOWED+" "+this.getMaxUploadSize());
 
 		fcConfig.setApproveButtonText(UPLOAD_BUTTON); 
 		fcConfig.setFileSelectionMode(FileChooserConfig.FILES_ONLY);
@@ -1104,7 +1100,7 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel>
 					onFailureCall(reason, new java.io.File(filePath).getName());
 					if(files.size()>0){
 						//upload the next files
-						Ivy.log().debug("Calling recursively uploadPreparedFiles from onFailure {0}",files);
+						Ivy.log().error("Calling recursively uploadPreparedFiles from onFailure {0}",files);
 						String s = PREPARING_NEXT_FILE_UPLOAD.concat(" ").concat(files.get(0).getName());
 						RDCallbackMethodHandler.callRDMethod(ulcPane, progressMethodName, new Object[] { s });
 						uploadPreparedFiles(files, _maxSize, false);
@@ -1122,7 +1118,7 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel>
 
 				public void onSuccess(InputStream ins[], String filePaths[], String fileNames[]){
 					try{
-						Ivy.log().debug("Uploading begin preparedFile: {0}", filePaths[0]);
+						Ivy.log().info("Uploading begin preparedFile: {0}", filePaths[0]);
 						final java.io.File fileToUpload = new java.io.File(filePath);
 						final String fileName= fileToUpload.getName();
 						final BufferedInputStream preparedFile = new BufferedInputStream(ins[0]);
@@ -1183,7 +1179,7 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel>
 									//RDCallbackMethodHandler.callRDMethod(ulcPane, progressMethodName, new Object[] { s });
 									if(files.size()>0){
 										//upload the next files
-										Ivy.log().debug("Calling recursively uploadPreparedFiles from onSuccess {0}",files);
+										Ivy.log().info("Calling recursively uploadPreparedFiles from onSuccess {0}",files);
 										String s = PREPARING_NEXT_FILE_UPLOAD.concat(" ").concat(files.get(0).getName());
 										RDCallbackMethodHandler.callRDMethod(ulcPane, progressMethodName, new Object[] { s });
 										uploadPreparedFiles(files, _maxSize, false);
@@ -1566,13 +1562,13 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel>
 	 *For internal use only
 	 */
 	private void cleanTimer(){
-		if(timer == null)
-			timer=new ULCPollingTimer(100,null);
-		IActionListener [] ia = timer.getActionListeners();
+		if(this.timer == null)
+			this.timer=new ULCPollingTimer(100,null);
+		IActionListener [] ia = this.timer.getActionListeners();
 		for(IActionListener i: ia){
-			timer.removeActionListener(i);
+			this.timer.removeActionListener(i);
 		}
-		//timer.setDelay(100);
+		this.timer.setRepeats(false);
 	}
 
 	/**
@@ -1720,7 +1716,7 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel>
 	 */
 	private void callPanelUploadSuccessMethod(List<java.io.File> l){
 		if(ulcPane != null && this.uploadSuccessMethodName!=null && this.uploadSuccessMethodName.trim().length()>0 && l!=null){
-			Ivy.log().debug("callPanelUploadSuccessMethod with List<java.io.File> {0}",l);
+			Ivy.log().info("callPanelUploadSuccessMethod with List<java.io.File> {0}",l);
 			RDCallbackMethodHandler.callRDMethod(ulcPane, uploadSuccessMethodName, new Object[] { l });
 		}
 	}
