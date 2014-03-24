@@ -329,7 +329,7 @@ public class XMLFileStartEventBean implements IProcessStartEventBean
                   if (copy.exists())
                   {
                     File errorInformationFile = new File(errorFolder, file.getName() + ".log");
-                    FileUtils.writeStringToFile(errorInformationFile, ex.getMessage(), null);
+                    FileUtils.writeStringToFile(errorInformationFile, ex.getMessage());
                     file.delete();
                   }
                   else
