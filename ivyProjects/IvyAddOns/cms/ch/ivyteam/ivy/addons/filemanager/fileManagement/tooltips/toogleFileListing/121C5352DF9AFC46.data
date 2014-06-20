@@ -1,5 +1,5 @@
 <P>
-<B>Switch File listing way</B><BR>
+<B>Switch file listing way</B><BR>
 Change the way the files are listed:<BR>
 Recursively (list all the files from the selected directory and from its sub-directories),<BR>
 or directly (list only the files from the selected directory).

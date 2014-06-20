@@ -75,7 +75,7 @@ public class FileManagementHandlersFactory {
 	/**
 	 * Factory for getting a FileSecurityHandler corresponding to the BasicConfigurationController.<br>
 	 * If the config.isActivateSecurity() returns false, then this method returns null.
-	 * @param config a BasicConfigurationController containing the needed configuration for instantiating a FileTagsController.
+	 * @param config a BasicConfigurationController containing the needed configuration for instantiating a FileSecurityHandler.
 	 * @return
 	 * @throws Exception
 	 */
@@ -168,16 +168,6 @@ public class FileManagementHandlersFactory {
 	}
 	
 	/**
-	 * Returns a new AbstractThumbnailHandler instance (responsible for managing the thumbnails persistence in the database).
-	 * @param config a BasicConfigurationController containing all the necessary infos for instantiating the new AbstractThumbnailHandler.
-	 * @return
-	 * @throws Exception 
-	 */
-	public static AbstractThumbnailHandler getThumbnailHandler(BasicConfigurationController config) throws Exception {
-		return new ThumbnailHandler(config);
-	}
-	
-	/**
 	 * <b>This is not a Public API method</b><br>This method may change in the future, use at own risk.<br>
 	 * 
 	 * If the activateSecurity flag from the configuration parameter is true, this method returns an appropriate instance of an AbstractFileSecurityHandler object.
@@ -194,6 +184,16 @@ public class FileManagementHandlersFactory {
 		}else {
 			return null;
 		}
+	}
+	
+	/**
+	 * Returns a new AbstractThumbnailHandler instance (responsible for managing the thumbnails persistence in the database).
+	 * @param config a BasicConfigurationController containing all the necessary infos for instantiating the new AbstractThumbnailHandler.
+	 * @return
+	 * @throws Exception 
+	 */
+	public static AbstractThumbnailHandler getThumbnailHandler(BasicConfigurationController config) throws Exception {
+		return new ThumbnailHandler(config);
 	}
 	
 	private static void checkConfiguration(BasicConfigurationController config) 

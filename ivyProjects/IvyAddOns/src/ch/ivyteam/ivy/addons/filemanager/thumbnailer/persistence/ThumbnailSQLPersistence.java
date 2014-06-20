@@ -386,6 +386,7 @@ public class ThumbnailSQLPersistence implements IThumbnailPersistence {
 		}
 		String query = ThumbnailSQLQueries.SELECT_THUMBNAILS_LIST_BY_FILE_IDS.replace(ThumbnailSQLQueries.THUMBNAIL_TABLENAMESPACE_PLACEHOLDER, 
 				this.tableNameSpace).replace(ThumbnailSQLQueries.FILE_IDS_PLACEHOLDER, ids);
+		Ivy.log().info(query);
 		PreparedStatement stmt=null;
 		try {
 			stmt = this.connectionManager.getConnection().prepareStatement(query);

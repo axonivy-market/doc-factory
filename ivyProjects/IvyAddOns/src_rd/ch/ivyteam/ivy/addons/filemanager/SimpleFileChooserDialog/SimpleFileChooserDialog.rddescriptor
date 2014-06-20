@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <richDialogDescriptor>
     <description>This RDCcontains a FileListChooserPane and returns the selected java.io.File. It contains also a DesktopHandler to be able to open the selected File. The user can then preview the File that he is about to select.</description>
+    <autoScreenshot>true</autoScreenshot>
     <method>
         <name>_uploadError</name>
         <description>callback Method: called when an error in an upload occures</description>

@@ -29,14 +29,14 @@ public class ServiceLoaderPluginFilter implements FileFilter {
 	 * Constructor with optional Parameters to be able to filter the files with some convention.
 	 * @param optionalAcceptedExtensions set of extensions (without dot ".") that will be accepted. 
 	 * Null or empty set means that no filtering will be done with the extension.
-	 * @param optionalPathConvention String that should be contained in the file path. 
-	 * Null or empty String means that no filtering will be done with the file path.
+	 * @param optionalNameConvention String that should be contained in the file name. 
+	 * Null or empty String means that no filtering will be done with the filename.
 	 */
-	public ServiceLoaderPluginFilter(Set<String> optionalAcceptedExtensions, String optionalPathConvention ) {
+	public ServiceLoaderPluginFilter(Set<String> optionalAcceptedExtensions, String optionalNameConvention ) {
 		if(optionalAcceptedExtensions!=null)
 			this.acceptedExtentions = optionalAcceptedExtensions;
-		if(optionalPathConvention!=null)
-			this.shouldContain = optionalPathConvention.replaceAll("\\\\", "/");
+		if(optionalNameConvention!=null)
+			this.shouldContain = optionalNameConvention.replaceAll("\\\\", "/");
 	}
 	
 	/**

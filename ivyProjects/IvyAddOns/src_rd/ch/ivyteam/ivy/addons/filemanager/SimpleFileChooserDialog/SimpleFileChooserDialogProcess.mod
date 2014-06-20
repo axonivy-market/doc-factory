@@ -1,5 +1,5 @@
 [Ivy]
-[>Created: Mon Oct 07 22:26:10 EDT 2013]
+[>Created: Wed Nov 13 09:18:45 EST 2013]
 125FE384C5BE80F0 3.17 #module
 >Proto >Proto Collection #zClass
 Fs0 FileChooserDialogProcess Big #zClass
@@ -199,8 +199,10 @@ Fs0 f9 actionDecl 'ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.Sim
 ' #txt
 Fs0 f9 actionTable 'out=in;
 ' #txt
-Fs0 f9 actionCode 'out.fileChoosed=new java.io.File("");
-' #txt
+Fs0 f9 actionCode 'import ch.ivyteam.ivy.addons.filemanager.DocumentOnServer;
+
+out.fileChoosed=new java.io.File("");
+out.selectedDocumentOnServer =  new DocumentOnServer();' #txt
 Fs0 f9 type ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog.SimpleFileChooserDialogData #txt
 Fs0 f9 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>

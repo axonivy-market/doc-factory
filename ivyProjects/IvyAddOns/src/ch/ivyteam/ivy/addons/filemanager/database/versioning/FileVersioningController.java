@@ -204,7 +204,13 @@ public class FileVersioningController extends AbstractFileVersioningController {
 			stmt.setLong(1, fileId);
 			recordList = executeStmt(stmt);
 		} finally {
-			DatabaseUtil.close(stmt);
+			if(stmt!=null) {
+				try {
+					stmt.close();
+				} catch( SQLException ex) {
+					Ivy.log().error("PreparedStatement cannot be closed in FileVersions.",ex);
+				}
+			}
 		}
 		if (recordList != null) {
 			for (Record rec : recordList) {
@@ -293,7 +299,13 @@ public class FileVersioningController extends AbstractFileVersioningController {
 				stmt.setLong(1, fileId);
 				nvn += executeStmt(stmt).size();
 			} finally {
-				DatabaseUtil.close(stmt);
+				if(stmt!=null) {
+					try {
+						stmt.close();
+					} catch( SQLException ex) {
+						Ivy.log().error("PreparedStatement cannot be closed in FileVersions.",ex);
+					}
+				}
 			}
 		} finally {
 			if (connection != null) {
@@ -347,12 +359,13 @@ public class FileVersioningController extends AbstractFileVersioningController {
 				+ " SET versionnumber=?, creationdate = ?, creationtime = ?, "
 				+ "creationuserid = ?, modificationdate = ?, modificationtime = ?, modificationuserid = ?  WHERE fileid=?";
 		IExternalDatabaseRuntimeConnection connection = null;
-		Ivy.log().info("CREATING VERSION for "+doc.getFileID());
+		Ivy.log().debug("CREATING VERSION for "+doc.getFileID());
 		try {
 			connection = getDatabase().getAndLockConnection();
 			Connection jdbcConnection = connection.getDatabaseConnection();
 
 			PreparedStatement stmt = null;
+			ResultSet rs = null;
 			try {
 				boolean flag = true;
 				// Insert first the new version
@@ -372,7 +385,7 @@ public class FileVersioningController extends AbstractFileVersioningController {
 				stmt.setString(5, doc.getUserID());
 				stmt.setString(6, doc.getFilename());
 				stmt.executeUpdate();
-				ResultSet rs = null;
+				
 				try {
 					rs = stmt.getGeneratedKeys();
 					if (rs != null && rs.next()) {
@@ -383,13 +396,18 @@ public class FileVersioningController extends AbstractFileVersioningController {
 											// PreparedStatement.RETURN_GENERATED_KEYS
 					// ignore
 				}
+				try {
+					stmt.close();
+				} catch( SQLException ex) {
+					Ivy.log().error("PreparedStatement cannot be closed in FileVersions.",ex);
+				}
 
 				if (!flag || vid <= 0) {// The JDBC Driver doesn't accept the
 										// PreparedStatement.RETURN_GENERATED_KEYS
 					// we have to get the inserted Id manually....
 					vid = this.getFileVersionWithParentFileIdAndVersionNumber(fileId, vn).getId();
 				}
-				Ivy.log().info("File Version id created "+vid);
+				Ivy.log().debug("File Version id created "+vid);
 				// insert the new version content
 				flag = true;
 				try {
@@ -415,6 +433,11 @@ public class FileVersioningController extends AbstractFileVersioningController {
 				if (error) {
 					flag = true;
 					try {
+						stmt.close();
+					} catch( SQLException ex) {
+						Ivy.log().error("PreparedStatement cannot be closed in FileVersions.",ex);
+					}
+					try {
 						stmt = jdbcConnection.prepareStatement(q2bis,PreparedStatement.RETURN_GENERATED_KEYS);
 					} catch (SQLFeatureNotSupportedException fex) {
 						flag = false;
@@ -427,7 +450,7 @@ public class FileVersioningController extends AbstractFileVersioningController {
 					stmt.setLong(2, fileId);
 					stmt.executeUpdate();
 				}
-				Ivy.log().info("File Version created "+vid);
+				Ivy.log().debug("File Version created "+vid);
 				rs = null;
 				try {
 					rs = stmt.getGeneratedKeys();
@@ -445,21 +468,29 @@ public class FileVersioningController extends AbstractFileVersioningController {
 					// we have to get the inserted Id manually....
 					vcid = this.getLastInsertedFileVersionContent(vid);
 				}
-
+				try {
+					stmt.close();
+				} catch( SQLException ex) {
+					Ivy.log().error("PreparedStatement cannot be closed in FileVersions.",ex);
+				}
 				// update the new file version "file version content Id" field
 				stmt = jdbcConnection.prepareStatement(q3);
 				stmt.setLong(1, vcid);
 				stmt.setLong(2, vid);
 				stmt.executeUpdate();
-
+				try {
+					stmt.close();
+				} catch( SQLException ex) {
+					Ivy.log().error("PreparedStatement cannot be closed in FileVersions.",ex);
+				}
 				// update the version number in the main file table
 				stmt = jdbcConnection.prepareStatement(q4);
 				
 				vn += 1;// increment the new version number of the main file
 				Date d = new Date();
 				Time t = new Time();
-				Ivy.log().info(q4);
-				Ivy.log().info("CREATING VERSION for "+fileId +" New version number is "+vn);
+				Ivy.log().debug(q4);
+				Ivy.log().debug("CREATING VERSION for "+fileId +" New version number is "+vn);
 				stmt.setInt(1, vn);
 				stmt.setString(2, (filemanagerItemMetaData==null || filemanagerItemMetaData.getCreationDate()==null)?
 						d.format("dd.MM.yyyy"):filemanagerItemMetaData.getCreationDate().format("dd.MM.yyyy"));
@@ -485,8 +516,18 @@ public class FileVersioningController extends AbstractFileVersioningController {
 				fv.setUser((filemanagerItemMetaData==null || filemanagerItemMetaData.getCreationUserId().isEmpty())?
 						Ivy.session().getSessionUserName():filemanagerItemMetaData.getCreationUserId());
 				fv.setVersionNumber(vn);
+				rs.close();
 			} finally {
-				DatabaseUtil.close(stmt);
+				if(rs!=null) {
+					DatabaseUtil.close(rs);
+				}
+				if(stmt!=null) {
+					try {
+						stmt.close();
+					} catch( SQLException ex) {
+						Ivy.log().error("PreparedStatement cannot be closed in FileVersions.",ex);
+					}
+				}
 			}
 		} finally {
 			if (connection != null) {
@@ -518,7 +559,13 @@ public class FileVersioningController extends AbstractFileVersioningController {
 				stmt.setLong(1, fileId);
 				recordList = executeStmt(stmt);
 			} finally {
-				DatabaseUtil.close(stmt);
+				if(stmt!=null) {
+					try {
+						stmt.close();
+					} catch( SQLException ex) {
+						Ivy.log().error("PreparedStatement cannot be closed in FileVersions.",ex);
+					}
+				}
 			}
 		} finally {
 			if (connection != null) {
@@ -604,7 +651,13 @@ public class FileVersioningController extends AbstractFileVersioningController {
 					fv.setUser(rec.getField("cuser").toString());
 				}
 			} finally {
-				DatabaseUtil.close(stmt);
+				if(stmt!=null) {
+					try {
+						stmt.close();
+					} catch( SQLException ex) {
+						Ivy.log().error("PreparedStatement cannot be closed in FileVersions.",ex);
+					}
+				}
 			}
 		} finally {
 			if (connection != null) {
@@ -659,11 +712,12 @@ public class FileVersioningController extends AbstractFileVersioningController {
 			connection = getDatabase().getAndLockConnection();
 			Connection jdbcConnection = connection.getDatabaseConnection();
 			PreparedStatement stmt = null;
+			ResultSet rst = null;
 			String path = PathUtil.formathPathForDirectoryWithoutFirstSeparatorWithEndSeparator(dir.getPath());
 			try {
 				stmt = jdbcConnection.prepareStatement(q1);
 				stmt.setLong(1, parentFileId);
-				ResultSet rst = stmt.executeQuery();
+				rst = stmt.executeQuery();
 				while (rst.next()) {
 					FileVersion fv = new FileVersion();
 					fv.setId(rst.getLong("versionid"));
@@ -713,7 +767,12 @@ public class FileVersioningController extends AbstractFileVersioningController {
 					}
 					versions.add(fv);
 				}
-
+				try {
+					rst.close();
+					stmt.close();
+				} catch( SQLException ex) {
+					Ivy.log().error("PreparedStatement cannot be closed in FileVersions.",ex);
+				}
 				stmt = jdbcConnection.prepareStatement(q2);
 				stmt.setLong(1, parentFileId);
 				rst = stmt.executeQuery();
@@ -766,8 +825,18 @@ public class FileVersioningController extends AbstractFileVersioningController {
 					}
 					versions.add(fv);
 				}
+				rst.close();
 			} finally {
-				DatabaseUtil.close(stmt);
+				if(rst!=null) {
+					DatabaseUtil.close(rst);
+				}
+				if(stmt!=null) {
+					try {
+						stmt.close();
+					} catch( SQLException ex) {
+						Ivy.log().error("PreparedStatement cannot be closed in FileVersions.",ex);
+					}
+				}
 			}
 		} finally {
 			if (connection != null) {
@@ -790,6 +859,7 @@ public class FileVersioningController extends AbstractFileVersioningController {
 				+ this.fileVersionContentTableName + ".fvcid" + " WHERE "
 				+ this.fileVersionTableName + ".versionid = ? ";
 		IExternalDatabaseRuntimeConnection connection = null;
+		ResultSet rst = null;
 		try {
 			connection = getDatabase().getAndLockConnection();
 			Connection jdbcConnection = connection.getDatabaseConnection();
@@ -797,12 +867,22 @@ public class FileVersioningController extends AbstractFileVersioningController {
 			try {
 				stmt = jdbcConnection.prepareStatement(query);
 				stmt.setLong(1, fileVersionId);
-				ResultSet rst = stmt.executeQuery();
+				rst = stmt.executeQuery();
 				if (rst.next()) {
 					fv = this.makeFileVersionWithResultSet(rst, true);
 				}
+				rst.close();
 			} finally {
-				DatabaseUtil.close(stmt);
+				if(rst!=null) {
+					DatabaseUtil.close(rst);
+				}
+				if(stmt!=null) {
+					try {
+						stmt.close();
+					} catch( SQLException ex) {
+						Ivy.log().error("PreparedStatement cannot be closed in FileVersions.",ex);
+					}
+				}
 			}
 		} finally {
 			if (connection != null) {
@@ -854,8 +934,20 @@ public class FileVersioningController extends AbstractFileVersioningController {
 			}
 		} finally {
 			try {
-				DatabaseUtil.close(stmt);
-				DatabaseUtil.close(stmt2);
+				if(stmt!=null) {
+					try {
+						stmt.close();
+					} catch( SQLException ex) {
+						Ivy.log().error("PreparedStatement cannot be closed in FileVersions.",ex);
+					}
+				}
+				if(stmt2!=null) {
+					try {
+						stmt2.close();
+					} catch( SQLException ex) {
+						Ivy.log().error("PreparedStatement cannot be closed in FileVersions.",ex);
+					}
+				}
 			} catch (Exception ex) {
 			}
 		}
@@ -898,12 +990,13 @@ public class FileVersioningController extends AbstractFileVersioningController {
 			connection = getDatabase().getAndLockConnection();
 			Connection jdbcConnection = connection.getDatabaseConnection();
 			PreparedStatement stmt = null;
+			ResultSet rst = null;
 			try {
 				//get last version
 				stmt = jdbcConnection.prepareStatement(q0);
 				stmt.setLong(1, fileId);
 				stmt.setLong(2, fileId);
-				ResultSet rst = stmt.executeQuery();
+				rst = stmt.executeQuery();
 				FileVersion fv = null;
 				if (rst.next()) {
 					fv = this.makeFileVersionWithResultSet(rst, false);
@@ -912,12 +1005,21 @@ public class FileVersioningController extends AbstractFileVersioningController {
 				{
 					result = false;
 				}else{
+					try {
+						stmt.close();
+					} catch( SQLException ex) {
+						Ivy.log().error("PreparedStatement cannot be closed in FileVersions.",ex);
+					}
 					//rollback the last version content
 					stmt = jdbcConnection.prepareStatement(q1);
 					stmt.setLong(1, fv.getVersionContentId());
 					stmt.setLong(2, fileId);
 					stmt.executeUpdate();
-					
+					try {
+						stmt.close();
+					} catch( SQLException ex) {
+						Ivy.log().error("PreparedStatement cannot be closed in FileVersions.",ex);
+					}
 					//update the file meta information
 					stmt = jdbcConnection.prepareStatement(q2);
 					stmt.setString(1, Ivy.session().getSessionUserName());
@@ -929,22 +1031,36 @@ public class FileVersioningController extends AbstractFileVersioningController {
 					stmt.setString(7, fv.getUser());
 					stmt.setLong(8,fileId);
 					stmt.executeUpdate();
-					
+					try {
+						stmt.close();
+					} catch( SQLException ex) {
+						Ivy.log().error("PreparedStatement cannot be closed in FileVersions.",ex);
+					}
 					//Delete the last version content
 					stmt = jdbcConnection.prepareStatement(q3);
 					stmt.setLong(1, fv.getVersionContentId());
 					stmt.executeUpdate();
-					
+					try {
+						stmt.close();
+					} catch( SQLException ex) {
+						Ivy.log().error("PreparedStatement cannot be closed in FileVersions.",ex);
+					}
 					//Delete the last version content
 					stmt = jdbcConnection.prepareStatement(q4);
 					stmt.setLong(1, fv.getVersionContentId());
 					stmt.executeUpdate();
 				}
-
+				rst.close();
 			} finally {
-				try {
-					DatabaseUtil.close(stmt);
-				} catch (Exception ex) {
+				if(rst!=null) {
+					DatabaseUtil.close(rst);
+				}
+				if(stmt!=null) {
+					try {
+						stmt.close();
+					} catch( SQLException ex) {
+						Ivy.log().error("PreparedStatement cannot be closed in FileVersions.",ex);
+					}
 				}
 			}
 		} finally {
@@ -1054,10 +1170,15 @@ public class FileVersioningController extends AbstractFileVersioningController {
 				if (recordList.size() > 0) {
 					Record rec = recordList.get(0);
 					id = Long.parseLong(rec.getField("fvcid").toString());
-
 				}
 			} finally {
-				DatabaseUtil.close(stmt);
+				if(stmt!=null) {
+					try {
+						stmt.close();
+					} catch( SQLException ex) {
+						Ivy.log().error("PreparedStatement cannot be closed in FileVersions.",ex);
+					}
+				}
 			}
 		} finally {
 			if (connection != null) {
@@ -1124,6 +1245,7 @@ public class FileVersioningController extends AbstractFileVersioningController {
 				Record rec = new Record(colNames,values);
 				recordList.add(rec);
 			}
+			rst.close();
 		}catch(Exception ex){
 			Ivy.log().error(ex.getMessage(), ex);
 		}finally

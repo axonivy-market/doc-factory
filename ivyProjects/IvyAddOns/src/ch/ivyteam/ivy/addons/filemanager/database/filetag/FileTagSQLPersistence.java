@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+import ch.ivyteam.db.jdbc.DatabaseUtil;
 import ch.ivyteam.ivy.addons.filemanager.FileTag;
 import ch.ivyteam.ivy.addons.filemanager.configuration.BasicConfigurationController;
 import ch.ivyteam.ivy.addons.filemanager.database.PersistenceConnectionManagerFactory;
@@ -69,7 +70,7 @@ public class FileTagSQLPersistence implements IFileTagPersistence {
 				try {
 					stmt.close();
 				} catch( SQLException ex) {
-					Ivy.log().error("PreparedStatement cannot be closed in create method, LanguageSQLPersistence.",ex);
+					Ivy.log().error("PreparedStatement cannot be closed in create method, FileTagSQLPersistence.",ex);
 				}
 			}
 			this.connectionManager.closeConnection();
@@ -99,7 +100,7 @@ public class FileTagSQLPersistence implements IFileTagPersistence {
 				try {
 					stmt.close();
 				} catch( SQLException ex) {
-					Ivy.log().error("PreparedStatement cannot be closed in create method, LanguageSQLPersistence.",ex);
+					Ivy.log().error("PreparedStatement cannot be closed in update method, FileTagSQLPersistence.",ex);
 				}
 			}
 			this.connectionManager.closeConnection();
@@ -126,23 +127,28 @@ public class FileTagSQLPersistence implements IFileTagPersistence {
 		
 		String query = FileTagSQLQueries.SELECT_FILETAG_BY_ID.replace(FileTagSQLQueries.TABLENAMESPACE_PLACEHOLDER, this.tableNameSpace);
 		PreparedStatement stmt=null;
+		ResultSet rst = null;
 		FileTag tag = null;
 		try {
 			stmt = this.connectionManager.getConnection().prepareStatement(query);
 			stmt.setLong(1, id);
-			ResultSet rst = stmt.executeQuery();
+			rst = stmt.executeQuery();
 			if(rst.next()) {
 				tag = new FileTag();
 				tag.setFileId(rst.getLong("fileid"));
 				tag.setId(id);
 				tag.setTag(rst.getString("tag").trim());
 			}
+			rst.close();
 		}finally {
+			if(rst!=null) {
+				DatabaseUtil.close(rst);
+			}
 			if(stmt!=null) {
 				try {
 					stmt.close();
 				} catch( SQLException ex) {
-					Ivy.log().error("PreparedStatement cannot be closed in create method, LanguageSQLPersistence.",ex);
+					Ivy.log().error("PreparedStatement cannot be closed in get method, FileTagSQLPersistence.",ex);
 				}
 			}
 			this.connectionManager.closeConnection();
@@ -168,7 +174,7 @@ public class FileTagSQLPersistence implements IFileTagPersistence {
 				try {
 					stmt.close();
 				} catch( SQLException ex) {
-					Ivy.log().error("PreparedStatement cannot be closed in create method, LanguageSQLPersistence.",ex);
+					Ivy.log().error("PreparedStatement cannot be closed in create method, FileTagSQLPersistence.",ex);
 				}
 			}
 			this.connectionManager.closeConnection();
@@ -190,21 +196,26 @@ public class FileTagSQLPersistence implements IFileTagPersistence {
 		}
 		PreparedStatement stmt=null;
 		java.util.List<String> tags = new ArrayList<String>();
+		ResultSet rst = null;
 		try {
 			stmt = this.connectionManager.getConnection().prepareStatement(query);
 			if(searchFor!=null && !searchFor.trim().isEmpty()) {
 				stmt.setString(1, searchFor);
 			}
-			ResultSet rst = stmt.executeQuery();
+			rst = stmt.executeQuery();
 			while(rst.next()) {
 				tags.add(rst.getString("tag"));
 			}
+			rst.close();
 		}finally {
+			if(rst!=null) {
+				DatabaseUtil.close(rst);
+			}
 			if(stmt!=null) {
 				try {
 					stmt.close();
 				} catch( SQLException ex) {
-					Ivy.log().error("PreparedStatement cannot be closed in create method, LanguageSQLPersistence.",ex);
+					Ivy.log().error("PreparedStatement cannot be closed in create method, FileTagSQLPersistence.",ex);
 				}
 			}
 			this.connectionManager.closeConnection();
@@ -220,24 +231,29 @@ public class FileTagSQLPersistence implements IFileTagPersistence {
 
 		String query = FileTagSQLQueries.SELECT_FILETAG_BY_VALUE_AND_FILEID.replace(FileTagSQLQueries.TABLENAMESPACE_PLACEHOLDER, this.tableNameSpace);
 		PreparedStatement stmt=null;
+		ResultSet rst = null;
 		FileTag tag = null;
 		try {
 			stmt = this.connectionManager.getConnection().prepareStatement(query);
 			stmt.setLong(1, fileid);
 			stmt.setString(2,tagValue.trim());
-			ResultSet rst = stmt.executeQuery();
+			rst = stmt.executeQuery();
 			if(rst.next()) {
 				tag = new FileTag();
 				tag.setFileId(rst.getLong("fileid"));
 				tag.setId(rst.getLong("id"));
 				tag.setTag(rst.getString("tag").trim());
 			}
+			rst.close();
 		}finally {
+			if(rst!=null) {
+				DatabaseUtil.close(rst);
+			}
 			if(stmt!=null) {
 				try {
 					stmt.close();
 				} catch( SQLException ex) {
-					Ivy.log().error("PreparedStatement cannot be closed in create method, LanguageSQLPersistence.",ex);
+					Ivy.log().error("PreparedStatement cannot be closed in create method, FileTagSQLPersistence.",ex);
 				}
 			}
 			this.connectionManager.closeConnection();
@@ -261,11 +277,12 @@ public class FileTagSQLPersistence implements IFileTagPersistence {
 	public List<FileTag> getFileTags(long fileId) throws Exception {
 		String query = FileTagSQLQueries.SELECT_ALL_FILETAGS_BY_FILEID.replace(FileTagSQLQueries.TABLENAMESPACE_PLACEHOLDER, this.tableNameSpace);
 		PreparedStatement stmt=null;
+		ResultSet rst = null;
 		java.util.List<FileTag> tags = new ArrayList<FileTag>();
 		try {
 			stmt = this.connectionManager.getConnection().prepareStatement(query);
 			stmt.setLong(1, fileId);
-			ResultSet rst = stmt.executeQuery();
+			rst = stmt.executeQuery();
 			while(rst.next()) {
 				FileTag tag = new FileTag();
 				tag.setFileId(rst.getLong("fileid"));
@@ -273,12 +290,16 @@ public class FileTagSQLPersistence implements IFileTagPersistence {
 				tag.setTag(rst.getString("tag").trim());
 				tags.add(tag);
 			}
+			rst.close();
 		}finally {
+			if(rst!=null) {
+				DatabaseUtil.close(rst);
+			}
 			if(stmt!=null) {
 				try {
 					stmt.close();
 				} catch( SQLException ex) {
-					Ivy.log().error("PreparedStatement cannot be closed in create method, LanguageSQLPersistence.",ex);
+					Ivy.log().error("PreparedStatement cannot be closed in create method, FileTagSQLPersistence.",ex);
 				}
 			}
 			this.connectionManager.closeConnection();
@@ -297,6 +318,7 @@ public class FileTagSQLPersistence implements IFileTagPersistence {
 		}
 		
 		PreparedStatement stmt=null;
+		ResultSet rst = null;
 		java.util.List<FileTag> tags = new ArrayList<FileTag>();
 		try {
 			
@@ -307,7 +329,7 @@ public class FileTagSQLPersistence implements IFileTagPersistence {
 				stmt.setLong(1, fileId);
 				stmt.setString(2, "%"+tagPattern+"%");
 			}
-			ResultSet rst = stmt.executeQuery();
+			rst = stmt.executeQuery();
 			while(rst.next()) {
 				FileTag ft = new FileTag();
 				ft.setId(rst.getLong("id"));
@@ -315,12 +337,16 @@ public class FileTagSQLPersistence implements IFileTagPersistence {
 				ft.setTag(rst.getString("tag").trim());
 				tags.add(ft);
 			}
+			rst.close();
 		}finally {
+			if(rst!=null) {
+				DatabaseUtil.close(rst);
+			}
 			if(stmt!=null) {
 				try {
 					stmt.close();
 				} catch( SQLException ex) {
-					Ivy.log().error("PreparedStatement cannot be closed in create method, LanguageSQLPersistence.",ex);
+					Ivy.log().error("PreparedStatement cannot be closed in create method, FileTagSQLPersistence.",ex);
 				}
 			}
 			this.connectionManager.closeConnection();

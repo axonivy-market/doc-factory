@@ -1,4 +1,4 @@
-co: name={clientSideNoReadRightException} description={} changed={2014-01-10 23:11:50 CET} changedby={ec} visualorder={0} guid={1437E35A387B7192} parentguid={} typeguid={E6AFEA2034301F66} id={} parentid={} typeid={}
-val: guid={1437E35E8EE82CB2} datatype={} isdefault={false} langid={fr} description={} validfrom={2014-01-10 23:11:38 CET} validto={} changed={2014-01-10 23:11:50 CET} changedby={ec} properties={} id={}
-val: guid={1437E35A3911FC3F} datatype={} isdefault={true} langid={en} description={} validfrom={2014-01-10 23:11:21 CET} validto={} changed={2014-01-10 23:11:38 CET} changedby={ec} properties={} id={}
-val: guid={1437E36178C33C7D} datatype={} isdefault={false} langid={de} description={} validfrom={2014-01-10 23:11:41 CET} validto={} changed={2014-01-10 23:11:50 CET} changedby={ec} properties={} id={}
+co: name={clientSideNoReadRightException} description={} changed={2014-01-11 00:01:48 CET} changedby={ec} visualorder={0} guid={1437E636228455F5} parentguid={} typeguid={E6AFEA2034301F66} id={} parentid={} typeid={}
+val: guid={1437E636231C0D07} datatype={} isdefault={false} langid={de} description={} validfrom={2013-07-18 20:20:11 CEST} validto={} changed={2014-01-11 00:01:48 CET} changedby={ec} properties={} id={}
+val: guid={1437E63625B1182C} datatype={} isdefault={true} langid={en} description={} validfrom={2013-07-18 20:19:30 CEST} validto={} changed={2014-01-11 00:01:48 CET} changedby={ec} properties={} id={}
+val: guid={1437E63623C4EF87} datatype={} isdefault={false} langid={fr} description={} validfrom={2013-07-18 20:20:08 CEST} validto={} changed={2014-01-11 00:01:48 CET} changedby={ec} properties={} id={}

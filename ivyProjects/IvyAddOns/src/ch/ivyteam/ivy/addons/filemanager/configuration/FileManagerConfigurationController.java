@@ -249,13 +249,5 @@ public class FileManagerConfigurationController extends
 		return super.getFileActionHistoryConfiguration().isActivateFileActionHistory() && showFileHistoryMenuItem;
 	}
 	
-	/**
-	 * Returns a new FileManagerConfigurationController object with the same properties as this one.
-	 */
-	@Override
-	public FileManagerConfigurationController clone(){
-		return (FileManagerConfigurationController) org.apache.commons.lang.SerializationUtils.clone(this);
-		
-	}
-	
+
 }

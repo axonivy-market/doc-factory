@@ -5,6 +5,7 @@ it returns the choosed action in form of a String:&#xD;
 &quot;edit&quot; if edit/show pressed&#xD;
 &quot;print&quot; if print pressed&#xD;
 &quot;cancel&quot; if cancel pressed</description>
+    <autoScreenshot>true</autoScreenshot>
     <method>
         <name>_close</name>
         <description>Called from the CTRL + W or ESCAPE Key event</description>

@@ -611,8 +611,9 @@ public class DocumentTemplate implements Serializable {
 	 * There should be no reason to use this method, since the FileOperationMessage is the result of the generateDocument() method.
 	 * @param _fop the fileOperationMessage
 	 */
-	public void setFileOperationMessage(FileOperationMessage _fop) {
-		this.fileOperationMessage = _fop;
+	public void setFileOperationMessage(FileOperationMessage _fop)
+	{
+		
 	}
 
 	/**

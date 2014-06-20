@@ -1904,7 +1904,7 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 		}
 		return message;
 	}
-
+	
 	@Override
 	public ReturnedMessage setFileDescription(final String path, String description)
 			throws Exception {

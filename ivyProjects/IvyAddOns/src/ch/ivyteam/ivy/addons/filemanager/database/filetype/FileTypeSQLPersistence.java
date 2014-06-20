@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import ch.ivyteam.db.jdbc.DatabaseUtil;
 import ch.ivyteam.ivy.addons.filemanager.DocumentOnServer;
 import ch.ivyteam.ivy.addons.filemanager.FileType;
 import ch.ivyteam.ivy.addons.filemanager.configuration.BasicConfigurationController;
@@ -76,7 +77,7 @@ public class FileTypeSQLPersistence implements IFileTypePersistence {
 				try {
 					stmt.close();
 				} catch( SQLException ex) {
-					Ivy.log().error("PreparedStatement cannot be closed in create method, LanguageSQLPersistence.",ex);
+					Ivy.log().error("PreparedStatement cannot be closed in create method, FileTypeSQLPersistence.",ex);
 				}
 			}
 			this.connectionManager.closeConnection();
@@ -108,7 +109,7 @@ public class FileTypeSQLPersistence implements IFileTypePersistence {
 				try {
 					stmt.close();
 				} catch( SQLException ex) {
-					Ivy.log().error("PreparedStatement cannot be closed in create method, LanguageSQLPersistence.",ex);
+					Ivy.log().error("PreparedStatement cannot be closed in update method, FileTypeSQLPersistence.",ex);
 				}
 			}
 			this.connectionManager.closeConnection();
@@ -127,6 +128,7 @@ public class FileTypeSQLPersistence implements IFileTypePersistence {
 		String appname;
 		String query = FileTypesSQLQueries.SELECT_FILETYPE_BY_NAME_AND_BY_APPNAME.replace(FileTypesSQLQueries.TABLENAMESPACE_PLACEHOLDER, this.tableNameSpace);
 		PreparedStatement stmt=null;
+		ResultSet rst = null;
 		FileType ft = new FileType();
 		if(params.length==1) {
 			name = params[0].trim();
@@ -141,7 +143,7 @@ public class FileTypeSQLPersistence implements IFileTypePersistence {
 			stmt = this.connectionManager.getConnection().prepareStatement(query);
 			stmt.setString(1, name);
 			stmt.setString(2, appname);
-			ResultSet rst = stmt.executeQuery();
+			rst = stmt.executeQuery();
 			if(rst.next()) {
 				ft.setId(rst.getLong("id"));
 				ft.setApplicationName(rst.getString("appname"));
@@ -149,11 +151,14 @@ public class FileTypeSQLPersistence implements IFileTypePersistence {
 				ft.setDisplayName(rst.getString("name"));
 			}
 		}finally {
+			if(rst!=null) {
+				DatabaseUtil.close(rst);
+			}
 			if(stmt!=null) {
 				try {
 					stmt.close();
 				} catch( SQLException ex) {
-					Ivy.log().error("PreparedStatement cannot be closed in create method, LanguageSQLPersistence.",ex);
+					Ivy.log().error("PreparedStatement cannot be closed in get(String) method, FileTypeSQLPersistence.",ex);
 				}
 			}
 			this.connectionManager.closeConnection();
@@ -169,11 +174,12 @@ public class FileTypeSQLPersistence implements IFileTypePersistence {
 		assert(id>0):"IllegalArgumentException in get(long id) FileTypeSQLPersistence.";
 		String query = FileTypesSQLQueries.SELECT_FILETYPE_BY_ID.replace(FileTypesSQLQueries.TABLENAMESPACE_PLACEHOLDER, this.tableNameSpace);
 		PreparedStatement stmt=null;
+		ResultSet rst = null;
 		FileType ft = new FileType();
 		try {
 			stmt = this.connectionManager.getConnection().prepareStatement(query);
 			stmt.setLong(1, id);
-			ResultSet rst = stmt.executeQuery();
+			rst = stmt.executeQuery();
 			if(rst.next()) {
 				ft.setId(id);
 				ft.setApplicationName(rst.getString("appname"));
@@ -181,11 +187,14 @@ public class FileTypeSQLPersistence implements IFileTypePersistence {
 				ft.setDisplayName(rst.getString("name"));
 			}
 		}finally {
+			if(rst!=null) {
+				DatabaseUtil.close(rst);
+			}
 			if(stmt!=null) {
 				try {
 					stmt.close();
 				} catch( SQLException ex) {
-					Ivy.log().error("PreparedStatement cannot be closed in create method, LanguageSQLPersistence.",ex);
+					Ivy.log().error("PreparedStatement cannot be closed in get(long id) method, FileTypeSQLPersistence.",ex);
 				}
 			}
 			this.connectionManager.closeConnection();
@@ -206,6 +215,11 @@ public class FileTypeSQLPersistence implements IFileTypePersistence {
 			stmt = this.connectionManager.getConnection().prepareStatement(query);
 			stmt.setLong(1, fileType.getId());
 			flag = stmt.executeUpdate()>0;
+			try{
+				stmt.close();
+			} catch (Exception ex) {
+				Ivy.log().error("PreparedStatement cannot be closed in delete method, FileTypeSQLPersistence.",ex);
+			}
 			query = FileTypesSQLQueries.REMOVE_FILETYPE_FROM_DOCUMENTS.replace(FileTypesSQLQueries.TABLENAMESPACE_PLACEHOLDER, this.filesTableNameSpace);
 			stmt = this.connectionManager.getConnection().prepareStatement(query);
 			stmt.setLong(1, fileType.getId());
@@ -215,7 +229,7 @@ public class FileTypeSQLPersistence implements IFileTypePersistence {
 				try {
 					stmt.close();
 				} catch( SQLException ex) {
-					Ivy.log().error("PreparedStatement cannot be closed in create method, LanguageSQLPersistence.",ex);
+					Ivy.log().error("PreparedStatement cannot be closed in delete method, FileTypeSQLPersistence.",ex);
 				}
 			}
 			this.connectionManager.closeConnection();
@@ -235,10 +249,11 @@ public class FileTypeSQLPersistence implements IFileTypePersistence {
 
 		applicationName = applicationName==null?"":applicationName.trim();
 		PreparedStatement stmt = null;
+		ResultSet rst = null;
 		try {
 			stmt = this.connectionManager.getConnection().prepareStatement(query);
 			stmt.setString(1, applicationName);
-			ResultSet rst = stmt.executeQuery();
+			rst = stmt.executeQuery();
 			while(rst.next()) {
 				FileType ft = new FileType();
 				ft.setId(rst.getLong("id"));
@@ -248,6 +263,9 @@ public class FileTypeSQLPersistence implements IFileTypePersistence {
 				ftl.add(ft);
 			}
 		}finally {
+			if(rst!=null) {
+				DatabaseUtil.close(rst);
+			}
 			if(stmt!=null) {
 				try {
 					stmt.close();
@@ -269,9 +287,10 @@ public class FileTypeSQLPersistence implements IFileTypePersistence {
 		String query = FileTypesSQLQueries.SELECT_ALL_FILETYPES.replace(FileTypesSQLQueries.TABLENAMESPACE_PLACEHOLDER, this.tableNameSpace);
 
 		PreparedStatement stmt = null;
+		ResultSet rst = null;
 		try {
 			stmt = this.connectionManager.getConnection().prepareStatement(query);
-			ResultSet rst = stmt.executeQuery();
+			rst = stmt.executeQuery();
 			while(rst.next()) {
 				FileType ft = new FileType();
 				ft.setId(rst.getLong("id"));
@@ -281,6 +300,9 @@ public class FileTypeSQLPersistence implements IFileTypePersistence {
 				ftl.add(ft);
 			}
 		}finally {
+			if(rst!=null) {
+				DatabaseUtil.close(rst);
+			}
 			if(stmt!=null) {
 				try {
 					stmt.close();
@@ -313,10 +335,11 @@ public class FileTypeSQLPersistence implements IFileTypePersistence {
 		String query = FileTypesSQLQueries.SELECT_DOCUMENTS_WITH_FILETYPEID.replace(FileTypesSQLQueries.TABLENAMESPACE_PLACEHOLDER, this.filesTableNameSpace);
 		
 		PreparedStatement stmt = null;
+		ResultSet rst = null;
 		try {
 			stmt = this.connectionManager.getConnection().prepareStatement(query);
 			stmt.setLong(1, typeId);
-			ResultSet rst = stmt.executeQuery();
+			rst = stmt.executeQuery();
 			while(rst.next()) {
 				DocumentOnServer doc = new DocumentOnServer();
 				doc.setFileID(String.valueOf(rst.getLong("FileId")));
@@ -336,6 +359,9 @@ public class FileTypeSQLPersistence implements IFileTypePersistence {
 				docs.add(doc);
 			}
 		}finally {
+			if(rst!=null) {
+				DatabaseUtil.close(rst);
+			}
 			if(stmt!=null) {
 				try {
 					stmt.close();
@@ -353,7 +379,7 @@ public class FileTypeSQLPersistence implements IFileTypePersistence {
 			long typeId) throws Exception {
 		if(doc==null || doc.getFileID()==null || Long.parseLong(doc.getFileID())<=0){
 			throw new IllegalArgumentException("The documentOnServer must not be null and its id must be greater than zero.");
-		}
+		}		
 		String query = FileTypesSQLQueries.UPDATE_DOCUMENT_FILETYPE.replace(FileTypesSQLQueries.TABLENAMESPACE_PLACEHOLDER, this.filesTableNameSpace);
 		FileType ft;
 		if(typeId <=0) {

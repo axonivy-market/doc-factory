@@ -28,6 +28,7 @@ public class UlcExtentionCheckUtil {
 	public static boolean ulcMethodExist(String className, String methodName, Class<?>... args){
 		boolean result = false;
 		try{
+			Ivy.log().info("calling ulcMethodExist {0} {1} {2}",className,methodName,Thread.currentThread().getContextClassLoader());
 			Class<?> c = Thread.currentThread().getContextClassLoader().loadClass(className);
 			
 			c.getDeclaredMethod(methodName, args);

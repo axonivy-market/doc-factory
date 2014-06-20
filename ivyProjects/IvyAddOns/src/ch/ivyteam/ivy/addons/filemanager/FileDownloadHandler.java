@@ -508,7 +508,6 @@ public class FileDownloadHandler<T extends ULCComponent & IRichDialogPanel>  imp
     	fcConfig.setFileSelectionMode(FileChooserConfig.DIRECTORIES_ONLY);
     	fcConfig.setMultiSelectionEnabled(false); // We accept just one directory at time
     	fcConfig.setApproveButtonText(this.chooseButton);
-    	fcConfig.setDialogType(FileChooserConfig.SAVE_DIALOG);
     	ClientContext.chooseFile(new IFileChooseHandler(){
     		public void onFailure(int reason, String description) {
     			makeError(reason,description);
@@ -521,7 +520,6 @@ public class FileDownloadHandler<T extends ULCComponent & IRichDialogPanel>  imp
     			boolean flag = false;
     			if(dGetFilesAtClientSideMethod!=null) {
     				try{
-    					Ivy.log().info("Before getting Infos on the directory choosed for download");
     					dGetFilesAtClientSideMethod.invoke(desktop, path);
     					flag =true;
     				}catch(Exception ex) {
@@ -529,7 +527,6 @@ public class FileDownloadHandler<T extends ULCComponent & IRichDialogPanel>  imp
     				}
     			}
     			if(!flag) {
-    				Ivy.log().info("Download 3");
     				downloadFilesAfterOverridingCheck(preparedFiles);
     			}
     		}
@@ -726,7 +723,14 @@ public class FileDownloadHandler<T extends ULCComponent & IRichDialogPanel>  imp
 				add=" "+Ivy.cms().co("/ch/ivyteam/ivy/addons/filemanager/download/message/clientDirectoryCannotBeFound").replace("DDIR", n);
 			}
 		}
-		msg = Ivy.cms().co("/ch/ivyteam/ivy/addons/filemanager/download/message/downloadFailed")+add;
+		switch (reason) {
+		case IFileStoreHandler.FAILED:
+			msg = Ivy.cms().co("/ch/ivyteam/ivy/addons/filemanager/download/message/downloadFailed")+add;
+			break;
+		default:
+			msg = Ivy.cms().co("/ch/ivyteam/ivy/addons/filemanager/download/message/downloadFailed")+add;
+			break;
+		}
 		message.setType(FileOperationMessage.ERROR_MESSAGE);
 		message.setText(msg);
 		RDCallbackMethodHandler.callRDMethod(ulcPane, errorMethodeName, new Object[] { message });

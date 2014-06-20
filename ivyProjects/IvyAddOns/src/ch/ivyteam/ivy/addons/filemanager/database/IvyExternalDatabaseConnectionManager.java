@@ -53,6 +53,7 @@ public class IvyExternalDatabaseConnectionManager implements
 		if(this.ivyConnection!=null ){
 			this.database.giveBackAndUnlockConnection(this.ivyConnection);
 			this.ivyConnection=null;
+			Ivy.log().debug("Ivy connection closed");
 		}
 	}
 	
@@ -87,11 +88,6 @@ public class IvyExternalDatabaseConnectionManager implements
 					});
 		}
 		return this.database;
-	}
-
-	@Override
-	public Class<Connection> getConnectionType() throws Exception {
-		return Connection.class;
 	}
 
 }

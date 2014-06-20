@@ -1,5 +1,5 @@
 [Ivy]
-[>Created: Sat Aug 10 22:12:14 EDT 2013]
+[>Created: Thu Feb 20 14:25:06 EST 2014]
 1406387DE1127837 3.17 #module
 >Proto >Proto Collection #zClass
 Fs0 ItemTranslationAdminProcess Big #zClass
@@ -114,7 +114,7 @@ List<IRichDialogPanel> ulcs =panel.ListDisplay.getPanels();
 
 HashMap map = new HashMap();
 for(IRichDialogPanel comp:ulcs) {
-	ivy.log.info(comp.toString()+" "+(comp instanceof ItemTranslationUnitPanel));
+	ivy.log.debug(comp.toString()+" "+(comp instanceof ItemTranslationUnitPanel));
 	if(comp instanceof ItemTranslationUnitPanel) {
 		ItemTranslationUnitPanel transp = comp as ItemTranslationUnitPanel;
 		map.put(transp.getLanguage(),transp.getTranslation());

@@ -111,7 +111,7 @@ public class FileCoupleChecker<T extends IRichDialogPanel>{
 				clientFilePathAndChecksumHashMap.clear();
 				clientFilePathAndChecksumHashMap.putAll(event.getFilesChecksums());
 				//after the HashMap of the changed client Files was updated, we upload those files on the server. 
-				Ivy.log().info("File changed reported in FileCoupleChecker {0}",clientFilePathAndChecksumHashMap);
+				Ivy.log().debug("File changed reported in FileCoupleChecker {0}",clientFilePathAndChecksumHashMap);
 				uploadChangedFiles();
 			}
 		});
@@ -142,10 +142,10 @@ public class FileCoupleChecker<T extends IRichDialogPanel>{
 								(fileCouples.get(i).getClientFile().getPath().contains("/")?
 										StringUtils.replace(fileCouples.get(i).getClientFile().getPath(),"/", this.clientFileSeparator):
 											fileCouples.get(i).getClientFile().getPath());
-							Ivy.log().info("File changed reported: {0}",fileCouples.get(i));
+							Ivy.log().debug("File changed reported: {0}",fileCouples.get(i));
 							if(fClientPath.equals(fcPath)) {
 								if(!fileCouples.get(i).getServerFile().exists()) {
-									Ivy.log().error("The File {0} does not exist anymore on the server. It was may be deleted or moved. Please close and reopen it.",fileCouples.get(i).getServerFile());
+									Ivy.log().error("The File {0} does not exist anymore on the server. It was may be deleted or moved. Please close and reopen it.");
 									continue;
 								}
 								String dirpath = null;
@@ -244,16 +244,16 @@ public class FileCoupleChecker<T extends IRichDialogPanel>{
 	public synchronized void replaceServerFiles(HashMap<java.io.File,java.io.File> oldFilesNewFiles) {
 		assert(oldFilesNewFiles != null):"NullPointerException in FileCoupleChecker.replaceServerFile(HashMap<java.io.File,java.io.File> oldFilesNewFiles)" +
 				", the parameter is null.";
-		Ivy.log().info("Before replacing server files \nULC FileCheckSumMap: {0}, \n new {1}",this.ulcFileCoupeChecker.getFileChecksumMap(),this.serverFileCheckSumHashMap);
+		Ivy.log().debug("Before replacing server files \nULC FileCheckSumMap: {0}, \n new {1}",this.ulcFileCoupeChecker.getFileChecksumMap(),this.serverFileCheckSumHashMap);
 
 		Iterator<Entry<java.io.File,java.io.File>> iter = oldFilesNewFiles.entrySet().iterator();
 		while(iter.hasNext()) {
 			Entry<java.io.File,java.io.File> entry = iter.next();
 			FileCouple fc = null;
 			for(FileCouple f : this.fileCouples) {
+				Ivy.log().debug("Found server file to be relocated? {0} {1}  \n new is {2}",f.getServerFile().getPath().equals(entry.getKey().getPath()),
+						f.getServerFile().getPath(),entry.getValue().getPath());
 				if(f.getServerFile().getPath().equals(entry.getKey().getPath())){
-					Ivy.log().info("Found server file to be relocated: {0} \n new is {1}",
-							f.getServerFile().getPath(),entry.getValue().getPath());
 					fc = f;
 					fc.setServerFile(entry.getValue());
 					f.setServerFile(entry.getValue());
@@ -273,15 +273,11 @@ public class FileCoupleChecker<T extends IRichDialogPanel>{
 				this.serverFileCheckSumHashMap.put(entry.getValue().getPath(), (Long) fc.getServerFileAdler32());
 			}
 		}
-		Ivy.log().info("After replacing server files \nULC FileCheckSumMap: {0}, \n new {1}",this.ulcFileCoupeChecker.getFileChecksumMap(),this.serverFileCheckSumHashMap);
-		/*if(hasChanged) {
-			this.setUlcFileCoupleCheckerCheckSumMap();
-		}*/
-		
+		Ivy.log().debug("After replacing server files \nULC FileCheckSumMap: {0}, \n new {1}",this.ulcFileCoupeChecker.getFileChecksumMap(),this.serverFileCheckSumHashMap);
 	}
 	
 	protected void setUlcFileCoupleCheckerCheckSumMap(){
-		Ivy.log().info("Replacing the ULC FileCheckSumMap: \nold {0}, \n new {1}",this.ulcFileCoupeChecker.getFileChecksumMap(),this.serverFileCheckSumHashMap);
+		Ivy.log().debug("Replacing the ULC FileCheckSumMap: \nold {0}, \n new {1}",this.ulcFileCoupeChecker.getFileChecksumMap(),this.serverFileCheckSumHashMap);
 		this.ulcFileCoupeChecker.setFileChecksumMap(this.serverFileCheckSumHashMap);
 	}
 

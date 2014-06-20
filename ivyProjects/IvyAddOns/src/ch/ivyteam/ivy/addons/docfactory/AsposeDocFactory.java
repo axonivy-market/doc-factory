@@ -1,10 +1,7 @@
 package ch.ivyteam.ivy.addons.docfactory;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -23,12 +20,10 @@ import ch.ivyteam.ivy.scripting.objects.Tree;
 import ch.ivyteam.ivy.addons.docfactory.TemplateMergeField;
 import ch.ivyteam.ivy.addons.util.RDCallbackMethodHandler;
 import ch.ivyteam.ivy.addons.docfactory.BaseDocFactory;
+import ch.ivyteam.ivy.addons.docfactory.aspose.AsposeFieldMergingCallback;
 import ch.ivyteam.ivy.addons.docfactory.aspose.MailMergeDataSource;
 
 import com.aspose.words.Document;
-import com.aspose.words.FieldMergingArgs;
-import com.aspose.words.IFieldMergingCallback;
-import com.aspose.words.ImageFieldMergingArgs;
 import com.aspose.words.ImportFormatMode;
 import com.aspose.words.MailMergeCleanupOptions;
 import com.aspose.words.Node;
@@ -58,6 +53,7 @@ public class AsposeDocFactory extends BaseDocFactory{
 	/** Aspose.Word Document objects used to perform the document merge (letter generation with MergeFields)*/
 	private Document doc, docDest;
 
+	private AsposeFieldMergingCallback fieldMergingCallback=null;
 	/** 
 	 * This Object is used to gives the RD Panel the result of the documents generation operation.<br>
 	 * This FileOperationMessage contains a type indicating if the operation was successful or not, and a List of generated Files.<br>
@@ -93,6 +89,19 @@ public class AsposeDocFactory extends BaseDocFactory{
 		parseLicence();
 	}
 	
+	/**
+	 * Not public API, for Tests only.
+	 * @param parent
+	 * @param errorMethod
+	 * @param successMethod
+	 * @param progressMethod
+	 * @param fileMergingCallback
+	 */
+	protected AsposeDocFactory(IRichDialogPanel parent, String errorMethod, String successMethod, String progressMethod, AsposeFieldMergingCallback fieldMergingCallback) {
+		super(parent, errorMethod, successMethod, progressMethod);
+		this.fieldMergingCallback = fieldMergingCallback;
+	}
+	
 	private void parseLicence() {
 		this.license = new com.aspose.words.License();
 		try {
@@ -101,6 +110,7 @@ public class AsposeDocFactory extends BaseDocFactory{
 			in.close();
 		} catch (Exception e) {
 			Ivy.log().error("Aspose Words Licence error "+e);
+			this.fileOperationMessage = new FileOperationMessage();
 			this.fileOperationMessage.setType(ch.ivyteam.ivy.addons.docfactory.FileOperationMessage.ERROR_MESSAGE);
 			this.fileOperationMessage.setMessage(e.getMessage());
 			this.fileOperationMessage.emptyFileList();
@@ -946,7 +956,7 @@ public class AsposeDocFactory extends BaseDocFactory{
 		}
 
 		//Set up the event handler for image fields and perform mail merge.
-		document.getMailMerge().setFieldMergingCallback(new HandleMergeImageField());
+		document.getMailMerge().setFieldMergingCallback(this.getAsposeFieldMergingCallback());
 		document.getMailMerge().setCleanupOptions(MailMergeCleanupOptions.REMOVE_EMPTY_PARAGRAPHS);
 		document.getMailMerge().execute(paramName,paramValue);
 		//do mail merge with regions if necessary
@@ -992,7 +1002,7 @@ public class AsposeDocFactory extends BaseDocFactory{
 			i++;
 		}
 		//Set up the event handler for image fields and perform mail merge.
-		document.getMailMerge().setFieldMergingCallback(new HandleMergeImageField());
+		document.getMailMerge().setFieldMergingCallback(this.getAsposeFieldMergingCallback());
 		document.getMailMerge().setCleanupOptions(MailMergeCleanupOptions.REMOVE_EMPTY_PARAGRAPHS);
 		document.getMailMerge().execute(paramName,paramValue);
 		//document.getMailMerge().setRemoveEmptyParagraphs(true);
@@ -1027,7 +1037,7 @@ public class AsposeDocFactory extends BaseDocFactory{
 		doc = new Document(this.template.getPath());
 
 		//Set up the event handler for image fields and perform mail merge.
-		doc.getMailMerge().setFieldMergingCallback(new HandleMergeImageField());
+		doc.getMailMerge().setFieldMergingCallback(this.getAsposeFieldMergingCallback());
 		doc.getMailMerge().setCleanupOptions(MailMergeCleanupOptions.REMOVE_EMPTY_PARAGRAPHS);
 		doc.getMailMerge().setCleanupOptions(MailMergeCleanupOptions.REMOVE_UNUSED_REGIONS);
 		doc.getMailMerge().execute(paramName,paramValue);
@@ -1262,49 +1272,6 @@ public class AsposeDocFactory extends BaseDocFactory{
 		}
 	}
 
-
-	/**
-	 * This is called when mail merge engine encounters Image: + name of imageMailField
-	 * You have a chance to return an Image object, file name or a stream that contains the image.
-	 */
-	private class HandleMergeImageField implements IFieldMergingCallback
-	{
-
-		@Override
-		public void fieldMerging(FieldMergingArgs arg0) throws Exception {
-			// Do nothing
-
-		}
-
-		@Override
-		public void imageFieldMerging(ImageFieldMergingArgs e)
-		throws Exception {
-			//Ivy.log().info("IN IMAGE EVENT " +e.toString()+" "+e.getDocumentFieldName()+ " "+e.getFieldValue());
-
-			InputStream imageStream = null;
-			if(e.getFieldValue() != null){
-				//Ivy.log().info(e.getFieldValue()+" "+e.getFieldValue().getClass().getName());
-				// The field value is a byte array, just cast it and create a stream on it.
-				if(e.getFieldValue().getClass().getComponentType()!= null && e.getClass().getComponentType().getName().equalsIgnoreCase("java.lang.Byte")){
-					//Ivy.log().info("byte");
-					imageStream = new ByteArrayInputStream((byte[])e.getFieldValue());
-					e.setImageStream(imageStream);
-				}else if(e.getFieldValue().getClass().getName().equalsIgnoreCase("java.lang.String")){
-					//Ivy.log().info("String");
-					try {
-						imageStream = new FileInputStream(new java.io.File((String) e.getFieldValue()));
-						e.setImageFileName((String) e.getFieldValue());
-					} catch (FileNotFoundException ex) {
-						//Ivy.log().info("FileNotFoundException" +ex.getMessage());
-						ex.printStackTrace();
-						return;
-					}
-				}
-			}
-
-		}
-	}
-
 	/**
 	 * Utility private method to make all checks before beginning to produce documents.<br>
 	 * During the check some empty or null parameters are going to be set with default values.
@@ -1405,14 +1372,12 @@ public class AsposeDocFactory extends BaseDocFactory{
 		Document document = new Document(this.template.getPath());
 
 		//Set up the event handler for image fields and perform mail merge.
-		document.getMailMerge().setFieldMergingCallback(new HandleMergeImageField());
+		document.getMailMerge().setFieldMergingCallback(this.getAsposeFieldMergingCallback());
 		document.getMailMerge().setCleanupOptions(MailMergeCleanupOptions.REMOVE_EMPTY_PARAGRAPHS);
 		document.getMailMerge().execute(paramName,paramValue);
-		if(dataSourcesForMergeWithRegions!=null && !dataSourcesForMergeWithRegions.isEmpty())
-		{
+		if(dataSourcesForMergeWithRegions!=null && !dataSourcesForMergeWithRegions.isEmpty()) {
 			Iterator<MailMergeDataSource> iter = dataSourcesForMergeWithRegions.iterator();
-			while(iter.hasNext())
-			{
+			while(iter.hasNext()) {
 				document.getMailMerge().executeWithRegions(iter.next());
 			}
 		}
@@ -1614,7 +1579,7 @@ public class AsposeDocFactory extends BaseDocFactory{
 		try {
 			if(_nestedDataSource!=null && !_nestedDataSource.isEmpty())
 			{
-				Ivy.log().info("We do the merge in nested "+_nestedDataSource);
+				Ivy.log().debug("We do the merge in nested "+_nestedDataSource);
 				mmds.add(new MailMergeDataSource(_nestedDataSource));
 			}
 			this.doc = this.returnDocumentFromMailMerge(templateParamslist, mmds);
@@ -1644,7 +1609,7 @@ public class AsposeDocFactory extends BaseDocFactory{
 		try {
 			if(_treeDataSource!=null)
 			{
-				Ivy.log().info("We do the merge in nested "+_treeDataSource);
+				Ivy.log().debug("We do the merge in nested "+_treeDataSource);
 				mmds.add(new MailMergeDataSource(_treeDataSource));
 			}
 			this.doc = this.returnDocumentFromMailMerge(templateParamslist, mmds);
@@ -1656,5 +1621,35 @@ public class AsposeDocFactory extends BaseDocFactory{
 			RDCallbackMethodHandler.callRDMethod(this.parentRD, errorMethodName, new Object[] { this.fileOperationMessage });
 		}
 		return this.fileOperationMessage;
+	}
+
+	/**
+	 * Returns the AsposeFieldMergingCallback object that is responsible for applying special rules for mail merging for some merge fields.<br>
+	 * This method never returns null. If this object is not set, a new AsposeFieldMergingCallback object is instantiated and returned.
+	 * @return the AsposeFieldMergingCallback object
+	 */
+	public AsposeFieldMergingCallback getAsposeFieldMergingCallback() {
+		if(this.fieldMergingCallback==null) {
+			this.fieldMergingCallback = new AsposeFieldMergingCallback();
+		}
+		return this.fieldMergingCallback;
+	}
+	
+	/**
+	 * Sets the AsposeFieldMergingCallback object used to apply special rules to merge fields while performing the mail merge operation.<br><br>
+	 * A typical use of FieldMergingCallback objects is to insert images in merge fields if these merge fields name are declared as "Image:fieldName". 
+	 * In such a case the merge-field-value corresponding to this field can be a String (path of the image file) or the images itself as ByteArray.<br><br>
+	 * You can provide your own AsposeFieldMergingCallback object that covers your special needs.
+	 * For example, you should override the <br>
+	 * {@code public void fieldMerging(FieldMergingArgs arg0)}<br>
+	 * method to apply special rules to HTML merge fields. See {@link www.aspose.com/community/forums/thread/380671/html-text-with-merge-field.aspx}
+	 * @param fieldMergingCallback
+	 * @throws IllegalArgumentException if the parameter is null.
+	 */
+	public void setAsposeFieldMergingCallback(AsposeFieldMergingCallback fieldMergingCallback) throws IllegalArgumentException {
+		if(fieldMergingCallback == null){
+			throw new IllegalArgumentException("The AsposeFieldMergingCallback must not be null.");
+		}
+		this.fieldMergingCallback = fieldMergingCallback;
 	}
 }

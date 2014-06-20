@@ -1,5 +1,5 @@
 [Ivy]
-[>Created: Wed Dec 04 17:59:16 EST 2013]
+[>Created: Wed Jan 16 10:48:22 EST 2013]
 125FE16732F8F94A 3.17 #module
 >Proto >Proto Collection #zClass
 Fs0 FileNameDialogProcess Big #zClass
@@ -351,7 +351,7 @@ if(panel.fileNameTextField.getText().trim().equalsIgnoreCase("")){
 	out.path="";
 	out.fileExtension="";
 }else{
-	//out.fileName=panel.fileNameTextField.getText().trim();
+	out.fileName=panel.fileNameTextField.getText().trim();
 	out.path=FileHandler.formatPathWithEndSeparator(in.path,false);
 }' #txt
 Fs0 f16 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -1096,8 +1096,6 @@ Fs0 f71 1166 372 874 316 #arcP
     <swimlaneColor>-10027162</swimlaneColor>
 </elementInfo>
 ' #txt
->Proto Fs0 .ui2RdDataAction 'out.fileName=panel.fileNameTextField.text;
-' #txt
 >Proto Fs0 .rdData2UIAction 'panel.fileTypesComboBox.listData=in.fileExtensions;
 panel.fileTypesComboBox.visible=in.showFileTypeChooser;
 panel.pathLabel.text=in.path;
@@ -1106,7 +1104,6 @@ panel.twoLabel.visible=in.allowPathChooser;
 panel.destinationFolderLabel.visible=in.allowPathChooser;
 panel.pathLabel.visible=in.allowPathChooser;
 panel.Button.visible=in.allowPathChooser;
-panel.fileNameTextField.text=in.fileName;
 ' #txt
 >Proto Fs0 -8 -8 16 16 16 26 #rect
 >Proto Fs0 '' #fIcon

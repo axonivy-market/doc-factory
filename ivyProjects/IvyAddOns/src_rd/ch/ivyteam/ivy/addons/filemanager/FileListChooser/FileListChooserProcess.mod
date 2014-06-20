@@ -1,5 +1,5 @@
 [Ivy]
-[>Created: Sat Mar 23 17:46:43 EDT 2013]
+[>Created: Wed Apr 16 11:41:30 EDT 2014]
 125FD643F033AAB0 3.17 #module
 >Proto >Proto Collection #zClass
 Fs0 FileListChooserProcess Big #zClass
@@ -421,7 +421,9 @@ import ch.ivyteam.ivy.addons.filemanager.FileHandler;
 import java.util.regex.Pattern;
 in.filteredDcoumentsList.clear();
 try{
+	ivy.log.info("getting documents with java file in {0}",in.configurationController.rootPath);
 	in.documentsList=in.filemanagementHandler.getDocumentsWithJavaFileInPath(in.configurationController.rootPath,false);
+	ivy.log.info("{0} documents with java file found",in.documentsList.size());
 }catch(Throwable t)
 {
 	ivy.log.error("Error while getting the documents with their Java Files. "+t.getMessage(),t);
