@@ -1,5 +1,5 @@
 [Ivy]
-[>Created: Mon Oct 07 22:24:30 EDT 2013]
+[>Created: Wed Nov 13 20:52:42 EST 2013]
 125F850DA67753A5 3.17 #module
 >Proto >Proto Collection #zClass
 Ds0 DesktopHandlerProcess Big #zClass
@@ -1966,10 +1966,10 @@ Ds0 f162 @|RichDialogProcessStepIcon #fIcon
 Ds0 f163 expr out #txt
 Ds0 f163 1600 482 1600 508 #arcP
 Ds0 f128 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
-Ds0 f128 1591 558 19 20 13 0 #rect
+Ds0 f128 1591 598 19 20 13 0 #rect
 Ds0 f128 @|RichDialogProcessEndIcon #fIcon
 Ds0 f164 expr out #txt
-Ds0 f164 1600 532 1599 558 #arcP
+Ds0 f164 1600 532 1599 598 #arcP
 Ds0 f165 guid 125F972066FB9D12 #txt
 Ds0 f165 type ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHandlerData #txt
 Ds0 f165 method startWithClientTempDirectory(String) #txt

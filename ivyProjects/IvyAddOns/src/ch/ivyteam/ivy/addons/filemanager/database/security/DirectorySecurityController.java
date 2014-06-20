@@ -4,6 +4,8 @@
 package ch.ivyteam.ivy.addons.filemanager.database.security;
 
 import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -127,17 +129,26 @@ public class DirectorySecurityController extends AbstractDirectorySecurityContro
 	 */
 	private void computeSecVersion() {
 		IPersistenceConnectionManager<?> conManager=null;
+		ResultSet rst = null;
 		try {
 			conManager = PersistenceConnectionManagerFactory.getPersistenceConnectionManagerInstance(this.config);
 			if(conManager.getConnection() instanceof java.sql.Connection){
 				DatabaseMetaData dbmd = ((java.sql.Connection) conManager.getConnection()).getMetaData();
-				if(dbmd.getColumns(null, this.schemaName, this.dirTableName, "ctd").next()){
+				rst = dbmd.getColumns(null, this.schemaName, this.dirTableName, "ctd");
+				if(rst.next()){
 					this.secVersion=2;
 				}
 			}
 		} catch (Exception e) {
 			//Ivy.log().error("Error while computing the internal security version in computeSecVersion from DirectorySecurityController. "+e.getMessage(),e);
 		}finally {
+			if(rst!=null) {
+				try {
+					rst.close();
+				} catch (SQLException e) {
+					Ivy.log().error("DirectorySecurityController computeSecVersion error closing ResultSet "+e.getMessage(),e);
+				}
+			}
 			if(conManager!=null ) {
 				try {
 					conManager.closeConnection();

@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
+import ch.ivyteam.db.jdbc.DatabaseUtil;
 import ch.ivyteam.ivy.addons.filemanager.DocumentOnServer;
 import ch.ivyteam.ivy.addons.filemanager.FileManagementHandlersFactory;
 import ch.ivyteam.ivy.addons.filemanager.FolderOnServer;
@@ -252,14 +253,15 @@ public class ItemTranslationSQLPersistence implements
 		String query = TranslateItemSQLQueries.SELECT_TRANSLATIONS_BY_TRANSLATED_ITEMID.replace(TranslateItemSQLQueries.TRANSLATION_TABLENAMESPACE_PLACEHOLDER, this.tableNameSpace);
 
 		PreparedStatement stmt=null;
+		ResultSet rst = null;
 		ItemTranslation tr = new ItemTranslation(id, null);
 		try {
 			stmt = this.connectionManager.getConnection().prepareStatement(query);
 			stmt.setLong(1, id);
-			ResultSet rst = stmt.executeQuery();
+			rst = stmt.executeQuery();
 			HashMap<String,String> map = new HashMap<String,String>();
 			while(rst.next()) {
-				map.put(rst.getString("lang"), rst.getString("tr"));
+				map.put(rst.getString("lang"), rst.getString("tr")==null?"":rst.getString("tr"));
 			}
 			for(Language l : this.langs) {
 				if(!map.containsKey(l.getIsoName())) {
@@ -267,8 +269,11 @@ public class ItemTranslationSQLPersistence implements
 				}
 			}
 			tr.setTranslations(map);
-			
+			rst.close();
 		}finally {
+			if(rst!=null) {
+				DatabaseUtil.close(rst);
+			}
 			if(stmt!=null) {
 				try {
 					stmt.close();
@@ -315,10 +320,11 @@ public class ItemTranslationSQLPersistence implements
 		String query = TranslateItemSQLQueries.SELECT_TRANSLATIONS_BY_TRANSLATED_ITEMID.replace(TranslateItemSQLQueries.TRANSLATION_TABLENAMESPACE_PLACEHOLDER, this.tableNameSpace);
 		PreparedStatement stmt=null;
 		ItemTranslation tr = null;
+		ResultSet rst = null;
 		try {
 			stmt = this.connectionManager.getConnection().prepareStatement(query);
 			stmt.setLong(1, id);
-			ResultSet rst = stmt.executeQuery();
+			rst = stmt.executeQuery();
 			
 			HashMap<String,String> map = new HashMap<String,String>();
 			while(rst.next()) {
@@ -330,7 +336,11 @@ public class ItemTranslationSQLPersistence implements
 			if(tr!=null) {
 				tr.setTranslations(map);
 			}
+			rst.close();
 		}finally {
+			if(rst!=null) {
+				DatabaseUtil.close(rst);
+			}
 			if(stmt!=null) {
 				try {
 					stmt.close();

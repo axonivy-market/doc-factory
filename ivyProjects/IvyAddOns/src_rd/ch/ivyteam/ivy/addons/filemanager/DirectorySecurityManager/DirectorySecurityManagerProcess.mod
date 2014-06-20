@@ -1,5 +1,5 @@
 [Ivy]
-[>Created: Sun Nov 17 22:38:40 EST 2013]
+[>Created: Sun Nov 17 22:38:15 EST 2013]
 132D1B65FEDF11D7 3.17 #module
 >Proto >Proto Collection #zClass
 Ds0 DirectorySecurityManagerProcess Big #zClass
@@ -405,7 +405,7 @@ Ds0 f84 disableUIEvents false #txt
 Ds0 f84 inParameterDecl 'ch.ivyteam.ivy.richdialog.exec.RdMethodCallEvent methodEvent = event as ch.ivyteam.ivy.richdialog.exec.RdMethodCallEvent;
 <ch.ivyteam.ivy.addons.filemanager.FolderOnServer selectedFolderOnServer> param = methodEvent.getInputArguments();
 ' #txt
-Ds0 f84 inParameterMapAction 'out.folderOnServer=param.selectedFolderOnServer.clone();
+Ds0 f84 inParameterMapAction 'out.folderOnServer=param.selectedFolderOnServer;
 ' #txt
 Ds0 f84 outParameterDecl '<> result;
 ' #txt
@@ -696,8 +696,7 @@ Ds0 f97 actionDecl 'ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.D
 ' #txt
 Ds0 f97 actionTable 'out=in;
 ' #txt
-Ds0 f97 actionCode '//ivy.log.info("We will save the following folder: {0}",in.folderOnServer);
-out.folderOnServer = in.securityController.saveFolderOnServer(in.folderOnServer);
+Ds0 f97 actionCode 'out.folderOnServer = in.securityController.saveFolderOnServer(in.folderOnServer);
 ' #txt
 Ds0 f97 type ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData #txt
 Ds0 f97 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>

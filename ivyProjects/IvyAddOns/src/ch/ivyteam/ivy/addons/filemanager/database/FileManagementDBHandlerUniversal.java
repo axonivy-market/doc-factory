@@ -9,6 +9,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -157,15 +158,20 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		
 	}
 	
-	private void initialize() throws Exception
+	private void initialize()
 	{
 		IExternalDatabaseRuntimeConnection connection = null;
 		try {
 			connection = this.getDatabase().getAndLockConnection();
-			if(connection.getDatabaseConnection().getMetaData().getDatabaseProductName().toLowerCase().contains("mysql")){
+			DatabaseMetaData dbmd = connection.getDatabaseConnection().getMetaData();
+			String prod = dbmd.getDatabaseProductName().toLowerCase();
+			if(prod.contains("mysql") || (prod.contains("postgre") && 
+					Double.valueOf(dbmd.getDatabaseMajorVersion()+"."+dbmd.getDatabaseMinorVersion())<9.1 )){
 				setEscapeChar("\\\\");
 			}
-		} finally{
+		} catch (Exception e) {
+			Ivy.log().error("Error while getting the database product name");
+		}finally{
 			if(connection!=null ){
 				this.database.giveBackAndUnlockConnection(connection);
 			}
@@ -2281,7 +2287,6 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		}
 		return message;
 	}
-
 
 	@Override
 	public ReturnedMessage setFileDescription(DocumentOnServer document,

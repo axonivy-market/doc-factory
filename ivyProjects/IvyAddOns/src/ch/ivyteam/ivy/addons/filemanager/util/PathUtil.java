@@ -192,7 +192,7 @@ public class PathUtil {
 	}
 	
 	/**
-	 * escape the special signs _() in paths to be able to perform LIKE sql searches.
+	 * escape the special signs _()' in paths to be able to perform LIKE sql searches.
 	 * @param _path
 	 * @return
 	 */

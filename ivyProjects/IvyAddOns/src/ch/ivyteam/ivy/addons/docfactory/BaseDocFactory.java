@@ -486,7 +486,7 @@ public abstract class BaseDocFactory{
 	
 	/**
 	 * Returns the success callback method name
-	 * @return the succes callback method name
+	 * @return the success callback method name
 	 */
 	public String getSuccessMethodName() {
 		return successMethodName;
@@ -503,19 +503,17 @@ public abstract class BaseDocFactory{
 	
 	/**
 	 * This method allows getting an instance of the actual document factory that is implemented.
-	 * If a System propertie "document.factory" is set, then it will try to return a new Instance of this factory object.<br>
-	 * This system propertie must contain the full namespace of the document factory class.
+	 * If a System property "document.factory" is set, then it will try to return a new Instance of this factory object.<br>
+	 * This system property must contain the full namespace of the document factory class.
 	 * @return an Instance of the implemented Document Factory
 	 */
 	public static BaseDocFactory getInstance(){
 		BaseDocFactory basedoc=null;
 		try {
 			if(System.getProperty("document.factory")!=null && !System.getProperty("document.factory").trim().equals("")){
-				//Ivy.log().info("With System Property");
 				basedoc=(BaseDocFactory) Class.forName(
 						System.getProperty("document.factory")).newInstance();
 			}else{
-				//Ivy.log().info("With System AsposeDocFactory");
 				basedoc= (BaseDocFactory) Class.forName("ch.ivyteam.ivy.addons.docfactory.AsposeDocFactory").newInstance();
 			}
 		} catch (ClassNotFoundException e) {

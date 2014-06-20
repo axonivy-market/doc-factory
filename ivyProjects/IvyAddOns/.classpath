@@ -12,11 +12,11 @@
 	<classpathentry exported="true" kind="lib" path="lib/aspose/aspose.pdf-3.0.1.jdk16.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/aspose/Aspose.Words.jdk16.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/ivyThirdPartyLicense.jar"/>
-	<classpathentry kind="lib" path="lib/thumbnail_plugin_base-1.0-SNAPSHOT.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/poi/poi-3.9-20121203.jar"/>
 	<classpathentry kind="lib" path="lib/aspose/aspose-cells-7.1.1.jar"/>
 	<classpathentry kind="lib" path="lib/aspose/aspose.slides-2.8.1.jar"/>
+	<classpathentry kind="lib" path="lib/thumbnail_plugin_base-1.0.0.0.jar"/>
 	<classpathentry kind="con" path="WEBAPP_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
-	<classpathentry exported="true" kind="lib" path="lib/poi/poi-3.9-20121203.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

@@ -24,6 +24,7 @@ import com.ulcjava.base.application.dnd.Transferable;
 
 import ch.ivyteam.ivy.richdialog.exec.panel.RichDialogPanelFactory;
 import ch.ivyteam.ivy.scripting.objects.List;
+import ch.ivyteam.ivy.richdialog.widgets.containers.RGridBagLayoutPane;
 
 /**
  * RichDialog panel implementation for FileListTablePanel.
@@ -52,6 +53,7 @@ private RButton unlockButton = null;
 private RMenuItem unockMenuItem = null;
 private RButton refrehButton = null;
 private RMenuItem refreshMenuItem = null;
+private RGridBagLayoutPane GridBagLayoutPane = null;
 /**
    * Create a new instance of FileListTablePanel
    */
@@ -69,10 +71,10 @@ private RMenuItem refreshMenuItem = null;
   {
 this.setPreferredSize(new com.ulcjava.base.application.util.Dimension(679,255));
 this.setStyleProperties("{/fill \"BOTH\"/weightY \"1\"/weightX \"1\"}");
-        this.add(getScrollPane(), new com.ulcjava.base.application.GridBagConstraints(0, 2, 1, 1, 1.0D, 1.0D, com.ulcjava.base.application.GridBagConstraints.CENTER, com.ulcjava.base.application.GridBagConstraints.BOTH, new com.ulcjava.base.application.util.Insets(0,0,0,0), 0, 0));
-        this.add(getDesktopHandlerPanel(), new com.ulcjava.base.application.GridBagConstraints(0, 3, 1, 1, -1, -1, com.ulcjava.base.application.GridBagConstraints.CENTER, com.ulcjava.base.application.GridBagConstraints.NONE, new com.ulcjava.base.application.util.Insets(0,0,0,0), 0, 0));
-        this.add(getEnablerTextField(), new com.ulcjava.base.application.GridBagConstraints(0, 4, 1, 1, -1, -1, com.ulcjava.base.application.GridBagConstraints.CENTER, com.ulcjava.base.application.GridBagConstraints.NONE, new com.ulcjava.base.application.util.Insets(0,0,0,0), 0, 0));
+        this.add(getDesktopHandlerPanel(), new com.ulcjava.base.application.GridBagConstraints(0, 4, 1, 1, -1, -1, com.ulcjava.base.application.GridBagConstraints.CENTER, com.ulcjava.base.application.GridBagConstraints.NONE, new com.ulcjava.base.application.util.Insets(0,0,0,0), 0, 0));
+        this.add(getEnablerTextField(), new com.ulcjava.base.application.GridBagConstraints(0, 5, 1, 1, -1, -1, com.ulcjava.base.application.GridBagConstraints.CENTER, com.ulcjava.base.application.GridBagConstraints.NONE, new com.ulcjava.base.application.util.Insets(0,0,0,0), 0, 0));
         this.add(getToolbarFlowLayoutPane(), new com.ulcjava.base.application.GridBagConstraints(0, 1, 1, 1, -1, -1, com.ulcjava.base.application.GridBagConstraints.CENTER, com.ulcjava.base.application.GridBagConstraints.NONE, new com.ulcjava.base.application.util.Insets(0,0,0,0), 0, 0));
+        this.add(getGridBagLayoutPane(), new com.ulcjava.base.application.GridBagConstraints(0, 3, 1, 1, -1, -1, com.ulcjava.base.application.GridBagConstraints.CENTER, com.ulcjava.base.application.GridBagConstraints.NONE, new com.ulcjava.base.application.util.Insets(0,0,0,0), 0, 0));
   }
 
 /**
@@ -86,14 +88,11 @@ private RTable getFileListTable() {
 		fileListTable.setName("fileListTable");
 		fileListTable.setAutoResizeMode(ULCTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
 		fileListTable.setSortable(true);
-		fileListTable.setModelConfiguration("{/showTableheader true /autoTableheader false /showtooltip false /showIcons true /version \"3.0\"/emptyTableText \"Keine Datei / Aucun Fichier / No File\"/columns {{/result \"result=entry.filename\"/version \"3.0\"/tooltip \"\"/icon \"result=IF(!entry.locked.trim().equals(\\\"1\\\"),null,\\r\\nivy.cms.cr(\\\"/ch/ivyteam/ivy/addons/icons/lock/16\\\"))\"/header \"ivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/fileName\\\")\"/field \"\"/condition \"\"/columnWidth \"250\"}{/result \"result=entry.creationDate.toIvyDate().format(\\\"dd-MM-yyyy\\\")\"/version \"3.0\"/tooltip \"\"/icon \"\"/header \"ivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/creationDate\\\")\"/field \"\"/condition \"\"/columnWidth \"150\"}{/result \"result=entry.userID\"/version \"3.0\"/tooltip \"\"/icon \"\"/header \"ivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/createdBy\\\")\"/field \"\"/columnWidth \"80\"}}}");
-		fileListTable.setPreferredSize(new com.ulcjava.base.application.util.Dimension(0,0));
-		fileListTable.setStyle("field");
+		fileListTable.setModelConfiguration("{/showTableheader true /autoTableheader false /showtooltip false /showIcons true /version \"3.0\"/emptyTableText \"Keine Datei / Aucun Fichier / No File\"/columns {{/result \"result=entry.filename\"/version \"3.0\"/tooltip \"\"/icon \"result=IF(!entry.locked.trim().equals(\\\"1\\\"),null,\\r\\nivy.cms.cr(\\\"/ch/ivyteam/ivy/addons/icons/lock/16\\\"))\"/header \"ivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/fileName\\\")\"/headerAlignment \"default\"/field \"\"/condition \"\"/columnWidth \"250\"}{/result \"result=entry.creationDate.toIvyDate().format(\\\"dd-MM-yyyy\\\")\"/version \"3.0\"/tooltip \"\"/icon \"\"/header \"ivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/creationDate\\\")\"/headerAlignment \"default\"/field \"\"/condition \"\"/columnWidth \"150\"}{/result \"result=entry.userID\"/version \"3.0\"/tooltip \"\"/icon \"\"/header \"ivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/createdBy\\\")\"/headerAlignment \"default\"/field \"\"/columnWidth \"80\"}}}");
 		fileListTable.setRowHeight(20);
 		fileListTable.setDragEnabled(true);
 		fileListTable.setTransferHandler(getFilesTableTransferHandler());
 		fileListTable.setComponentPopupMenu(getTablePopupMenu());
-		fileListTable.setStyleProperties("{/fill \"BOTH\"/weightY \"1\"/weightX \"1\"}");
 	}
 	return fileListTable;
 }
@@ -156,7 +155,8 @@ private RScrollPane getScrollPane() {
 	if (ScrollPane == null) {
 		ScrollPane = new RScrollPane();
 		ScrollPane.setName("ScrollPane");
-		ScrollPane.setStyleProperties("{/weightY \"1\"/weightX \"1\"}");
+		ScrollPane.setStyleProperties("{/fill \"BOTH\"/weightY \"1\"/weightX \"1\"}");
+		ScrollPane.setName("ScrollPane");
 		ScrollPane.setName("ScrollPane");
 		ScrollPane.setViewPortView(getFileListTable());
 	}
@@ -391,5 +391,20 @@ private RMenuItem getRefreshMenuItem() {
 		refreshMenuItem.setName("refreshMenuItem");
 	}
 	return refreshMenuItem;
+}
+
+/**
+ * This method initializes GridBagLayoutPane	
+ * 	
+ * @return ch.ivyteam.ivy.richdialog.widgets.containers.RGridBagLayoutPane	
+ */
+private RGridBagLayoutPane getGridBagLayoutPane() {
+	if (GridBagLayoutPane == null) {
+		GridBagLayoutPane = new RGridBagLayoutPane();
+		GridBagLayoutPane.setName("GridBagLayoutPane");
+		GridBagLayoutPane.setStyleProperties("{/fill \"BOTH\"/weightY \"1\"/weightX \"1\"}");
+		GridBagLayoutPane.add(getScrollPane(), new com.ulcjava.base.application.GridBagConstraints(0, 0, 1, 1, -1, -1, com.ulcjava.base.application.GridBagConstraints.CENTER, com.ulcjava.base.application.GridBagConstraints.NONE, new com.ulcjava.base.application.util.Insets(0,0,0,0), 0, 0));
+	}
+	return GridBagLayoutPane;
 }
 }  //  @jve:decl-index=0:visual-constraint="10,10"

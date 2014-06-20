@@ -28,12 +28,5 @@ public interface IPersistenceConnectionManager<T> {
 	 * @throws Exception
 	 */
 	public void closeConnection() throws Exception;
-	
-	/**
-	 * Returns the Connection Class type: in general may be java.sql.Connection, but this can be extended if you use JPA or NoSQL.
-	 * @return
-	 * @throws Exception
-	 */
-	public Class<?> getConnectionType() throws Exception;
 
 }

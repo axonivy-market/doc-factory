@@ -318,6 +318,26 @@ This method is called when the files are stored as BLOB in a DB.</description>
             <nullPermitted>false</nullPermitted>
         </inputParameter>
     </method>
+    <method>
+        <name>setReadOnly</name>
+        <description></description>
+        <inputParameter>
+            <name>readOnly</name>
+            <description></description>
+            <parameterType>Boolean</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </inputParameter>
+    </method>
+    <method>
+        <name>getReadOnly</name>
+        <description></description>
+        <outputParameter>
+            <name>readOnly</name>
+            <description></description>
+            <parameterType>Boolean</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </outputParameter>
+    </method>
     <startMethod>
         <name>startWithPath</name>
         <description>Start with &#xD;

@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -110,7 +111,13 @@ public class FileActionHistoryController extends AbstractFileActionHistoryContro
 				stmt.executeUpdate();
 
 			}finally {
-				DatabaseUtil.close(stmt);
+				if(stmt!=null) {
+					try {
+						stmt.close();
+					} catch( SQLException ex) {
+						Ivy.log().error("PreparedStatement cannot be closed in File Action.",ex);
+					}
+				}
 			}
 		} finally {
 			if(connection!=null ){
@@ -160,7 +167,13 @@ public class FileActionHistoryController extends AbstractFileActionHistoryContro
 			Ivy.log().debug("Write history "+this.config.getFileActionHistoryTableNameSpace());
 
 		}finally {
-			DatabaseUtil.close(stmt);
+			if(stmt!=null) {
+				try {
+					stmt.close();
+				} catch( SQLException ex) {
+					Ivy.log().error("PreparedStatement cannot be closed in File Action.",ex);
+				}
+			}
 		}
 		 
 	}
@@ -174,13 +187,24 @@ public class FileActionHistoryController extends AbstractFileActionHistoryContro
 			connection = getDatabase().getAndLockConnection();
 			Connection jdbcConnection=connection.getDatabaseConnection();
 			PreparedStatement stmt = null;
+			ResultSet rst = null;
 			try {
 				stmt = jdbcConnection.prepareStatement(sql);
 				stmt.setShort(1, actionType);
-				ResultSet rst = stmt.executeQuery();
+				rst = stmt.executeQuery();
 				r = rst.next();
+				rst.close();
 			}finally {
-				DatabaseUtil.close(stmt);
+				if(rst!=null) {
+					DatabaseUtil.close(rst);
+				}
+				if(stmt!=null) {
+					try {
+						stmt.close();
+					} catch( SQLException ex) {
+						Ivy.log().error("PreparedStatement cannot be closed in File Action.",ex);
+					}
+				}
 			}
 		} finally {
 			if(connection!=null ) {
@@ -196,13 +220,24 @@ public class FileActionHistoryController extends AbstractFileActionHistoryContro
 		String sql = "SELECT id FROM "+this.config.getFileActionTypeNameSpace()+" WHERE atype=?";
 		
 		PreparedStatement stmt = null;
+		ResultSet rst = null;
 		try {
 			stmt = con.prepareStatement(sql);
 			stmt.setShort(1, actionType);
-			ResultSet rst = stmt.executeQuery();
+			rst = stmt.executeQuery();
 			r = rst.next();
+			rst.close();
 		} finally {
-			DatabaseUtil.close(stmt);
+			if(rst!=null) {
+				DatabaseUtil.close(rst);
+			}
+			if(stmt!=null) {
+				try {
+					stmt.close();
+				} catch( SQLException ex) {
+					Ivy.log().error("PreparedStatement cannot be closed in File Action.",ex);
+				}
+			}
 		}
 
 		return r;
@@ -220,9 +255,10 @@ public class FileActionHistoryController extends AbstractFileActionHistoryContro
 			connection = getDatabase().getAndLockConnection();
 			Connection jdbcConnection=connection.getDatabaseConnection();
 			PreparedStatement stmt = null;
+			ResultSet rst = null;
 			try {
 				stmt = jdbcConnection.prepareStatement(sql);
-				ResultSet rst = stmt.executeQuery();
+				rst = stmt.executeQuery();
 				while(rst.next()) {
 					FileActionType fa = new FileActionType();
 					fa.setId(rst.getInt("id"));
@@ -234,8 +270,18 @@ public class FileActionHistoryController extends AbstractFileActionHistoryContro
 					}
 					atypes.add(fa);
 				}
+				rst.close();
 			}finally {
-				DatabaseUtil.close(stmt);
+				if(rst!=null) {
+					DatabaseUtil.close(rst);
+				}
+				if(stmt!=null) {
+					try {
+						stmt.close();
+					} catch( SQLException ex) {
+						Ivy.log().error("PreparedStatement cannot be closed in File Action.",ex);
+					}
+				}
 			}
 		} finally {
 			if(connection!=null ) {
@@ -260,12 +306,13 @@ public class FileActionHistoryController extends AbstractFileActionHistoryContro
 			connection = getDatabase().getAndLockConnection();
 			Connection jdbcConnection=connection.getDatabaseConnection();
 			PreparedStatement stmt = null;
+			ResultSet rst = null;
 			try{
 				Ivy.log().debug(sql);
 				stmt = jdbcConnection.prepareStatement(sql);
 				stmt.setLong(1, fileid);
 
-				ResultSet rst = stmt.executeQuery();
+				rst = stmt.executeQuery();
 				while(rst.next()) {
 					FileAction fa = new FileAction();
 					fa.setId(rst.getLong("id"));
@@ -291,8 +338,18 @@ public class FileActionHistoryController extends AbstractFileActionHistoryContro
 
 					actions.add(fa);
 				}
+				rst.close();
 			}finally {
-				DatabaseUtil.close(stmt);
+				if(rst!=null) {
+					DatabaseUtil.close(rst);
+				}
+				if(stmt!=null) {
+					try {
+						stmt.close();
+					} catch( SQLException ex) {
+						Ivy.log().error("PreparedStatement cannot be closed in File Action.",ex);
+					}
+				}
 			}
 		} finally {
 			if(connection!=null ){
@@ -316,9 +373,10 @@ public class FileActionHistoryController extends AbstractFileActionHistoryContro
 			connection = getDatabase().getAndLockConnection();
 			Connection jdbcConnection=connection.getDatabaseConnection();
 			PreparedStatement stmt = null;
+			ResultSet rst = null;
 			try {
 				stmt = jdbcConnection.prepareStatement(sql);
-				ResultSet rst = stmt.executeQuery();
+				rst = stmt.executeQuery();
 				ResultSetMetaData rsmd = rst.getMetaData();
 				int nb = rsmd.getColumnCount();
 				for(int i=0; i<nb; i++) {
@@ -327,8 +385,18 @@ public class FileActionHistoryController extends AbstractFileActionHistoryContro
 						break;
 					}
 				}
+				rst.close();
 			}finally {
-				DatabaseUtil.close(stmt);
+				if(rst!=null) {
+					DatabaseUtil.close(rst);
+				}
+				if(stmt!=null) {
+					try {
+						stmt.close();
+					} catch( SQLException ex) {
+						Ivy.log().error("PreparedStatement cannot be closed in File Action.",ex);
+					}
+				}
 			}
 		} finally {
 			if(connection!=null ){

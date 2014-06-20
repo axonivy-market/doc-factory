@@ -3,6 +3,7 @@
     <description>This RDC presents a user the possible actions to perform with a given File: edition/read, print, open FileManager, download&#xD;
 it implements the DesktopHandler RDC.</description>
     <tags>file action chooser</tags>
+    <autoScreenshot>true</autoScreenshot>
     <acceptedBroadcast>
         <name>downloadFiles</name>
         <description>Catches the downloadFiles@Application event &#xD;

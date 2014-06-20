@@ -67,6 +67,16 @@ public class DocumentOnServerSQLQueries {
 			" ModificationDate= ?, ModificationTime= ?, Description= ?, versionnumber = ?, filetypeid = ? WHERE FileId = ?";
 	
 	/**
+	 * update a given document by its id in the file table<br>
+	 * UPDATE --file table-- SET FileName= ?,  FilePath= ?, FileSize= ?, Locked= ?, LockingUserId= ?, ModificationUserId= ?,
+	 * ModificationDate= ?, ModificationTime= ?, Description= ?, versionnumber = ? WHERE FileId = ?
+	 */
+	public static String UPDATE_BY_ID_NO_FILETYPE_Q = "UPDATE "+TABLENAMESPACE_PLACEHOLDER+
+			" SET FileName= ?,  FilePath= ?," +
+			" FileSize= ?, Locked= ?, LockingUserId= ?, ModificationUserId= ?," +
+			" ModificationDate= ?, ModificationTime= ?, Description= ?, versionnumber = ? WHERE FileId = ?";
+	
+	/**
 	 * update the content of a given document by its id in the file content table<br>
 	 * UPDATE --file table content-- SET file_content= ? WHERE File_id = ?"
 	 */

@@ -1,5 +1,5 @@
 [Ivy]
-[>Created: Thu Aug 09 13:49:12 EDT 2012]
+[>Created: Tue Apr 15 21:22:52 EDT 2014]
 125F9B9E8C5A4087 3.17 #module
 >Proto >Proto Collection #zClass
 Fs0 FileActionOptionPaneProcess Big #zClass
@@ -21,7 +21,6 @@ Fs0 @RichDialogInitStart f3 '' #zField
 Fs0 @RichDialogProcessStep f4 '' #zField
 Fs0 @PushWFArc f5 '' #zField
 Fs0 @RichDialogProcessEnd f6 '' #zField
-Fs0 @PushWFArc f7 '' #zField
 Fs0 @RichDialogMethodStart f8 '' #zField
 Fs0 @RichDialogProcessStep f9 '' #zField
 Fs0 @PushWFArc f10 '' #zField
@@ -122,6 +121,7 @@ Fs0 @PushWFArc f103 '' #zField
 Fs0 @RichDialogProcessStart f104 '' #zField
 Fs0 @RichDialogProcessEnd f105 '' #zField
 Fs0 @PushWFArc f106 '' #zField
+Fs0 @PushWFArc f109 '' #zField
 >Proto Fs0 Fs0 FileActionOptionPaneProcess #zField
 Fs0 f0 guid 121E36CF8DC15FC4 #txt
 Fs0 f0 type ch.ivyteam.ivy.addons.filemanager.FileActionOptionPane.FileActionOptionPaneData #txt
@@ -203,8 +203,6 @@ Fs0 f5 224 58 224 84 #arcP
 Fs0 f6 type ch.ivyteam.ivy.addons.filemanager.FileActionOptionPane.FileActionOptionPaneData #txt
 Fs0 f6 211 147 26 26 14 0 #rect
 Fs0 f6 @|RichDialogProcessEndIcon #fIcon
-Fs0 f7 expr out #txt
-Fs0 f7 224 108 224 147 #arcP
 Fs0 f8 guid 121E38AC71DA66FA #txt
 Fs0 f8 type ch.ivyteam.ivy.addons.filemanager.FileActionOptionPane.FileActionOptionPaneData #txt
 Fs0 f8 method disableActionButtons() #txt
@@ -1356,6 +1354,8 @@ Fs0 f105 1102 462 20 20 13 0 #rect
 Fs0 f105 @|RichDialogProcessEndIcon #fIcon
 Fs0 f106 expr out #txt
 Fs0 f106 1112 418 1112 462 #arcP
+Fs0 f109 expr out #txt
+Fs0 f109 224 108 224 147 #arcP
 >Proto Fs0 .type ch.ivyteam.ivy.addons.filemanager.FileActionOptionPane.FileActionOptionPaneData #txt
 >Proto Fs0 .processKind RICH_DIALOG #txt
 >Proto Fs0 .rdData2UIAction 'panel.infoLabel.text=IF(in.files.size()==1,
@@ -1386,8 +1386,6 @@ Fs0 f106 1112 418 1112 462 #arcP
 >Proto Fs0 '' #fIcon
 Fs0 f3 mainOut f5 tail #connect
 Fs0 f5 head f4 mainIn #connect
-Fs0 f4 mainOut f7 tail #connect
-Fs0 f7 head f6 mainIn #connect
 Fs0 f8 mainOut f10 tail #connect
 Fs0 f10 head f9 mainIn #connect
 Fs0 f9 mainOut f12 tail #connect
@@ -1484,3 +1482,5 @@ Fs0 f101 mainOut f103 tail #connect
 Fs0 f103 head f24 mainIn #connect
 Fs0 f104 mainOut f106 tail #connect
 Fs0 f106 head f105 mainIn #connect
+Fs0 f4 mainOut f109 tail #connect
+Fs0 f109 head f6 mainIn #connect

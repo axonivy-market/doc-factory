@@ -1,5 +1,5 @@
 # Xpert.ivy RichDialog Event-Mapping Data
-# 2013-03-23 12:10:48 | 4.3.8.41480 | 1.0
+# 2014-04-14 18:07:53 | 5.0.10.45353 | 1.0
 ~.deleteButton@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FDB0198DDACE8/11F89B713EFCFEA6
 ~.deleteMenuItem@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FDB0198DDACE8/11F89B713EFCFEA6
 ~.desktopHandlerPanel@RD_EVENT[desktopException]--->ch.ivyteam.ivy.process.ProcessStart:125FDB0198DDACE8/11F8D295F50E7097
@@ -12,8 +12,8 @@
 ~.fileListTable@LIST_SELECTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FDB0198DDACE8/11F6A70B450F3C9A
 ~.openButton@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FDB0198DDACE8/11F89AA2F2E17B0B
 ~.openMenuItem@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FDB0198DDACE8/11F89AA2F2E17B0B
-~.refrehButton@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FDB0198DDACE8/13D97FE8F33E39AA # FileListTableProcess.mod/refresh
-~.refreshMenuItem@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FDB0198DDACE8/13D97FE8F33E39AA # FileListTableProcess.mod/refresh
+~.refrehButton@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FDB0198DDACE8/13D97FE8F33E39AA
+~.refreshMenuItem@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FDB0198DDACE8/13D97FE8F33E39AA
 ~.unlockButton@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FDB0198DDACE8/137BD69A065DF423
 ~.unockMenuItem@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FDB0198DDACE8/137BD69A065DF423
 ~.uploadButton@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FDB0198DDACE8/11F89B358329468E
@@ -36,6 +36,7 @@
 ~@RD_METHODCALL[getListedFiles()]--->ch.ivyteam.ivy.process.ProcessStart:125FDB0198DDACE8/11F8D0BC6D7711E5
 ~@RD_METHODCALL[getMultipleSelectionAllowed()]--->ch.ivyteam.ivy.process.ProcessStart:125FDB0198DDACE8/11F6A56E00DE9BB4
 ~@RD_METHODCALL[getPath()]--->ch.ivyteam.ivy.process.ProcessStart:125FDB0198DDACE8/11F6A56F3908D020
+~@RD_METHODCALL[getReadOnly()]--->ch.ivyteam.ivy.process.ProcessStart:125FDB0198DDACE8/145620D0E0DECD30
 ~@RD_METHODCALL[getSelectedDocument()]--->ch.ivyteam.ivy.process.ProcessStart:125FDB0198DDACE8/11F6A5703E7B0A8C
 ~@RD_METHODCALL[getSelectedDocuments()]--->ch.ivyteam.ivy.process.ProcessStart:125FDB0198DDACE8/11F6A57306A7B746
 ~@RD_METHODCALL[getSelectedFile()]--->ch.ivyteam.ivy.process.ProcessStart:125FDB0198DDACE8/11F6A7C3D61C71C2
@@ -47,6 +48,7 @@
 ~@RD_METHODCALL[setIconSize(String)]--->ch.ivyteam.ivy.process.ProcessStart:125FDB0198DDACE8/12B426CB5E9DCD91
 ~@RD_METHODCALL[setMultipleSelectionAllowed(Boolean)]--->ch.ivyteam.ivy.process.ProcessStart:125FDB0198DDACE8/11F6A574AE032875
 ~@RD_METHODCALL[setPath(String)]--->ch.ivyteam.ivy.process.ProcessStart:125FDB0198DDACE8/11F6A57642EB06B0
+~@RD_METHODCALL[setReadOnly(Boolean)]--->ch.ivyteam.ivy.process.ProcessStart:125FDB0198DDACE8/145620CE8726DA34
 ~@RD_METHODCALL[setToolbarVisible(Boolean)]--->ch.ivyteam.ivy.process.ProcessStart:125FDB0198DDACE8/1200ED57F13B12F7
 ~@RD_METHODCALL[setUploadEnabled(Boolean)]--->ch.ivyteam.ivy.process.ProcessStart:125FDB0198DDACE8/11FCC1428B6832FC
 ~@RD_METHODCALL[start()]--->ch.ivyteam.ivy.process.ProcessStart:125FDB0198DDACE8/11F6A40F8EC16E70

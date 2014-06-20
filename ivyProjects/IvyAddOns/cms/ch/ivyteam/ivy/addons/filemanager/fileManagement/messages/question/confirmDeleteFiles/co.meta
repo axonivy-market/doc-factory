@@ -1,4 +1,4 @@
-co: name={confirmDeleteFiles} description={} changed={2012-11-14 20:25:37 CET} changedby={ec} visualorder={0} guid={12370F5909DACDA6} parentguid={} typeguid={E6AFEA202AFB4911} id={} parentid={} typeid={}
-val: guid={12370F5909D253B3} datatype={} isdefault={true} langid={en} description={} validfrom={2009-08-31 16:57:04 CEST} validto={} changed={2012-11-14 20:25:15 CET} changedby={ec} properties={} id={}
+co: name={confirmDeleteFiles} description={} changed={2014-02-11 00:51:50 CET} changedby={ec} visualorder={0} guid={12370F5909DACDA6} parentguid={} typeguid={E6AFEA202AFB4911} id={} parentid={} typeid={}
+val: guid={12370F5909D253B3} datatype={} isdefault={true} langid={en} description={} validfrom={2009-08-31 16:57:04 CEST} validto={} changed={2014-02-11 00:51:50 CET} changedby={ec} properties={} id={}
 val: guid={12370F6B37F54B9B} datatype={} isdefault={false} langid={fr} description={} validfrom={2009-08-31 16:58:19 CEST} validto={} changed={2012-11-14 20:25:15 CET} changedby={ec} properties={} id={}
 val: guid={12370F8B2D5AEB4D} datatype={} isdefault={false} langid={de} description={} validfrom={2009-08-31 17:00:30 CEST} validto={} changed={2012-11-14 20:25:37 CET} changedby={ec} properties={} id={}

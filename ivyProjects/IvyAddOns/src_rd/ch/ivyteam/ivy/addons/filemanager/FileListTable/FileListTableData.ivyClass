@@ -65,3 +65,5 @@ filesToOverwrite 'used in DnD operations to determine wich files are going to be
 docsToOverwrite List<ch.ivyteam.ivy.addons.filemanager.DocumentOnServer> #field
 docsToOverwrite 'used in DnD operations to determine wich documentOnServer objects are going to be overwritten.' #fieldComment
 configurationController ch.ivyteam.ivy.addons.filemanager.configuration.FileManagerConfigurationController #field
+readOnly Boolean #field
+readOnly 'If true no file upload, delete possible and the files will be opened read only.' #fieldComment
