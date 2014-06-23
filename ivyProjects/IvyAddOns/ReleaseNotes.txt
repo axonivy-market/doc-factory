@@ -1,6 +1,13 @@
 =============================== 
-IvyAddons 5001200 Release Notes 
+IvyAddons 5010000 Release Notes 
 ===============================
+First official release version of the IvyAddons for ivy 5.1.
+
+* Issue #33769: Start Filemanager with max upload size less than 1024 Kb. 
+The max size filtering works fine, but the warning message shown to the user indicates a wrong max value: 
+it shows the bytes max values and not the Kb. 
+
+
 
 =============================== 
 IvyAddons 5001100 Release Notes 

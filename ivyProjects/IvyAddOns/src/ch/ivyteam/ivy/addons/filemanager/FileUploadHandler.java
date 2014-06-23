@@ -1677,20 +1677,25 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel>
 	}
 
 	private String getMaxUploadSize() {
-		String s;
 		int div = 1024*1024;
 		if(this.maxSize>=div) {
-			float f = (float) this.maxSize;
-			if(f%div>0) {
-				Double d = new Double(f/div);
-				s=new DecimalFormat("0.00").format(d);
-			}else{
-				double i = this.maxSize/div;
-				s=""+i;
-			}
-			s+=" Mb";
+			return getMaxSizeAsMbOrKb(div)+" Mb";
+		}else if(this.maxSize>=1024){
+			return getMaxSizeAsMbOrKb(1024)+" Kb";
+		}
+			
+		return this.maxSize+" Kb";
+	}
+	
+	private String getMaxSizeAsMbOrKb(int divisor) {
+		String s;
+		float f = (float) this.maxSize;
+		if(f%divisor>0) {
+			Double d = new Double(f/divisor);
+			s=new DecimalFormat("0.00").format(d);
 		}else{
-			s=""+this.maxSize+" Kb";
+			double i = this.maxSize/divisor;
+			s=""+new Double(i).intValue();
 		}
 		return s;
 	}
