@@ -597,7 +597,7 @@ All the children nodes at each level of the Tree contain dataclasses as value th
         fields, and the third one contains a merge mail region (table). </para>
       <para>The demo shows how to generate serial documents and the template with merge regions is
         used. All the serial documents are going to be generated into the
-        <filename>ivy_RIA_files</filename> directory of your Server or Designer installation. </para>
+        <filename>ivy_RIA_files</filename> directory of your Engine or Designer installation. </para>
       <mediaobject>
         <imageobject>
           <imagedata fileref="images/DocFactory/theDemo.png"/>
@@ -657,7 +657,7 @@ All the children nodes at each level of the Tree contain dataclasses as value th
         nested mail merge regions.</para>
       <para>The demo shows how to generate serial documents and the template with merge regions is
         used. All the serial documents are going to be generated into the
-        <filename>ivy_RIA_files</filename> directory of your Server or Designer installation. </para>
+        <filename>ivy_RIA_files</filename> directory of your Engine or Designer installation. </para>
       <mediaobject>
         <imageobject>
           <imagedata fileref="images/DocFactory/startReportingDemo.png"/>
