@@ -87,7 +87,7 @@
                     </listitem>
                 </varlistentry>
                 <varlistentry>
-                    <term><replaceable>ivy Server </replaceable></term>
+                    <term><replaceable>ivy Engine</replaceable></term>
                     <listitem>
                         <para>A <emphasis role="bold">replacable</emphasis> element is used for
                             replaceable items in code and text</para>

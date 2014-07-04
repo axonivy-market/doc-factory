@@ -362,12 +362,12 @@
             the user will not be able to do anything. You can set the server Path dynamically at a
             delayed time with the <ns:code>setServerPath(String _serverPath)</ns:code> method. </para>
           <para>If you provide a path like "Test/dir1/", the directories and theirs files are going
-            to be located at the root of the Ivy Server installation directory. If the path is like
+            to be located at the root of the Ivy Engine installation directory. If the path is like
             "/test/dir1/...", the directories and theirs files are going to be located at the root
             of the drive. You can also provide a path like "C:/test/...".</para>
           <para>You can connect to a file share server path with for example
               <ns:emphasis>"//ServerShareName/dir1/"</ns:emphasis>. In such a case the file sharing
-            must be configured so that the Ivy Server User can connect to it. </para>
+            must be configured so that the Ivy Engine User can connect to it. </para>
         </sect4>
         <sect4>
           <title>The database settings</title>

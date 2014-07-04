@@ -2,20 +2,20 @@
 <chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="ivy.addons.libraries">
 	<title>Libraries</title>
 	<para> The IvyAddOns project contains (executable) libraries that can be used outside of
-		Xpert.ivy (e.g. on the client or from within other applications) to communicate or otherwise
-		interact with Xpert.ivy. The purpose and usage of those libraries is explained in this
+		Axon.ivy (e.g. on the client or from within other applications) to communicate or otherwise
+		interact with Axon.ivy. The purpose and usage of those libraries is explained in this
 		chapter. </para>
 	<sect1 xml:id="ivy.addons.libraries.processstarter">
 		<title>IvyProcessStarter.jar</title>
 		<sect2>
 			<title>Purpose</title>
-			<para> Normally Xpert.ivy Applications are started by clicking on a Link in a Web
+			<para> Normally Axon.ivy Applications are started by clicking on a Link in a Web
 				browser. However, often afterwards the browser is not needed anymore and, in fact,
 				wouldn't really have been required in the first place, were it not for the reason
-				that there is no other way to start an Xpert.ivy application. </para>
+				that there is no other way to start an Axon.ivy application. </para>
 			<para> With the <filename>IvyProcessStarter.jar</filename>, which is located in the
 				IvyAddOns <filename>lib/</filename> folder (switch to the Java or Resource
-				perspective to see it), one can start Xpert.ivy applications with a single click
+				perspective to see it), one can start Axon.ivy applications with a single click
 				from the desktop, without having to use a browser. The following image shows three
 				common ways to do so on a windows desktop: either from the start menu (1), from the
 				quick start tool bar (2) or with a short cut icon on the desktop. </para>
@@ -25,7 +25,7 @@
 				</imageobject>
 			</mediaobject>
 			<para> Once such a Shortcut is installed, the user simply clicks on it and the linked
-				Xpert.ivy application starts directly (via Java) without the need of having to open
+				Axon.ivy application starts directly (via Java) without the need of having to open
 				a browser beforehand. </para>
 			<note>
 				<para>Although the screenshots in this section show Windows desktops only, similar
