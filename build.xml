@@ -132,10 +132,10 @@
 		<loadfile property="response.xml.content" srcFile="${temp.response.xml.file}" />
 		<delete file="${temp.response.xml.file}" />
 
-		<propertyregex regexp="(ivy([^&lt;>]*)XpertIvyServer([^&lt;>]*)${installer.os.suffix}\.zip)" property="path.ivy.server" input="${response.xml.content}" select="\1" />
+		<propertyregex regexp="(ivy([^&lt;>]*)AxonIvyEngine([^&lt;>]*)${installer.os.suffix}\.zip)" property="path.ivy.server" input="${response.xml.content}" select="\1" />
 
-		<get dest="${dir.build}/XpertIvyServer.zip" src="${url.ivy.server.build}/artifact/${path.ivy.server}"/>
-		<unzip dest="${dir.ivy.server}" src="${dir.build}/XpertIvyServer.zip"/>
+		<get dest="${dir.build}/AxonIvyEngine.zip" src="${url.ivy.server.build}/artifact/${path.ivy.server}"/>
+		<unzip dest="${dir.ivy.server}" src="${dir.build}/AxonIvyEngine.zip"/>
 	</target>
 </project>
 	
