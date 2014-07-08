@@ -3,7 +3,7 @@
   xmlns:ns6="http://www.w3.org/1999/xlink" xmlns:ns5="http://www.w3.org/1998/Math/MathML"
   xmlns:ns4="http://www.w3.org/2000/svg" xmlns:ns3="http://www.w3.org/1999/xhtml"
   xmlns:ns="http://docbook.org/ns/docbook">
-  <title>File Management System</title>
+  <title>File Management</title>
   <sect1 xml:id="ivy.addons.filemanager.introduction">
     <title>Introduction</title>
     <para>The goal of this document is to provide a small description of the file management system
