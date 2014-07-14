@@ -24,7 +24,7 @@ implements IRichDialogPanel
 { 
   /** Serial version id */
   private static final long serialVersionUID = 1L;
-private RLabel xpertlineIconLabel = null;
+private RLabel northLabel = null;
 private RLabel iconLabel = null;
 private RLabel userNameLabel = null;
 private RLabel passwordLabel = null;
@@ -64,25 +64,25 @@ private RComboBox allowedEnvironmentsComboBox = null;
         this.add(getSessionLanguageLabel(), new com.ulcjava.base.application.GridBagConstraints(1, 3, 1, 1, -1, -1, com.ulcjava.base.application.GridBagConstraints.CENTER, com.ulcjava.base.application.GridBagConstraints.NONE, new com.ulcjava.base.application.util.Insets(0,0,0,0), 0, 0));
         this.add(getSessionLanguagesComboBox(), new com.ulcjava.base.application.GridBagConstraints(2, 3, 1, 1, -1, -1, com.ulcjava.base.application.GridBagConstraints.CENTER, com.ulcjava.base.application.GridBagConstraints.NONE, new com.ulcjava.base.application.util.Insets(0,0,0,0), 0, 0));
         this.add(getEnvironmentLabel(), new com.ulcjava.base.application.GridBagConstraints(1, 4, 1, 1, -1, -1, com.ulcjava.base.application.GridBagConstraints.CENTER, com.ulcjava.base.application.GridBagConstraints.NONE, new com.ulcjava.base.application.util.Insets(0,0,0,0), 0, 0));
-        this.add(getXpertlineIconLabel(), new com.ulcjava.base.application.GridBagConstraints(0, 0, 3, 1, -1, -1, com.ulcjava.base.application.GridBagConstraints.CENTER, com.ulcjava.base.application.GridBagConstraints.NONE, new com.ulcjava.base.application.util.Insets(0,0,0,0), 0, 0));
+        this.add(getNorthLabel(), new com.ulcjava.base.application.GridBagConstraints(0, 0, 3, 1, -1, -1, com.ulcjava.base.application.GridBagConstraints.CENTER, com.ulcjava.base.application.GridBagConstraints.NONE, new com.ulcjava.base.application.util.Insets(0,0,0,0), 0, 0));
         this.add(getAllowedEnvironmentsComboBox(), new com.ulcjava.base.application.GridBagConstraints(2, 4, 1, 1, -1, -1, com.ulcjava.base.application.GridBagConstraints.CENTER, com.ulcjava.base.application.GridBagConstraints.NONE, new com.ulcjava.base.application.util.Insets(0,0,0,0), 0, 0));
         this.add(filler, new com.ulcjava.base.application.GridBagConstraints(2, 7, 1, 1, -1, 1.0D, com.ulcjava.base.application.GridBagConstraints.CENTER, com.ulcjava.base.application.GridBagConstraints.NONE, new com.ulcjava.base.application.util.Insets(0,0,0,0), 0, 0));       
   }
 
 /**
- * This method initializes xpertlineIconLabel	
+ * This method initializes northLabel
  * 	
  * @return ch.ivyteam.ivy.richdialog.widgets.components.RLabel	
  */
-private RLabel getXpertlineIconLabel() {
-	if (xpertlineIconLabel == null) {
-		xpertlineIconLabel = new RLabel();
-		xpertlineIconLabel.setName("xpertlineIconLabel");
-		xpertlineIconLabel.setIconUri("<%= ivy.cms.cr(\"/ch/ivyteam/ivy/addons/images/XpertLineLogo\") %>");
-		xpertlineIconLabel.setStyleProperties("{/anchor \"NORTHWEST\"}");
-		xpertlineIconLabel.setStyle("border-all");
+private RLabel getNorthLabel() {
+	if (northLabel == null) {
+		northLabel = new RLabel();
+		northLabel.setName("northLabel");
+		northLabel.setText(" ");
+		northLabel.setStyleProperties("{/anchor \"NORTHWEST\"}");
+		northLabel.setStyle("border-all");
 	}
-	return xpertlineIconLabel;
+	return northLabel;
 }
 
 /**
