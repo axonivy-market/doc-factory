@@ -426,6 +426,35 @@ Returns: the choosed fileName (empty String if cancelled) and the path.</descrip
             <nullPermitted>false</nullPermitted>
         </outputParameter>
     </startMethod>
+    <startMethod>
+        <name>start</name>
+        <description>start with the the selected document to rename and the configuration&#xD;
+Returns: the choosed fileName (empty String if cancelled) and the path.</description>
+        <inputParameter>
+            <name>configurationController</name>
+            <description></description>
+            <parameterType>ch.ivyteam.ivy.addons.filemanager.configuration.BasicConfigurationController</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </inputParameter>
+        <inputParameter>
+            <name>documentOnServer</name>
+            <description></description>
+            <parameterType>ch.ivyteam.ivy.addons.filemanager.DocumentOnServer</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </inputParameter>
+        <outputParameter>
+            <name>fileName</name>
+            <description></description>
+            <parameterType>String</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </outputParameter>
+        <outputParameter>
+            <name>path</name>
+            <description></description>
+            <parameterType>String</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </outputParameter>
+    </startMethod>
     <property>
         <name>guid</name>
         <value>125FE16732F4661D</value>

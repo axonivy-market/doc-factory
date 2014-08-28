@@ -1,5 +1,5 @@
 [Ivy]
-[>Created: Sun Nov 17 22:38:15 EST 2013]
+[>Created: Thu Aug 28 10:36:14 EDT 2014]
 132D1B65FEDF11D7 3.17 #module
 >Proto >Proto Collection #zClass
 Ds0 DirectorySecurityManagerProcess Big #zClass
@@ -429,7 +429,6 @@ Ds0 f85 actionCode 'import ch.ivyteam.ivy.security.IRole;
 if(in.isVisible){
 	panel.mapSelectedIRoleRights();
 	if(in.#selectedIRole!= null && in.selectedIRole.getName().trim().length()>0){	
-			
 			panel.actionsGridBagLayoutPane.enabled=in.selectedIRole.getName().compareTo(in.config.adminRole)!=0;
 	}
 	if(panel.adminCheckBox.selected) {
@@ -455,6 +454,8 @@ if(in.isVisible){
 		panel.cufCheckBox.selected=true;
 		panel.cwfCheckBox.selected=true;
 		panel.cdfCheckBox.selected=true;
+	}else{
+		panel._makeSelectedChekBoxesConsistent();
 	}
 }
 
@@ -996,7 +997,9 @@ Ds0 f20 actionTable 'out=in;
 ' #txt
 Ds0 f20 actionCode 'if(in.#selectedIRole!=null && in.selectedIRole.getName().compareTo(in.config.adminRole)==0){
 	panel.actionsGridBagLayoutPane.enabled=false;
-	}' #txt
+}else {
+	panel._makeSelectedChekBoxesConsistent();
+}' #txt
 Ds0 f20 type ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecurityManagerData #txt
 Ds0 f20 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>

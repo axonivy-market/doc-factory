@@ -1,7 +1,9 @@
 package ch.ivyteam.ivy.addons.filemanager.html.thumbnailer;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -17,6 +19,7 @@ import ch.ivyteam.ivy.addons.filemanager.thumbnailer.mime.MimeTypeDetector;
 import ch.ivyteam.ivy.addons.service.AddonsServiceLoader;
 import ch.ivyteam.ivy.addons.service.ServiceLoaderPluginFilter;
 import ch.ivyteam.ivy.environment.Ivy;
+import ch.ivyteam.ivy.scripting.objects.Binary;
 import ch.ivyteam.ivy.scripting.objects.util.IvyScriptObjectEnvironment;
 
 /**
@@ -188,6 +191,50 @@ public class HtmlFileManagerThumbnailer {
 		}catch(Exception e){
     		Ivy.log().error(e.getMessage());
     	}
+	}
+	
+	/**
+	 * Generate full size images from byte array
+	 * @author tctruc
+	 * @param input
+	 * @return OutputStream[]
+	 */
+	public OutputStream[] createFullSizeImages(byte[] input, String filename, int totalPagesForGenerating) {
+		OutputStream[] result = null;
+		try{
+			ch.ivyteam.ivy.scripting.objects.File tempFile = new ch.ivyteam.ivy.scripting.objects.File(filename);
+			tempFile.makePersistent(false);
+			tempFile.writeBinary(new Binary(input));
+			
+			if(checkValidMIMEtype(tempFile.getJavaFile())){
+				result = thumbnailer.generateFullSizeImages(tempFile.getJavaFile(), null, totalPagesForGenerating);
+			}
+		}
+		catch(Exception e) {
+			result = null;
+		}
+		return result;
+	}
+	
+	/**
+	 * Get number of pages
+	 * @param input
+	 * @param mimeType
+	 * @return total pages
+	 * @throws IOException
+	 * @author: tctruc
+	 * @Date: Aug 5, 2014
+	 */
+	public int getNumberOfPages(File input, String mimeType) throws IOException {
+		int result = 0;
+		try {
+			if(checkValidMIMEtype(input)) {
+				return thumbnailer.getNumberOfPages(input, mimeType);
+			}
+		} catch(Exception ex) {
+			result = 0;
+		}
+		return result;
 	}
 	
 

@@ -16,11 +16,13 @@ import ch.ivyteam.ivy.addons.filemanager.DirectoryHelper;
 import ch.ivyteam.ivy.addons.filemanager.FolderOnServer;
 import ch.ivyteam.ivy.addons.filemanager.ItemTranslation;
 import ch.ivyteam.ivy.addons.filemanager.configuration.BasicConfigurationController;
-import ch.ivyteam.ivy.addons.filemanager.database.persistence.IItemTranslationPersistence;
 import ch.ivyteam.ivy.addons.filemanager.database.persistence.IFolderOnServerPersistence;
+import ch.ivyteam.ivy.addons.filemanager.database.persistence.IItemTranslationPersistence;
 import ch.ivyteam.ivy.addons.filemanager.database.persistence.IPersistenceConnectionManager;
 import ch.ivyteam.ivy.addons.filemanager.database.persistence.SqlPersistenceHelper;
 import ch.ivyteam.ivy.addons.filemanager.database.persistence.TranslatedFileManagerItemsEnum;
+import ch.ivyteam.ivy.addons.filemanager.database.security.DirectorySecurityVersionDetector;
+import ch.ivyteam.ivy.addons.filemanager.database.security.SecurityConstants;
 import ch.ivyteam.ivy.addons.filemanager.database.sql.DocumentOnServerSQLQueries;
 import ch.ivyteam.ivy.addons.filemanager.database.sql.FolderOnServerSQLQueries;
 import ch.ivyteam.ivy.addons.filemanager.util.PathUtil;
@@ -66,7 +68,6 @@ public class FolderOnServerSQLPersistence implements IFolderOnServerPersistence 
 				Ivy.log().error(e.getMessage(),e);
 			}
 		}
-		ResultSet rst = null;
 		try {
 			DatabaseMetaData dbmd = this.connectionManager.getConnection().getMetaData();
 			String prod = dbmd.getDatabaseProductName().toLowerCase();
@@ -76,24 +77,10 @@ public class FolderOnServerSQLPersistence implements IFolderOnServerPersistence 
 			}
 			this.isMsSql = prod.contains("microsoft");
 			this.isOracle = prod.contains("oracle");
-			rst = dbmd.getColumns(null, 
-					(this.configuration.getDatabaseSchemaName()!=null &&  this.configuration.getDatabaseSchemaName().trim().length()==0)?
-							null: this.configuration.getDatabaseSchemaName(), 
-					this.configuration.getDirectoriesTableName(), "ctd");
-			if(rst.next()){
-				this.secVersion=2;
-			}
-			Ivy.log().debug("FolderOnServerSQLPersistence initialized db security version is {0}",this.secVersion);
+			this.secVersion=DirectorySecurityVersionDetector.getDirectorySecurityVersion(this.configuration, dbmd);
 		} catch(Exception ex) {
 			Ivy.log().error(ex.getMessage(),ex);
 		} finally {
-			if(rst!=null) {
-				try {
-					rst.close();
-				} catch (SQLException e) {
-					Ivy.log().error("FolderOnServerSQLPersistence initialized error closing ResultSet "+e.getMessage(),e);
-				}
-			}
 			try {
 				this.connectionManager.closeConnection();
 			} catch (Exception e) {
@@ -451,18 +438,18 @@ public class FolderOnServerSQLPersistence implements IFolderOnServerPersistence 
 		}
 		if(this.configuration.isActivateSecurity()) {
 			fos.setIs_protected(rec.getField("is_protected").toString().equals("1"));
-			fos.setCmrd(PathUtil.getListFromString(rec.getField("cmdr").toString(),","));
-			fos.setCod(PathUtil.getListFromString(rec.getField("cod").toString(),","));
-			fos.setCud(PathUtil.getListFromString(rec.getField("cud").toString(),","));
-			fos.setCdd(PathUtil.getListFromString(rec.getField("cdd").toString(),","));
-			fos.setCwf(PathUtil.getListFromString(rec.getField("cwf").toString(),","));
-			fos.setCdf(PathUtil.getListFromString(rec.getField("cdf").toString(),","));
+			fos.setCmrd(PathUtil.getListFromString(rec.getField(SecurityConstants.CAN_MANAGE_DIRECTORY_RIGHTS_COLUMN_NAME).toString(),","));
+			fos.setCod(PathUtil.getListFromString(rec.getField(SecurityConstants.CAN_OPEN_DIRECTORY_COLUMN_NAME).toString(),","));
+			fos.setCud(PathUtil.getListFromString(rec.getField(SecurityConstants.CAN_UPDATE_DIRECTORY_COLUMN_NAME).toString(),","));
+			fos.setCdd(PathUtil.getListFromString(rec.getField(SecurityConstants.CAN_DELETE_DIRECTORY_COLUMN_NAME).toString(),","));
+			fos.setCwf(PathUtil.getListFromString(rec.getField(SecurityConstants.CAN_WRITE_FILE_COLUMN_NAME).toString(),","));
+			fos.setCdf(PathUtil.getListFromString(rec.getField(SecurityConstants.CAN_DELETE_FILE_COLUMN_NAME).toString(),","));
 			if(this.secVersion>1) {
-				fos.setCcd(PathUtil.getListFromString(rec.getField("ccd").toString(),","));
-				fos.setCrd(PathUtil.getListFromString(rec.getField("crd").toString(),","));
-				fos.setCtd(PathUtil.getListFromString(rec.getField("ctd").toString(),","));
-				fos.setCcf(PathUtil.getListFromString(rec.getField("ccf").toString(),","));
-				fos.setCuf(PathUtil.getListFromString(rec.getField("cuf").toString(),","));
+				fos.setCcd(PathUtil.getListFromString(rec.getField(SecurityConstants.CAN_CREATE_DIRECTORY_COLUMN_NAME).toString(),","));
+				fos.setCrd(PathUtil.getListFromString(rec.getField(SecurityConstants.CAN_RENAME_DIRECTORY_COLUMN_NAME).toString(),","));
+				fos.setCtd(PathUtil.getListFromString(rec.getField(SecurityConstants.CAN_TRANSLATE_DIRECTORY_COLUMN_NAME).toString(),","));
+				fos.setCcf(PathUtil.getListFromString(rec.getField(SecurityConstants.CAN_CREATE_FILE_COLUMN_NAME).toString(),","));
+				fos.setCuf(PathUtil.getListFromString(rec.getField(SecurityConstants.CAN_UPDATE_FILE_COLUMN_NAME).toString(),","));
 			}else {
 				fos.setCcd(fos.getCud());
 				fos.setCrd(fos.getCud());

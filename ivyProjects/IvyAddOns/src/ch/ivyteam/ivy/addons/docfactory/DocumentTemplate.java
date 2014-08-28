@@ -55,7 +55,7 @@ public class DocumentTemplate implements Serializable {
 	 */
 	private BaseDocFactory documentFactory=null;
 
-	/** The FileOperationMessage is a convenient Object to get the results of a Mail Merge from a Document Factory Object.<br>
+	/** The fileOperationMessage is a convenient Object to get the results of a Mail Merge from a Document Factory Object.<br>
 	 * @see ch.ivyteam.ivy.addons.docfactory.FileOperationMessage
 	 */
 	private FileOperationMessage fileOperationMessage= null;
@@ -107,22 +107,13 @@ public class DocumentTemplate implements Serializable {
 	 */
 	public DocumentTemplate(String _templatePath, String _outputPath, String _outputName, String _outputFormat, List<TemplateMergeField> _mergeFields) {
 		super();
-		this.templatePath = (_templatePath==null)?"":_templatePath;
-		this.outputPath = (_outputPath==null)?"":_outputPath;
-		this.outputName = (_outputName==null)?"":_outputName;
-		this.outputFormat = (_outputFormat==null)?"":_outputFormat;
-		if(_mergeFields == null)
-		{
-			this.mergeFields = List.create(TemplateMergeField.class);
-		}else
-		{
+		initializeConstructorVariables(_templatePath, _outputPath, _outputName,
+				_outputFormat);
+		if(_mergeFields != null) {
 			this.mergeFields = _mergeFields;
 		}
 
-		this.fileOperationMessage= new FileOperationMessage();
-		this.fileOperationMessage.setMessage("");
-		this.fileOperationMessage.setFiles(List.create(java.io.File.class));
-		this.fileOperationMessage.setType(FileOperationMessage.INFORMATION_MESSAGE);
+		initializeFileOperationMessage();
 	}
 
 	/**
@@ -139,24 +130,15 @@ public class DocumentTemplate implements Serializable {
 	 */
 	public DocumentTemplate(String _templatePath, String _outputPath, String _outputName, String _outputFormat, List<TemplateMergeField> _mergeFields, HashMap<String , java.util.List<CompositeObject>> _tablesNamesAndFieldsmap) {
 		super();
-		this.templatePath = (_templatePath==null)?"":_templatePath;
-		this.outputPath = (_outputPath==null)?"":_outputPath;
-		this.outputName = (_outputName==null)?"":_outputName;
-		this.outputFormat = (_outputFormat==null)?"":_outputFormat;
-		if(_mergeFields == null)
-		{
-			this.mergeFields = List.create(TemplateMergeField.class);
-		}else
-		{
+		initializeConstructorVariables(_templatePath, _outputPath, _outputName,
+				_outputFormat);
+		if(_mergeFields != null) {
 			this.mergeFields = _mergeFields;
 		}
 
 		this.setTablesNamesAndFieldsmap(_tablesNamesAndFieldsmap);
 
-		this.fileOperationMessage= new FileOperationMessage();
-		this.fileOperationMessage.setMessage("");
-		this.fileOperationMessage.setFiles(List.create(java.io.File.class));
-		this.fileOperationMessage.setType(FileOperationMessage.INFORMATION_MESSAGE);
+		initializeFileOperationMessage();
 	}
 
 	/**
@@ -173,24 +155,15 @@ public class DocumentTemplate implements Serializable {
 	 */
 	public DocumentTemplate(String _templatePath, String _outputPath, String _outputName, String _outputFormat, List<TemplateMergeField> _mergeFields, Hashtable<String , Recordset> _tablesNamesAndFieldsHashtable) {
 		super();
-		this.templatePath = (_templatePath==null)?"":_templatePath;
-		this.outputPath = (_outputPath==null)?"":_outputPath;
-		this.outputName = (_outputName==null)?"":_outputName;
-		this.outputFormat = (_outputFormat==null)?"":_outputFormat;
-		if(_mergeFields == null)
-		{
-			this.mergeFields = List.create(TemplateMergeField.class);
-		}else
-		{
+		initializeConstructorVariables(_templatePath, _outputPath, _outputName,
+				_outputFormat);
+		if(_mergeFields != null) {
 			this.mergeFields = _mergeFields;
 		}
 
 		this.setTablesNamesAndFieldsHashtable(_tablesNamesAndFieldsHashtable);
 
-		this.fileOperationMessage= new FileOperationMessage();
-		this.fileOperationMessage.setMessage("");
-		this.fileOperationMessage.setFiles(List.create(java.io.File.class));
-		this.fileOperationMessage.setType(FileOperationMessage.INFORMATION_MESSAGE);
+		initializeFileOperationMessage();
 	}
 
 	/**
@@ -207,24 +180,16 @@ public class DocumentTemplate implements Serializable {
 	 */
 	public DocumentTemplate(String _templatePath, String _outputPath, String _outputName, String _outputFormat, CompositeObject _data) {
 		super();
-		this.templatePath = (_templatePath==null)?"":_templatePath;
-		this.outputPath = (_outputPath==null)?"":_outputPath;
-		this.outputName = (_outputName==null)?"":_outputName;
-		this.outputFormat = (_outputFormat==null)?"":_outputFormat;
-		if(_data == null)
-		{
-			this.mergeFields = List.create(TemplateMergeField.class);
-		}else
-		{
-			this.mergeFields =DataClassToMergefields.transformDataClassInMergeField(_data);
+		initializeConstructorVariables(_templatePath, _outputPath, _outputName,
+				_outputFormat);
+		if(_data != null) {
+			this.mergeFields = DataClassToMergefields.transformDataClassInMergeField(_data);
+			this.tablesNamesAndFieldsHashtable = DataClassToMergefields.transformDataClassInTablesNamesAndFields(_data);
 			this.nestedDataSourceForNestedMailMerge = List.create(CompositeObject.class);
 			this.nestedDataSourceForNestedMailMerge.add(_data);
 		}
 
-		this.fileOperationMessage= new FileOperationMessage();
-		this.fileOperationMessage.setMessage("");
-		this.fileOperationMessage.setFiles(List.create(java.io.File.class));
-		this.fileOperationMessage.setType(FileOperationMessage.INFORMATION_MESSAGE);
+		initializeFileOperationMessage();
 	}
 
 	/**
@@ -242,24 +207,16 @@ public class DocumentTemplate implements Serializable {
 	 */
 	public DocumentTemplate(String _templatePath, String _outputPath, String _outputName, String _outputFormat, CompositeObject _data, HashMap<String , java.util.List<CompositeObject>> _tablesNamesAndFieldsmap) {
 		super();
-		this.templatePath = (_templatePath==null)?"":_templatePath;
-		this.outputPath = (_outputPath==null)?"":_outputPath;
-		this.outputName = (_outputName==null)?"":_outputName;
-		this.outputFormat = (_outputFormat==null)?"":_outputFormat;
-		if(_data == null)
-		{
-			this.mergeFields = List.create(TemplateMergeField.class);
-		}else
-		{
-			this.mergeFields =DataClassToMergefields.transformDataClassInMergeField(_data);
+		initializeConstructorVariables(_templatePath, _outputPath, _outputName,
+				_outputFormat);
+		if(_data != null) {
+			this.mergeFields = DataClassToMergefields.transformDataClassInMergeField(_data);
+			this.tablesNamesAndFieldsHashtable = DataClassToMergefields.transformDataClassInTablesNamesAndFields(_data);
 		}
 
 		this.setTablesNamesAndFieldsmap(_tablesNamesAndFieldsmap);
 
-		this.fileOperationMessage= new FileOperationMessage();
-		this.fileOperationMessage.setMessage("");
-		this.fileOperationMessage.setFiles(List.create(java.io.File.class));
-		this.fileOperationMessage.setType(FileOperationMessage.INFORMATION_MESSAGE);
+		initializeFileOperationMessage();
 	}
 
 	/**
@@ -277,24 +234,16 @@ public class DocumentTemplate implements Serializable {
 	 */
 	public DocumentTemplate(String _templatePath, String _outputPath, String _outputName, String _outputFormat, CompositeObject _data, Hashtable<String , Recordset> _tablesNamesAndFieldsHashtable) {
 		super();
-		this.templatePath = (_templatePath==null)?"":_templatePath;
-		this.outputPath = (_outputPath==null)?"":_outputPath;
-		this.outputName = (_outputName==null)?"":_outputName;
-		this.outputFormat = (_outputFormat==null)?"":_outputFormat;
-		if(_data == null)
-		{
-			this.mergeFields = List.create(TemplateMergeField.class);
-		}else
-		{
+		initializeConstructorVariables(_templatePath, _outputPath, _outputName,
+				_outputFormat);
+		if(_data != null) {
 			this.mergeFields = DataClassToMergefields.transformDataClassInMergeField(_data);
+			this.tablesNamesAndFieldsHashtable = DataClassToMergefields.transformDataClassInTablesNamesAndFields(_data);
 		}
 
 		this.setTablesNamesAndFieldsHashtable(_tablesNamesAndFieldsHashtable);
 
-		this.fileOperationMessage= new FileOperationMessage();
-		this.fileOperationMessage.setMessage("");
-		this.fileOperationMessage.setFiles(List.create(java.io.File.class));
-		this.fileOperationMessage.setType(FileOperationMessage.INFORMATION_MESSAGE);
+		initializeFileOperationMessage();
 	}
 	
 	/**
@@ -318,31 +267,21 @@ public class DocumentTemplate implements Serializable {
 	 */
 	public DocumentTemplate(String _templatePath, String _outputPath, String _outputName, String _outputFormat, CompositeObject _data, List<CompositeObject> _parentDataSourceForNestedMailMerge,List<List<CompositeObject>> _childrenDataSourcesForNestedMailMerge) {
 		super();
-		this.templatePath = (_templatePath==null)?"":_templatePath;
-		this.outputPath = (_outputPath==null)?"":_outputPath;
-		this.outputName = (_outputName==null)?"":_outputName;
-		this.outputFormat = (_outputFormat==null)?"":_outputFormat;
-		if(_data == null)
-		{
-			this.mergeFields = List.create(TemplateMergeField.class);
-		}else
-		{
+		initializeConstructorVariables(_templatePath, _outputPath, _outputName,
+				_outputFormat);
+		if(_data != null) {
 			this.mergeFields = DataClassToMergefields.transformDataClassInMergeField(_data);
+			this.tablesNamesAndFieldsHashtable = DataClassToMergefields.transformDataClassInTablesNamesAndFields(_data);
 		}
 
-		if(_parentDataSourceForNestedMailMerge!=null && !_parentDataSourceForNestedMailMerge.isEmpty())
-		{
+		if(_parentDataSourceForNestedMailMerge!=null && !_parentDataSourceForNestedMailMerge.isEmpty()) {
 			this.setParentDataSourceForNestedMailMerge(_parentDataSourceForNestedMailMerge);
-			if(_childrenDataSourcesForNestedMailMerge!=null && !_childrenDataSourcesForNestedMailMerge.isEmpty())
-			{
+			if(_childrenDataSourcesForNestedMailMerge!=null && !_childrenDataSourcesForNestedMailMerge.isEmpty()) {
 				this.setChildrenDataSourcesForNestedMailMerge(_childrenDataSourcesForNestedMailMerge);
 			}
 		}
 
-		this.fileOperationMessage= new FileOperationMessage();
-		this.fileOperationMessage.setMessage("");
-		this.fileOperationMessage.setFiles(List.create(java.io.File.class));
-		this.fileOperationMessage.setType(FileOperationMessage.INFORMATION_MESSAGE);
+		initializeFileOperationMessage();
 	}
 	
 	/**
@@ -361,28 +300,18 @@ public class DocumentTemplate implements Serializable {
 	 */
 	public DocumentTemplate(String _templatePath, String _outputPath, String _outputName, String _outputFormat, CompositeObject _data, List<CompositeObject> _nestedDataSourceForNestedMailMerge) {
 		super();
-		this.templatePath = (_templatePath==null)?"":_templatePath;
-		this.outputPath = (_outputPath==null)?"":_outputPath;
-		this.outputName = (_outputName==null)?"":_outputName;
-		this.outputFormat = (_outputFormat==null)?"":_outputFormat;
-		if(_data == null)
-		{
-			this.mergeFields = List.create(TemplateMergeField.class);
-		}else
-		{
+		initializeConstructorVariables(_templatePath, _outputPath, _outputName,
+				_outputFormat);
+		if(_data != null) {
 			this.mergeFields = DataClassToMergefields.transformDataClassInMergeField(_data);
+			this.tablesNamesAndFieldsHashtable = DataClassToMergefields.transformDataClassInTablesNamesAndFields(_data);
 		}
 
-		if(_nestedDataSourceForNestedMailMerge!=null && !_nestedDataSourceForNestedMailMerge.isEmpty())
-		{
+		if(_nestedDataSourceForNestedMailMerge!=null && !_nestedDataSourceForNestedMailMerge.isEmpty()) {
 			this.setNestedDataSourceForNestedMailMerge(_nestedDataSourceForNestedMailMerge);
-			
 		}
 
-		this.fileOperationMessage= new FileOperationMessage();
-		this.fileOperationMessage.setMessage("");
-		this.fileOperationMessage.setFiles(List.create(java.io.File.class));
-		this.fileOperationMessage.setType(FileOperationMessage.INFORMATION_MESSAGE);
+		initializeFileOperationMessage();
 	}
 	
 	/**
@@ -399,21 +328,16 @@ public class DocumentTemplate implements Serializable {
 	 */
 	public DocumentTemplate(String _templatePath, String _outputPath, String _outputName, String _outputFormat, Tree _treeData) {
 		super();
-		this.templatePath = (_templatePath==null)?"":_templatePath;
-		this.outputPath = (_outputPath==null)?"":_outputPath;
-		this.outputName = (_outputName==null)?"":_outputName;
-		this.outputFormat = (_outputFormat==null)?"":_outputFormat;
-		this.mergeFields = List.create(TemplateMergeField.class);
-		if(_treeData!=null)
-		{
-			if( _treeData.getValue()!=null)
-			{
+		initializeConstructorVariables(_templatePath, _outputPath, _outputName,
+				_outputFormat);
+		if(_treeData!=null) {
+			if( _treeData.getValue()!=null) {
 				CompositeObject obj;
-				try{
+				try {
 					obj = (CompositeObject) _treeData.getValue(); 
 					this.mergeFields = DataClassToMergefields.transformDataClassInMergeField(obj);
-				}catch(Exception ex)
-				{
+					this.tablesNamesAndFieldsHashtable = DataClassToMergefields.transformDataClassInTablesNamesAndFields(obj);
+				}catch(Exception ex) {
 					//ignore the Exception the _treeData does not have a real DataClass object, 
 					//so we do not have any merge fields.
 				}
@@ -421,25 +345,21 @@ public class DocumentTemplate implements Serializable {
 			this.treeData=_treeData;
 		}
 		
-		this.fileOperationMessage= new FileOperationMessage();
-		this.fileOperationMessage.setMessage("");
-		this.fileOperationMessage.setFiles(List.create(java.io.File.class));
-		this.fileOperationMessage.setType(FileOperationMessage.INFORMATION_MESSAGE);
+		initializeFileOperationMessage();
 	}
 
 	/**
 	 * Try to generate the document with his objects variables.<br>
 	 * Mail merge with regions and mail merge with nested regions are supported.
-	 * @return the FileOperationMessage that results of the Document Factory mail Merge and File Creation
+	 * @return the fileOperationMessage that results of the Document Factory mail Merge and File Creation
 	 * 
 	 */
 	public FileOperationMessage generateDocument(){
-		if(this.documentFactory==null)
-		{//check if the document factory was already instantiated
+		if(this.documentFactory==null) {
+			//check if the document factory was already instantiated
 			this.documentFactory=BaseDocFactory.getInstance();
 		}
-		if(this.tablesNamesAndFieldsmap!= null && !this.tablesNamesAndFieldsmap.isEmpty())
-		{
+		if(this.tablesNamesAndFieldsmap!= null && !this.tablesNamesAndFieldsmap.isEmpty()) {
 			this.fileOperationMessage = this.documentFactory.generateDocumentWithRegions(
 					this.templatePath, 
 					this.outputName, 
@@ -447,8 +367,7 @@ public class DocumentTemplate implements Serializable {
 					this.outputFormat, 
 					this.mergeFields, 
 					this.tablesNamesAndFieldsmap);
-		}else if(this.tablesNamesAndFieldsHashtable!=null && !this.tablesNamesAndFieldsHashtable.isEmpty())
-		{
+		}else if(this.tablesNamesAndFieldsHashtable!=null && !this.tablesNamesAndFieldsHashtable.isEmpty()) {
 			this.fileOperationMessage = this.documentFactory.generateDocumentWithRegions(
 					this.templatePath, 
 					this.outputName, 
@@ -456,7 +375,7 @@ public class DocumentTemplate implements Serializable {
 					this.outputFormat, 
 					this.mergeFields, 
 					this.tablesNamesAndFieldsHashtable);
-		}else if(this.parentDataSourceForNestedMailMerge!=null && !this.parentDataSourceForNestedMailMerge.isEmpty()){
+		}else if(this.parentDataSourceForNestedMailMerge!=null && !this.parentDataSourceForNestedMailMerge.isEmpty()) {
 			this.fileOperationMessage = this.documentFactory.generateDocumentWithNestedRegions(
 					this.templatePath, 
 					this.outputName, 
@@ -465,7 +384,7 @@ public class DocumentTemplate implements Serializable {
 					this.mergeFields, 
 					this.parentDataSourceForNestedMailMerge, 
 					this.childrenDataSourcesForNestedMailMerge);
-		}else if(this.nestedDataSourceForNestedMailMerge!=null && !this.nestedDataSourceForNestedMailMerge.isEmpty()){
+		}else if(this.nestedDataSourceForNestedMailMerge!=null && !this.nestedDataSourceForNestedMailMerge.isEmpty()) {
 			this.fileOperationMessage = this.documentFactory.generateDocumentWithNestedRegions(
 					this.templatePath, 
 					this.outputName, 
@@ -473,7 +392,7 @@ public class DocumentTemplate implements Serializable {
 					this.outputFormat, 
 					this.mergeFields, 
 					this.nestedDataSourceForNestedMailMerge);
-		}else if(this.treeData!=null){
+		}else if(this.treeData!=null) {
 			this.fileOperationMessage = this.documentFactory.generateDocumentWithNestedRegions(
 					this.templatePath, 
 					this.outputName, 
@@ -481,7 +400,7 @@ public class DocumentTemplate implements Serializable {
 					this.outputFormat, 
 					this.mergeFields, 
 					this.treeData);
-		}else{
+		}else {
 			this.fileOperationMessage = this.documentFactory.generateDocument(
 					this.templatePath, 
 					this.outputName, 
@@ -527,12 +446,11 @@ public class DocumentTemplate implements Serializable {
 	 */
 	public void setData(CompositeObject _data) {
 		this.data = _data;
-		if(_data == null)
-		{
+		if(_data == null) {
 			this.mergeFields = List.create(TemplateMergeField.class);
-		}else
-		{
+		}else {
 			this.mergeFields =DataClassToMergefields.transformDataClassInMergeField(_data);
+			this.tablesNamesAndFieldsHashtable = DataClassToMergefields.transformDataClassInTablesNamesAndFields(_data);
 		}
 	}
 
@@ -607,13 +525,16 @@ public class DocumentTemplate implements Serializable {
 	}
 	
 	/**
-	 * set the FileOperationMessage Object of the DocumentTemplate.<br>
-	 * There should be no reason to use this method, since the FileOperationMessage is the result of the generateDocument() method.
+	 * set the fileOperationMessage Object of the DocumentTemplate.<br>
+	 * There should be no reason to use this method, since the fileOperationMessage is the result of the generateDocument() method.
 	 * @param _fop the fileOperationMessage
 	 */
+	@Deprecated
 	public void setFileOperationMessage(FileOperationMessage _fop)
 	{
-		
+		if(_fop!=null) {
+			this.fileOperationMessage = _fop;
+		}
 	}
 
 	/**
@@ -625,8 +546,7 @@ public class DocumentTemplate implements Serializable {
 		this.tablesNamesAndFieldsmap = _tablesNamesAndFieldsmap;
 		//we clear the hashTable if not null because we only use one of the two possible data Input 
 		//for Mail merge with regions.
-		if(this.tablesNamesAndFieldsHashtable != null)
-		{
+		if(this.tablesNamesAndFieldsHashtable != null) {
 			this.tablesNamesAndFieldsHashtable.clear();
 		}
 	}
@@ -648,8 +568,7 @@ public class DocumentTemplate implements Serializable {
 		this.tablesNamesAndFieldsHashtable = tablesNamesAndFieldsHashtable;
 		//we clear the hashMap if not null because we only use one of the two possible data Input 
 		//for Mail merge with regions.
-		if(this.tablesNamesAndFieldsmap !=null)
-		{
+		if(this.tablesNamesAndFieldsmap !=null) {
 			this.tablesNamesAndFieldsmap.clear();
 		}
 
@@ -720,7 +639,18 @@ public class DocumentTemplate implements Serializable {
 	public void setTreeData(Tree treeData) {
 		this.treeData = treeData;
 	}
+	
+	private void initializeFileOperationMessage() {
+		this.fileOperationMessage= FileOperationMessage.generateInformationTypeFileOperationMessage("");
+	}
 
-
+	private void initializeConstructorVariables(String _templatePath,
+			String _outputPath, String _outputName, String _outputFormat) {
+		this.templatePath = (_templatePath==null)?"":_templatePath;
+		this.outputPath = (_outputPath==null)?"":_outputPath;
+		this.outputName = (_outputName==null)?"":_outputName;
+		this.outputFormat = (_outputFormat==null)?"":_outputFormat;
+		this.mergeFields = List.create(TemplateMergeField.class);
+	}
 
 }

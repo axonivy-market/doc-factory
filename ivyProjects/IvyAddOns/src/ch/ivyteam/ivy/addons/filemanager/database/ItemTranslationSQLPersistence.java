@@ -97,7 +97,9 @@ public class ItemTranslationSQLPersistence implements
 	@Override
 	public ItemTranslation create(ItemTranslation itemTranslation)
 			throws Exception {
-		assert(itemTranslation !=null && itemTranslation.getTranslatedItemId()>0):"IllegalArgumentException in create ItemTranslationSQLPersistence.";
+		if(itemTranslation==null) {
+			return null;
+		}
 		ItemTranslation tmp = this.getExistingTranslation(itemTranslation.getTranslatedItemId());
 		if(tmp!=null && !tmp.getTranslations().isEmpty()) {
 			//a translation already exists for the directory
@@ -141,7 +143,9 @@ public class ItemTranslationSQLPersistence implements
 	 */
 	@Override
 	public ItemTranslation update(ItemTranslation itemTranslation) throws Exception {
-		assert(itemTranslation !=null && itemTranslation.getTranslatedItemId()>0):"IllegalArgumentException in update ItemTranslationSQLPersistence.";
+		if(itemTranslation==null || itemTranslation.getTranslatedItemId()<=0) {
+			return null;
+		}
 		
 		String query = TranslateItemSQLQueries.UPDATE_ITEM_TRANSLATION.replace(TranslateItemSQLQueries.TRANSLATION_TABLENAMESPACE_PLACEHOLDER, this.tableNameSpace);
 		PreparedStatement stmt=null;

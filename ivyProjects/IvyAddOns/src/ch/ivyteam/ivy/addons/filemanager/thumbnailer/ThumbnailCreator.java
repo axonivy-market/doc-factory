@@ -2,6 +2,7 @@ package ch.ivyteam.ivy.addons.filemanager.thumbnailer;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Set;
@@ -340,6 +341,118 @@ public class ThumbnailCreator implements Thumbnailer, ThumbnailerConstants {
 	@Override
 	public String getName() {
 		return this.getClass().getSimpleName();
+	}
+
+	@Override
+	public OutputStream[] generateFullSizeImages(File input, String mimeType, int totalPagesForGenerating)
+			throws IOException, ch.ivyteam.ivy.addons.filemanager.thumbnailer.exception.ThumbnailerException {
+		FileDoesNotExistException.check(input, "The input file");
+		OutputStream[] generated = null;
+		// MIME might be known already (in case of recursive thumbnail managers)
+		if (mimeType == null) {
+			mimeType = mimeTypeDetector.getMimeType(input);
+		}
+		
+		if (mimeType != null)
+			generated = executeFullSizeThumbnailers(mimeType, input, mimeType, totalPagesForGenerating);
+		
+		// Try again using wildcard thumbnailers
+		if (generated == null)
+			generated = executeFullSizeThumbnailers(ALL_MIME_WILDCARD, input,
+					mimeType, totalPagesForGenerating);
+
+		if (generated == null) 
+			throw new ch.ivyteam.ivy.addons.filemanager.thumbnailer.exception.ThumbnailerException(
+					"No suitable Thumbnailer has been found. (File: "
+							+ input.getName() + " ; Detected MIME: " + mimeType
+							+ ")");
+		
+		
+		return generated;
+	}
+	
+	/**
+	 * Helper function for Thumbnail generation: execute all thumbnailers of a
+	 * given MimeType.
+	 * @param useMimeType
+	 * @param input
+	 * @param detectedMimeType
+	 * @return
+	 * @throws IOException
+	 * @author: tctruc
+	 * @Date: Jul 28, 2014
+	 */
+	private OutputStream[] executeFullSizeThumbnailers(String useMimeType, File input,
+			String detectedMimeType, int totalPagesForGenerating) throws IOException {
+		OutputStream[] result = null;
+		for (Thumbnailer thumbnailer : thumbnailers
+				.getIterable(useMimeType)) {
+			try {
+				result = thumbnailer.generateFullSizeImages(input, detectedMimeType, totalPagesForGenerating);
+			} catch (Exception e) {
+				// This Thumbnailer apparently wasn't suitable, so try next
+				System.out.println("Warning: "
+						+ thumbnailer.getClass().getName()
+						+ " could not handle the file " + input.getName()
+						+ " (trying next)");
+			}
+		}
+		return result;
+	}
+
+	@Override
+	public int getNumberOfPages(File input, String mimeType) throws IOException {
+		FileDoesNotExistException.check(input, "The input file");
+		int result = 0;
+		
+		if (mimeType == null) {
+			mimeType = mimeTypeDetector.getMimeType(input);
+		}
+		
+		if (mimeType != null)
+			result = executeGetNumberOfPages(mimeType, input, mimeType);
+		
+		if (result == 0)
+			result = executeGetNumberOfPages(ALL_MIME_WILDCARD, input,
+					mimeType);
+		
+		if (result == 0) 
+			Ivy.log().warn("No suitable Thumbnailer has been found. (File: "
+							+ input.getName() + " ; Detected MIME: " + mimeType
+							+ ")");
+		
+		return result;
+	}
+	
+	/**
+	 * Helper function for getting number of pages
+	 * given MimeType.
+	 * @param useMimeType
+	 * @param input
+	 * @param detectedMimeType
+	 * @return
+	 * @throws IOException
+	 * @author: tctruc
+	 * @Date: Jul 28, 2014
+	 */
+	private int executeGetNumberOfPages(String useMimeType, File input,
+			String detectedMimeType) throws IOException {
+		int result = 0;
+		for (Thumbnailer thumbnailer : thumbnailers
+				.getIterable(useMimeType)) {
+			try {
+				result = thumbnailer.getNumberOfPages(input, detectedMimeType);
+			} catch (Exception e) {
+				result = 0;
+				// This Thumbnailer apparently wasn't suitable, so try next
+				Ivy.log().warn("Warning: "
+						+ thumbnailer.getClass().getName()
+						+ " could not handle the file " + input.getName()
+						+ " (trying next)");
+			}
+		}
+		Ivy.log().info("Total Pages: " + result);
+		return result;
 	}
 
 }

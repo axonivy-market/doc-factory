@@ -3,6 +3,12 @@ IvyAddons 5010000 Release Notes
 ===============================
 First official release version of the IvyAddons for ivy 5.1.
 
+* Issue #25095: Filemanager - oracle db. The security version is not detected properly, a a consequence the new security rights are ignored.
+* Issue #25096: Filemanager: Fix security feature activated
+  - files listed in recursive mode, the files the user can edit appears as read-only files.
+  - security version 2, user cannot rename files if he has the file update right and not write parent right.
+  - security version 2, user cannot paste files if he has the file create right and not write parent right.
+* Issue #25097: Filemanager-HTML Thumbnailer new version. Improvement of the thumbnailing with different images sizes. icepdf jar in the thumbnailer lib.
 * Issue #33769: Start Filemanager with max upload size less than 1024 Kb. 
 The max size filtering works fine, but the warning message shown to the user indicates a wrong max value: 
 it shows the bytes max values and not the Kb. 
