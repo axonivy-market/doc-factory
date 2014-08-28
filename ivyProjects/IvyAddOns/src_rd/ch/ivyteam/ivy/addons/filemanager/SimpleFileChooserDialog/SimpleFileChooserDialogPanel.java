@@ -26,6 +26,7 @@ import ch.ivyteam.ivy.environment.Ivy;
  * @author <%=author%>
  * @since <%=date%>
  */
+@SuppressWarnings("restriction")
 public class SimpleFileChooserDialogPanel extends RichDialogGridBagPanel 
 implements IRichDialogPanel 
 { 

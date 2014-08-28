@@ -1,0 +1,18 @@
+package ch.ivyteam.ivy.addons.docfactory;
+
+public final class DocFactoryConstants {
+	
+	public static final String DOC_EXTENSION=".doc";
+	public static final String DOCX_EXTENSION=".docx";
+	public static final String TXT_EXTENSION=".txt";
+	public static final String PDF_EXTENSION=".pdf";
+	public static final String HTML_EXTENSION=".html";
+	
+	public static final int UNSUPPORTED_FORMAT=-1;
+	public static final int DOC_FORMAT=0;
+	public static final int DOCX_FORMAT=1;
+	public static final int HTML_FORMAT=2;
+	public static final int TXT_FORMAT=3;
+	public static final int PDF_FORMAT=4;
+
+}

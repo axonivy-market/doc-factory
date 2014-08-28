@@ -370,9 +370,9 @@ public class DocumentOnServerSQLPersistence implements
 		ResultSet rst = null;
 		try {
 			stmt = this.connectionManager.getConnection().prepareStatement(query);
-			stmt.setString(1, PathUtil.escapeBackSlash(filepath));
+			stmt.setString(1, PathUtil.escapeUnderscoreInPath(PathUtil.escapeBackSlash(filepath)));
 			rst = stmt.executeQuery();
-			
+			Ivy.log().debug("{0} {1}", filepath, query);
 			if(rst.next()) {
 				doc = new DocumentOnServer();
 				this.buildDocumentOnServerWithResulSetRow(doc,rst);
@@ -547,6 +547,12 @@ public class DocumentOnServerSQLPersistence implements
 			stmt = this.connectionManager.getConnection().prepareStatement(query);
 			stmt.setLong(1, Long.decode(docToDelete.getFileID()));
 			flag = stmt.executeUpdate()>0;
+			try {
+				stmt.close();
+			} catch( SQLException ex) {
+				Ivy.log().error("PreparedStatement cannot be closed in get method.",ex);
+			}
+			
 			Ivy.log().debug("DocumentOnServer found and deleted? {0}",flag);
 			if(this.configuration.isStoreFilesInDB()) {
 				String query2 = DocumentOnServerSQLQueries.DELETE_CONTENT_FILE_Q

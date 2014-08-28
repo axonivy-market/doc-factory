@@ -62,6 +62,7 @@ import ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager.DirectorySecur
  * @author <%=author%>
  * @since <%=date%>
  */
+@SuppressWarnings("restriction")
 public class FileManagerPanel extends RichDialogGridBagPanel 
 implements IRichDialogPanel 
 { 
@@ -175,7 +176,6 @@ implements IRichDialogPanel
 	 * This method initializes updownloadPanePanel
 	 * @return void
 	 */
-	@SuppressWarnings("restriction")
 	private void initialize()
 	{
 		if(!RichDialogUtil.isRunningInVisualEditor()) {

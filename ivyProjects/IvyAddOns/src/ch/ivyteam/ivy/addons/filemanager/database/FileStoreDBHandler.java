@@ -23,6 +23,7 @@ import ch.ivyteam.ivy.addons.filemanager.database.filetype.FileTypesController;
 import ch.ivyteam.ivy.addons.filemanager.database.persistence.IDocumentOnServerPersistence;
 import ch.ivyteam.ivy.addons.filemanager.database.persistence.IFolderOnServerPersistence;
 import ch.ivyteam.ivy.addons.filemanager.database.security.AbstractDirectorySecurityController;
+import ch.ivyteam.ivy.addons.filemanager.database.security.DirectorySecurityUtil;
 import ch.ivyteam.ivy.addons.filemanager.database.security.SecurityHandler;
 import ch.ivyteam.ivy.addons.filemanager.database.security.SecurityHandlerChain;
 import ch.ivyteam.ivy.addons.filemanager.database.security.SecurityResponse;
@@ -125,13 +126,7 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 		this.securityActivated = this.config.isActivateSecurity();
 		if(this.securityActivated) {
 			this.securityController =new SecurityHandlerChain(null,this.config);
-			//this.securityController = FileManagementHandlersFactory.getDirectorySecurityControllerInstance(this.config);
 			this.config.setSecurityHandler(this.securityController);
-			
-			/*if(this.securityController instanceof DirectorySecurityController) {
-				((DirectorySecurityController) this.securityController).setSecurityHandler(this);
-			}*/
-			
 		}
 		this.docPersistence = PersistenceConnectionManagerFactory.getIDocumentOnServerPersistenceInstance(this.config);
 		this.dirPersistence = PersistenceConnectionManagerFactory.getIFolderOnServerPersistenceInstance(this.config);
@@ -191,7 +186,6 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 		}
 		if(this.config.getFileActionHistoryConfiguration()!=null 
 				&& this.config.getFileActionHistoryConfiguration().isActivateFileActionHistory()) {
-			//super.setFileActionHistoryController((AbstractFileActionHistoryController) new FileActionHistoryController(this.config.getFileActionHistoryConfiguration()));
 			super.setFileActionHistoryController(FileManagementHandlersFactory.getFileActionHistoryControllerInstance(this.config));
 		}
 		
@@ -717,8 +711,7 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 	 * @param _path: the path of the document
 	 * @return the id of the document or -1 if not found
 	 */
-	public int getDocIdWithPath(String _path) throws Exception
-	{
+	public int getDocIdWithPath(String _path) throws Exception {
 		DocumentOnServer doc = this.docPersistence.get(_path);
 		return doc==null? -1 : Integer.parseInt(doc.getFileID());
 	}
@@ -733,8 +726,7 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 	 * @throws Exception
 	 */
 	@Deprecated
-	public int[] getFileIdsUnderPath(String _path) throws Exception
-	{
+	public int[] getFileIdsUnderPath(String _path) throws Exception {
 		int[] i =null;
 		if(_path==null || _path.trim().equals(""))
 		{
@@ -761,21 +753,18 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 	 * @return
 	 * @throws Exception
 	 */
-	public long[] getFileIdsAsLongUnderPath(String _path) throws Exception
-	{
+	public long[] getFileIdsAsLongUnderPath(String _path) throws Exception {
 		long[] i =null;
-		if(_path==null || _path.trim().equals(""))
-		{
+		if(_path==null || _path.trim().equals("")) {
 			return i;
 		}
 		java.util.List<DocumentOnServer> docs = this.docPersistence.getList(_path, false);
 		i= new long[docs.size()];
 		int j=0;
 		for(DocumentOnServer doc:docs) {
-			try{
+			try {
 				i[j]=Long.decode(doc.getFileID());
-			}catch(Exception ex)
-			{
+			} catch(Exception ex) {
 				i[j]=0;
 			}
 			j++;
@@ -853,7 +842,7 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 						if(this.config.getSecurityHandler().hasRight(null, SecurityRightsEnum.OPEN_DIRECTORY_RIGHT, fos, u, null).isAllow()) {
 							doc.setCanUserDelete(this.config.getSecurityHandler().hasRight(null, SecurityRightsEnum.DELETE_FILES_RIGHT, fos, u, null).isAllow());
 							doc.setCanUserRead(true);
-							doc.setCanUserWrite(this.config.getSecurityHandler().hasRight(null, SecurityRightsEnum.WRITE_FILES_RIGHT, fos, u, null).isAllow());
+							doc.setCanUserWrite(this.config.getSecurityHandler().hasRight(null, SecurityRightsEnum.UPDATE_FILES_RIGHT, fos, u, null).isAllow());
 							al.add(doc);
 						}
 						break;
@@ -943,10 +932,9 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 	 */
 	@Override
 	public ArrayList<DocumentOnServer> getDocumentsInPath(String _path, boolean _isRecursive) throws Exception {
-		ArrayList<DocumentOnServer> l = new ArrayList<DocumentOnServer>();
-		l.addAll(this.docPersistence.getList(_path, _isRecursive));
-		
-		return l;
+		ArrayList<DocumentOnServer> al = new ArrayList<DocumentOnServer>();
+		al.addAll(this.getDocumentOnServersInDirectory(_path, _isRecursive));
+		return al;
 	}
 
 	/**
@@ -957,8 +945,7 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 	 * @throws Exception
 	 */
 	public ArrayList<DocumentOnServer> getDocumentsLocked(String _path, boolean _isrecursive) throws Exception{
-		if(_path==null || _path.trim().length()==0)
-		{
+		if(_path==null || _path.trim().length()==0) {
 			throw new Exception("Invalid path in getDocumentsInPath method");
 		}
 		ArrayList<DocumentOnServer>  al = new ArrayList<DocumentOnServer>();
@@ -976,8 +963,7 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 	 */
 	@Override
 	public ArrayList<DocumentOnServer> getDocumentsWithJavaFileInPath(String _path, boolean _isRecursive) throws Exception {
-		if(_path==null || _path.trim().length()==0)
-		{
+		if(_path==null || _path.trim().length()==0) {
 			throw new Exception("Invalid path in getDocumentsInPath method");
 		}
 
@@ -1000,7 +986,7 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 						if(this.securityController.hasRight(null, SecurityRightsEnum.OPEN_DIRECTORY_RIGHT, fos, u, null).isAllow()) {
 							doc.setCanUserDelete(this.securityController.hasRight(null, SecurityRightsEnum.DELETE_FILES_RIGHT, fos, u, null).isAllow());
 							doc.setCanUserRead(true);
-							doc.setCanUserWrite(this.securityController.hasRight(null, SecurityRightsEnum.WRITE_FILES_RIGHT, fos, u, null).isAllow());
+							doc.setCanUserWrite(this.securityController.hasRight(null, SecurityRightsEnum.UPDATE_FILES_RIGHT, fos, u, null).isAllow());
 							al.add(doc);
 						}
 					}
@@ -2747,161 +2733,7 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 	}
 	
 	private FolderOnServer ensureRightsIntegrityInDirectory(FolderOnServer fos) {
-		if (fos == null) {
-			return null;
-		}
-		// check the roles lists objects
-		if (fos.getCmrd() == null) {
-			fos.setCmrd(List.create(String.class));
-		}
-		if (fos.getCod() == null) {
-			fos.setCod(List.create(String.class));
-		}
-		if (fos.getCud() == null) {
-			fos.setCud(List.create(String.class));
-		}
-		if (fos.getCdd() == null) {
-			fos.setCdd(List.create(String.class));
-		}
-		if (fos.getCdf() == null) {
-			fos.setCdf(List.create(String.class));
-		}
-		if (fos.getCwf() == null) {
-			fos.setCwf(List.create(String.class));
-		}
-		if (fos.getCcd() == null) {
-			fos.setCcd(List.create(String.class));
-		}
-		if (fos.getCrd() == null) {
-			fos.setCrd(List.create(String.class));
-		}
-		if (fos.getCtd() == null) {
-			fos.setCtd(List.create(String.class));
-		}
-		if (fos.getCcf() == null) {
-			fos.setCcf(List.create(String.class));
-		}
-		if (fos.getCuf() == null) {
-			fos.setCuf(List.create(String.class));
-		}
-
-		// CHeck integrity in the rights
-
-		// ensure admin is in it + administrators should have all the rights
-		fos.setCmrd(ensureAdminRoleInList(fos.getCmrd()));
-		for (String s : fos.getCmrd()) {
-			if (!fos.getCdd().contains(s)) {
-				fos.getCdd().add(s);
-			}
-			if (!fos.getCud().contains(s)) {
-				fos.getCud().add(s);
-			}
-			if (!fos.getCod().contains(s)) {
-				fos.getCod().add(s);
-			}
-			if (!fos.getCdf().contains(s)) {
-				fos.getCdf().add(s);
-			}
-			if (!fos.getCwf().contains(s)) {
-				fos.getCwf().add(s);
-			}
-			if (!fos.getCcd().contains(s)) {
-				fos.getCcd().add(s);
-			}
-			if (!fos.getCrd().contains(s)) {
-				fos.getCrd().add(s);
-			}
-			if (!fos.getCtd().contains(s)) {
-				fos.getCtd().add(s);
-			}
-			if (!fos.getCcf().contains(s)) {
-				fos.getCcf().add(s);
-			}
-			if (!fos.getCuf().contains(s)) {
-				fos.getCuf().add(s);
-			}
-		}
-
-		// Who can delete a directory should be able to open and update it
-		for (String s : fos.getCdd()) {
-			if (!fos.getCod().contains(s)) {
-				fos.getCod().add(s);
-			}
-			if (!fos.getCud().contains(s)) {
-				fos.getCud().add(s);
-			}
-			if (!fos.getCrd().contains(s)) {
-				fos.getCrd().add(s);
-			}
-		}
-		
-		// Who can translate a directory should be able to open and update it
-		for (String s : fos.getCtd()) {
-			if (!fos.getCod().contains(s)) {
-				fos.getCod().add(s);
-			}
-		}
-
-		// Who can rename a directory should be able to open and update it
-		for (String s : fos.getCrd()) {
-			if (!fos.getCod().contains(s)) {
-				fos.getCod().add(s);
-			}
-		}
-
-		// Who can create a directory should be able to open and update it
-		for (String s : fos.getCcd()) {
-			if (!fos.getCod().contains(s)) {
-				fos.getCod().add(s);
-			}
-		}
-
-		// Who can update a directory should be able to open it
-		for (String s : fos.getCud()) {
-			if (!fos.getCod().contains(s)) {
-				fos.getCod().add(s);
-			}
-		}
-		
-		// Who can create a file should be able to open the directory
-		for (String s : fos.getCcf()) {
-			if (!fos.getCod().contains(s)) {
-				fos.getCod().add(s);
-			}
-		}
-		
-		// Who can create a file should be able to open the directory
-		for (String s : fos.getCuf()) {
-			if (!fos.getCod().contains(s)) {
-				fos.getCod().add(s);
-			}
-		}
-
-		// Who can delete a file should be able to update it and to open the
-		// directory
-		for (String s : fos.getCdf()) {
-			if (!fos.getCod().contains(s)) {
-				fos.getCod().add(s);
-			}
-			if (!fos.getCwf().contains(s)) {
-				fos.getCwf().add(s);
-			}
-			if (!fos.getCcf().contains(s)) {
-				fos.getCcf().add(s);
-			}
-			if (!fos.getCuf().contains(s)) {
-				fos.getCuf().add(s);
-			}
-		}
-
-		// Who can write a file should be able to open the directory
-		for (String s : fos.getCwf()) {
-			if (!fos.getCod().contains(s)) {
-				fos.getCod().add(s);
-			}
-		}
-
-		return fos;
+		return DirectorySecurityUtil.ensureRightsIntegrityInDirectory(config.getAdminRole(), fos);
 	}
 
 	/**
@@ -2911,21 +2743,10 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 	 * @param roles: the initial List<String> of names of Ivy Roles
 	 * @return the List<String> of names of Ivy Roles containing the administrator Role name if it exists.
 	 */
-	private List<String> ensureAdminRoleInList(List<String> roles)
-	{
-		if(roles==null)
-		{
-			roles=List.create(String.class);
-		}
-		String admin =null;
-		try{
-			admin = this.getFileManagerAdminRoleName();
-		}catch(Throwable t){
-
-		}
-		if(admin!=null && !roles.contains(admin))
-		{
-			roles.add(admin);
+	private List<String> ensureAdminRoleInList(List<String> roles) {
+		try {
+			return DirectorySecurityUtil.putRoleInListIfNotPresent(this.getFileManagerAdminRoleName(), roles);
+		} catch (Exception e) {
 		}
 		return roles;
 

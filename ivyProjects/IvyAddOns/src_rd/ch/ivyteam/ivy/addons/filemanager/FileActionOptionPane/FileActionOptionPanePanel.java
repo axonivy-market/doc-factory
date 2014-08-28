@@ -27,6 +27,7 @@ import ch.ivyteam.ivy.system.IProperty;
  * @author <%=author%>
  * @since <%=date%>
  */
+@SuppressWarnings("restriction")
 public class FileActionOptionPanePanel extends RichDialogGridBagPanel 
 implements IRichDialogPanel 
 { 

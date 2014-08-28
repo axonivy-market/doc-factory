@@ -1,5 +1,5 @@
 [Ivy]
-[>Created: Wed Jan 16 10:48:22 EST 2013]
+[>Created: Mon Jul 21 15:32:47 EDT 2014]
 125FE16732F8F94A 3.17 #module
 >Proto >Proto Collection #zClass
 Fs0 FileNameDialogProcess Big #zClass
@@ -87,6 +87,10 @@ Fs0 @PushWFArc f19 '' #zField
 Fs0 @RichDialog f69 '' #zField
 Fs0 @PushWFArc f70 '' #zField
 Fs0 @PushWFArc f71 '' #zField
+Fs0 @RichDialogInitStart f72 '' #zField
+Fs0 @RichDialogProcessStep f73 '' #zField
+Fs0 @PushWFArc f74 '' #zField
+Fs0 @PushWFArc f75 '' #zField
 >Proto Fs0 Fs0 FileNameDialogProcess #zField
 Fs0 f0 guid 121ECD37DFCFCA97 #txt
 Fs0 f0 type ch.ivyteam.ivy.addons.filemanager.FileNameDialog.FileNameDialogData #txt
@@ -161,7 +165,8 @@ Fs0 f6 actionDecl 'ch.ivyteam.ivy.addons.filemanager.FileNameDialog.FileNameDial
 ' #txt
 Fs0 f6 actionTable 'out=in;
 ' #txt
-Fs0 f6 actionCode 'panel.warnLabel.visible=false;
+Fs0 f6 actionCode '
+panel.warnLabel.visible=false;
 if(in.freePath.trim().length()>0){
 	if(!in.path.startsWith(in.freePath)){
 		out.freePath = in.path;
@@ -174,10 +179,7 @@ if(in.fileExtension.trim().length()>0 && !in.fileExtension.trim().equalsIgnoreCa
 	if(!in.fileExtension.startsWith(".")){
 		out.fileExtension="."+in.fileExtension;
 	}
-}else{
-	out.fileExtension=".doc";
 }
-
 ' #txt
 Fs0 f6 type ch.ivyteam.ivy.addons.filemanager.FileNameDialog.FileNameDialogData #txt
 Fs0 f6 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -185,7 +187,7 @@ Fs0 f6 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <language>
         <name>check freepath
 and fileExtension</name>
-        <nameStyle>32,9
+        <nameStyle>32,7,9
 </nameStyle>
     </language>
 </elementInfo>
@@ -213,7 +215,7 @@ Fs0 f8 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
         <name>format paths</name>
-        <nameStyle>12,9
+        <nameStyle>12,7,9
 </nameStyle>
     </language>
 </elementInfo>
@@ -701,6 +703,18 @@ if(panel.fileNameTextField.getText().trim().length()>0){
 	  panel.warnLabel.setText(ivy.cms.co("/ch/ivyteam/ivy/addons/filemanager/fileManagement/messages/error/invalidCharacterInFileName"));
 		panel.warnLabel.visible=true;
 		panel.okButton.setEnabled(false);
+	}else if(in.#configurationController!=null && in.#configurationController.#fileManagementHandler!=null){
+		String fname=in.path+panel.fileNameTextField.getText().trim()+in.fileExtension;
+		boolean fileExist= in.configurationController.fileManagementHandler.fileExists(fname);
+		ivy.log.debug("file exist? {0} {1}", fname,fileExist);
+		if(fileExist){
+			panel.warnLabel.setText(ivy.cms.co("/ch/ivyteam/ivy/addons/filemanager/fileManagement/messages/information/fileAlreadyExists"));
+			panel.warnLabel.visible=true;
+			panel.okButton.setEnabled(false);
+		}else{
+			panel.warnLabel.visible=false;
+			panel.okButton.setEnabled(true);
+		}
 	}
 	else if(in.fileExtension.trim().length()>1){
 		java.io.File file = new java.io.File(in.path+panel.fileNameTextField.getText().trim()+in.fileExtension);
@@ -1081,6 +1095,59 @@ Fs0 f70 2 1304 376 #addKink
 Fs0 f70 1 0.23121076568729693 0 0 #arcLabel
 Fs0 f71 expr out #txt
 Fs0 f71 1166 372 874 316 #arcP
+Fs0 f72 guid 1475A6277AB32CF8 #txt
+Fs0 f72 type ch.ivyteam.ivy.addons.filemanager.FileNameDialog.FileNameDialogData #txt
+Fs0 f72 method start(ch.ivyteam.ivy.addons.filemanager.configuration.BasicConfigurationController,ch.ivyteam.ivy.addons.filemanager.DocumentOnServer) #txt
+Fs0 f72 disableUIEvents true #txt
+Fs0 f72 inParameterDecl 'ch.ivyteam.ivy.richdialog.exec.RdMethodCallEvent methodEvent = event as ch.ivyteam.ivy.richdialog.exec.RdMethodCallEvent;
+<ch.ivyteam.ivy.addons.filemanager.configuration.BasicConfigurationController configurationController,ch.ivyteam.ivy.addons.filemanager.DocumentOnServer documentOnServer> param = methodEvent.getInputArguments();
+' #txt
+Fs0 f72 inParameterMapAction 'out.allowPathChooser=false;
+out.configurationController=param.configurationController;
+out.DBSchemaName=param.configurationController.databaseSchemaName;
+out.DBTableName=param.configurationController.filesTableName;
+out.documentOnServer=param.documentOnServer;
+out.ivyConnectionName=param.configurationController.ivyDBConnectionName;
+out.showFileTypeChooser=false;
+' #txt
+Fs0 f72 outParameterDecl '<java.lang.String fileName,java.lang.String path> result;
+' #txt
+Fs0 f72 outParameterMapAction 'result.fileName=in.fileName;
+result.path=in.path;
+' #txt
+Fs0 f72 embeddedRdInitializations '* ' #txt
+Fs0 f72 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>start(BasicConfigurationController,
+DocumentOnServer)</name>
+        <nameStyle>53,5,7
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
+Fs0 f72 45 365 22 22 -44 -49 #rect
+Fs0 f72 @|RichDialogInitStartIcon #fIcon
+Fs0 f73 actionDecl 'ch.ivyteam.ivy.addons.filemanager.FileNameDialog.FileNameDialogData out;
+' #txt
+Fs0 f73 actionTable 'out=in;
+' #txt
+Fs0 f73 actionCode 'import org.apache.commons.io.FilenameUtils;
+
+if(in.#documentOnServer!=null && !in.documentOnServer.path.trim().isEmpty()) {
+	panel.fileNameTextField.setText(FilenameUtils.getBaseName(in.documentOnServer.path));
+	out.fileExtension=FilenameUtils.getExtension(in.documentOnServer.path);
+	out.path = FilenameUtils.getFullPath(in.documentOnServer.path);
+}' #txt
+Fs0 f73 type ch.ivyteam.ivy.addons.filemanager.FileNameDialog.FileNameDialogData #txt
+Fs0 f73 38 412 36 24 20 -2 #rect
+Fs0 f73 @|RichDialogProcessStepIcon #fIcon
+Fs0 f74 expr out #txt
+Fs0 f74 56 387 56 412 #arcP
+Fs0 f75 expr out #txt
+Fs0 f75 74 424 267 308 #arcP
+Fs0 f75 1 144 424 #addKink
+Fs0 f75 1 0.2902649377836512 0 0 #arcLabel
 >Proto Fs0 .type ch.ivyteam.ivy.addons.filemanager.FileNameDialog.FileNameDialogData #txt
 >Proto Fs0 .processKind RICH_DIALOG #txt
 >Proto Fs0 .xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -1177,3 +1244,7 @@ Fs0 f67 out f70 tail #connect
 Fs0 f70 head f69 mainIn #connect
 Fs0 f69 mainOut f71 tail #connect
 Fs0 f71 head f49 mainIn #connect
+Fs0 f72 mainOut f74 tail #connect
+Fs0 f74 head f73 mainIn #connect
+Fs0 f73 mainOut f75 tail #connect
+Fs0 f75 head f6 mainIn #connect

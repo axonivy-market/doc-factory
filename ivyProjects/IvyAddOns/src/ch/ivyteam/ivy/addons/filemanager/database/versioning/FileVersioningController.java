@@ -923,14 +923,25 @@ public class FileVersioningController extends AbstractFileVersioningController {
 		PreparedStatement stmt = null;
 		PreparedStatement stmt2 = null;
 		try {
-			stmt = con.prepareStatement(q1);
-			stmt2 = con.prepareStatement(q2);
+			
 			for (FileVersion fv : fvs) {
+				stmt = con.prepareStatement(q1);
+				stmt2 = con.prepareStatement(q2);
 				stmt.setLong(1, fv.getId());
 				stmt.executeUpdate();
 
 				stmt2.setLong(1, fv.getId());
 				stmt2.executeUpdate();
+				try {
+					stmt.close();
+				} catch( SQLException ex) {
+					Ivy.log().error("PreparedStatement cannot be closed in FileVersions.",ex);
+				}
+				try {
+					stmt2.close();
+				} catch( SQLException ex) {
+					Ivy.log().error("PreparedStatement cannot be closed in FileVersions.",ex);
+				}
 			}
 		} finally {
 			try {

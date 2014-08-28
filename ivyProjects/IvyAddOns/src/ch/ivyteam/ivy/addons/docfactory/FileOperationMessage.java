@@ -1,7 +1,6 @@
 package ch.ivyteam.ivy.addons.docfactory;
 
 import java.io.File;
-import java.util.ArrayList;
 
 import ch.ivyteam.ivy.scripting.objects.List;
 
@@ -31,7 +30,7 @@ public class FileOperationMessage {
     
 	/**
 	 * Constructor
-	 * Generates the FileOperationMessage object with empty message, empty File List<br>
+	 * Generates the fileOperationMessage object with empty message, empty File List<br>
 	 * and as an information message
 	 */
 	public FileOperationMessage() {
@@ -42,33 +41,28 @@ public class FileOperationMessage {
 	/**
 	 * Constructor with the message, the List of the Files and the type
 	 * @param _message
-	 * @param _files
+	 * @param _files if null the inner files list will be an empty files list
 	 * @param _type
 	 */
 	public FileOperationMessage(String _message, List<File> _files, int _type) {
-		super();
-		if(_message!= null)
-		{
+		if(_message!= null) {
 			this.message = _message;
-		}else
-		{
+		}else {
 			this.message = "";
 		}
 		
-		if(_files != null)
-		{
+		if(_files != null) {
 			this.files = _files;
-		}else
-		{
+		}else {
 			this.files= List.create(java.io.File.class);
 		}
 		
-		if( 0 <_type &&  _type < 4)
-		{// if type indicated supported
+		if( SUCCESS_MESSAGE <=_type &&  _type <= INFORMATION_MESSAGE) {
+			// if type indicated supported
 			this.type = _type;
 		}
-		else
-		{ //type indicated not supported, we set the type to Information's one
+		else { 
+			//type indicated not supported, we set the type to Information's one
 			this.type=3;
 		}
 		
@@ -78,8 +72,7 @@ public class FileOperationMessage {
 	 * @return the files
 	 */
 	public List<java.io.File> getFiles() {
-		if(this.files==null)
-		{
+		if(this.files==null) {
 			this.files= List.create(java.io.File.class);
 		}
 		return files;
@@ -89,12 +82,10 @@ public class FileOperationMessage {
 	 * @param _files the files to set
 	 */
 	public void setFiles(List<java.io.File> _files) {
-		if(_files != null)
-		{
-			this.files.clear();
+		if(_files != null) {
+			this.getFiles().clear();
 			this.files.addAll(_files);
-		}else
-		{
+		}else {
 			this.files= List.create(java.io.File.class);
 		}
 	}
@@ -103,12 +94,10 @@ public class FileOperationMessage {
 	 * Clears the files List and creates the file list if it is null.
 	 */
 	public void emptyFileList(){
-		if(this.files==null)
-		{
+		if(this.files==null) {
 			this.files= List.create(java.io.File.class);
 		}
-		else
-		{
+		else {
 			this.files.clear();
 		}
 	
@@ -147,26 +136,55 @@ public class FileOperationMessage {
 	 * @param _file
 	 */
     public void addFile(java.io.File _file){
-    	if(_file !=null)
-    	{
-    		this.files.add(_file); 
+    	if(_file !=null) {
+    		this.getFiles().add(_file); 
     	}
     }
     
     /**
      * add files to the list
-     * @param _files
+     * @param list
      */
-    public void addFiles(ArrayList<java.io.File> _files){
-    	if(this.files==null)
-		{
-			this.files= List.create(java.io.File.class);
-		}
-    	if(_files!=null)
-    	{
-    		this.files.addAll(_files);
+    public void addFiles(java.util.List<File> list){
+    	if(list!=null) {
+    		this.getFiles().addAll(list);
     	}
     }
+    
+    /**
+     * returns true if the fileOperationMessage represents a success message
+     * @return true if the fileOperationMessage represents a success message, else false
+     */
+    public boolean isSuccess() {
+    	return this.type==SUCCESS_MESSAGE;
+    }
+    
+    /**
+     * returns true if the fileOperationMessage represents an error message
+     * @return true if the fileOperationMessage represents an error message, else false
+     */
+    public boolean isError() {
+    	return this.type==ERROR_MESSAGE;
+    }
+    
+    /**
+     * returns true if the fileOperationMessage represents an information message
+     * @return true if the fileOperationMessage represents an information message, else false
+     */
+    public boolean isInformation() {
+    	return this.type==INFORMATION_MESSAGE;
+    }
+    
+    public static FileOperationMessage generateInformationTypeFileOperationMessage(String message) {
+    	return new FileOperationMessage(message, null, INFORMATION_MESSAGE);
+    }
+    
+    public static FileOperationMessage generateSuccessTypeFileOperationMessage(String message) {
+    	return new FileOperationMessage(message, null, SUCCESS_MESSAGE);
+    }
 	
+    public static FileOperationMessage generateErrorTypeFileOperationMessage(String message) {
+    	return new FileOperationMessage(message, null, ERROR_MESSAGE);
+    }
 
 }

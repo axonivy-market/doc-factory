@@ -31,30 +31,31 @@ public abstract class BaseDocFactory{
 	/** The parent RichDialogPanel of this docFactory, used to communicate with its callback methods */
 	protected IRichDialogPanel parentRD;
 	/** the list of supported formats. Can be different in your implementation*/
-	static final public String[] supportedOutputFormats = new String[] {"doc", "docx", "html", "txt", "pdf"};
-	/** Format types for convenient use of switch control*/
-	static final public int DOC_FORMAT=0;
-	/** */
-	static final public int DOCX_FORMAT=1;
-	/** */
-	static final public int HTML_FORMAT=2;
-	/** */
-	static final public int TXT_FORMAT=3;
-	/** */
-	static final public int PDF_FORMAT=4;
+	public static final String[] SUPPORTED_OUTPUT_FORMATS = new String[] {"doc", "docx", "html", "txt", "pdf"};
+	
+	@Deprecated
+	public static final String[] supportedOutputFormats = new String[] {"doc", "docx", "html", "txt", "pdf"};
+	
+	/* Format types for convenient use of switch control*/
+	public static final int UNSUPPORTED_FORMAT=DocFactoryConstants.UNSUPPORTED_FORMAT;
+	public static final int DOC_FORMAT=DocFactoryConstants.DOC_FORMAT;
+	public static final int DOCX_FORMAT=DocFactoryConstants.DOCX_FORMAT;
+	public static final int HTML_FORMAT=DocFactoryConstants.HTML_FORMAT;
+	public static final int TXT_FORMAT=DocFactoryConstants.TXT_FORMAT;
+	public static final int PDF_FORMAT=DocFactoryConstants.PDF_FORMAT;
 	/** the document factory use a document model like an office dot template to generate serial letters.<br>
 	 * This is the template java.io.File Object to be used for this operation.
 	 */
 	protected File template;
 	/** 
 	 * This Object is used to gives the RD Panel the result of the documents generation operation.<br>
-	 * This FileOperationMessage contains a type indicating if the operation was successful or not, and a List of generated Files.<br>
+	 * This fileOperationMessage contains a type indicating if the operation was successful or not, and a List of generated Files.<br>
 	 * @see ch.ivyteam.ivy.addons.docfactory.FileOperationMessage
 	 */
-	protected FileOperationMessage FileOperationMessage;
+	protected FileOperationMessage fileOperationMessage;
 	/** These are the callback methods names that allow communicating with the Ivy Rich Dialog.<br>
-	 * The errorMethod should accept a FileOperationMessage as incoming parameter.<br>
-	 * The successMethod should accept a FileOperationMessage as incoming parameter.<br>
+	 * The errorMethod should accept a fileOperationMessage as incoming parameter.<br>
+	 * The successMethod should accept a fileOperationMessage as incoming parameter.<br>
 	 * The progressMethod should accept a Number as incoming parameter.
 	 * */
 	protected String errorMethodName, successMethodName, progressMethodName;
@@ -76,7 +77,7 @@ public abstract class BaseDocFactory{
 	 */
 	public BaseDocFactory(IRichDialogPanel parent, String errorMethodName, String successMethodName, String progressMethodName){
 		this.parentRD=parent;
-		this.outputFormat=supportedOutputFormats[0];
+		this.outputFormat=SUPPORTED_OUTPUT_FORMATS[0];
 		this.errorMethodName=errorMethodName;
 		this.successMethodName=successMethodName;
 		this.progressMethodName=progressMethodName;
@@ -90,35 +91,11 @@ public abstract class BaseDocFactory{
 	 * @param _outputName : name of the output File
 	 * @param _outputPath : where to save the new generated File on the server
 	 * @param _outputFormat : format ".doc", ".docx", ".pdf", or ".html"
-	 *@return The FileOperationMessage object containing the Type of the message (FileHandler.SUCCESS, ERROR, INFORMATION_MESSAGE),<br>
+	 *@return The fileOperationMessage object containing the Type of the message (FileHandler.SUCCESS, ERROR, INFORMATION_MESSAGE),<br>
 	 *  the text of the message and <br>
 	 *  the java.io.File generated in case of success, else null.<br>
 	 */
 	public abstract FileOperationMessage generateBlankDocument(String _outputName, String _outputPath, String _outputFormat);
-	
-	/**
-	 * Method to generate one document
-	 * @param path : where to save the new generated File on the server
-	 * @param format : format ".doc", ".docx", ".pdf", or ".html" 
-	 * @param list : List of parameters (TemplateMergeField objects).
-	 * @return The FileOperationMessage object containing the Type of the message (FileHandler.SUCCESS, ERROR, INFORMATION_MESSAGE),<br>
-	 *  the text of the message and <br>
-	 *  the java.io.File generated in case of success added to the file list, else an empty file List.<br>
-	 
-	public abstract FileOperationMessage generateDocument(String path, String format, List<TemplateMergeField> list);
-	
-	
-	 * Method to generate one document
-	 * @param the name of the File that will be generated
-	 * @param path : where to save the new generated File on the server
-	 * @param format : format ".doc", ".docx", ".pdf", or ".html" 
-	 * @param list : List of parameters (TemplateMergeField objects).
-	 * @return The FileOperationMessage object containing the Type of the message (FileHandler.SUCCESS, ERROR, INFORMATION_MESSAGE),<br>
-	 *  the text of the message and <br>
-	 *  the java.io.File generated in case of success, else null.<br>
-	 
-	public abstract FileOperationMessage generateDocument(String fileName, String path, String format, List<TemplateMergeField> list);
-	*/
 	
 	/**
 	 * Method to generate one document
@@ -127,7 +104,7 @@ public abstract class BaseDocFactory{
 	 * @param _outputpath : where to save the new generated File on the server
 	 * @param _outputformat : format ".doc", ".docx", ".pdf", or ".html" 
 	 * @param list : List of parameters (TemplateMergeField objects).
-	 * @return The FileOperationMessage object containing the Type of the message (FileHandler.SUCCESS, ERROR, INFORMATION_MESSAGE),<br>
+	 * @return The fileOperationMessage object containing the Type of the message (FileHandler.SUCCESS, ERROR, INFORMATION_MESSAGE),<br>
 	 *  the text of the message and <br>
 	 *  the java.io.File generated in case of success, else null.<br>
 	 */
@@ -136,7 +113,7 @@ public abstract class BaseDocFactory{
 	/**
 	 * Method to generate one document
 	 * @param _documentTemplate the DocumentTemplate Object containing all the necessary variables for this operation<br>
-	 * @return The FileOperationMessage object containing the Type of the message (FileHandler.SUCCESS, ERROR, INFORMATION_MESSAGE),<br>
+	 * @return The fileOperationMessage object containing the Type of the message (FileHandler.SUCCESS, ERROR, INFORMATION_MESSAGE),<br>
 	 *  the text of the message and <br>
 	 *  the java.io.File generated in case of success, else null.<br>
 	 *  @see DocumentTemplate
@@ -146,11 +123,11 @@ public abstract class BaseDocFactory{
 	/**
 	 * Method to generate one document
 	 * @param list : List of parameters (TemplateMergeField objects).
-	 * @return The FileOperationMessage object containing the Type of the message (FileHandler.SUCCESS, ERROR, INFORMATION_MESSAGE),<br>
+	 * @return The fileOperationMessage object containing the Type of the message (FileHandler.SUCCESS, ERROR, INFORMATION_MESSAGE),<br>
 	 *  the text of the message and <br>
 	 *  the java.io.File generated in case of success, else null.<br>
 	
-	public abstract FileOperationMessage generateDocument(List<TemplateMergeField> list);
+	public abstract fileOperationMessage generateDocument(List<TemplateMergeField> list);
 	 */
 	
 	/**
@@ -185,7 +162,7 @@ public abstract class BaseDocFactory{
 	 * with a list of DocumentTemplates Objects containing all the necessary variables for this operation.<br>
 	 * Here each of the DocumentTemplate will generate a single File.<br>
 	 * @param list : List of DocumentTemplates. <br>
-	 * @return The FileOperationMessage object containing the Type of the message (FileHandler.SUCCESS, ERROR, INFORMATION_MESSAGE),<br>
+	 * @return The fileOperationMessage object containing the Type of the message (FileHandler.SUCCESS, ERROR, INFORMATION_MESSAGE),<br>
 	 *  the text of the message and null File Object<br>
 	 *  @see DocumentTemplate
 	 */
@@ -199,7 +176,7 @@ public abstract class BaseDocFactory{
 	 * @param _outputFormat : format ".doc", ".docx", ".pdf", ".txt" or ".html" 
 	 * @param list : List of List of parameters (TemplateMergeField objects). <br>
 	 * Each List of TemplateMergeField objects in the primary List will be turned into a new document.
-	 * @return The FileOperationMessage object containing the Type of the message (FileHandler.SUCCESS, ERROR, INFORMATION_MESSAGE),<br>
+	 * @return The fileOperationMessage object containing the Type of the message (FileHandler.SUCCESS, ERROR, INFORMATION_MESSAGE),<br>
 	 *  the text of the message and null File Object<br>
 	 */
 	public abstract FileOperationMessage generateDocuments(String templatePath, String _outputPath, String _outputFormat, List<List<TemplateMergeField>> list);
@@ -212,7 +189,7 @@ public abstract class BaseDocFactory{
 	 * @param _outputFormat : format ".doc", ".docx", ".pdf", ".txt" or ".html"  
 	 * @param list : List of List of parameters (TemplateMergeField objects). <br>
 	 * Each List of TemplateMergeField objects in the primary List will be turned into a new document.
-	 * @return The FileOperationMessage object containing the Type of the message (FileHandler.SUCCESS, ERROR, INFORMATION_MESSAGE),<br>
+	 * @return The fileOperationMessage object containing the Type of the message (FileHandler.SUCCESS, ERROR, INFORMATION_MESSAGE),<br>
 	 *  the text of the message and null File Object<br>
 	 */
 	public abstract FileOperationMessage generateDocumentsWithDifferentDestination(String templatePath, String _outputFormat, List<List<TemplateMergeField>> list);
@@ -226,7 +203,7 @@ public abstract class BaseDocFactory{
 	 * @param _outputFormat: format ".doc", ".docx", ".pdf", ".txt" or ".html" 
 	 * @param _mergefields: a List of ch.ivyteam.ivy.addons.docfactory.TemplateMergeField Objects for "normal" mail merge.
 	 * @param _tablesNamesAndFieldsmap: HashMap<String, List<CompositeObject>> HashMap containing the tables names (merge regions) from the template an the Lists of dataClasses Objects to feed the tables. 
-	 * @return The FileOperationMessage object containing the Type of the message (FileHandler.SUCCESS, ERROR, INFORMATION_MESSAGE),<br>
+	 * @return The fileOperationMessage object containing the Type of the message (FileHandler.SUCCESS, ERROR, INFORMATION_MESSAGE),<br>
 	 *  the text of the message and null File Object<br>
 	 */
 	public abstract FileOperationMessage generateDocumentWithRegions(String _templatePath, String _outputName, String _outputPath, String _outputFormat, List<TemplateMergeField> _mergefields, HashMap<String, List<CompositeObject>> _tablesNamesAndFieldsmap);
@@ -240,7 +217,7 @@ public abstract class BaseDocFactory{
 	 * @param _mergefields: a List of ch.ivyteam.ivy.addons.docfactory.TemplateMergeField Objects for "normal" mail merge.
 	 * @param _hashtable: Hashtable<String, Recordset> each String is the table Name in  the template with its corresponding Recordset to feed the table. <br>
 	 * Each recordset column name should correspond to a merge region field name in its corresponding table.
-	 * @return The FileOperationMessage object containing the Type of the message (FileHandler.SUCCESS, ERROR, INFORMATION_MESSAGE),<br>
+	 * @return The fileOperationMessage object containing the Type of the message (FileHandler.SUCCESS, ERROR, INFORMATION_MESSAGE),<br>
 	 *  the text of the message and null File Object<br>
 	 */
 	public abstract FileOperationMessage generateDocumentWithRegions(String _templatePath, String _outputName, String _outputPath, String _outputFormat, List<TemplateMergeField> _mergefields, Hashtable<String, Recordset> _hashtable);
@@ -255,7 +232,7 @@ public abstract class BaseDocFactory{
 	 * @param _tablesNames: list of String representing the table names in the template
 	 * @param _tables_fieldsNames: for each table a list of String representing each merge field with region name (column name)
 	 * @param tables_rowsValues: for each table a list of list of values (list of rows) to feed the corresponding table.
-	 * @return The FileOperationMessage object containing the Type of the message (FileHandler.SUCCESS, ERROR, INFORMATION_MESSAGE),<br>
+	 * @return The fileOperationMessage object containing the Type of the message (FileHandler.SUCCESS, ERROR, INFORMATION_MESSAGE),<br>
 	 *  the text of the message and null File Object<br>
 	 */
 	public abstract FileOperationMessage generateDocumentWithRegions(String _templatePath, String _outputName, String _outputPath, String _outputFormat, List<TemplateMergeField> _mergefields, List<String> _tablesNames, List<List<String>> _tables_fieldsNames, List<List<List<Object>>> tables_rowsValues);
@@ -303,7 +280,7 @@ public abstract class BaseDocFactory{
 	 * and all the TemplateMergefields.
 	 * @param list : List of List of DocumentTemplate. <br>
 	 * Each List of TemplateMergeField objects in the primary List will be turned into a new document.
-	 * @return The List of FileOperationMessage objects (one for each DocumentTemplate) containing the Type of the message (FileHandler.SUCCESS, ERROR, INFORMATION_MESSAGE),<br>
+	 * @return The List of fileOperationMessage objects (one for each DocumentTemplate) containing the Type of the message (FileHandler.SUCCESS, ERROR, INFORMATION_MESSAGE),<br>
 	 *  the text of the message and File Object<br>
 	 *  @see DocumentTemplate
 	 */
@@ -317,11 +294,11 @@ public abstract class BaseDocFactory{
 	 * @param _outputFormat : format ".doc", ".docx", ".pdf", or ".html" 
 	 * @param list : List of List of parameters (TemplateMergeField objects). <br>
 	 * Each List of TemplateMergeField objects in the primary List will be turned into a new page in the final File.
-	 * @return The FileOperationMessage object containing the Type of the message (FileHandler.SUCCESS, ERROR, INFORMATION_MESSAGE),<br>
+	 * @return The fileOperationMessage object containing the Type of the message (FileHandler.SUCCESS, ERROR, INFORMATION_MESSAGE),<br>
 	 *  the text of the message and <br>
 	 *  the java.io.File generated in case of success, else null.<br> 
 	 
-	public abstract FileOperationMessage generateMultipleDocumentsInOne(String _outputName, String _outputPath, String _outputFormat,List<List<TemplateMergeField>> list);
+	public abstract fileOperationMessage generateMultipleDocumentsInOne(String _outputName, String _outputPath, String _outputFormat,List<List<TemplateMergeField>> list);
 	*/
 	
 	/**
@@ -332,7 +309,7 @@ public abstract class BaseDocFactory{
 	 * @param _outputFormat : format ".doc", ".docx", ".pdf", or ".html" 
 	 * @param list : List of List of parameters (TemplateMergeField objects). <br>
 	 * Each List of TemplateMergeField objects in the primary List will be turned into a new page in the final File.
-	 * @return The FileOperationMessage object containing the Type of the message (FileHandler.SUCCESS, ERROR, INFORMATION_MESSAGE),<br>
+	 * @return The fileOperationMessage object containing the Type of the message (FileHandler.SUCCESS, ERROR, INFORMATION_MESSAGE),<br>
 	 *  the text of the message and <br>
 	 *  the java.io.File generated in case of success, else null.<br> 
 	 */
@@ -345,7 +322,7 @@ public abstract class BaseDocFactory{
 	 * @param _outputName : the desired Name for the document (can have a default like "letter_nanotime")
 	 * @param _outputFormat : format ".doc" (can be the default), ".docx", ....
 	 * @param list : List DocumentTemplate Objects. Each one contains the necessary variables for its output. 
-	 * @return The FileOperationMessage object containing the Type of the message (FileHandler.SUCCESS, ERROR, INFORMATION_MESSAGE),<br>
+	 * @return The fileOperationMessage object containing the Type of the message (FileHandler.SUCCESS, ERROR, INFORMATION_MESSAGE),<br>
 	 *  the text of the message and <br>
 	 *  the java.io.File generated in case of success, else null.<br> 
 	 * @see DocumentTemplate
@@ -420,7 +397,7 @@ public abstract class BaseDocFactory{
 	 * @return an array of Strings representing the supported formats
 	 */
 	public static String[] getSupportedFormats(){
-		return supportedOutputFormats;
+		return SUPPORTED_OUTPUT_FORMATS;
 	}
 	
 	
@@ -510,25 +487,14 @@ public abstract class BaseDocFactory{
 	public static BaseDocFactory getInstance(){
 		BaseDocFactory basedoc=null;
 		try {
-			if(System.getProperty("document.factory")!=null && !System.getProperty("document.factory").trim().equals("")){
-				basedoc=(BaseDocFactory) Class.forName(
-						System.getProperty("document.factory")).newInstance();
+			if(System.getProperty("document.factory")!=null && !System.getProperty("document.factory").trim().isEmpty()){
+				basedoc=(BaseDocFactory) Class.forName(System.getProperty("document.factory")).newInstance();
 			}else{
 				basedoc= (BaseDocFactory) Class.forName("ch.ivyteam.ivy.addons.docfactory.AsposeDocFactory").newInstance();
 			}
-		} catch (ClassNotFoundException e) {
-			Ivy.log().debug(e.getMessage());
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			Ivy.log().debug(e.getMessage());
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			Ivy.log().debug(e.getMessage());
-			e.printStackTrace();
-		} catch (NullPointerException e){
-			Ivy.log().debug("debug "+e);
-			e.printStackTrace();
-		}
+		} catch (Exception e) {
+			Ivy.log().error("Exception generating the docFactory. "+e.getMessage(),e);
+		} 
 		return basedoc;
 	}
 }

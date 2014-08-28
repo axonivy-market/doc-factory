@@ -22,3 +22,5 @@ DBSchemaName 'usefull in case of use of schemas in the DB: like with PostgreSQL.
 allowPathChooser Boolean #field
 allowPathChooser 'True if the Path chooser button is visible' #fieldComment
 allowPathChooser PERSISTENT #fieldModifier
+configurationController ch.ivyteam.ivy.addons.filemanager.configuration.BasicConfigurationController #field
+documentOnServer ch.ivyteam.ivy.addons.filemanager.DocumentOnServer #field

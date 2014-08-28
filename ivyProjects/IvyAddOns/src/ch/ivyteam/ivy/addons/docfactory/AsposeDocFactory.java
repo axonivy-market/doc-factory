@@ -20,6 +20,7 @@ import ch.ivyteam.ivy.scripting.objects.Tree;
 import ch.ivyteam.ivy.addons.docfactory.TemplateMergeField;
 import ch.ivyteam.ivy.addons.util.RDCallbackMethodHandler;
 import ch.ivyteam.ivy.addons.docfactory.BaseDocFactory;
+import ch.ivyteam.ivy.addons.docfactory.aspose.AsposeDocFactoryFileGenerator;
 import ch.ivyteam.ivy.addons.docfactory.aspose.AsposeFieldMergingCallback;
 import ch.ivyteam.ivy.addons.docfactory.aspose.MailMergeDataSource;
 
@@ -54,12 +55,7 @@ public class AsposeDocFactory extends BaseDocFactory{
 	private Document doc, docDest;
 
 	private AsposeFieldMergingCallback fieldMergingCallback=null;
-	/** 
-	 * This Object is used to gives the RD Panel the result of the documents generation operation.<br>
-	 * This FileOperationMessage contains a type indicating if the operation was successful or not, and a List of generated Files.<br>
-	 * @see ch.ivyteam.ivy.addons.util.FileOperationMessage
-	 */
-	private FileOperationMessage fileOperationMessage;
+	
 
 	/** Aspose Licence*/
 	private com.aspose.words.License license = null;
@@ -76,7 +72,7 @@ public class AsposeDocFactory extends BaseDocFactory{
 		parseLicence();
 
 	}
-	
+
 	/**
 	 * Constructor with the following parameters:
 	 * @param parent : the IRichDialogPanel from the RIA where this docFactory is used. Usefull to communicate through callback methods.
@@ -88,7 +84,7 @@ public class AsposeDocFactory extends BaseDocFactory{
 		super(parent, errorMethod, successMethod, progressMethod);
 		parseLicence();
 	}
-	
+
 	/**
 	 * Not public API, for Tests only.
 	 * @param parent
@@ -101,7 +97,7 @@ public class AsposeDocFactory extends BaseDocFactory{
 		super(parent, errorMethod, successMethod, progressMethod);
 		this.fieldMergingCallback = fieldMergingCallback;
 	}
-	
+
 	private void parseLicence() {
 		this.license = new com.aspose.words.License();
 		try {
@@ -109,11 +105,8 @@ public class AsposeDocFactory extends BaseDocFactory{
 			this.license.setLicense(in);
 			in.close();
 		} catch (Exception e) {
-			Ivy.log().error("Aspose Words Licence error "+e);
-			this.fileOperationMessage = new FileOperationMessage();
-			this.fileOperationMessage.setType(ch.ivyteam.ivy.addons.docfactory.FileOperationMessage.ERROR_MESSAGE);
-			this.fileOperationMessage.setMessage(e.getMessage());
-			this.fileOperationMessage.emptyFileList();
+			Ivy.log().error("Aspose Words Licence error",e);
+			this.fileOperationMessage= FileOperationMessage.generateErrorTypeFileOperationMessage("Aspose Words Licence error "+e.getMessage());
 			RDCallbackMethodHandler.callRDMethod(this.parentRD, errorMethodName, new Object[] { this.fileOperationMessage });
 		}
 	}
@@ -122,75 +115,37 @@ public class AsposeDocFactory extends BaseDocFactory{
 	 * generate a blank document. For test purpose.
 	 * The generated document will be empty, will have the given String name, will be created in the 
 	 * given String path and in the given format.
-	 * @return a FileOperationMessage Object
+	 * @return a fileOperationMessage Object
 	 * @see ch.ivyteam.ivy.addons.util.FileOperationMessage
 	 * @see ch.ivyteam.ivy.addons.docfactory.BaseDocFactory#generateBlankDocument(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
 	public FileOperationMessage generateBlankDocument(String _outputName, String _outputPath, String _outputFormat) {
-
-		File file=null;
 		this.fileOperationMessage=new FileOperationMessage();
 		//we check if the given file name is valid
-		if(!FileUtil.isFileNameValid(_outputName))
-		{
-			this.fileOperationMessage.setType(ch.ivyteam.ivy.addons.docfactory.FileOperationMessage.ERROR_MESSAGE);
-			this.fileOperationMessage.setMessage(Ivy.cms().co("/ch/ivyteam/ivy/addons/docfactory/messages/invalidFileName"));
-			this.fileOperationMessage.emptyFileList();
+		if(!FileUtil.isFileNameValid(_outputName)) {
+			this.fileOperationMessage= FileOperationMessage.generateErrorTypeFileOperationMessage(Ivy.cms().co("/ch/ivyteam/ivy/addons/docfactory/messages/invalidFileName"));
 			RDCallbackMethodHandler.callRDMethod(this.parentRD, errorMethodName, new Object[] { this.fileOperationMessage });
 		}
 		this.setBasicFileName(_outputName);
 
-		if(_outputPath == null || _outputPath.trim().equalsIgnoreCase(""))
-		{
+		if(_outputPath == null || _outputPath.trim().equalsIgnoreCase("")) {
 			this.setOutputPath(FileUtil.formatPathWithEndSeparator("ivy_RIA_files"));
-		}else{
+		}else {
 			this.setOutputPath(FileUtil.formatPathWithEndSeparator(_outputPath));
 		}
-
 		this.setFormat(_outputFormat);
-		boolean b=true;
+		
+		String baseDocPath= this.outputPath+this.outputName;
+		int format = getFormatPosition(_outputFormat,UNSUPPORTED_FORMAT);
+		
 		try {
-			doc = new Document();
-			switch(getFormatPosition(_outputFormat)){
-			case DOC_FORMAT:
-				doc.save(this.outputPath+this.outputName+".doc", SaveFormat.DOC);
-				file=new File(this.outputPath+this.outputName+".doc");
-				break;
-			case DOCX_FORMAT:
-				doc.save(this.outputPath+this.outputName+".docx", SaveFormat.DOCX);
-				file=new File(this.outputPath+this.outputName+".docx");
-				break;
-			case PDF_FORMAT:
-				doc.save(this.outputPath+this.outputName+".pdf");
-				file=new File(this.outputPath+this.outputName+".pdf");
-				break;
-			case HTML_FORMAT:
-				doc.save(this.outputPath+this.outputName+".html", SaveFormat.HTML);
-				file=new File(this.outputPath+this.outputName+".html");
-				break;
-			case TXT_FORMAT:
-				doc.save(this.outputPath+this.outputName+".txt", SaveFormat.TEXT);
-				file=new File(this.outputPath+this.outputName+".txt");
-				break;
-			default:
-				b=false;
-				this.fileOperationMessage.setType(ch.ivyteam.ivy.addons.docfactory.FileOperationMessage.ERROR_MESSAGE);
-				this.fileOperationMessage.setMessage(Ivy.cms().co("/ch/ivyteam/ivy/addons/docfactory/messages/formatNotSupported")+" \n"+_outputFormat);
-				this.fileOperationMessage.emptyFileList();
-				RDCallbackMethodHandler.callRDMethod(this.parentRD, errorMethodName, new Object[] { this.fileOperationMessage });
-			}
-			if(b && file !=null) 
-			{// the file generation was a success
-				this.fileOperationMessage.setType(ch.ivyteam.ivy.addons.docfactory.FileOperationMessage.SUCCESS_MESSAGE);
-				this.fileOperationMessage.setMessage(Ivy.cms().co("/ch/ivyteam/ivy/addons/docfactory/messages/serialLetterSuccess")+" \n"+file.getName());
-				this.fileOperationMessage.addFile(file);
-			}
+			this.fileOperationMessage = AsposeDocFactoryFileGenerator.exportDocumentToFile(null, baseDocPath, format, true);
 		} catch (Exception e) {
-			this.fileOperationMessage.setType(ch.ivyteam.ivy.addons.docfactory.FileOperationMessage.ERROR_MESSAGE);
-			this.fileOperationMessage.setMessage(e.getMessage());
-			this.fileOperationMessage.emptyFileList();
-			RDCallbackMethodHandler.callRDMethod(this.parentRD, errorMethodName, new Object[] { this.fileOperationMessage });	
+			this.fileOperationMessage= FileOperationMessage.generateErrorTypeFileOperationMessage(e.getMessage());
+		}
+		if(this.fileOperationMessage.isError()) {
+			RDCallbackMethodHandler.callRDMethod(this.parentRD, errorMethodName, new Object[] { this.fileOperationMessage });
 		}
 		return fileOperationMessage;
 	}
@@ -201,7 +156,7 @@ public class AsposeDocFactory extends BaseDocFactory{
 	 * Method to generate one document<br>
 	 * Mail merge with regions is now supported
 	 * @param _documentTemplate the DocumentTemplate Object containing all the necessary variables for this operation<br>
-	 * @return The FileOperationMessage object containing the Type of the message (FileHandler.SUCCESS, ERROR, INFORMATION_MESSAGE),<br>
+	 * @return The fileOperationMessage object containing the Type of the message (FileHandler.SUCCESS, ERROR, INFORMATION_MESSAGE),<br>
 	 *  the text of the message and <br>
 	 *  the java.io.File generated in case of success, else null.<br>
 	 *  @see DocumentTemplate
@@ -211,22 +166,21 @@ public class AsposeDocFactory extends BaseDocFactory{
 	public FileOperationMessage generateDocument(DocumentTemplate _documentTemplate) {
 		if(_documentTemplate != null)
 		{ //The DocumentTemplate is not null
-			if(_documentTemplate.getTablesNamesAndFieldsHashtable()!=null && !_documentTemplate.getTablesNamesAndFieldsHashtable().isEmpty()){
+			if(_documentTemplate.getTablesNamesAndFieldsHashtable()!=null && !_documentTemplate.getTablesNamesAndFieldsHashtable().isEmpty()) {
 				return generateDocumentWithRegions(_documentTemplate.getTemplatePath(),
 						_documentTemplate.getOutputName(),
 						_documentTemplate.getOutputPath(),
 						_documentTemplate.getOutputFormat(),
 						_documentTemplate.getMergeFields(), 
 						_documentTemplate.getTablesNamesAndFieldsHashtable());
-			}else if(_documentTemplate.getTablesNamesAndFieldsmap()!=null && !_documentTemplate.getTablesNamesAndFieldsmap().isEmpty())
-			{
+			}else if(_documentTemplate.getTablesNamesAndFieldsmap()!=null && !_documentTemplate.getTablesNamesAndFieldsmap().isEmpty()) {
 				return generateDocumentWithRegions(_documentTemplate.getTemplatePath(),
 						_documentTemplate.getOutputName(),
 						_documentTemplate.getOutputPath(),
 						_documentTemplate.getOutputFormat(),
 						_documentTemplate.getMergeFields(), 
 						_documentTemplate.getTablesNamesAndFieldsmap());
-			}else if(_documentTemplate.getParentDataSourceForNestedMailMerge()!=null && !_documentTemplate.getParentDataSourceForNestedMailMerge().isEmpty()){
+			}else if(_documentTemplate.getParentDataSourceForNestedMailMerge()!=null && !_documentTemplate.getParentDataSourceForNestedMailMerge().isEmpty()) {
 				return generateDocumentWithNestedRegions(_documentTemplate.getTemplatePath(),
 						_documentTemplate.getOutputName(),
 						_documentTemplate.getOutputPath(),
@@ -234,29 +188,29 @@ public class AsposeDocFactory extends BaseDocFactory{
 						_documentTemplate.getMergeFields(), 
 						_documentTemplate.getParentDataSourceForNestedMailMerge(), 
 						_documentTemplate.getChildrenDataSourcesForNestedMailMerge());
-			}else if(_documentTemplate.getNestedDataSourceForNestedMailMerge()!=null && !_documentTemplate.getNestedDataSourceForNestedMailMerge().isEmpty()){
+			}else if(_documentTemplate.getNestedDataSourceForNestedMailMerge()!=null && !_documentTemplate.getNestedDataSourceForNestedMailMerge().isEmpty()) {
 				return generateDocumentWithNestedRegions(_documentTemplate.getTemplatePath(),
 						_documentTemplate.getOutputName(),
 						_documentTemplate.getOutputPath(),
 						_documentTemplate.getOutputFormat(),
 						_documentTemplate.getMergeFields(), 
 						_documentTemplate.getNestedDataSourceForNestedMailMerge());
-			}else if(_documentTemplate.getTreeData()!=null){
+			}else if(_documentTemplate.getTreeData()!=null) {
 				return generateDocumentWithNestedRegions(_documentTemplate.getTemplatePath(),
 						_documentTemplate.getOutputName(),
 						_documentTemplate.getOutputPath(),
 						_documentTemplate.getOutputFormat(),
 						_documentTemplate.getMergeFields(), 
 						_documentTemplate.getTreeData());
-			}
-			else{return generateDocument(_documentTemplate.getTemplatePath(),
+			}else {
+				return generateDocument(_documentTemplate.getTemplatePath(),
 						_documentTemplate.getOutputName(),
 						_documentTemplate.getOutputPath(),
 						_documentTemplate.getOutputFormat(),
 						_documentTemplate.getMergeFields());
 			}
 		}else
-		{//will return a FileOperationMessage with an Error
+		{//will return a fileOperationMessage with an Error
 			return generateDocument(null, null, null, null, null);
 		}
 	}
@@ -278,56 +232,48 @@ public class AsposeDocFactory extends BaseDocFactory{
 		//Check the parameters
 		this.resetAndCheckCommonParameters(_templatePath, _outputName, _outputPath, _outputFormat, _mergeFields);
 
-		if(this.fileOperationMessage.getType() == ch.ivyteam.ivy.addons.docfactory.FileOperationMessage.ERROR_MESSAGE)
-		{// Check failed
+		if(this.fileOperationMessage.isError()) {
+			RDCallbackMethodHandler.callRDMethod(this.parentRD, errorMethodName, new Object[] { this.fileOperationMessage });
 			return this.fileOperationMessage;
 		}
 
 		ArrayList<TemplateMergeField> templateParamslist =new ArrayList<TemplateMergeField>();
 		templateParamslist.addAll(_mergeFields);
 
-		if(_outputName==null || _outputName.trim().equalsIgnoreCase(""))
-		{//if the filename was not indicated, we look if the first mergeField Object could contain the fileName
-			if(templateParamslist.get(0).getMergeFieldName().trim().equalsIgnoreCase("filename"))
-			{// it contains the file name
+		if(_outputName==null || _outputName.trim().equalsIgnoreCase("")) {
+			//if the filename was not indicated, we look if the first mergeField Object could contain the fileName
+			if(templateParamslist.get(0).getMergeFieldName().trim().equalsIgnoreCase("filename")) {
+				// it contains the file name
 				this.outputName=templateParamslist.get(0).getMergeFieldValue().trim();
-			}
-			else
-			{// no file Name indicated, we have to take a default one
+			} else {
+				// no file Name indicated, we have to take a default one
 				this.outputName="serialLetter_"+System.nanoTime();
 			}
-		}else{
-
+		} else {
 			this.outputName=_outputName;
 		}
 
-		if(!FileUtil.isFileNameValid(_outputName))
-		{// if the filename contains invalid characters
-			this.fileOperationMessage.setType(ch.ivyteam.ivy.addons.docfactory.FileOperationMessage.ERROR_MESSAGE);
-			this.fileOperationMessage.emptyFileList();
-			this.fileOperationMessage.setMessage(Ivy.cms().co("/ch/ivyteam/ivy/addons/docfactory/messages/invalidFileName"));
-			return this.fileOperationMessage;
+		if(!FileUtil.isFileNameValid(_outputName)) {
+			// if the filename contains invalid characters
+			this.fileOperationMessage=FileOperationMessage.generateErrorTypeFileOperationMessage(Ivy.cms().co("/ch/ivyteam/ivy/addons/docfactory/messages/invalidFileName"));
+		} else {
+			this.fileOperationMessage=FileOperationMessage.generateSuccessTypeFileOperationMessage(Ivy.cms().co("/ch/ivyteam/ivy/addons/docfactory/messages/serialLetterSuccess"));
+			this.setFormat(_outputFormat);
+
+			try {
+				File file = this.doMailMerge(templateParamslist);
+				this.fileOperationMessage.addFile(file);
+			} catch (Exception e) {
+				this.fileOperationMessage=FileOperationMessage.generateErrorTypeFileOperationMessage(e.getMessage());
+			}
 		}
-
-		this.fileOperationMessage.setType(ch.ivyteam.ivy.addons.docfactory.FileOperationMessage.SUCCESS_MESSAGE);
-		this.fileOperationMessage.setMessage(Ivy.cms().co("/ch/ivyteam/ivy/addons/docfactory/messages/serialLetterSuccess"));
-		this.setFormat(_outputFormat);
-
-		try {
-			File file = this.doMailMerge(templateParamslist);
-			this.fileOperationMessage.addFile(file);
-
-		} catch (Exception e) {
-			this.fileOperationMessage.setType(ch.ivyteam.ivy.addons.docfactory.FileOperationMessage.ERROR_MESSAGE);
-			this.fileOperationMessage.setMessage(e.getMessage());
-			this.fileOperationMessage.emptyFileList();
+		if(this.fileOperationMessage.isError()) {
 			RDCallbackMethodHandler.callRDMethod(this.parentRD, errorMethodName, new Object[] { this.fileOperationMessage });
 		}
-
 		return fileOperationMessage;
 	}
-	
-	
+
+
 
 
 	/**
@@ -342,9 +288,7 @@ public class AsposeDocFactory extends BaseDocFactory{
 		try {
 			emailText = this.doMailMerge(templatePath, list).toTxt();
 		} catch (Exception e) {
-			this.fileOperationMessage.setType(ch.ivyteam.ivy.addons.docfactory.FileOperationMessage.ERROR_MESSAGE);
-			this.fileOperationMessage.setMessage(e.getMessage());
-			this.fileOperationMessage.addFile(null);
+			this.fileOperationMessage=FileOperationMessage.generateErrorTypeFileOperationMessage(e.getMessage());
 			RDCallbackMethodHandler.callRDMethod(this.parentRD, errorMethodName, new Object[] { this.fileOperationMessage });	
 		}
 		return emailText;
@@ -379,12 +323,8 @@ public class AsposeDocFactory extends BaseDocFactory{
 			}
 			reader.close();
 			emailText =fileData.toString();
-
-			//FileOperationMessage.deleteFile(s);
 		} catch (Exception e) {
-			this.fileOperationMessage.setType(ch.ivyteam.ivy.addons.docfactory.FileOperationMessage.ERROR_MESSAGE);
-			this.fileOperationMessage.setMessage(e.getMessage());
-			this.fileOperationMessage.addFile(null);
+			this.fileOperationMessage=FileOperationMessage.generateErrorTypeFileOperationMessage(e.getMessage());
 			RDCallbackMethodHandler.callRDMethod(this.parentRD, errorMethodName, new Object[] { this.fileOperationMessage });	
 		}
 		return emailText;
@@ -404,14 +344,12 @@ public class AsposeDocFactory extends BaseDocFactory{
 	public ArrayList<java.io.File> generateFilesForHTML(String templatePath, List<TemplateMergeField> list) {
 		ArrayList<java.io.File> HTMLfiles=new ArrayList<java.io.File>();
 		this.outputName="tmpHTML_"+ new Long(System.nanoTime()).toString();
-		if(this.outputPath==null | this.outputPath.trim().equalsIgnoreCase(""))
-		{
+		if(this.outputPath==null | this.outputPath.trim().equalsIgnoreCase("")) {
 			this.outputPath="ivy_RIA_files";
 		}
 		this.outputPath = FileUtil.formatPathWithEndSeparator(this.outputPath);
 
-		if(list.get(0).getMergeFieldName().trim().equalsIgnoreCase("filename"))
-		{
+		if(list.get(0).getMergeFieldName().trim().equalsIgnoreCase("filename")) {
 			this.outputName=list.get(0).getMergeFieldValue().trim();
 		}
 
@@ -421,9 +359,7 @@ public class AsposeDocFactory extends BaseDocFactory{
 			HTMLfiles.add(new java.io.File(s));
 			HTMLfiles.addAll(FileUtil.getFilesWithPattern("\\.[0-9].*$", this.outputName, this.outputPath));
 		} catch (Exception e) {
-			this.fileOperationMessage.setType(ch.ivyteam.ivy.addons.docfactory.FileOperationMessage.ERROR_MESSAGE);
-			this.fileOperationMessage.setMessage(e.getMessage());
-			this.fileOperationMessage.addFile(null);
+			this.fileOperationMessage=FileOperationMessage.generateErrorTypeFileOperationMessage(e.getMessage());
 			RDCallbackMethodHandler.callRDMethod(this.parentRD, errorMethodName, new Object[] { this.fileOperationMessage });	
 		}
 		return HTMLfiles;
@@ -436,62 +372,36 @@ public class AsposeDocFactory extends BaseDocFactory{
 	 * Each single DocumentTemplate can have its own format, path, template...
 	 * The Merge Mail with regions (Table) is now supported.
 	 * @param list of DocumentTemplate: List<DocumentTemplate> list
-	 * @return a FileOperationMessage. This object contains the type of Message (SUCCESS, ERROR), the message, <br>
+	 * @return a fileOperationMessage. This object contains the type of Message (SUCCESS, ERROR), the message, <br>
 	 * and the List of generated Files. If a DocumentTemplate didn't contain valid parameters, its output File will be null. <br>
 	 * If you want to have an exact trace of the operation's result for each DocumentTemplate, <br>
-	 * use the generateDocumentsWithDifferentDestination(List<DocumentTemplate> list) method instead. This method returns a FileOperationMessage for each DocumentTemplate.
+	 * use the generateDocumentsWithDifferentDestination(List<DocumentTemplate> list) method instead. This method returns a fileOperationMessage for each DocumentTemplate.
 	 * @see ch.ivyteam.ivy.addons.docfactory.BaseDocFactory#generateDocuments(java.util.List)
 	 * @see #generateDocuments(String, String, String, List)
 	 */
 	@Override
 	public FileOperationMessage generateDocuments(List<DocumentTemplate> list) {
 		FileOperationMessage fom = new FileOperationMessage();
-		if(list==null || list.isEmpty())
-		{//list null or empty => we return an ERROR
+		if(list==null || list.isEmpty()) {
+			//list null or empty => we return an ERROR
 			fom.setType(ch.ivyteam.ivy.addons.docfactory.FileOperationMessage.ERROR_MESSAGE);
 			fom.setMessage(Ivy.cms().co("/ch/ivyteam/ivy/addons/docfactory/messages/EmptyMergeFields"));
 			fom.emptyFileList();
-		}
-		else
-		{ // we go through the list of Document template Objects and make a new File with each of them
+		} else { // we go through the list of Document template Objects and make a new File with each of them
 			Iterator<DocumentTemplate> iter = list.iterator();
 			ArrayList<java.io.File> files = new ArrayList<java.io.File>();
-			while(iter.hasNext())
-			{
+			while(iter.hasNext()) {
 				try {
 					DocumentTemplate dt = iter.next();
-					Document _doc = this.doMailMerge(dt);
 					String s = FileUtil.formatPathWithEndSeparator(dt.getOutputPath())+dt.getOutputName();
-					java.io.File file = null;
-					switch(getFormatPosition(dt.getOutputFormat())){
-					case DOC_FORMAT:
-						_doc.save(s+".doc", SaveFormat.DOC);
-						file=new File(s+".doc");
-						break;
-					case DOCX_FORMAT:
-						_doc.save(s+".docx", SaveFormat.DOCX);
-						file=new File(s+".docx");
-						break;
-					case PDF_FORMAT:
-						_doc.save(s+".pdf");
-						file=new File(s+".pdf");
-						break;
-					case HTML_FORMAT:
-						_doc.save(s+".html", SaveFormat.HTML);
-						file=new File(s+".html");
-						break;
-					case TXT_FORMAT:
-						_doc.save(s+".txt", SaveFormat.TEXT);
-						file=new File(s+".txt");
-						break;
-					default:
-						_doc.save(s+".pdf");
-						file=new File(s+".pdf");
+					int format = getFormatPosition(dt.getOutputFormat(),PDF_FORMAT);
+					FileOperationMessage fomessage  = AsposeDocFactoryFileGenerator.exportDocumentToFile(this.doMailMerge(dt), s, format, false);
+					
+					if(fomessage.isSuccess() && fomessage.getFiles().size()==1) {
+						files.add(fomessage.getFiles().get(0));
 					}
-					files.add(file);
 				} catch (Exception e) {
-
-					e.printStackTrace();
+					//do nothing and generate the next one.
 				}
 			}
 			fom.addFiles(files);
@@ -506,7 +416,7 @@ public class AsposeDocFactory extends BaseDocFactory{
 	 * @param _outputFormat : format ".doc", ".docx", ".pdf", or ".html" 
 	 * @param list : List of List of parameters (TemplateMergeField objects). <br>
 	 * Each List of TemplateMergeField objects in the primary List will be turned into a new document.
-	 * @return The FileOperationMessage object containing the Type of the message (FileHandler.SUCCESS, ERROR, INFORMATION_MESSAGE),<br>
+	 * @return The fileOperationMessage object containing the Type of the message (FileHandler.SUCCESS, ERROR, INFORMATION_MESSAGE),<br>
 	 *  the text of the message and null File Object<br>
 	 * @see ch.ivyteam.ivy.addons.docfactory.BaseDocFactory#generateDocuments(String, String, String, List)
 	 * @see ch.ivyteam.ivy.addons.util.FileOperationMessage
@@ -515,76 +425,51 @@ public class AsposeDocFactory extends BaseDocFactory{
 	public FileOperationMessage generateDocuments(String templatePath, String _outputPath, final String _outputFormat, final List<List<TemplateMergeField>> list) {
 		//series of check to see if no exceptions
 		this.template = new java.io.File(FileUtil.formatPath(templatePath));
-		if(!doCheckBeforeDocGeneration(_outputFormat, list))
+		if(!doCheckBeforeDocGeneration(_outputFormat, list)) {
 			return this.fileOperationMessage;
+		}
 
-		if(_outputPath == null || _outputPath.trim().equalsIgnoreCase(""))
-		{
+		if(_outputPath == null || _outputPath.trim().equalsIgnoreCase("")) {
 			this.setOutputPath(FileUtil.formatPathWithEndSeparator("ivy_RIA_files"));
-		}else{
+		}else {
 			this.setOutputPath(FileUtil.formatPathWithEndSeparator(_outputPath));
 		}
 
 		this.setFormat(_outputFormat);
+		int format = getFormatPosition(_outputFormat,PDF_FORMAT);
 
 		//reset the fileOperationMessage object
-		this.fileOperationMessage=new FileOperationMessage();
-		this.fileOperationMessage.setType(ch.ivyteam.ivy.addons.docfactory.FileOperationMessage.SUCCESS_MESSAGE);
-		this.fileOperationMessage.emptyFileList();
+		this.fileOperationMessage=FileOperationMessage.generateSuccessTypeFileOperationMessage("");
 
 		//iterator to parse all of the List<TemplateMergeField>, each one is a different letter
 		final Iterator<List<TemplateMergeField>> iter = list.iterator();
 
-		while(iter.hasNext())
-		{// there are still letters that have not been written
+		while(iter.hasNext()) {// there are still letters that have not been written
 			ArrayList<TemplateMergeField> templateParamslist =new ArrayList<TemplateMergeField>();
 			templateParamslist.addAll(iter.next());
-			
+
 			//Try to get the filename from the first template merge field found
-			if(templateParamslist.get(0).getMergeFieldName().trim().equalsIgnoreCase("filename"))
-			{
-				outputName=templateParamslist.get(0).getMergeFieldValue().trim();
-			}else{//we didn't find the filename merge field, we take the default serial letter name
-				outputName="serialLetter_"+System.nanoTime();
+			if(templateParamslist.get(0).getMergeFieldName().trim().equalsIgnoreCase("filename")) {
+				this.outputName=templateParamslist.get(0).getMergeFieldValue().trim();
+			}else {//we didn't find the filename merge field, we take the default serial letter name
+				this.outputName="serialLetter_"+System.nanoTime();
 			}
-			
+			String baseDocPath= this.outputPath+this.outputName;
 			try {
-				File file=null;
-				switch(getFormatPosition(_outputFormat)){
-				case DOC_FORMAT:
-					this.doMailMerge(templatePath, templateParamslist).save(outputPath+outputName+".doc", SaveFormat.DOC);
-					file=new File(outputPath+outputName+".doc");
-					break;
-				case DOCX_FORMAT:
-					this.doMailMerge(templatePath, templateParamslist).save(outputPath+outputName+".docx", SaveFormat.DOCX);
-					file=new File(outputPath+outputName+".docx");
-					break;
-				case PDF_FORMAT:
-					this.doMailMerge(templatePath, templateParamslist).save(outputPath+outputName+".pdf");
-					file=new File(outputPath+outputName+".pdf");
-					break;
-				case HTML_FORMAT:
-					this.doMailMerge(templatePath, templateParamslist).save(outputPath+outputName+".html", SaveFormat.HTML);
-					file=new File(outputPath+outputName+".html");
-					break;
-				case TXT_FORMAT:
-					this.doMailMerge(templatePath, templateParamslist).save(outputPath+outputName+".txt", SaveFormat.TEXT);
-					file=new File(outputPath+outputName+".txt");
-					break;
-				default:
-					this.doMailMerge(templatePath, templateParamslist).save(outputPath+outputName+".pdf");
-					file=new File(outputPath+outputName+".pdf");
+				FileOperationMessage fom  = AsposeDocFactoryFileGenerator.exportDocumentToFile(this.doMailMerge(templatePath, templateParamslist), baseDocPath, format, false);
+				if(!fom.isError()) {
+					this.fileOperationMessage.addFiles(fom.getFiles());
 				}
-				//We add the new created file to the Files list
-				fileOperationMessage.addFile(file);
-			} catch (Exception e1) {
-				fileOperationMessage.setType(ch.ivyteam.ivy.addons.docfactory.FileOperationMessage.ERROR_MESSAGE);
-				fileOperationMessage.setMessage(e1.getMessage());
-				RDCallbackMethodHandler.callRDMethod(parentRD, errorMethodName, new Object[] { fileOperationMessage });	
+			} catch (Exception ex) {
+				if(!this.fileOperationMessage.isInformation()) {
+					this.fileOperationMessage.setType(FileOperationMessage.INFORMATION_MESSAGE);
+					this.fileOperationMessage.setMessage("The following documents could not be created: "+this.outputName);
+				} else {
+					this.fileOperationMessage.setMessage(this.fileOperationMessage.getMessage()+", "+this.outputName);
+				}
 			}
-			
 		}
-		return fileOperationMessage;
+		return this.fileOperationMessage;
 	}
 
 	/**
@@ -595,7 +480,7 @@ public class AsposeDocFactory extends BaseDocFactory{
 	 * @param _outputFormat : format ".doc", ".docx", or ".html" 
 	 * @param list : List of List of parameters (TemplateMergeField objects). <br>
 	 * Each List of TemplateMergeField objects in the primary List will be turned into a new document.
-	 * @return The FileOperationMessage object containing the Type of the message (FileHandler.SUCCESS, ERROR, INFORMATION_MESSAGE),<br>
+	 * @return The fileOperationMessage object containing the Type of the message (FileHandler.SUCCESS, ERROR, INFORMATION_MESSAGE),<br>
 	 *  the text of the message and null File Object<br>
 	 * @see ch.ivyteam.ivy.addons.docfactory.BaseDocFactory#generateDocumentsWithDifferentDestination(String, String, List)
 	 * @see ch.ivyteam.ivy.addons.util.FileOperationMessage
@@ -605,14 +490,14 @@ public class AsposeDocFactory extends BaseDocFactory{
 	@Override
 	public FileOperationMessage generateDocumentsWithDifferentDestination(String templatePath, final String _outputFormat, final List<List<TemplateMergeField>> list) {
 
-		if(!doCheckBeforeDocGeneration(_outputFormat, list))
-		{//series of check to see if no exceptions
+		if(!doCheckBeforeDocGeneration(_outputFormat, list)) {
 			return this.fileOperationMessage;
 		}
+		
 		this.setFormat(_outputFormat);
-		this.fileOperationMessage=new FileOperationMessage();
-		this.fileOperationMessage.setType(ch.ivyteam.ivy.addons.docfactory.FileOperationMessage.SUCCESS_MESSAGE);
-		this.fileOperationMessage.emptyFileList();
+		int format = getFormatPosition(_outputFormat,PDF_FORMAT);
+
+		this.fileOperationMessage=FileOperationMessage.generateSuccessTypeFileOperationMessage("");
 		final Iterator<List<TemplateMergeField>> iter = list.iterator();
 
 		while(iter.hasNext())
@@ -622,57 +507,36 @@ public class AsposeDocFactory extends BaseDocFactory{
 
 			String destinationPath;// the specific destination path for this letter
 			//get the name of the document
-			if(templateParamslist.get(0).getMergeFieldName().trim().equalsIgnoreCase("filename"))
-			{
+			if(templateParamslist.get(0).getMergeFieldName().trim().equalsIgnoreCase("filename")) {
 				outputName=templateParamslist.get(0).getMergeFieldValue().trim();
-			}
-			else{
+			} else {
 				outputName="serialLetter_"+System.nanoTime();
 			}
 
 			//get the destination folder of the document
-			if(templateParamslist.get(1).getMergeFieldName().trim().equalsIgnoreCase("destinationPath")){
+			if(templateParamslist.get(1).getMergeFieldName().trim().equalsIgnoreCase("destinationPath")) {
 				destinationPath= FileUtil.formatPathWithEndSeparator(templateParamslist.get(1).getMergeFieldValue().trim(), true);
 			}
-			else{
+			else {
 				destinationPath= FileUtil.formatPathWithEndSeparator("ivy_RIA_files", true);
 			}
-			
+			String baseDocPath= destinationPath+this.outputName;
 			try {
-				File file=null;
-				switch(getFormatPosition(_outputFormat)){
-				case DOC_FORMAT:
-					this.doMailMerge(templatePath, templateParamslist).save(destinationPath+outputName+".doc", SaveFormat.DOC);
-					file=new File(destinationPath+outputName+".doc");
-					break;
-				case DOCX_FORMAT:
-					this.doMailMerge(templatePath, templateParamslist).save(destinationPath+outputName+".docx", SaveFormat.DOCX);
-					file=new File(destinationPath+outputName+".docx");
-					break;
-				case PDF_FORMAT:
-					this.doMailMerge(templatePath, templateParamslist).save(outputPath+outputName+".pdf");
-					file=new File(outputPath+outputName+".pdf");
-					break;
-				case HTML_FORMAT:
-					this.doMailMerge(templatePath, templateParamslist).save(destinationPath+outputName+".html", SaveFormat.HTML);
-					file=new File(destinationPath+outputName+".html");
-					break;
-				case TXT_FORMAT:
-					this.doMailMerge(templatePath, templateParamslist).save(destinationPath+outputName+".txt", SaveFormat.TEXT);
-					file=new File(destinationPath+outputName+".txt");
-					break;
-				default:
-					this.doMailMerge(templatePath, templateParamslist).save(outputPath+outputName+".pdf");
-					file=new File(outputPath+outputName+".pdf");
+				FileOperationMessage fom = AsposeDocFactoryFileGenerator
+						.exportDocumentToFile(this.doMailMerge(templatePath, templateParamslist), baseDocPath, format, false);
+				if(fom.isError()) {
+					RDCallbackMethodHandler.callRDMethod(this.parentRD, errorMethodName, new Object[] { fom });
+				}else {
+					this.fileOperationMessage.addFiles(fom.getFiles());
 				}
-				//We add the new created file to the Files list
-				fileOperationMessage.addFile(file);
-			} catch (Exception e1) {
-				fileOperationMessage.setType(ch.ivyteam.ivy.addons.docfactory.FileOperationMessage.ERROR_MESSAGE);
-				fileOperationMessage.setMessage(e1.getMessage());
-				RDCallbackMethodHandler.callRDMethod(parentRD, errorMethodName, new Object[] { fileOperationMessage });	
+			} catch (Exception ex) {
+				if(!this.fileOperationMessage.isInformation()) {
+					this.fileOperationMessage.setType(FileOperationMessage.INFORMATION_MESSAGE);
+					this.fileOperationMessage.setMessage("The following documents could not be created: "+this.outputName);
+				} else {
+					this.fileOperationMessage.setMessage(this.fileOperationMessage.getMessage()+", "+this.outputName);
+				}
 			}
-			
 		}
 		return fileOperationMessage;
 	}
@@ -685,8 +549,7 @@ public class AsposeDocFactory extends BaseDocFactory{
 	@Override
 	public List<FileOperationMessage> generateDocumentsWithDifferentDestination(List<DocumentTemplate> list) {
 		ArrayList <FileOperationMessage> l = new ArrayList <FileOperationMessage>();
-		for(DocumentTemplate dt: list)
-		{
+		for(DocumentTemplate dt: list) {
 			l.add(this.generateDocument(dt));
 		}
 		return l;
@@ -702,7 +565,7 @@ public class AsposeDocFactory extends BaseDocFactory{
 	 * @param _outputFormat : format ".doc", ".docx", ".pdf", or ".html" 
 	 * @param list : List of List of parameters (TemplateMergeField objects). <br>
 	 * Each List of TemplateMergeField objects in the primary List will be turned into a new page in the final File.
-	 * @return The FileOperationMessage object containing the Type of the message (FileHandler.SUCCESS, ERROR, INFORMATION_MESSAGE),<br>
+	 * @return The fileOperationMessage object containing the Type of the message (FileHandler.SUCCESS, ERROR, INFORMATION_MESSAGE),<br>
 	 *  the text of the message and <br>
 	 *  the java.io.File generated in case of success, else empty List<java.io.File>.<br> 
 	 * @see ch.ivyteam.ivy.addons.docfactory.BaseDocFactory#generateMultipleDocumentsInOne(java.lang.String, java.lang.String, java.lang.String, java.util.List)
@@ -714,81 +577,47 @@ public class AsposeDocFactory extends BaseDocFactory{
 		//template File
 		this.template = new java.io.File(FileUtil.formatPath(templatePath));
 		//		set the outPutPath
-		if(_outputPath == null || _outputPath.trim().equalsIgnoreCase(""))
-		{
+		if(_outputPath == null || _outputPath.trim().equalsIgnoreCase("")) {
 			this.setOutputPath(FileUtil.formatPathWithEndSeparator("ivy_RIA_files"));
-		}else{
+		}else {
 			this.setOutputPath(FileUtil.formatPathWithEndSeparator(_outputPath));
 		}
 		// 		set the format
 		this.setFormat(_outputFormat);
 		//		set the output name
-		if(_outputName == null || _outputName.trim().equalsIgnoreCase("") || !FileUtil.isFileNameValid(_outputName))
-		{//		fileName parameter is invalid
-			// We take the default name SerialLetter + System nanoTime String
+		if(_outputName == null || _outputName.trim().equalsIgnoreCase("") || !FileUtil.isFileNameValid(_outputName)) {
+			// fileName parameter is invalid. We take the default name SerialLetter + System nanoTime String
 			this.outputName="serialLetter_"+System.nanoTime();
-		}else{
+		}else {
 			this.outputName = _outputName;
 		}
 		// series of check to see if no exceptions -> this method checks the template, the format and if the list is not empty
-		if(!doCheckBeforeDocGeneration(_outputFormat, list))
-		{// The inputParameters are not all valid. We return the actual FileOperationMessage with the error Message
+		if(!doCheckBeforeDocGeneration(_outputFormat, list)) {
+			// The inputParameters are not all valid. We return the actual fileOperationMessage with the error Message
 			return this.fileOperationMessage;
 		}
 		//the input parameters are checked and valid	
-		File file=null;
-		this.fileOperationMessage=new FileOperationMessage();
-		this.fileOperationMessage.setType(ch.ivyteam.ivy.addons.docfactory.FileOperationMessage.SUCCESS_MESSAGE);
-		this.fileOperationMessage.emptyFileList();
+		int format = getFormatPosition(_outputFormat,UNSUPPORTED_FORMAT);
+		this.fileOperationMessage=FileOperationMessage.generateSuccessTypeFileOperationMessage("");
 
 		//iterator to parse all of the List<TemplateMergeField>, each one is a different letter
 		final Iterator<List<TemplateMergeField>> iter = list.iterator();
-		try 
-		{
+		try  {
 			docDest = doMailMerge(templatePath, iter.next());
 			//appends the rest of the documents to the first one
-			while(iter.hasNext())
-			{
+			while(iter.hasNext()) {
 				doc = doMailMerge(templatePath, iter.next());
 				doc.getFirstSection().getPageSetup().setSectionStart(SectionStart.NEW_PAGE);
 
 				AppendDoc(docDest, doc);
 			}
-			switch(getFormatPosition(_outputFormat)){
-			case DOC_FORMAT:
-				docDest.save(this.outputPath+this.outputName+".doc", SaveFormat.DOC);
-				file=new File(this.outputPath+this.outputName+".doc");
-				break;
-			case DOCX_FORMAT:
-				docDest.save(this.outputPath+this.outputName+".docx", SaveFormat.DOCX);
-				file=new File(this.outputPath+this.outputName+".docx");
-				break;
-			case PDF_FORMAT:
-				docDest.save(this.outputPath+this.outputName+".pdf", SaveFormat.PDF);
-				file=new File(this.outputPath+this.outputName+".pdf");
-				break;
-			case HTML_FORMAT:
-				docDest.save(this.outputPath+this.outputName+".html", SaveFormat.HTML);
-				file=new File(this.outputPath+this.outputName+".html");
-				break;
-			default:
-				this.fileOperationMessage.setType(ch.ivyteam.ivy.addons.docfactory.FileOperationMessage.ERROR_MESSAGE);
-				this.fileOperationMessage.setMessage(Ivy.cms().co("/ch/ivyteam/ivy/addons/docfactory/messages/formatNotSupported"));
-				this.fileOperationMessage.emptyFileList();
-				RDCallbackMethodHandler.callRDMethod(this.parentRD, errorMethodName, new Object[] { this.fileOperationMessage });
-			}
+			this.fileOperationMessage  = AsposeDocFactoryFileGenerator.exportDocumentToFile(this.docDest, this.outputPath+this.outputName, format, false);
 		}
-		catch (Exception e1) {
-			this.fileOperationMessage.setType(ch.ivyteam.ivy.addons.docfactory.FileOperationMessage.ERROR_MESSAGE);
-			this.fileOperationMessage.setMessage(e1.getMessage());
+		catch (Exception ex) {
+			this.fileOperationMessage=FileOperationMessage.generateErrorTypeFileOperationMessage(ex.getMessage());
 			RDCallbackMethodHandler.callRDMethod(this.parentRD, errorMethodName, new Object[] { this.fileOperationMessage });
 		}
-		if(this.fileOperationMessage.getType()==ch.ivyteam.ivy.addons.docfactory.FileOperationMessage.SUCCESS_MESSAGE)
-		{//Creation successful
-			this.fileOperationMessage.setMessage(Ivy.cms().co("/ch/ivyteam/ivy/addons/docfactory/messages/serialLetterSuccess"));
-			this.fileOperationMessage.addFile(file);
-		}
-		return fileOperationMessage;
+		return this.fileOperationMessage;
 	}
 
 
@@ -800,79 +629,48 @@ public class AsposeDocFactory extends BaseDocFactory{
 	@Override
 	public FileOperationMessage generateMultipleDocumentsInOne(String _outputPath, String _outputName, String _outputFormat, List<DocumentTemplate> list) {
 		//series of check to see if no exceptions
-		if(list == null || list.isEmpty())
-		{// the list is empty: the FielOperationMessage Object contains the error and we return it
-			this.fileOperationMessage.setType(ch.ivyteam.ivy.addons.docfactory.FileOperationMessage.ERROR_MESSAGE);
-			this.fileOperationMessage.setMessage(Ivy.cms().co("/ch/ivyteam/ivy/addons/docfactory/messages/EmptyMergeFields"));
-			this.fileOperationMessage.emptyFileList();
+		if(list == null || list.isEmpty()) {
+			// the list is empty: the FielOperationMessage Object contains the error and we return it
+			this.fileOperationMessage = FileOperationMessage.generateErrorTypeFileOperationMessage(
+					Ivy.cms().co("/ch/ivyteam/ivy/addons/docfactory/messages/EmptyMergeFields"));
 			return this.fileOperationMessage;
 		}	
 
-		if(_outputPath==null || _outputPath.trim().equalsIgnoreCase(""))
-		{
-			_outputPath="ivy_RIA_files";
+		if(_outputPath == null || _outputPath.trim().equalsIgnoreCase("")) {
+			this.setOutputPath(FileUtil.formatPathWithEndSeparator("ivy_RIA_files"));
+		}else {
+			this.setOutputPath(FileUtil.formatPathWithEndSeparator(_outputPath));
 		}
-		if(_outputName== null || _outputName.trim().equalsIgnoreCase(""))
-		{
-			_outputName ="serialLetter"+System.nanoTime();
+		//		set the output name
+		if(_outputName == null || _outputName.trim().equalsIgnoreCase("") || !FileUtil.isFileNameValid(_outputName)) {
+			// fileName parameter is invalid. We take the default name SerialLetter + System nanoTime String
+			this.outputName="serialLetter_"+System.nanoTime();
+		}else {
+			this.outputName = _outputName;
 		}
-		this.setOutputPath(FileUtil.formatPathWithEndSeparator(_outputPath));
 		this.setFormat(_outputFormat);
 
-		File file=null;
-		this.fileOperationMessage=new FileOperationMessage();
-		this.fileOperationMessage.setType(ch.ivyteam.ivy.addons.docfactory.FileOperationMessage.SUCCESS_MESSAGE);
-		this.fileOperationMessage.emptyFileList();
-
+		this.fileOperationMessage=FileOperationMessage.generateSuccessTypeFileOperationMessage("");
+		
+		int format = getFormatPosition(this.outputFormat,UNSUPPORTED_FORMAT);
+		
 		//iterator to parse all of the DocumentTemplate objects, each one is a different letter
-		final Iterator <DocumentTemplate> iter = list.iterator();
-		try 
-		{
+		final Iterator<DocumentTemplate> iter = list.iterator();
+		try  {
 			// we do the mailMerge for the first DocumentTemplate
 			docDest = this.doMailMerge(iter.next());
 
 			//appends the rest of the documents to the first one
-			while(iter.hasNext())
-			{
+			while(iter.hasNext()) {
 				doc=doMailMerge(iter.next());
-
 				doc.getFirstSection().getPageSetup().setSectionStart(SectionStart.NEW_PAGE);
 				AppendDoc(docDest, doc);
 			}
-			switch(getFormatPosition(this.outputFormat)){
-			case DOC_FORMAT:
-				docDest.save(this.outputPath+_outputName+".doc", SaveFormat.DOC);
-				file=new File(this.outputPath+_outputName+".doc");
-				break;
-			case DOCX_FORMAT:
-				docDest.save(this.outputPath+_outputName+".docx", SaveFormat.DOCX);
-				file=new File(this.outputPath+_outputName+".docx");
-				break;
-			case PDF_FORMAT:
-				docDest.save(this.outputPath+_outputName+".pdf", SaveFormat.PDF);
-				file=new File(this.outputPath+_outputName+".pdf");
-				break;
-			case HTML_FORMAT:
-				docDest.save(this.outputPath+_outputName+".html", SaveFormat.HTML);
-				file=new File(this.outputPath+_outputName+".html");
-				break;
-			default:
-				this.fileOperationMessage.setType(ch.ivyteam.ivy.addons.docfactory.FileOperationMessage.ERROR_MESSAGE);
-				this.fileOperationMessage.setMessage(Ivy.cms().co("/ch/ivyteam/ivy/addons/docfactory/messages/formatNotSupported"));
-				this.fileOperationMessage.emptyFileList();
-				RDCallbackMethodHandler.callRDMethod(this.parentRD, errorMethodName, new Object[] { this.fileOperationMessage });
-			}
+			this.fileOperationMessage  = AsposeDocFactoryFileGenerator.exportDocumentToFile(this.docDest, this.outputPath+this.outputName, format, false);
 		}
-		catch (Exception e1) {
-			this.fileOperationMessage.setType(ch.ivyteam.ivy.addons.docfactory.FileOperationMessage.ERROR_MESSAGE);
-			this.fileOperationMessage.setMessage(e1.getClass().getName()+" "+e1.getMessage());
-			Ivy.log().error(e1.getClass().getName()+" "+e1.getMessage());
+		catch (Exception ex) {
+			this.fileOperationMessage=FileOperationMessage.generateErrorTypeFileOperationMessage(ex.getMessage());
 			RDCallbackMethodHandler.callRDMethod(this.parentRD, errorMethodName, new Object[] { this.fileOperationMessage });
-		}
-		if(this.fileOperationMessage.getType()==ch.ivyteam.ivy.addons.docfactory.FileOperationMessage.SUCCESS_MESSAGE)
-		{//Creation successful
-			this.fileOperationMessage.setMessage(Ivy.cms().co("/ch/ivyteam/ivy/addons/docfactory/messages/serialLetterSuccess"));
-			this.fileOperationMessage.addFile(file);
 		}
 		return this.fileOperationMessage;
 	}
@@ -891,45 +689,43 @@ public class AsposeDocFactory extends BaseDocFactory{
 
 		//Get the mail with region data sources if there are any...
 		ArrayList<MailMergeDataSource> mmds = new ArrayList<MailMergeDataSource>();
-		if(_documentTemplate.getTablesNamesAndFieldsHashtable() != null && !_documentTemplate.getTablesNamesAndFieldsHashtable().isEmpty())
-		{
+		if(_documentTemplate.getTablesNamesAndFieldsHashtable() != null 
+				&& !_documentTemplate.getTablesNamesAndFieldsHashtable().isEmpty()) {
 			Set<String> tables = _documentTemplate.getTablesNamesAndFieldsHashtable().keySet();
 			Iterator<String> iter = tables.iterator();
 			while(iter.hasNext()){
 				String key = iter.next();
-				try{
+				try {
 					mmds.add(new MailMergeDataSource(_documentTemplate.getTablesNamesAndFieldsHashtable().get(key), key));
-				}catch(Exception ex)
-				{
+				}catch(Exception ex) {
 					Ivy.log().error("The DataClass Objects provided to generateDocumentWithRegions are not all from the same Type. This is not allowed. The process will ignore the table "+key, ex);
 				}
 			}
 
-		}else if(_documentTemplate.getTablesNamesAndFieldsmap() != null && !_documentTemplate.getTablesNamesAndFieldsmap().isEmpty())
-		{
+		}else if(_documentTemplate.getTablesNamesAndFieldsmap() != null 
+				&& !_documentTemplate.getTablesNamesAndFieldsmap().isEmpty()) {
 			Set<String> tables = _documentTemplate.getTablesNamesAndFieldsmap().keySet();
 			Iterator<String> iter = tables.iterator();
-			while(iter.hasNext()){
+			while(iter.hasNext()) {
 				String key = iter.next();
-				try{
+				try {
 					mmds.add(DataClassToMergefields.transfomDataClassInMergeDataSource(_documentTemplate.getTablesNamesAndFieldsmap().get(key), key));
-				}catch(Exception ex)
-				{
+				}catch(Exception ex) {
 					Ivy.log().error("The DataClass Objects provided to generateDocumentWithRegions are not all from the same Type. This is not allowed. The process will ignore the table "+key, ex);
 				}
 			}
 		}
 
-		if(_documentTemplate.getParentDataSourceForNestedMailMerge()!=null && !_documentTemplate.getParentDataSourceForNestedMailMerge().isEmpty()){
+		if(_documentTemplate.getParentDataSourceForNestedMailMerge()!=null 
+				&& !_documentTemplate.getParentDataSourceForNestedMailMerge().isEmpty()) {
 			mmds.add(new MailMergeDataSource(_documentTemplate.getParentDataSourceForNestedMailMerge(), _documentTemplate.getChildrenDataSourcesForNestedMailMerge()));
 		}
 
-		if(_documentTemplate.getNestedDataSourceForNestedMailMerge()!=null && !_documentTemplate.getNestedDataSourceForNestedMailMerge().isEmpty())
-		{
+		if(_documentTemplate.getNestedDataSourceForNestedMailMerge()!=null 
+				&& !_documentTemplate.getNestedDataSourceForNestedMailMerge().isEmpty()) {
 			mmds.add(new MailMergeDataSource(_documentTemplate.getNestedDataSourceForNestedMailMerge()));
 		}
-		if(_documentTemplate.getTreeData()!=null)
-		{
+		if(_documentTemplate.getTreeData()!=null) {
 			mmds.add(new MailMergeDataSource(_documentTemplate.getTreeData()));
 		}
 
@@ -939,15 +735,15 @@ public class AsposeDocFactory extends BaseDocFactory{
 
 		Iterator<TemplateMergeField> iterator = fields.iterator();
 		int i=0;
-		while(iterator.hasNext()){
+		while(iterator.hasNext()) {
 			TemplateMergeField tmf = iterator.next();
 			String s = tmf.getMergeFieldName();
-			if(s.startsWith("Image:") || s.startsWith("Image_"))
-			{//The merge field name indicates an Image, we take only the second part of the name
+			if(s.startsWith("Image:") || s.startsWith("Image_")) {
+				//The merge field name indicates an Image, we take only the second part of the name
 				paramName[i]=s.substring(6);
 			}
-			else
-			{//The merge field is a text field
+			else {
+				//The merge field is a text field
 				paramName[i]=s;
 			}
 
@@ -960,9 +756,8 @@ public class AsposeDocFactory extends BaseDocFactory{
 		document.getMailMerge().setCleanupOptions(MailMergeCleanupOptions.REMOVE_EMPTY_PARAGRAPHS);
 		document.getMailMerge().execute(paramName,paramValue);
 		//do mail merge with regions if necessary
-		if(!mmds.isEmpty())
-		{
-			for(MailMergeDataSource m : mmds){
+		if(!mmds.isEmpty()) {
+			for(MailMergeDataSource m : mmds) {
 				document.getMailMerge().executeWithRegions(m);
 			}
 		}
@@ -986,15 +781,14 @@ public class AsposeDocFactory extends BaseDocFactory{
 		String [] paramValue= new String[fields.size()];
 		Iterator<TemplateMergeField> iterator = fields.iterator();
 		int i=0;
-		while(iterator.hasNext()){
+		while(iterator.hasNext()) {
 			TemplateMergeField tmf = iterator.next();
 			String s = tmf.getMergeFieldName();
-			if(s.startsWith("Image:") || s.startsWith("Image_"))
-			{//The merge field name indicates an Image, we take only the second part of the name
+			if(s.startsWith("Image:") || s.startsWith("Image_")) {
+				//The merge field name indicates an Image, we take only the second part of the name
 				paramName[i]=s.substring(6);
 			}
-			else
-			{//The merge field is a text field
+			else {//The merge field is a text field
 				paramName[i]=s;
 			}
 
@@ -1016,18 +810,18 @@ public class AsposeDocFactory extends BaseDocFactory{
 	 * @return the java.io.File taht was generated.
 	 * @throws Exception
 	 */
-	private java.io.File doMailMerge(ArrayList<TemplateMergeField> parameters) throws Exception{
+	private java.io.File doMailMerge(ArrayList<TemplateMergeField> parameters) throws Exception {
 		File file=null;
 		String [] paramName= new String[parameters.size()];
 		String [] paramValue= new String[parameters.size()];
 		for(int i=0; i<parameters.size();i++){
 			String s = parameters.get(i).getMergeFieldName();
-			if(s.startsWith("Image:") || s.startsWith("Image_"))
-			{//The merge field name indicates an Image, we take only the second part of the name
+			if(s.startsWith("Image:") || s.startsWith("Image_")) {
+				//The merge field name indicates an Image, we take only the second part of the name
 				paramName[i]=s.substring(6);
 			}
-			else
-			{//The merge field is a text field
+			else {
+				//The merge field is a text field
 				paramName[i]=s;
 			}
 
@@ -1035,45 +829,22 @@ public class AsposeDocFactory extends BaseDocFactory{
 		}
 
 		doc = new Document(this.template.getPath());
-
+		int format = getFormatPosition(this.outputFormat,UNSUPPORTED_FORMAT);
+		String baseFilePath = this.outputPath+this.outputName;
 		//Set up the event handler for image fields and perform mail merge.
 		doc.getMailMerge().setFieldMergingCallback(this.getAsposeFieldMergingCallback());
 		doc.getMailMerge().setCleanupOptions(MailMergeCleanupOptions.REMOVE_EMPTY_PARAGRAPHS);
 		doc.getMailMerge().setCleanupOptions(MailMergeCleanupOptions.REMOVE_UNUSED_REGIONS);
 		doc.getMailMerge().execute(paramName,paramValue);
-		
+
 		//doc.getMailMerge().setRemoveEmptyParagraphs(true);
 		//doc.getMailMerge().setRemoveEmptyRegions(true);
 		doc.getMailMerge().deleteFields();
-		switch(getFormatPosition(this.outputFormat)){
-		case DOC_FORMAT:
-			doc.save(this.outputPath+this.outputName+".doc", SaveFormat.DOC);
-			file=new File(this.outputPath+this.outputName+".doc");
-			break;
-		case DOCX_FORMAT:
-			doc.save(this.outputPath+this.outputName+".docx", SaveFormat.DOCX);
-			file=new File(this.outputPath+this.outputName+".docx");
-			break;
-		case PDF_FORMAT:
-			doc.save(outputPath+outputName+".pdf");
-			file=new File(outputPath+outputName+".pdf");
-			break;
-		case HTML_FORMAT:
-			doc.save(this.outputPath+this.outputName+".html", SaveFormat.HTML);
-			file=new File(this.outputPath+this.outputName+".html");
-			break;
-		case TXT_FORMAT:
-			doc.save(this.outputPath+this.outputName+".txt", SaveFormat.TEXT);
-			file=new File(this.outputPath+this.outputName+".txt");
-			break;
-		default:
-			this.fileOperationMessage.setType(ch.ivyteam.ivy.addons.docfactory.FileOperationMessage.ERROR_MESSAGE);
-			this.fileOperationMessage.setMessage(Ivy.cms().co("/ch/ivyteam/ivy/addons/docfactory/messages/formatNotSupported"));
-			this.fileOperationMessage.emptyFileList();
-			RDCallbackMethodHandler.callRDMethod(this.parentRD, errorMethodName, new Object[] { this.fileOperationMessage });
-
+		this.fileOperationMessage  = AsposeDocFactoryFileGenerator.exportDocumentToFile(this.doc, baseFilePath, format, false);
+		if(this.fileOperationMessage.isSuccess() && !this.fileOperationMessage.getFiles().isEmpty()) {
+			file = this.fileOperationMessage.getFiles().get(0);
 		}
-
+			
 		return file;
 	}
 
@@ -1083,13 +854,11 @@ public class AsposeDocFactory extends BaseDocFactory{
 	 * @param dstDoc : The destination document where to append to
 	 * @param srcDoc : The source document.
 	 */
-	private void AppendDoc(Document dstDoc, Document srcDoc) throws Exception
-	{
+	private void AppendDoc(Document dstDoc, Document srcDoc) throws Exception {
 		// Loop through all sections in the source document.
 		// Section nodes are immediate children of the Document node so we can just enumerate the Document.
 		int x = srcDoc.getSections().getCount();
-		for (int i=0; i<x;i++)
-		{
+		for (int i=0; i<x;i++) {
 			// Because we are copying a section from one document to another,
 			// it is required to import the Section node into the destination document.
 			// This adjusts any document-specific references to styles, lists, etc.
@@ -1114,10 +883,10 @@ public class AsposeDocFactory extends BaseDocFactory{
 	 * @param format
 	 * @return the position of the given format in the format supported list
 	 */
-	private int getFormatPosition(String format){
-		int a=-1;
-		for(int i =0; i<supportedOutputFormats.length;i++){
-			if(format.trim().equalsIgnoreCase(supportedOutputFormats[i])){
+	private int getFormatPosition(String format, int default_format_position_if_not_found) {
+		int a=default_format_position_if_not_found;
+		for(int i =0; i<supportedOutputFormats.length;i++) {
+			if(format.trim().equalsIgnoreCase(supportedOutputFormats[i])) {
 				a=i;
 				break;
 			}
@@ -1130,7 +899,7 @@ public class AsposeDocFactory extends BaseDocFactory{
 	 * @param _doc the aspose Word Document Object
 	 * @return the ArrayList<String> of the MergeFields
 	 */
-	public String[] getTemplateFields(Document _doc){
+	public String[] getTemplateFields(Document _doc) {
 		String [] templateFields=null;
 		try {
 			templateFields= _doc.getMailMerge().getFieldNames();
@@ -1148,13 +917,13 @@ public class AsposeDocFactory extends BaseDocFactory{
 	 * @return the ArrayList<String> of the MergeFields
 	 */
 	@Override
-	public ArrayList<String> getTemplateFields(String templatePath){
+	public ArrayList<String> getTemplateFields(String templatePath) {
 
 		ArrayList<String> templateFields=new ArrayList<String>();
 		try {
 			Document _doc = new Document(templatePath);
 			String [] sArray = _doc.getMailMerge().getFieldNames();
-			for(String s: sArray){
+			for(String s: sArray) {
 				templateFields.add(s);
 			}
 		} catch (Exception e) {
@@ -1197,25 +966,25 @@ public class AsposeDocFactory extends BaseDocFactory{
 	 * @param list
 	 * @return true if this document Factory can be used to produce documents. Else false because some parameters are invalid.
 	 */
-	private boolean doCheckBeforeDocGeneration(String format, List<?> list){
+	private boolean doCheckBeforeDocGeneration(String format, List<?> list) {
 		boolean flag=true;
 		this.fileOperationMessage=new FileOperationMessage();
 		if(format.startsWith(".")) format=format.substring(1);
-		if(format==null || !isFormatSupported(format)){
+		if(format==null || !isFormatSupported(format)) {
 			this.fileOperationMessage.setType(ch.ivyteam.ivy.addons.docfactory.FileOperationMessage.ERROR_MESSAGE);
 			this.fileOperationMessage.setMessage(Ivy.cms().co("/ch/ivyteam/ivy/addons/docfactory/messages/formatNotSupported")+" \n"+format);
 			this.fileOperationMessage.emptyFileList();
 			RDCallbackMethodHandler.callRDMethod(this.parentRD, errorMethodName, new Object[] { this.fileOperationMessage });
 			flag=false;
 		}
-		if(this.template==null || !this.template.exists()){
+		if(this.template==null || !this.template.exists()) {
 			this.fileOperationMessage.setType(ch.ivyteam.ivy.addons.docfactory.FileOperationMessage.ERROR_MESSAGE);
 			this.fileOperationMessage.setMessage(Ivy.cms().co("/ch/ivyteam/ivy/addons/docfactory/messages/templateCannotBefFound"));
 			this.fileOperationMessage.emptyFileList();
 			RDCallbackMethodHandler.callRDMethod(this.parentRD, errorMethodName, new Object[] { this.fileOperationMessage });
 			flag=false;
 		}
-		if(list == null){
+		if(list == null) {
 			this.fileOperationMessage.setType(ch.ivyteam.ivy.addons.docfactory.FileOperationMessage.ERROR_MESSAGE);
 			this.fileOperationMessage.setMessage(Ivy.cms().co("/ch/ivyteam/ivy/addons/docfactory/messages/EmptyMergeFields"));
 			this.fileOperationMessage.emptyFileList();
@@ -1231,12 +1000,12 @@ public class AsposeDocFactory extends BaseDocFactory{
 	 * @return true if supported, else false
 	 */
 	@Override
-	public boolean isFormatSupported(String format){
+	public boolean isFormatSupported(String format) {
 		boolean flag = false;
 		String s = format;
 		if(s.startsWith(".")) s=format.substring(1);
-		for(int i =0; i<supportedOutputFormats.length;i++){
-			if(s.trim().equalsIgnoreCase(supportedOutputFormats[i])){
+		for(int i =0; i<supportedOutputFormats.length;i++) {
+			if(s.trim().equalsIgnoreCase(supportedOutputFormats[i])) {
 				flag=true;
 				break;
 			}
@@ -1258,16 +1027,13 @@ public class AsposeDocFactory extends BaseDocFactory{
 	 * We set the format. If the given format is invalid, we set it to "doc" per default.
 	 */
 	@Override
-	public void setFormat(String _format){
-		if( _format==null|| _format.trim().equalsIgnoreCase("") || !isFormatSupported(_format))
-		{
+	public void setFormat(String _format) {
+		if( _format==null|| _format.trim().equalsIgnoreCase("") || !isFormatSupported(_format)) {
 			_format ="doc";
 		}
-		if(_format.startsWith("."))
-		{
+		if(_format.startsWith(".")) {
 			this.outputFormat = _format.substring(1);
-		}else
-		{
+		}else {
 			this.outputFormat=_format;
 		}
 	}
@@ -1280,7 +1046,7 @@ public class AsposeDocFactory extends BaseDocFactory{
 	 * @param _outputPath: the output path to check, if empty or null will be set to "ivy_RIA_files".
 	 * @param _outputFormat: the output format to check, if empty or null will be set with "doc"
 	 * @param _fields: the templateMergeFields parameter to check cannot be null, may be an empty list.
-	 * @return FileOperationMessage with ch.ivyteam.ivy.addons.docfactory.FileOperationMessage.ERROR_MESSAGE as Type if one of the parameter is invalid,<br>
+	 * @return fileOperationMessage with ch.ivyteam.ivy.addons.docfactory.FileOperationMessage.ERROR_MESSAGE as Type if one of the parameter is invalid,<br>
 	 * else the type will be ch.ivyteam.ivy.addons.docfactory.FileOperationMessage.SUCCESS_MESSAGE.
 	 */
 	private FileOperationMessage resetAndCheckCommonParameters(String _templatePath, String _outputName, String _outputPath, String _outputFormat, List<TemplateMergeField> _fields){
@@ -1288,48 +1054,45 @@ public class AsposeDocFactory extends BaseDocFactory{
 		this.fileOperationMessage=new FileOperationMessage();
 		this.fileOperationMessage.emptyFileList();
 
-		if(_templatePath!=null && !_templatePath.trim().equalsIgnoreCase(""))
-		{// if the template path param is valid
+		if(_templatePath!=null && !_templatePath.trim().equalsIgnoreCase("")) {
+			// if the template path param is valid
 			this.template = new java.io.File(FileUtil.formatPath(_templatePath));
-		}else
-		{
+		}else {
 			this.setTemplate(null);
 		}
 
-		if(_outputPath==null || _outputPath.trim().equalsIgnoreCase(""))
-		{
+		if(_outputPath==null || _outputPath.trim().equalsIgnoreCase("")) {
 			this.outputPath=FileUtil.formatPathWithEndSeparator("ivy_RIA_files");
 		}
-		else
-		{
+		else {
 			this.setOutputPath(FileUtil.formatPathWithEndSeparator(_outputPath));
 		}
 
-		if(!doCheckBeforeDocGeneration(_outputFormat, _fields))
-		{// if the format or the list of MergeFields or the Template are not valid
-			//we return the FileOperationMessage generated by doCheckBeforeDocGeneration(_format, list)
+		if(!doCheckBeforeDocGeneration(_outputFormat, _fields)) {
+			// if the format or the list of MergeFields or the Template are not valid
+			//we return the fileOperationMessage generated by doCheckBeforeDocGeneration(_format, list)
 			return this.fileOperationMessage;
 		}
 
 		ArrayList<TemplateMergeField> templateParamslist =new ArrayList<TemplateMergeField>();
 		templateParamslist.addAll(_fields);
 
-		if(_outputName==null || _outputName.trim().equalsIgnoreCase(""))
-		{//if the filename was not indicated, we look if the first mergeField Object could contain the fileName
-			if(templateParamslist.get(0).getMergeFieldName().trim().equalsIgnoreCase("filename"))
-			{// it contains the file name
+		if(_outputName==null || _outputName.trim().equalsIgnoreCase("")) {
+			//if the filename was not indicated, we look if the first mergeField Object could contain the fileName
+			if(templateParamslist.get(0).getMergeFieldName().trim().equalsIgnoreCase("filename")) {
+				// it contains the file name
 				this.outputName=templateParamslist.get(0).getMergeFieldValue().trim();
 			}
-			else
-			{// no file Name indicated, we have to take a default one
+			else {
+				// no file Name indicated, we have to take a default one
 				this.outputName="serialLetter_"+System.nanoTime();
 			}
-		}else{
+		} else {
 			this.outputName=_outputName;
 		}
 
-		if(!FileUtil.isFileNameValid(_outputName))
-		{// if the filename contains invalid characters
+		if(!FileUtil.isFileNameValid(_outputName)) {
+			// if the filename contains invalid characters
 			this.fileOperationMessage.setType(ch.ivyteam.ivy.addons.docfactory.FileOperationMessage.ERROR_MESSAGE);
 			this.fileOperationMessage.emptyFileList();
 			this.fileOperationMessage.setMessage(Ivy.cms().co("/ch/ivyteam/ivy/addons/docfactory/messages/invalidFileName"));
@@ -1357,12 +1120,12 @@ public class AsposeDocFactory extends BaseDocFactory{
 		String [] paramValue= new String[_normalMergeFields.size()];
 		for(int i=0; i<_normalMergeFields.size();i++){
 			String s = _normalMergeFields.get(i).getMergeFieldName();
-			if(s.startsWith("Image:") || s.startsWith("Image_"))
-			{//The merge field name indicates an Image, we take only the second part of the name
+			if(s.startsWith("Image:") || s.startsWith("Image_")) {
+				//The merge field name indicates an Image, we take only the second part of the name
 				paramName[i]=s.substring(6);
 			}
-			else
-			{//The merge field is a text field
+			else {
+				//The merge field is a text field
 				paramName[i]=s;
 			}
 
@@ -1391,39 +1154,20 @@ public class AsposeDocFactory extends BaseDocFactory{
 	/**
 	 * Generates the java.io.File corresponding to the Aspose Document Object.<br>
 	 * It takes the already saved output path, output name and output format.
-	 * @param doc
+	 * @param document
 	 * @return the generated java.io.File
 	 * @throws Exception
 	 */
-	private java.io.File makeFileWithDocument(Document doc) throws Exception{
+	private java.io.File makeFileWithDocument(Document document) throws Exception {
 		java.io.File file=null;
-		switch(getFormatPosition(this.outputFormat)){
-		case DOC_FORMAT:
-			doc.save(this.outputPath+this.outputName+".doc", SaveFormat.DOC);
-			file=new File(this.outputPath+this.outputName+".doc");
-			break;
-		case DOCX_FORMAT:
-			doc.save(this.outputPath+this.outputName+".docx", SaveFormat.DOCX);
-			file=new File(this.outputPath+this.outputName+".docx");
-			break;
-		case PDF_FORMAT:
-			doc.save(this.outputPath+this.outputName+".pdf");
-			file=new File(this.outputPath+this.outputName+".pdf");
-			break;
-		case HTML_FORMAT:
-			doc.save(this.outputPath+this.outputName+".html", SaveFormat.HTML);
-			file=new File(this.outputPath+this.outputName+".html");
-			break;
-		case TXT_FORMAT:
-			doc.save(this.outputPath+this.outputName+".txt", SaveFormat.TEXT);
-			file=new File(this.outputPath+this.outputName+".txt");
-			break;
-		default:
-			this.fileOperationMessage.setType(ch.ivyteam.ivy.addons.docfactory.FileOperationMessage.ERROR_MESSAGE);
-			this.fileOperationMessage.setMessage(Ivy.cms().co("/ch/ivyteam/ivy/addons/docfactory/messages/formatNotSupported"));
-			this.fileOperationMessage.emptyFileList();
+		int format = getFormatPosition(this.outputFormat,UNSUPPORTED_FORMAT);
+		String baseFilePath=this.outputPath+this.outputName;
+		this.fileOperationMessage  = AsposeDocFactoryFileGenerator.exportDocumentToFile(document, baseFilePath, format, false);
+		if(this.fileOperationMessage.isError()) {
 			RDCallbackMethodHandler.callRDMethod(this.parentRD, errorMethodName, new Object[] { this.fileOperationMessage });
-
+		}
+		if(!this.fileOperationMessage.getFiles().isEmpty()) {
+			file = this.fileOperationMessage.getFiles().get(0);
 		}
 		return file;
 	}
@@ -1548,7 +1292,7 @@ public class AsposeDocFactory extends BaseDocFactory{
 		try {
 			if(_parentDataSource!=null && !_parentDataSource.isEmpty())
 			{
-				
+
 				mmds.add(new MailMergeDataSource(_parentDataSource, _childrenDataSources));
 			}
 			this.doc = this.returnDocumentFromMailMerge(templateParamslist, mmds);
@@ -1634,7 +1378,7 @@ public class AsposeDocFactory extends BaseDocFactory{
 		}
 		return this.fieldMergingCallback;
 	}
-	
+
 	/**
 	 * Sets the AsposeFieldMergingCallback object used to apply special rules to merge fields while performing the mail merge operation.<br><br>
 	 * A typical use of FieldMergingCallback objects is to insert images in merge fields if these merge fields name are declared as "Image:fieldName". 
