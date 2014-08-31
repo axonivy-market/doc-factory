@@ -51,6 +51,7 @@ public class DirectorySecurityUtil {
 		Set<String> rolesSet = new HashSet<String>();
 		rolesSet.addAll(fos.getCud());
 		rolesSet.addAll(fos.getCrd());
+		rolesSet.addAll(fos.getCtd());
 		roles.addAll(rolesSet);
 		return roles;
 	}

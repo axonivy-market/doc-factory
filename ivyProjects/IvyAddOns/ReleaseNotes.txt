@@ -3,6 +3,12 @@ IvyAddons 5010000 Release Notes
 ===============================
 First official release version of the IvyAddons for ivy 5.1.
 
+* Issue 25115:
+The Aspose Total license has been upgraded, so that we can upgrade to the newest aspose libraries versions:
+aspose.slides-14.5.0.jar
+aspose-cells-8.1.2.jar
+aspose-pdf-9.3.1-jdk16.jar
+aspose-words-14.7.0-jdk16.jar
 * Issue #25095: Filemanager - oracle db. The security version is not detected properly, a a consequence the new security rights are ignored.
 * Issue #25096: Filemanager: Fix security feature activated
   - files listed in recursive mode, the files the user can edit appears as read-only files.
