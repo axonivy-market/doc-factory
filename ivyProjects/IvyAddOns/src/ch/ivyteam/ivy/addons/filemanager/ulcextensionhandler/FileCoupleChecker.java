@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
@@ -60,13 +61,13 @@ public class FileCoupleChecker<T extends IRichDialogPanel>{
 	 * HashMap coming from the UI half object when Files are modified at client side.<br>
 	 *  it contains key/value pairs: file path at client side / checksum
 	 */
-	final HashMap<String, Long> clientFilePathAndChecksumHashMap = new HashMap<String, Long>();
+	final Map<String, Long> clientFilePathAndChecksumHashMap = new HashMap<String, Long>();
 
 	/**
 	 * HashMap from the edited Files at server side.<br>
 	 *  it contains key/value pairs: file path at server side / checksum
 	 */
-	HashMap<String, Long> serverFileCheckSumHashMap = new HashMap<String, Long>();
+	Map<String, Long> serverFileCheckSumHashMap = new HashMap<String, Long>();
 
 	/**
 	 * The List of the FileCouple that represents Client side/Server side Files Couples that are edited.

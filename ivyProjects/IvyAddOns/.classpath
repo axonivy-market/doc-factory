@@ -9,14 +9,15 @@
 	<classpathentry exported="true" kind="con" path="IVY_CONTAINER"/>
 	<classpathentry kind="con" path="ULC_CONTAINER"/>
 	<classpathentry kind="src" path="src_wsproc"/>
-	<classpathentry exported="true" kind="lib" path="lib/aspose/aspose.pdf-3.0.1.jdk16.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/aspose/Aspose.Words.jdk16.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/ivyThirdPartyLicense.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/poi/poi-3.9-20121203.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/aspose/aspose-cells-7.1.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/aspose/aspose.slides-2.8.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/ivyThirdPartyLicenses-0.0.1-SNAPSHOT.jar"/>
 	<classpathentry kind="con" path="WEBAPP_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
-	<classpathentry kind="lib" path="lib/thumbnail_plugin_base-1.0.1.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/aspose/aspose-cells-8.1.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/aspose/aspose-pdf-9.3.1-jdk16.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/aspose/aspose-words-14.7.0-jdk16.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/aspose/aspose.slides-14.5.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/thumbnail_plugin_base-1.0.1.0.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
