@@ -354,9 +354,9 @@ public class EventLogHelper
     List<EventLog> result;
     ICase wfCase;
 
-    wfCase = new DummyCase(caseId);
+    wfCase = wf.findCase(caseId);
 
-    result = null;
+    result = new ArrayList<EventLog>();
     if (wfCase != null)
     {
       result = getEventLogs(wf.findEventLogs(wfCase));
