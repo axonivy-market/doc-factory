@@ -11,8 +11,11 @@ import org.apache.commons.beanutils.BeanUtils;
 
 import ch.ivyteam.ivy.addons.filemanager.database.AbstractFileManagementHandler;
 import ch.ivyteam.ivy.addons.filemanager.database.fileaction.FileActionConfiguration;
+import ch.ivyteam.ivy.addons.filemanager.database.filetype.FileTypeListFilter;
+import ch.ivyteam.ivy.addons.filemanager.database.filetype.FileTypesController;
 import ch.ivyteam.ivy.addons.filemanager.database.security.DocumentFilter;
 import ch.ivyteam.ivy.addons.filemanager.database.security.SecurityHandler;
+import ch.ivyteam.ivy.addons.filemanager.document.filter.DocumentListFilter;
 import ch.ivyteam.ivy.addons.filemanager.listener.AbstractFileActionListener;
 import ch.ivyteam.ivy.addons.filemanager.util.PathUtil;
 import ch.ivyteam.ivy.environment.Ivy;
@@ -25,7 +28,7 @@ import ch.ivyteam.ivy.environment.Ivy;
  * For example, the FileManager RDC uses the FileManagerConfigurationController that extends this BasicConfigurationController.
  *
  */
-public class BasicConfigurationController implements Serializable{
+public class BasicConfigurationController implements Serializable {
 
 	/**
 	 * The auto generated serial Version ID
@@ -37,18 +40,18 @@ public class BasicConfigurationController implements Serializable{
 	 * Per default, the value is set to false.<br/>
 	 * If this is true, then the storeFilesInDB, activateSecurity and activateFileVersioning are false. 
 	 */
-	private boolean useIvySystemDB = Ivy.var().get("xivy_addons_fileManager_activateUseOfIvySystemDatabase").trim().equals("1");
+	private boolean useIvySystemDB = IvyGlobalVariableHandler.getGlobalVariable(GlobalVariableNames.USE_IVY_SYSTEM_DATABASE).equals("1");
 
 	/**
 	 * If true, the files content is stored as BLOB into the Table which name is set in filesContentTableName.<br />
 	 * If true, then useIvySystemDB is false,<br />
 	 * If false, then activateSecurity and activateFileVersioning are false.
 	 */
-	private boolean storeFilesInDB = Ivy.var().get("xivy_addons_fileManager_activateFileContentInDatabase").trim().equals("1");;
+	private boolean storeFilesInDB = IvyGlobalVariableHandler.isGlobalVariableEqualTo(GlobalVariableNames.FILE_CONTENT_STORED_IN_DATABASE, "1");
 	/**
 	 * If true the security management on the directories will be activated. storeFilesInDB must be true.
 	 */
-	private boolean activateSecurity = Ivy.var().get("xivy_addons_fileManager_activateSecurity").trim().equals("1");
+	private boolean activateSecurity = IvyGlobalVariableHandler.isGlobalVariableEqualTo(GlobalVariableNames.ACTIVATE_SECURITY, "1");
 	
 	/**
 	 * The security Handler responsible for computing the FileManager rights
@@ -58,12 +61,19 @@ public class BasicConfigurationController implements Serializable{
 	/**
 	 * If true the File version feature will be activated. storeFilesInDB must be true.
 	 */
-	private boolean activateFileVersioning = Ivy.var().get("xivy_addons_fileManager_activateFileVersioning").trim().equals("1");
+	private boolean activateFileVersioning = IvyGlobalVariableHandler.isGlobalVariableEqualTo(GlobalVariableNames.ACTIVATE_FILE_VERSIONING, "1");
 	/**
 	 * If true the activateFileVersioning flag is automatically set to true.<br>  storeFilesInDB must be true.<br>
 	 * This flag is used to activate some extended functionalities in the file version feature.
 	 */
 	private boolean activateFileVersioningExtended = false;
+	
+	/**
+	 * if true then all the documents that have been archived as versions, can not be deleted anymore.<br>
+	 * default is false
+	 */
+	private boolean fileArchiveProtected = false;
+	
 	/**
 	 * If true, the file types feature will be activated.
 	 */
@@ -75,79 +85,100 @@ public class BasicConfigurationController implements Serializable{
 	 * If true, the file tags feature will be activated.
 	 */
 	private boolean activateFileTags = false;
+	
+	/**
+	 * If true the File link feature will be activated. storeFilesInDB must be true.
+	 */
+	private boolean activateFileLink = IvyGlobalVariableHandler.isGlobalVariableEqualTo(GlobalVariableNames.ACTIVATE_FILE_LINK, "1");
+	
+	/**
+	 * if true and the fileversion feature is true and the activateFileLink is true, then the fileLinks will link to the linked document version. 
+	 */
+	private boolean linkToVersion = false;
 
 	/**
 	 * The name of the ivy role that is allowed to manage the file manager security.<br>
 	 * Default is the value of the xivy_addons_fileManager_admin_roleName global variable.
 	 */
-	private String adminRole=Ivy.var().get("xivy_addons_fileManager_admin_roleName").trim();
+	private String adminRole = IvyGlobalVariableHandler.getGlobalVariable(GlobalVariableNames.SECURITY_ADMIN_ROLE_NAME);
 	/**
 	 * The name of the Ivy database Configuration name used to connect to the database.<br>
 	 * Default is the value of the xivy_addons_fileManager_ivyDatabaseConnectionName global variable.
 	 */
-	private String ivyDBConnectionName=Ivy.var().get("xivy_addons_fileManager_ivyDatabaseConnectionName").trim();
+	private String ivyDBConnectionName = IvyGlobalVariableHandler.getGlobalVariable(GlobalVariableNames.IVY_DB_CONNECTION_NAME);
 
 	/**
 	 * The name of the database schema that may be used if the tables are stored in a schema<br>
 	 * Default is the value of the xivy_addons_fileManager_databaseSchemaName global variable.
 	 */
-	private String databaseSchemaName=Ivy.var().get("xivy_addons_fileManager_databaseSchemaName").trim();
+	private String databaseSchemaName = IvyGlobalVariableHandler.getGlobalVariable(GlobalVariableNames.DATABASE_SCHEMA_NAME);
 
 	/**
 	 * The name of the Table that stores the information about the files.<br>
 	 * Default is the value of the xivy_addons_fileManager_fileMetaDataTableName global variable.
 	 */
-	private String filesTableName=Ivy.var().get("xivy_addons_fileManager_fileMetaDataTableName").trim();
+	private String filesTableName = IvyGlobalVariableHandler.getGlobalVariable(GlobalVariableNames.FILES_TABLE_NAME);
 	/**
 	 * The name of the DB Table that stores the directory structure.<br>
 	 * Default is the value of the xivy_addons_fileManager_directoriesTableName global variable.
 	 */
-	private String directoriesTableName=Ivy.var().get("xivy_addons_fileManager_directoriesTableName").trim();
+	private String directoriesTableName = IvyGlobalVariableHandler.getGlobalVariable(GlobalVariableNames.DIRECTORIES_TABLE_NAME);
 	/**
 	 * The name of the DB Table that stores the file content.<br>
 	 * Default is the value of the xivy_addons_fileManager_fileContentTableName global variable.
 	 */
-	private String filesContentTableName=Ivy.var().get("xivy_addons_fileManager_fileContentTableName").trim();
+	private String filesContentTableName = IvyGlobalVariableHandler.getGlobalVariable(GlobalVariableNames.FILE_CONTENT_TABLE_NAME);
 	/**
 	 * The name of the DB Table that stores the file versions information.<br>
 	 * Default is the value of the xivy_addons_fileManager_fileVersioningMetaDataTableName global variable.
 	 */
-	private String filesVersionTableName=Ivy.var().get("xivy_addons_fileManager_fileVersioningMetaDataTableName").trim();
+	private String filesVersionTableName = IvyGlobalVariableHandler.getGlobalVariable(GlobalVariableNames.FILE_VERSION_TABLE_NAME);
 	/**
 	 * The name of the DB Table that stores the file versions content.<br>
 	 * Default is the value of the xivy_addons_fileManager_fileVersioningContentTableName global variable.
 	 */
-	private String filesVersionContentTableName=Ivy.var().get("xivy_addons_fileManager_fileVersioningContentTableName").trim();
+	private String filesVersionContentTableName = IvyGlobalVariableHandler.getGlobalVariable(GlobalVariableNames.FILE_VERSION_CONTENT_TABLE_NAME);
+	/**
+	 * The name of the table in the db that stores the file id and version number that have been archived in the version system.<br>
+	 * This is necessary if we want to track this information and use the fileArchiveProtected
+	 */
+	private String filesVersionArchiveTrackingTableName = IvyGlobalVariableHandler.getGlobalVariable(GlobalVariableNames.FILE_VERSION_ARCHIVE_TRACKING_TABLE_NAME);
 
 	/**
 	 * Name of the DB Table that stores the file types
 	 * Default is the value of the xivy_addons_fileManager_fileTypesTableName global variable.
 	 */
-	private String fileTypeTableName =Ivy.var().get("xivy_addons_fileManager_fileTypesTableName").trim();
+	private String fileTypeTableName = IvyGlobalVariableHandler.getGlobalVariable(GlobalVariableNames.FILE_TYPE_TABLE_NAME);
 
 	/**
 	 * Name of the DB Table that stores the file tags
 	 * Default is the value of the xivy_addons_fileManager_fileTagsTableName global variable.
 	 */
-	private String fileTagsTableName =Ivy.var().get("xivy_addons_fileManager_fileTagsTableName").trim();
+	private String fileTagsTableName = IvyGlobalVariableHandler.getGlobalVariable(GlobalVariableNames.FILE_TAG_TABLE_NAME);
+	
+	/**
+	 * Name of the DB Table that stores the file tags
+	 * Default is the value of the xivy_addons_fileManager_fileTagsTableName global variable.
+	 */
+	private String fileLinkTableName = IvyGlobalVariableHandler.getGlobalVariable(GlobalVariableNames.FILE_LINK_TABLE_NAME);
 	
 	/**
 	 * Name of the DB Table that stores the languages ISO Code supported by the filemanager
 	 * Default is "fmlanguages"
 	 */
-	private String languageTableName = "fmlanguages";
+	private String languageTableName = IvyGlobalVariableHandler.getGlobalVariable(GlobalVariableNames.LANGUAGES_TABLE_NAME);
 	
 	/**
 	 * Name of the DB Table that stores the directories names translations
 	 * Default is "dirtranslation"
 	 */
-	private String directoriesTranslationTableName = "dirtranslation";
+	private String directoriesTranslationTableName = IvyGlobalVariableHandler.getGlobalVariable(GlobalVariableNames.DIRECTORIES_TRANSLATION_TABLE_NAME);
 	
 	/**
 	 * Name of the DB Table that stores the filetypes names translations
 	 * Default is "fttranslation"
 	 */
-	private String fileTypesTranslationTableName = "fttranslation";
+	private String fileTypesTranslationTableName = IvyGlobalVariableHandler.getGlobalVariable(GlobalVariableNames.FILE_TYPE_TRANSLATION_TABLE_NAME);
 	
 	/**
 	 * The rootPath is the directory entry path.
@@ -174,13 +205,17 @@ public class BasicConfigurationController implements Serializable{
 	 * This should only be used if you want to override completely the way the file manager retrieves the files and manages the directories and the files.<br>
 	 * This is only here to allow getting an extension point. 
 	 */
-	private AbstractFileManagementHandler fileManagementHandler=null;
+	private AbstractFileManagementHandler fileManagementHandler = null;
 	
 	private List<AbstractFileActionListener> fileActionListeners;
 	
-	private DocumentFilter documentFilter=null;
+	private DocumentFilter documentFilter = null;
 	
-	private String ThumbnailTableName = Ivy.var().get("xivy_addons_fileManager_thumbnailTableName").trim();
+	private String ThumbnailTableName = IvyGlobalVariableHandler.getGlobalVariable(GlobalVariableNames.THUMBNAIL_TABLE_NAME);
+	
+	private DocumentListFilter documentListFilter = null;
+	
+	private FileTypeListFilter fileTypeListFilter = null;
 
 	/**
 	 * 
@@ -197,8 +232,7 @@ public class BasicConfigurationController implements Serializable{
 	 */
 	public void setUseIvySystemDB(boolean useIvySystemDB) {
 		this.useIvySystemDB = useIvySystemDB;
-		if(this.useIvySystemDB)
-		{
+		if(this.useIvySystemDB) {
 			this.storeFilesInDB=false;
 			this.fileActionHistoryConfiguration.setActivateFileActionHistory(false);
 		}
@@ -227,12 +261,10 @@ public class BasicConfigurationController implements Serializable{
 	 */
 	public void setStoreFilesInDB(boolean storeFilesInDB) {
 		this.storeFilesInDB = storeFilesInDB;
-		if(this.storeFilesInDB)
-		{
+		if(this.storeFilesInDB) {
 			this.useIvySystemDB=false;
 		}
-		if(!this.storeFilesInDB)
-		{
+		if(!this.storeFilesInDB) {
 			this.fileActionHistoryConfiguration.setActivateFileActionHistory(false);
 		}
 	}
@@ -245,7 +277,6 @@ public class BasicConfigurationController implements Serializable{
 	 * @return the activateSecurity, true if the security management feature can be activated: storeFilesInDB is true && activateSecurity is true.
 	 */
 	public boolean isActivateSecurity() {
-		//Ivy.log().info("Hey isActivateSecurity() was called and returned: "+(this.storeFilesInDB && activateSecurity)+ " the real value of activateSecurity is "+activateSecurity);
 		return (this.storeFilesInDB && activateSecurity);
 	}
 
@@ -258,7 +289,6 @@ public class BasicConfigurationController implements Serializable{
 	 */
 	public void setActivateSecurity(boolean activateSecurity) {
 		this.activateSecurity = activateSecurity;
-		//Ivy.log().info("Hey setActivateSecurity was called and set to : "+this.activateSecurity);
 	}
 
 	/**
@@ -319,10 +349,45 @@ public class BasicConfigurationController implements Serializable{
 	public void setActivateFileVersioningExtended(
 			boolean activateFileVersioningExtended) {
 		this.activateFileVersioningExtended = activateFileVersioningExtended;
-		if(this.activateFileVersioningExtended)
-		{
+		if(this.activateFileVersioningExtended) {
 			this.activateFileVersioning=true;
 		}
+	}
+
+	/**
+	 * Returns true if the files are stored in a database AND the file version is activated AND the file archive protection is enabled.
+	 * @see setFileArchiveProtected(boolean fileArchiveProtected)
+	 * @return true if the files are stored in a database AND the file version is activated AND the file archive protection is enabled.
+	 */
+	public boolean isFileArchiveProtectionEnabled() {
+		return this.storeFilesInDB && this.activateFileVersioning && this.fileArchiveProtected;
+	}
+
+	/**
+	 * enables or disables the file archive protection feature.
+	 * @param fileArchiveProtectionEnabled : true enables the file archive protection, else enables it.
+	 */
+	public void setFileArchiveProtectionEnabled(boolean fileArchiveProtectionEnabled) {
+		this.fileArchiveProtected = fileArchiveProtectionEnabled;
+	}
+
+	public boolean isActivateFileLink() {
+		return (this.isStoreFilesInDB() && activateFileLink);
+	}
+	
+	public void setActivateFileLink(boolean activateFileLink) {
+		this.activateFileLink = activateFileLink;
+	}
+
+	/**
+	 * true if the fileversion feature is activated and the activateFileLink and linkToVersion are true, then the fileLinks will link to the linked document version. 
+	 */
+	public boolean isLinkToVersion() {
+		return isActivateFileVersioning() && activateFileLink && linkToVersion;
+	}
+
+	public void setLinkToVersion(boolean linkToVersion) {
+		this.linkToVersion = linkToVersion;
 	}
 
 	/**
@@ -433,11 +498,9 @@ public class BasicConfigurationController implements Serializable{
 	 * @param _ivyDBConnectionName the ivyDBConnectionName to set
 	 */
 	public void setIvyDBConnectionName(String _ivyDBConnectionName) {
-		if(_ivyDBConnectionName== null || _ivyDBConnectionName.trim().length()==0) {
-			this.ivyDBConnectionName = Ivy.var().get("xivy_addons_fileManager_ivyDatabaseConnectionName").trim();
-		}else {
-			this.ivyDBConnectionName = _ivyDBConnectionName.trim();
-		}
+		this.ivyDBConnectionName = IvyGlobalVariableHandler.
+				returnsGlobalVariableValueIfProposedValueIsBlank(_ivyDBConnectionName, GlobalVariableNames.IVY_DB_CONNECTION_NAME);
+		
 		this.fileActionHistoryConfiguration.setIvyDBConnectionName(this.ivyDBConnectionName);
 	}
 
@@ -454,11 +517,8 @@ public class BasicConfigurationController implements Serializable{
 	 * @param _filesTableName the filesTableName to set
 	 */
 	public void setFilesTableName(String _filesTableName) {
-		if(_filesTableName==null || _filesTableName.trim().length()==0) {
-			this.filesTableName = Ivy.var().get("xivy_addons_fileManager_fileMetaDataTableName").trim();
-		}else {
-			this.filesTableName = _filesTableName.trim();
-		}
+		this.filesTableName = IvyGlobalVariableHandler.
+				returnsGlobalVariableValueIfProposedValueIsBlank(_filesTableName, GlobalVariableNames.FILES_TABLE_NAME);
 	}
 
 	/**
@@ -475,11 +535,8 @@ public class BasicConfigurationController implements Serializable{
 	 * @param _directoriesTableName the directoriesTableName to set
 	 */
 	public void setDirectoriesTableName(String _directoriesTableName) {
-		if(_directoriesTableName==null || _directoriesTableName.trim().length()==0) {
-			this.directoriesTableName = Ivy.var().get("xivy_addons_fileManager_directoriesTableName").trim();
-		}else {
-			this.directoriesTableName = _directoriesTableName;
-		}
+		this.directoriesTableName = IvyGlobalVariableHandler.
+				returnsGlobalVariableValueIfProposedValueIsBlank(_directoriesTableName, GlobalVariableNames.DIRECTORIES_TABLE_NAME);
 	}
 
 	/**
@@ -496,11 +553,8 @@ public class BasicConfigurationController implements Serializable{
 	 * @param _filesContentTableName the filesContentTableName to set
 	 */
 	public void setFilesContentTableName(String _filesContentTableName) {
-		if(_filesContentTableName== null || _filesContentTableName.trim().length()==0) {
-			this.filesContentTableName = Ivy.var().get("xivy_addons_fileManager_fileContentTableName").trim();
-		}else {
-			this.filesContentTableName = _filesContentTableName;
-		}
+		this.filesContentTableName = IvyGlobalVariableHandler.
+				returnsGlobalVariableValueIfProposedValueIsBlank(_filesContentTableName, GlobalVariableNames.FILE_CONTENT_TABLE_NAME);
 	}
 
 	/**
@@ -517,11 +571,8 @@ public class BasicConfigurationController implements Serializable{
 	 * @param _filesVersionTableName the filesVersionTableName to set
 	 */
 	public void setFilesVersionTableName(String _filesVersionTableName) {
-		if(_filesVersionTableName==null || _filesVersionTableName.trim().length()==0)
-		{
-			this.filesVersionTableName = Ivy.var().get("xivy_addons_fileManager_fileVersioningMetaDataTableName").trim();
-		}
-		this.filesVersionTableName = _filesVersionTableName;
+		this.filesVersionTableName = IvyGlobalVariableHandler.
+				returnsGlobalVariableValueIfProposedValueIsBlank(_filesVersionTableName, GlobalVariableNames.FILE_VERSION_TABLE_NAME);
 	}
 
 	/**
@@ -538,12 +589,8 @@ public class BasicConfigurationController implements Serializable{
 	 * @param _filesVersionContentTableName the filesVersionContentTableName to set
 	 */
 	public void setFilesVersionContentTableName(String _filesVersionContentTableName) {
-		if(_filesVersionContentTableName==null || _filesVersionContentTableName.trim().length()==0)
-		{
-			this.filesVersionContentTableName = Ivy.var().get("xivy_addons_fileManager_fileVersioningContentTableName").trim();
-		}else{
-			this.filesVersionContentTableName = _filesVersionContentTableName;
-		}
+		this.filesVersionContentTableName = IvyGlobalVariableHandler.
+				returnsGlobalVariableValueIfProposedValueIsBlank(_filesVersionContentTableName, GlobalVariableNames.FILE_VERSION_CONTENT_TABLE_NAME);
 	}
 
 	/**
@@ -574,6 +621,21 @@ public class BasicConfigurationController implements Serializable{
 	 */
 	public String getFileTagsTableName() {
 		return this.fileTagsTableName;
+	}
+
+	/**
+	 * @return the file links table name. The default is the value of the xivy_addons_fileManager_fileLinkTableName ivy global variable.
+	 */
+	public String getFileLinkTableName() {
+		return fileLinkTableName;
+	}
+
+	/**
+	 * Set the file link table name
+	 * @param fileLinkTableName
+	 */
+	public void setFileLinkTableName(String fileLinkTableName) {
+		this.fileLinkTableName = fileLinkTableName;
 	}
 
 	public String getLanguageTableName() {
@@ -631,15 +693,29 @@ public class BasicConfigurationController implements Serializable{
 	}
 
 	/**
+	 * @return the filesVersionArchiveTrackingTableName
+	 */
+	public String getFilesVersionArchiveTrackingTableName() {
+		return filesVersionArchiveTrackingTableName;
+	}
+
+	/**
+	 * @param filesVersionArchiveTrackingTableName the filesVersionArchiveTrackingTableName to set
+	 */
+	public void setFilesVersionArchiveTrackingTableName(
+			String filesVersionArchiveTrackingTableName) {
+		this.filesVersionArchiveTrackingTableName = filesVersionArchiveTrackingTableName;
+	}
+
+	/**
 	 * Set the rootPath attribute. The root path is considered to be the root directory of the file manager.<br>
 	 * This path will be automatically formatted so it contains only "/" as separator and ends always with "/"
 	 * @param _rootPath the rootPath to set
 	 */
 	public void setRootPath(String _rootPath) {
-		if(_rootPath==null)
-		{
+		if(_rootPath==null) {
 			this.rootPath ="";
-		}else{
+		} else {
 			this.rootPath = PathUtil.formatPathForDirectory(_rootPath);
 		}
 	}
@@ -663,8 +739,7 @@ public class BasicConfigurationController implements Serializable{
 	 * @param _databaseSchemaName the databaseSchemaName to set
 	 */
 	public void setDatabaseSchemaName(String _databaseSchemaName) {
-		if(_databaseSchemaName==null)
-		{
+		if(_databaseSchemaName==null) {
 			this.databaseSchemaName="";
 			return;
 		}
@@ -690,9 +765,9 @@ public class BasicConfigurationController implements Serializable{
 	 */
 	public int getMaxFileUploadSize() {
 		if(this.maxFileUploadSize<=0) {
-			try{
-				maxFileUploadSize = Integer.parseInt(Ivy.var().get("xivy_addons_fileManager_max_upload_size"));
-			}catch(Exception ex){
+			try {
+				maxFileUploadSize = Integer.parseInt(IvyGlobalVariableHandler.getGlobalVariable(GlobalVariableNames.MAXIMUM_FILE_UPLOAD_SIZE));
+			} catch(Exception ex){
 				Ivy.log().error("Cannot set the max size. "+ ex.getMessage(),ex);
 			}
 		}
@@ -730,6 +805,42 @@ public class BasicConfigurationController implements Serializable{
 	public void setDocumentFilter(DocumentFilter documentFilter) {
 		this.documentFilter = documentFilter;
 	}
+	
+	/**
+	 * A DocumentListFilter is a filter that works independently from the security.<br>
+	 * You can use such a Filter to filter the document that are going to be returned by the file manager API.<br>
+	 * @see {@link ch.ivyteam.ivy.addons.filemanager.document.filter.DocumentListFilter}
+	 * @return the documentListFilter
+	 */
+	public DocumentListFilter getDocumentListFilter() {
+		return documentListFilter;
+	}
+
+	/**
+	 * A DocumentListFilter is a filter that works independently from the security.<br>
+	 * You can use such a Filter to filter the document that are going to be returned by the file manager API.<br>
+	 * @see {@link ch.ivyteam.ivy.addons.filemanager.document.filter.DocumentListFilter}
+	 * @param documentListFilter the documentListFilter to set
+	 */
+	public void setDocumentListFilter(DocumentListFilter documentListFilter) {
+		this.documentListFilter = documentListFilter;
+	}
+
+	/**
+	 * Used by the {@link FileTypesController} to filter the FileType Objects in the methods returning List of FileType.
+	 * @return the fileTypeListFilter
+	 */
+	public FileTypeListFilter getFileTypeListFilter() {
+		return fileTypeListFilter;
+	}
+
+	/**
+	 * Used by the {@link FileTypesController} to filter the FileType Objects in the methods returning List of FileType.
+	 * @param fileTypeListFilter the fileTypeListFilter to set
+	 */
+	public void setFileTypeListFilter(FileTypeListFilter fileTypeListFilter) {
+		this.fileTypeListFilter = fileTypeListFilter;
+	}
 
 	/**
 	 * Check if the configuration is correct to be able to start the file manager.<br>
@@ -737,8 +848,7 @@ public class BasicConfigurationController implements Serializable{
 	 * This doesn't check if the rootPath was provided.
 	 * @return true if the configuration is correct else false.
 	 */
-	public boolean isConfigurationCorrect()
-	{
+	public boolean isConfigurationCorrect() {
 		return (this.isUseIvySystemDB() || 
 				(
 						this.ivyDBConnectionName.length()>0 &&
@@ -798,6 +908,5 @@ public class BasicConfigurationController implements Serializable{
 		
 		return conf;
 	}
-
 
 }

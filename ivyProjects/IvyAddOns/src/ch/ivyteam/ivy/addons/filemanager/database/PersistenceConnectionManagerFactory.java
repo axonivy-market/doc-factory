@@ -5,9 +5,14 @@ package ch.ivyteam.ivy.addons.filemanager.database;
 
 
 import ch.ivyteam.ivy.addons.filemanager.configuration.BasicConfigurationController;
+import ch.ivyteam.ivy.addons.filemanager.database.fileaction.FileActionHistorySQLPersistence;
+import ch.ivyteam.ivy.addons.filemanager.database.filelink.FileLinkSQLPersistence;
 import ch.ivyteam.ivy.addons.filemanager.database.filetag.FileTagSQLPersistence;
 import ch.ivyteam.ivy.addons.filemanager.database.filetype.FileTypeSQLPersistence;
+import ch.ivyteam.ivy.addons.filemanager.database.persistence.IFileActionHistoryPersistence;
+import ch.ivyteam.ivy.addons.filemanager.database.persistence.IFileLinkPersistence;
 import ch.ivyteam.ivy.addons.filemanager.database.persistence.IFileTagPersistence;
+import ch.ivyteam.ivy.addons.filemanager.database.persistence.IFileVersionPersistence;
 import ch.ivyteam.ivy.addons.filemanager.database.persistence.IItemTranslationPersistence;
 import ch.ivyteam.ivy.addons.filemanager.database.persistence.IDocumentOnServerPersistence;
 import ch.ivyteam.ivy.addons.filemanager.database.persistence.IFileTypePersistence;
@@ -17,7 +22,10 @@ import ch.ivyteam.ivy.addons.filemanager.database.persistence.ILanguagePersisten
 import ch.ivyteam.ivy.addons.filemanager.database.persistence.IPersistenceConnectionManager;
 import ch.ivyteam.ivy.addons.filemanager.database.persistence.IThumbnailPersistence;
 import ch.ivyteam.ivy.addons.filemanager.database.persistence.TranslatedFileManagerItemsEnum;
+import ch.ivyteam.ivy.addons.filemanager.database.sql.TableChecker;
+import ch.ivyteam.ivy.addons.filemanager.database.versioning.FileVersioningSQLPersistence;
 import ch.ivyteam.ivy.addons.filemanager.thumbnailer.persistence.ThumbnailSQLPersistence;
+import ch.ivyteam.ivy.environment.Ivy;
 
 /**
  * This class declares static methods allowing to get IItemPersistence instances for the different kind of persistent filemanager objects.
@@ -112,6 +120,22 @@ public class PersistenceConnectionManagerFactory {
 	 */
 	public static IFileTagPersistence getIFileTagPersistenceInstance(BasicConfigurationController config){
 		return new FileTagSQLPersistence(config);
+	}
+	
+	public static IFileVersionPersistence getIFileVersionPersistenceInstance(BasicConfigurationController config) throws Exception {
+		return new FileVersioningSQLPersistence(config);
+	}
+	
+	public static IFileActionHistoryPersistence getIFileActionPersistenceInstance(BasicConfigurationController config) throws Exception {
+		return new FileActionHistorySQLPersistence(config.getFileActionHistoryConfiguration());
+	}
+	
+	public static IFileLinkPersistence getIFileLinkPersistenceInstance(BasicConfigurationController config) throws Exception {
+		if(!TableChecker.FileLinkTableExist(config)) {
+			Ivy.log().warn("The FileLink table does not exist. Please create it if you want to be able to use the FileLink feature.");
+			return null;
+		}
+		return new FileLinkSQLPersistence(config);
 	}
 
 }

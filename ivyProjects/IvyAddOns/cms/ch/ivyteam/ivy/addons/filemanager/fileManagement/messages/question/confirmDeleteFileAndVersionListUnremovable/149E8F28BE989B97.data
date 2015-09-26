@@ -1,0 +1,9 @@
+<P>
+Die ausgewählten Dateien werden gelöscht. <BR>
+%s
+Möchten Sie vortfahren?
+</P>
+<P><BR />
+Info: die folgenden Dokumente werden nicht gelöscht, weil sie gerade editiert werden.<BR />
+EDITEDFILES
+</P>

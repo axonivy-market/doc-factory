@@ -859,17 +859,15 @@ public class FileUploadHandler<T extends ULCComponent & IRichDialogPanel>
 			public void onSuccess(String[] filePaths, String[] fileNames) {
 				Ivy.log().debug("Number of Files choosed: "+filePaths.length);
 				try{
-					for(int i=0; i<filePaths.length; i++){
+					for(int i=0; i<filePaths.length; i++) {
 						Ivy.log().debug(filePaths[i]);
 						files.add(new java.io.File(filePaths[i]));
 					}
-					if(!callbackMethodName.trim().equals(""))
-					{
+					if(!callbackMethodName.trim().equals("")) {
 						List<java.io.File> f = List.create(java.io.File.class);
 						f.addAll(files);
 						RDCallbackMethodHandler.callRDMethodFromULCComponent(panel, callbackMethodName, new Object[] { f });
 					}
-
 				}
 				catch(Exception exception) { 
 					callPanelErrorMethode(exception.getMessage());

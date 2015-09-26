@@ -1,5 +1,5 @@
-# Xpert.ivy RichDialog Event-Mapping Data
-# 2014-04-14 18:07:53 | 5.0.10.45353 | 1.0
+# Ivy RichDialog Event-Mapping Data
+# 2014-12-22 21:35:15 | 5.1.1.47273 | 1.0
 ~.deleteButton@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FDB0198DDACE8/11F89B713EFCFEA6
 ~.deleteMenuItem@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:125FDB0198DDACE8/11F89B713EFCFEA6
 ~.desktopHandlerPanel@RD_EVENT[desktopException]--->ch.ivyteam.ivy.process.ProcessStart:125FDB0198DDACE8/11F8D295F50E7097
@@ -26,6 +26,7 @@
 ~@RD_METHODCALL[_onChangeFile(ch.ivyteam.ivy.addons.filemanager.ReturnedMessage)]--->ch.ivyteam.ivy.process.ProcessStart:125FDB0198DDACE8/11F92BB10D256BB5
 ~@RD_METHODCALL[_onProgress(Number)]--->ch.ivyteam.ivy.process.ProcessStart:125FDB0198DDACE8/11F92AF9DC8BD232
 ~@RD_METHODCALL[_onUploadError(ch.ivyteam.ivy.addons.filemanager.ReturnedMessage)]--->ch.ivyteam.ivy.process.ProcessStart:125FDB0198DDACE8/11F89CE94C8C7FAA
+~@RD_METHODCALL[_uploadFiles(List<java.io.File>)]--->ch.ivyteam.ivy.process.ProcessStart:125FDB0198DDACE8/14A73B46A4D2E2FE
 ~@RD_METHODCALL[_uploadFilesFromOSDnD(List<String>)]--->ch.ivyteam.ivy.process.ProcessStart:125FDB0198DDACE8/12EAEAE8843B646B
 ~@RD_METHODCALL[_uploadSuccessWithFilesInDB(ch.ivyteam.ivy.addons.filemanager.ReturnedMessage)]--->ch.ivyteam.ivy.process.ProcessStart:125FDB0198DDACE8/137BCC81F0B77534
 ~@RD_METHODCALL[addDocumentOnServers(List<ch.ivyteam.ivy.addons.filemanager.DocumentOnServer>)]--->ch.ivyteam.ivy.process.ProcessStart:125FDB0198DDACE8/11F89E330427923D

@@ -82,4 +82,11 @@ public abstract class AbstractFileTagsController {
 	 * @throws Exception
 	 */
 	public abstract java.util.List<String> searchAvailableTags(String searchFor) throws Exception;
+	
+	/**
+	 * Delete all the tags that are linked to the given file id.
+	 * @param fileid
+	 * @throws Exception
+	 */
+	public abstract void deleteFileTags(long fileid) throws Exception;
 }

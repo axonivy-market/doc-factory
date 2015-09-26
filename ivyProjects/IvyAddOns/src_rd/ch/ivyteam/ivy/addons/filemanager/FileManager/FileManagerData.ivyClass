@@ -141,3 +141,7 @@ dialogParam 'util Object to communicate in/out with common dialogs.' #fieldComme
 eventSource ch.ivyteam.ivy.addons.filemanager.EventSourceData #field
 eventSource 'util object to get trace of the source of an event (RButton, RMenuItem)....' #fieldComment
 securityResponse ch.ivyteam.ivy.addons.filemanager.database.security.SecurityResponse #field
+systemEventString String #field
+systemEventString PERSISTENT #fieldModifier
+systemEventParameter Object #field
+systemEventParameter PERSISTENT #fieldModifier

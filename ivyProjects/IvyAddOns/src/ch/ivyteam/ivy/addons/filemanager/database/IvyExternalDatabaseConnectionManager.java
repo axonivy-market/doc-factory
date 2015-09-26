@@ -76,7 +76,7 @@ public class IvyExternalDatabaseConnectionManager implements
 	 * @return
 	 * @throws Exception
 	 */
-	private IExternalDatabase getDatabase()throws Exception {
+	private IExternalDatabase getDatabase() throws Exception {
 		if (this.database == null) {
 			this.database = Ivy.session().getSecurityContext().executeAsSystemUser(new Callable<IExternalDatabase>() {
 						public IExternalDatabase call() throws Exception {

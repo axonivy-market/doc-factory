@@ -205,6 +205,18 @@ public class PathUtil {
 		}
 		return _path;
 	}
+	/**
+	 * escape the special signs _' in paths to be able to perform LIKE sql searches in Oracle.
+	 * @param _path
+	 * @return
+	 */
+	public static String escapeSpecialSQLSignsForOracleInPath(String _path) {
+		if (_path != null && !_path.trim().equals("")) {
+			_path=_path.replaceAll("_", "\\\\_");
+			_path=_path.replaceAll("'", "''");
+		}
+		return _path;
+	}
 	
 	/**
 	 * escape the ' sign in paths to be able to perform LIKE sql searches.
@@ -308,5 +320,4 @@ public class PathUtil {
 		sb.append(stringList.get(n));
 		return sb.toString();
 	}
-
 }

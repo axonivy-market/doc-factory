@@ -13,15 +13,17 @@ import ch.ivyteam.ivy.security.IUser;
  * @author ec
  *
  */
-public class IUserHelper {
+public final class IUserHelper {
+	
+	private IUserHelper() {}
 
 	/**
-	 * Tells if a give user denotes by its Ivy user name has an active session (is logged).
-	 * @param userName: the username
+	 * Tells if a given user denoted by its Ivy user name has an active session (is logged).
+	 * @param userName: the user name
 	 * @return true if the user is currently logged, else false.
-	 * @throws Throwable 
+	 * @throws Exception 
 	 */
-	public static boolean isUserlogged(String userName) throws Throwable
+	public static boolean isUserlogged(String userName) throws Exception
 	{
 		if(userName==null || userName.trim().length()==0)
 		{

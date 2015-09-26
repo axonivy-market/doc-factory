@@ -3,6 +3,52 @@ IvyAddons 6000000 Release Notes
 ===============================
 
 =============================== 
+IvyAddons 5010800 Release Notes 
+===============================
+
+* Issue 25687: Upgrade the Aspose libraries to the following versions:
+aspose.slides-15.6.0
+aspose-cells-8.5.1
+aspose-pdf-10.6.1
+aspose-words-15.7.0-jdk16
+
+=============================== 
+IvyAddons 5010600 Release Notes 
+===============================
+
+* Issue 25423: Bug fix. Filemanager: file tags are not deleted if related file is removed.
+The result of this bug is that some tags remain in the db without reference to any existing file. No user can see the bug but your database contains some unnecessary data.
+Workaround to manually clean the db (DISCLAIMER: PLEASE ALWAYS DO A DB BACKUP BEFORE USING SUCH A QUERY):
+delete from tags t where not exists (select * from uploadedfiles f where f.fileid = t.fileid);
+
+* Issue 25439: Improvement. HTML FileManager API in IvyAddons: HtmlFileManagerThumbnailer createFullSizeImages method should create temp images only.
+* Issue 25440: Improvement. Filemanager: when displayed recursively the selected document displays its path in the filemanager info.
+If the Directory Translation feature is activated, the path is displayed with the translated directories names.
+
+* Issue 25558: new feature FileLinks. There is the possibility to create some fileLinks with the API. A FileLink links to an existing document or version.
+To be able to activate this feature you have to create a new file_links table in the filemanager db. For more info about the create SQL Scripts, 
+please look at the following folder in this project: sql/5010600/
+* Issue 25559: Improvement. Filemanager. When the Filemanager loads the files, a check is made to unlock automatically all the files that are locked 
+by users which session is not active anymore. This allows avoiding that files stay in locked state after sessions have timed-out.
+
+
+
+=============================== 
+IvyAddons 5010300 Release Notes 
+===============================
+
+* Issue 25160: Bug fix. Filemanager Oracle Db- Copy-paste of a file which name contains "(" or ")"fails with
+Oracle Exception: SQLDataException: ORA-01424: missing or illegal character following the escape character
+* Issue 25161: New Feature. File Archive protection. When activated, the users cannot delete a file version that has been already versioned as archive.
+* Issue 25218: New Feature. DocumentListFilter. If set in the filemanager configuration object, the DocumentPersistence API returns only documents accepted by the filter.
+* Issue 25243: Bug fix. FileType - Oracle db. Cannot find FileTypes which appname is empty (oracle transforms the empty strings to null).
+* Issue 25268: New Feature. FileTypeListFilter feature to be able to filter the fileTypes in methods that list them.
+* Issue 25295: New Feature. Filemanager and FileListTable - Before and after files upload custom actions possibility. Two callables have been placed at key logical points
+of the file upload workflow. One after the files have been selected for upload and before they are uploaded, and a second one after the files have been
+uploaded and integrated in the filemanagement database.
+* Issue 25312: New Feature.	Filemanager: moveDirectory API function needed.
+
+=============================== 
 IvyAddons 5010000 Release Notes 
 ===============================
 First official release version of the IvyAddons for ivy 5.1.

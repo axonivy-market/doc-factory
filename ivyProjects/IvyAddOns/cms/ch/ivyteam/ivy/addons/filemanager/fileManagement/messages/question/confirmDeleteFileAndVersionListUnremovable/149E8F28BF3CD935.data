@@ -1,0 +1,8 @@
+<P>The selected documents will be completely deleted.<BR>
+%s
+Do you want to continue?
+</P>
+<P><BR />
+Info: these documents won't be deleted because they are being edited.<BR />
+EDITEDFILES
+</P>

@@ -1,12 +1,7 @@
-/**
- * 
- */
 package ch.ivyteam.ivy.addons.filemanager.database;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
@@ -17,27 +12,30 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import ch.ivyteam.db.jdbc.DatabaseUtil;
+import org.apache.commons.lang3.StringUtils;
+
 import ch.ivyteam.ivy.addons.filemanager.DocumentOnServer;
 import ch.ivyteam.ivy.addons.filemanager.FileHandler;
 import ch.ivyteam.ivy.addons.filemanager.FileManagementHandlersFactory;
-import ch.ivyteam.ivy.addons.filemanager.FileType;
-import ch.ivyteam.ivy.addons.filemanager.FolderOnServer;
 import ch.ivyteam.ivy.addons.filemanager.KeyValuePair;
 import ch.ivyteam.ivy.addons.filemanager.configuration.BasicConfigurationController;
+import ch.ivyteam.ivy.addons.filemanager.database.filelink.AbstractFileLinkController;
+import ch.ivyteam.ivy.addons.filemanager.database.filelink.FileLink;
 import ch.ivyteam.ivy.addons.filemanager.database.filetype.AbstractFileTypesController;
 import ch.ivyteam.ivy.addons.filemanager.database.persistence.IDocumentOnServerPersistence;
 import ch.ivyteam.ivy.addons.filemanager.database.persistence.IPersistenceConnectionManager;
 import ch.ivyteam.ivy.addons.filemanager.database.persistence.SqlPersistenceHelper;
 import ch.ivyteam.ivy.addons.filemanager.database.sql.DocumentOnServerSQLQueries;
+import ch.ivyteam.ivy.addons.filemanager.database.sql.FileExtractor;
+import ch.ivyteam.ivy.addons.filemanager.database.sql.PersistenceConnectionManagerReleaser;
 import ch.ivyteam.ivy.addons.filemanager.exception.FileManagementException;
+import ch.ivyteam.ivy.addons.filemanager.restricted.database.sql.DocumentOnServerGeneratorHelper;
+import ch.ivyteam.ivy.addons.filemanager.restricted.database.sql.FolderOnServerTranslationHelper;
+import ch.ivyteam.ivy.addons.filemanager.util.DateUtil;
 import ch.ivyteam.ivy.addons.filemanager.util.PathUtil;
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.scripting.objects.Date;
-import ch.ivyteam.ivy.scripting.objects.DateTime;
-import ch.ivyteam.ivy.scripting.objects.File;
 import ch.ivyteam.ivy.scripting.objects.Record;
-import ch.ivyteam.ivy.scripting.objects.Time;
 
 /**
  * The DocumentOnServerSQLPersistence is a particular IDocumentOnServerPersistence.<br>
@@ -46,7 +44,7 @@ import ch.ivyteam.ivy.scripting.objects.Time;
  *
  */
 public class DocumentOnServerSQLPersistence implements
-		IDocumentOnServerPersistence {
+IDocumentOnServerPersistence {
 
 	private IPersistenceConnectionManager<Connection> connectionManager =null;
 	private BasicConfigurationController configuration;
@@ -55,6 +53,8 @@ public class DocumentOnServerSQLPersistence implements
 	private String escapeChar = "\\";
 	private AbstractFileTypesController fileTypesController = null;
 	
+	private AbstractFileLinkController fileLinkController = null;
+
 	/**
 	 * 
 	 * @param config
@@ -67,7 +67,17 @@ public class DocumentOnServerSQLPersistence implements
 				.getPersistenceConnectionManagerInstance(config);
 		this.initialize();
 	}
-	
+
+	/**
+	 * For Unit tests only
+	 * @param config
+	 * @param connectionManager
+	 */
+	protected DocumentOnServerSQLPersistence(BasicConfigurationController config, IPersistenceConnectionManager<Connection> connectionManager) {
+		this.configuration=config;
+		this.connectionManager = connectionManager;
+	}
+
 	private void initialize() throws Exception {
 		if(this.configuration.getDatabaseSchemaName()!=null  && this.configuration.getDatabaseSchemaName().length()>0) {
 			this.fileContentTableNameSpace = this.configuration.getDatabaseSchemaName()+"."+this.configuration.getFilesContentTableName();
@@ -83,6 +93,7 @@ public class DocumentOnServerSQLPersistence implements
 				Ivy.log().error(e.getMessage(),e);
 			}
 		}
+		fileLinkController = FileManagementHandlersFactory.getFileLinkControllerInstance(configuration);
 		try {
 			DatabaseMetaData dbmd = this.connectionManager.getConnection().getMetaData();
 			String prod = dbmd.getDatabaseProductName().toLowerCase();
@@ -97,9 +108,9 @@ public class DocumentOnServerSQLPersistence implements
 				Ivy.log().error(e.getMessage(),e);
 			}
 		}
-		
+
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see ch.ivyteam.ivy.addons.filemanager.database.IDatabasePersistency#create(java.lang.Object)
 	 */
@@ -114,9 +125,13 @@ public class DocumentOnServerSQLPersistence implements
 			// this document exists already
 			throw new FileManagementException("The document already exists and cannot be recreated : "+document.getPath());
 		}
+		if(document instanceof FileLink) {
+			checkFileLinkController("Cannot create new FileLink because the FileLinkController has not been instanciated.");
+			return this.fileLinkController.createFileLink((FileLink) document);
+		}
 		//make sure the a file exists for the document to insert
 		java.io.File jf = docToJavaFile(document);
-		
+
 		String query = DocumentOnServerSQLQueries.INSERT_Q
 				.replace(DocumentOnServerSQLQueries.TABLENAMESPACE_PLACEHOLDER, this.fileTableNameSpace);
 		this.setDocumentDatesAndTimes(document);
@@ -133,7 +148,7 @@ public class DocumentOnServerSQLPersistence implements
 				flag=false;
 			}
 			stmt.setString(1, (document.getFilename()==null || document.getFilename().trim().length()==0)? 
-							document.getJavaFile().getName():document.getFilename());
+					document.getJavaFile().getName():document.getFilename());
 			stmt.setString(2, PathUtil.escapeBackSlash(document.getPath()));
 			stmt.setString(3, (document.getUserID()==null || document.getUserID().trim().length()==0)?
 					Ivy.session().getSessionUserName():document.getUserID());
@@ -148,7 +163,7 @@ public class DocumentOnServerSQLPersistence implements
 			stmt.setString(12, document.getDescription()==null?"":document.getDescription());
 
 			stmt.executeUpdate();
-			
+
 			long insertedId = 0;
 			try {
 				rs = stmt.getGeneratedKeys();
@@ -192,23 +207,15 @@ public class DocumentOnServerSQLPersistence implements
 				}
 			}
 			rs.close();
-			
+
 		} finally {
-			if(rs!=null) {
-				DatabaseUtil.close(rs);
-			}
-			if(stmt!=null) {
-				try {
-					stmt.close();
-				} catch( SQLException ex) {
-					Ivy.log().error("PreparedStatement cannot be closed in create method.",ex);
-				}
-			}
-			this.connectionManager.closeConnection();
+			PersistenceConnectionManagerReleaser.release(this.connectionManager, stmt, rs, "create", this.getClass());
 		}
 		return document;
 	}
+
 	
+
 	/**
 	 * <b>Not public API<b>
 	 * @param docsWithJavaFile
@@ -236,14 +243,7 @@ public class DocumentOnServerSQLPersistence implements
 				}
 			}
 		} finally {
-			if(stmt!=null) {
-				try {
-					stmt.close();
-				} catch( SQLException ex) {
-					Ivy.log().error("PreparedStatement cannot be closed in create method.",ex);
-				}
-			}
-			this.connectionManager.closeConnection();
+			PersistenceConnectionManagerReleaser.release(this.connectionManager, stmt, null, "insertContentInBlob", this.getClass());
 		}
 	}
 
@@ -257,9 +257,9 @@ public class DocumentOnServerSQLPersistence implements
 				jf =new java.io.File(document.getPath().trim());
 			}
 		} else {
-			jf =document.getJavaFile();
+			jf = document.getJavaFile();
 		}
-		if(jf==null || !jf.exists()) {
+		if(jf == null || !jf.exists()) {
 			throw new FileNotFoundException("The file to insert in the database was not found.");
 		}
 		document.setFileSize(FileHandler.getFileSize(jf));
@@ -278,6 +278,17 @@ public class DocumentOnServerSQLPersistence implements
 		if(document == null || document.getFileID()==null || document.getFileID().trim().isEmpty() ||
 				Long.parseLong(document.getFileID())<=0){
 			throw new IllegalArgumentException("The documentOnServer must not be null and its id must be greater than zero.");
+		}
+		if(document instanceof FileLink) {
+			checkFileLinkController("Cannot update FileLink because the FileLinkController has not been instanciated.");
+			return this.fileLinkController.updateFileLink((FileLink) document);
+		}
+		if(this.fileLinkController != null) {
+			int vn = this.get(Long.parseLong(document.getFileID())).getVersionnumber().intValue();
+			if(document.getVersionnumber().intValue() != vn) {
+				this.fileLinkController.updateFileLinksVersionId(Long.parseLong(document.getFileID()), vn);
+			}
+			
 		}
 		String query = DocumentOnServerSQLQueries.UPDATE_BY_ID_Q
 				.replace(DocumentOnServerSQLQueries.TABLENAMESPACE_PLACEHOLDER, this.fileTableNameSpace);
@@ -320,7 +331,7 @@ public class DocumentOnServerSQLPersistence implements
 				FileInputStream is=null;
 				try {
 					is = new FileInputStream ( document.getJavaFile() );   
-					
+
 					stmt.setBinaryStream (1, is, (int) document.getJavaFile().length() ); 
 					stmt.setLong(2, Long.decode(document.getFileID()));
 					stmt.executeUpdate();
@@ -330,16 +341,9 @@ public class DocumentOnServerSQLPersistence implements
 					}
 				}
 			}
-			
+
 		} finally {
-			if(stmt!=null) {
-				try {
-					stmt.close();
-				} catch( SQLException ex) {
-					Ivy.log().error("PreparedStatement cannot be closed in update method.",ex);
-				}
-			}
-			this.connectionManager.closeConnection();
+			PersistenceConnectionManagerReleaser.release(this.connectionManager, stmt, null, "update", this.getClass());
 		}
 		return document;
 	}
@@ -358,9 +362,16 @@ public class DocumentOnServerSQLPersistence implements
 	 */
 	@Override
 	public DocumentOnServer get(String filepath) throws Exception {
-		
-		assert (filepath!=null && filepath.trim().length()>0):"IllegalArgumentException: The given filepath is invalid in get(String). ".concat(this.getClass().toString());
 
+		assert (filepath!=null && filepath.trim().length()>0):"IllegalArgumentException: The given filepath is invalid in get(String). ".concat(this.getClass().toString());
+		
+		if(this.fileLinkController != null) {
+			FileLink fl = this.fileLinkController.getFileLink(filepath);
+			if(fl != null) {
+				return fl;
+			}
+		}
+		
 		String query = DocumentOnServerSQLQueries.SELECT_WITH_PATH_Q
 				.replace(DocumentOnServerSQLQueries.TABLENAMESPACE_PLACEHOLDER, this.fileTableNameSpace)
 				.replace(DocumentOnServerSQLQueries.ESCAPECHAR_PLACEHOLDER, this.escapeChar);
@@ -374,37 +385,28 @@ public class DocumentOnServerSQLPersistence implements
 			rst = stmt.executeQuery();
 			Ivy.log().debug("{0} {1}", filepath, query);
 			if(rst.next()) {
-				doc = new DocumentOnServer();
-				this.buildDocumentOnServerWithResulSetRow(doc,rst);
+				doc = DocumentOnServerGeneratorHelper.buildDocumentOnServerWithResulSetRow(rst, configuration);
 			}
 			rst.close();
 		} finally {
-			if(rst!=null) {
-				DatabaseUtil.close(rst);
-			}
-			if(stmt!=null) {
-				try {
-					stmt.close();
-				} catch( SQLException ex) {
-					Ivy.log().error("PreparedStatement cannot be closed in get method.",ex);
-				}
-			}
-			this.connectionManager.closeConnection();
+			PersistenceConnectionManagerReleaser.release(this.connectionManager, stmt, rst, "get(String filePath)", this.getClass());
 		}
 		if(this.configuration.isActivateFileType() && this.fileTypesController!=null) {
-			try{
+			try {
 				if(doc!=null && doc.getFileType()!=null && doc.getFileType().getId()!=null && doc.getFileType().getId()>0) {
 					doc.setFileType(this.fileTypesController.getFileTypeWithId(doc.getFileType().getId()));
 				}
-			}catch(Exception ex)
-			{
+			}catch(Exception ex) {
 				//do nothing the file type is not mandatory
 				Ivy.log().warn("WARNING while getting the file type on "+doc.getFilename()+ " "+ex.getMessage(), ex);
 			}
 		}
+		if(doc == null && this.fileLinkController != null) {
+			doc = this.fileLinkController.getFileLink(filepath);
+		}
 		return doc;
 	}
-	
+
 	/**
 	 * Returns the DocumentOnServer object that corresponds to the given id.<br> 
 	 * If no Document can be found, returns null.<br>
@@ -426,24 +428,12 @@ public class DocumentOnServerSQLPersistence implements
 			stmt = this.connectionManager.getConnection().prepareStatement(query);
 			stmt.setLong(1, id);
 			rst = stmt.executeQuery();
-			
+
 			if(rst.next()) {
-				doc = new DocumentOnServer();
-				this.buildDocumentOnServerWithResulSetRow(doc,rst);
+				doc = DocumentOnServerGeneratorHelper.buildDocumentOnServerWithResulSetRow(rst, configuration);
 			}
-			rst.close();
 		} finally {
-			if(rst!=null) {
-				DatabaseUtil.close(rst);
-			}
-			if(stmt!=null) {
-				try {
-					stmt.close();
-				} catch( SQLException ex) {
-					Ivy.log().error("PreparedStatement cannot be closed in get method.",ex);
-				}
-			}
-			this.connectionManager.closeConnection();
+			PersistenceConnectionManagerReleaser.release(this.connectionManager, stmt, rst, "get(long id)", this.getClass());
 		}
 		if(this.configuration.isActivateFileType() && this.fileTypesController!=null) {
 			try {
@@ -466,8 +456,9 @@ public class DocumentOnServerSQLPersistence implements
 	public List<DocumentOnServer> getList(String searchpath, boolean recursive) throws Exception {
 
 		assert (searchpath!=null && searchpath.trim().length()>0):"The given filepath is invalid.";
-		searchpath = PathUtil.formatPathForDirectoryWithoutLastSeparator(searchpath)+"/";
-		searchpath = PathUtil.escapeUnderscoreInPath(searchpath);
+		String formatedPath = searchpath;
+		formatedPath = PathUtil.formatPathForDirectoryWithoutLastSeparator(searchpath)+"/";
+		formatedPath = PathUtil.escapeUnderscoreInPath(formatedPath);
 		String query = ( recursive? 
 				DocumentOnServerSQLQueries.SELECT_WITH_PATH_Q
 				.replace(DocumentOnServerSQLQueries.TABLENAMESPACE_PLACEHOLDER, this.fileTableNameSpace)
@@ -481,30 +472,19 @@ public class DocumentOnServerSQLPersistence implements
 		ResultSet rst = null;
 		try{
 			stmt = this.connectionManager.getConnection().prepareStatement(query);
-			stmt.setString(1, searchpath+"%");
+			stmt.setString(1, formatedPath+"%");
 			if(!recursive) {
-				stmt.setString(2, searchpath+"%/%");
+				stmt.setString(2, formatedPath+"%/%");
 			}
-			Ivy.log().debug(query + " "+searchpath);
+			Ivy.log().debug(query + " "+formatedPath);
 			rst  = stmt.executeQuery();
 			while(rst.next()) {
-				DocumentOnServer doc = new DocumentOnServer();
-				this.buildDocumentOnServerWithResulSetRow(doc,rst);
+				DocumentOnServer doc = DocumentOnServerGeneratorHelper.buildDocumentOnServerWithResulSetRow(rst, configuration);
 				docs.add(doc);
 			}
 			rst.close();
 		} finally {
-			if(rst!=null) {
-				DatabaseUtil.close(rst);
-			}
-			if(stmt!=null) {
-				try {
-					stmt.close();
-				} catch( SQLException ex) {
-					Ivy.log().error("PreparedStatement cannot be closed in get method.",ex);
-				}
-			}
-			this.connectionManager.closeConnection();
+			PersistenceConnectionManagerReleaser.release(this.connectionManager, stmt, rst, "getList", this.getClass());
 		}
 		if(this.configuration.isActivateFileType() && this.fileTypesController!=null) {
 			for(DocumentOnServer doc:docs) {
@@ -519,6 +499,16 @@ public class DocumentOnServerSQLPersistence implements
 				}
 			}
 		}
+		if(recursive && this.configuration.isActivateDirectoryTranslation()) {
+			for(DocumentOnServer doc: docs) {
+				String path = FolderOnServerTranslationHelper.getTranslatedPathForFolderOnServer(PathUtil.getParentDirectoryPath(doc.getPath()), configuration);
+				doc.setDisplayedPath(path+"/"+doc.getFilename());
+			}
+		}
+		if(this.fileLinkController != null) {
+			docs.addAll(this.fileLinkController.getFileLinksUnderPath(searchpath, recursive));
+		}
+		
 		return docs;
 	}
 
@@ -528,6 +518,11 @@ public class DocumentOnServerSQLPersistence implements
 	@Override
 	public boolean delete(DocumentOnServer docToDelete) throws Exception {
 		assert (docToDelete !=null):"IllegalArgumentException: the document to delete is invalid.";
+		
+		if(docToDelete instanceof FileLink) {
+			checkFileLinkController("Cannot delete FileLink because the FileLinkController has not been instanciated.");
+			return this.fileLinkController.deleteFileLink((FileLink) docToDelete);
+		}
 		
 		if(docToDelete.getFileID() == null || docToDelete.getFileID().trim().length()==0) {
 			//no id in the document to delete, we try to get it
@@ -552,7 +547,7 @@ public class DocumentOnServerSQLPersistence implements
 			} catch( SQLException ex) {
 				Ivy.log().error("PreparedStatement cannot be closed in get method.",ex);
 			}
-			
+
 			Ivy.log().debug("DocumentOnServer found and deleted? {0}",flag);
 			if(this.configuration.isStoreFilesInDB()) {
 				String query2 = DocumentOnServerSQLQueries.DELETE_CONTENT_FILE_Q
@@ -565,14 +560,7 @@ public class DocumentOnServerSQLPersistence implements
 				f.delete();
 			}
 		} finally {
-			if(stmt!=null) {
-				try {
-					stmt.close();
-				} catch( SQLException ex) {
-					Ivy.log().error("PreparedStatement cannot be closed in get method.",ex);
-				}
-			}
-			this.connectionManager.closeConnection();
+			PersistenceConnectionManagerReleaser.release(this.connectionManager, stmt, null, "delete", this.getClass());
 		}
 		return flag;
 	}
@@ -586,7 +574,7 @@ public class DocumentOnServerSQLPersistence implements
 		if(doc!=null){
 			this.setGivenDocumentOnServerJavaFile(doc);
 		}
-		
+
 		return doc;
 	}
 
@@ -604,6 +592,9 @@ public class DocumentOnServerSQLPersistence implements
 				assert f.isFile():"FileNotFoundException. The file could not be found on the file system at "+path;
 				doc.setJavaFile(f);
 			}
+		} else if( this.fileLinkController != null){
+			FileLink fl = this.fileLinkController.getFileLink(path);
+			return this.fileLinkController.getFileLinkWithJavaFile(fl.getFileLinkId());
 		}
 		return doc;
 	}
@@ -622,7 +613,7 @@ public class DocumentOnServerSQLPersistence implements
 			doc.setJavaFile(f);
 		}
 	}
-	
+
 	@Override
 	public void unlockDocumentsUnderPathEditedByUserWithOptionalRecursivity(
 			String _path, String _user, boolean _recursive) throws Exception {
@@ -656,121 +647,35 @@ public class DocumentOnServerSQLPersistence implements
 			}
 
 		}finally {
-			if(stmt!=null) {
-				try {
-					stmt.close();
-				} catch( SQLException ex) {
-					Ivy.log().error("PreparedStatement cannot be closed in get method.",ex);
-				}
-			}
-			this.connectionManager.closeConnection();
-		}
-	}
-
-	private void buildDocumentOnServerWithResulSetRow(DocumentOnServer doc, ResultSet rst) throws Exception {
-		assert(doc!=null):"Invalid DocumentOnServer in buildDocumentOnServerWithResulSetRow method.";
-		assert(rst !=null):"Invalid ResultSet in buildDocumentOnServerWithResulSetRow method.";
-		
-		doc.setFileID(String.valueOf(rst.getInt("FileId")));
-		doc.setFilename(rst.getString("FileName"));
-		doc.setPath(rst.getString("FilePath"));
-		doc.setFileSize(rst.getString("FileSize"));
-		doc.setUserID(rst.getString("CreationUserId"));
-		doc.setCreationDate(rst.getString("CreationDate"));
-		doc.setCreationTime(rst.getString("CreationTime"));
-		doc.setModificationUserID(rst.getString("ModificationUserId"));
-		doc.setModificationDate(rst.getString("ModificationDate"));
-		doc.setModificationTime(rst.getString("ModificationTime"));
-		doc.setLocked(""+rst.getInt("Locked"));
-		doc.setIsLocked(doc.getLocked().compareTo("1")==0);
-		doc.setLockingUserID(rst.getString("LockingUserId"));
-		doc.setDescription(rst.getString("Description"));
-		
-		if(this.configuration.isActivateFileType() && this.fileTypesController!=null) {
-			try {
-				long id = rst.getInt("filetypeid");
-				if(id>0) {
-					FileType ft = new FileType();
-					ft.setId(id);
-					doc.setFileType(ft);
-				}
-			}catch(Exception ex) {
-				//do nothing the file type is not mandatory
-				Ivy.log().warn("WARNING while getting the file type on "+doc.getFilename()+ " "+ex.getMessage(), ex);
-			}
-		}
-		try {
-			int i = rst.getInt("versionnumber")>0?rst.getInt("versionnumber"):1;
-			doc.setVersionnumber(i);
-		}catch(Exception ex) {
-			doc.setVersionnumber(1);
+			PersistenceConnectionManagerReleaser.release(this.connectionManager, stmt, null, "unlockDocumentsUnderPathEditedByUserWithOptionalRecursivity", this.getClass());
 		}
 	}
 
 	private java.io.File getJavaFileFromDbForDocumentOnServer (DocumentOnServer doc) throws Exception {
 		assert ( doc!=null && doc.getFileID()!=null && doc.getFileID().trim().length()>0)
-			:"IllegalArgumentException: The given DocumentOnServer is invalid.";
+		:"IllegalArgumentException: The given DocumentOnServer is invalid.";
+		if(doc instanceof FileLink) {
+			checkFileLinkController("Cannot get FileLink with its java file because the FileLinkController has not been instanciated.");
+			FileLink fl = (FileLink) doc;
+			return this.fileLinkController.getFileLinkWithJavaFile(fl.getFileLinkId()).getJavaFile();
+		}
 		long id = Long.decode(doc.getFileID());
 		assert id >0:"IllegalArgumentException: The DocumentOnServer id is invalid.";
 		String query = DocumentOnServerSQLQueries.SELECT_FILE_CONTENT_Q.replace(
 				DocumentOnServerSQLQueries.TABLENAMESPACE_PLACEHOLDER, this.fileContentTableNameSpace);
 		PreparedStatement stmt=null;
-		File ivyFile = null;
 		ResultSet rst = null;
 		try {
 			stmt = this.connectionManager.getConnection().prepareStatement(query);
 			stmt.setLong(1, id);
 			rst = stmt.executeQuery();
 			if(rst.next()) {
-				Blob bl = null;
-				byte[] byt = null;
-				try{
-					bl = rst.getBlob("file_content");
-				}catch(Exception e){
-					try {
-						byt = rst.getBytes("file_content");
-					}catch(Exception e2) {
-
-					}
-				}
-				//we create a temp file on the server 
-				String tmpPath="tmp/"+System.nanoTime()+"/"+doc.getFilename();
-				ivyFile = new File(tmpPath,true);
-				ivyFile.createNewFile();
-				byte[] allBytesInBlob = bl!=null?bl.getBytes(1, (int) bl.length()):byt;
-				FileOutputStream fos=null;
-				try{
-					java.io.File javaFile = ivyFile.getJavaFile();
-					if(allBytesInBlob!=null) {
-						fos = new FileOutputStream(javaFile.getPath());
-						fos.write(allBytesInBlob);
-					}
-					doc.setJavaFile(javaFile);
-				}finally{
-					if(fos!=null){
-						fos.close();
-					}
-				}
+				doc.setJavaFile(FileExtractor.extractInputStreamToTemporaryFile(rst.getBinaryStream("file_content"), doc.getFilename()));
 			}
-			rst.close();
 		} finally {
-			if(rst!=null) {
-				DatabaseUtil.close(rst);
-			}
-			if(stmt!=null) {
-				try {
-					stmt.close();
-				} catch( SQLException ex) {
-					Ivy.log().error("PreparedStatement cannot be closed in getJavaFileFromDbForDocumentOnServer method.",ex);
-				}
-			}
-			this.connectionManager.closeConnection();
+			PersistenceConnectionManagerReleaser.release(this.connectionManager, stmt, rst, "getJavaFileFromDbForDocumentOnServer", this.getClass());
 		}
-		if(ivyFile != null ){
-			return ivyFile.getJavaFile();
-		}else {
-			return null;
-		}
+		return doc.getJavaFile();
 	}
 
 	@Override
@@ -801,21 +706,10 @@ public class DocumentOnServerSQLPersistence implements
 			rst = stmt.executeQuery();
 			recordList=SqlPersistenceHelper.getRecordsListFromResulSet(rst);
 			if(recordList!=null) {
-				al.addAll(this.makeDocsWithRecordList(recordList, null));
+				al.addAll(DocumentOnServerGeneratorHelper.makeDocsWithRecordList(recordList, configuration));
 			}
-			rst.close();
 		} finally {
-			if(rst!=null) {
-				DatabaseUtil.close(rst);
-			}
-			if(stmt!=null) {
-				try {
-					stmt.close();
-				} catch( SQLException ex) {
-					Ivy.log().error("PreparedStatement cannot be closed in get method.",ex);
-				}
-			}
-			this.connectionManager.closeConnection();
+			PersistenceConnectionManagerReleaser.release(this.connectionManager, stmt, rst, "getDocuments(List<String> conditions)", this.getClass());
 		}
 		if(this.configuration.isActivateFileType() && this.fileTypesController!=null) {
 			for(DocumentOnServer doc:al) {
@@ -831,7 +725,7 @@ public class DocumentOnServerSQLPersistence implements
 		}
 		return al;
 	}
-	
+
 	protected int updateDocumentWithQuery(String _query) throws Exception {
 		Statement stmt = null;
 		int row = 0;
@@ -849,68 +743,9 @@ public class DocumentOnServerSQLPersistence implements
 			this.connectionManager.closeConnection();
 		}
 		return row;
-		
-	}
-	
-	
-	private List<DocumentOnServer> makeDocsWithRecordList(List<Record> recordList, FolderOnServer fos) {
-		List<DocumentOnServer>  al = new ArrayList<DocumentOnServer>();
-		if(recordList==null || recordList.isEmpty()) {
-			return al;
-		}
 
-		for(Record rec: recordList) {
-			DocumentOnServer doc = new DocumentOnServer();
-			doc.setFileID(rec.getField("FileId").toString());
-			doc.setFilename(rec.getField("FileName").toString());
-			doc.setPath(rec.getField("FilePath").toString());
-			doc.setFileSize(rec.getField("FileSize").toString());
-			doc.setUserID(rec.getField("CreationUserId").toString());
-			doc.setCreationDate(rec.getField("CreationDate").toString());
-			doc.setCreationTime(rec.getField("CreationTime").toString());
-			doc.setModificationUserID(rec.getField("ModificationUserId").toString());
-			doc.setModificationDate(rec.getField("ModificationDate").toString());
-			doc.setModificationTime(rec.getField("ModificationTime").toString());
-			doc.setLocked(rec.getField("Locked").toString());
-			doc.setIsLocked(doc.getLocked().compareTo("1")==0);
-			doc.setLockingUserID(rec.getField("LockingUserId").toString());
-			doc.setDescription(rec.getField("Description").toString());
-			
-			try{
-				int i = Integer.parseInt(rec.getField("versionnumber").toString());
-				if(i<=0) {
-					i=1;
-				}
-				doc.setVersionnumber(i);
-			}catch(Exception ex){
-				doc.setVersionnumber(1);
-			}
-			try{
-				doc.setExtension(doc.getFilename().substring(doc.getFilename().lastIndexOf(".")+1));
-			}catch(Exception ex){
-				//Ignore the Exception here
-			}
-			if(this.configuration.isActivateFileType() && this.fileTypesController!=null) {
-				try{
-					String fileTypeId = rec.getField("filetypeid").toString();
-					if(!fileTypeId.trim().isEmpty()) {
-						long id = Long.parseLong(rec.getField("filetypeid").toString());
-						if(id>0) {
-							FileType ft = new FileType();
-							ft.setId(id);
-							doc.setFileType(ft);
-						}
-					}
-				}catch(Exception ex){
-					//do nothing the file type is not mandatory
-					Ivy.log().warn("WARNING while getting the file type on "+doc.getFilename()+ " "+ex.getMessage(), ex);
-				}
-			}
-			al.add(doc);
-		}
-		return al;
 	}
-	
+
 	protected int updateDocuments(List<KeyValuePair> _KVP, List<String> _conditions) throws Exception {
 		int rows=0;
 		if(_KVP.isEmpty()){//do nothing if the list of KeyValuePairs is empty
@@ -918,7 +753,6 @@ public class DocumentOnServerSQLPersistence implements
 		}
 		//build the SQL Query with the keyValue pairs and the list of conditions
 		StringBuilder sql = new StringBuilder("UPDATE "+this.fileTableNameSpace+" SET");
-
 
 		for(KeyValuePair kvp: _KVP) {
 			if(kvp.getValue() instanceof String) {
@@ -940,45 +774,17 @@ public class DocumentOnServerSQLPersistence implements
 		rows = this.updateDocumentWithQuery(_query);
 		return rows;
 	}
-	
-	/**
-	 * In development
-	 * @param stmt
-	 * @param index
-	 * @param value
-	 * @return
-	 * @throws SQLException
-	 */
-	@SuppressWarnings("unused")
-	private PreparedStatement setPreparedStatement(PreparedStatement stmt, int index, Object value) throws SQLException {
-		if(value instanceof Short) {
-			stmt.setShort(index, (Short) value);
-		} else if(value instanceof Integer) {
-			
-		} else if(value instanceof Long) {
-			
-		} else if(value instanceof Date) {
-			
-		} else if(value instanceof DateTime) {
-			
-		} else if(value instanceof Time) {
-			
-		} else {
-			
-		} 
-		return stmt;
-	}
-	
+
 	protected String getEscapeChar() {
 		return this.escapeChar;
 	}
-	
+
 	protected IPersistenceConnectionManager<Connection> getConnectionManager(){
 		return this.connectionManager;
 	}
-	
+
 	private DocumentOnServer setDocumentDatesAndTimes(DocumentOnServer doc){
-		String date = new Date().format("dd.MM.yyyy");
+		String date = DateUtil.getNewDateAsString();
 		if(doc.getCreationDate()==null || doc.getCreationDate().trim().isEmpty()){
 			doc.setCreationDate(date);
 		}else {
@@ -989,26 +795,9 @@ public class DocumentOnServerSQLPersistence implements
 		}else{
 			doc.setModificationDate(new Date(doc.getModificationDate()).format("dd.MM.yyyy"));
 		}
-		doc.setCreationTime(this.formatTime(doc.getCreationTime()));
-		doc.setModificationTime(this.formatTime(doc.getModificationTime()));
+		doc.setCreationTime(DateUtil.formatTime(doc.getCreationTime()));
+		doc.setModificationTime(DateUtil.formatTime(doc.getModificationTime()));
 		return doc;
-	}
-	
-	private String formatTime(String time){
-		if(time==null || !time.contains(":")){
-			return new Time().format("HH:mm:ss");
-		}
-		String [] ts = time.split(":");
-		for(int i= 0;i<ts.length;i++){
-			ts[i]=ts[i].trim().length()==0?"00":(ts[i].trim().length()==1?"0"+ts[i]:ts[i].trim().substring(0, 2));
-		}
-		if(ts.length==2) {
-			return ts[0]+":"+ts[1]+":00";
-		}
-		if(ts.length==3) {
-			return ts[0]+":"+ts[1]+":"+ts[2];
-		}
-		return new Time().format("HH:mm:ss");
 	}
 
 	private void checkDocumentOnServer(DocumentOnServer document) {
@@ -1021,6 +810,12 @@ public class DocumentOnServerSQLPersistence implements
 		if((document.getFilename()==null || document.getFilename().trim().isEmpty()) && document.getJavaFile()==null) {
 			throw new IllegalArgumentException("The Document's filename must not be null or an empty String, " +
 					"or in that case it should at least references a java.io.File.");
+		}
+	}
+	
+	private void checkFileLinkController(String message) throws FileManagementException {
+		if(this.fileLinkController == null) {
+			throw new FileManagementException(StringUtils.isBlank(message)?"Cannot handle FileLink operations because the FileLinkController has not been instanciated.": message);
 		}
 	}
 

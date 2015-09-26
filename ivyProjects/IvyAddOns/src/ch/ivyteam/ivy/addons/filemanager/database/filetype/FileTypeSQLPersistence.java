@@ -8,7 +8,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import ch.ivyteam.db.jdbc.DatabaseUtil;
 import ch.ivyteam.ivy.addons.filemanager.DocumentOnServer;
 import ch.ivyteam.ivy.addons.filemanager.FileType;
 import ch.ivyteam.ivy.addons.filemanager.configuration.BasicConfigurationController;
@@ -17,7 +16,9 @@ import ch.ivyteam.ivy.addons.filemanager.database.persistence.IFileTypePersisten
 import ch.ivyteam.ivy.addons.filemanager.database.persistence.IItemTranslationPersistence;
 import ch.ivyteam.ivy.addons.filemanager.database.persistence.IPersistenceConnectionManager;
 import ch.ivyteam.ivy.addons.filemanager.database.persistence.TranslatedFileManagerItemsEnum;
+import ch.ivyteam.ivy.addons.filemanager.database.sql.DatabaseMetaDataAnalyzer;
 import ch.ivyteam.ivy.addons.filemanager.database.sql.FileTypesSQLQueries;
+import ch.ivyteam.ivy.addons.filemanager.database.sql.PersistenceConnectionManagerReleaser;
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.persistence.PersistencyException;
 import ch.ivyteam.ivy.scripting.objects.List;
@@ -33,6 +34,7 @@ public class FileTypeSQLPersistence implements IFileTypePersistence {
 	private String tableNameSpace;
 	private String filesTableNameSpace;
 	private IItemTranslationPersistence ftI18nPersistence;
+	private DatabaseMetaDataAnalyzer dbmdAnalyzer;
 	
 	@SuppressWarnings("unchecked")
 	public FileTypeSQLPersistence(BasicConfigurationController config) {
@@ -57,6 +59,7 @@ public class FileTypeSQLPersistence implements IFileTypePersistence {
 				Ivy.log().error(e.getMessage(),e);
 			}
 		}
+		this.dbmdAnalyzer = new DatabaseMetaDataAnalyzer(this.configuration);
 	}
 	
 	@Override
@@ -73,14 +76,7 @@ public class FileTypeSQLPersistence implements IFileTypePersistence {
 			stmt.setString(2, fileType.getApplicationName());
 			stmt.executeUpdate();
 		}finally {
-			if(stmt!=null) {
-				try {
-					stmt.close();
-				} catch( SQLException ex) {
-					Ivy.log().error("PreparedStatement cannot be closed in create method, FileTypeSQLPersistence.",ex);
-				}
-			}
-			this.connectionManager.closeConnection();
+			PersistenceConnectionManagerReleaser.release(this.connectionManager, stmt, null, "create", this.getClass());
 		}
 		FileType ft = this.get(fileType.getFileTypeName()+"*SEPARATE*"+fileType.getApplicationName());;
 		if(this.ftI18nPersistence!=null) {
@@ -105,14 +101,7 @@ public class FileTypeSQLPersistence implements IFileTypePersistence {
 			stmt.setLong(3, fileType.getId());
 			stmt.executeUpdate();
 		}finally {
-			if(stmt!=null) {
-				try {
-					stmt.close();
-				} catch( SQLException ex) {
-					Ivy.log().error("PreparedStatement cannot be closed in update method, FileTypeSQLPersistence.",ex);
-				}
-			}
-			this.connectionManager.closeConnection();
+			PersistenceConnectionManagerReleaser.release(this.connectionManager, stmt, null, "update", this.getClass());
 		}
 		if(this.ftI18nPersistence!=null) {
 			this.ftI18nPersistence.update(fileType.getTranslation());
@@ -127,22 +116,30 @@ public class FileTypeSQLPersistence implements IFileTypePersistence {
 		String name;
 		String appname;
 		String query = FileTypesSQLQueries.SELECT_FILETYPE_BY_NAME_AND_BY_APPNAME.replace(FileTypesSQLQueries.TABLENAMESPACE_PLACEHOLDER, this.tableNameSpace);
-		PreparedStatement stmt=null;
-		ResultSet rst = null;
 		FileType ft = new FileType();
+		ft.setId((long) 0);
 		if(params.length==1) {
 			name = params[0].trim();
-			appname="";
+			if(this.dbmdAnalyzer.isOracle()) {
+				appname=null;
+				query = FileTypesSQLQueries.SELECT_FILETYPE_BY_NAME_AND_BY_APPNAME_IS_NULL.replace(FileTypesSQLQueries.TABLENAMESPACE_PLACEHOLDER, this.tableNameSpace);
+			} else {
+				appname="";
+			}
 		} else if(params.length>1) {
 			name = params[0].trim();
-			appname=params[1].trim();
+			appname = params[1].trim();
 		} else {
 			return ft;
 		}
+		PreparedStatement stmt=null;
+		ResultSet rst = null;
 		try {
 			stmt = this.connectionManager.getConnection().prepareStatement(query);
 			stmt.setString(1, name);
-			stmt.setString(2, appname);
+			if(appname!=null) {
+				stmt.setString(2, appname);
+			}
 			rst = stmt.executeQuery();
 			if(rst.next()) {
 				ft.setId(rst.getLong("id"));
@@ -151,17 +148,7 @@ public class FileTypeSQLPersistence implements IFileTypePersistence {
 				ft.setDisplayName(rst.getString("name"));
 			}
 		}finally {
-			if(rst!=null) {
-				DatabaseUtil.close(rst);
-			}
-			if(stmt!=null) {
-				try {
-					stmt.close();
-				} catch( SQLException ex) {
-					Ivy.log().error("PreparedStatement cannot be closed in get(String) method, FileTypeSQLPersistence.",ex);
-				}
-			}
-			this.connectionManager.closeConnection();
+			PersistenceConnectionManagerReleaser.release(this.connectionManager, stmt, rst, "get(String uniqueDescriptor", this.getClass());
 		}
 		if(ft.getId()>0 && this.ftI18nPersistence!=null) {
 			this.setFileTypeTranslation(ft);
@@ -176,6 +163,7 @@ public class FileTypeSQLPersistence implements IFileTypePersistence {
 		PreparedStatement stmt=null;
 		ResultSet rst = null;
 		FileType ft = new FileType();
+		ft.setId((long) 0);
 		try {
 			stmt = this.connectionManager.getConnection().prepareStatement(query);
 			stmt.setLong(1, id);
@@ -187,17 +175,7 @@ public class FileTypeSQLPersistence implements IFileTypePersistence {
 				ft.setDisplayName(rst.getString("name"));
 			}
 		}finally {
-			if(rst!=null) {
-				DatabaseUtil.close(rst);
-			}
-			if(stmt!=null) {
-				try {
-					stmt.close();
-				} catch( SQLException ex) {
-					Ivy.log().error("PreparedStatement cannot be closed in get(long id) method, FileTypeSQLPersistence.",ex);
-				}
-			}
-			this.connectionManager.closeConnection();
+			PersistenceConnectionManagerReleaser.release(this.connectionManager, stmt, rst, "get(long id)", this.getClass());
 		}
 		if(ft.getId()>0 && this.ftI18nPersistence!=null) {
 			this.setFileTypeTranslation(ft);
@@ -225,14 +203,7 @@ public class FileTypeSQLPersistence implements IFileTypePersistence {
 			stmt.setLong(1, fileType.getId());
 			stmt.executeUpdate();
 		}finally {
-			if(stmt!=null) {
-				try {
-					stmt.close();
-				} catch( SQLException ex) {
-					Ivy.log().error("PreparedStatement cannot be closed in delete method, FileTypeSQLPersistence.",ex);
-				}
-			}
-			this.connectionManager.closeConnection();
+			PersistenceConnectionManagerReleaser.release(this.connectionManager, stmt, null, "delete", this.getClass());
 		}
 		if(this.ftI18nPersistence!=null) {
 			this.ftI18nPersistence.delete(fileType.getTranslation());
@@ -246,13 +217,19 @@ public class FileTypeSQLPersistence implements IFileTypePersistence {
 		List<FileType> ftl = List.create(FileType.class);
 
 		String query = FileTypesSQLQueries.SELECT_FILETYPES_BY_APPNAME.replace(FileTypesSQLQueries.TABLENAMESPACE_PLACEHOLDER, this.tableNameSpace);
-
+		
 		applicationName = applicationName==null?"":applicationName.trim();
 		PreparedStatement stmt = null;
 		ResultSet rst = null;
 		try {
-			stmt = this.connectionManager.getConnection().prepareStatement(query);
-			stmt.setString(1, applicationName);
+			if(this.dbmdAnalyzer.isOracle() && applicationName.isEmpty()) {
+				stmt = this.connectionManager.getConnection().prepareStatement(
+						FileTypesSQLQueries.SELECT_FILETYPES_BY_APPNAME_IS_NULL.replace(
+								FileTypesSQLQueries.TABLENAMESPACE_PLACEHOLDER, this.tableNameSpace));
+			} else {
+				stmt = this.connectionManager.getConnection().prepareStatement(query);
+				stmt.setString(1, applicationName);
+			}
 			rst = stmt.executeQuery();
 			while(rst.next()) {
 				FileType ft = new FileType();
@@ -263,17 +240,7 @@ public class FileTypeSQLPersistence implements IFileTypePersistence {
 				ftl.add(ft);
 			}
 		}finally {
-			if(rst!=null) {
-				DatabaseUtil.close(rst);
-			}
-			if(stmt!=null) {
-				try {
-					stmt.close();
-				} catch( SQLException ex) {
-					Ivy.log().error("PreparedStatement cannot be closed in create method, LanguageSQLPersistence.",ex);
-				}
-			}
-			this.connectionManager.closeConnection();
+			PersistenceConnectionManagerReleaser.release(this.connectionManager, stmt, rst, "getFileTypesWithAppName", this.getClass());
 		}
 		if(this.ftI18nPersistence!=null) {
 			this.setFileTypesTranslation(ftl);
@@ -300,17 +267,7 @@ public class FileTypeSQLPersistence implements IFileTypePersistence {
 				ftl.add(ft);
 			}
 		}finally {
-			if(rst!=null) {
-				DatabaseUtil.close(rst);
-			}
-			if(stmt!=null) {
-				try {
-					stmt.close();
-				} catch( SQLException ex) {
-					Ivy.log().error("PreparedStatement cannot be closed in create method, LanguageSQLPersistence.",ex);
-				}
-			}
-			this.connectionManager.closeConnection();
+			PersistenceConnectionManagerReleaser.release(this.connectionManager, stmt, rst, "getAllFileTypes", this.getClass());
 		}
 		if(this.ftI18nPersistence!=null) {
 			this.setFileTypesTranslation(ftl);
@@ -359,17 +316,7 @@ public class FileTypeSQLPersistence implements IFileTypePersistence {
 				docs.add(doc);
 			}
 		}finally {
-			if(rst!=null) {
-				DatabaseUtil.close(rst);
-			}
-			if(stmt!=null) {
-				try {
-					stmt.close();
-				} catch( SQLException ex) {
-					Ivy.log().error("PreparedStatement cannot be closed in create method, LanguageSQLPersistence.",ex);
-				}
-			}
-			this.connectionManager.closeConnection();
+			PersistenceConnectionManagerReleaser.release(this.connectionManager, stmt, rst, "getDocumentsWithFileTypeId", this.getClass());
 		}
 		return docs;
 	}
@@ -398,14 +345,7 @@ public class FileTypeSQLPersistence implements IFileTypePersistence {
 			stmt.setLong(2, Long.parseLong(doc.getFileID()));
 			stmt.executeUpdate();
 		}finally {
-			if(stmt!=null) {
-				try {
-					stmt.close();
-				} catch( SQLException ex) {
-					Ivy.log().error("PreparedStatement cannot be closed in create method, LanguageSQLPersistence.",ex);
-				}
-			}
-			this.connectionManager.closeConnection();
+			PersistenceConnectionManagerReleaser.release(this.connectionManager, stmt, null, "setDocumentFileType", this.getClass());
 		}
 		doc.setFileType(ft);
 		return doc;

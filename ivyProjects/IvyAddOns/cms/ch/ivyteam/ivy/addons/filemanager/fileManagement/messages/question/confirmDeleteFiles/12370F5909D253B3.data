@@ -1,5 +1,4 @@
-<P>You are about to delete the following files on the server. 
-Are you sure you want to delete those files? 
-If you press "Delete files", those files are going to be deleted, and their informations are going to be lost. 
-If you are not sure about what you are doing, please click on "Cancel"
+<P>You are about to delete the selected files on the server, their content will be lost.<BR>
+%s
+Press "Delete files" if you are sure that you want to delete them, else click on "Cancel".
 </P>

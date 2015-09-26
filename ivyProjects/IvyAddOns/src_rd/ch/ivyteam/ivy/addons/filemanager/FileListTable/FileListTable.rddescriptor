@@ -338,6 +338,16 @@ This method is called when the files are stored as BLOB in a DB.</description>
             <nullPermitted>false</nullPermitted>
         </outputParameter>
     </method>
+    <method>
+        <name>_uploadFiles</name>
+        <description></description>
+        <inputParameter>
+            <name>filesToUpload</name>
+            <description></description>
+            <parameterType>List&lt;java.io.File&gt;</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </inputParameter>
+    </method>
     <startMethod>
         <name>startWithPath</name>
         <description>Start with &#xD;

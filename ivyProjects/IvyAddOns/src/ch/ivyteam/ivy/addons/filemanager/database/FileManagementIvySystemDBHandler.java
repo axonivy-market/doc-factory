@@ -1016,11 +1016,7 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 						throw new PersistencyException(ex);
 					}
 				}
-				//return String.valueOf(stmt.executeUpdate());
-				//IvySystemDbReuser.insert(stmt);
 				return i;
-
-
 			}});
 
 		return insertedIDs;
@@ -1384,20 +1380,25 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 	@Override
 	public ReturnedMessage createDirectory(String destinationPath,
 			String newDirectoryName) throws Exception {
-		if(destinationPath==null || newDirectoryName==null || newDirectoryName.trim().equals(""))
-		{
+		if(destinationPath==null || newDirectoryName==null || newDirectoryName.trim().equals("")) {
 			throw new IllegalArgumentException("One of the parameters in "+this.getClass().getName()+", method createDirectory(String destinationPath, String newDirectoryName) is not set.");
 		}
-		
 		return this.createDirectory(PathUtil.formatPathForDirectory(destinationPath)+newDirectoryName.trim());
-		
+	}
+	
+	/**
+	 * This method throws an UnsupportedOperationException because it only works if the files are stored in a database.
+	 */
+	@Override
+	public FolderOnServer moveDirectory(FolderOnServer folderToMove,
+			String destinationParentPath) {
+		throw new UnsupportedOperationException("The moveDirectory function is not supported in a context where the files are stored on the server filesystem.");
 	}
 	
 	@Override
 	public ReturnedMessage createDirectory(String _newDirectoryPath) throws Exception
 	{
-		if(_newDirectoryPath==null ||  _newDirectoryPath.trim().equals(""))
-		{
+		if(_newDirectoryPath==null ||  _newDirectoryPath.trim().equals("")) {
 			throw new IllegalArgumentException("One of the parameters in "+this.getClass().getName()+", method createDirectory(String _newDirectoryPath) is not set.");
 		}
 		if(_newDirectoryPath.contains("%")){

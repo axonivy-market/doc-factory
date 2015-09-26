@@ -8,7 +8,7 @@ import ch.ivyteam.ivy.scripting.objects.List;
 /**
  * @author ec
  * @since 27.10.2009
- * Tiis class describes an object that can be returned after any operation on or about Files (java.io.File)<br>
+ * This class describes an object that can be returned after any operation on or about Files (java.io.File)<br>
  * Such an operation can be an Upload, download, a letter generation with a document factory...
  *
  */
@@ -31,7 +31,7 @@ public class FileOperationMessage {
 	/**
 	 * Constructor
 	 * Generates the fileOperationMessage object with empty message, empty File List<br>
-	 * and as an information message
+	 * and as an information Type
 	 */
 	public FileOperationMessage() {
 		this("", List.create(java.io.File.class), 3);
@@ -79,7 +79,7 @@ public class FileOperationMessage {
 	}
 
 	/**
-	 * @param _files the files to set
+	 * @param _files the files to set, if null the files list will be cleared.
 	 */
 	public void setFiles(List<java.io.File> _files) {
 		if(_files != null) {

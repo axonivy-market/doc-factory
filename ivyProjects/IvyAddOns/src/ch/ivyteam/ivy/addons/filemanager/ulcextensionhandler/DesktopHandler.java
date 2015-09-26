@@ -180,6 +180,7 @@ public class DesktopHandler<T extends IRichDialogPanel> extends Observable{
      * @param _attachments: The attachments are Files that must be present at client side
      */
     public void mailMessage(String _subject, String _body, String _to, String _cc, String _bcc, String _attachments){
+    	Ivy.log().info("Calling mail with to: {0}", _to);
     	this.javaDesktop.mailMessage(_subject, _body, _to, _cc, _bcc, _attachments);
     }
     

@@ -72,6 +72,8 @@ public class FileManagerConfigurationController extends
 	 * then the user will be able to open the file action history window with a menuItem.
 	 */
 	private boolean showFileHistoryMenuItem = true;
+	
+	private boolean showUserMessageByMoveDirectory = true;
 	/**
 	 * Tells if the folderTree should be visible
 	 * @return the folderTreeVisible
@@ -247,6 +249,21 @@ public class FileManagerConfigurationController extends
 	 */
 	public boolean isShowFileHistoryMenuItem() {
 		return super.getFileActionHistoryConfiguration().isActivateFileActionHistory() && showFileHistoryMenuItem;
+	}
+
+	/**
+	 * @return the showUserMessageByMoveDirectory
+	 */
+	public boolean isShowUserMessageByMoveDirectory() {
+		return showUserMessageByMoveDirectory;
+	}
+
+	/**
+	 * @param showUserMessageByMoveDirectory the showUserMessageByMoveDirectory to set
+	 */
+	public void setShowUserMessageByMoveDirectory(
+			boolean showUserMessageByMoveDirectory) {
+		this.showUserMessageByMoveDirectory = showUserMessageByMoveDirectory;
 	}
 	
 

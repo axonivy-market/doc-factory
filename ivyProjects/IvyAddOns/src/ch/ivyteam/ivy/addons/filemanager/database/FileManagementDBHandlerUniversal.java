@@ -1595,6 +1595,16 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		return this.createDirectory(PathUtil.formatPathForDirectory(destinationPath)+newDirectoryName.trim());
 
 	}
+	
+	/**
+	 * This method throws an UnsupportedOperationException because it only works if the files are stored in a database.
+	 */
+	@Override
+	public FolderOnServer moveDirectory(FolderOnServer folderToMove,
+			String destinationParentPath) {
+		throw new UnsupportedOperationException("The moveDirectory function is not supported in a context where the files are stored on the server filesystem.");
+	}
+
 
 	@Override
 	public ReturnedMessage createDirectory(String _newDirectoryPath) throws Exception
@@ -1957,8 +1967,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 			//find the files on File System that are not registered in the DB
 			docsToAdd.addAll(FileHandler.getDocumentsListDiff(listeInDB,docsInSelectedDir));
 
-			if(docsToAdd.size()>0)
-			{
+			if(docsToAdd.size()>0) {
 				this.insertDocuments(docsToAdd);
 			}
 		}
@@ -1966,8 +1975,8 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		//find the files registered in the DB but that are not on the File System
 		docsToDelete.addAll(FileHandler.getDocumentsListDiff(listeOnFS,listeInDB));
 		//delete theses files
-		if(docsToDelete.size()>0)
-		{
+		if(docsToDelete.size()>0) {
+			Ivy.log().warn("The following files will be deleted: {0}",docsToDelete.size());
 			this.deleteDocuments(docsToDelete);
 		}
 
