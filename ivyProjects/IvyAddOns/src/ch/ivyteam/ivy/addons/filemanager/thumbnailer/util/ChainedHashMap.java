@@ -243,6 +243,21 @@ public class ChainedHashMap<K, V> implements Map<K, V>,
 		}
 	}
 
+	public boolean remove(K key, V value) {
+		List<V> list = hashtable.get(key);
+
+		if (list == null)
+			return false;
+
+		boolean removed = list.remove(value);
+		if (removed) {
+			if (list.isEmpty())
+				hashtable.remove(key);
+			size--;
+		}
+		return removed;
+	}
+
 	@Override
 	public void putAll(Map<? extends K, ? extends V> map) {
 		for (Entry<? extends K, ? extends V> entry : map.entrySet()) {

@@ -23,9 +23,19 @@ public class FileTypesSQLQueries {
 	 */
 	public static String SELECT_FILETYPE_BY_NAME_AND_BY_APPNAME = "SELECT * FROM "+TABLENAMESPACE_PLACEHOLDER+" WHERE name = ? AND appname = ?";
 	/**
+	 * Special query for ORACLE if appname is null<br>
+	 * SELECT * FROM --TABLENAMESPACE_PLACEHOLDER-- WHERE name = ? AND appname is null
+	 */
+	public static String SELECT_FILETYPE_BY_NAME_AND_BY_APPNAME_IS_NULL = "SELECT * FROM "+TABLENAMESPACE_PLACEHOLDER+" WHERE name = ? AND appname is null";
+	/**
 	 * SELECT * FROM --TABLENAMESPACE_PLACEHOLDER-- WHERE appname = ?
 	 */
 	public static String SELECT_FILETYPES_BY_APPNAME = "SELECT * FROM "+TABLENAMESPACE_PLACEHOLDER+" WHERE appname = ?";
+	/**
+	 * Special query for ORACLE if appname is null<br>
+	 * SELECT * FROM --TABLENAMESPACE_PLACEHOLDER-- WHERE appname is null
+	 */
+	public static String SELECT_FILETYPES_BY_APPNAME_IS_NULL = "SELECT * FROM "+TABLENAMESPACE_PLACEHOLDER+" WHERE appname is null";
 	/**
 	 * SELECT * FROM --TABLENAMESPACE_PLACEHOLDER--
 	 */

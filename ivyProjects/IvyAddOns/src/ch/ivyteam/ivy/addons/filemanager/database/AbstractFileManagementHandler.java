@@ -19,6 +19,7 @@ import ch.ivyteam.ivy.addons.filemanager.database.fileaction.AbstractFileActionH
 import ch.ivyteam.ivy.addons.filemanager.database.fileaction.FileActionHistoryController;
 import ch.ivyteam.ivy.addons.filemanager.database.security.AbstractDirectorySecurityController;
 import ch.ivyteam.ivy.addons.filemanager.database.security.SecurityHandler;
+import ch.ivyteam.ivy.addons.filemanager.exception.DocumentLockException;
 import ch.ivyteam.ivy.addons.filemanager.util.PathUtil;
 
 /**
@@ -953,6 +954,20 @@ public abstract class AbstractFileManagementHandler {
 			throws Exception;
 
 	/**
+	 * Moves the given directory to destination path.<br />
+	 * Only implemented with file content stored in database. Exception is thrown if called in file system storage context.<br />
+	 * <b>This is a pure API function (no move directory feature in the filemanager dialog), 
+	 * so be aware that is has some consequences on the possible opened Filemanager dialogs. 
+	 * Use this operation at own risk.</ b>
+	 * @param folderToMove the FolderOnServer to move
+	 * @param destinationParentPath the path of the parent folder.
+	 * @return the moved FolderOnServer
+	 * @throws DocumentLockException if a document is locked (edited) in the Folder Tree to move, 
+	 * @throws Exception if the folderOnServer is not a valid folder object (null, no name, no path)... or the FolderOnServer already exists at destination.
+	 */
+	public abstract FolderOnServer moveDirectory (FolderOnServer folderToMove, String destinationParentPath) throws DocumentLockException, Exception;
+	
+	/**
 	 * tells if a directory denoted by the given path exists.
 	 * 
 	 * @param directoryPath
@@ -1008,11 +1023,10 @@ public abstract class AbstractFileManagementHandler {
 	 * 
 	 * @param _path
 	 *            the directory path to delete
-	 * @return true if delete successful, else false
+	 * @return a ReturnedMessage object reflecting the success or failing of the delete operation (Type SUCCESS or ERROR) 
 	 * @throws Exception
 	 */
-	public abstract ReturnedMessage deleteDirectoryAsAdministrator(
-			String _directoryPath) throws Exception;
+	public abstract ReturnedMessage deleteDirectoryAsAdministrator(String _directoryPath) throws Exception;
 
 	/**
 	 * Renames a directory

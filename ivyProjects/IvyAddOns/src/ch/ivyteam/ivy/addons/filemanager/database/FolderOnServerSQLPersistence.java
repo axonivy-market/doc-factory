@@ -4,14 +4,11 @@
 package ch.ivyteam.ivy.addons.filemanager.database;
 
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import ch.ivyteam.db.jdbc.DatabaseUtil;
 import ch.ivyteam.ivy.addons.filemanager.DirectoryHelper;
 import ch.ivyteam.ivy.addons.filemanager.FolderOnServer;
 import ch.ivyteam.ivy.addons.filemanager.ItemTranslation;
@@ -21,10 +18,11 @@ import ch.ivyteam.ivy.addons.filemanager.database.persistence.IItemTranslationPe
 import ch.ivyteam.ivy.addons.filemanager.database.persistence.IPersistenceConnectionManager;
 import ch.ivyteam.ivy.addons.filemanager.database.persistence.SqlPersistenceHelper;
 import ch.ivyteam.ivy.addons.filemanager.database.persistence.TranslatedFileManagerItemsEnum;
-import ch.ivyteam.ivy.addons.filemanager.database.security.DirectorySecurityVersionDetector;
 import ch.ivyteam.ivy.addons.filemanager.database.security.SecurityConstants;
+import ch.ivyteam.ivy.addons.filemanager.database.sql.DatabaseMetaDataAnalyzer;
 import ch.ivyteam.ivy.addons.filemanager.database.sql.DocumentOnServerSQLQueries;
 import ch.ivyteam.ivy.addons.filemanager.database.sql.FolderOnServerSQLQueries;
+import ch.ivyteam.ivy.addons.filemanager.database.sql.PersistenceConnectionManagerReleaser;
 import ch.ivyteam.ivy.addons.filemanager.util.PathUtil;
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.scripting.objects.Date;
@@ -41,10 +39,7 @@ public class FolderOnServerSQLPersistence implements IFolderOnServerPersistence 
 	private IPersistenceConnectionManager<Connection> connectionManager =null;
 	private BasicConfigurationController configuration;
 	private String directoriesTableNameSpace;
-	private String escapeChar = "\\";
-	private int secVersion=1;
-	private boolean isMsSql=false;
-	private boolean isOracle=false;
+	private DatabaseMetaDataAnalyzer dbmdAnalyzer;
 	private IItemTranslationPersistence dirI18nPersistence;
 	
 	@SuppressWarnings("unchecked")
@@ -68,25 +63,12 @@ public class FolderOnServerSQLPersistence implements IFolderOnServerPersistence 
 				Ivy.log().error(e.getMessage(),e);
 			}
 		}
-		try {
-			DatabaseMetaData dbmd = this.connectionManager.getConnection().getMetaData();
-			String prod = dbmd.getDatabaseProductName().toLowerCase();
-			if(prod.contains("mysql") || (prod.contains("postgre") && 
-					Double.valueOf(dbmd.getDatabaseMajorVersion()+"."+dbmd.getDatabaseMinorVersion())<9.1 )){
-				this.escapeChar="\\\\";
-			}
-			this.isMsSql = prod.contains("microsoft");
-			this.isOracle = prod.contains("oracle");
-			this.secVersion=DirectorySecurityVersionDetector.getDirectorySecurityVersion(this.configuration, dbmd);
-		} catch(Exception ex) {
-			Ivy.log().error(ex.getMessage(),ex);
-		} finally {
-			try {
-				this.connectionManager.closeConnection();
-			} catch (Exception e) {
-				Ivy.log().error(e.getMessage(),e);
-			}
-		}
+		this.dbmdAnalyzer = new DatabaseMetaDataAnalyzer(this.configuration);
+	}
+	
+	@Override
+	public boolean isOracle() {
+		return this.dbmdAnalyzer.isOracle();
 	}
 	
 
@@ -100,7 +82,7 @@ public class FolderOnServerSQLPersistence implements IFolderOnServerPersistence 
 		fos.setPath(PathUtil.formatPathForDirectoryWithoutLastSeparator(fos.getPath()));
 		assert(fos.getPath().length()>1):"The FolderOnServer object path to save is invalid.";
 		
-		String query = (this.secVersion>1?
+		String query = (dbmdAnalyzer.getSecurityVersion()>1?
 				FolderOnServerSQLQueries.CREATE_FOLDER_Q2
 				.replace(FolderOnServerSQLQueries.TABLENAMESPACE_PLACEHOLDER, this.directoriesTableNameSpace):
 					FolderOnServerSQLQueries.CREATE_FOLDER_Q1
@@ -125,7 +107,7 @@ public class FolderOnServerSQLPersistence implements IFolderOnServerPersistence 
 			stmt.setString(13, PathUtil.returnStringFromList(fos.getCdd()));
 			stmt.setString(14, PathUtil.returnStringFromList(fos.getCwf()));
 			stmt.setString(15, PathUtil.returnStringFromList(fos.getCdf()));
-			if(this.secVersion>1){
+			if(dbmdAnalyzer.getSecurityVersion()>1){
 				stmt.setString(16, PathUtil.returnStringFromList(fos.getCcd()));
 				stmt.setString(17, PathUtil.returnStringFromList(fos.getCrd()));
 				stmt.setString(18, PathUtil.returnStringFromList(fos.getCtd()));
@@ -135,14 +117,7 @@ public class FolderOnServerSQLPersistence implements IFolderOnServerPersistence 
 			stmt.executeUpdate();
 			Ivy.log().debug("Create folderOnServer query executed: {0}",query);
 		} finally {
-			if(stmt!=null) {
-				try {
-					stmt.close();
-				} catch( SQLException ex) {
-					Ivy.log().error("PreparedStatement cannot be closed in get method.",ex);
-				}
-			}
-			this.connectionManager.closeConnection();
+			PersistenceConnectionManagerReleaser.release(this.connectionManager, stmt, null, "create", this.getClass());
 		}
 		fos = this.get(fos.getPath());
 		if(this.dirI18nPersistence!=null) {
@@ -169,14 +144,7 @@ public class FolderOnServerSQLPersistence implements IFolderOnServerPersistence 
 			stmt.executeUpdate();
 			Ivy.log().debug("Folder after the update: {0}", fos);
 		} finally {
-			if(stmt!=null) {
-				try {
-					stmt.close();
-				} catch( SQLException ex) {
-					Ivy.log().error("PreparedStatement cannot be closed in get method.",ex);
-				}
-			}
-			this.connectionManager.closeConnection();
+			PersistenceConnectionManagerReleaser.release(this.connectionManager, stmt, null, "update", this.getClass());
 		}
 		
 		if(this.dirI18nPersistence!=null) {
@@ -189,7 +157,7 @@ public class FolderOnServerSQLPersistence implements IFolderOnServerPersistence 
 	}
 	
 	private PreparedStatement makePreparedStatementForUpdateById(FolderOnServer fos) throws Exception {
-		String query = (this.secVersion>1?
+		String query = (dbmdAnalyzer.getSecurityVersion()>1?
 				FolderOnServerSQLQueries.UPDATE_FOLDER_BY_ID_Q2
 				.replace(FolderOnServerSQLQueries.TABLENAMESPACE_PLACEHOLDER, this.directoriesTableNameSpace):
 					FolderOnServerSQLQueries.UPDATE_FOLDER_BY_ID_Q1
@@ -212,7 +180,7 @@ public class FolderOnServerSQLPersistence implements IFolderOnServerPersistence 
 		stmt.setString(14, PathUtil.returnStringFromList(fos.getCwf()));
 		stmt.setString(15, PathUtil.returnStringFromList(fos.getCdf()));
 		
-		if(this.secVersion>1){
+		if(dbmdAnalyzer.getSecurityVersion()>1){
 			stmt.setString(16, PathUtil.returnStringFromList(fos.getCcd()));
 			stmt.setString(17, PathUtil.returnStringFromList(fos.getCrd()));
 			stmt.setString(18, PathUtil.returnStringFromList(fos.getCtd()));
@@ -227,7 +195,7 @@ public class FolderOnServerSQLPersistence implements IFolderOnServerPersistence 
 	}
 	
 	private PreparedStatement makePreparedStatementForUpdateByPath(FolderOnServer fos) throws Exception {
-		String query = (this.secVersion>1?
+		String query = (dbmdAnalyzer.getSecurityVersion()>1?
 				FolderOnServerSQLQueries.UPDATE_FOLDER_BY_PATH_Q2
 				.replace(FolderOnServerSQLQueries.TABLENAMESPACE_PLACEHOLDER, this.directoriesTableNameSpace):
 					FolderOnServerSQLQueries.UPDATE_FOLDER_BY_PATH_Q1
@@ -248,7 +216,7 @@ public class FolderOnServerSQLPersistence implements IFolderOnServerPersistence 
 		stmt.setString(12, PathUtil.returnStringFromList(fos.getCdd()));
 		stmt.setString(13, PathUtil.returnStringFromList(fos.getCwf()));
 		stmt.setString(14, PathUtil.returnStringFromList(fos.getCdf()));
-		if(this.secVersion>1){
+		if(dbmdAnalyzer.getSecurityVersion()>1){
 			stmt.setString(15, PathUtil.returnStringFromList(fos.getCcd()));
 			stmt.setString(16, PathUtil.returnStringFromList(fos.getCrd()));
 			stmt.setString(17, PathUtil.returnStringFromList(fos.getCtd()));
@@ -290,19 +258,8 @@ public class FolderOnServerSQLPersistence implements IFolderOnServerPersistence 
 			if(!records.isEmpty()) {				
 				fos = this.makeFolderOnServerFromRecord(records.get(0),false);
 			}
-			rst.close();
 		} finally {
-			if(rst!=null) {
-				DatabaseUtil.close(rst);
-			}
-			if(stmt!=null) {
-				try {
-					stmt.close();
-				} catch( SQLException ex) {
-					Ivy.log().error("PreparedStatement cannot be closed in get method.",ex);
-				}
-			}
-			this.connectionManager.closeConnection();
+			PersistenceConnectionManagerReleaser.release(this.connectionManager, stmt, rst, "get(String directoryPath)", this.getClass());
 		}
 		if(fos!=null && this.dirI18nPersistence!=null) {
 			setFolderTranslation(fos);
@@ -319,7 +276,7 @@ public class FolderOnServerSQLPersistence implements IFolderOnServerPersistence 
 		assert id>0:"Illegal argument: the id parameter is invalid in get(long id).";
 		String query =FolderOnServerSQLQueries.SELECT_DIRECTORY_BY_ID
 				.replace(DocumentOnServerSQLQueries.TABLENAMESPACE_PLACEHOLDER, this.directoriesTableNameSpace)
-				.replace(DocumentOnServerSQLQueries.ESCAPECHAR_PLACEHOLDER, this.escapeChar);
+				.replace(DocumentOnServerSQLQueries.ESCAPECHAR_PLACEHOLDER, dbmdAnalyzer.getEscapeChar());
 		
 		PreparedStatement stmt=null;
 		FolderOnServer fos = null;
@@ -333,19 +290,8 @@ public class FolderOnServerSQLPersistence implements IFolderOnServerPersistence 
 			if(!records.isEmpty()) {				
 				fos = this.makeFolderOnServerFromRecord(records.get(0),false);
 			}
-			rst.close();
 		} finally {
-			if(rst!=null) {
-				DatabaseUtil.close(rst);
-			}
-			if(stmt!=null) {
-				try {
-					stmt.close();
-				} catch( SQLException ex) {
-					Ivy.log().error("PreparedStatement cannot be closed in get method.",ex);
-				}
-			}
-			this.connectionManager.closeConnection();
+			PersistenceConnectionManagerReleaser.release(this.connectionManager, stmt, rst, "get(long id)", this.getClass());
 		}
 		if(fos!=null && this.dirI18nPersistence!=null) {
 			setFolderTranslation(fos);
@@ -368,10 +314,10 @@ public class FolderOnServerSQLPersistence implements IFolderOnServerPersistence 
 		String query =(recursive?
 				FolderOnServerSQLQueries.SELECT_FOLDER_UNDER_PATH_RECURSIVE_Q
 				.replace(DocumentOnServerSQLQueries.TABLENAMESPACE_PLACEHOLDER, this.directoriesTableNameSpace)
-				.replace(DocumentOnServerSQLQueries.ESCAPECHAR_PLACEHOLDER, this.escapeChar) :
+				.replace(DocumentOnServerSQLQueries.ESCAPECHAR_PLACEHOLDER, dbmdAnalyzer.getEscapeChar()) :
 					FolderOnServerSQLQueries.SELECT_FOLDER_UNDER_PATH_NOT_RECURSIVE_Q
 					.replace(DocumentOnServerSQLQueries.TABLENAMESPACE_PLACEHOLDER, this.directoriesTableNameSpace)
-					.replace(DocumentOnServerSQLQueries.ESCAPECHAR_PLACEHOLDER, this.escapeChar)
+					.replace(DocumentOnServerSQLQueries.ESCAPECHAR_PLACEHOLDER, dbmdAnalyzer.getEscapeChar())
 				);
 		PreparedStatement stmt=null;
 		ResultSet rst = null;
@@ -391,19 +337,8 @@ public class FolderOnServerSQLPersistence implements IFolderOnServerPersistence 
 					lFos.add(fos);
 				}
 			}
-			rst.close();
 		} finally {
-			if(rst!=null) {
-				DatabaseUtil.close(rst);
-			}
-			if(stmt!=null) {
-				try {
-					stmt.close();
-				} catch( SQLException ex) {
-					Ivy.log().error("PreparedStatement cannot be closed in get method.",ex);
-				}
-			}
-			this.connectionManager.closeConnection();
+			PersistenceConnectionManagerReleaser.release(this.connectionManager, stmt, rst, "getList", this.getClass());
 		}
 		if(this.dirI18nPersistence!=null) {
 			setFoldersTranslation(lFos);
@@ -425,11 +360,11 @@ public class FolderOnServerSQLPersistence implements IFolderOnServerPersistence 
 		fos.setCreationUser(rec.getField("creation_user_id").toString());
 		fos.setCreationDate(new Date(rec.getField("creation_date").toString().length()>10?
 				rec.getField("creation_date").toString().substring(0, 10):rec.getField("creation_date").toString()));
-		if(this.isMsSql) {
+		if(dbmdAnalyzer.isMsSql()) {
 			DateTime dt = new DateTime(rec.getField("creation_time").toString().length()>19?
 					rec.getField("creation_time").toString().substring(0, 19):rec.getField("creation_time").toString());
 			fos.setCreationTime(dt.getTime());
-		} else if(this.isOracle) {
+		} else if(dbmdAnalyzer.isOracle()) {
 			DateTime dt = new DateTime(rec.getField("creation_time").toString());
 			fos.setCreationTime(dt.getTime());
 		}else{
@@ -444,7 +379,7 @@ public class FolderOnServerSQLPersistence implements IFolderOnServerPersistence 
 			fos.setCdd(PathUtil.getListFromString(rec.getField(SecurityConstants.CAN_DELETE_DIRECTORY_COLUMN_NAME).toString(),","));
 			fos.setCwf(PathUtil.getListFromString(rec.getField(SecurityConstants.CAN_WRITE_FILE_COLUMN_NAME).toString(),","));
 			fos.setCdf(PathUtil.getListFromString(rec.getField(SecurityConstants.CAN_DELETE_FILE_COLUMN_NAME).toString(),","));
-			if(this.secVersion>1) {
+			if(dbmdAnalyzer.getSecurityVersion()>1) {
 				fos.setCcd(PathUtil.getListFromString(rec.getField(SecurityConstants.CAN_CREATE_DIRECTORY_COLUMN_NAME).toString(),","));
 				fos.setCrd(PathUtil.getListFromString(rec.getField(SecurityConstants.CAN_RENAME_DIRECTORY_COLUMN_NAME).toString(),","));
 				fos.setCtd(PathUtil.getListFromString(rec.getField(SecurityConstants.CAN_TRANSLATE_DIRECTORY_COLUMN_NAME).toString(),","));
@@ -493,14 +428,7 @@ public class FolderOnServerSQLPersistence implements IFolderOnServerPersistence 
 			flag = stmt.executeUpdate()==1;
 			
 		} finally {
-			if(stmt!=null) {
-				try {
-					stmt.close();
-				} catch( SQLException ex) {
-					Ivy.log().error("PreparedStatement cannot be closed in get method.",ex);
-				}
-			}
-			this.connectionManager.closeConnection();
+			PersistenceConnectionManagerReleaser.release(this.connectionManager, stmt, null, "delete", this.getClass());
 		}
 		if(this.dirI18nPersistence!=null) {
 			this.dirI18nPersistence.delete(fos.getTranslation());

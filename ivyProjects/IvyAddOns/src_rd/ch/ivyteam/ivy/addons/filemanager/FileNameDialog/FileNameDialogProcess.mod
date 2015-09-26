@@ -1,5 +1,5 @@
 [Ivy]
-[>Created: Mon Jul 21 15:32:47 EDT 2014]
+[>Created: Tue May 19 21:35:15 EDT 2015]
 125FE16732F8F94A 3.17 #module
 >Proto >Proto Collection #zClass
 Fs0 FileNameDialogProcess Big #zClass
@@ -1132,12 +1132,17 @@ Fs0 f73 actionDecl 'ch.ivyteam.ivy.addons.filemanager.FileNameDialog.FileNameDia
 ' #txt
 Fs0 f73 actionTable 'out=in;
 ' #txt
-Fs0 f73 actionCode 'import org.apache.commons.io.FilenameUtils;
+Fs0 f73 actionCode 'import ch.ivyteam.ivy.addons.filemanager.database.filelink.FileLink;
+import org.apache.commons.io.FilenameUtils;
 
 if(in.#documentOnServer!=null && !in.documentOnServer.path.trim().isEmpty()) {
-	panel.fileNameTextField.setText(FilenameUtils.getBaseName(in.documentOnServer.path));
-	out.fileExtension=FilenameUtils.getExtension(in.documentOnServer.path);
-	out.path = FilenameUtils.getFullPath(in.documentOnServer.path);
+	String path = in.documentOnServer.path;
+	if(in.documentOnServer instanceof FileLink) {
+		path = (in.documentOnServer as FileLink).getFileLinkPath();
+	}
+	panel.fileNameTextField.setText(FilenameUtils.getBaseName(path));
+	out.fileExtension=FilenameUtils.getExtension(path);
+	out.path = FilenameUtils.getFullPath(path);
 }' #txt
 Fs0 f73 type ch.ivyteam.ivy.addons.filemanager.FileNameDialog.FileNameDialogData #txt
 Fs0 f73 38 412 36 24 20 -2 #rect

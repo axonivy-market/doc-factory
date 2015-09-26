@@ -11,16 +11,20 @@ import ch.ivyteam.ivy.addons.filemanager.database.FileManagementIvySystemDBHandl
 import ch.ivyteam.ivy.addons.filemanager.database.FileStoreDBHandler;
 import ch.ivyteam.ivy.addons.filemanager.database.fileaction.AbstractFileActionHistoryController;
 import ch.ivyteam.ivy.addons.filemanager.database.fileaction.FileActionHistoryController;
+import ch.ivyteam.ivy.addons.filemanager.database.filelink.AbstractFileLinkController;
+import ch.ivyteam.ivy.addons.filemanager.database.filelink.FileLinkController;
 import ch.ivyteam.ivy.addons.filemanager.database.filetag.AbstractFileTagsController;
 import ch.ivyteam.ivy.addons.filemanager.database.filetag.FileTagsController;
 import ch.ivyteam.ivy.addons.filemanager.database.filetype.AbstractFileTypesController;
 import ch.ivyteam.ivy.addons.filemanager.database.filetype.FileTypesController;
 import ch.ivyteam.ivy.addons.filemanager.database.security.AbstractDirectorySecurityController;
 import ch.ivyteam.ivy.addons.filemanager.database.security.DirectorySecurityController;
+import ch.ivyteam.ivy.addons.filemanager.database.sql.TableChecker;
 import ch.ivyteam.ivy.addons.filemanager.database.versioning.AbstractFileVersioningController;
 import ch.ivyteam.ivy.addons.filemanager.database.versioning.FileVersioningController;
 import ch.ivyteam.ivy.addons.filemanager.thumbnailer.persistence.AbstractThumbnailHandler;
 import ch.ivyteam.ivy.addons.filemanager.thumbnailer.persistence.ThumbnailHandler;
+import ch.ivyteam.ivy.environment.Ivy;
 
 /**
  * This class is an helper class that contains static methods.<br>
@@ -49,6 +53,7 @@ public class FileManagementHandlersFactory {
 			throws Exception {
 		checkConfiguration(config);
 		if(config.getFileActionHistoryConfiguration().isActivateFileActionHistory()) {
+			Ivy.log().info("Getting FileActionHistoryController "+config.getFileActionHistoryConfiguration().isFileCreationTracked());
 			return new FileActionHistoryController(config.getFileActionHistoryConfiguration());
 		}else{
 			return null;
@@ -135,9 +140,7 @@ public class FileManagementHandlersFactory {
 			throws Exception {
 		checkConfiguration(config);
 		if(config.isActivateFileVersioning()) {
-			return new FileVersioningController(config.getIvyDBConnectionName(), config.getFilesTableName(), 
-					config.getFilesContentTableName(), config.getFilesVersionTableName(), 
-					config.getFilesVersionContentTableName(), config.getDatabaseSchemaName());
+			return new FileVersioningController(config);
 		} else {
 			return null;
 		}
@@ -184,6 +187,22 @@ public class FileManagementHandlersFactory {
 		}else {
 			return null;
 		}
+	}
+	
+	/**
+	 * Returns the FileLinkController.<br />
+	 * If the files are not stored as BLOB in the database or if the FileLink table does not exist, returns null.
+	 * @param config
+	 * @return
+	 * @throws Exception
+	 */
+	public static AbstractFileLinkController getFileLinkControllerInstance(BasicConfigurationController config) throws Exception {
+		checkConfiguration(config);
+		if(config.isStoreFilesInDB() && TableChecker.FileLinkTableExist(config)) {
+			return new FileLinkController(config);
+		}
+		Ivy.log().debug("The FileLinkController cannot be instanciated possible causes: the files are not stored as BLOB in the database or the FileLink table does not exist.");
+		return null;
 	}
 	
 	/**

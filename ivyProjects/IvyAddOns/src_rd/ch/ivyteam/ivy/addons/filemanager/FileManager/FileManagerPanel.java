@@ -207,7 +207,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.containers.RScrollPane	
 	 */
-	private RScrollPane getFilesTableScrollPane() {
+	protected RScrollPane getFilesTableScrollPane() {
 		if (filesTableScrollPane == null) {
 			filesTableScrollPane = new RScrollPane();
 			filesTableScrollPane.setName("filesTableScrollPane");
@@ -227,12 +227,12 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.components.RTable	
 	 */
-	private RTable getFilesTable() {
+	protected RTable getFilesTable() {
 		if (filesTable == null) {
 			filesTable = new RTable();
 			filesTable.setName("filesTable");
 			filesTable.setSortable(true);
-			filesTable.setModelConfiguration("{/showTableheader true /autoTableheader false /showtooltip true /showIcons true /emptyTableText \"Keine Datei / Aucun Fichier / No File\"/version \"3.0\"/columns {{/result \"result=IF(entry.locked.trim().equals(\\\"1\\\"),entry.lockingUserID,\\\"\\\")\"/version \"3.0\"/tooltip \"result=IF(!entry.locked.trim().equals(\\\"1\\\"),ivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/fileUnlocked\\\"),\\r\\nivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/thisFile\\\")+\\\" \\\"+entry.filename+\\\" \\\" + \\r\\nivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/isEditedBy\\\")+\\\" \\\"+entry.lockingUserID)\"/icon \"result=IF(!entry.locked.trim().equals(\\\"1\\\"),ivy.cms.cr(\\\"/ch/ivyteam/ivy/addons/icons/file/16\\\"),\\r\\nivy.cms.cr(\\\"/ch/ivyteam/ivy/addons/icons/lock/16\\\"))\"/header \"\\\"\\\"\"/headerAlignment \"default\"/field \"\"/editable \"\"/condition \"\"/columnWidth \"18\"/columnStyle \"\"/cellWidget \"\"}{/result \"result=entry.filename\"/version \"3.0\"/tooltip \"result=\\\"<html><b>\\\"+\\r\\nivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/fileDetails\\\")+\\\"</b><br>\\\"+\\r\\nivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/createdBy\\\")+\\\" \\\"+entry.userID+\\\" \\\"+\\r\\nivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/onDate\\\")+\\\" \\\"+entry.creationDate.toIvyDate().format(\\\"dd-MM-yyyy\\\")+\\\", \\\"+entry.creationTime+\\\"<br>\\\"+\\r\\nivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/lastModifiedBy\\\")+\\\" \\\"+entry.modificationUserID+\\\" \\\"+\\r\\nivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/onDate\\\")+\\\" \\\"+entry.modificationDate.toIvyDate().format(\\\"dd-MM-yyyy\\\")+\\\", \\\"+entry.modificationTime+\\\"<br>\\\"+\\r\\nIF(entry.#fileType!=null && entry.fileType.id > 0, \\r\\n\\tivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/filetype\\\")+\\\": \\\" +entry.fileType.displayName+\\\" \\\"+\\r\\n\\tIF(entry.fileType.applicationName.trim().length()>0,\\r\\n\\t\\tivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileTypes/strings/application\\\")+\\\" \\\"+entry.fileType.applicationName+\\\"<br>\\\",\\r\\n\\t\\\"<br>\\\")\\r\\n,\\\"\\\")+\\r\\nentry.description.replaceAll(\\\"\\\\n\\\", \\\"<br>\\\")+\\r\\n\\r\\n\\\"</html>\\\"\"/icon \"\"/header \"ivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/fileName\\\")\"/headerAlignment \"default\"/field \"\"/editable \"\"/columnWidth \"150\"/columnStyle \"\"}{/result \"result=IF(entry.#fileType!=null,entry.fileType.displayName,\\\"\\\")\"/version \"3.0\"/tooltip \"result=\\\"<html>\\\"+\\r\\nIF(entry.#fileType==null || entry.fileType.id==0,ivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileTypes/strings/noFileTypeSet\\\"),\\r\\n\\tivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/filetype\\\")+\\\": \\\" +entry.fileType.fileTypeName+\\\" \\\"+\\r\\n\\tIF(entry.fileType.applicationName.trim().length()>0,\\r\\n\\t\\tivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileTypes/strings/application\\\")+\\\" \\\"+entry.fileType.applicationName+\\\"<br>\\\",\\r\\n\\t\\\"<br>\\\")\\r\\n)+\\r\\n\\\"</html>\\\"\"/icon \"\"/header \"ivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/filetype\\\")\"/headerAlignment \"default\"/field \"\"/editable \"\"/condition \"in.configurationController.showFileTypeInTable\"/columnStyle \"default\"/cellWidget \"\"}{/result \"result=entry.versionnumber\"/version \"3.0\"/tooltip \"\"/icon \"\"/header \"ivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileVersioning/plainStrings/versionnumber\\\")\"/headerAlignment \"default\"/field \"\"/editable \"\"/condition \"in.configurationController.activateFileVersioning\"/cellWidget \"\"}{/result \"result=entry.fileSize\"/version \"3.0\"/tooltip \"\"/icon \"\"/header \"ivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/fileSize\\\")\"/headerAlignment \"default\"/field \"\"/editable \"\"/columnWidth \"80\"/columnStyle \"\"}{/result \"result=entry.userID\"/version \"3.0\"/tooltip \"\"/icon \"\"/header \"ivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/createdBy\\\")\"/headerAlignment \"default\"/field \"\"/editable \"\"/condition \"true\"/columnWidth \"70\"}{/result \"result=\\\"<html>\\\" + \\\"<!--\\\" + new DateTime(entry.creationDate.toIvyDate(), entry.creationTime.toTime()).format(\\\"yyyyMMddHHmm\\\") + \\\"-->\\\" +\\r\\nnew DateTime(entry.creationDate.toIvyDate(), entry.creationTime.toTime()).format(\\\"dd.MM.yyyy HH:mm\\\")\"/version \"3.0\"/tooltip \"\"/icon \"\"/header \"ivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/creationDate\\\")\"/headerAlignment \"default\"/field \"\"/editable \"\"/condition \"true\"/columnWidth \"70\"/columnStyle \"alignCenter\"}}}");
+			filesTable.setModelConfiguration("{/showTableheader true /autoTableheader false /showtooltip true /showIcons true /emptyTableText \"Keine Datei / Aucun Fichier / No File\"/version \"3.0\"/columns {{/result \"result=IF(entry.locked.trim().equals(\\\"1\\\"),entry.lockingUserID,\\\"\\\")\"/version \"3.0\"/tooltip \"result=IF(!entry.locked.trim().equals(\\\"1\\\"),ivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/fileUnlocked\\\"),\\r\\nivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/thisFile\\\")+\\\" \\\"+entry.filename+\\\" \\\" + \\r\\nivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/isEditedBy\\\")+\\\" \\\"+entry.lockingUserID)\"/icon \"result=IF(\\r\\nentry instanceof ch.ivyteam.ivy.addons.filemanager.database.filelink.FileLink, \\r\\n\\tivy.cms.cr(\\\"/ch/ivyteam/ivy/addons/icons/filelink/16\\\"), \\r\\n\\tIF(\\r\\n\\t\\t!entry.locked.trim().equals(\\\"1\\\"),\\r\\n\\t\\t\\tivy.cms.cr(\\\"/ch/ivyteam/ivy/addons/icons/file/16\\\"),\\r\\n\\t\\t\\tivy.cms.cr(\\\"/ch/ivyteam/ivy/addons/icons/lock/16\\\")\\r\\n\\t)\\r\\n)\"/header \"\\\"\\\"\"/headerAlignment \"default\"/field \"\"/editable \"\"/condition \"\"/columnWidth \"18\"/columnStyle \"\"/cellWidget \"\"}{/result \"result=IF(entry instanceof ch.ivyteam.ivy.addons.filemanager.database.filelink.FileLink, (entry as ch.ivyteam.ivy.addons.filemanager.database.filelink.FileLink).fileLinkName,\\r\\n entry.filename)\"/version \"3.0\"/tooltip \"result=\\\"<html><b>\\\"+ivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/fileDetails\\\")+\\\"</b><br>\\\"+\\r\\nivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/createdBy\\\")+\\\" \\\"+entry.userID+\\\" \\\"+\\r\\nivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/onDate\\\")+\\\" \\\"+entry.creationDate.toIvyDate().format(\\\"dd-MM-yyyy\\\")+\\\", \\\"+entry.creationTime+\\\"<br>\\\"+\\r\\nivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/lastModifiedBy\\\")+\\\" \\\"+entry.modificationUserID+\\\" \\\"+\\r\\nivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/onDate\\\")+\\\" \\\"+entry.modificationDate.toIvyDate().format(\\\"dd-MM-yyyy\\\")+\\\", \\\"+entry.modificationTime+\\\"<br>\\\"\\r\\n+\\r\\nIF(entry.#fileType!=null && entry.fileType.id > 0, \\r\\n\\tivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/filetype\\\")+\\\": \\\" +entry.fileType.displayName+\\\" \\\"+\\r\\n\\tIF(entry.fileType.applicationName.trim().length()>0,\\r\\n\\t\\tivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileTypes/strings/application\\\")+\\\" \\\"+entry.fileType.applicationName+\\\"<br>\\\",\\r\\n\\t\\t\\\"<br>\\\"\\r\\n\\t)\\r\\n\\t,\\\"\\\"\\r\\n)\\r\\n+\\r\\nentry.description.replaceAll(\\\"\\\\n\\\", \\\"<br>\\\")+\\r\\n\\r\\n\\\"</html>\\\"\"/icon \"\"/header \"ivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/fileName\\\")\"/headerAlignment \"default\"/field \"\"/editable \"\"/columnWidth \"150\"/columnStyle \"\"}{/result \"result=IF(entry.#fileType!=null,entry.fileType.displayName,\\\"\\\")\"/version \"3.0\"/tooltip \"result=\\\"<html>\\\"+\\r\\nIF(entry.#fileType==null || entry.fileType.id==0,ivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileTypes/strings/noFileTypeSet\\\"),\\r\\n\\tivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/filetype\\\")+\\\": \\\" +entry.fileType.fileTypeName+\\\" \\\"+\\r\\n\\tIF(entry.fileType.applicationName.trim().length()>0,\\r\\n\\t\\tivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileTypes/strings/application\\\")+\\\" \\\"+entry.fileType.applicationName+\\\"<br>\\\",\\r\\n\\t\\\"<br>\\\")\\r\\n)+\\r\\n\\\"</html>\\\"\"/icon \"\"/header \"ivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/filetype\\\")\"/headerAlignment \"default\"/field \"\"/editable \"\"/condition \"in.configurationController.showFileTypeInTable\"/columnStyle \"default\"/cellWidget \"\"}{/result \"result=IF(\\r\\nentry instanceof ch.ivyteam.ivy.addons.filemanager.database.filelink.FileLink,\\r\\n(entry as ch.ivyteam.ivy.addons.filemanager.database.filelink.FileLink).getLinkedVersionNumber(),\\r\\nentry.versionnumber\\r\\n)\"/version \"3.0\"/tooltip \"\"/icon \"\"/header \"ivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileVersioning/plainStrings/versionnumber\\\")\"/headerAlignment \"default\"/field \"\"/editable \"\"/condition \"in.configurationController.activateFileVersioning\"/cellWidget \"\"}{/result \"result=entry.fileSize\"/version \"3.0\"/tooltip \"\"/icon \"\"/header \"ivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/fileSize\\\")\"/headerAlignment \"default\"/field \"\"/editable \"\"/columnWidth \"80\"/columnStyle \"\"}{/result \"result=entry.userID\"/version \"3.0\"/tooltip \"\"/icon \"\"/header \"ivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/createdBy\\\")\"/headerAlignment \"default\"/field \"\"/editable \"\"/condition \"true\"/columnWidth \"70\"}{/result \"result=\\\"<html>\\\" + \\\"<!--\\\" + \\r\\nIF(\\r\\nentry instanceof ch.ivyteam.ivy.addons.filemanager.database.filelink.FileLink,\\r\\nnew DateTime(\\r\\n(entry as ch.ivyteam.ivy.addons.filemanager.database.filelink.FileLink).linkCreationDate.toIvyDate(), \\r\\n(entry as ch.ivyteam.ivy.addons.filemanager.database.filelink.FileLink).linkCreationTime.toTime()\\r\\n).format(\\\"yyyyMMddHHmm\\\") + \\\"-->\\\" +\\r\\nnew DateTime(\\r\\n(entry as ch.ivyteam.ivy.addons.filemanager.database.filelink.FileLink).linkCreationDate.toIvyDate(), \\r\\n(entry as ch.ivyteam.ivy.addons.filemanager.database.filelink.FileLink).linkCreationTime.toTime()\\r\\n).format(\\\"dd.MM.yyyy HH:mm\\\")\\r\\n,\\r\\n\\r\\nnew DateTime(entry.creationDate.toIvyDate(), entry.creationTime.toTime()).format(\\\"yyyyMMddHHmm\\\") + \\\"-->\\\" +\\r\\nnew DateTime(entry.creationDate.toIvyDate(), entry.creationTime.toTime()).format(\\\"dd.MM.yyyy HH:mm\\\")\\r\\n)\"/version \"3.0\"/tooltip \"\"/icon \"\"/header \"ivy.cms.co(\\\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/creationDate\\\")\"/headerAlignment \"default\"/field \"\"/editable \"\"/condition \"true\"/columnWidth \"70\"/columnStyle \"alignCenter\"}}}");
 			filesTable.setRowHeight(22);
 			filesTable.setRowMargin(2);
 			filesTable.setFont(new Font("Tahoma", 0, 12));
@@ -254,7 +254,7 @@ implements IRichDialogPanel
 	 * 
 	 * @return the transferHandler for the files table
 	 */
-	private TransferHandler getFilesTableTransferHandler(){
+	protected TransferHandler getFilesTableTransferHandler(){
 		final IRichDialogPanel panel = this;
 
 		if(filesTableTransferHandler==null){
@@ -303,7 +303,7 @@ implements IRichDialogPanel
 	 * 
 	 * @return com.ulcjava.base.application.AbstractAction
 	 */
-	private AbstractAction getActionForDeleteFiles(){
+	protected AbstractAction getActionForDeleteFiles(){
 		if(deleteFilesAction==null)
 		{
 			deleteFilesAction= new AbstractAction(){
@@ -326,7 +326,7 @@ implements IRichDialogPanel
 	 * makes the methode call for delete selected files 
 	 *
 	 */
-	private void doActionForDeleteFiles(){
+	protected void doActionForDeleteFiles(){
 		try{
 			this.getPanelAPI().callMethod("_deleteSelectedFiles", new Object [0]);
 
@@ -340,7 +340,7 @@ implements IRichDialogPanel
 	 * 
 	 * @return com.ulcjava.base.application.AbstractAction
 	 */
-	private AbstractAction getRenameFileAction(){
+	protected AbstractAction getRenameFileAction(){
 		if(renameFileAction==null)
 		{
 			renameFileAction= new AbstractAction(){
@@ -363,7 +363,7 @@ implements IRichDialogPanel
 	 * makes the method call for renaming selected file
 	 *
 	 */
-	private void doRenameFileAction(){
+	protected void doRenameFileAction(){
 		try{
 			this.getPanelAPI().callMethod("_renameFile", new Object [0]);
 
@@ -376,7 +376,7 @@ implements IRichDialogPanel
 	 * 
 	 * @return com.ulcjava.base.application.AbstractAction
 	 */
-	private AbstractAction getRefreshFileAction(){
+	protected AbstractAction getRefreshFileAction(){
 		if(refreshFileAction==null){
 			refreshFileAction = new AbstractAction(){
 				/**
@@ -396,7 +396,7 @@ implements IRichDialogPanel
 	 * makes the method call for renaming selected file
 	 *
 	 */
-	private void doRefreshFileAction(){
+	protected void doRefreshFileAction(){
 		try{
 			this.getPanelAPI().callMethod("refreshActualSelectedFolder", new Object [0]);
 		}catch(Exception ex){
@@ -408,7 +408,7 @@ implements IRichDialogPanel
 	 * 
 	 * @return com.ulcjava.base.application.AbstractAction
 	 */
-	private AbstractAction getCopyFilesAction(){
+	protected AbstractAction getCopyFilesAction(){
 		if(copyFilesAction==null)
 		{
 			copyFilesAction= new AbstractAction(){
@@ -431,7 +431,7 @@ implements IRichDialogPanel
 	 * makes the methode call for copy selected files 
 	 *
 	 */
-	private void doActionCopyFiles(){
+	protected void doActionCopyFiles(){
 		try{
 			this.getPanelAPI().callMethod("_copyFiles", new Object [0]);
 
@@ -445,7 +445,7 @@ implements IRichDialogPanel
 	 * 
 	 * @return com.ulcjava.base.application.AbstractAction
 	 */
-	private AbstractAction getPasteFilesAction(){
+	protected AbstractAction getPasteFilesAction(){
 		if(pasteFilesAction==null)
 		{
 			pasteFilesAction= new AbstractAction(){
@@ -468,7 +468,7 @@ implements IRichDialogPanel
 	 * makes the methode call for paste copied files 
 	 *
 	 */
-	private void doActionPasteFiles(){
+	protected void doActionPasteFiles(){
 		try{
 			this.getPanelAPI().callMethod("_pasteFiles", new Object [0]);
 
@@ -482,7 +482,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.menus.RPopupMenu	
 	 */
-	private RPopupMenu getServerFilePopupMenu() {
+	protected RPopupMenu getServerFilePopupMenu() {
 		if (ServerFilePopupMenu == null) {
 			ServerFilePopupMenu = new RPopupMenu();
 			ServerFilePopupMenu.setName("ServerFilePopupMenu");
@@ -516,7 +516,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.menus.RMenuItem	
 	 */
-	private RMenuItem getDownloadMenuItem() {
+	protected RMenuItem getDownloadMenuItem() {
 		if (downloadMenuItem == null) {
 			downloadMenuItem = new RMenuItem();
 			downloadMenuItem.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/buttonLabels/download\")%>");
@@ -533,7 +533,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.menus.RMenuItem	
 	 */
-	private RMenuItem getDeleteMenuItem() {
+	protected RMenuItem getDeleteMenuItem() {
 		if (deleteMenuItem == null) {
 			deleteMenuItem = new RMenuItem();
 			deleteMenuItem.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/buttonLabels/delete\")%>");
@@ -552,7 +552,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.components.RTextField	
 	 */
-	private RTextField getFileNameInvisibleTextField() {
+	protected RTextField getFileNameInvisibleTextField() {
 		if (FileNameInvisibleTextField == null) {
 			FileNameInvisibleTextField = new RTextField();
 			FileNameInvisibleTextField.setText("");
@@ -570,7 +570,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.containers.RScrollPane	
 	 */
-	private RScrollPane getTreeScrollPane() {
+	protected RScrollPane getTreeScrollPane() {
 		if (treeScrollPane == null) {
 			treeScrollPane = new RScrollPane();
 			treeScrollPane.setName("treeScrollPane");
@@ -586,7 +586,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.components.RTree	
 	 */
-	private RTree getOrdnersTree() {
+	protected RTree getOrdnersTree() {
 		if (ordnersTree == null) {
 			ordnersTree = new RTree();
 			ordnersTree.setName("ordnersTree");
@@ -605,7 +605,7 @@ implements IRichDialogPanel
 	 * build and return the transferHandler for the OrdnersTree
 	 * @return
 	 */
-	private TransferHandler getTransferHandler() {
+	protected TransferHandler getTransferHandler() {
 		final FileManagerPanel panel = this;
 		if (transferHandler == null) {
 			transferHandler = new TransferHandler() {
@@ -739,7 +739,7 @@ implements IRichDialogPanel
 	 * 
 	 * @return com.ulcjava.base.application.AbstractAction
 	 */
-	private AbstractAction getActionForDeleteDirectory(){
+	protected AbstractAction getActionForDeleteDirectory(){
 		if(deleteDirectoryAction==null)
 		{
 			deleteDirectoryAction= new AbstractAction(){
@@ -761,7 +761,7 @@ implements IRichDialogPanel
 	 * makes the methode call for delete selected files 
 	 *
 	 */
-	private void doActionForDeleteDirectory(){
+	protected void doActionForDeleteDirectory(){
 		try{
 			this.getPanelAPI().callMethod("_deleteSelectedDirectory", new Object [0]);
 
@@ -775,7 +775,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.containers.RSplitPane	
 	 */
-	private RSplitPane getSplitPane() {
+	protected RSplitPane getSplitPane() {
 		if (SplitPane == null) {
 			SplitPane = new RSplitPane();
 			SplitPane.setName("SplitPane");
@@ -792,7 +792,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.menus.RMenuItem	
 	 */
-	private RMenuItem getUploadMenuItem() {
+	protected RMenuItem getUploadMenuItem() {
 		if (uploadMenuItem == null) {
 			uploadMenuItem = new RMenuItem();
 			uploadMenuItem.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/buttonLabels/upload\")%>");
@@ -808,7 +808,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.menus.RMenuItem	
 	 */
-	private RMenuItem getRefreshMenuItem() {
+	protected RMenuItem getRefreshMenuItem() {
 		if (refreshMenuItem == null) {
 			refreshMenuItem = new RMenuItem();
 			refreshMenuItem.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/buttonLabels/refreshFiles\")%>");
@@ -824,7 +824,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.menus.RMenuItem	
 	 */
-	private RMenuItem getShowTreeMenuItem() {
+	protected RMenuItem getShowTreeMenuItem() {
 		if (showTreeMenuItem == null) {
 			showTreeMenuItem = new RMenuItem();
 			showTreeMenuItem.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/buttonLabels/showHiddeFolderTree\")%>");
@@ -840,7 +840,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.components.RProgressBar	
 	 */
-	private RProgressBar getProgressBar() {
+	protected RProgressBar getProgressBar() {
 		if (ProgressBar == null) {
 			ProgressBar = new RProgressBar();
 			ProgressBar.setName("ProgressBar");
@@ -858,7 +858,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.xpertline.common.ria.component.DesktopHandler.DesktopHandlerPanel	
 	 */
-	private ULCContainer getDesktopHandlerPanel()  {
+	protected ULCContainer getDesktopHandlerPanel()  {
 		if (desktopHandlerPanel == null) {
 			desktopHandlerPanel = RichDialogPanelFactory.create(DesktopHandlerPanel.class);
 			desktopHandlerPanel.setName("desktopHandlerPanel");
@@ -874,7 +874,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.menus.RMenuItem	
 	 */
-	private RMenuItem getEditMenuItem() {
+	protected RMenuItem getEditMenuItem() {
 		if (editMenuItem == null) {
 			editMenuItem = new RMenuItem();
 			editMenuItem.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/buttonLabels/edit\")%>");
@@ -891,7 +891,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.menus.RMenuItem	
 	 */
-	private RMenuItem getNewVersionMenuItem() {
+	protected RMenuItem getNewVersionMenuItem() {
 		if (newVersionMenuItem == null) {
 			newVersionMenuItem = new RMenuItem();
 			newVersionMenuItem.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/buttonLabels/renameFile\")%>");
@@ -908,7 +908,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.menus.RMenuItem	
 	 */
-	private RMenuItem getShowHiddeEditedFilesMenuItem() {
+	protected RMenuItem getShowHiddeEditedFilesMenuItem() {
 		if (showHiddeEditedFilesMenuItem == null) {
 			showHiddeEditedFilesMenuItem = new RMenuItem();
 			showHiddeEditedFilesMenuItem.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/buttonLabels/showHiddeEditedFiles\")%>");
@@ -924,7 +924,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.menus.RMenuItem	
 	 */
-	private RMenuItem getUnlockMenuItem() {
+	protected RMenuItem getUnlockMenuItem() {
 		if (unlockMenuItem == null) {
 			unlockMenuItem = new RMenuItem();
 			unlockMenuItem.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/buttonLabels/unlockSelectedFiles\")%>");
@@ -941,7 +941,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.menus.RPopupMenu	
 	 */
-	private RPopupMenu getServerDirPopupMenu() {
+	protected RPopupMenu getServerDirPopupMenu() {
 		if (ServerDirPopupMenu == null) {
 			ServerDirPopupMenu = new RPopupMenu();
 			ServerDirPopupMenu.setName("ServerDirPopupMenu");
@@ -964,7 +964,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.menus.RMenuItem	
 	 */
-	private RMenuItem getNewDirAtRootMenuItem() {
+	protected RMenuItem getNewDirAtRootMenuItem() {
 		if (newDirAtRootMenuItem == null) {
 			newDirAtRootMenuItem = new RMenuItem();
 			newDirAtRootMenuItem.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/buttonLabels/makeNewDir\")%>");
@@ -981,7 +981,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.menus.RMenuItem	
 	 */
-	private RMenuItem getDeleteDirectoryMenuItem() {
+	protected RMenuItem getDeleteDirectoryMenuItem() {
 		if (deleteDirectoryMenuItem == null) {
 			deleteDirectoryMenuItem = new RMenuItem();
 			deleteDirectoryMenuItem.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/buttonLabels/deleteDirectory\")%>");
@@ -998,7 +998,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.menus.RMenuItem	
 	 */
-	private RMenuItem getDownloadDirContentMenuItem() {
+	protected RMenuItem getDownloadDirContentMenuItem() {
 		if (downloadDirContentMenuItem == null) {
 			downloadDirContentMenuItem = new RMenuItem();
 			downloadDirContentMenuItem.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/buttonLabels/downloadFolderFiles\")%>");
@@ -1015,7 +1015,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.menus.RMenuItem	
 	 */
-	private RMenuItem getToogleRecursiveMenuItem() {
+	protected RMenuItem getToogleRecursiveMenuItem() {
 		if (toogleRecursiveMenuItem == null) {
 			toogleRecursiveMenuItem = new RMenuItem();
 			toogleRecursiveMenuItem.setText("TEST");
@@ -1031,7 +1031,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.menus.RMenuItem	
 	 */
-	private RMenuItem getCopyMenuItem() {
+	protected RMenuItem getCopyMenuItem() {
 		if (copyMenuItem == null) {
 			copyMenuItem = new RMenuItem();
 			copyMenuItem.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/copy\")%>");
@@ -1048,7 +1048,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.menus.RMenuItem	
 	 */
-	private RMenuItem getPasteMenuItem() {
+	protected RMenuItem getPasteMenuItem() {
 		if (pasteMenuItem == null) {
 			pasteMenuItem = new RMenuItem();
 			pasteMenuItem.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/tableStrings/Paste\")%>");
@@ -1063,7 +1063,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.menus.RMenuItem	
 	 */
-	private RMenuItem getPrintMenuItem() {
+	protected RMenuItem getPrintMenuItem() {
 		if (printMenuItem == null) {
 			printMenuItem = new RMenuItem();
 			printMenuItem.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/buttonLabels/print\")%>");
@@ -1080,7 +1080,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.menus.RMenuItem	
 	 */
-	private RMenuItem getRefreshDirMenuItem() {
+	protected RMenuItem getRefreshDirMenuItem() {
 		if (refreshDirMenuItem == null) {
 			refreshDirMenuItem = new RMenuItem();
 			refreshDirMenuItem.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/buttonLabels/refreshDir\")%>");
@@ -1095,7 +1095,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.components.RButton	
 	 */
-	private RButton getUnlockButton() {
+	protected RButton getUnlockButton() {
 		if (unlockButton == null) {
 			unlockButton = new RButton();
 			unlockButton.setName("unlockButton");
@@ -1116,7 +1116,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.components.RButton	
 	 */
-	private RButton getDownloadButton() {
+	protected RButton getDownloadButton() {
 		if (downloadButton == null) {
 			downloadButton = new RButton();
 			downloadButton.setName("downloadButton");
@@ -1138,7 +1138,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.components.RButton	
 	 */
-	private RButton getEditButton() {
+	protected RButton getEditButton() {
 		if (editButton == null) {
 			editButton = new RButton();
 			editButton.setName("editButton");
@@ -1157,7 +1157,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.components.RButton	
 	 */
-	private RButton getNewCopyButton() {
+	protected RButton getNewCopyButton() {
 		if (newCopyButton == null) {
 			newCopyButton = new RButton();
 			newCopyButton.setName("newCopyButton");
@@ -1179,7 +1179,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.components.RButton	
 	 */
-	private RButton getDeleteButton() {
+	protected RButton getDeleteButton() {
 		if (deleteButton == null) {
 			deleteButton = new RButton();
 			deleteButton.setName("deleteButton");
@@ -1203,7 +1203,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.components.RButton	
 	 */
-	private RButton getRefreshSelectedFolderButton() {
+	protected RButton getRefreshSelectedFolderButton() {
 		if (refreshSelectedFolderButton == null) {
 			refreshSelectedFolderButton = new RButton();
 			refreshSelectedFolderButton.setName("refreshSelectedFolderButton");
@@ -1224,7 +1224,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.components.RButton	
 	 */
-	private RButton getPrintButton() {
+	protected RButton getPrintButton() {
 		if (printButton == null) {
 			printButton = new RButton();
 			printButton.setName("printButton");
@@ -1243,7 +1243,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.components.RButton	
 	 */
-	private RButton getMakeNewDirButton() {
+	protected RButton getMakeNewDirButton() {
 		if (makeNewDirButton == null) {
 			makeNewDirButton = new RButton();
 			makeNewDirButton.setName("makeNewDirButton");
@@ -1261,7 +1261,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.containers.RGridBagLayoutPane	
 	 */
-	private RGridBagLayoutPane getTreeGridBagLayoutPane() {
+	protected RGridBagLayoutPane getTreeGridBagLayoutPane() {
 		if (treeGridBagLayoutPane == null) {
 			treeGridBagLayoutPane = new RGridBagLayoutPane();
 			treeGridBagLayoutPane.setName("treeGridBagLayoutPane");
@@ -1278,7 +1278,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.components.RButton	
 	 */
-	private RButton getDeleteDirButton() {
+	protected RButton getDeleteDirButton() {
 		if (deleteDirButton == null) {
 			deleteDirButton = new RButton();
 			deleteDirButton.setName("deleteDirButton");
@@ -1298,7 +1298,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.containers.RGridBagLayoutPane	
 	 */
-	private RGridBagLayoutPane getGridBagLayoutPane() {
+	protected RGridBagLayoutPane getGridBagLayoutPane() {
 		if (GridBagLayoutPane == null) {
 			GridBagLayoutPane = new RGridBagLayoutPane();
 			GridBagLayoutPane.setName("GridBagLayoutPane");
@@ -1319,7 +1319,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.components.RButton	
 	 */
-	private RButton getRefreshDirsButton() {
+	protected RButton getRefreshDirsButton() {
 		if (refreshDirsButton == null) {
 			refreshDirsButton = new RButton();
 			refreshDirsButton.setName("refreshDirsButton");
@@ -1339,7 +1339,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.components.RButton	
 	 */
-	private RButton getDownloadAllFilesButton() {
+	protected RButton getDownloadAllFilesButton() {
 		if (downloadAllFilesButton == null) {
 			downloadAllFilesButton = new RButton();
 			downloadAllFilesButton.setName("downloadAllFilesButton");
@@ -1359,7 +1359,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.components.RButton	
 	 */
-	private RButton getToogleFileListingButton() {
+	protected RButton getToogleFileListingButton() {
 		if (toogleFileListingButton == null) {
 			toogleFileListingButton = new RButton();
 			toogleFileListingButton.setName("toogleFileListingButton");
@@ -1375,7 +1375,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.components.RButton	
 	 */
-	private RButton getPasteButton() {
+	protected RButton getPasteButton() {
 		if (pasteButton == null) {
 			pasteButton = new RButton();
 			pasteButton.setName("pasteButton");
@@ -1397,7 +1397,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.menus.RMenuItem	
 	 */
-	private RMenuItem getZipMenuItem() {
+	protected RMenuItem getZipMenuItem() {
 		if (zipMenuItem == null) {
 			zipMenuItem = new RMenuItem();
 			zipMenuItem.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/buttonLabels/zip\")%>");
@@ -1414,7 +1414,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.containers.RFlowLayoutPane	
 	 */
-	private RFlowLayoutPane getPathChooserFlowLayoutPane() {
+	protected RFlowLayoutPane getPathChooserFlowLayoutPane() {
 		if (pathChooserFlowLayoutPane == null) {
 			pathChooserFlowLayoutPane = new RFlowLayoutPane();
 			pathChooserFlowLayoutPane.setName("pathChooserFlowLayoutPane");
@@ -1430,7 +1430,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.components.RButton	
 	 */
-	private RButton getOkButton() {
+	protected RButton getOkButton() {
 		if (okButton == null) {
 			okButton = new RButton();
 			okButton.setIconUri("<%=ivy.cms.cr(\"/ch/ivyteam/ivy/addons/icons/ok/24\")%>");
@@ -1444,7 +1444,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.components.RButton	
 	 */
-	private RButton getCancelButton() {
+	protected RButton getCancelButton() {
 		if (cancelButton == null) {
 			cancelButton = new RButton();
 			cancelButton.setIconUri("<%=ivy.cms.cr(\"/ch/ivyteam/ivy/addons/icons/cancel/24\")%>");
@@ -1458,7 +1458,7 @@ implements IRichDialogPanel
 	 * This method initializes closeAction	 
 	 * @return com.ulcjava.base.application.AbstractAction
 	 */
-	private AbstractAction getCloseAction(){
+	protected AbstractAction getCloseAction(){
 		if(closeAction==null){
 			closeAction = new AbstractAction(){
 
@@ -1479,7 +1479,7 @@ implements IRichDialogPanel
 	 * used by the closeButton CTRL+ ... key Event to close the panel
 	 *
 	 */
-	private void doCloseAction(){
+	protected void doCloseAction(){
 		try {
 			this.getPanelAPI().callMethod("_close", new Object[0]);
 		} catch (Exception ex) {
@@ -1492,7 +1492,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.containers.RGridBagLayoutPane	
 	 */
-	private RGridBagLayoutPane getFileToolbarPane() {
+	protected RGridBagLayoutPane getFileToolbarPane() {
 		if (fileToolbarPane == null) {
 			RFiller Filler = new RFiller();
 			Filler.setStyleProperties("{/usePreferredSizeAsExactSize \"true\"/preferredSizeWidth \"120\"/preferredSizeHeight \"0\"}");
@@ -1516,7 +1516,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.containers.RGridBagLayoutPane	
 	 */
-	private RGridBagLayoutPane getFileToolbarPane2() {
+	protected RGridBagLayoutPane getFileToolbarPane2() {
 		if (fileToolbarPane2 == null) {
 			RFiller Filler1 = new RFiller();
 			Filler1.setStyleProperties("{/usePreferredSizeAsExactSize \"true\"/preferredSizeWidth \"120\"/preferredSizeHeight \"0\"}");
@@ -1540,7 +1540,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.containers.RGridBagLayoutPane	
 	 */
-	private RGridBagLayoutPane getFileToolbarPane3() {
+	protected RGridBagLayoutPane getFileToolbarPane3() {
 		if (fileToolbarPane3 == null) {
 			RFiller Filler2 = new RFiller();
 			Filler2.setStyleProperties("{/usePreferredSizeAsExactSize \"true\"/preferredSizeWidth \"120\"/preferredSizeHeight \"0\"}");
@@ -1564,7 +1564,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.containers.RGridBagLayoutPane	
 	 */
-	private RGridBagLayoutPane getFilesGridBagLayoutPane() {
+	protected RGridBagLayoutPane getFilesGridBagLayoutPane() {
 		if (filesGridBagLayoutPane == null) {
 			filesGridBagLayoutPane = new RGridBagLayoutPane();
 			filesGridBagLayoutPane.setName("filesGridBagLayoutPane");
@@ -1580,7 +1580,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.containers.RGridBagLayoutPane	
 	 */
-	private RGridBagLayoutPane getToolbarGridBagLayoutPane() {
+	protected RGridBagLayoutPane getToolbarGridBagLayoutPane() {
 		if (toolbarGridBagLayoutPane == null) {
 			toolbarGridBagLayoutPane = new RGridBagLayoutPane();
 			toolbarGridBagLayoutPane.setName("toolbarGridBagLayoutPane");
@@ -1601,7 +1601,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.components.RButton	
 	 */
-	private RButton getUploadButton() {
+	protected RButton getUploadButton() {
 		if (uploadButton == null) {
 			uploadButton = new RButton();
 			uploadButton.setName("uploadButton");
@@ -1619,7 +1619,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.components.RLabel	
 	 */
-	private RLabel getStatusLabel() {
+	protected RLabel getStatusLabel() {
 		if (statusLabel == null) {
 			statusLabel = new RLabel();
 			statusLabel.setStyleProperties("{/horizontalAlignment \"LEFT\"/fill \"HORIZONTAL\"/weightX \"2\"}");
@@ -1633,7 +1633,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.containers.RGridBagLayoutPane	
 	 */
-	private RGridBagLayoutPane getButtonsGridBagLayoutPane() {
+	protected RGridBagLayoutPane getButtonsGridBagLayoutPane() {
 		if (buttonsGridBagLayoutPane == null) {
 			buttonsGridBagLayoutPane = new RGridBagLayoutPane();
 			buttonsGridBagLayoutPane.setName("buttonsGridBagLayoutPane");
@@ -1653,7 +1653,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.containers.RGridBagLayoutPane	
 	 */
-	private RGridBagLayoutPane getButtonGroupGridBagLayoutPane() {
+	protected RGridBagLayoutPane getButtonGroupGridBagLayoutPane() {
 		if (buttonGroupGridBagLayoutPane == null) {
 			RFiller Filler4 = new RFiller();
 			Filler4.setStyleProperties("{/fill \"HORIZONTAL\"/weightX \"1\"}");
@@ -1682,7 +1682,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.menus.RMenuItem	
 	 */
-	private RMenuItem getPasteMenuItemTable() {
+	protected RMenuItem getPasteMenuItemTable() {
 		if (pasteMenuItemTable == null) {
 			pasteMenuItemTable = new RMenuItem();
 			pasteMenuItemTable.setName("pasteMenuItemTable");
@@ -1698,7 +1698,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.containers.RBoxPane	
 	 */
-	private RBoxPane getServerDirectoriesToolBar2BoxPane() {
+	protected RBoxPane getServerDirectoriesToolBar2BoxPane() {
 		if (serverDirectoriesToolBar2BoxPane == null) {
 			RFiller hFiller2 = new RFiller();
 			hFiller2.setStyleProperties("{/fill \"HORIZONTAL\"/weightX \"1\"}");
@@ -1721,7 +1721,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.components.RHyperlink	
 	 */
-	private RHyperlink getMakeNewDirAtRoot2Button() {
+	protected RHyperlink getMakeNewDirAtRoot2Button() {
 		if (makeNewDirAtRoot2Button == null) {
 			makeNewDirAtRoot2Button = new RHyperlink();
 			makeNewDirAtRoot2Button.setName("makeNewDirAtRoot2Button");
@@ -1738,7 +1738,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.components.RHyperlink	
 	 */
-	private RHyperlink getDeleteDir2Button() {
+	protected RHyperlink getDeleteDir2Button() {
 		if (deleteDir2Button == null) {
 			deleteDir2Button = new RHyperlink();
 			deleteDir2Button.setName("deleteDir2Button");
@@ -1755,7 +1755,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.components.RHyperlink	
 	 */
-	private RHyperlink getRefreshDirs2Button() {
+	protected RHyperlink getRefreshDirs2Button() {
 		if (refreshDirs2Button == null) {
 			refreshDirs2Button = new RHyperlink();
 			refreshDirs2Button.setName("refreshDirs2Button");
@@ -1772,7 +1772,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.components.RHyperlink	
 	 */
-	private RHyperlink getDownloadAllFiles2Button() {
+	protected RHyperlink getDownloadAllFiles2Button() {
 		if (downloadAllFiles2Button == null) {
 			downloadAllFiles2Button = new RHyperlink();
 			downloadAllFiles2Button.setName("downloadAllFiles2Button");
@@ -1789,7 +1789,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.components.RHyperlink	
 	 */
-	private RHyperlink getToogleFileListing2Button() {
+	protected RHyperlink getToogleFileListing2Button() {
 		if (toogleFileListing2Button == null) {
 			toogleFileListing2Button = new RHyperlink();
 			toogleFileListing2Button.setName("toogleFileListing2Button");
@@ -1806,7 +1806,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.containers.RBoxPane	
 	 */
-	private RBoxPane getFileActionsToolBar2BoxPane() {
+	protected RBoxPane getFileActionsToolBar2BoxPane() {
 		if (fileActionsToolBar2BoxPane == null) {
 			RFiller hFiller3 = new RFiller();
 			hFiller3.setStyleProperties("{/fill \"HORIZONTAL\"/weightX \"1\"}");
@@ -1833,7 +1833,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.components.RHyperlink	
 	 */
-	private RHyperlink getZip2Button() {
+	protected RHyperlink getZip2Button() {
 		if (zip2Button == null) {
 			zip2Button = new RHyperlink();
 			zip2Button.setName("zip2Button");
@@ -1850,7 +1850,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.components.RHyperlink	
 	 */
-	private RHyperlink getEdit2Button() {
+	protected RHyperlink getEdit2Button() {
 		if (edit2Button == null) {
 			edit2Button = new RHyperlink();
 			edit2Button.setName("edit2Button");
@@ -1867,7 +1867,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.components.RHyperlink	
 	 */
-	private RHyperlink getUpload2Button() {
+	protected RHyperlink getUpload2Button() {
 		if (upload2Button == null) {
 			upload2Button = new RHyperlink();
 			upload2Button.setName("upload2Button");
@@ -1884,7 +1884,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.components.RHyperlink	
 	 */
-	private RHyperlink getDownload2Button() {
+	protected RHyperlink getDownload2Button() {
 		if (download2Button == null) {
 			download2Button = new RHyperlink();
 			download2Button.setName("download2Button");
@@ -1901,7 +1901,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.components.RHyperlink	
 	 */
-	private RHyperlink getPrint2Button() {
+	protected RHyperlink getPrint2Button() {
 		if (print2Button == null) {
 			print2Button = new RHyperlink();
 			print2Button.setName("print2Button");
@@ -1918,7 +1918,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.components.RHyperlink	
 	 */
-	private RHyperlink getNewCopy2Button() {
+	protected RHyperlink getNewCopy2Button() {
 		if (newCopy2Button == null) {
 			newCopy2Button = new RHyperlink();
 			newCopy2Button.setName("newCopy2Button");
@@ -1935,7 +1935,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.components.RHyperlink	
 	 */
-	private RHyperlink getDelete2Button() {
+	protected RHyperlink getDelete2Button() {
 		if (delete2Button == null) {
 			delete2Button = new RHyperlink();
 			delete2Button.setName("delete2Button");
@@ -1952,7 +1952,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.components.RHyperlink	
 	 */
-	private RHyperlink getMail2Button() {
+	protected RHyperlink getMail2Button() {
 		if (mail2Button == null) {
 			mail2Button = new RHyperlink();
 			mail2Button.setName("mail2Button");
@@ -1969,7 +1969,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.components.RHyperlink	
 	 */
-	private RHyperlink getRefreshSelectedFolder2Button() {
+	protected RHyperlink getRefreshSelectedFolder2Button() {
 		if (refreshSelectedFolder2Button == null) {
 			refreshSelectedFolder2Button = new RHyperlink();
 			refreshSelectedFolder2Button.setName("refreshSelectedFolder2Button");
@@ -1986,7 +1986,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.menus.RMenuItem	
 	 */
-	private RMenuItem getSetDescriptionMenuItem() {
+	protected RMenuItem getSetDescriptionMenuItem() {
 		if (setDescriptionMenuItem == null) {
 			setDescriptionMenuItem = new RMenuItem();
 			setDescriptionMenuItem.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/buttonLabels/setDescription\")%>");
@@ -2005,7 +2005,7 @@ implements IRichDialogPanel
 	 * class due to overriding.
 	 * @returns com.ulcjava.base.application.ULCContainer 
 	 */
-	private ULCContainer getDirectorySecurityManagerPanel() {
+	protected ULCContainer getDirectorySecurityManagerPanel() {
 		if (directorySecurityManagerPanel == null) {
 			directorySecurityManagerPanel = RichDialogPanelFactory
 					.create(DirectorySecurityManagerPanel.class);
@@ -2021,7 +2021,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.menus.RMenuItem	
 	 */
-	private RMenuItem getMakeVersionMenuItem() {
+	protected RMenuItem getMakeVersionMenuItem() {
 		if (makeVersionMenuItem == null) {
 			makeVersionMenuItem = new RMenuItem();
 			makeVersionMenuItem.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileVersioning/plainStrings/createNewVersion\")%>");
@@ -2039,7 +2039,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.menus.RMenuItem	
 	 */
-	private RMenuItem getOpenVersionsMenuItem() {
+	protected RMenuItem getOpenVersionsMenuItem() {
 		if (openVersionsMenuItem == null) {
 			openVersionsMenuItem = new RMenuItem();
 			openVersionsMenuItem.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileVersioning/plainStrings/openVersionsPane\")%>");
@@ -2057,7 +2057,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.menus.RMenuItem	
 	 */
-	private RMenuItem getFileTypeChooserMenuItem() {
+	protected RMenuItem getFileTypeChooserMenuItem() {
 		if (fileTypeChooserMenuItem == null) {
 			fileTypeChooserMenuItem = new RMenuItem();
 			fileTypeChooserMenuItem.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileTypes/strings/fileTypeChooser\")%>");
@@ -2075,7 +2075,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.menus.RMenuItem	
 	 */
-	private RMenuItem getFileTypeManagerMenuItem() {
+	protected RMenuItem getFileTypeManagerMenuItem() {
 		if (fileTypeManagerMenuItem == null) {
 			fileTypeManagerMenuItem = new RMenuItem();
 			fileTypeManagerMenuItem.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileTypes/strings/fileTypeManager\")%>");
@@ -2093,7 +2093,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.menus.RMenuItem	
 	 */
-	private RMenuItem getTagsMenuItem() {
+	protected RMenuItem getTagsMenuItem() {
 		if (tagsMenuItem == null) {
 			tagsMenuItem = new RMenuItem();
 			tagsMenuItem.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileTags/fileTagsMenuItem\")%>");
@@ -2111,7 +2111,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.menus.RMenuItem	
 	 */
-	private RMenuItem getShowHistoryMenuItem() {
+	protected RMenuItem getShowHistoryMenuItem() {
 		if (showHistoryMenuItem == null) {
 			showHistoryMenuItem = new RMenuItem();
 			showHistoryMenuItem.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileActionHistory/label/windowTitle\")%>");
@@ -2126,7 +2126,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.menus.RMenuItem	
 	 */
-	private RMenuItem getRenameDirMenuItem() {
+	protected RMenuItem getRenameDirMenuItem() {
 		if (renameDirMenuItem == null) {
 			renameDirMenuItem = new RMenuItem();
 			renameDirMenuItem.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/buttonLabels/renameDir\")%>");
@@ -2142,7 +2142,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.menus.RMenuItem	
 	 */
-	private RMenuItem getReadFileMenuItem() {
+	protected RMenuItem getReadFileMenuItem() {
 		if (readFileMenuItem == null) {
 			readFileMenuItem = new RMenuItem();
 			readFileMenuItem.setText("<%=ivy.cms.co(\"/ch/ivyteam/ivy/addons/filemanager/fileManagement/buttonLabels/readFile\")%>");
@@ -2160,7 +2160,7 @@ implements IRichDialogPanel
 	 * 	
 	 * @return ch.ivyteam.ivy.richdialog.widgets.menus.RMenuItem	
 	 */
-	private RMenuItem getTranslateDirMenuItem() {
+	protected RMenuItem getTranslateDirMenuItem() {
 		if (translateDirMenuItem == null) {
 			translateDirMenuItem = new RMenuItem();
 			translateDirMenuItem.setName("translateDirMenuItem");

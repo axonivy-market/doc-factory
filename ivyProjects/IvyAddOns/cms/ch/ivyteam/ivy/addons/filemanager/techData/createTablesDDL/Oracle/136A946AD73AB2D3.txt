@@ -138,6 +138,29 @@ BEGIN
 END;
 /
 
+/********* FILE ARCHIVE TRACKING FEATURE **********/
+
+CREATE TABLE file_archive_tracker
+(
+	id      number(19,0) NOT NULL,
+	fileid number(19,0) NOT NULL,
+	versionnumber number(19,0) NOT NULL,
+	CONSTRAINT PK_TRACKER PRIMARY KEY (id),
+	CONSTRAINT file_archive_tracker_unique UNIQUE(fileid,versionnumber)
+);
+
+CREATE SEQUENCE archive_tracker_seq 
+INCREMENT BY 1 START WITH 1 CACHE 20 ;
+
+CREATE TRIGGER archive_tracker_pk_trg
+  BEFORE INSERT ON file_archive_tracker FOR EACH ROW
+BEGIN 
+    IF :NEW.id IS NULL THEN
+      SELECT archive_tracker_seq.NEXTVAL INTO :NEW.id FROM DUAL;
+    END IF;
+END;
+/
+
 /********* FILE TYPES FEATURE **********/
 
 CREATE TABLE filetype
@@ -319,3 +342,27 @@ BEGIN
 END;
 /
 
+CREATE TABLE thumbnailcontent
+(
+	id      number(19,0) NOT NULL,
+	org_file_id number(19,0) NOT NULL,
+	thumb_content bytea,
+    creation_date        VARCHAR2 (10) NULL,
+	creation_time        VARCHAR2 (8) NULL,
+    use_default number(1,0) NULL DEFAULT 0,
+    org_modificationdate VARCHAR2 (10) NULL,
+    org_modificationtime VARCHAR2 (8) NULL,
+    CONSTRAINT thumbnailcontent_pkey PRIMARY KEY (id),
+    CONSTRAINT thumbnailcontent_org_file_id_key UNIQUE (org_file_id)
+);
+CREATE SEQUENCE thumbnailcontent_id_seq 
+INCREMENT BY 1 START WITH 1 CACHE 20 ;
+
+CREATE TRIGGER thumbnailcontent_pk_trg
+  BEFORE INSERT ON thumbnailcontent FOR EACH ROW
+BEGIN 
+    IF :NEW.id IS NULL THEN
+      SELECT thumbnailcontent_id_seq.NEXTVAL INTO :NEW.id FROM DUAL;
+    END IF;
+END;
+/

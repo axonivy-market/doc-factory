@@ -136,7 +136,7 @@ public class AsposeDocFactory extends BaseDocFactory{
 		}
 		this.setFormat(_outputFormat);
 		
-		String baseDocPath= this.outputPath+this.outputName;
+		String baseDocPath= this.outputPath+this.basicFileName;
 		int format = getFormatPosition(_outputFormat,UNSUPPORTED_FORMAT);
 		
 		try {

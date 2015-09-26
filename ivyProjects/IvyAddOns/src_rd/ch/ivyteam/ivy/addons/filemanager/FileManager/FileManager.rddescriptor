@@ -164,6 +164,26 @@ path of the directory where the files were deleted</description>
             <nullPermitted>true</nullPermitted>
         </attachment>
     </acceptedBroadcast>
+    <acceptedBroadcast>
+        <name>uploadChoosedFiles</name>
+        <description></description>
+        <attachment>
+            <name>panelId</name>
+            <description></description>
+            <parameterType>Number</parameterType>
+            <nullPermitted>true</nullPermitted>
+        </attachment>
+    </acceptedBroadcast>
+    <acceptedBroadcast>
+        <name>directoryMoved</name>
+        <description></description>
+        <attachment>
+            <name>movedFolder</name>
+            <description></description>
+            <parameterType>ch.ivyteam.ivy.addons.filemanager.FolderOnServer</parameterType>
+            <nullPermitted>true</nullPermitted>
+        </attachment>
+    </acceptedBroadcast>
     <method>
         <name>getLastFileUploaded</name>
         <description>get the last Uploaded File reference.&#xD;
@@ -1129,6 +1149,16 @@ is set in the Configuration object.</description>
             <nullPermitted>false</nullPermitted>
         </inputParameter>
     </method>
+    <method>
+        <name>_uploadChoosedFiles</name>
+        <description></description>
+        <inputParameter>
+            <name>choosedFiles</name>
+            <description></description>
+            <parameterType>List&lt;java.io.File&gt;</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </inputParameter>
+    </method>
     <startMethod>
         <name>startAsPathChooser</name>
         <description>start the RDC as Path chooser. The user will be able to make a new directory, no actions on Files are possible.&#xD;
@@ -1695,6 +1725,17 @@ This Event sends the FileManager unique PanelId data so that only other FileMana
             <name>returnedMessage</name>
             <description></description>
             <parameterType>ch.ivyteam.ivy.addons.filemanager.ReturnedMessage</parameterType>
+            <nullPermitted>true</nullPermitted>
+        </attachment>
+    </firedEvent>
+    <firedEvent>
+        <name>uploadChoosedFiles</name>
+        <description></description>
+        <scope>APPLICATION</scope>
+        <attachment>
+            <name>panelId</name>
+            <description></description>
+            <parameterType>Number</parameterType>
             <nullPermitted>true</nullPermitted>
         </attachment>
     </firedEvent>

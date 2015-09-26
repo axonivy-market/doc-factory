@@ -5,7 +5,8 @@ package ch.ivyteam.ivy.addons.filemanager.database.fileaction;
 
 import java.io.Serializable;
 
-import ch.ivyteam.ivy.environment.Ivy;
+import ch.ivyteam.ivy.addons.filemanager.configuration.GlobalVariableNames;
+import ch.ivyteam.ivy.addons.filemanager.configuration.IvyGlobalVariableHandler;
 
 /**
  * @author ec
@@ -35,18 +36,18 @@ public class FileActionConfiguration implements Serializable {
 	 * The name of the Ivy database Configuration name used to connect to the database.<br>
 	 * Default is the value of the xivy_addons_fileManager_ivyDatabaseConnectionName global variable.
 	 */
-	private String ivyDBConnectionName=Ivy.var().get("xivy_addons_fileManager_ivyDatabaseConnectionName").trim(); // the user friendly connection name to Database in Ivy
+	private String ivyDBConnectionName = IvyGlobalVariableHandler.getGlobalVariable(GlobalVariableNames.IVY_DB_CONNECTION_NAME); // the user friendly connection name to Database in Ivy
 	
 	/**
 	 * Name of the DB table that stores the file history actions
 	 * Default is the value of the xivy_addons_fileManager_fileActionHistoryTableName global variable.
 	 */
-	private String fileActionHistoryTableName = Ivy.var().get("xivy_addons_fileManager_fileActionHistoryTableName").trim();
+	private String fileActionHistoryTableName = IvyGlobalVariableHandler.getGlobalVariable(GlobalVariableNames.FILE_ACTION_HISTORY_TABLE_NAME);
 	
 	/**
 	 * Name of the DB table that stores the file action types.
 	 */
-	private String fileActionTypeTableName= Ivy.var().get("xivy_addons_fileManager_fileActionTypeTableName").trim();
+	private String fileActionTypeTableName= IvyGlobalVariableHandler.getGlobalVariable(GlobalVariableNames.FILE_ACTION_TYPE_TABLE_NAME);
 
 	private String fileActionHistoryTableNameSpace=null;
 	
@@ -56,7 +57,7 @@ public class FileActionConfiguration implements Serializable {
 	 * The name of the database schema that may be used if the tables are stored in a schema<br>
 	 * Default is the value of the xivy_addons_fileManager_databaseSchemaName global variable.
 	 */
-	private String schemaName= Ivy.var().get("xivy_addons_fileManager_databaseSchemaName").trim();
+	private String schemaName= IvyGlobalVariableHandler.getGlobalVariable(GlobalVariableNames.DATABASE_SCHEMA_NAME);
 	
 	/**
 	 * 

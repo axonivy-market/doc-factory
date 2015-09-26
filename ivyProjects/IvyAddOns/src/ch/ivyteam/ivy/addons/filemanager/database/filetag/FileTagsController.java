@@ -84,6 +84,17 @@ public class FileTagsController extends AbstractFileTagsController {
 		return this.ftPersistence.getFileTags(fileId);
 	}
 	
+	
+	
+	@Override
+	public void deleteFileTags(long fileId) throws Exception {
+		java.util.List<FileTag> tags =  getFileTags(fileId);
+		for(FileTag ft: tags) {
+			this.deleteTag(ft.getId());
+		}
+		
+	}
+
 	/**
 	 * @return the ivyDBConnectionName
 	 */

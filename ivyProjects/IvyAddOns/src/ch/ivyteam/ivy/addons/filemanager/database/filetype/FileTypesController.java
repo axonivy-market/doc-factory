@@ -4,6 +4,7 @@
 package ch.ivyteam.ivy.addons.filemanager.database.filetype;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import ch.ivyteam.ivy.addons.filemanager.DocumentOnServer;
 import ch.ivyteam.ivy.addons.filemanager.FileType;
@@ -25,7 +26,7 @@ public class FileTypesController extends AbstractFileTypesController {
 	private String tableName = null; // the table that stores file types info
 	private String schemaName=null;
 	private IFileTypePersistence ftPersistence;
-	
+	private FileTypeListFilter fileTypeListFilter= null;
 
 
 	/**
@@ -36,14 +37,13 @@ public class FileTypesController extends AbstractFileTypesController {
 	 * @see ch.ivyteam.ivy.addons.filemanager.configuration.BasicConfigurationController
 	 * @throws Exception
 	 */
-	public FileTypesController(BasicConfigurationController _config) throws Exception
-	{
+	public FileTypesController(BasicConfigurationController _config) throws Exception {
 		this.ftPersistence = PersistenceConnectionManagerFactory.getIFileTypePersistenceInstance(_config);
+		this.fileTypeListFilter = _config.getFileTypeListFilter();
 	}
 
 	@Override
-	public FileType createFileType(String name, String optionalApplicationName) throws Exception
-	{
+	public FileType createFileType(String name, String optionalApplicationName) throws Exception {
 		FileType ft = new FileType();
 		ft.setApplicationName(optionalApplicationName);
 		ft.setFileTypeName(name);
@@ -51,19 +51,16 @@ public class FileTypesController extends AbstractFileTypesController {
 	}
 
 	@Override
-	public FileType modifyFileType(FileType ft) throws Exception
-	{
-		if(ft.getId()==0)
-		{
+	public FileType modifyFileType(FileType ft) throws Exception {
+		if(ft.getId()==0) {
 			return this.createFileType(ft.getFileTypeName(), ft.getApplicationName());
 		}
 		return this.ftPersistence.update(ft);
 	}
 	
 	@Override
-	public void deleteFileType(long fileTypeId) throws Exception
-	{
-		if(fileTypeId ==0){
+	public void deleteFileType(long fileTypeId) throws Exception {
+		if(fileTypeId ==0) {
 			return;
 		}
 		FileType ft = this.ftPersistence.get(fileTypeId);
@@ -73,8 +70,7 @@ public class FileTypesController extends AbstractFileTypesController {
 	}
 
 	@Override
-	public FileType getFileTypeWithId(long fileTypeId) throws PersistencyException, SQLException, Exception
-	{
+	public FileType getFileTypeWithId(long fileTypeId) throws PersistencyException, SQLException, Exception {
 		return this.ftPersistence.get(fileTypeId);
 	}
 	
@@ -88,11 +84,9 @@ public class FileTypesController extends AbstractFileTypesController {
 	 * @throws SQLException 
 	 * @throws PersistencyException 
 	 */
-	public FileType getFileTypeWithId(long fileTypeId, java.sql.Connection con) throws PersistencyException, SQLException, Exception
-	{
+	public FileType getFileTypeWithId(long fileTypeId, java.sql.Connection con) throws PersistencyException, SQLException, Exception {
 		return this.ftPersistence.get(fileTypeId);
 	}
-
 
 	@Override
 	public FileType getFileTypeWithName(String typeName, String optionalApplicationName) 
@@ -107,12 +101,25 @@ public class FileTypesController extends AbstractFileTypesController {
 	@Override
 	public java.util.List<FileType> getFileTypesWithAppName(String applicationName) 
 			throws PersistencyException, SQLException, Exception {
-		return this.ftPersistence.getFileTypesWithAppName(applicationName);
+		return filterFileTypes(this.ftPersistence.getFileTypesWithAppName(applicationName));
 	}
 
 	@Override
 	public java.util.List<FileType> getAllFileTypes() throws PersistencyException, SQLException, Exception {
-		return this.ftPersistence.getAllFileTypes();
+		return filterFileTypes(this.ftPersistence.getAllFileTypes());
+	}
+	
+	private java.util.List<FileType> filterFileTypes(java.util.List<FileType> fileTypes) {
+		if(this.fileTypeListFilter==null) {
+			return fileTypes;
+		}
+		java.util.List<FileType> ftypes = new ArrayList<>();
+		for(FileType ft: fileTypes) {
+			if(this.fileTypeListFilter.accept(ft)) {
+				ftypes.add(ft);
+			}
+		}
+		return ftypes;
 	}
 
 	@Override
@@ -144,7 +151,7 @@ public class FileTypesController extends AbstractFileTypesController {
 			return null;
 		}
 		for(DocumentOnServer doc : _docs) {
-			if(doc.getFileType().getId()>0) {
+			if(doc.getFileType()!=null && doc.getFileType().getId()>0) {
 				try {
 					doc.setFileType(this.getFileTypeWithId(doc.getFileType().getId()));
 				}catch(Exception ex) {

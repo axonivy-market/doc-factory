@@ -45,7 +45,7 @@ import com.ulcjava.base.shared.FileChooserConfig;
  * @author ec<br>
  * FileDownloadHandler class<br>
  * A FileDownloadHandler Object manages the download process of a file from the Server to the client.<br>
- * To be usable with all its features, it has to be instanciated with a reference to its parent ULComponent implementing IRichDialogPanel.<br>
+ * To be usable with all its features, it has to be instantiated with a reference to its parent ULComponent implementing IRichDialogPanel.<br>
  * With such a reference, the FileDownloadHandler can communicate directly with its parent component through callback methods. <br>
  * The name of the callback methods has to be indicated in the constructor or with their setter methods (see further). <br>
  * (In the case of callback reference, its parent must be a RichDialogGridBagPanel).<br><br>
@@ -376,7 +376,7 @@ public class FileDownloadHandler<T extends ULCComponent & IRichDialogPanel>  imp
 	 * If the process is successfull, a success method will be called back. 
 	 * @return fileOperationMessage. If successfull, it contains the path choosed as String in its Text filed,
 	 * the File directory in the File field.<br>
-	 * If the Type is FileOperationMessage.ERROR_MESSAGE, the File is null and the text contains an error message.
+	 * If the Type is fileOperationMessage.ERROR_MESSAGE, the File is null and the text contains an error message.
 	 */
 	public FileOperationMessage selectDirOnClient(){
 		this.fileOperationMessage=new FileOperationMessage();
@@ -508,6 +508,7 @@ public class FileDownloadHandler<T extends ULCComponent & IRichDialogPanel>  imp
     	fcConfig.setFileSelectionMode(FileChooserConfig.DIRECTORIES_ONLY);
     	fcConfig.setMultiSelectionEnabled(false); // We accept just one directory at time
     	fcConfig.setApproveButtonText(this.chooseButton);
+    	fcConfig.setSelectedFile("C:/Users");
     	ClientContext.chooseFile(new IFileChooseHandler(){
     		public void onFailure(int reason, String description) {
     			makeError(reason,description);

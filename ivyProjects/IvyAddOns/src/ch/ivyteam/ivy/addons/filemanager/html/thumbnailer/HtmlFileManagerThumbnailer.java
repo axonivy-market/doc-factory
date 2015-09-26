@@ -202,8 +202,8 @@ public class HtmlFileManagerThumbnailer {
 	public OutputStream[] createFullSizeImages(byte[] input, String filename, int totalPagesForGenerating) {
 		OutputStream[] result = null;
 		try{
-			ch.ivyteam.ivy.scripting.objects.File tempFile = new ch.ivyteam.ivy.scripting.objects.File(filename);
-			tempFile.makePersistent(false);
+			ch.ivyteam.ivy.scripting.objects.File tempFile = new ch.ivyteam.ivy.scripting.objects.File(filename, true);
+			//tempFile.makePersistent(false);
 			tempFile.writeBinary(new Binary(input));
 			
 			if(checkValidMIMEtype(tempFile.getJavaFile())){

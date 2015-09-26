@@ -24,5 +24,12 @@ public interface IFolderOnServerPersistence extends IItemPersistence<FolderOnSer
 	 * @throws Exception in case of error
 	 */
 	public List<FolderOnServer> getList(String searchpath, boolean recursive) throws Exception;
+	
+	/**
+	 * <b><h2>WARNING: NOT PUBLIC API, use at own risk. This function may change or disappear in the future</h2></b>
+	 * returns true if the underlying database persistence system is an oracle product.
+	 * @return
+	 */
+	public boolean isOracle();
 
 }

@@ -19,6 +19,7 @@ public abstract class AbstractFileActionHistoryController {
 	public abstract void createNewActionHistory(long fileid, short actionType, String username, String actionInfos) throws Exception;
 	
 	/**
+	 * @deprecated use createNewActionHistory(long fileid, short actionType, String username, String actionInfos) instead.<br />
 	 * Creates a new file action history record.<br>
 	 * It takes a java.sql.connection as parameter to be able to be called from within other methods <br>
 	 * without locking another database connection during its processing.<br>
@@ -31,6 +32,7 @@ public abstract class AbstractFileActionHistoryController {
 	 * @param con a java.sql.connection to the database.
 	 * @throws Exception if the file id is not a valid id, if the file action type does not exist, or in case of SQLException.
 	 */
+	@Deprecated
 	public abstract void createNewActionHistory(long fileid, short actionType, String username, String actionInfos, Connection con) throws Exception;
 	
 	/**

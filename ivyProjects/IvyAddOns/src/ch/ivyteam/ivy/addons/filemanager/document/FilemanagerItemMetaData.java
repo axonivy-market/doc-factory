@@ -12,7 +12,7 @@ import ch.ivyteam.ivy.scripting.objects.Time;
  * @author ec
  * This POJO contains meta data information that can be used for filemanager items (Folders, Documents...)
  */
-public class FilemanagerItemMetaData implements Serializable{
+public class FilemanagerItemMetaData implements Serializable {
 
 	/**
 	 * 
