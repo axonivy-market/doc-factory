@@ -243,7 +243,8 @@ public class ChainedHashMap<K, V> implements Map<K, V>,
 		}
 	}
 
-	public boolean remove(K key, V value) {
+	//TODO name was remove but error in compilation (java 8)
+	public boolean removeIt(K key, V value) {
 		List<V> list = hashtable.get(key);
 
 		if (list == null)
