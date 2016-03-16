@@ -7,16 +7,23 @@ public final class FileLinkSQLQueries {
 	public static String TABLENAMESPACE_PLACEHOLDER ="TABLENAMESPACE";
 	
 	/**
-	 * INSERT INTO TABLENAMESPACE_PLACEHOLDER (name, directory_id, file_id, content_id, version_number, version_id) VALUES (?,?,?,?,?,?)
+	 * INSERT INTO TABLENAMESPACE_PLACEHOLDER (name, directory_id, file_id, content_id, version_number, version_id, filelinksize) VALUES (?,?,?,?,?,?,?)
 	 */
 	public static final String INSERT_FILELINK = "INSERT INTO " + TABLENAMESPACE_PLACEHOLDER
-			+ " (name, directory_id, file_id, content_id, version_number, version_id) VALUES (?,?,?,?,?,?)";
+			+ " (name, directory_id, file_id, content_id, version_number, version_id, filelinksize, creationdate) VALUES (?,?,?,?,?,?,?,?)";
 	
 	/**
-	 * UPDATE TABLENAMESPACE_PLACEHOLDER SET name = ? , directory_id = ? , content_id = ? , version_id = ? , reference_version = ? WHERE id = ?"
+	 * UPDATE TABLENAMESPACE_PLACEHOLDER SET name = ? , directory_id = ? , content_id = ? , version_id = ? , reference_version = ?,
+	 *  filelinksize = ? WHERE id = ?"
 	 */
 	public static final String UPDATE_FILELINK = "UPDATE " + TABLENAMESPACE_PLACEHOLDER
-			+ " SET name = ? , directory_id = ? , content_id = ? , version_id = ? WHERE id = ?";
+			+ " SET name = ? , directory_id = ? , content_id = ? , version_id = ?, version_number = ?, filelinksize = ? WHERE id = ?";
+	
+	/**
+	 * UPDATE TABLENAMESPACE_PLACEHOLDER SET directory_id = ? WHERE id = ?"
+	 */
+	public static final String UPDATE_FILELINK_DIRECTORY = "UPDATE " + TABLENAMESPACE_PLACEHOLDER
+			+ " SET directory_id = ?  WHERE id = ?";
 	
 	/**
 	 * DELETE FROM  TABLENAMESPACE_PLACEHOLDER WHERE id = ?

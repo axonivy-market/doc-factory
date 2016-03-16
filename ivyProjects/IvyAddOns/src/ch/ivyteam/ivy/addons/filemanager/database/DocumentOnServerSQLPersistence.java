@@ -499,14 +499,17 @@ IDocumentOnServerPersistence {
 				}
 			}
 		}
-		if(recursive && this.configuration.isActivateDirectoryTranslation()) {
+		
+		if(this.fileLinkController != null) {
+			List<FileLink> fll = this.fileLinkController.getFileLinksUnderPath(searchpath, recursive);
+			docs.addAll(fll);
+		}
+		
+		if(this.configuration.isActivateDirectoryTranslation()) {
 			for(DocumentOnServer doc: docs) {
 				String path = FolderOnServerTranslationHelper.getTranslatedPathForFolderOnServer(PathUtil.getParentDirectoryPath(doc.getPath()), configuration);
 				doc.setDisplayedPath(path+"/"+doc.getFilename());
 			}
-		}
-		if(this.fileLinkController != null) {
-			docs.addAll(this.fileLinkController.getFileLinksUnderPath(searchpath, recursive));
 		}
 		
 		return docs;

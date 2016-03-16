@@ -100,8 +100,9 @@ public class FileLinkSQLPersistence implements IFileLinkPersistence {
 		//INSERT INTO TABLENAMESPACE_PLACEHOLDER (name, directory_id, file_id, content_id, version_number, version_content_id) VALUES (?,?,?,?,?,?)
 		String query = FileLinkSQLQueries.INSERT_FILELINK.replace(FileLinkSQLQueries.TABLENAMESPACE_PLACEHOLDER, tableNamespace);
 
-		PreparedStatement stmt=null;
+		PreparedStatement stmt = null;
 		try {
+			Ivy.log().info("create filelink {0}" , fileLink.getFileLinkName());
 			stmt = this.connectionManager.getConnection().prepareStatement(query);
 			stmt.setString(1, fileLink.getFileLinkName());
 			stmt.setLong(2, fileLink.getDirectoryId());
@@ -114,7 +115,8 @@ public class FileLinkSQLPersistence implements IFileLinkPersistence {
 				stmt.setInt(5, fileLink.getVersionnumber().intValue());
 				stmt.setLong(6, 0);
 			}
-			
+			stmt.setString(7, fileLink.getFileSize());
+			stmt.setDate(8, new java.sql.Date(new Date().toJavaDate().getTime()));
 			stmt.executeUpdate();
 		} finally {
 			PersistenceConnectionManagerReleaser.release(this.connectionManager, stmt, null, "create", this.getClass());
@@ -127,15 +129,31 @@ public class FileLinkSQLPersistence implements IFileLinkPersistence {
 		FileLinkValidator.throwIllegalArgumentExceptionIfInvalid(fileLink, true);
 		//UPDATE TABLENAMESPACE_PLACEHOLDER SET name = ? , directory_id = ? , content_id = ? , version_content_id = ? , reference_version = ? WHERE id = ?
 		String query = FileLinkSQLQueries.UPDATE_FILELINK.replace(FileLinkSQLQueries.TABLENAMESPACE_PLACEHOLDER, tableNamespace);
-		PreparedStatement stmt=null;
+		PreparedStatement stmt = null;
 		try {
 			stmt = this.connectionManager.getConnection().prepareStatement(query);
 			stmt.setString(1, fileLink.getFileLinkName());
 			stmt.setLong(2, fileLink.getDirectoryId());
 			stmt.setLong(3, fileLink.getContentId());
 			stmt.setLong(4, fileLink.getVersionId());
-			stmt.setLong(5, fileLink.getFileLinkId());
+			int vn = 1;
+			if(this.configuration.isLinkToVersion()) {
+				vn = fileLink.getLinkedVersionNumber() > 0 ? fileLink.getLinkedVersionNumber() : vn;
+				if(!this.configuration.isActivateFileVersioningExtended()) {
+					stmt.setString(6, fileLink.getFileSize());
+				} else {
+					stmt.setString(6, fileLink.getFileLinkSize());
+				}
+			} else {
+				stmt.setString(6, fileLink.getFileSize());
+			}
+			if(fileLink.getVersionnumber() != null && fileLink.getVersionnumber().intValue() > 1) {
+				vn = fileLink.getVersionnumber().intValue();
+			}
+			stmt.setInt(5, vn);
+			stmt.setLong(7, fileLink.getFileLinkId());
 			stmt.executeUpdate();
+			Ivy.log().debug("Updated filelink id {0} with versionnumber {1}", fileLink.getFileLinkId(), vn);
 		} finally {
 			PersistenceConnectionManagerReleaser.release(this.connectionManager, stmt, null, "create", this.getClass());
 		}
@@ -145,23 +163,25 @@ public class FileLinkSQLPersistence implements IFileLinkPersistence {
 	@Override
 	public int updateFileLinksVersionId(long fileId, int versionNumber)
 			throws Exception {
-		if(!this.configuration.isLinkToVersion()) {
-			return 0;
-		}
+		
 		Ivy.log().info("finding fileLink to update with File version for fileid {0} and versionNumber {1}", fileId, versionNumber);
 		List<FileLink> fileLinks = new ArrayList<>();
 		for(FileLink fl: getFileLinksForFile(fileId)) {
 			if(fl.getLinkedVersionNumber() == versionNumber) {
-				Ivy.log().info("found fileLink to update with File version {0}", fl.getFileLinkName());
+				Ivy.log().debug("found fileLink to update with File version {0}", fl.getFileLinkName());
 				fileLinks.add(fl);
 			}
 		}
 		if(fileLinks.isEmpty()) {
 			return 0;
 		}
-		long versionId = getVersionIdWithFileIdAndVersionNumber(fileId, versionNumber);
+		long versionId = !this.configuration.isLinkToVersion()? 0 : getVersionIdWithFileIdAndVersionNumber(fileId, versionNumber);
 		for(FileLink fl: fileLinks) {
 			fl.setVersionId(versionId);
+			fl.setVersionnumber(versionNumber);
+			if(!this.configuration.isLinkToVersion()) {
+				fl.setVersionnumber(versionNumber + 1);
+			}
 			this.update(fl);
 		}
 		return fileLinks.size();
@@ -179,7 +199,7 @@ public class FileLinkSQLPersistence implements IFileLinkPersistence {
 			stmt.setInt(2, versionNumber);
 			rst = stmt.executeQuery();
 			if(rst.next()) {
-				Ivy.log().info("found the version id for fileid {0} and version_number {1}", fileId, versionNumber);
+				Ivy.log().debug("found the version id for fileid {0} and version_number {1}", fileId, versionNumber);
 				return rst.getLong("versionid");
 			}
 			Ivy.log().info("DID NOT found the version id for fileid {0} and version_number {1}", fileId, versionNumber);
@@ -275,7 +295,7 @@ public class FileLinkSQLPersistence implements IFileLinkPersistence {
 	private FileLink getRawFileLink(long id) throws SQLException, Exception {
 		String query = FileLinkSQLQueries.SELECT_FILELINK_BY_ID.replace(FileLinkSQLQueries.TABLENAMESPACE_PLACEHOLDER, tableNamespace);
 		FileLink fl = new FileLink();
-		PreparedStatement stmt=null;
+		PreparedStatement stmt = null;
 		ResultSet rst = null;
 		try {
 			stmt = this.connectionManager.getConnection().prepareStatement(query);
@@ -296,7 +316,7 @@ public class FileLinkSQLPersistence implements IFileLinkPersistence {
 		FileLinkValidator.throwIllegalArgumentExceptionIfInvalid(fileLink, true);
 
 		String query = FileLinkSQLQueries.DELETE_FILELINK.replace(FileLinkSQLQueries.TABLENAMESPACE_PLACEHOLDER, tableNamespace);
-		PreparedStatement stmt=null;
+		PreparedStatement stmt = null;
 		try {
 			stmt = this.connectionManager.getConnection().prepareStatement(query);
 			stmt.setLong(1, fileLink.getFileLinkId());
@@ -311,7 +331,7 @@ public class FileLinkSQLPersistence implements IFileLinkPersistence {
 		checkLong(fileId, "deleteFileLinksForFileId");
 
 		String query = FileLinkSQLQueries.DELETE_FILELINKS_BY_FILEID.replace(FileLinkSQLQueries.TABLENAMESPACE_PLACEHOLDER, tableNamespace);
-		PreparedStatement stmt=null;
+		PreparedStatement stmt = null;
 		try {
 			stmt = this.connectionManager.getConnection().prepareStatement(query);
 			stmt.setLong(1, fileId);
@@ -327,7 +347,7 @@ public class FileLinkSQLPersistence implements IFileLinkPersistence {
 		checkLong(fileVersionId, "deleteFileLinksForFileId");
 
 		String query = FileLinkSQLQueries.DELETE_FILELINKS_BY_FILEVERSION_ID.replace(FileLinkSQLQueries.TABLENAMESPACE_PLACEHOLDER, tableNamespace);
-		PreparedStatement stmt=null;
+		PreparedStatement stmt = null;
 		try {
 			stmt = this.connectionManager.getConnection().prepareStatement(query);
 			stmt.setLong(1, fileVersionId);
@@ -342,7 +362,7 @@ public class FileLinkSQLPersistence implements IFileLinkPersistence {
 		checkLong(directoryId, "deleteFileLinksInDirectory");
 
 		String query = FileLinkSQLQueries.DELETE_FILELINKS_BY_DIRECTORY.replace(FileLinkSQLQueries.TABLENAMESPACE_PLACEHOLDER, tableNamespace);
-		PreparedStatement stmt=null;
+		PreparedStatement stmt = null;
 		try {
 			stmt = this.connectionManager.getConnection().prepareStatement(query);
 			stmt.setLong(1, directoryId);
@@ -372,7 +392,7 @@ public class FileLinkSQLPersistence implements IFileLinkPersistence {
 
 		List<FileLink> fileLinks = new ArrayList<>();
 		String query = FileLinkSQLQueries.SELECT_FILELINKS_BY_FILE_ID.replace(FileLinkSQLQueries.TABLENAMESPACE_PLACEHOLDER, tableNamespace);
-		PreparedStatement stmt=null;
+		PreparedStatement stmt = null;
 		ResultSet rst = null;
 		try {
 			stmt = this.connectionManager.getConnection().prepareStatement(query);
@@ -401,7 +421,7 @@ public class FileLinkSQLPersistence implements IFileLinkPersistence {
 			return fileLinks;
 		}
 		String query = FileLinkSQLQueries.SELECT_FILELINKS_BY_FILE_VERSION_ID.replace(FileLinkSQLQueries.TABLENAMESPACE_PLACEHOLDER, tableNamespace);
-		PreparedStatement stmt=null;
+		PreparedStatement stmt = null;
 		ResultSet rst = null;
 		try {
 			stmt = this.connectionManager.getConnection().prepareStatement(query);
@@ -434,7 +454,7 @@ public class FileLinkSQLPersistence implements IFileLinkPersistence {
 			fosList.addAll(dirPersistence.getList(folderOnServer.getPath(), true));
 		}
 		String query = FileLinkSQLQueries.SELECT_FILELINKS_BY_DIRECTORY.replace(FileLinkSQLQueries.TABLENAMESPACE_PLACEHOLDER, tableNamespace);
-		PreparedStatement stmt=null;
+		PreparedStatement stmt = null;
 		ResultSet rst = null;
 		try {
 			stmt = this.connectionManager.getConnection().prepareStatement(query);
@@ -457,6 +477,40 @@ public class FileLinkSQLPersistence implements IFileLinkPersistence {
 		return fileLinks;
 	}
 
+	@Override
+	public FileLink moveFileLink(FileLink fileLink, long newDirectoryId)
+			throws Exception {
+		FileLinkValidator.throwIllegalArgumentExceptionIfInvalid(fileLink, true);
+		if(newDirectoryId <= 0) {
+			throw new IllegalArgumentException("The directory id where the FileLink should be moved must be greater than zero.");
+		}
+		String query = FileLinkSQLQueries.UPDATE_FILELINK_DIRECTORY.replace(FileLinkSQLQueries.TABLENAMESPACE_PLACEHOLDER, tableNamespace);
+		PreparedStatement stmt = null;
+		
+		deleteFileLinkByNameInDirectory(newDirectoryId, fileLink.getFileLinkName());
+		try {
+			stmt = this.connectionManager.getConnection().prepareStatement(query);
+			stmt.setLong(1, newDirectoryId);
+			stmt.setLong(2, fileLink.getFileLinkId());
+			if( stmt.executeUpdate() > 0) {
+				fileLink.setDirectoryId(newDirectoryId);
+			}
+		} finally {
+			PersistenceConnectionManagerReleaser.release(this.connectionManager, stmt, null, "moveFileLink", this.getClass());
+		}
+		return fileLink;
+	}
+
+	private void deleteFileLinkByNameInDirectory(long newDirectoryId,
+			String fileLinkName) throws Exception {
+		List<FileLink> linksToCheck = this.getListInDirectory(newDirectoryId, false);
+		for(FileLink fl: linksToCheck) {
+			if(fl.getFileLinkName().equals(fileLinkName)) {
+				this.delete(fl);
+			}
+		}
+	}
+
 	private long fillFileLink(FileLink fl, ResultSet rst) throws SQLException {
 		fl.setFileLinkId(rst.getLong("id"));
 		long fileId = rst.getLong("file_id");
@@ -468,6 +522,7 @@ public class FileLinkSQLPersistence implements IFileLinkPersistence {
 		fl.setVersionnumber(rst.getInt("version_number"));
 		fl.setLinkedVersionNumber(rst.getInt("version_number"));
 		fl.setLinkCreationDate(new Date(formatter.format(rst.getDate("creationdate"))));
+		fl.setFileLinkSize(rst.getString("filelinksize"));
 		fl.setLinkCreationTime(new Time(DateFormat.getTimeInstance(DateFormat.MEDIUM, Locale.GERMAN).format(rst.getTime("creationtime"))));
 		return fileId;
 	}
@@ -516,13 +571,13 @@ public class FileLinkSQLPersistence implements IFileLinkPersistence {
 	@Override
 	public File getContentAsTempFile(FileLink fl) throws Exception {
 		if(fl.isReferenceVersion()) {
-			Ivy.log().info("FileLink is a version. getting the version content as file");
+			Ivy.log().debug("FileLink is a version. getting the version content as file");
 			File f = getFileVersionWithJavaFile(fl);
 			fl.setIvyFile(f);
 			fl.setJavaFile(f.getJavaFile());
 			return f;
 		}
-		Ivy.log().info("FileLink is not a version. getting the content as file");
+		Ivy.log().debug("FileLink is not a version. getting the content as file");
 		this.getFileContentAsTempFile(fl);
 		return fl.getIvyFile();
 	}

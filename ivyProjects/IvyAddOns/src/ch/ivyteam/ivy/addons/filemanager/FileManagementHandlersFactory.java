@@ -198,7 +198,7 @@ public class FileManagementHandlersFactory {
 	 */
 	public static AbstractFileLinkController getFileLinkControllerInstance(BasicConfigurationController config) throws Exception {
 		checkConfiguration(config);
-		if(config.isStoreFilesInDB() && TableChecker.FileLinkTableExist(config)) {
+		if(config.isActivateFileLink() /*&& TableChecker.FileLinkTableExist(config)*/) {
 			return new FileLinkController(config);
 		}
 		Ivy.log().debug("The FileLinkController cannot be instanciated possible causes: the files are not stored as BLOB in the database or the FileLink table does not exist.");

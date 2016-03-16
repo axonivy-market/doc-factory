@@ -23,6 +23,8 @@ public class FileLink extends DocumentOnServer {
 	private long versionId;
 	// if the file versioning feature is activated, each fileLink links to a fixed version number
 	private int linkedVersionNumber;
+	// The fileLink size. Same as the document one if the configuration linkToVersion property is false, else same as the version's link. Expressed in bytes, Kb or Mb.
+	private String fileLinkSize;
 	
 	private Date linkCreationDate;
 	private Time linkCreationTime;
@@ -101,6 +103,14 @@ public class FileLink extends DocumentOnServer {
 
 	public void setLinkCreationTime(Time linkCreationTime) {
 		this.linkCreationTime = linkCreationTime;
+	}
+
+	public String getFileLinkSize() {
+		return fileLinkSize;
+	}
+
+	public void setFileLinkSize(String fileLinkSize) {
+		this.fileLinkSize = fileLinkSize;
 	}
 	
 }
