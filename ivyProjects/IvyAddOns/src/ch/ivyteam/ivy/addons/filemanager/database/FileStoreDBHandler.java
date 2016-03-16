@@ -218,7 +218,7 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 		if(this.config.isActivateFileLink()) {
 			try {
 				this.fileLinkController = FileManagementHandlersFactory.getFileLinkControllerInstance(_conf);
-				if(this.activateFileVersioning && this.config.isLinkToVersion()) {
+				if(this.activateFileVersioning) {
 					this.fileVersionController.addFileVersionActionListener(fileLinkController);
 				}
 			} catch (Exception ex) {
@@ -815,8 +815,11 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 			lFos.addAll(this.getListDirectoriesUnderPath(_path));
 			u = Ivy.session().getSessionUser();
 			for(DocumentOnServer doc:l) {
+				String documentParentPath = (doc instanceof FileLink)?  
+						PathUtil.getParentDirectoryPath(((FileLink) doc).getFileLinkPath()) : 
+							PathUtil.getParentDirectoryPath(doc.getPath());
 				for (FolderOnServer fos: lFos) {
-					if(fos.getPath().equals(PathUtil.getParentDirectoryPath(doc.getPath()))) {
+					if(fos.getPath().equals(documentParentPath)) {
 						if(this.config.getSecurityHandler().hasRight(null, SecurityRightsEnum.OPEN_DIRECTORY_RIGHT, fos, u, null).isAllow()) {
 							doc.setCanUserDelete(this.config.getSecurityHandler().hasRight(null, SecurityRightsEnum.DELETE_FILES_RIGHT, fos, u, null).isAllow());
 							doc.setCanUserRead(true);
@@ -1793,13 +1796,13 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 			fl.setFileLinkPath(destination+fl.getFileLinkName());
 			this.fileLinkController.moveFileLink((FileLink) document, destination);
 			id = fl.getFileLinkId();
-			actionMessage = actualPath +" -> "+fl.getFileLinkPath();
+			actionMessage = actualPath +" -> " + fl.getFileLinkPath();
 		} else {
 			String oldPlace = document.getPath();
 			document.setPath(destination+document.getFilename());
 			this.docPersistence.update(document);
 			id = Long.parseLong(document.getFileID());
-			actionMessage = oldPlace +" -> "+destination+document.getFilename();
+			actionMessage = oldPlace +" -> " + destination+document.getFilename();
 		}
 		if(this.activateFileActionHistory && this.fileActionHistoryController.getConfig().isMoveFileTracked()) {
 			this.fileActionHistoryController.createNewActionHistory(id, 

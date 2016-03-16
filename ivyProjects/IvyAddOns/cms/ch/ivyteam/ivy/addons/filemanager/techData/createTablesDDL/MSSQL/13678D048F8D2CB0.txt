@@ -82,7 +82,20 @@ CREATE TABLE dbo.file_version_content
 )
 GO
 
+/********* FILE ARCHIVE TRACKER ********/
+
+CREATE TABLE dbo.file_archive_tracker
+(
+  id BIGINT IDENTITY NOT NULL,
+  fileid BIGINT NOT NULL,
+  versionnumber INT NOT NULL,
+  CONSTRAINT file_archive_tracker_pkey PRIMARY KEY (id),
+  CONSTRAINT file_archive_tracker_fileid_versionnumber_key UNIQUE (fileid, versionnumber)
+)
+GO
+
 /********* FILE TYPES FEATURE **********/
+
 CREATE TABLE dbo.filetype
 (
 	id      BIGINT IDENTITY NOT NULL,
@@ -177,3 +190,71 @@ GO
 INSERT INTO dbo.fmlanguages(isoname) VALUES ('EN');
 INSERT INTO dbo.fmlanguages(isoname) VALUES ('DE');
 INSERT INTO dbo.fmlanguages(isoname) VALUES ('FR');
+
+/****** FileLinks Feature ***********/
+
+CREATE TABLE [dbo].[file_links](
+	[id] [bigint] IDENTITY(1,1) NOT NULL,
+	[directory_id] [int] NOT NULL,
+	[file_id] [bigint] NOT NULL,
+	[content_id] [bigint] NOT NULL,
+	[version_number] [int] NULL,
+	[version_id] [int] NULL,
+	[name] [varchar](255) NOT NULL,
+	[creationdate] [date] NOT NULL,
+	[creationtime] [time](7) NULL,
+	[filelinksize] [varchar](20) NOT NULL,
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+ALTER TABLE [dbo].[file_links] ADD  CONSTRAINT [file_links_creationdate]  DEFAULT (getdate()) FOR [creationdate]
+GO
+
+ALTER TABLE [dbo].[file_links] ADD  CONSTRAINT [file_links_creationtime]  DEFAULT (getdate()) FOR [creationtime]
+GO
+
+ALTER TABLE [dbo].[file_links]  WITH CHECK ADD  CONSTRAINT [file_links_directory_fk] FOREIGN KEY([directory_id])
+REFERENCES [dbo].[directories] ([id])
+ON DELETE CASCADE
+GO
+
+ALTER TABLE [dbo].[file_links] CHECK CONSTRAINT [file_links_directory_fk]
+GO
+
+ALTER TABLE [dbo].[file_links]  WITH CHECK ADD  CONSTRAINT [file_links_uploadedfiles_fk] FOREIGN KEY([file_id])
+REFERENCES [dbo].[uploadedfiles] ([FileId])
+ON DELETE CASCADE
+GO
+
+ALTER TABLE [dbo].[file_links] CHECK CONSTRAINT [file_links_uploadedfiles_fk]
+GO
+
+/****** Thumbnails for HTML Filemanager ***********/
+
+CREATE TABLE [dbo].[thumbnailcontent](
+	[id] [int] IDENTITY NOT NULL,
+	[org_file_id] [int] NOT NULL,
+	[thumb_content] [varbinary](max) NULL,
+	[creation_date] [varchar](10) NULL,
+	[creation_time] [varchar](8) NULL,
+	[use_default] [bit] NOT NULL,
+	[org_modificationDate] [VARCHAR](10) NULL,
+	[org_modificationTime] [VARCHAR](8) NULL,
+ CONSTRAINT [PK__thumbnailcontent] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY],
+ CONSTRAINT [UQ__thumbnailcontent] UNIQUE NONCLUSTERED 
+(
+	[org_file_id] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO

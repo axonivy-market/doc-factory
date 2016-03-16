@@ -48,9 +48,12 @@ import com.aspose.words.SectionStart;
  */
 public class AsposeDocFactory extends BaseDocFactory{
 
-	/** The supportedFormat in this implementation of the BaseDocFactory */
-	static final public String[] supportedOutputFormats = new String[] {"doc", "docx", "html", "txt", "pdf"};
-
+	/** The supportedFormat in this implementation of the BaseDocFactory. 
+	 * Deprecated: please use {@link BaseDocFactory#SUPPORTED_OUTPUT_FORMATS} instead
+	 * */
+    @Deprecated
+	public static final String[] supportedOutputFormats = SUPPORTED_OUTPUT_FORMATS;
+	
 	/** Aspose.Word Document objects used to perform the document merge (letter generation with MergeFields)*/
 	private Document doc, docDest;
 
@@ -885,8 +888,8 @@ public class AsposeDocFactory extends BaseDocFactory{
 	 */
 	private int getFormatPosition(String format, int default_format_position_if_not_found) {
 		int a=default_format_position_if_not_found;
-		for(int i =0; i<supportedOutputFormats.length;i++) {
-			if(format.trim().equalsIgnoreCase(supportedOutputFormats[i])) {
+		for(int i =0; i<SUPPORTED_OUTPUT_FORMATS.length;i++) {
+			if(format.trim().equalsIgnoreCase(SUPPORTED_OUTPUT_FORMATS[i])) {
 				a=i;
 				break;
 			}
@@ -1004,8 +1007,8 @@ public class AsposeDocFactory extends BaseDocFactory{
 		boolean flag = false;
 		String s = format;
 		if(s.startsWith(".")) s=format.substring(1);
-		for(int i =0; i<supportedOutputFormats.length;i++) {
-			if(s.trim().equalsIgnoreCase(supportedOutputFormats[i])) {
+		for(int i =0; i<SUPPORTED_OUTPUT_FORMATS.length;i++) {
+			if(s.trim().equalsIgnoreCase(SUPPORTED_OUTPUT_FORMATS[i])) {
 				flag=true;
 				break;
 			}
@@ -1018,7 +1021,7 @@ public class AsposeDocFactory extends BaseDocFactory{
 	 * @see ch.ivyteam.ivy.addons.docfactory.BaseDocFactory#getSupportedFormats()
 	 */
 	public static String[] getSupportedFormats(){
-		return supportedOutputFormats;
+		return SUPPORTED_OUTPUT_FORMATS;
 	}
 
 

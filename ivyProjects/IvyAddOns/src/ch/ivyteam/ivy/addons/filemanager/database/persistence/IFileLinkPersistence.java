@@ -103,5 +103,14 @@ public interface IFileLinkPersistence extends IItemPersistence<FileLink>{
 	 * @return the number of FileLinks modified.
 	 */
 	int updateFileLinksVersionId(long fileId, int versionNumber) throws Exception;
+	
+	/**
+	 * moves the given fileLink to the directory denoted by the given directory id
+	 * @param fileLink the fileLink to move. Cannot be null.
+	 * @param newDirectoryId the new directory id as long. Must be greater than zero.
+	 * @return the moved FileLink
+	 * @throws Exception if an error occurs. Example: the destination directory does not exists etc...
+	 */
+	FileLink moveFileLink(FileLink fileLink, long newDirectoryId) throws Exception;
 		
 }

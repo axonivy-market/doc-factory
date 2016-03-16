@@ -1,6 +1,11 @@
 =============================== 
-IvyAddons 6000000 Release Notes 
+IvyAddons 6010000 Release Notes 
 ===============================
+
+* Issue 25766: Filemanager / File Links: translated dir names are not displayed correctly in info bar
+* Issue 25767: Filemanager Filelinks: Filelinks are wrong listed in show recursive mode. 
+This bug occurs if the Security and the Directory translation are activated. 
+The filelinks located in the selected folder are not displayed if the path contains some translated directories in recursive mode.
 
 =============================== 
 IvyAddons 5010800 Release Notes 

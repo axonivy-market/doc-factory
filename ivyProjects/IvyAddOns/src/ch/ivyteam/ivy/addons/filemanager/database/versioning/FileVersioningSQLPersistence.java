@@ -600,6 +600,7 @@ public class FileVersioningSQLPersistence implements IFileVersionPersistence {
 		} finally {
 			PersistenceConnectionManagerReleaser.release(this.connectionManager, stmt, rst, "rollbackLastVersionAsActiveDocument", this.getClass());
 		}
+		this.docPersistence.update(this.docPersistence.getDocumentOnServerWithJavaFile(fileId));
 		return fv;
 	}
 	
