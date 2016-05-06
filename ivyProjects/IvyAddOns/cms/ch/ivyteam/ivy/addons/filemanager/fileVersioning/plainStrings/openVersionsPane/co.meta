@@ -1,0 +1,4 @@
+co: name={openVersionsPane} description={} changed={2012-02-13 20:29:10 CET} changedby={ec} visualorder={0} guid={135782FD638F8F3D} parentguid={} typeguid={E6AFEA2034301F66} id={} parentid={} typeid={}
+val: guid={1357830AEB85DA64} datatype={} isdefault={false} langid={fr} description={} validfrom={2012-02-13 20:28:33 CET} validto={} changed={2012-02-13 20:29:10 CET} changedby={ec} properties={} id={}
+val: guid={135782FD63CFAF02} datatype={} isdefault={true} langid={en} description={} validfrom={2012-02-13 20:28:15 CET} validto={} changed={2012-02-13 20:29:10 CET} changedby={ec} properties={} id={}
+val: guid={1357830AED85C1E5} datatype={} isdefault={false} langid={de} description={} validfrom={2012-02-13 20:28:31 CET} validto={} changed={2012-02-13 20:29:10 CET} changedby={ec} properties={} id={}

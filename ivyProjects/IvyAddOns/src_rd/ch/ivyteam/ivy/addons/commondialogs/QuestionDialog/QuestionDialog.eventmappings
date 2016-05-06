@@ -1,0 +1,8 @@
+# Xpert.ivy RichDialog Event-Mapping Data
+# 2012-08-10 16:16:40 | 4.4.0.40304 | 1.0
+~@RD_METHODCALL[askQuestion(String,String,List<String>)]--->ch.ivyteam.ivy.process.ProcessStart:1180E439FFBB432D/1180E4A519E73650
+~@RD_METHODCALL[askQuestion(String,String,List<String>,String)]--->ch.ivyteam.ivy.process.ProcessStart:1180E439FFBB432D/11C8E1E34E2E22EE
+~@RD_METHODCALL[askQuestionWithTitle(String,String,String,List<String>)]--->ch.ivyteam.ivy.process.ProcessStart:1180E439FFBB432D/119CD4D601442B36
+~@RD_METHODCALL[askQuestionWithTitle(String,String,String,List<String>,String)]--->ch.ivyteam.ivy.process.ProcessStart:1180E439FFBB432D/11C8E1E22C2262AB
+~@RD_METHODCALL[askQuestionWithTitleAndCustomButtons(String,String,String,List<String>,List<String>,List<String>,String)]--->ch.ivyteam.ivy.process.ProcessStart:1180E439FFBB432D/012181CD5DA9B891
+~@RD_METHODCALL[start()]--->ch.ivyteam.ivy.process.ProcessStart:1180E439FFBB432D/139122E7D421C1B7

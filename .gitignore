@@ -1,1 +1,5 @@
 doc/IvyAddOnsGuide/DocFactory/images/DocFactory/Thumbs.db
+ivyProjects/IvyAddOns/classes
+ivyProjects/IvyAddOns/logs
+ivyProjects/IvyAddOns/src_dataClasses/*
+ivyProjects/IvyAddOns/target

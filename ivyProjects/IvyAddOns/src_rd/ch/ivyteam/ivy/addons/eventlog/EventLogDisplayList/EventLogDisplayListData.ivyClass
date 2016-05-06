@@ -1,0 +1,19 @@
+EventLogDisplayListData #class
+ch.ivyteam.ivy.addons.eventlog.EventLogDisplayList #namespace
+eventLogs List<ch.ivyteam.ivy.addons.data.technical.eventlog.EventLog> #field
+eventLogs 'The event logs to hadle and display on UI.' #fieldComment
+wfCase ch.ivyteam.ivy.workflow.ICase #field
+wfCase 'The case for which event logs have to be displayed.' #fieldComment
+ivyResultStatus ch.ivyteam.ivy.addons.data.technical.IvyResultStatus #field
+windowTitle String #field
+windowTitle 'It containts the title to display on the Rich Dialog (error message, message, etc).' #fieldComment
+silentMode Boolean #field
+silentMode 'If false, then display the error dialog to the user; otherwise no error dialog to the end user...' #fieldComment
+displayMode int #field
+displayMode '0=all events, 1=only business events' #fieldComment
+businessObject ch.ivyteam.ivy.addons.data.technical.eventlog.EventLogSearchByBusinessObject #field
+businessObject 'Object contain information to search event log entries' #fieldComment
+cmsContext List<String> #field
+cmsContext 'Where the column headers can be found in the CMS.' #fieldComment
+columns List<ch.ivyteam.ivy.addons.eventlog.EventLogProperty> #field
+columns 'List of the column to display in the right sequence. Only EVENT_DATE, EVENT_TIME, EVENT_TYPE, EVENT_SUB_TYPE, OBJECT_ID, MESSAGE, SEVERITY, GROUPID, IS_BUSINESS_EVENT, INITIATOR, USER_NAME, SOURCE can be used.' #fieldComment

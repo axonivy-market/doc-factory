@@ -1,0 +1,109 @@
+=============================== 
+IvyAddons 6010000 Release Notes 
+===============================
+
+* Issue 25766: Filemanager / File Links: translated dir names are not displayed correctly in info bar
+* Issue 25767: Filemanager Filelinks: Filelinks are wrong listed in show recursive mode. 
+This bug occurs if the Security and the Directory translation are activated. 
+The filelinks located in the selected folder are not displayed if the path contains some translated directories in recursive mode.
+
+=============================== 
+IvyAddons 5010800 Release Notes 
+===============================
+
+* Issue 25687: Upgrade the Aspose libraries to the following versions:
+aspose.slides-15.6.0
+aspose-cells-8.5.1
+aspose-pdf-10.6.1
+aspose-words-15.7.0-jdk16
+
+=============================== 
+IvyAddons 5010600 Release Notes 
+===============================
+
+* Issue 25423: Bug fix. Filemanager: file tags are not deleted if related file is removed.
+The result of this bug is that some tags remain in the db without reference to any existing file. No user can see the bug but your database contains some unnecessary data.
+Workaround to manually clean the db (DISCLAIMER: PLEASE ALWAYS DO A DB BACKUP BEFORE USING SUCH A QUERY):
+delete from tags t where not exists (select * from uploadedfiles f where f.fileid = t.fileid);
+
+* Issue 25439: Improvement. HTML FileManager API in IvyAddons: HtmlFileManagerThumbnailer createFullSizeImages method should create temp images only.
+* Issue 25440: Improvement. Filemanager: when displayed recursively the selected document displays its path in the filemanager info.
+If the Directory Translation feature is activated, the path is displayed with the translated directories names.
+
+* Issue 25558: new feature FileLinks. There is the possibility to create some fileLinks with the API. A FileLink links to an existing document or version.
+To be able to activate this feature you have to create a new file_links table in the filemanager db. For more info about the create SQL Scripts, 
+please look at the following folder in this project: sql/5010600/
+* Issue 25559: Improvement. Filemanager. When the Filemanager loads the files, a check is made to unlock automatically all the files that are locked 
+by users which session is not active anymore. This allows avoiding that files stay in locked state after sessions have timed-out.
+
+
+
+=============================== 
+IvyAddons 5010300 Release Notes 
+===============================
+
+* Issue 25160: Bug fix. Filemanager Oracle Db- Copy-paste of a file which name contains "(" or ")"fails with
+Oracle Exception: SQLDataException: ORA-01424: missing or illegal character following the escape character
+* Issue 25161: New Feature. File Archive protection. When activated, the users cannot delete a file version that has been already versioned as archive.
+* Issue 25218: New Feature. DocumentListFilter. If set in the filemanager configuration object, the DocumentPersistence API returns only documents accepted by the filter.
+* Issue 25243: Bug fix. FileType - Oracle db. Cannot find FileTypes which appname is empty (oracle transforms the empty strings to null).
+* Issue 25268: New Feature. FileTypeListFilter feature to be able to filter the fileTypes in methods that list them.
+* Issue 25295: New Feature. Filemanager and FileListTable - Before and after files upload custom actions possibility. Two callables have been placed at key logical points
+of the file upload workflow. One after the files have been selected for upload and before they are uploaded, and a second one after the files have been
+uploaded and integrated in the filemanagement database.
+* Issue 25312: New Feature.	Filemanager: moveDirectory API function needed.
+
+=============================== 
+IvyAddons 5010000 Release Notes 
+===============================
+First official release version of the IvyAddons for ivy 5.1.
+
+* Issue 25115:
+The Aspose Total license has been upgraded, so that we can upgrade to the newest aspose libraries versions:
+aspose.slides-14.5.0.jar
+aspose-cells-8.1.2.jar
+aspose-pdf-9.3.1-jdk16.jar
+aspose-words-14.7.0-jdk16.jar
+* Issue #25095: Filemanager - oracle db. The security version is not detected properly, a a consequence the new security rights are ignored.
+* Issue #25096: Filemanager: Fix security feature activated
+  - files listed in recursive mode, the files the user can edit appears as read-only files.
+  - security version 2, user cannot rename files if he has the file update right and not write parent right.
+  - security version 2, user cannot paste files if he has the file create right and not write parent right.
+* Issue #25097: Filemanager-HTML Thumbnailer new version. Improvement of the thumbnailing with different images sizes. icepdf jar in the thumbnailer lib.
+* Issue #33769: Start Filemanager with max upload size less than 1024 Kb. 
+The max size filtering works fine, but the warning message shown to the user indicates a wrong max value: 
+it shows the bytes max values and not the Kb. 
+
+
+
+=============================== 
+IvyAddons 5001100 Release Notes 
+===============================
+* Issue #24937: Filemanager with Oracle DB - NPE if file has 0 byte
+* Issue #24938: Filemanager directory translation feature - the directories are displayed without translation after calling the RDC setServerPath method.
+* Issue #24946: Filemanager Oracle Db - Directory translation activated. Rename directory function throws NPE if the directory has no translation in the user language.
+* Issue #24947: Filemanager PostgreSQL version 9.0 and below - files stored on the server file system. SQL Exception "unterminated quoted String at or near "'\'" if path contains "_" char
+* Issue #24951: IvyAddons - FileListTable RDC Pb with Scrollbar after resizing the window. The scrollbar will not be displayed as needed.
+
+New: presence of a pom.xml for maven build.
+
+=============================== 
+IvyAddons 5001000 Release Notes 
+===============================
+
+* Issue #24900 (Bug): Filemanager, the use of the getDirectory API function NPE may be thrown with security activated and folder does not exist.
+* Issue #24901: Ivyaddons, old POI 3.2 jar must be deleted as it was replaced by the newest one - 3.9 version.
+* Issue #24914: There are few GUI bugs and improvements needs in the FileListTable RDC:
+			- the MenuItems for delete, edit, unlock file should not be enabled if no document is selected,
+			- the setToolbarVisible function does not work. (the toolbar remains visible),
+			- set readOnly function: the delete, unlock and upload buttons and menu items should not be visible.
+* Issue #24918 (Bug): SimpleFileChooserDialog store Files in DB + security activated: Exception in Filemanagement System after uploading a file in new directory 			
+* Issue #24919 (Improvement): Div. RDCs File management Buttons are not rendered properly with Xpertline Look And Feel.
+With this Look and Feel the button background is black and the HTML Labels in the buttons remain black also...
+
+=============================== 
+IvyAddons 5000900 Release Notes 
+===============================
+
+* Issue #24801 (Bug): Filemanager and Oracle DB. A lot of Open Cursors are not closed.
+* Issue #24807 (Feature): DocFactory. Provide a light-weight possibility to extend the MailMerging Callback. See ch.ivyteam.ivy.addons.docfactory.aspose.AsposeFieldMergingCallback.java

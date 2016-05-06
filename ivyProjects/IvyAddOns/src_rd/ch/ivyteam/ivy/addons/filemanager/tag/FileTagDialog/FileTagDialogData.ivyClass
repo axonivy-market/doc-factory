@@ -1,0 +1,18 @@
+FileTagDialogData #class
+ch.ivyteam.ivy.addons.filemanager.tag.FileTagDialog #namespace
+errorUtil ch.ivyteam.ivy.addons.filemanager.ErrorUtil #field
+errorUtil PERSISTENT #fieldModifier
+configurationController ch.ivyteam.ivy.addons.filemanager.configuration.BasicConfigurationController #field
+configurationController PERSISTENT #fieldModifier
+allowEdit Boolean #field
+allowEdit PERSISTENT #fieldModifier
+parentDocumentOnServer ch.ivyteam.ivy.addons.filemanager.DocumentOnServer #field
+parentDocumentOnServer PERSISTENT #fieldModifier
+tagsList List<ch.ivyteam.ivy.addons.filemanager.FileTag> #field
+tagsList PERSISTENT #fieldModifier
+selectedTag ch.ivyteam.ivy.addons.filemanager.FileTag #field
+selectedTag PERSISTENT #fieldModifier
+fileTagController ch.ivyteam.ivy.addons.filemanager.database.filetag.FileTagsController #field
+fileTagController PERSISTENT #fieldModifier
+modCancelled Boolean #field
+modCancelled PERSISTENT #fieldModifier

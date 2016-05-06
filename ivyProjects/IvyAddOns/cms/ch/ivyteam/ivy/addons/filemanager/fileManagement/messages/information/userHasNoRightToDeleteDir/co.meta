@@ -1,0 +1,4 @@
+co: name={userHasNoRightToDeleteDir} description={} changed={2013-03-22 15:25:49 CET} changedby={ec} visualorder={0} guid={13D927D12B13B3E2} parentguid={} typeguid={E6AFEA202AFB4911} id={} parentid={} typeid={}
+val: guid={13D927D12C06EC0F} datatype={} isdefault={false} langid={de} description={} validfrom={2009-08-31 16:11:20 CEST} validto={} changed={2013-03-22 15:25:49 CET} changedby={ec} properties={} id={}
+val: guid={13D927D12B562A67} datatype={} isdefault={true} langid={en} description={} validfrom={2009-08-31 16:08:39 CEST} validto={} changed={2013-03-22 15:25:49 CET} changedby={ec} properties={} id={}
+val: guid={13D927D12C94C7A2} datatype={} isdefault={false} langid={fr} description={} validfrom={2009-08-31 16:10:05 CEST} validto={} changed={2013-03-22 15:25:49 CET} changedby={ec} properties={} id={}

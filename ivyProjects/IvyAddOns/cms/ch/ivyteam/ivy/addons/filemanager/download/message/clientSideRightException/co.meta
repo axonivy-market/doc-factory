@@ -1,0 +1,4 @@
+co: name={clientSideRightException} description={} changed={2013-07-19 14:52:29 CEST} changedby={ec} visualorder={0} guid={13FF302213685021} parentguid={} typeguid={E6AFEA2034301F66} id={} parentid={} typeid={}
+val: guid={13FF302C35FB28B7} datatype={} isdefault={false} langid={de} description={} validfrom={2013-07-18 20:20:11 CEST} validto={} changed={2013-07-19 14:52:29 CEST} changedby={ec} properties={} id={}
+val: guid={13FF302B471BDB01} datatype={} isdefault={false} langid={fr} description={} validfrom={2013-07-18 20:20:08 CEST} validto={} changed={2013-07-18 20:23:34 CEST} changedby={ec} properties={} id={}
+val: guid={13FF302213CB316F} datatype={} isdefault={true} langid={en} description={} validfrom={2013-07-18 20:19:30 CEST} validto={} changed={2013-07-18 20:20:08 CEST} changedby={ec} properties={} id={}

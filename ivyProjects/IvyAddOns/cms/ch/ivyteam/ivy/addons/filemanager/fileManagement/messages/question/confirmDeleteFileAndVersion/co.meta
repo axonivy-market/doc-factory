@@ -1,0 +1,4 @@
+co: name={confirmDeleteFileAndVersion} description={} changed={2015-05-22 16:09:00 CEST} changedby={ec} visualorder={0} guid={13AC2016AAA29AF2} parentguid={} typeguid={E6AFEA202AFB4911} id={} parentid={} typeid={}
+val: guid={13AC2016AE18B32F} datatype={} isdefault={true} langid={en} description={} validfrom={2009-08-31 16:57:04 CEST} validto={} changed={2015-05-22 16:08:55 CEST} changedby={ec} properties={} id={}
+val: guid={13AC2016AC3BF10B} datatype={} isdefault={false} langid={de} description={} validfrom={2009-08-31 17:00:30 CEST} validto={} changed={2015-05-22 16:09:00 CEST} changedby={ec} properties={} id={}
+val: guid={13AC2016AB3EB4ED} datatype={} isdefault={false} langid={fr} description={} validfrom={2009-08-31 16:58:19 CEST} validto={} changed={2015-05-22 16:08:55 CEST} changedby={ec} properties={} id={}

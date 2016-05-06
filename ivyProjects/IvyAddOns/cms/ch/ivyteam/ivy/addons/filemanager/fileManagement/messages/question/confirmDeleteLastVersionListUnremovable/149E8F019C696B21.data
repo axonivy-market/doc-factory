@@ -1,0 +1,10 @@
+<P>
+The selected documents' active version will be deleted. Their penultimate version will be active again. <BR>
+The selected documents without older version will be totally deleted. <BR>
+%s
+Do you want to continue?
+</P>
+<P><BR />
+Info: these documents won't be deleted because they are being edited.<BR />
+EDITEDFILES
+</P>
