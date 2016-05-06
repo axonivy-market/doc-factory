@@ -145,3 +145,5 @@ systemEventString String #field
 systemEventString PERSISTENT #fieldModifier
 systemEventParameter Object #field
 systemEventParameter PERSISTENT #fieldModifier
+canUserOverwriteFilesByUpload Boolean #field
+canUserOverwriteFilesByUpload PERSISTENT #fieldModifier
