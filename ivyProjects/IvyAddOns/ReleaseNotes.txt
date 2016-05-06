@@ -1,4 +1,15 @@
 =============================== 
+IvyAddons 6010100 Release Notes 
+===============================
+
+* Issue 25812: IvyAddons Filemanager Security: User can override files without "FILE_UPDATE" right. This is wrong
+The User has only "FILE_CREATE" rights: he can still upload files that override other files...
+* Issue 25813: IvyAddons FileManager: NPE at server side (ULC) if new Document Version has been created through 
+new upload and the user select the file on the GUI while displaying the files in recursive mode.
+* Issue 25814: FileManager java.util.MissingFormatArgumentException in API FileHandler deleteDirectoryAsAdministrator method. 
+Only if File Archive protection activated.
+
+=============================== 
 IvyAddons 6010000 Release Notes 
 ===============================
 

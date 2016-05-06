@@ -1,5 +1,6 @@
 package ch.ivyteam.ivy.addons.filemanager.FileManager;
 import ch.ivyteam.ivy.addons.filemanager.DocumentOnServer;
+import ch.ivyteam.ivy.addons.filemanager.FileHandler;
 import ch.ivyteam.ivy.addons.filemanager.FolderOnServer;
 import ch.ivyteam.ivy.addons.filemanager.configuration.FileManagerConfigurationController;
 import ch.ivyteam.ivy.addons.filemanager.database.filelink.FileLink;
@@ -53,6 +54,22 @@ public class FileManagerPanelGuiManager {
 	public static void manageDocumentSelectionChange(FileManagerPanel panel, FileManagerConfigurationController configuration, 
 			FolderOnServer selectedDirectory, boolean isUserFileManagerAdmin) {
 		DocumentOnServer doc = (DocumentOnServer) panel.getFilesTable().getSelectedListEntry();
+		boolean canDelete = true;
+		boolean canWrite = true;
+		if(configuration.isActivateSecurity()) {
+			try {
+				java.util.List<DocumentOnServer> docs =configuration.getFileManagementHandler().getDocumentsInPath(FileHandler.getFileDirectoryPath(new java.io.File(doc.getPath())), false);
+				for(DocumentOnServer d: docs) {
+					if(d.getFileID().equals(doc.getFileID())) {
+						canDelete = d.getCanUserDelete();
+						canWrite = d.getCanUserWrite();
+						break;
+					}
+				}
+			} catch (Exception e) {
+				Ivy.log().error(e.getMessage(), e);
+			}
+		}
 		if(panel.getFilesTable().getSelectedListEntry() instanceof FileLink) {
 			doc =  (FileLink) panel.getFilesTable().getSelectedListEntry();
 		}
@@ -79,19 +96,20 @@ public class FileManagerPanelGuiManager {
 			setFilesActionMenusStateWithSecurity(panel, configuration, isUserFileManagerAdmin, selectedDirectory);
 
 			if(configuration.isDiplayFilesRecursively()){
-				panel.getDeleteMenuItem().setEnabled(doc.getCanUserDelete());
-				panel.getDeleteButton().setEnabled(doc.getCanUserDelete());
-				panel.getDelete2Button().setEnabled(doc.getCanUserDelete());
+				
+				panel.getDeleteMenuItem().setEnabled(canDelete);
+				panel.getDeleteButton().setEnabled(canDelete);
+				panel.getDelete2Button().setEnabled(canDelete);
 
-				panel.getSetDescriptionMenuItem().setEnabled(doc.getCanUserWrite());
-				panel.getNewVersionMenuItem().setEnabled(doc.getCanUserWrite());
-				panel.getMakeVersionMenuItem().setEnabled(doc.getCanUserWrite());
-				panel.getFileTypeChooserMenuItem().setEnabled(doc.getCanUserWrite());
-				panel.getFileTypeManagerMenuItem().setEnabled(doc.getCanUserWrite());
-				panel.getEditMenuItem().setEnabled(doc.getCanUserWrite());
-				panel.getEditButton().setIconUri(doc.getCanUserWrite()?
+				panel.getSetDescriptionMenuItem().setEnabled(canWrite);
+				panel.getNewVersionMenuItem().setEnabled(canWrite);
+				panel.getMakeVersionMenuItem().setEnabled(canWrite);
+				panel.getFileTypeChooserMenuItem().setEnabled(canWrite);
+				panel.getFileTypeManagerMenuItem().setEnabled(canWrite);
+				panel.getEditMenuItem().setEnabled(canWrite);
+				panel.getEditButton().setIconUri(canWrite?
 						Ivy.cms().cr("/ch/ivyteam/ivy/addons/icons/write/48") : Ivy.cms().cr("/ch/ivyteam/ivy/addons/icons/file/48"));
-				panel.getEditButton().setToolTipText(doc.getCanUserWrite()?
+				panel.getEditButton().setToolTipText(canWrite?
 						Ivy.cms().co("/ch/ivyteam/ivy/addons/filemanager/fileManagement/tooltips/edit") : 
 							Ivy.cms().co("/ch/ivyteam/ivy/addons/filemanager/fileManagement/tooltips/read"));
 			}
@@ -115,7 +133,7 @@ public class FileManagerPanelGuiManager {
 				panel.getReadFileMenuItem().setEnabled(false);
 			}
 			if(configuration.isDiplayFilesRecursively() && configuration.isActivateSecurity()){
-				panel.getRefreshSelectedFolderButton().setEnabled(doc.getCanUserWrite());
+				panel.getRefreshSelectedFolderButton().setEnabled(canWrite);
 			}
 		}
 		panel.getOpenVersionsMenuItem().setEnabled(doc.getVersionnumber().intValue() > 1);
