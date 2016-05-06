@@ -1,4 +1,0 @@
-co: name={overwriteFileCreatingNewVersion} description={} changed={2013-03-25 19:07:47 CET} changedby={ec} visualorder={0} guid={13DA2B3593030CC5} parentguid={} typeguid={E6AFEA202AFB4911} id={} parentid={} typeid={}
-val: guid={13DA2B3594FCE4F5} datatype={} isdefault={true} langid={en} description={} validfrom={2009-05-19 10:01:13 CEST} validto={} changed={2013-03-25 19:07:47 CET} changedby={ec} properties={} id={}
-val: guid={13DA2B35940D80E7} datatype={} isdefault={false} langid={de} description={} validfrom={2009-07-23 13:56:54 CEST} validto={} changed={2013-03-25 19:07:47 CET} changedby={ec} properties={} id={}
-val: guid={13DA2B35940BBB53} datatype={} isdefault={false} langid={fr} description={} validfrom={2009-07-23 13:56:54 CEST} validto={} changed={2013-03-25 19:07:47 CET} changedby={ec} properties={} id={}

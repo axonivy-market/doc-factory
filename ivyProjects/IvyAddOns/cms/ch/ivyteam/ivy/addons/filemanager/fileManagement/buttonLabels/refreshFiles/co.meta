@@ -1,4 +1,0 @@
-co: name={refreshFiles} description={} changed={2013-03-21 21:56:32 GMT} changedby={ec} visualorder={0} guid={13D8EF411EB176FE} parentguid={} typeguid={E6AFEA2034301F66} id={} parentid={} typeid={}
-val: guid={13D8EF411F2BBF4E} datatype={} isdefault={false} langid={fr} description={} validfrom={2009-07-23 11:56:49 GMT} validto={} changed={2013-03-21 21:56:32 GMT} changedby={ec} properties={} id={}
-val: guid={13D8EF41207595E3} datatype={} isdefault={false} langid={de} description={} validfrom={2009-07-14 09:54:49 GMT} validto={} changed={2013-03-21 21:56:32 GMT} changedby={ec} properties={} id={}
-val: guid={13D8EF411FCF02C3} datatype={} isdefault={true} langid={en} description={} validfrom={2009-06-09 12:39:46 GMT} validto={} changed={2013-03-21 21:56:32 GMT} changedby={ec} properties={} id={}

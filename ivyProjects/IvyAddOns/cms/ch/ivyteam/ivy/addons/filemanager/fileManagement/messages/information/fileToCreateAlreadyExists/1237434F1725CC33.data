@@ -1,6 +1,0 @@
-<P>The file you want to create already exists. Please choose one of the following actions: 
-
-"Overwrite" will overwrite the existing file. Its content will be lost.
- "Enter another name" you will be prompted to choose another name for the new file. 
-"Cancel" this will cancel this action.
-</P>
