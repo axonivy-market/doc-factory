@@ -2034,7 +2034,7 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 			if(this.config.isFileArchiveProtectionEnabled() && 
 					this.fileVersionController.wasFileVersionArchived(Long.parseLong(doc.getFileID()), doc.getVersionnumber().intValue())) {
 				message.setType(FileHandler.ERROR_MESSAGE);
-				message.setText(String.format(Ivy.cms().co("/ch/ivyteam/ivy/addons/filemanager/fileManagement/messages/version/FileDeleteAbordedBecauseArchiveProtection"), doc.getFilename()));
+				message.setText(String.format(Ivy.cms().co("/ch/ivyteam/ivy/addons/filemanager/fileManagement/messages/version/FileDeleteAbordedBecauseArchiveProtection"), doc.getVersionnumber().toString(), doc.getFilename()));
 				return message;
 			}
 		}
