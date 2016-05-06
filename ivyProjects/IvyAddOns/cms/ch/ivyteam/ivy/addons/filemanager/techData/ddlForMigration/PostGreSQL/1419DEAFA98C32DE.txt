@@ -1,0 +1,269 @@
+/********* FILE STORED IN DATABASE FEATURE **********/
+
+CREATE SEQUENCE directories_sequence
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+  
+CREATE TABLE directories
+  (
+  id bigint NOT NULL DEFAULT nextval('directories_sequence'::regclass),
+  dir_name character varying(255) NOT NULL,
+  dir_path character varying(750) NOT NULL,
+  creation_user_id character varying(200),
+  creation_date date,
+  creation_time time without time zone,
+  modification_user_id character varying(200),
+  modification_date date,
+  modification_time time without time zone,
+  is_protected smallint NOT NULL DEFAULT 0,
+  cmdr character varying(2048),
+  cod character varying(2048),
+  cud character varying(2048),
+  ccd character varying(2048),
+  crd character varying(2048),
+  ctd character varying(2048),
+  cdd character varying(2048),
+  cwf character varying(2048),
+  ccf character varying(2048),
+  cuf character varying(2048),
+  cdf character varying(2048), 
+  CONSTRAINT directories_pkey PRIMARY KEY (id),
+  CONSTRAINT directories_dir_path_key UNIQUE (dir_path)
+  )
+  WITH (
+  OIDS=FALSE
+);
+  
+CREATE SEQUENCE filecontent_sequence
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+  
+CREATE TABLE filecontent
+  (
+  id bigint NOT NULL DEFAULT nextval('filecontent_sequence'::regclass),
+  file_id bigint NOT NULL,
+  file_content bytea,
+  CONSTRAINT filecontent_pkey PRIMARY KEY (id),
+  CONSTRAINT filecontent_file_id_key UNIQUE (file_id)
+  )
+  WITH (
+  OIDS=FALSE
+);
+
+/********* FILE VERSIONS FEATURE **********/
+
+CREATE SEQUENCE fileversions_sequence
+        INCREMENT 1
+        MINVALUE 1
+        MAXVALUE 9223372036854775807
+        START 1
+        CACHE 1;
+        
+CREATE TABLE file_versions
+(
+  versionid bigint NOT NULL DEFAULT nextval('fileversions_sequence'::regclass),
+  file_id bigint NOT NULL,
+  version_number integer NOT NULL,
+  fvc_id bigint,
+  file_name character varying(255),
+  cdate date,
+  ctime time without time zone,
+  cuser character varying(255),
+  CONSTRAINT file_versions_pkey PRIMARY KEY (versionid)
+)
+WITH (
+  OIDS=FALSE
+);
+
+CREATE SEQUENCE fileversioncontent_sequence
+        INCREMENT 1
+        MINVALUE 1
+        MAXVALUE 9223372036854775807
+        START 1
+        CACHE 1;
+        
+CREATE TABLE file_version_content
+(
+  fvcid bigint NOT NULL DEFAULT nextval('fileversioncontent_sequence'::regclass),
+  version_id bigint NOT NULL,
+  content bytea,
+  CONSTRAINT file_version_content_pkey PRIMARY KEY (fvcid),
+  CONSTRAINT file_version_content_version_id_key UNIQUE (version_id)
+)
+WITH (
+  OIDS=FALSE
+);
+
+/********* FILE TYPES FEATURE **********/
+
+CREATE SEQUENCE filetype_sequence
+        INCREMENT 1
+        MINVALUE 1
+        MAXVALUE 9223372036854775807
+        START 1
+        CACHE 1;
+        
+CREATE TABLE filetype
+(
+  id integer NOT NULL DEFAULT nextval('filetype_sequence'::regclass),
+  name character varying(255) NOT NULL,
+  appname character varying(255) NULL,
+  CONSTRAINT filetype_pkey PRIMARY KEY (id),
+  CONSTRAINT filetype_name_appname_key UNIQUE (name,appname)
+)
+WITH (
+  OIDS=FALSE
+);
+
+/********* FILE TAGS FEATURE **********/
+
+CREATE SEQUENCE filetags_sequence
+        INCREMENT 1
+        MINVALUE 1
+        MAXVALUE 9223372036854775807
+        START 1
+        CACHE 1;
+        
+CREATE TABLE tags
+(
+  id bigint NOT NULL DEFAULT nextval('filetags_sequence'::regclass),
+  fileid bigint NOT NULL,
+  tag character varying(255) NOT NULL,
+  CONSTRAINT filetags_pkey PRIMARY KEY (id),
+  CONSTRAINT filetags_fileid_tag_key UNIQUE (fileid,tag)
+)
+WITH (
+  OIDS=FALSE
+);
+
+/********* FILE ACTION HISTORY FEATURE **********/
+
+CREATE SEQUENCE fileactiontype_sequence
+        INCREMENT 1
+        MINVALUE 1
+        MAXVALUE 9223372036854775807
+        START 1
+        CACHE 1;
+        
+CREATE TABLE fileactiontype
+(
+  id integer NOT NULL DEFAULT nextval('fileactiontype_sequence'::regclass),
+  atype integer NOT NULL,
+  en character varying(64) NOT NULL,
+  de character varying(64) NOT NULL,
+  fr character varying(64) NOT NULL,
+  CONSTRAINT fileactiontype_pkey PRIMARY KEY (id),
+  CONSTRAINT fileactiontype_ukey UNIQUE (atype)
+)
+WITH (
+  OIDS=FALSE
+);
+
+CREATE SEQUENCE fileactionhistory_sequence
+        INCREMENT 1
+        MINVALUE 1
+        MAXVALUE 9223372036854775807
+        START 1
+        CACHE 1;
+        
+CREATE TABLE fileactionhistory
+(
+  id bigint NOT NULL DEFAULT nextval('fileactionhistory_sequence'::regclass),
+  actiontype integer NOT NULL REFERENCES fileactiontype(atype),
+  file_id bigint NOT NULL,
+  usern character varying(256) NOT NULL,
+  uname character varying(1024) NOT NULL,
+  ddate date,
+  ttime time without time zone,
+  adesc character varying(1600) NOT NULL,
+  CONSTRAINT fileactionhistory_pkey PRIMARY KEY (id)
+)
+WITH (
+  OIDS=FALSE
+);
+
+INSERT INTO fileactiontype (atype,en,de,fr) VALUES (1,'File created', 'Datei kreiert' , 'Fichier créé');
+INSERT INTO fileactiontype (atype,en,de,fr) VALUES (2,'File content changed', 'Datei Inhalt geändert' , 'Fichier modifié');
+INSERT INTO fileactiontype (atype,en,de,fr) VALUES (3,'File description changed', 'Datei Beschreibung geändert', 'Description du Fichier modifiée');
+INSERT INTO fileactiontype (atype,en,de,fr) VALUES (4,'File renamed', 'Datei umbennant' , 'Fichier renommé');
+INSERT INTO fileactiontype (atype,en,de,fr) VALUES (5,'File deleted', 'Datei gelöscht' , 'Fichier supprimé');
+INSERT INTO fileactiontype (atype,en,de,fr) VALUES (6,'File downloaded', 'Datei heruntergeladen' , 'Fichier téléchargé');
+INSERT INTO fileactiontype (atype,en,de,fr) VALUES (7,'File printed', 'Datei gedruckt' , 'Fichier imprimé');
+INSERT INTO fileactiontype (atype,en,de,fr) VALUES (8,'File opened', 'Datei geöffnet' , 'Fichier ouvert');
+INSERT INTO fileactiontype (atype,en,de,fr) VALUES (9,'File copied and paste', 'Datei kopiert' , 'Fichier copié');
+INSERT INTO fileactiontype (atype,en,de,fr) VALUES (10,'File moved', 'Datei verschoben' , 'Fichier déplacé');
+INSERT INTO fileactiontype (atype,en,de,fr) VALUES (11,'New Version created', 'Neue Version erfasst' , 'Nouvelle version');
+INSERT INTO fileactiontype (atype,en,de,fr) VALUES (12,'Last version rollbacked', 'Letzte Version gelöscht' , 'Dernière version supprimée');
+
+/********* DIRECTORY AND FILETYPES TRANSLATION FEATURES **********/
+
+CREATE SEQUENCE fmlanguages_sequence
+	INCREMENT 1
+	MINVALUE 1
+	MAXVALUE 9223372036854775807
+	START 1
+	CACHE 1;
+
+CREATE TABLE public.fmlanguages
+(
+   id bigint NOT NULL DEFAULT nextval('fmlanguages_sequence'::regclass), 
+   isoname character varying(3) NOT NULL, 
+   CONSTRAINT fmlanguages_pk PRIMARY KEY (id), 
+   CONSTRAINT unique_isoname_fmlanguages UNIQUE (isoname)
+) 
+WITH (
+  OIDS = FALSE
+)
+;
+
+INSERT INTO fmlanguages(isoname) VALUES ('EN');
+INSERT INTO fmlanguages(isoname) VALUES ('DE');
+INSERT INTO fmlanguages(isoname) VALUES ('FR');
+
+CREATE SEQUENCE dirtranslation_sequence
+	INCREMENT 1
+	MINVALUE 1
+	MAXVALUE 9223372036854775807
+	START 1
+	CACHE 1;
+
+CREATE TABLE public.dirtranslation
+(
+   id bigint NOT NULL DEFAULT nextval('dirtranslation_sequence'::regclass), 
+   translateditemid bigint NOT NULL,
+   lang character varying(3) NOT NULL, 
+   tr character varying(1024) NULL,
+   CONSTRAINT dirtranslation_pk PRIMARY KEY (id), 
+   CONSTRAINT unique_dirtranslation UNIQUE (translateditemid,lang)
+) 
+WITH (
+  OIDS = FALSE
+)
+;
+
+CREATE SEQUENCE fttranslation_sequence
+	INCREMENT 1
+	MINVALUE 1
+	MAXVALUE 9223372036854775807
+	START 1
+	CACHE 1;
+
+CREATE TABLE public.fttranslation
+(
+   id bigint NOT NULL DEFAULT nextval('fttranslation_sequence'::regclass), 
+   translateditemid bigint NOT NULL,
+   lang character varying(3) NOT NULL, 
+   tr character varying(1024) NULL,
+   CONSTRAINT fttranslation_pk PRIMARY KEY (id), 
+   CONSTRAINT unique_fttranslation UNIQUE (translateditemid,lang)
+) 
+WITH (
+  OIDS = FALSE
+)
+;

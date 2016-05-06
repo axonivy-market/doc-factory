@@ -1,0 +1,23 @@
+# Xpert.ivy RichDialog Event-Mapping Data
+# 2013-11-17 22:38:31 | 5.0.6.44078 | 1.0
+~.adminCheckBox@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:132D1B65FEDF11D7/13F1C25223748BF5
+~.ccdCheckBox@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:132D1B65FEDF11D7/13F1C25223748BF5
+~.ccfCheckBox@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:132D1B65FEDF11D7/13F1C25223748BF5
+~.cddCheckBox@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:132D1B65FEDF11D7/13F1C25223748BF5
+~.cdfCheckBox@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:132D1B65FEDF11D7/13F1C25223748BF5
+~.closeButton@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:132D1B65FEDF11D7/132D48B28BEB3352
+~.codCheckBox@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:132D1B65FEDF11D7/13F1C25223748BF5
+~.crdCheckBox@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:132D1B65FEDF11D7/13F1C25223748BF5
+~.ctdCheckBox@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:132D1B65FEDF11D7/13F1C25223748BF5
+~.cudCheckBox@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:132D1B65FEDF11D7/13F1C25223748BF5
+~.cufCheckBox@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:132D1B65FEDF11D7/13F1C25223748BF5
+~.cwfCheckBox@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:132D1B65FEDF11D7/13F1C25223748BF5
+~.rolesTree@TREE_SELECTION[]--->ch.ivyteam.ivy.process.ProcessStart:132D1B65FEDF11D7/132D41EFC77B64BF
+~@RD_METHODCALL[_makeSelectedChekBoxesConsistent()]--->ch.ivyteam.ivy.process.ProcessStart:132D1B65FEDF11D7/132F87FC44BAF0F8
+~@RD_METHODCALL[load()]--->ch.ivyteam.ivy.process.ProcessStart:132D1B65FEDF11D7/132D1C1EEB662BC2
+~@RD_METHODCALL[mapSelectedIRoleRights()]--->ch.ivyteam.ivy.process.ProcessStart:132D1B65FEDF11D7/132D469EE2FDD752
+~@RD_METHODCALL[setSelectedFolderOnServer(ch.ivyteam.ivy.addons.filemanager.FolderOnServer)]--->ch.ivyteam.ivy.process.ProcessStart:132D1B65FEDF11D7/132DE345CF8D108B
+~@RD_METHODCALL[showError()]--->ch.ivyteam.ivy.process.ProcessStart:132D1B65FEDF11D7/132D46E5157A7030
+~@RD_METHODCALL[start()]--->ch.ivyteam.ivy.process.ProcessStart:132D1B65FEDF11D7/132D1B66000F11BB
+~@RD_METHODCALL[start(ch.ivyteam.ivy.addons.filemanager.configuration.BasicConfigurationController)]--->ch.ivyteam.ivy.process.ProcessStart:132D1B65FEDF11D7/140A511139181B2D
+~@RD_METHODCALL[start(String,String,String)]--->ch.ivyteam.ivy.process.ProcessStart:132D1B65FEDF11D7/132D463DF0C46A88

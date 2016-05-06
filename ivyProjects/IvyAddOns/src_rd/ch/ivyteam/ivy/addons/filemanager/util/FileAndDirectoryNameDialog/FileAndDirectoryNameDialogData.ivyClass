@@ -1,0 +1,22 @@
+FileAndDirectoryNameDialogData #class
+ch.ivyteam.ivy.addons.filemanager.util.FileAndDirectoryNameDialog #namespace
+text String #field
+text PERSISTENT #fieldModifier
+name String #field
+name PERSISTENT #fieldModifier
+buttonClicked String #field
+buttonClicked PERSISTENT #fieldModifier
+iconUri String #field
+iconUri PERSISTENT #fieldModifier
+excludePattern String #field
+excludePattern PERSISTENT #fieldModifier
+excludeNames List<String> #field
+excludeNames PERSISTENT #fieldModifier
+error Boolean #field
+error PERSISTENT #fieldModifier
+pattern java.util.regex.Pattern #field
+pattern PERSISTENT #fieldModifier
+type Number #field
+type PERSISTENT #fieldModifier
+invalidPatternMessage String #field
+invalidPatternMessage PERSISTENT #fieldModifier

@@ -1,0 +1,6 @@
+<P>
+Defines the style in Ivy Configuration applied to the label used in a SpeparatorPane widget.<BR>
+The style should be defined in RLabel or General.<BR>
+The default value is 'separatorLabel'.<BR>
+All the children inherit this value.
+</P>

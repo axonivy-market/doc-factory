@@ -1,0 +1,260 @@
+CREATE TABLE dbo.uploadedfiles
+(
+	FileId             BIGINT IDENTITY NOT NULL,
+	FileName           VARCHAR (255) NULL,
+	FilePath           VARCHAR (750) NULL,
+	CreationUserId     VARCHAR (64) NULL,
+	CreationDate       VARCHAR (10) NULL,
+	CreationTime       VARCHAR (8) NULL,
+	FileSize           VARCHAR (20) NULL,
+	Locked             TINYINT NULL,
+	LockingUserId      VARCHAR (64) NULL,
+	ModificationUserId VARCHAR (64) NULL,
+	ModificationDate   VARCHAR (10) NULL,
+	ModificationTime   VARCHAR (8) NULL,
+	Description        VARCHAR (1024) NULL,
+	versionnumber      INT NULL,
+	filetypeid         BIGINT NULL,
+	CONSTRAINT PK__uploadedfiles PRIMARY KEY (FileId)
+)
+GO
+
+/********* FILE STORED IN DATABASE FEATURE **********/
+CREATE TABLE dbo.directories
+(
+	id                   INT IDENTITY NOT NULL,
+	dir_name             VARCHAR (255) NOT NULL,
+	dir_path             VARCHAR (750) NOT NULL,
+	creation_user_id     VARCHAR (200) NULL,
+	creation_date        DATETIME NULL,
+	creation_time        DATETIME NULL,
+	modification_user_id VARCHAR (200) NULL,
+	modification_date    DATETIME NULL,
+	modification_time    DATETIME NULL,
+	is_protected         BIT DEFAULT ((0)) NOT NULL,
+	cmdr                 VARCHAR (2048) NULL,
+	cod                  VARCHAR (2048) NULL,
+	cud                  VARCHAR (2048) NULL,
+	ccd                  VARCHAR (2048) NULL,
+	crd                  VARCHAR (2048) NULL,
+ 	ctd                  VARCHAR (2048) NULL,
+	cdd                  VARCHAR (2048) NULL,
+	cwf                  VARCHAR (2048) NULL,
+	ccf                  VARCHAR (2048) NULL,
+	cuf                  VARCHAR (2048) NULL,
+	cdf                  VARCHAR (2048) NULL,	
+	CONSTRAINT PK__directories PRIMARY KEY (id),
+	CONSTRAINT UQ__directories UNIQUE (dir_path)
+)
+GO
+
+CREATE TABLE dbo.filecontent
+(
+	id           INT IDENTITY NOT NULL,
+	file_id      INT NOT NULL,
+	file_content VARBINARY (max) NULL,
+	CONSTRAINT PK__filecontent PRIMARY KEY (id),
+	CONSTRAINT UQ__filecontent UNIQUE (file_id)
+)
+GO
+
+/********* FILE VERSIONS FEATURE **********/
+CREATE TABLE dbo.file_versions
+(
+	versionid      BIGINT IDENTITY NOT NULL,
+	file_id        INT NOT NULL,
+	version_number INT NULL,
+	fvc_id         INT NULL,
+	file_name      NVARCHAR (255) NOT NULL,
+	cdate          DATETIME NULL,
+	ctime          DATETIME NULL,
+	cuser          NVARCHAR (255) NULL,
+	CONSTRAINT PK__file_versions PRIMARY KEY (versionid)
+)
+GO
+
+CREATE TABLE dbo.file_version_content
+(
+	fvcid      BIGINT IDENTITY NOT NULL,
+	version_id BIGINT NULL,
+	content    VARBINARY (max) NULL,
+	CONSTRAINT PK__file_version_content PRIMARY KEY (fvcid)
+)
+GO
+
+/********* FILE ARCHIVE TRACKER ********/
+
+CREATE TABLE dbo.file_archive_tracker
+(
+  id BIGINT IDENTITY NOT NULL,
+  fileid BIGINT NOT NULL,
+  versionnumber INT NOT NULL,
+  CONSTRAINT file_archive_tracker_pkey PRIMARY KEY (id),
+  CONSTRAINT file_archive_tracker_fileid_versionnumber_key UNIQUE (fileid, versionnumber)
+)
+GO
+
+/********* FILE TYPES FEATURE **********/
+
+CREATE TABLE dbo.filetype
+(
+	id      BIGINT IDENTITY NOT NULL,
+	name    VARCHAR (255) NOT NULL,
+	appname VARCHAR (255) NULL,
+	CONSTRAINT PK__filetype PRIMARY KEY (id),
+	CONSTRAINT UQ__filetype UNIQUE (name,appname)
+)
+GO
+
+/********* FILE TAGS FEATURE **********/
+CREATE TABLE dbo.tags
+(
+	id     BIGINT IDENTITY NOT NULL,
+	fileid BIGINT NOT NULL,
+	tag    VARCHAR (255) NOT NULL,
+	CONSTRAINT PK__filetags PRIMARY KEY (id),
+	CONSTRAINT UQ__filetags UNIQUE (fileid,tag)
+)
+GO
+
+/********* FILE ACTION HISTORY FEATURE **********/
+
+CREATE TABLE dbo.fileactiontype
+(
+	id      INT IDENTITY NOT NULL,
+	atype 	INT NOT NULL,
+	en      VARCHAR (64) NULL,
+	fr      VARCHAR (64) NULL,
+	de      VARCHAR (64) NULL,
+	CONSTRAINT PK__fileactiontype PRIMARY KEY (id),
+	CONSTRAINT UQ__fileactiontype UNIQUE (atype)
+)
+GO
+
+CREATE TABLE dbo.fileactionhistory
+(
+	id      BIGINT IDENTITY NOT NULL,
+	file_id BIGINT NOT NULL,
+	actiontype      INT NOT NULL,
+	usern    VARCHAR (256) NOT NULL,
+	uname   VARCHAR (1024) NULL,
+	ttime	DATETIME NULL,
+	ddate	DATETIME NULL,
+	adesc VARCHAR (1600) NULL,
+	CONSTRAINT PK__fileactionhistory PRIMARY KEY (id),
+	CONSTRAINT FK_fileactionhistory_2 FOREIGN KEY (actiontype) REFERENCES dbo.fileactiontype (atype)
+)
+GO
+
+INSERT INTO dbo.fileactiontype (atype,en,de,fr) VALUES (1,'File created', 'Datei kreiert' , 'Fichier créé');
+INSERT INTO dbo.fileactiontype (atype,en,de,fr) VALUES (2,'File content changed', 'Datei Inhalt geändert' , 'Fichier modifié');
+INSERT INTO dbo.fileactiontype (atype,en,de,fr) VALUES (3,'File description changed', 'Datei Beschreibung geändert' , 'Description du Fichier modifiée');
+INSERT INTO dbo.fileactiontype (atype,en,de,fr) VALUES (4,'File renamed', 'Datei umbennant' , 'Fichier renommé');
+INSERT INTO dbo.fileactiontype (atype,en,de,fr) VALUES (5,'File deleted', 'Datei gelöscht' , 'Fichier supprimé');
+INSERT INTO dbo.fileactiontype (atype,en,de,fr) VALUES (6,'File downloaded', 'Datei heruntergeladen' , 'Fichier téléchargé');
+INSERT INTO dbo.fileactiontype (atype,en,de,fr) VALUES (7,'File printed', 'Datei gedruckt' , 'Fichier imprimé');
+INSERT INTO dbo.fileactiontype (atype,en,de,fr) VALUES (8,'File opened', 'Datei geöffnet' , 'Fichier ouvert');
+INSERT INTO dbo.fileactiontype (atype,en,de,fr) VALUES (9,'File copied and paste', 'Datei kopiert' , 'Fichier copié');
+INSERT INTO dbo.fileactiontype (atype,en,de,fr) VALUES (10,'File moved', 'Datei verschoben' , 'Fichier déplacé');
+INSERT INTO dbo.fileactiontype (atype,en,de,fr) VALUES (11,'New Version created', 'Neue Version erfasst' , 'Nouvelle version');
+INSERT INTO dbo.fileactiontype (atype,en,de,fr) VALUES (12,'Last version rollbacked', 'Letzte Version gelöscht' , 'Dernière version supprimée');
+
+/********* DIRECTORY AND FILETYPES TRANSLATION FEATURES **********/
+
+CREATE TABLE dbo.fmlanguages(
+	id bigint IDENTITY NOT NULL,
+	isoname nvarchar(3) UNIQUE NOT NULL
+)
+GO
+
+CREATE TABLE dbo.dirtranslation(
+	id bigint IDENTITY NOT NULL,
+	translateditemid bigint NOT NULL,
+	lang character varying(3) NOT NULL, 
+	tr character varying(1024) NULL,
+	CONSTRAINT PK__dirtranslation PRIMARY KEY (id),
+	CONSTRAINT UQ__dirtranslation UNIQUE (translateditemid,lang)
+)
+GO
+
+CREATE TABLE dbo.fttranslation(
+	id bigint IDENTITY NOT NULL,
+	translateditemid bigint NOT NULL,
+	lang character varying(3) NOT NULL, 
+	tr character varying(1024) NULL,
+	CONSTRAINT PK__fttranslation PRIMARY KEY (id),
+	CONSTRAINT UQ__fttranslation UNIQUE (translateditemid,lang)
+)
+GO
+
+INSERT INTO dbo.fmlanguages(isoname) VALUES ('EN');
+INSERT INTO dbo.fmlanguages(isoname) VALUES ('DE');
+INSERT INTO dbo.fmlanguages(isoname) VALUES ('FR');
+
+/****** FileLinks Feature ***********/
+
+CREATE TABLE [dbo].[file_links](
+	[id] [bigint] IDENTITY(1,1) NOT NULL,
+	[directory_id] [int] NOT NULL,
+	[file_id] [bigint] NOT NULL,
+	[content_id] [bigint] NOT NULL,
+	[version_number] [int] NULL,
+	[version_id] [int] NULL,
+	[name] [varchar](255) NOT NULL,
+	[creationdate] [date] NOT NULL,
+	[creationtime] [time](7) NULL,
+	[filelinksize] [varchar](20) NOT NULL,
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+ALTER TABLE [dbo].[file_links] ADD  CONSTRAINT [file_links_creationdate]  DEFAULT (getdate()) FOR [creationdate]
+GO
+
+ALTER TABLE [dbo].[file_links] ADD  CONSTRAINT [file_links_creationtime]  DEFAULT (getdate()) FOR [creationtime]
+GO
+
+ALTER TABLE [dbo].[file_links]  WITH CHECK ADD  CONSTRAINT [file_links_directory_fk] FOREIGN KEY([directory_id])
+REFERENCES [dbo].[directories] ([id])
+ON DELETE CASCADE
+GO
+
+ALTER TABLE [dbo].[file_links] CHECK CONSTRAINT [file_links_directory_fk]
+GO
+
+ALTER TABLE [dbo].[file_links]  WITH CHECK ADD  CONSTRAINT [file_links_uploadedfiles_fk] FOREIGN KEY([file_id])
+REFERENCES [dbo].[uploadedfiles] ([FileId])
+ON DELETE CASCADE
+GO
+
+ALTER TABLE [dbo].[file_links] CHECK CONSTRAINT [file_links_uploadedfiles_fk]
+GO
+
+/****** Thumbnails for HTML Filemanager ***********/
+
+CREATE TABLE [dbo].[thumbnailcontent](
+	[id] [int] IDENTITY NOT NULL,
+	[org_file_id] [int] NOT NULL,
+	[thumb_content] [varbinary](max) NULL,
+	[creation_date] [varchar](10) NULL,
+	[creation_time] [varchar](8) NULL,
+	[use_default] [bit] NOT NULL,
+	[org_modificationDate] [VARCHAR](10) NULL,
+	[org_modificationTime] [VARCHAR](8) NULL,
+ CONSTRAINT [PK__thumbnailcontent] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY],
+ CONSTRAINT [UQ__thumbnailcontent] UNIQUE NONCLUSTERED 
+(
+	[org_file_id] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO

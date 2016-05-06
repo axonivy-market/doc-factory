@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<richDialogDescriptor>
+    <description>The Rich Dialog displays the list of event logs get from EventLogServices.</description>
+    <autoScreenshot>true</autoScreenshot>
+    <method>
+        <name>getWfCase</name>
+        <description>This method return the case &#xD;
+that has event logs are being displayed</description>
+        <outputParameter>
+            <name>wfCase</name>
+            <description></description>
+            <parameterType>ch.ivyteam.ivy.workflow.ICase</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </outputParameter>
+    </method>
+    <method>
+        <name>setWfCase</name>
+        <description>It sets the case and load all events related to the specified ICase.</description>
+        <inputParameter>
+            <name>wfCase</name>
+            <description></description>
+            <parameterType>ch.ivyteam.ivy.workflow.ICase</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </inputParameter>
+    </method>
+    <method>
+        <name>setSilentMode</name>
+        <description>If false, then display the error dialog to the user; otherwise no error dialog to the end user...&#xD;
+False value is used for WFUI integration...</description>
+        <inputParameter>
+            <name>silentMode</name>
+            <description></description>
+            <parameterType>Boolean</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </inputParameter>
+    </method>
+    <method>
+        <name>setDisplayMode</name>
+        <description>It sets the display mode as following:&#xD;
+0=all events, 1=only business events</description>
+        <inputParameter>
+            <name>displayMode</name>
+            <description></description>
+            <parameterType>Number</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </inputParameter>
+    </method>
+    <method>
+        <name>getDisplayMode</name>
+        <description>It returns the display mode as following:&#xD;
+0=all events, 1=only business events</description>
+        <outputParameter>
+            <name>displayMode</name>
+            <description></description>
+            <parameterType>Number</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </outputParameter>
+    </method>
+    <method>
+        <name>getBusinessObject</name>
+        <description>This method return the business object &#xD;
+that has event logs are being displayed.</description>
+        <outputParameter>
+            <name>businessObject</name>
+            <description></description>
+            <parameterType>ch.ivyteam.ivy.addons.data.technical.eventlog.EventLogSearchByBusinessObject</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </outputParameter>
+    </method>
+    <method>
+        <name>setBusinessObject</name>
+        <description>This method set the business object &#xD;
+to display.</description>
+        <inputParameter>
+            <name>businessObject</name>
+            <description></description>
+            <parameterType>ch.ivyteam.ivy.addons.data.technical.eventlog.EventLogSearchByBusinessObject</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </inputParameter>
+    </method>
+    <startMethod>
+        <name>start</name>
+        <description>It starts and load all events related to the specified ICase.</description>
+        <inputParameter>
+            <name>wfCase</name>
+            <description></description>
+            <parameterType>ch.ivyteam.ivy.workflow.ICase</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </inputParameter>
+    </startMethod>
+    <startMethod>
+        <name>start</name>
+        <description>Default Rich Dialog start
+This method can not be changed or deleted!</description>
+    </startMethod>
+    <startMethod>
+        <name>startWithBusinessEventsOnly</name>
+        <description>It starts and load all business events related to the specified ICase.</description>
+        <inputParameter>
+            <name>wfCase</name>
+            <description></description>
+            <parameterType>ch.ivyteam.ivy.workflow.ICase</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </inputParameter>
+    </startMethod>
+    <startMethod>
+        <name>startWithBusinessEventsOnly</name>
+        <description>This method will display the events related to the specified tower&#xD;
+and Business Object within the current ivy &quot;Application&quot;&#xD;
+and ivy &quot;Environment&quot;, whatever the event type or event subtype is.</description>
+        <inputParameter>
+            <name>businessObject</name>
+            <description>Object contain information to get event logs.</description>
+            <parameterType>ch.ivyteam.ivy.addons.data.technical.eventlog.EventLogSearchByBusinessObject</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </inputParameter>
+        <inputParameter>
+            <name>columns</name>
+            <description>List of the column to display in the right sequence. Only EVENT_DATE, EVENT_TIME, EVENT_TYPE, EVENT_SUB_TYPE, OBJECT_ID, MESSAGE, SEVERITY, GROUPID, IS_BUSINESS_EVENT, INITIATOR, USER_NAME, SOURCE, STATUS can be used.</description>
+            <parameterType>List&lt;ch.ivyteam.ivy.addons.eventlog.EventLogProperty&gt;</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </inputParameter>
+        <inputParameter>
+            <name>headerCmsUri</name>
+            <description>Where the column headers can be found in the CMS. The content should be structured as /ch/ivyteam/ivy/addons/eventlog/EventLogDisplayTree/plainStrings.</description>
+            <parameterType>String</parameterType>
+            <nullPermitted>false</nullPermitted>
+        </inputParameter>
+    </startMethod>
+    <property>
+        <name>guid</name>
+        <value>1284D7DC62A95CF1</value>
+        <readOnly>true</readOnly>
+    </property>
+    <property>
+        <name>version</name>
+        <value>1</value>
+        <readOnly>true</readOnly>
+    </property>
+    <property>
+        <name>binary</name>
+        <value>false</value>
+        <readOnly>true</readOnly>
+    </property>
+</richDialogDescriptor>

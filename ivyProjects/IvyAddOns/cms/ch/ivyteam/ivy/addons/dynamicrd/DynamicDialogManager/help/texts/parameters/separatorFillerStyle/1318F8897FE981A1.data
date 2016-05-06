@@ -1,0 +1,6 @@
+<P>
+Defines the style in Ivy Configuration applied to the filler used in a SpeparatorPane widget.<BR>
+The style should be defined in RFiller or General.<BR>
+The default value is 'separatorFiller'.<BR>
+All the children inherit this value.
+</P>

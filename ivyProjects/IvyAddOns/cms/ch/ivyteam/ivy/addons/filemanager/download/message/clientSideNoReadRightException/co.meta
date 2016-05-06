@@ -1,0 +1,4 @@
+co: name={clientSideNoReadRightException} description={} changed={2014-01-11 00:01:48 CET} changedby={ec} visualorder={0} guid={1437E636228455F5} parentguid={} typeguid={E6AFEA2034301F66} id={} parentid={} typeid={}
+val: guid={1437E636231C0D07} datatype={} isdefault={false} langid={de} description={} validfrom={2013-07-18 20:20:11 CEST} validto={} changed={2014-01-11 00:01:48 CET} changedby={ec} properties={} id={}
+val: guid={1437E63625B1182C} datatype={} isdefault={true} langid={en} description={} validfrom={2013-07-18 20:19:30 CEST} validto={} changed={2014-01-11 00:01:48 CET} changedby={ec} properties={} id={}
+val: guid={1437E63623C4EF87} datatype={} isdefault={false} langid={fr} description={} validfrom={2013-07-18 20:20:08 CEST} validto={} changed={2014-01-11 00:01:48 CET} changedby={ec} properties={} id={}

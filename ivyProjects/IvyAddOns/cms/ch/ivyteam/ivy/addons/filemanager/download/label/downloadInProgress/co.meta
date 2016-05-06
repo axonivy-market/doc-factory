@@ -1,0 +1,4 @@
+co: name={downloadInProgress} description={} changed={2013-07-17 01:06:34 CEST} changedby={ec} visualorder={0} guid={13FE9BA79D758FD1} parentguid={} typeguid={E6AFEA2034301F66} id={} parentid={} typeid={}
+val: guid={13FE9BA79E69C491} datatype={} isdefault={true} langid={en} description={} validfrom={2012-03-04 23:53:12 CET} validto={} changed={2013-07-17 01:06:34 CEST} changedby={ec} properties={} id={}
+val: guid={13FE9BA79EF47232} datatype={} isdefault={false} langid={fr} description={} validfrom={2012-03-04 23:53:26 CET} validto={} changed={2013-07-17 01:06:34 CEST} changedby={ec} properties={} id={}
+val: guid={13FE9BA79DB9D7B5} datatype={} isdefault={false} langid={de} description={} validfrom={2012-03-04 23:53:28 CET} validto={} changed={2013-07-17 01:06:34 CEST} changedby={ec} properties={} id={}

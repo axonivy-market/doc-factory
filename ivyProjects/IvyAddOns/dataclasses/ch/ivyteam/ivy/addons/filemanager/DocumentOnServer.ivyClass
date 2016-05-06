@@ -1,0 +1,52 @@
+DocumentOnServer #class
+'The dataclass DocumentOnServer represents a java file uploaded by a user on the server.
+Its elements are the fields found in the DB table used to store the FIles''informations.' #classComment
+ch.ivyteam.ivy.addons.filemanager #namespace
+fileID String #field
+fileID 'String representation of the File ID' #fieldComment
+path String #field
+path 'path on the server' #fieldComment
+filename String #field
+filename 'name of the file' #fieldComment
+fileSize String #field
+fileSize 'size of the file' #fieldComment
+userID String #field
+userID 'User who created the file' #fieldComment
+creationDate String #field
+creationDate 'Date of creation represented as a String' #fieldComment
+creationTime String #field
+creationTime 'time of creation represented as a String' #fieldComment
+modificationUserID String #field
+modificationUserID 'User who modified the File at last' #fieldComment
+modificationDate String #field
+modificationDate 'Date of last Modification  represented as a String' #fieldComment
+modificationTime String #field
+modificationTime 'Time of last Modification  represented as a String' #fieldComment
+locked String #field
+locked 'Tells if the file is currently edited by an another user' #fieldComment
+lockingUserID String #field
+lockingUserID 'The user who currently edits this File' #fieldComment
+description String #field
+description 'The description of the document' #fieldComment
+extension String #field
+extension 'The file Extension' #fieldComment
+ivyFile File #field
+ivyFile 'ivy File to be able to edit the corresponding File in case of DB storage.' #fieldComment
+javaFile java.io.File #field
+javaFile 'java io File, edit a physically stored File' #fieldComment
+versionnumber Number #field
+versionnumber 'if versioning is activated, this is the document version number.' #fieldComment
+fileType ch.ivyteam.ivy.addons.filemanager.FileType #field
+fileType 'The FileType if this is implemented. The FileType.id is stored in the file meta data table. Is null if this feature is not implemented.' #fieldComment
+editedInSession Boolean #field
+editedInSession 'Used as internal flag for history tracking.' #fieldComment
+canUserDelete Boolean #field
+canUserDelete 'true if user has the right to delete the file' #fieldComment
+canUserWrite Boolean #field
+canUserWrite 'true if user has the right to update the file (Content write, rename, description change)' #fieldComment
+canUserRead Boolean #field
+canUserRead 'true if user has the right to read the file' #fieldComment
+isLocked Boolean #field
+isLocked 'Flag set to true if the doc is locked.' #fieldComment
+displayedPath String #field
+displayedPath 'used for displaying the path, especially if the directories are translated.' #fieldComment

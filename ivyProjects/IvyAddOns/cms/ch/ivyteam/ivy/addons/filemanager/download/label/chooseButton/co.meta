@@ -1,0 +1,4 @@
+co: name={chooseButton} description={} changed={2012-03-04 23:59:15 CET} changedby={ec} visualorder={0} guid={135DFEFB2E4CCAA8} parentguid={} typeguid={E6AFEA2034301F66} id={} parentid={} typeid={}
+val: guid={135DFF0325A4004A} datatype={} isdefault={false} langid={fr} description={} validfrom={2012-03-04 23:58:52 CET} validto={} changed={2012-03-04 23:59:15 CET} changedby={ec} properties={} id={}
+val: guid={135DFEFB2E77D4CC} datatype={} isdefault={true} langid={en} description={} validfrom={2012-03-04 23:58:42 CET} validto={} changed={2012-03-04 23:59:15 CET} changedby={ec} properties={} id={}
+val: guid={135DFF032B2F375A} datatype={} isdefault={false} langid={de} description={} validfrom={2012-03-04 23:59:03 CET} validto={} changed={2012-03-04 23:59:15 CET} changedby={ec} properties={} id={}

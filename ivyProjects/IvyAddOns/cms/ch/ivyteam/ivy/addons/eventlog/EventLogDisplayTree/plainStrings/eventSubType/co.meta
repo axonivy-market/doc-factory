@@ -1,0 +1,4 @@
+co: name={eventSubType} description={} changed={2011-02-21 17:39:20 CET} changedby={tipaj} visualorder={0} guid={12CE8ED2C1CD220F} parentguid={} typeguid={E6AFEA2034301F66} id={} parentid={} typeid={}
+val: guid={12E490A7EE8D1C67} datatype={} isdefault={false} langid={de} description={} validfrom={2011-02-21 17:25:36 CET} validto={} changed={2011-02-21 17:25:48 CET} changedby={tipaj} properties={} id={}
+val: guid={12CE8ED2C1F9C54D} datatype={} isdefault={true} langid={en} description={} validfrom={2010-12-15 08:27:26 CET} validto={} changed={2011-02-21 17:39:20 CET} changedby={tipaj} properties={} id={}
+val: guid={12CE8EEA0CD5CD0E} datatype={} isdefault={false} langid={fr} description={} validfrom={2010-12-15 08:29:01 CET} validto={} changed={2011-02-21 17:39:20 CET} changedby={tipaj} properties={} id={}

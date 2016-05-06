@@ -1,0 +1,15 @@
+DirectorySecurityManagerData #class
+'The directory Security Manager allows the filemanager administrator setting the rights on the different directories.' #classComment
+ch.ivyteam.ivy.addons.filemanager.DirectorySecurityManager #namespace
+ivyRolesTree Tree #field
+selectedIRole ch.ivyteam.ivy.security.IRole #field
+error ch.ivyteam.ivy.addons.filemanager.ErrorUtil #field
+isLoaded boolean #field
+isVisible boolean #field
+folderOnServer ch.ivyteam.ivy.addons.filemanager.FolderOnServer #field
+securityController ch.ivyteam.ivy.addons.filemanager.database.AbstractFileSecurityHandler #field
+version Number #field
+rightType Number #field
+shouldAddRight Boolean #field
+config ch.ivyteam.ivy.addons.filemanager.configuration.BasicConfigurationController #field
+isSelectedRoleAdmin Boolean #field

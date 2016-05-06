@@ -1,0 +1,13 @@
+ItemTranslationAdminData #class
+ch.ivyteam.ivy.addons.filemanager.util.ItemTranslationAdmin #namespace
+inputItemTranslation ch.ivyteam.ivy.addons.filemanager.ItemTranslation #field
+displayId String #field
+itemTranslation ch.ivyteam.ivy.addons.filemanager.ItemTranslation #field
+translationPersistence ch.ivyteam.ivy.addons.filemanager.database.persistence.IItemTranslationPersistence #field
+config ch.ivyteam.ivy.addons.filemanager.configuration.BasicConfigurationController #field
+counter Number #field
+iterator java.util.Iterator #field
+itemType ch.ivyteam.ivy.addons.filemanager.database.persistence.TranslatedFileManagerItemsEnum #field
+itemType PERSISTENT #fieldModifier
+itemMainName String #field
+itemMainName PERSISTENT #fieldModifier

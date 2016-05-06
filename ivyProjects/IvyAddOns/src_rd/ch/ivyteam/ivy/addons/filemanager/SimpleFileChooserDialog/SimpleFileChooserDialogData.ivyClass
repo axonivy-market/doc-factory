@@ -1,0 +1,15 @@
+SimpleFileChooserDialogData #class
+ch.ivyteam.ivy.addons.filemanager.SimpleFileChooserDialog #namespace
+fileChoosed java.io.File #field
+path String #field
+error String #field
+windowTitle String #field
+customLabel String #field
+returnedMessage ch.ivyteam.ivy.addons.filemanager.ReturnedMessage #field
+uploader ch.ivyteam.ivy.addons.filemanager.FileUploadHandler #field
+uploadEnabled Boolean #field
+userResponse String #field
+configurationController ch.ivyteam.ivy.addons.filemanager.configuration.BasicConfigurationController #field
+selectedDocumentOnServer ch.ivyteam.ivy.addons.filemanager.DocumentOnServer #field
+fileManagementHandler ch.ivyteam.ivy.addons.filemanager.database.AbstractFileManagementHandler #field
+errorUtil ch.ivyteam.ivy.addons.filemanager.ErrorUtil #field

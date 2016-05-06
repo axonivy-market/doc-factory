@@ -1,0 +1,47 @@
+<P>
+Forces the widet used by dynamic dialog to represent an attribute.<BR>
+By default, dynamic dialog selects the best widget to use from the following rules.<BR>
+
+</P>
+<H2>
+Fields
+</H2>
+<UL>
+<LI>
+CheckBox if the attribute is boolean
+<LI>
+DatePicker if the attribute is a date
+<LI>
+TextField if no choice
+<LI>
+RadioButton if <= 4 choices
+<LI>
+ComboBox if <= 20 choices
+<LI>
+LookupTextField if > 20 choices
+</UL>
+<P>
+
+</P>
+<H2>
+Containers
+</H2>
+<UL>
+<LI>
+TaskPane or widget defined in 'defaultContainerWidget' &nbsp;if the parameter 'group' is evaluated to true
+<LI>
+otherwise it reuses the parent container
+</UL>
+<P>
+
+</P>
+<H2>
+Lists
+</H2>
+<UL>
+<LI>
+Table allways
+</UL>
+<P>
+
+</P>

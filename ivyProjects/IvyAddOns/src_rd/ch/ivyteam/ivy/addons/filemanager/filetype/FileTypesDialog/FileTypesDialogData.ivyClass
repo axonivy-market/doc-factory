@@ -1,0 +1,11 @@
+FileTypesDialogData #class
+ch.ivyteam.ivy.addons.filemanager.filetype.FileTypesDialog #namespace
+configurationController ch.ivyteam.ivy.addons.filemanager.configuration.BasicConfigurationController #field
+configurationController 'The basic needed to get the file list table name, the file type table name and the Ivy DB connection name.' #fieldComment
+choosedFileType ch.ivyteam.ivy.addons.filemanager.FileType #field
+fileTypesList List<ch.ivyteam.ivy.addons.filemanager.FileType> #field
+actionCancelled Boolean #field
+fileTypesController ch.ivyteam.ivy.addons.filemanager.database.filetype.AbstractFileTypesController #field
+editedFileType ch.ivyteam.ivy.addons.filemanager.FileType #field
+errorUtil ch.ivyteam.ivy.addons.filemanager.ErrorUtil #field
+modCancelled Boolean #field

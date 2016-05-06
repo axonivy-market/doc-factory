@@ -1,0 +1,4 @@
+co: name={fileUploadNotAllowForTheseFiles} description={} changed={2013-08-26 11:57:45 CEST} changedby={ec} visualorder={0} guid={140BA082F316ED58} parentguid={} typeguid={E6AFEA2034301F66} id={} parentid={} typeid={}
+val: guid={140BA082F3A9E117} datatype={} isdefault={false} langid={fr} description={} validfrom={2013-08-24 14:27:01 CEST} validto={} changed={2013-08-26 11:57:45 CEST} changedby={ec} properties={} id={}
+val: guid={140BA082F4EEB004} datatype={} isdefault={true} langid={en} description={} validfrom={2013-08-24 14:25:09 CEST} validto={} changed={2013-08-26 11:57:45 CEST} changedby={ec} properties={} id={}
+val: guid={140BA082F45AD4D8} datatype={} isdefault={false} langid={de} description={} validfrom={2013-08-24 14:27:03 CEST} validto={} changed={2013-08-26 11:57:45 CEST} changedby={ec} properties={} id={}
