@@ -1,4 +1,0 @@
-ItemTranslationUnitData #class
-ch.ivyteam.ivy.addons.filemanager.util.ItemTranslationUnit #namespace
-language String #field
-translation String #field

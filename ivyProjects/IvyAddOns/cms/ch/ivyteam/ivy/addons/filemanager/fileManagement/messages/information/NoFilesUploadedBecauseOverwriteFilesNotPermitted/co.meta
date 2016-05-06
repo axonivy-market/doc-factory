@@ -1,4 +1,0 @@
-co: name={NoFilesUploadedBecauseOverwriteFilesNotPermitted} description={} changed={2016-05-04 15:29:52 CEST} changedby={ec} visualorder={0} guid={1547BE3AAB9DE1D4} parentguid={} typeguid={E6AFEA202AFB4911} id={} parentid={} typeid={}
-val: guid={1547BE3AAC8BF592} datatype={} isdefault={false} langid={fr} description={} validfrom={2011-03-13 11:29:04 CET} validto={} changed={2016-05-04 15:29:52 CEST} changedby={ec} properties={} id={}
-val: guid={1547BE3AABEE96C0} datatype={} isdefault={false} langid={de} description={} validfrom={2011-03-13 11:29:07 CET} validto={} changed={2016-05-04 15:29:52 CEST} changedby={ec} properties={} id={}
-val: guid={1547BE3AAE69AFC9} datatype={} isdefault={true} langid={en} description={} validfrom={2011-03-13 11:29:01 CET} validto={} changed={2016-05-04 15:29:52 CEST} changedby={ec} properties={} id={}

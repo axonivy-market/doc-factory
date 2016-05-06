@@ -1,4 +1,0 @@
-FileTypeWriterData #class
-ch.ivyteam.ivy.addons.filemanager.filetype.FileTypeWriter #namespace
-fileType ch.ivyteam.ivy.addons.filemanager.FileType #field
-actionCancelled Boolean #field

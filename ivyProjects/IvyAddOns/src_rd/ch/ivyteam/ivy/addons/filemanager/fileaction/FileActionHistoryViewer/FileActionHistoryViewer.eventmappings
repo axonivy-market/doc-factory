@@ -1,7 +1,0 @@
-# Xpert.ivy RichDialog Event-Mapping Data
-# 2012-08-07 14:53:35 | 4.3.4.40176 | 1.0
-~.closeButton@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:13900F4E09EDA8AA/13901C9272FA2678 # FileActionHistoryViewerProcess.mod/close
-~.refreshMenuItem@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:13900F4E09EDA8AA/139026ECC6465309 # FileActionHistoryViewerProcess.mod/refresh
-~@RD_METHODCALL[start()]--->ch.ivyteam.ivy.process.ProcessStart:13900F4E09EDA8AA/13900F4E0C1F93A7
-~@RD_METHODCALL[start(ch.ivyteam.ivy.addons.filemanager.database.fileaction.FileActionConfiguration,ch.ivyteam.ivy.addons.filemanager.DocumentOnServer,String)]--->ch.ivyteam.ivy.process.ProcessStart:13900F4E09EDA8AA/13901C6538F184CD
-~@RD_METHODCALL[start(ch.ivyteam.ivy.addons.filemanager.database.fileaction.FileActionConfiguration,Long,String)]--->ch.ivyteam.ivy.process.ProcessStart:13900F4E09EDA8AA/13901C5154714378

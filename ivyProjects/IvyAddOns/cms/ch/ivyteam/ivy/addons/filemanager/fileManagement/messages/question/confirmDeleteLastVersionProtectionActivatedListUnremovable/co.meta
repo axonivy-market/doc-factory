@@ -1,4 +1,0 @@
-co: name={confirmDeleteLastVersionProtectionActivatedListUnremovable} description={} changed={2015-05-22 16:14:52 CEST} changedby={ec} visualorder={0} guid={149CE898318DBCB8} parentguid={} typeguid={E6AFEA202AFB4911} id={} parentid={} typeid={}
-val: guid={149CE89832238E55} datatype={} isdefault={true} langid={en} description={} validfrom={2014-11-20 19:49:18 CET} validto={} changed={2015-05-22 16:14:51 CEST} changedby={ec} properties={} id={}
-val: guid={149CE8A37638E316} datatype={} isdefault={false} langid={fr} description={} validfrom={2014-11-20 19:49:43 CET} validto={} changed={2015-05-22 16:14:51 CEST} changedby={ec} properties={} id={}
-val: guid={149CE8A392516073} datatype={} isdefault={false} langid={de} description={} validfrom={2014-11-20 19:49:46 CET} validto={} changed={2015-05-22 16:14:52 CEST} changedby={ec} properties={} id={}

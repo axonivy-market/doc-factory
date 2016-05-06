@@ -1,4 +1,0 @@
-<P>
-Defines which widget is used as default container.<BR>
-All the container children inherit this value.
-</P>

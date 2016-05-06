@@ -1,6 +1,0 @@
-# Xpert.ivy RichDialog Event-Mapping Data
-# 2013-04-15 14:34:32 | 5.0.0.42648 | 1.0
-~@RD_METHODCALL[askInput(String,String,List<String>)]--->ch.ivyteam.ivy.process.ProcessStart:11812581269404BC/118121E168071765
-~@RD_METHODCALL[askInput(String,String,List<String>,String)]--->ch.ivyteam.ivy.process.ProcessStart:11812581269404BC/11C8E07FE97AEE31
-~@RD_METHODCALL[askInputWithCustomButtons(String,String,List<String>,List<String>,List<String>,String)]--->ch.ivyteam.ivy.process.ProcessStart:11812581269404BC/12182B082BEAB3EF
-~@RD_METHODCALL[start()]--->ch.ivyteam.ivy.process.ProcessStart:11812581269404BC/13E0DB0876FB2944
