@@ -69,10 +69,14 @@ public class AsposeDocFactoryFileGenerator {
 		default:
 			throw new UnsupportedFormatException(Ivy.cms().co("/ch/ivyteam/ivy/addons/docfactory/messages/formatNotSupported"));
 		}
-		if(!file.isFile()) {
-			throw new IOException("The file "+file.getName()+" could not be produced. the Aspose Document could not be exported as File.");
+		
+		try {
+			if(!file.isFile()) {
+				throw new IOException("The file "+file.getName()+" could not be produced. the Aspose Document could not be exported as File.");
+			}
+		} catch (SecurityException ex) {
+			throw new Exception("A SecurityException occurred " + ex.getMessage(), ex);
 		}
-
 		fom = FileOperationMessage.generateSuccessTypeFileOperationMessage(Ivy.cms().co("/ch/ivyteam/ivy/addons/docfactory/messages/serialLetterSuccess")+ " \n" + file.getName());
 		fom.addFile(file);
 		return fom;

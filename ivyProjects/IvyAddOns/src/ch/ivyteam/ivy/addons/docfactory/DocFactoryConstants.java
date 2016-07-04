@@ -1,5 +1,7 @@
 package ch.ivyteam.ivy.addons.docfactory;
 
+import java.util.Locale;
+
 public final class DocFactoryConstants {
 	
 	public static final String DOC_EXTENSION=".doc";
@@ -14,5 +16,10 @@ public final class DocFactoryConstants {
 	public static final int HTML_FORMAT=2;
 	public static final int TXT_FORMAT=3;
 	public static final int PDF_FORMAT=4;
+	
+	public static final String IMAGE_MERGEFIELD_NAME_START = "image";
+	public static final String EMBEDDED_DOCUMENT_MERGEFIELD_NAME_START = "document_";
+	
+	public static final Locale DEFAULT_LOCALE = Locale.getDefault();
 
 }
