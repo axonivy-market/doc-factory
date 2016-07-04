@@ -6,19 +6,22 @@ package ch.ivyteam.ivy.addons.docfactory;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
 import ch.ivyteam.ivy.addons.docfactory.mergefield.TemplateMergeFieldType;
+import ch.ivyteam.ivy.addons.docfactory.mergefield.internal.MergeFieldsExtractor;
 
 
 /**
  * This Class represents a MergeField in a document Template<br>
  * like in a Microsoft Office dot document.
  * @author ec<br>
- * @param <T> this Type has been added in June 2016 for specifying the type of the TemplateMergeField.
  * @since 27.10.2009<br>
  * @see TemplateMergeFieldType ch.ivyteam.ivy.addons.docfactory.TemplateMergeFieldType
  */
@@ -37,6 +40,10 @@ public class TemplateMergeField {
 	
 	private NumberFormat numberFormat = NumberFormat.getInstance(locale);
 	
+	private Collection<TemplateMergeField> children = new ArrayList<>();
+	
+	private Collection<TemplateMergeField> nestedCollections = new ArrayList<>();
+	
 	/**
 	 * Constructor with two parameters : the mergeFieldName and its value.
 	 * @param _mergeFieldName String
@@ -49,6 +56,11 @@ public class TemplateMergeField {
 		
 	}
 	
+	/**
+	 * Creates a new TemplateMergeField with the given name. The Name will be used in the mail merging operation for filling the corresponding mail merge field in the template.
+	 * @param mergeFieldName the name. Cannot be blank.
+	 * @return the TemplateMergeField with the name set.
+	 */
 	public static TemplateMergeField withName(String mergeFieldName) {
 		if(StringUtils.isBlank(mergeFieldName)) {
 			throw new IllegalArgumentException("The mergeFieldName cannot be blank");
@@ -57,17 +69,26 @@ public class TemplateMergeField {
 	}
 	
 	/**
-	 * 
-	 * @param type
-	 * @param value
+	 * Set the Type {@link TemplateMergeFieldType} and the value of this TemplateMergeField.<br>
+	 * If you don't want to care about setting the type yourself, use {@link TemplateMergeField#withValue(Object)}.
+	 * @param type the TemplateMergeFieldType reflecting the type of this field value.
+	 * @param value the value of the field. 
 	 * @return
 	 */
 	public TemplateMergeField withValueAs(TemplateMergeFieldType type, Object value) {
 		setValue(value);
 		this.type = type;
+		makeChildren();
 		return this;
 	}
 	
+	/**
+	 * Set the value of the TemplateMergeField and return it.<br>
+	 * The {@link TemplateMergeFieldType} will be automatically computed.
+	 * 
+	 * @param value the value to set, cannot be null.
+	 * @return
+	 */
 	public TemplateMergeField withValue(Object value) {
 		setValue(value);
 		setType();
@@ -105,6 +126,9 @@ public class TemplateMergeField {
 	}
 
 	private void setType() {
+		if(value == null) {
+			return;
+		}
 		if(value instanceof String) {
 			this.type = TemplateMergeFieldType.TEXT;
 		} else if (value instanceof byte[]) {
@@ -115,13 +139,70 @@ public class TemplateMergeField {
 			this.type = TemplateMergeFieldType.NUMBER;
 		} else if (value instanceof Date || value instanceof java.sql.Date) {
 			this.type = TemplateMergeFieldType.DATE;
+		} else if (value instanceof Collection || value instanceof Map<?,?>) {
+			this.type = TemplateMergeFieldType.COLLECTION;
+			makeChildren();
 		} else {
 			this.type = TemplateMergeFieldType.OBJECT;
+			makeChildren();
 		}
 	}
 	
+	/**
+	 * gets the type of this TemplateMergeField. <br>
+	 * @see {@link TemplateMergeFieldType}
+	 * @return the TemplateMergeFieldType of this field
+	 */
 	public TemplateMergeFieldType getType() {
 		return this.type;
+	}
+	
+	/**
+	 * Checks if this TemplateMergeField is a Collection Type (List, Set, Map ....)
+	 * @return true if the TemplateMergeField value is from type {@link TemplateMergeFieldType#COLLECTION}
+	 */
+	public boolean isCollection() {
+		return this.type.is(TemplateMergeFieldType.COLLECTION);
+	}
+	
+	public boolean hasCollection() {
+		return !getNestedCollections().isEmpty();
+	}
+	
+	public boolean hasChildren() {
+		return !getChildren().isEmpty();
+	}
+	
+	public Collection<TemplateMergeField> getChildren() {
+		return this.children;
+	}
+	
+	public Collection<TemplateMergeField> getNestedCollections() {
+		return this.nestedCollections;
+	}
+	
+	private void makeChildren() {
+		this.children.clear();
+		this.nestedCollections.clear();
+		if(this.type.is(TemplateMergeFieldType.OBJECT)) {
+			this.children.addAll(MergeFieldsExtractor.getChildrenMergeFieldsForObjectMergeField(this));
+			for(TemplateMergeField tmf : this.children) {
+				if(tmf.isCollection()) {
+					this.nestedCollections.add(tmf);
+				}
+			}
+		}
+		if(this.type.is(TemplateMergeFieldType.COLLECTION)) {
+			/*Collection<?> col = null;
+			if(this.getValue() instanceof Map<?, ?>) {
+				col = ((Map<?, ?>) this.getValue()).values();
+			} else {
+				col = (Collection<?>) this.getValue();
+			}*/
+			for(Collection<TemplateMergeField> result : MergeFieldsExtractor.getMergeFieldsForCollectionTemplateMergeField(this.getMergeFieldName(), this)) {
+				this.children.addAll(result);
+			}
+		}
 	}
 	
 	/**
@@ -152,10 +233,10 @@ public class TemplateMergeField {
 			return "";
 		}
 		try {
-			if(this.type.equals(TemplateMergeFieldType.DATE)) {
+			if(this.type.is(TemplateMergeFieldType.DATE)) {
 				return this.dateFormat.format(this.value);
 			}
-			if(this.type.equals(TemplateMergeFieldType.NUMBER)) {
+			if(this.type.is(TemplateMergeFieldType.NUMBER)) {
 				return this.numberFormat.format(value);
 			}
 		} catch (IllegalArgumentException e) {
@@ -171,7 +252,8 @@ public class TemplateMergeField {
 	 * @return
 	 */
 	public Object getValueForMailMerging() {
-		if(this.type.equals(TemplateMergeFieldType.BYTES) || this.type.equals(TemplateMergeFieldType.FILE) || this.type.equals(TemplateMergeFieldType.OBJECT)) {
+		if(this.type.is(TemplateMergeFieldType.BYTES) || this.type.is(TemplateMergeFieldType.FILE) || 
+				this.type.is(TemplateMergeFieldType.OBJECT) || this.type.is(TemplateMergeFieldType.COLLECTION)) {
 			return this.value;
 		}
 		return getMergeFieldValue();
@@ -192,6 +274,10 @@ public class TemplateMergeField {
 	public void setMergeFieldValue(String mergeFieldValue) {
 		this.value = mergeFieldValue;
 		this.type = TemplateMergeFieldType.TEXT;
+	}
+	
+	public Locale getLocale() {
+		return this.locale;
 	}
 
 	@Override
@@ -231,7 +317,7 @@ public class TemplateMergeField {
 		if (value == null) {
 			if (other.value != null)
 				return false;
-		} else if (type.equals(TemplateMergeFieldType.NUMBER)) {
+		} else if (type.is(TemplateMergeFieldType.NUMBER)) {
 			result =  String.valueOf(value).equals(String.valueOf(other.value));
 		} else if (!value.equals(other.value)) {
 			result =  false;
@@ -241,13 +327,13 @@ public class TemplateMergeField {
 	}
 	
 	private boolean shouldCompareDateAndNumber(TemplateMergeFieldType otherType) {
-		return (type.equals(TemplateMergeFieldType.DATE) && otherType.equals(TemplateMergeFieldType.NUMBER)) 
+		return (type.is(TemplateMergeFieldType.DATE) && otherType.is(TemplateMergeFieldType.NUMBER)) 
 				|| 
-				(type.equals(TemplateMergeFieldType.NUMBER) && otherType.equals(TemplateMergeFieldType.DATE));
+				(type.is(TemplateMergeFieldType.NUMBER) && otherType.is(TemplateMergeFieldType.DATE));
 	}
 	
 	private boolean areNumberAndDateSame(TemplateMergeField other) {
-		if(type.equals(TemplateMergeFieldType.NUMBER) && other.type.equals(TemplateMergeFieldType.DATE)) {
+		if(type.is(TemplateMergeFieldType.NUMBER) && other.type.is(TemplateMergeFieldType.DATE)) {
 			return new Date((long) this.value).equals(other.value);
 		}
 		return new Date((long) other.value).equals(this.value);

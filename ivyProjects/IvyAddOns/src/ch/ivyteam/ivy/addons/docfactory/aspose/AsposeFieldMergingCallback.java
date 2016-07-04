@@ -74,10 +74,8 @@ public class AsposeFieldMergingCallback implements IFieldMergingCallback {
 				imageStream_dimension = new ByteArrayInputStream((byte[]) e.getFieldValue());
 			} else if (e.getFieldValue().getClass().getName().equalsIgnoreCase("java.lang.String")) {
 				try {
-					java.io.File image = new java.io.File((String) e.getFieldValue());
-					Ivy.log().info("Mergefield image file {0}", image.isFile());
-					imageStream = new FileInputStream(image);
-					imageStream_dimension = new FileInputStream(image);
+					imageStream = new FileInputStream(new java.io.File((String) e.getFieldValue()));
+					imageStream_dimension = new FileInputStream(new java.io.File((String) e.getFieldValue()));
 				} catch (FileNotFoundException ex) {
 					Ivy.log().error("FileNotFoundException occurred while getting an imageStream for mail merging.",ex);
 					return;

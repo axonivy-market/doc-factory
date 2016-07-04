@@ -3,6 +3,8 @@ package ch.ivyteam.ivy.addons.docfactory;
 import java.lang.reflect.Field;
 import java.util.Hashtable;
 
+import com.aspose.words.IMailMergeDataSource;
+
 import ch.ivyteam.ivy.addons.docfactory.aspose.MailMergeDataSource;
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.scripting.objects.CompositeObject;
@@ -76,7 +78,7 @@ public class DataClassToMergefields {
 	 * @return
 	 * @throws Exception
 	 */
-	public static MailMergeDataSource transfomDataClassInMergeDataSource(java.util.List<CompositeObject> compositeObjectsList, String _tableName) throws Exception {
+	public static IMailMergeDataSource transfomDataClassInMergeDataSource(java.util.List<CompositeObject> compositeObjectsList, String _tableName) throws Exception {
 		MailMergeDataSource mmds=null;
 		//We check if incoming parameter is null or empty
 		if(compositeObjectsList == null || compositeObjectsList.isEmpty()) {

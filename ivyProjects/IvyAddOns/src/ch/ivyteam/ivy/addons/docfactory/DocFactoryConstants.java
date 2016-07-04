@@ -9,6 +9,7 @@ public final class DocFactoryConstants {
 	public static final String TXT_EXTENSION=".txt";
 	public static final String PDF_EXTENSION=".pdf";
 	public static final String HTML_EXTENSION=".html";
+	public static final String ODT_EXTENSION=".odt";
 	
 	public static final int UNSUPPORTED_FORMAT=-1;
 	public static final int DOC_FORMAT=0;
@@ -16,6 +17,7 @@ public final class DocFactoryConstants {
 	public static final int HTML_FORMAT=2;
 	public static final int TXT_FORMAT=3;
 	public static final int PDF_FORMAT=4;
+	public static final int ODT_FORMAT=5;
 	
 	public static final String IMAGE_MERGEFIELD_NAME_START = "image";
 	public static final String EMBEDDED_DOCUMENT_MERGEFIELD_NAME_START = "document_";
