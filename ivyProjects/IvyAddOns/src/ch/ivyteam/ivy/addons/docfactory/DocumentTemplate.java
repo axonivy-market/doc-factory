@@ -1,14 +1,25 @@
 
 package ch.ivyteam.ivy.addons.docfactory;
 
+import java.io.File;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Locale;
 
+import org.apache.commons.lang.StringUtils;
+
+import ch.ivyteam.ivy.addons.docfactory.mergefield.SerializableToMergeFields;
+import ch.ivyteam.ivy.addons.docfactory.response.ResponseHandler;
+import ch.ivyteam.ivy.addons.filemanager.FileHandler;
+import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.scripting.objects.CompositeObject;
 import ch.ivyteam.ivy.scripting.objects.List;
 import ch.ivyteam.ivy.scripting.objects.Recordset;
 import ch.ivyteam.ivy.scripting.objects.Tree;
+import ch.ivyteam.ivy.scripting.objects.util.MetaType;
 
 /**
  * @author ec<br>
@@ -42,18 +53,18 @@ public class DocumentTemplate implements Serializable {
 	 * The value is the String that will replace the mergeField in the template during the template merging.<br>
 	 * @see TemplateMergeField
 	 * */
-	private List<TemplateMergeField> mergeFields= null;
+	private java.util.List<TemplateMergeField> mergeFields = new ArrayList<>();
 
 	/**
 	 * DataClass whose parameters are going to be taken to fill the merge fields of an office template.<br>
 	 * The names of the dataClass parameters have to be the same as the names of the fields in the templates.
 	 */
-	private CompositeObject data=null;
+	private Serializable data = null;
 
 	/** the document factory used to parse the template and to perform the mailMerging.<br>
 	 * @see BaseDocFactory#getInstance()
 	 */
-	private BaseDocFactory documentFactory=null;
+	private BaseDocFactory documentFactory = null;
 
 	/** The fileOperationMessage is a convenient Object to get the results of a Mail Merge from a Document Factory Object.<br>
 	 * @see ch.ivyteam.ivy.addons.docfactory.FileOperationMessage
@@ -87,6 +98,150 @@ public class DocumentTemplate implements Serializable {
 	 * Used as possible Data for MergeMail with Nested Regions
 	 */
 	private Tree treeData = null;
+
+	/**
+	 * Locale used for Date and Number formatting
+	 */
+	private Locale locale = DocFactoryConstants.DEFAULT_LOCALE;
+	
+	private Collection<Object> dataTables = new ArrayList<>();
+	
+	/**
+	 * Generates a DocumentTemplate with the given Template file
+	 * @param template a File as Template. Cannot be null.
+	 * @return the DocumentTemplate
+	 */
+	public static DocumentTemplate withTemplate(java.io.File template) {
+		if(template == null) {
+			throw new IllegalArgumentException("The template parameter cannot be null");
+		}
+		DocumentTemplate documentTemplate = new DocumentTemplate(template.getPath(),"","","",List.create(TemplateMergeField.class));
+		documentTemplate.setDocumentFactory(BaseDocFactory.getInstance());
+		return documentTemplate;
+	}
+	
+	/**
+	 * Set the responseHandler that will be used as callBack Response in the document Factory
+	 * @see {@link BaseDocFactory#withResponseHandler(ResponseHandler)}
+	 * @param responseHandler ResponseHandler . May be null.
+	 * @return the document template object with the ResponseHandler set in its document factory
+	 */
+	public DocumentTemplate withResponseHandler(ResponseHandler responseHandler) {
+		if(this.documentFactory == null) {
+			this.documentFactory = BaseDocFactory.getInstance();
+		}
+		this.documentFactory.withResponseHandler(responseHandler);
+		return this;
+	}
+	
+	/**
+	 * Allows specifying a Locale for formatting the Numbers and Dates objects
+	 * @param locale
+	 * @return The DocumenTemplate which Locale as been set.
+	 */
+	public DocumentTemplate useLocale(Locale locale) {
+		if(locale != null) {
+			this.locale  = locale;
+		}
+		for(TemplateMergeField tmf : this.mergeFields) {
+			tmf.useLocaleAndResetNumberFormatAndDateFormat(locale);
+		}
+		return this;
+	}
+	
+	/**
+	 * Allows using a Serializable bean which attributes accessible with public getters will be used as MergeFields.
+	 * The Nested Serializable in this Serializable are supported.<br>
+	 * Example: a Person Serializable which holds a name, an Address with a zipCode. The following MergeFields will be retrieved:<br>
+	 * person.name and person.address.zipCode <br>
+	 * You can call this method several times with sevral Data. All the MergeFields will be added.
+	 * @param data
+	 * @return the DocumentTemplate which MergFields List is completed with the MergeFields retrieved from the given Data
+	 */
+	public DocumentTemplate putDataAsSourceForSimpleMailMerge(Serializable data) {
+		if(data == null) {
+			throw new IllegalArgumentException("The data parameter cannot be null");
+		}
+		this.data = data;
+		this.mergeFields.addAll(SerializableToMergeFields.getMergeFields(data));
+		if(!locale.equals(DocFactoryConstants.DEFAULT_LOCALE)) {
+			for(TemplateMergeField tmf : this.mergeFields) {
+				tmf.useLocaleAndResetNumberFormatAndDateFormat(locale);
+			}
+		}
+		return this;
+	}
+	
+	/**
+	 * Put an object that will be used for merging a table in the template. The DataTable Object must hold enough information for being placed in the template.<br>
+	 * Example by using Aspose: the DataTable name must be the same as the Region-MergeField.
+	 * You can use this method several time for injecting several DataTables in different regions of your template.
+	 * @param dataTable an Object that the underlying Document Factory will be able to use as data source for merging a table in a region on in a merge field.<br>
+	 * If the underlying Document Factory cannot use this object, it should ignore it.
+	 * @return the Document Template.
+	 */
+	public DocumentTemplate putTableDataForMergingATableInDocument(Object dataTable) {
+		if(dataTable == null) {
+			throw new IllegalArgumentException("The data parameter cannot be null");
+		}
+		this.dataTables.add(dataTable);
+		return this;
+	}
+	
+	public DocumentTemplate withDocFactory(BaseDocFactory docFactory) {
+		if(docFactory == null) {
+			throw new IllegalArgumentException("The docFactory parameter cannot be null");
+		}
+		this.documentFactory = docFactory;
+		return this;
+	}
+	
+	public boolean hasDataTable() {
+		return !this.dataTables.isEmpty();
+	}
+	
+	public Collection<?> getDataTable() {
+		return this.dataTables;
+	}
+	
+	/**
+	 * Add a specific meregeField
+	 * @param mergeFieldName
+	 * @param value
+	 * @return
+	 */
+	public DocumentTemplate addMergeField(String mergeFieldName, Object value) {
+		if(StringUtils.isBlank(mergeFieldName) || value == null) {
+			throw new IllegalArgumentException("The mergeFieldName cannot be blank and the value cannot be null");
+		}
+		this.mergeFields.add(TemplateMergeField.withName(mergeFieldName).withValue(value).useLocaleAndResetNumberFormatAndDateFormat(this.locale));
+		return this;
+	}
+	
+	/**
+	 * Produces the document
+	 * @param destinationDocument
+	 * @return
+	 */
+	public FileOperationMessage produceDocument(File destinationDocument) {
+		if(destinationDocument == null) {
+			throw new IllegalArgumentException("The destinationDocument parameter cannot be null");
+		}
+		this.outputPath = destinationDocument.getParent();
+		if(this.outputPath == null) {
+			this.outputPath = Ivy.wf().getApplication().getSessionFileArea().getPath();
+		}
+		this.outputFormat = FileHandler.getFileExtension(destinationDocument.getName());
+		try {
+			this.outputPath = FileHandler.getFileDirectoryPath(destinationDocument);
+			this.outputName = FileHandler.getFileNameWithoutExt(destinationDocument.getName());
+		} catch (Exception e) {
+			this.fileOperationMessage = FileOperationMessage.generateErrorTypeFileOperationMessage(e.getMessage());
+			return this.fileOperationMessage;
+		}
+		return this.documentFactory.generateDocument(this);
+		
+	}
 	
 	/**
 	 * empty constructor
@@ -133,7 +288,7 @@ public class DocumentTemplate implements Serializable {
 		initializeConstructorVariables(_templatePath, _outputPath, _outputName,
 				_outputFormat);
 		if(_mergeFields != null) {
-			this.mergeFields = _mergeFields;
+			setMergeFields(_mergeFields);
 		}
 
 		this.setTablesNamesAndFieldsmap(_tablesNamesAndFieldsmap);
@@ -158,7 +313,7 @@ public class DocumentTemplate implements Serializable {
 		initializeConstructorVariables(_templatePath, _outputPath, _outputName,
 				_outputFormat);
 		if(_mergeFields != null) {
-			this.mergeFields = _mergeFields;
+			setMergeFields(_mergeFields);
 		}
 
 		this.setTablesNamesAndFieldsHashtable(_tablesNamesAndFieldsHashtable);
@@ -270,7 +425,7 @@ public class DocumentTemplate implements Serializable {
 		initializeConstructorVariables(_templatePath, _outputPath, _outputName,
 				_outputFormat);
 		if(_data != null) {
-			this.mergeFields = DataClassToMergefields.transformDataClassInMergeField(_data);
+			setMergeFields(DataClassToMergefields.transformDataClassInMergeField(_data));
 			this.tablesNamesAndFieldsHashtable = DataClassToMergefields.transformDataClassInTablesNamesAndFields(_data);
 		}
 
@@ -359,7 +514,8 @@ public class DocumentTemplate implements Serializable {
 			//check if the document factory was already instantiated
 			this.documentFactory=BaseDocFactory.getInstance();
 		}
-		if(this.tablesNamesAndFieldsmap!= null && !this.tablesNamesAndFieldsmap.isEmpty()) {
+		return this.documentFactory.generateDocument(this);
+		/*if(this.tablesNamesAndFieldsmap!= null && !this.tablesNamesAndFieldsmap.isEmpty()) {
 			this.fileOperationMessage = this.documentFactory.generateDocumentWithRegions(
 					this.templatePath, 
 					this.outputName, 
@@ -408,7 +564,7 @@ public class DocumentTemplate implements Serializable {
 					this.outputFormat, 
 					this.mergeFields);
 		}
-		return this.fileOperationMessage;
+		return this.fileOperationMessage;*/
 	}
 
 	/**
@@ -429,14 +585,15 @@ public class DocumentTemplate implements Serializable {
 	 * @return the mergeFields
 	 */
 	public List<TemplateMergeField> getMergeFields() {
-		return mergeFields;
+		return List.forJavaList(MetaType.valueOf(TemplateMergeField.class), this.mergeFields);
 	}
 
 	/**
 	 * @param mergeFields the mergeFields to set
 	 */
 	public void setMergeFields(List<TemplateMergeField> mergeFields) {
-		this.mergeFields = mergeFields;
+		this.mergeFields.clear();
+		this.mergeFields.addAll(mergeFields);
 	}
 
 	/**
@@ -449,7 +606,7 @@ public class DocumentTemplate implements Serializable {
 		if(_data == null) {
 			this.mergeFields = List.create(TemplateMergeField.class);
 		}else {
-			this.mergeFields =DataClassToMergefields.transformDataClassInMergeField(_data);
+			this.mergeFields = DataClassToMergefields.transformDataClassInMergeField(_data);
 			this.tablesNamesAndFieldsHashtable = DataClassToMergefields.transformDataClassInTablesNamesAndFields(_data);
 		}
 	}
@@ -458,7 +615,11 @@ public class DocumentTemplate implements Serializable {
 	 * @return the data
 	 */
 	public CompositeObject getData() {
-		return data;
+		if(this.data instanceof CompositeObject) {
+			return (CompositeObject) data;
+		}
+		
+		return null;
 	}
 
 	/**

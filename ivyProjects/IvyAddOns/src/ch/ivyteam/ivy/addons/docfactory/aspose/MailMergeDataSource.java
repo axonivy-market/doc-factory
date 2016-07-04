@@ -176,7 +176,6 @@ public class MailMergeDataSource implements IMailMergeDataSource {
 			return;
 		}
 		this.tableName=_tablename;
-		Ivy.log().info("Table name :"+this.tableName);
 		this.treeChildrenDS = List.create(MetaTypeList.listOf(Tree.class));
 
 		this.tableValues = new Recordset();

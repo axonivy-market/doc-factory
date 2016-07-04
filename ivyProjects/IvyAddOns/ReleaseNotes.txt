@@ -1,4 +1,20 @@
 =============================== 
+IvyAddons 6010200 Release Notes 
+===============================
+
+DocFactory:
+New Feature: Possibility to use a Serializable as datasource for the mergefields. (Supports embedded Serializable objects in Serializable).
+Example of use: 
+DocumentTemplate documentTemplate = DocumentTemplate.withTemplate(template).putDataAsSourceForSimpleMailMerge(makePerson());
+The mergefields will be named with the Serializable Class as prefix like:
+person.name
+person.firstname
+person.address.city.cityname
+
+Div. API: New QRCode API for generating QRCode images from Data.
+See ch.ivyteam.ivy.addons.qrcode package
+
+=============================== 
 IvyAddons 6010100 Release Notes 
 ===============================
 

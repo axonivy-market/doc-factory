@@ -9,12 +9,13 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 
+import ch.ivyteam.ivy.addons.docfactory.aspose.AsposeFieldMergingCallback;
+import ch.ivyteam.ivy.addons.docfactory.response.ResponseHandler;
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.richdialog.exec.panel.IRichDialogPanel;
 import ch.ivyteam.ivy.scripting.objects.CompositeObject;
 import ch.ivyteam.ivy.scripting.objects.Recordset;
 import ch.ivyteam.ivy.scripting.objects.Tree;
-import ch.ivyteam.ivy.addons.docfactory.TemplateMergeField;
 
 
 /**
@@ -28,8 +29,13 @@ import ch.ivyteam.ivy.addons.docfactory.TemplateMergeField;
 public abstract class BaseDocFactory{
 	
 	protected String outputPath, outputFormat, basicFileName;
+	
 	/** The parent RichDialogPanel of this docFactory, used to communicate with its callback methods */
 	protected IRichDialogPanel parentRD;
+	
+	/** */
+	private ResponseHandler responseHandler;
+	
 	/** the list of supported formats. Can be different in your implementation*/
 	public static final String[] SUPPORTED_OUTPUT_FORMATS = new String[] {"doc", "docx", "html", "txt", "pdf"};
 	
@@ -367,6 +373,7 @@ public abstract class BaseDocFactory{
 	 * get a reference to the calling parent RD.
 	 * @return the parent Rich Dialog
 	 */
+	@Deprecated
 	public IRichDialogPanel getParentRD(){
 		return this.parentRD;
 	}
@@ -389,6 +396,7 @@ public abstract class BaseDocFactory{
 	 * Set the parent reich dialog that uses this BaseDocFactory Object
 	 * @param Rd
 	 */
+	@Deprecated
 	public void setParentRD(IRichDialogPanel Rd){
 		this.parentRD=Rd;
 	}
@@ -476,7 +484,6 @@ public abstract class BaseDocFactory{
 	public void setSuccessMethodName(String successMethodName) {
 		this.successMethodName = successMethodName;
 	}
-
 	
 	/**
 	 * This method allows getting an instance of the actual document factory that is implemented.
@@ -484,11 +491,11 @@ public abstract class BaseDocFactory{
 	 * This system property must contain the full namespace of the document factory class.
 	 * @return an Instance of the implemented Document Factory
 	 */
-	public static BaseDocFactory getInstance(){
-		BaseDocFactory basedoc=null;
+	public static BaseDocFactory getInstance() {
+		BaseDocFactory basedoc = null;
 		try {
 			if(System.getProperty("document.factory")!=null && !System.getProperty("document.factory").trim().isEmpty()){
-				basedoc=(BaseDocFactory) Class.forName(System.getProperty("document.factory")).newInstance();
+				basedoc= (BaseDocFactory) Class.forName(System.getProperty("document.factory")).newInstance();
 			}else{
 				basedoc= (BaseDocFactory) Class.forName("ch.ivyteam.ivy.addons.docfactory.AsposeDocFactory").newInstance();
 			}
@@ -497,4 +504,41 @@ public abstract class BaseDocFactory{
 		} 
 		return basedoc;
 	}
+	
+	/**
+	 * Set the response handler. 
+	 * A ResponseHandler must implement the handleDocFactoryResponse method accepting a {@link FileOperationMessage} object.
+	 * @param responseHandler
+	 * @return
+	 */
+	public BaseDocFactory withResponseHandler(ResponseHandler responseHandler) {
+		this.responseHandler = responseHandler;
+		return this;
+	}
+	
+	protected ResponseHandler getResponsHandler() {
+		return this.responseHandler;
+	}
+	
+	protected Object fieldMergingCallback;
+	
+	/**
+	 * Some DocFactory may allow injecting its own FieldMerging plug-in class for performing mail merging.
+	 * A good example is the {@link AsposeFieldMergingCallback} for Aspose.<br>
+	 * <b>Note:</b> at the time of the writing of this method, the default DocFactory is based on Aspose. 
+	 * As there is already a default one, You don't need to set the fieldMergingCallback unless you really need it.
+	 * @param fieldMergingCallback
+	 * @return the baseDocFactory with the given fieldMergingCallback set.
+	 */
+	public <T> BaseDocFactory withFielMergingCallBack(T fieldMergingCallback) {
+		this.fieldMergingCallback = fieldMergingCallback;
+		return this;
+	}
+	
+	@SuppressWarnings("unchecked")
+	protected <T> T getFielMergingCallBack() {
+		return (T) fieldMergingCallback;
+	}
+	
+	
 }
