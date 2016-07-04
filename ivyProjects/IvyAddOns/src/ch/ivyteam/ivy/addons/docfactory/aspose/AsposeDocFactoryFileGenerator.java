@@ -66,6 +66,10 @@ public class AsposeDocFactoryFileGenerator {
 			document.save(baseFilePath + DocFactoryConstants.TXT_EXTENSION, SaveFormat.TEXT);
 			file = new File(baseFilePath + DocFactoryConstants.TXT_EXTENSION);
 			break;
+		case BaseDocFactory.ODT_FORMAT:
+			document.save(baseFilePath + DocFactoryConstants.ODT_EXTENSION, SaveFormat.ODT);
+			file = new File(baseFilePath + DocFactoryConstants.ODT_EXTENSION);
+			break;
 		default:
 			throw new UnsupportedFormatException(Ivy.cms().co("/ch/ivyteam/ivy/addons/docfactory/messages/formatNotSupported"));
 		}

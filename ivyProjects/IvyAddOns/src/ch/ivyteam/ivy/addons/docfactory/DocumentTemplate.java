@@ -11,7 +11,7 @@ import java.util.Locale;
 
 import org.apache.commons.lang.StringUtils;
 
-import ch.ivyteam.ivy.addons.docfactory.mergefield.SerializableToMergeFields;
+import ch.ivyteam.ivy.addons.docfactory.mergefield.internal.MergeFieldsExtractor;
 import ch.ivyteam.ivy.addons.docfactory.response.ResponseHandler;
 import ch.ivyteam.ivy.addons.filemanager.FileHandler;
 import ch.ivyteam.ivy.environment.Ivy;
@@ -157,13 +157,29 @@ public class DocumentTemplate implements Serializable {
 	 * You can call this method several times with sevral Data. All the MergeFields will be added.
 	 * @param data
 	 * @return the DocumentTemplate which MergFields List is completed with the MergeFields retrieved from the given Data
+	 * @deprecated use {@link DocumentTemplate#putDataAsSourceForMailMerge(Serializable)} instead
 	 */
+	@Deprecated
 	public DocumentTemplate putDataAsSourceForSimpleMailMerge(Serializable data) {
+		return putDataAsSourceForMailMerge(data);
+	}
+	
+	/**
+	 * Allows using a Serializable bean which attributes accessible with public getters will be used as MergeFields.
+	 * The Nested Serializable in this Serializable are supported.<br>
+	 * Collections of Serializables in this Serializable are going to be used as sources for mail merge regions.<br>
+	 * Example: a Person Serializable which holds a name, an Address with a zipCode. The following MergeFields will be retrieved:<br>
+	 * person.name and person.address.zipCode <br>
+	 * You can call this method several times with sevral Data. All the MergeFields will be added.
+	 * @param data
+	 * @return the DocumentTemplate which MergFields List is completed with the MergeFields retrieved from the given Data
+	 */
+	public DocumentTemplate putDataAsSourceForMailMerge(Serializable data) {
 		if(data == null) {
 			throw new IllegalArgumentException("The data parameter cannot be null");
 		}
 		this.data = data;
-		this.mergeFields.addAll(SerializableToMergeFields.getMergeFields(data));
+		this.mergeFields.addAll(MergeFieldsExtractor.getMergeFields(data));
 		if(!locale.equals(DocFactoryConstants.DEFAULT_LOCALE)) {
 			for(TemplateMergeField tmf : this.mergeFields) {
 				tmf.useLocaleAndResetNumberFormatAndDateFormat(locale);
@@ -260,7 +276,8 @@ public class DocumentTemplate implements Serializable {
 	 * The key is the name of the mergeField that can be found in the template<br>
 	 * The value is the String that will replace the mergeField in the template during the template merging.
 	 */
-	public DocumentTemplate(String _templatePath, String _outputPath, String _outputName, String _outputFormat, List<TemplateMergeField> _mergeFields) {
+	public DocumentTemplate(String _templatePath, String _outputPath, String _outputName, 
+			String _outputFormat, List<TemplateMergeField> _mergeFields) {
 		super();
 		initializeConstructorVariables(_templatePath, _outputPath, _outputName,
 				_outputFormat);
@@ -283,7 +300,9 @@ public class DocumentTemplate implements Serializable {
 	 * @param _tablesNamesAndFieldsmap: an HashMap containing the tables name contained in the template as keys and the compositeObjects whose values should be inserted in the corresponding table.
 	 * if not null or not empty and if the template contains Merge Regions, the Merge Regions are going to be filled as table with the values.
 	 */
-	public DocumentTemplate(String _templatePath, String _outputPath, String _outputName, String _outputFormat, List<TemplateMergeField> _mergeFields, HashMap<String , java.util.List<CompositeObject>> _tablesNamesAndFieldsmap) {
+	public DocumentTemplate(String _templatePath, String _outputPath, String _outputName, 
+			String _outputFormat, List<TemplateMergeField> _mergeFields, HashMap<String , 
+			java.util.List<CompositeObject>> _tablesNamesAndFieldsmap) {
 		super();
 		initializeConstructorVariables(_templatePath, _outputPath, _outputName,
 				_outputFormat);
@@ -308,7 +327,9 @@ public class DocumentTemplate implements Serializable {
 	 * @param _tablesNamesAndFieldsHashtable: an Hashtable containing the tables name contained in the template as keys and the values should be inserted in the corresponding table as a ch.ivyteam.ivy.scripting.objects.Recordset.<br>
 	 * if not null or not empty and if the template contains Merge Regions, the Merge Regions are going to be filled as table with the values.
 	 */
-	public DocumentTemplate(String _templatePath, String _outputPath, String _outputName, String _outputFormat, List<TemplateMergeField> _mergeFields, Hashtable<String , Recordset> _tablesNamesAndFieldsHashtable) {
+	public DocumentTemplate(String _templatePath, String _outputPath, String _outputName, 
+			String _outputFormat, List<TemplateMergeField> _mergeFields, 
+			Hashtable<String , Recordset> _tablesNamesAndFieldsHashtable) {
 		super();
 		initializeConstructorVariables(_templatePath, _outputPath, _outputName,
 				_outputFormat);

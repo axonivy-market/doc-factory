@@ -16,8 +16,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.apache.commons.lang3.StringUtils;
-
 import ch.ivyteam.ivy.addons.docfactory.TemplateMergeField;
 
 public class SerializableToMergeFields {
@@ -30,14 +28,12 @@ public class SerializableToMergeFields {
 			return Collections.emptyList();
 		}
 		
-		
 		Collection<TemplateMergeField> result = new ArrayList<>();
 		Map<String, Object> introspected = null;
 		try {
 			introspected = introspect(bean, bean.getClass().getSimpleName().toLowerCase() + ".");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 		Iterator<Entry<String, Object>> iter = introspected.entrySet().iterator();
 		while(iter.hasNext()) {

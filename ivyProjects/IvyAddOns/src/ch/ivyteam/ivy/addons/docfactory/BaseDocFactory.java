@@ -37,18 +37,19 @@ public abstract class BaseDocFactory{
 	private ResponseHandler responseHandler;
 	
 	/** the list of supported formats. Can be different in your implementation*/
-	public static final String[] SUPPORTED_OUTPUT_FORMATS = new String[] {"doc", "docx", "html", "txt", "pdf"};
+	public static final String[] SUPPORTED_OUTPUT_FORMATS = new String[] {"doc", "docx", "html", "txt", "pdf", "odt"};
 	
 	@Deprecated
-	public static final String[] supportedOutputFormats = new String[] {"doc", "docx", "html", "txt", "pdf"};
+	public static final String[] supportedOutputFormats = new String[] {"doc", "docx", "html", "txt", "pdf", "odt"};
 	
 	/* Format types for convenient use of switch control*/
-	public static final int UNSUPPORTED_FORMAT=DocFactoryConstants.UNSUPPORTED_FORMAT;
-	public static final int DOC_FORMAT=DocFactoryConstants.DOC_FORMAT;
-	public static final int DOCX_FORMAT=DocFactoryConstants.DOCX_FORMAT;
-	public static final int HTML_FORMAT=DocFactoryConstants.HTML_FORMAT;
-	public static final int TXT_FORMAT=DocFactoryConstants.TXT_FORMAT;
-	public static final int PDF_FORMAT=DocFactoryConstants.PDF_FORMAT;
+	public static final int UNSUPPORTED_FORMAT = DocFactoryConstants.UNSUPPORTED_FORMAT;
+	public static final int DOC_FORMAT = DocFactoryConstants.DOC_FORMAT;
+	public static final int DOCX_FORMAT = DocFactoryConstants.DOCX_FORMAT;
+	public static final int HTML_FORMAT = DocFactoryConstants.HTML_FORMAT;
+	public static final int TXT_FORMAT = DocFactoryConstants.TXT_FORMAT;
+	public static final int PDF_FORMAT = DocFactoryConstants.PDF_FORMAT;
+	public static final int ODT_FORMAT = DocFactoryConstants.ODT_FORMAT;
 	/** the document factory use a document model like an office dot template to generate serial letters.<br>
 	 * This is the template java.io.File Object to be used for this operation.
 	 */

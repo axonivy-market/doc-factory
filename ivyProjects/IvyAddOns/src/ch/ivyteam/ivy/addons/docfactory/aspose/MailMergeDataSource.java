@@ -5,6 +5,8 @@ package ch.ivyteam.ivy.addons.docfactory.aspose;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.LinkedList;
 
 import org.apache.commons.lang.WordUtils;
 
@@ -30,15 +32,16 @@ public class MailMergeDataSource implements IMailMergeDataSource {
 	private List<List<CompositeObject>> childrenDatasources;
 	private List<java.util.List<List<CompositeObject>>> nestedChildrenDatasources;
 	private List<List<Tree>> treeChildrenDS;
+	private LinkedList<IMailMergeDataSource> childrenMailMergeDataSource;
 
 	/**
 	 * Instantiates the MailMergeDataSource object for Aspose MailMergeWithRegions with ch.ivyteam.ivy.scripting.objects.Recordset and tableName.
-	 * @param _val : the ch.ivyteam.ivy.scripting.objects.Recordset
-	 * @param _tablename : the tableName
+	 * @param recordSet : the ch.ivyteam.ivy.scripting.objects.Recordset
+	 * @param tableName : the tableName
 	 */
-	public MailMergeDataSource(Recordset _val, String _tablename) {
-		this.tableValues = _val;
-		this.tableName = _tablename;
+	public MailMergeDataSource(Recordset recordSet, String tableName) {
+		this.tableValues = recordSet;
+		this.tableName = tableName;
 		// When the data source is initialized, it must be positioned before the first record.
 		this.rowIndex = -1;
 	}
@@ -91,7 +94,7 @@ public class MailMergeDataSource implements IMailMergeDataSource {
 
 	/**
 	 * Instantiates the MailMergeDataSource object for Aspose MailMerge WithNestedRegions.
-	 * The parameter is a DataClass that can contain List of other DataClasses. Each of these is will be concidered as a child data source.
+	 * The parameter is a DataClass that can contain List of other DataClasses. Each of these is will be considered as a child data source.
 	 * @param dataSourceObjects
 	 */
 	public MailMergeDataSource(List<CompositeObject> dataSourceObjects) {
@@ -110,6 +113,27 @@ public class MailMergeDataSource implements IMailMergeDataSource {
 		}
 		this.rowIndex = -1;
 		makeListOfChildrenDataSourceInComposite(dataSourceObjects);
+	}
+	
+	public <T> MailMergeDataSource(java.util.Collection<T> dataSourceObjects) {
+		if(dataSourceObjects == null || dataSourceObjects.isEmpty()) {
+			return;
+		}
+		java.util.List<T> dataList = new ArrayList<>();
+		dataList.addAll(dataSourceObjects);
+		this.tableName = dataList.get(0).getClass().getName().substring(dataList.get(0).getClass().getName().lastIndexOf(".")+1);
+		this.tableValues = new Recordset();
+		
+		//this.tableValues.add(dataList.get(0));
+		for (int i = 1; i < dataList.size(); i++) {
+			//Check List consistency: all the compositeObjects have to have the same type
+			if (dataList.get(i).getClass().getName() != dataList.get(i-1).getClass().getName()) {
+				throw new IllegalArgumentException(Ivy.cms().co("/ch/ivyteam/ivy/addons/docfactory/messages/mailMergeWithRegionsNeedsListOfSameDataClassTypes"));	
+			}
+			//this.tableValues.add(dataList.get(i));
+		}
+		this.rowIndex = -1;
+		//makeListOfChildrenDataSourceInComposite(dataSourceObjects);
 	}
 
 	/**
@@ -154,7 +178,6 @@ public class MailMergeDataSource implements IMailMergeDataSource {
 		List<Tree> children = _tree.getChildren();
 		if(!children.isEmpty() && children.get(0).getValue() instanceof CompositeObject) {
 			this.tableName = children.get(0).getValue().getClass().getName().substring(children.get(0).getValue().getClass().getName().lastIndexOf(".")+1);
-			Ivy.log().debug("Table name :"+this.tableName);
 			this.tableValues = new Recordset();
 			this.tableValues.add((CompositeObject)children.get(0).getValue());
 			this.treeChildrenDS.add(children.get(0).getChildren());
@@ -258,8 +281,30 @@ public class MailMergeDataSource implements IMailMergeDataSource {
 			if(i<this.treeChildrenDS.size()) {
 				return new MailMergeDataSource(this.treeChildrenDS.get(i),_tablename);
 			}
+		} else if(this.childrenMailMergeDataSource != null) {
+			int i = 0;
+			for(IMailMergeDataSource ds: this.childrenMailMergeDataSource) {
+				if(ds.getTableName().equals(_tablename)) {
+					return this.childrenMailMergeDataSource.remove(i);
+				}
+				i++;
+			}
 		}
 		return null;
+	}
+	
+	void putChildMailMergeDataSource(IMailMergeDataSource mmds, String tableName) {
+		if(mmds == null) {
+			return;
+		}
+		if(this.childrenMailMergeDataSource == null) {
+			this.childrenMailMergeDataSource = new LinkedList<>();
+		} 
+		this.childrenMailMergeDataSource.add(mmds);
+	}
+	
+	protected Recordset getTableValues() {
+		return this.tableValues;
 	}
 
 }

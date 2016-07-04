@@ -19,6 +19,7 @@ import ch.ivyteam.ivy.ThirdPartyLicenses;
 import ch.ivyteam.ivy.addons.docfactory.aspose.AsposeDocFactoryFileGenerator;
 import ch.ivyteam.ivy.addons.docfactory.aspose.AsposeFieldMergingCallback;
 import ch.ivyteam.ivy.addons.docfactory.aspose.MailMergeDataSource;
+import ch.ivyteam.ivy.addons.docfactory.aspose.MailMergeDataSourceGenerator;
 import ch.ivyteam.ivy.addons.docfactory.exception.DocumentGenerationException;
 import ch.ivyteam.ivy.addons.docfactory.mergefield.SimpleMergeFieldsHandler;
 import ch.ivyteam.ivy.addons.util.RDCallbackMethodHandler;
@@ -173,7 +174,7 @@ public class AsposeDocFactory extends BaseDocFactory {
 	public FileOperationMessage generateDocument(DocumentTemplate _documentTemplate) {
 		try {
 			this.doc = this.doMailMerge(_documentTemplate);
-			
+			System.out.println(_documentTemplate.getOutputFormat());
 			this.fileOperationMessage =  AsposeDocFactoryFileGenerator.exportDocumentToFile(
 					this.doc, 
 					this.formatGivenPathSetToDefaultIfBlank(_documentTemplate.getOutputPath()) + _documentTemplate.getOutputName(), 
@@ -687,6 +688,15 @@ public class AsposeDocFactory extends BaseDocFactory {
 		if(_documentTemplate.getTreeData()!=null) {
 			mmds.add(new MailMergeDataSource(_documentTemplate.getTreeData()));
 		}
+		for(TemplateMergeField tmf: _documentTemplate.getMergeFields()) {
+			if(tmf.isCollection()) {
+				IMailMergeDataSource dataSource = MailMergeDataSourceGenerator.getFromCollectionTypeTemplateMergeField(tmf);
+				
+				if(dataSource != null) {
+					mmds.add(dataSource);
+				}
+			}
+		}
 		return mmds;
 	}
 	
@@ -868,16 +878,16 @@ public class AsposeDocFactory extends BaseDocFactory {
 	 */
 	@Override
 	public boolean isFormatSupported(String format) {
-		if(StringUtils.isBlank(format)) {
+		if (StringUtils.isBlank(format)) {
 			return false;
 		}
 		boolean flag = false;
-		if(format.startsWith(".")) {
+		if (format.startsWith(".")) {
 			format = format.substring(1);
 		}
-		for(int i =0; i<SUPPORTED_OUTPUT_FORMATS.length;i++) {
-			if(format.trim().equalsIgnoreCase(SUPPORTED_OUTPUT_FORMATS[i])) {
-				flag=true;
+		for (int i = 0; i < SUPPORTED_OUTPUT_FORMATS.length; i++) {
+			if (format.trim().equalsIgnoreCase(SUPPORTED_OUTPUT_FORMATS[i])) {
+				flag = true;
 				break;
 			}
 		}
