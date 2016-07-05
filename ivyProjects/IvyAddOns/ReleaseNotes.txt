@@ -11,6 +11,8 @@ person.name
 person.firstname
 person.address.city.cityname
 
+New Feature: Possibility to use a Serializable as datasource for the mergefields with region and nested merge fields with regions.
+
 Div. API: New QRCode API for generating QRCode images from Data.
 See ch.ivyteam.ivy.addons.qrcode package
 
