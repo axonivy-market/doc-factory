@@ -154,7 +154,7 @@ public class DocumentTemplate implements Serializable {
 	 * The Nested Serializable in this Serializable are supported.<br>
 	 * Example: a Person Serializable which holds a name, an Address with a zipCode. The following MergeFields will be retrieved:<br>
 	 * person.name and person.address.zipCode <br>
-	 * You can call this method several times with sevral Data. All the MergeFields will be added.
+	 * You can call this method several times with several Data. All the MergeFields will be added.
 	 * @param data
 	 * @return the DocumentTemplate which MergFields List is completed with the MergeFields retrieved from the given Data
 	 * @deprecated use {@link DocumentTemplate#putDataAsSourceForMailMerge(Serializable)} instead
@@ -170,7 +170,7 @@ public class DocumentTemplate implements Serializable {
 	 * Collections of Serializables in this Serializable are going to be used as sources for mail merge regions.<br>
 	 * Example: a Person Serializable which holds a name, an Address with a zipCode. The following MergeFields will be retrieved:<br>
 	 * person.name and person.address.zipCode <br>
-	 * You can call this method several times with sevral Data. All the MergeFields will be added.
+	 * You can call this method several times with several Data. All the MergeFields will be added.
 	 * @param data
 	 * @return the DocumentTemplate which MergFields List is completed with the MergeFields retrieved from the given Data
 	 */
