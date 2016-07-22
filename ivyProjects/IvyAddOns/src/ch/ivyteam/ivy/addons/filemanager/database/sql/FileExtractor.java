@@ -25,7 +25,9 @@ public final class FileExtractor {
 		String tmpPath="tmp/"+System.nanoTime()+"/"+fileName;
 		File ivyFile = new File(tmpPath, true);
 		ivyFile.createNewFile();
-		
+		if(inputStream == null) {
+			return ivyFile;
+		}
 		java.io.File javaFile = ivyFile.getJavaFile();
 		
 		FileOutputStream fos = null;
