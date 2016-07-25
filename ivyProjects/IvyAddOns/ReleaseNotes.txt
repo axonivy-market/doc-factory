@@ -1,5 +1,5 @@
 =============================== 
-IvyAddons 6010200 Release Notes 
+IvyAddons 6030000 Release Notes 
 ===============================
 
 * Issue 25838: Filemanager, a new Callable call has been placed at the end of the RD start Method for allowing to inject some custom behavior (UI changes etc....). 
