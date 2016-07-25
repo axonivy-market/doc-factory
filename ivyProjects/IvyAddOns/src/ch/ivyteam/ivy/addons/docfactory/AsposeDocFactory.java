@@ -174,7 +174,7 @@ public class AsposeDocFactory extends BaseDocFactory {
 	public FileOperationMessage generateDocument(DocumentTemplate _documentTemplate) {
 		try {
 			this.doc = this.doMailMerge(_documentTemplate);
-			System.out.println(_documentTemplate.getOutputFormat());
+			//System.out.println(_documentTemplate.getOutputFormat());
 			this.fileOperationMessage =  AsposeDocFactoryFileGenerator.exportDocumentToFile(
 					this.doc, 
 					this.formatGivenPathSetToDefaultIfBlank(_documentTemplate.getOutputPath()) + _documentTemplate.getOutputName(), 
@@ -689,7 +689,8 @@ public class AsposeDocFactory extends BaseDocFactory {
 			mmds.add(new MailMergeDataSource(_documentTemplate.getTreeData()));
 		}
 		for(TemplateMergeField tmf: _documentTemplate.getMergeFields()) {
-			if(tmf.isCollection()) {
+			
+			if(tmf.isPossibleTableData() && tmf.isCollection()) {
 				IMailMergeDataSource dataSource = MailMergeDataSourceGenerator.getFromCollectionTypeTemplateMergeField(tmf);
 				
 				if(dataSource != null) {

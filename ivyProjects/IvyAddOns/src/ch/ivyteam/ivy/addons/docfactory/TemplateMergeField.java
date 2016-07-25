@@ -14,6 +14,7 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
+import ch.ivyteam.api.API;
 import ch.ivyteam.ivy.addons.docfactory.mergefield.TemplateMergeFieldType;
 import ch.ivyteam.ivy.addons.docfactory.mergefield.internal.MergeFieldsExtractor;
 
@@ -44,6 +45,8 @@ public class TemplateMergeField {
 	
 	private Collection<TemplateMergeField> nestedCollections = new ArrayList<>();
 	
+	private boolean isSimpleValue = true;
+	
 	/**
 	 * Constructor with two parameters : the mergeFieldName and its value.
 	 * @param _mergeFieldName String
@@ -70,26 +73,48 @@ public class TemplateMergeField {
 	
 	/**
 	 * Set the Type {@link TemplateMergeFieldType} and the value of this TemplateMergeField.<br>
-	 * If you don't want to care about setting the type yourself, use {@link TemplateMergeField#withValue(Object)}.
-	 * @param type the TemplateMergeFieldType reflecting the type of this field value.
+	 * If you don't want to care about setting the type yourself, use {@link TemplateMergeField#withValue(Object)} or {@link TemplateMergeField#asSimpleValue(Object)}.
+	 * An introspection is done for getting children TemplateMergeFields in case of an Object or a Collection type. 
+	 * This allows supporting mail merge with regions or nested regions.
+	 * @param type the TemplateMergeFieldType reflecting the type of this field value. Cannot be null.
 	 * @param value the value of the field. 
 	 * @return
 	 */
 	public TemplateMergeField withValueAs(TemplateMergeFieldType type, Object value) {
+		API.checkNotNull(type, "TemplateMergeFieldType");
+		this.isSimpleValue = false;
 		setValue(value);
 		this.type = type;
-		makeChildren();
+		if(type.is(TemplateMergeFieldType.OBJECT) || type.is(TemplateMergeFieldType.COLLECTION)) {
+			makeChildren();
+		}
 		return this;
 	}
 	
 	/**
 	 * Set the value of the TemplateMergeField and return it.<br>
+	 * An introspection is done for getting children TemplateMergeFields in case of an Object or a Collection type. 
+	 * This allows supporting mail merge with regions or nested regions.
 	 * The {@link TemplateMergeFieldType} will be automatically computed.
 	 * 
 	 * @param value the value to set, cannot be null.
 	 * @return
 	 */
 	public TemplateMergeField withValue(Object value) {
+		this.isSimpleValue = false;
+		setValue(value);
+		setType();
+		return this;
+	}
+	
+	/**
+	 * Set the value of the TemplateMergeField and return it.<br>
+	 * The {@link TemplateMergeFieldType} will be automatically computed.
+	 * The resulting TemplateMergeField won't be used for introspection to look if it contains collection of data for mail merge with regions.
+	 * @param value the value to set, cannot be null.
+	 * @return
+	 */
+	public TemplateMergeField asSimpleValue(Object value) {
 		setValue(value);
 		setType();
 		return this;
@@ -139,7 +164,10 @@ public class TemplateMergeField {
 			this.type = TemplateMergeFieldType.NUMBER;
 		} else if (value instanceof Date || value instanceof java.sql.Date) {
 			this.type = TemplateMergeFieldType.DATE;
-		} else if (value instanceof Collection || value instanceof Map<?,?>) {
+		} else if(value instanceof Enum<?>) {
+			this.type = TemplateMergeFieldType.ENUM;
+		}
+		else if (value instanceof Collection || value instanceof Map<?,?>) {
 			this.type = TemplateMergeFieldType.COLLECTION;
 			makeChildren();
 		} else {
@@ -184,6 +212,9 @@ public class TemplateMergeField {
 	private void makeChildren() {
 		this.children.clear();
 		this.nestedCollections.clear();
+		if(this.isSimpleValue) {
+			return;
+		}
 		if(this.type.is(TemplateMergeFieldType.OBJECT)) {
 			this.children.addAll(MergeFieldsExtractor.getChildrenMergeFieldsForObjectMergeField(this));
 			for(TemplateMergeField tmf : this.children) {
@@ -193,12 +224,6 @@ public class TemplateMergeField {
 			}
 		}
 		if(this.type.is(TemplateMergeFieldType.COLLECTION)) {
-			/*Collection<?> col = null;
-			if(this.getValue() instanceof Map<?, ?>) {
-				col = ((Map<?, ?>) this.getValue()).values();
-			} else {
-				col = (Collection<?>) this.getValue();
-			}*/
 			for(Collection<TemplateMergeField> result : MergeFieldsExtractor.getMergeFieldsForCollectionTemplateMergeField(this.getMergeFieldName(), this)) {
 				this.children.addAll(result);
 			}
@@ -257,6 +282,10 @@ public class TemplateMergeField {
 			return this.value;
 		}
 		return getMergeFieldValue();
+	}
+	
+	public boolean isPossibleTableData() {
+		return !this.isSimpleValue;
 	}
 	
 	/**

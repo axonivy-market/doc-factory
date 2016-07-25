@@ -23,7 +23,7 @@ public class MailMergeDataSourceGenerator {
 	public static IMailMergeDataSource getFromCollectionTypeTemplateMergeField(TemplateMergeField templateMergeField) {
 		API.checkNotNull(templateMergeField, "TemplateMergeField");
 		MailMergeDataSource mmds = null;
-		if(templateMergeField.getType().is(TemplateMergeFieldType.COLLECTION)) {
+		if(templateMergeField.isPossibleTableData() && templateMergeField.getType().is(TemplateMergeFieldType.COLLECTION)) {
 			MailMergeDataSourceGenerator serializableMailMergeDataSource = new MailMergeDataSourceGenerator();
 			serializableMailMergeDataSource.templateMergeField = templateMergeField;
 			serializableMailMergeDataSource.tableName = templateMergeField.getMergeFieldName();
@@ -43,7 +43,7 @@ public class MailMergeDataSourceGenerator {
 	private static IMailMergeDataSource getFromCollectionTypeTemplateMergeField(TemplateMergeField templateMergeField, String parent) {
 		API.checkNotNull(templateMergeField, "TemplateMergeField");
 		MailMergeDataSource mmds = null;
-		if(templateMergeField.getType().is(TemplateMergeFieldType.COLLECTION)) {
+		if(templateMergeField.isPossibleTableData() && templateMergeField.getType().is(TemplateMergeFieldType.COLLECTION)) {
 			MailMergeDataSourceGenerator serializableMailMergeDataSource = new MailMergeDataSourceGenerator();
 			serializableMailMergeDataSource.templateMergeField = templateMergeField;
 			serializableMailMergeDataSource.tableName = getLastPart(parent) + getSecondPart(templateMergeField.getMergeFieldName());
@@ -64,11 +64,11 @@ public class MailMergeDataSourceGenerator {
 		MailMergeDataSource parentDataSource = (MailMergeDataSource) parentMmds;
 		String simplifiedName = getLastPart(parentTableName);
 		IMailMergeDataSource childMailMergeDataSource = null;
-		if(templateMergeField.isCollection()) {
+		if(templateMergeField.isPossibleTableData() && templateMergeField.isCollection()) {
 			childMailMergeDataSource = getFromCollectionTypeTemplateMergeField(templateMergeField, parentTableName);
 			parentDataSource.putChildMailMergeDataSource(childMailMergeDataSource, simplifiedName + getSecondPart(templateMergeField.getMergeFieldName()));
 		}
-		if(templateMergeField.getType().is(TemplateMergeFieldType.OBJECT)) {
+		if(templateMergeField.isPossibleTableData() && templateMergeField.getType().is(TemplateMergeFieldType.OBJECT)) {
 			Collection<TemplateMergeField> childrenFields = MergeFieldsExtractor.getMergeFields(templateMergeField.getValue());
 			for(TemplateMergeField tmf : childrenFields) {
 				IMailMergeDataSource result = getFromCollectionTypeTemplateMergeField(tmf, parentTableName);
