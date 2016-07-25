@@ -158,7 +158,7 @@ public class DocumentTemplate implements Serializable {
 	 * <b>Be aware that no reporting with tables is supported</b> (merge mail with regions or nested regions). 
 	 * If the given bean has some nested Collections, these collections are not parsed for merging the tables.
 	 * Use {@link DocumentTemplate#putDataAsSourceForMailMerge(Serializable)} instead if you want that the MailMergeWithRegions support
-	 * @param data
+	 * @param data the data, cannot be null.
 	 * @return the DocumentTemplate which MergFields List is completed with the MergeFields retrieved from the given Data
 	 * 
 	 */
@@ -180,10 +180,11 @@ public class DocumentTemplate implements Serializable {
 	 * Allows using a Serializable bean which attributes accessible with public getters will be used as MergeFields.
 	 * The Nested Serializable in this Serializable are supported.<br>
 	 * Collections of Serializables in this Serializable are going to be used as sources for mail merge regions.<br>
-	 * Example: a Person Serializable which holds a name, an Address with a zipCode. The following MergeFields will be retrieved:<br>
-	 * person.name and person.address.zipCode <br>
+	 * <b>Important</b> Due to the way the DocFactory introspects the data for retrieving and building the mail merge regions sources, 
+	 * having some collection of objects with cyclic relationships will end to an OutOfMemory Exception.<br>
+	 * Example: Person with a Collection of Addresses and each Address holds a reference to the Person object. This is not supported.<br><br>
 	 * You can call this method several times with several Data. All the MergeFields will be added.
-	 * @param data
+	 * @param data the data, cannot be null.
 	 * @return the DocumentTemplate which MergFields List is completed with the MergeFields retrieved from the given Data
 	 */
 	public DocumentTemplate putDataAsSourceForMailMerge(Serializable data) {
