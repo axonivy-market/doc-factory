@@ -154,14 +154,26 @@ public class DocumentTemplate implements Serializable {
 	 * The Nested Serializable in this Serializable are supported.<br>
 	 * Example: a Person Serializable which holds a name, an Address with a zipCode. The following MergeFields will be retrieved:<br>
 	 * person.name and person.address.zipCode <br>
-	 * You can call this method several times with several Data. All the MergeFields will be added.
+	 * You can call this method several times with several Data. All the MergeFields will be added. <br>
+	 * <b>Be aware that no reporting with tables is supported</b> (merge mail with regions or nested regions). 
+	 * If the given bean has some nested Collections, these collections are not parsed for merging the tables.
+	 * Use {@link DocumentTemplate#putDataAsSourceForMailMerge(Serializable)} instead if you want that the MailMergeWithRegions support
 	 * @param data
 	 * @return the DocumentTemplate which MergFields List is completed with the MergeFields retrieved from the given Data
-	 * @deprecated use {@link DocumentTemplate#putDataAsSourceForMailMerge(Serializable)} instead
+	 * 
 	 */
-	@Deprecated
 	public DocumentTemplate putDataAsSourceForSimpleMailMerge(Serializable data) {
-		return putDataAsSourceForMailMerge(data);
+		if(data == null) {
+			throw new IllegalArgumentException("The data parameter cannot be null");
+		}
+		this.data = data;
+		this.mergeFields.addAll(MergeFieldsExtractor.getMergeFieldsForSimpleMerge(data));
+		if(!locale.equals(DocFactoryConstants.DEFAULT_LOCALE)) {
+			for(TemplateMergeField tmf : this.mergeFields) {
+				tmf.useLocaleAndResetNumberFormatAndDateFormat(locale);
+			}
+		}
+		return this;
 	}
 	
 	/**
@@ -221,16 +233,18 @@ public class DocumentTemplate implements Serializable {
 	}
 	
 	/**
-	 * Add a specific meregeField
-	 * @param mergeFieldName
-	 * @param value
-	 * @return
+	 * Add a specific mergeField.<br>
+	 * Note that the MergeField will be added as simple value and won't be introspected for merge mail with regions.
+	 * 
+	 * @param mergeFieldName the name of the merge field as it should appears in the template, cannot be blank.
+	 * @param value The value: cannot be blank
+	 * @return the documentTemplate which contains a new "simple mail merge" TemplateMergeField.
 	 */
 	public DocumentTemplate addMergeField(String mergeFieldName, Object value) {
 		if(StringUtils.isBlank(mergeFieldName) || value == null) {
 			throw new IllegalArgumentException("The mergeFieldName cannot be blank and the value cannot be null");
 		}
-		this.mergeFields.add(TemplateMergeField.withName(mergeFieldName).withValue(value).useLocaleAndResetNumberFormatAndDateFormat(this.locale));
+		this.mergeFields.add(TemplateMergeField.withName(mergeFieldName).asSimpleValue(value).useLocaleAndResetNumberFormatAndDateFormat(this.locale));
 		return this;
 	}
 	

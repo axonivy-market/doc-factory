@@ -34,25 +34,54 @@ public class MergeFieldsExtractor {
 		if(bean == null) {
 			return Collections.emptyList();
 		}
+		Iterator<Entry<String, Object>> iter = extractFields(bean, baseName);
+		if(iter == null) {
+			return Collections.emptyList();
+		}
+		Collection<TemplateMergeField> result = new ArrayList<>();
+		while(iter.hasNext()) {
+			Entry<String, Object> entry = iter.next();
+			result.add(TemplateMergeField.withName(entry.getKey()).withValue(entry.getValue()));
+		}
+		return result;
+	}
+	
+	private static Collection<TemplateMergeField> getMergeFieldsWithBaseNameForSimpleMerge(
+			Object bean, String baseName) {
+		if(bean == null) {
+			return Collections.emptyList();
+		}
+		Iterator<Entry<String, Object>> iter = extractFields(bean, baseName);
+		if(iter == null) {
+			return Collections.emptyList();
+		}
+		Collection<TemplateMergeField> result = new ArrayList<>();
+		while(iter.hasNext()) {
+			Entry<String, Object> entry = iter.next();
+			result.add(TemplateMergeField.withName(entry.getKey()).asSimpleValue(entry.getValue()));
+		}
+		return result;
+	}
+
+	private static Iterator<Entry<String, Object>> extractFields(Object bean,
+			String baseName) {
+		
 		if(StringUtils.isBlank(baseName)) {
 			baseName = "";
 		} else if(!baseName.endsWith(".")) {
 			baseName = baseName + ".";
 		}
-		
-		Collection<TemplateMergeField> result = new ArrayList<>();
 		Map<String, Object> introspected = null;
 		try {
 			introspected = introspect(bean, baseName + Introspector.decapitalize(bean.getClass().getSimpleName()) + ".");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 		}
-		Iterator<Entry<String, Object>> iter = introspected.entrySet().iterator();
-		while(iter.hasNext()) {
-			Entry<String, Object> entry = iter.next();
-			result.add(TemplateMergeField.withName(entry.getKey()).withValue(entry.getValue()));
+		if(introspected == null) {
+			return null;
 		}
-		return result;
+		Iterator<Entry<String, Object>> iter = introspected.entrySet().iterator();
+		return iter;
 	}
 	
 	public static Collection<TemplateMergeField> getChildrenMergeFieldsForObjectMergeField(TemplateMergeField templateMergeField) {
@@ -61,18 +90,23 @@ public class MergeFieldsExtractor {
 			return Collections.emptyList();
 		}
 		String baseName = templateMergeField.getMergeFieldName();
+		if(baseName.contains(".declaringClass.")) {
+			return Collections.emptyList();
+		}
 		if(StringUtils.isBlank(baseName)) {
 			baseName = "";
 		} else if(!baseName.endsWith(".")) {
 			baseName = baseName + ".";
 		}
-		
 		Collection<TemplateMergeField> result = new ArrayList<>();
 		Map<String, Object> introspected = null;
 		try {
 			introspected = introspect(templateMergeField.getValue(), baseName + Introspector.decapitalize(templateMergeField.getValue().getClass().getSimpleName()) + ".");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
+		}
+		if(introspected == null ||  introspected.entrySet() == null) {
+			return Collections.emptyList();
 		}
 		Iterator<Entry<String, Object>> iter = introspected.entrySet().iterator();
 		while(iter.hasNext()) {
@@ -86,6 +120,12 @@ public class MergeFieldsExtractor {
 		return getMergeFieldsWithBaseName(bean, "");
 	}
 	
+	public static Collection<TemplateMergeField> getMergeFieldsForSimpleMerge(Object bean) {
+		return getMergeFieldsWithBaseNameForSimpleMerge(bean, "");
+	}
+	
+	
+
 	public static Collection<Collection<TemplateMergeField>> getMergeFieldsForCollectionTemplateMergeField(String tablename, TemplateMergeField templateMergeField) {
 		if(!templateMergeField.isCollection()) {
 			return Collections.emptyList();

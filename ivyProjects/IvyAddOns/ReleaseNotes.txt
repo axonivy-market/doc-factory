@@ -2,8 +2,13 @@
 IvyAddons 6010200 Release Notes 
 ===============================
 
-DocFactory:
-New Feature: Possibility to use a Serializable as datasource for the mergefields. (Supports embedded Serializable objects in Serializable).
+* Issue 25838: Filemanager, a new Callable call has been placed at the end of the RD start Method for allowing to inject some custom behavior (UI changes etc....). 
+The original empty Callable is placed under /IvyAddOns/processes/Functional Processes/Filemanager/Panel/RichDialogPanelDefinition.mod
+and takes 2 parameters: the panel itself and the FilemanagerConfiguration. One can override this callable for customizing it.
+
+* Issue 25839 (bug): FileManager on Oracle DB - NPE by opening a 0 byte file
+
+* Issue 25843 DocFactory - New Feature: Possibility to use a Serializable as datasource for the mergefields. (Supports embedded Serializable objects in Serializable).
 Example of use: 
 DocumentTemplate documentTemplate = DocumentTemplate.withTemplate(template).putDataAsSourceForSimpleMailMerge(makePerson());
 The mergefields will be named with the Serializable Class as prefix like:
@@ -11,9 +16,14 @@ person.name
 person.firstname
 person.address.city.cityname
 
-New Feature: Possibility to use a Serializable as datasource for the mergefields with region and nested merge fields with regions.
+* Issue 25844 DocFactory - New Feature: Possibility to use a Serializable as datasource for the mergefields with region and nested merge fields with regions.
+A java Bean may contain collections of other beans which in turn may contain other collections, and so on ... We have then nested collections inside other parent collections.
+These collections may be used for injecting data in nested mail merge regions of your template.
+IMPORTANT
+For the moment cyclic relationships are not supported. For example an Order object has a list of OrderDetails objects, each OrderDetails object has a reference to the parent Order and so on... . 
+For the moment the way the DocFactory introspects the data may leads to an OutOfMemory Error. This is a well known problem and this may be supported in the future.
 
-Div. API: New QRCode API for generating QRCode images from Data.
+* Issue 25845 New QRCode API for generating QRCode images from Data.
 See ch.ivyteam.ivy.addons.qrcode package
 
 =============================== 
