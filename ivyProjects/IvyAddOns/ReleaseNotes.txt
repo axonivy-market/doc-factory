@@ -2,6 +2,7 @@
 IvyAddons 6030000 Release Notes 
 ===============================
 
+
 * Issue 25838: Filemanager, a new Callable call has been placed at the end of the RD start Method for allowing to inject some custom behavior (UI changes etc....). 
 The original empty Callable is placed under /IvyAddOns/processes/Functional Processes/Filemanager/Panel/RichDialogPanelDefinition.mod
 and takes 2 parameters: the panel itself and the FilemanagerConfiguration. One can override this callable for customizing it.
@@ -25,6 +26,10 @@ For the moment the way the DocFactory introspects the data may leads to an OutOf
 
 * Issue 25845 New QRCode API for generating QRCode images from Data.
 See ch.ivyteam.ivy.addons.qrcode package
+
+* Issue 25850 DocFactory: Insert HTML-formatted Text as merge field value
+It is now possible to inject HTML-formatted text in your documents. This can be a great help if you have to change the format of your text like the text color, size, background... dynamically.
+The principle is very easy: you just put some text with some HTML tags and css styles into a mergefield or in a data and the DocFactory engine will automatically inject your text as HTML in the document.
 
 =============================== 
 IvyAddons 6010100 Release Notes 
