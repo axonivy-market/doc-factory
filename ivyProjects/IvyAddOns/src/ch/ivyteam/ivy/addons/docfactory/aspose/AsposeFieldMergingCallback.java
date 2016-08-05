@@ -18,6 +18,7 @@ import java.nio.file.Paths;
 
 import ch.ivyteam.ivy.addons.docfactory.DocFactoryConstants;
 import ch.ivyteam.ivy.addons.docfactory.image.ImageDimensionCalculatorFactory;
+import ch.ivyteam.ivy.addons.restricted.util.HTMLParser;
 import ch.ivyteam.ivy.environment.Ivy;
 
 import com.aspose.words.CompositeNode;
@@ -49,7 +50,7 @@ import com.aspose.words.Section;
  * Use the {@code AsposeDocFactory.setAsposeFieldMergingCallback(AsposeFieldMergingCallback fieldMergingCallback)} method to pass your own AsposeFieldMergingCallback to the docFactory.
  */
 public class AsposeFieldMergingCallback implements IFieldMergingCallback {
-
+	
 	@Override
 	public void fieldMerging(FieldMergingArgs e) throws Exception { 
 		if(e.getFieldValue() == null) {
@@ -57,6 +58,9 @@ public class AsposeFieldMergingCallback implements IFieldMergingCallback {
 		}
 		if(e.getFieldName().toLowerCase().startsWith(DocFactoryConstants.EMBEDDED_DOCUMENT_MERGEFIELD_NAME_START)) {
 			handleDocumentInsertion(e);
+		}
+		if(e.getFieldValue() instanceof String && isHTML((String) e.getFieldValue())) {
+			handleHTMLInsertion(e);
 		}
 
 	}
@@ -148,6 +152,12 @@ public class AsposeFieldMergingCallback implements IFieldMergingCallback {
 		// Indicate to the mail merge engine that we have inserted what we wanted.
 		e.setText(null);
 	}
+	
+	private void handleHTMLInsertion(FieldMergingArgs e) throws Exception {
+		DocumentBuilder builder = new DocumentBuilder(e.getDocument());
+		builder.moveToMergeField(e.getFieldName());
+		builder.insertHtml((String) e.getFieldValue());
+	}
 
 
 	private void insertDocument(Node insertAfterNode, Document documentToInsert) throws Exception {
@@ -184,6 +194,10 @@ public class AsposeFieldMergingCallback implements IFieldMergingCallback {
 				insertAfterNode = newNode;
 			}
 		}
+	}
+	
+	private boolean isHTML(String fieldValue) {
+		return HTMLParser.isHTML(fieldValue);
 	}
 
 }
