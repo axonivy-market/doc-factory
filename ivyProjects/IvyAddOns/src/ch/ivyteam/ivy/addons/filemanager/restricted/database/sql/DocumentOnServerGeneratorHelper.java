@@ -31,6 +31,7 @@ public class DocumentOnServerGeneratorHelper {
 		
 		assert(rst !=null):"Invalid ResultSet in buildDocumentOnServerWithResulSetRow method.";
 		DocumentOnServer doc =  new DocumentOnServer();
+		doc.setId((long) rst.getInt("FileId"));
 		doc.setFileID(String.valueOf(rst.getInt("FileId")));
 		doc.setFilename(rst.getString("FileName"));
 		doc.setPath(rst.getString("FilePath"));
@@ -84,6 +85,7 @@ public class DocumentOnServerGeneratorHelper {
 		for(Record rec: recordList) {
 			DocumentOnServer doc = new DocumentOnServer();
 			doc.setFileID(rec.getField("FileId").toString());
+			doc.setId(Long.parseLong(rec.getField("FileId").toString()));
 			doc.setFilename(rec.getField("FileName").toString());
 			doc.setPath(rec.getField("FilePath").toString());
 			doc.setDisplayedPath(doc.getPath());
