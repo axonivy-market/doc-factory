@@ -3,7 +3,6 @@ package ch.ivyteam.ivy.addons.docfactory;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -15,9 +14,10 @@ import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 
-import ch.ivyteam.ivy.ThirdPartyLicenses;
 import ch.ivyteam.ivy.addons.docfactory.aspose.AsposeDocFactoryFileGenerator;
 import ch.ivyteam.ivy.addons.docfactory.aspose.AsposeFieldMergingCallback;
+import ch.ivyteam.ivy.addons.docfactory.aspose.AsposeProduct;
+import ch.ivyteam.ivy.addons.docfactory.aspose.LicenseLoader;
 import ch.ivyteam.ivy.addons.docfactory.aspose.MailMergeDataSource;
 import ch.ivyteam.ivy.addons.docfactory.aspose.MailMergeDataSourceGenerator;
 import ch.ivyteam.ivy.addons.docfactory.exception.DocumentGenerationException;
@@ -65,13 +65,7 @@ public class AsposeDocFactory extends BaseDocFactory {
 	public static final String[] supportedOutputFormats = SUPPORTED_OUTPUT_FORMATS;
 	
 	/** Aspose.Word Document objects used to perform the document merge (letter generation with MergeFields)*/
-	private Document doc, docDest;
-
-	//private AsposeFieldMergingCallback fieldMergingCallback=null;
-	
-
-	/** Aspose License*/
-	private com.aspose.words.License license = null;
+	private Document doc, docDest;	
 
 	/** String used to stored the fileName used to generate a document */
 	String outputName;
@@ -115,11 +109,8 @@ public class AsposeDocFactory extends BaseDocFactory {
 	}
 
 	private void parseLicense() {
-		this.license = new com.aspose.words.License();
 		try {
-			InputStream in = ThirdPartyLicenses.getDocumentFactoryLicense();
-			this.license.setLicense(in);
-			in.close();
+			LicenseLoader.loadLicenseforProduct(AsposeProduct.WORDS);
 		} catch (Exception e) {
 			Ivy.log().error("Aspose Words Licence error",e);
 			this.fileOperationMessage= FileOperationMessage.generateErrorTypeFileOperationMessage("Aspose Words Licence error "+e.getMessage());
@@ -712,7 +703,10 @@ public class AsposeDocFactory extends BaseDocFactory {
 		Document document = new Document(FileUtil.formatPath(templatePath));
 		SimpleMergeFieldsHandler simpleMergeFieldsHandler = SimpleMergeFieldsHandler.forTemplateMergeFields(fields);
 		document.getMailMerge().setFieldMergingCallback(this.getFielMergingCallBack());
-		document.getMailMerge().setCleanupOptions(MailMergeCleanupOptions.REMOVE_EMPTY_PARAGRAPHS);
+		document.getMailMerge().setCleanupOptions(MailMergeCleanupOptions.REMOVE_UNUSED_FIELDS  
+				| MailMergeCleanupOptions.REMOVE_UNUSED_REGIONS 
+				| MailMergeCleanupOptions.REMOVE_CONTAINING_FIELDS 
+				| MailMergeCleanupOptions.REMOVE_EMPTY_PARAGRAPHS);
 		document.getMailMerge().execute(simpleMergeFieldsHandler.getMergeFieldNames(), simpleMergeFieldsHandler.getMergeFieldValues());
 		if(mailMergeDataSources != null) {
 			for(IMailMergeDataSource m : mailMergeDataSources) {
@@ -726,7 +720,6 @@ public class AsposeDocFactory extends BaseDocFactory {
 				}
 			}
 		}
-		document.getMailMerge().setCleanupOptions(MailMergeCleanupOptions.REMOVE_UNUSED_REGIONS);
 		document.getMailMerge().executeWithRegions(makeEmptyDataTable());
 		document.getMailMerge().deleteFields();
 		return document;
