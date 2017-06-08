@@ -304,8 +304,8 @@ IDocumentOnServerPersistence {
 			stmt.setString(2, document.getPath());
 			stmt.setString(3, (document.getJavaFile()!=null && document.getJavaFile().isFile())?
 					FileHandler.getFileSize(document.getJavaFile()):document.getFileSize());
-			stmt.setInt(4, Integer.parseInt(document.getLocked()));
-			stmt.setString(5, document.getLockingUserID()== null?"":document.getLockingUserID());
+			stmt.setInt(4, Integer.parseInt(StringUtils.isBlank(document.getLocked()) ? "0" : document.getLocked()));
+			stmt.setString(5, document.getLockingUserID()== null? "" : document.getLockingUserID());
 			stmt.setString(6, (document.getModificationUserID() == null || document.getModificationUserID().trim().isEmpty())?
 					Ivy.session().getSessionUserName():document.getModificationUserID());
 			stmt.setString(7, document.getModificationDate());
@@ -673,7 +673,8 @@ IDocumentOnServerPersistence {
 			stmt.setLong(1, id);
 			rst = stmt.executeQuery();
 			if(rst.next()) {
-				doc.setJavaFile(FileExtractor.extractInputStreamToTemporaryFile(rst.getBinaryStream("file_content"), doc.getFilename()));
+				doc.setIvyFile(FileExtractor.extractInputStreamToTemporaryIvyFile(rst.getBinaryStream("file_content"), doc.getFilename()));
+				doc.setJavaFile(doc.getIvyFile().getJavaFile());
 			}
 		} finally {
 			PersistenceConnectionManagerReleaser.release(this.connectionManager, stmt, rst, "getJavaFileFromDbForDocumentOnServer", this.getClass());
