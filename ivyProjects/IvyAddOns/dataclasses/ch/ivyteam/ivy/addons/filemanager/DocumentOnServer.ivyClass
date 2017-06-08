@@ -50,3 +50,4 @@ isLocked Boolean #field
 isLocked 'Flag set to true if the doc is locked.' #fieldComment
 displayedPath String #field
 displayedPath 'used for displaying the path, especially if the directories are translated.' #fieldComment
+id Long #field
