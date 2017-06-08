@@ -1146,8 +1146,9 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 		if(!this.directoryExists(dir.getPath())) {
 			this.createDirectory(dir.getPath());
 		}
+		
 		DocumentOnServer doc = this.docPersistence.create(_document);
-
+		_document.setLocked("0");
 		if(this.activateFileTypesFeature && doc.getFileType() !=null && doc.getFileType().getId() != null && doc.getFileType().getId()>0) {
 			fileTypesController.setDocumentFileType(doc, doc.getFileType().getId());
 		}
