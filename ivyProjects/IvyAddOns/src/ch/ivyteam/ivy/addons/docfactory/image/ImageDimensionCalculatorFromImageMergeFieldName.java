@@ -9,6 +9,8 @@ import javax.imageio.ImageIO;
 
 import org.apache.commons.lang3.StringUtils;
 
+import ch.ivyteam.ivy.environment.Ivy;
+
 public class ImageDimensionCalculatorFromImageMergeFieldName implements
 		ImageDimensionCalculator {
 
@@ -68,17 +70,33 @@ public class ImageDimensionCalculatorFromImageMergeFieldName implements
 	}
 	
 	private int getScaledWidth(InputStream imageStream, int resizedHeight) throws IOException {
-		BufferedImage bimg = ImageIO.read(imageStream);
+		BufferedImage bimg = readInputStreamToBufferedImage(imageStream);
+		if(bimg == null) {
+			return 0;
+		}
 		int width = bimg.getWidth();
 		int height = bimg.getHeight();
 		return width * resizedHeight / height;
 	}
 	
 	private int getScaledHeight(InputStream imageStream, int resizedWidth) throws IOException {
-		BufferedImage bimg = ImageIO.read(imageStream);
+		BufferedImage bimg = readInputStreamToBufferedImage(imageStream);
+		if(bimg == null) {
+			return 0;
+		}
 		int width = bimg.getWidth();
 		int height = bimg.getHeight();
 		return height * resizedWidth / width;
+	}
+
+	private BufferedImage readInputStreamToBufferedImage(InputStream imageStream) {
+		BufferedImage bimg = null;
+		try{
+			bimg = ImageIO.read(imageStream);
+		}catch(Exception ex) {
+			Ivy.log().error("Got an error while ImageIO read imageStream", ex);
+		}
+		return bimg;
 	}
 
 }
