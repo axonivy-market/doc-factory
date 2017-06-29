@@ -1072,7 +1072,7 @@ public abstract class AbstractFileManagementHandler {
 	 * @return
 	 */
 	public abstract int getFileStorageType();
-
+	
 	/**
 	 * Replaces all the backslashes through "/" in a String All the file paths
 	 * in the persistence system should use the "/" char as file separator

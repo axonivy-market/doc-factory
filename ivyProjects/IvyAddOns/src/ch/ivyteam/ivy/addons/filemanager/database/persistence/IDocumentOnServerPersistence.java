@@ -6,6 +6,8 @@ package ch.ivyteam.ivy.addons.filemanager.database.persistence;
 import java.util.List;
 
 import ch.ivyteam.ivy.addons.filemanager.DocumentOnServer;
+import ch.ivyteam.ivy.addons.filemanager.database.PersistenceConnectionManagerFactory;
+import ch.ivyteam.ivy.addons.filemanager.database.search.DocumentCreationDateSearch;
 
 /**
  * This interface is sub-interface of IItemPersistence for the particular DocumentOnServer data type.<br>
@@ -72,7 +74,19 @@ public interface IDocumentOnServerPersistence extends IItemPersistence<DocumentO
 	 * @param recursive true or false. If is recursive, look in all the sub directories under the path
 	 * @throws Exception
 	 */
-	public void unlockDocumentsUnderPathEditedByUserWithOptionalRecursivity(String path, String user, boolean recursive)throws Exception;
+	public void unlockDocumentsUnderPathEditedByUserWithOptionalRecursivity(String path, String user, boolean recursive) throws Exception;
 	
-
+	/**
+	 * Return the list of documentOnServer matching the given conditions.<br />
+	 * Only the filepath condition is mandatory.
+	 * @param filepathCondition you can specify a precise filepath like "myapp/documents/employee/45/test.pdf" for getting one document, 
+	 * or use some wildcards like "myapp/documents/employee/45/%" for searching all the documents under a specified path. Cannot be blank.
+	 * @param filetypeNameCondition if specified, only the documents matching this filetype name will be returned. 
+	 * This can be a precise name like "payslip" or one with some wildcard like "pay%". Can be blank.
+	 * @param tagNameCondition If specified this must be a precise tag name as the documents can have more then one tag. Using wildcard search like "myTag%" won't work. Can be blank.
+	 * @param creationDateCondition this object allows setting condition search for the creation date. Can be null.
+	 * @return a list of matching documentOnServer
+	 * @throws Exception
+	 */
+	public java.util.List<DocumentOnServer> getDocumentsFilteredby(String filepathCondition, String filetypeNameCondition, String tagNameCondition, DocumentCreationDateSearch creationDateCondition) throws Exception;
 }
