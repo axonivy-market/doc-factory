@@ -1,6 +1,3 @@
-/**
- * 
- */
 package ch.ivyteam.ivy.addons.filemanager.database.sql;
 
 /**
@@ -11,6 +8,7 @@ public class DocumentOnServerSQLQueries {
 	
 	public static String TABLENAMESPACE_PLACEHOLDER ="TABLENAMESPACE";
 	public static String ESCAPECHAR_PLACEHOLDER ="ESCAPECHAR";
+	public static String PARAMETER_SIGNS = "PARAMETERSIGNS";
 	
 	/**
 	 * Select the documentOnServer meta data from the files table with the file path<br>
@@ -38,6 +36,16 @@ public class DocumentOnServerSQLQueries {
 	 * SELECT file_content FROM --file content table-- WHERE file_id = ?
 	 */
 	public static String SELECT_FILE_CONTENT_Q ="SELECT file_content FROM "+TABLENAMESPACE_PLACEHOLDER+" WHERE file_id = ?";
+	
+	
+	
+	public static String SELECT_ALL_DOCUMENTS_BY_FILTERING_Q = "SELECT * FROM " + TABLENAMESPACE_PLACEHOLDER + " "
+			+ "INNER JOIN filetype ON " + TABLENAMESPACE_PLACEHOLDER + ".filetypeid = filetype.id AND filetype.name LIKE ? "
+			+ "INNER JOIN tags ON " + TABLENAMESPACE_PLACEHOLDER + ".fileid = tags.fileid AND tags.tag LIKE ? "
+			+ "WHERE " + TABLENAMESPACE_PLACEHOLDER + ".filepath LIKE ? -CREATIONDATE CONDITION- "
+			+ "ORDER BY uploadedfiles.fileid DESC;";
+	
+	
 	
 	/**
 	 * Insert a new Document in the files table<br>

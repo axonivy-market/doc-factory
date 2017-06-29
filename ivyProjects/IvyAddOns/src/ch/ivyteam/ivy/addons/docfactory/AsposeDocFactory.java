@@ -703,10 +703,7 @@ public class AsposeDocFactory extends BaseDocFactory {
 		Document document = new Document(FileUtil.formatPath(templatePath));
 		SimpleMergeFieldsHandler simpleMergeFieldsHandler = SimpleMergeFieldsHandler.forTemplateMergeFields(fields);
 		document.getMailMerge().setFieldMergingCallback(this.getFielMergingCallBack());
-		document.getMailMerge().setCleanupOptions(MailMergeCleanupOptions.REMOVE_UNUSED_FIELDS  
-				| MailMergeCleanupOptions.REMOVE_UNUSED_REGIONS 
-				| MailMergeCleanupOptions.REMOVE_CONTAINING_FIELDS 
-				| MailMergeCleanupOptions.REMOVE_EMPTY_PARAGRAPHS);
+		document.getMailMerge().setCleanupOptions(MailMergeCleanupOptions.REMOVE_EMPTY_PARAGRAPHS);
 		document.getMailMerge().execute(simpleMergeFieldsHandler.getMergeFieldNames(), simpleMergeFieldsHandler.getMergeFieldValues());
 		if(mailMergeDataSources != null) {
 			for(IMailMergeDataSource m : mailMergeDataSources) {
@@ -720,6 +717,12 @@ public class AsposeDocFactory extends BaseDocFactory {
 				}
 			}
 		}
+		
+		document.getMailMerge().setCleanupOptions(MailMergeCleanupOptions.REMOVE_UNUSED_FIELDS  
+				| MailMergeCleanupOptions.REMOVE_UNUSED_REGIONS 
+				| MailMergeCleanupOptions.REMOVE_CONTAINING_FIELDS 
+				| MailMergeCleanupOptions.REMOVE_EMPTY_PARAGRAPHS);
+		
 		document.getMailMerge().executeWithRegions(makeEmptyDataTable());
 		document.getMailMerge().deleteFields();
 		return document;

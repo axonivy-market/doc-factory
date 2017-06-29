@@ -14,9 +14,12 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
+import ch.ivyteam.api.API;
 import ch.ivyteam.ivy.addons.filemanager.DocumentOnServer;
 import ch.ivyteam.ivy.addons.filemanager.FileHandler;
 import ch.ivyteam.ivy.addons.filemanager.FileManagementHandlersFactory;
+import ch.ivyteam.ivy.addons.filemanager.FileTag;
+import ch.ivyteam.ivy.addons.filemanager.FileType;
 import ch.ivyteam.ivy.addons.filemanager.KeyValuePair;
 import ch.ivyteam.ivy.addons.filemanager.configuration.BasicConfigurationController;
 import ch.ivyteam.ivy.addons.filemanager.database.filelink.AbstractFileLinkController;
@@ -25,6 +28,7 @@ import ch.ivyteam.ivy.addons.filemanager.database.filetype.AbstractFileTypesCont
 import ch.ivyteam.ivy.addons.filemanager.database.persistence.IDocumentOnServerPersistence;
 import ch.ivyteam.ivy.addons.filemanager.database.persistence.IPersistenceConnectionManager;
 import ch.ivyteam.ivy.addons.filemanager.database.persistence.SqlPersistenceHelper;
+import ch.ivyteam.ivy.addons.filemanager.database.search.DocumentCreationDateSearch;
 import ch.ivyteam.ivy.addons.filemanager.database.sql.DocumentOnServerSQLQueries;
 import ch.ivyteam.ivy.addons.filemanager.database.sql.FileExtractor;
 import ch.ivyteam.ivy.addons.filemanager.database.sql.PersistenceConnectionManagerReleaser;
@@ -821,6 +825,92 @@ IDocumentOnServerPersistence {
 		if(this.fileLinkController == null) {
 			throw new FileManagementException(StringUtils.isBlank(message)?"Cannot handle FileLink operations because the FileLinkController has not been instanciated.": message);
 		}
+	}
+
+	@Override
+	public List<DocumentOnServer> getDocumentsFilteredby(String filepathCondition, String filetypeCondition, String tagCondition, DocumentCreationDateSearch creationDateCondition) throws Exception {
+		API.checkNotEmpty(filepathCondition, "Search condition for the file path");
+		PreparedStatement stmt = null;
+		ResultSet rst = null;
+		String query = DocumentOnServerSQLQueries.SELECT_ALL_DOCUMENTS_BY_FILTERING_Q.replace(DocumentOnServerSQLQueries.TABLENAMESPACE_PLACEHOLDER, this.fileTableNameSpace);
+		boolean hasFileTypeCondition = true;
+		boolean hasFileTagCondition = true;
+		List<DocumentOnServer> docs = new ArrayList<>();
+		
+		if(StringUtils.isBlank(filetypeCondition)) {
+			query = query.replace("AND filetype.name LIKE ?", "");
+			hasFileTypeCondition = false;
+		}
+		if(StringUtils.isBlank(tagCondition)) {
+			query = query.replace("AND tags.tag LIKE ?", "");
+			hasFileTagCondition = false;
+		}
+		if(creationDateCondition == null) {
+			query = query.replace("-CREATIONDATE CONDITION-", "");
+		} else {
+			query = query.replace("-CREATIONDATE CONDITION-", "AND" + creationDateCondition.getQuery());
+		}
+		Ivy.log().debug(query);
+		
+		try {
+			stmt = this.connectionManager.getConnection().prepareStatement(query);
+			if(hasFileTypeCondition && hasFileTagCondition) {
+				stmt.setString(1, filetypeCondition);
+				stmt.setString(2, tagCondition);
+				stmt.setString(3, filepathCondition);
+			} else if(hasFileTypeCondition) {
+				stmt.setString(1, filetypeCondition);
+				stmt.setString(2, filepathCondition);
+			} else if(hasFileTagCondition) {
+				stmt.setString(1, tagCondition);
+				stmt.setString(2, filepathCondition);
+			} else {
+				stmt.setString(1, filepathCondition);
+			}
+			rst = stmt.executeQuery();
+			
+			while(rst.next()) {
+				DocumentOnServer doc = new DocumentOnServer();
+				
+				doc.setFileID(rst.getString(1));
+				doc.setFilename(rst.getString(2));
+				doc.setPath(rst.getString(3));
+				doc.setUserID(rst.getString(4));
+				doc.setCreationDate(rst.getString(5));
+				doc.setCreationTime(rst.getString(6));
+				doc.setFileSize(rst.getString(7));
+				doc.setLocked("0");
+				doc.setLockingUserID(rst.getString(9));
+				doc.setModificationUserID(rst.getString(10));
+				doc.setModificationDate(rst.getString(11));
+				doc.setModificationTime(rst.getString(12));
+				doc.setDescription(rst.getString(13));
+				doc.setVersionnumber(rst.getInt(14));
+				FileType fileType = new FileType();
+				fileType.setId(rst.getLong(15));
+				fileType.setFileTypeName(rst.getString(17));
+				fileType.setDisplayName(rst.getString(17));
+				fileType.setApplicationName(rst.getString(18));
+				doc.setFileType(fileType);
+				List<FileTag> tags = new ArrayList<>();
+				FileTag tag = new FileTag();
+				tag.setId(rst.getLong(19));
+				tag.setFileId(rst.getLong(20));
+				tag.setTag(rst.getString(21));
+				tags.add(tag);
+				doc.setTags(tags);
+				try{
+					doc.setExtension(doc.getFilename().substring(doc.getFilename().lastIndexOf(".")+1));
+				}catch(Exception ex){
+					//Ignore the Exception here
+				}
+				docs.add(doc);
+			}
+		} finally {
+			PersistenceConnectionManagerReleaser.release(this.connectionManager, stmt, rst, "getDocumentsFilteredby", this.getClass());
+		}
+		
+		return docs;
 	}
 
 }
