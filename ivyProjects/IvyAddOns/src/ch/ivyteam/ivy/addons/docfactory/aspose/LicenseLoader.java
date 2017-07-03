@@ -8,6 +8,11 @@ public class LicenseLoader {
 	
 	private LicenseLoader() {}
 	
+	/**
+	 * Loads the Aspose License for the given AsposeProduct.
+	 * @param product the AsposeProduct. see {@link #AsposeProduct}
+	 * @throws Exception
+	 */
 	public static void loadLicenseforProduct(AsposeProduct product) throws Exception {
 		InputStream in = ThirdPartyLicenses.getDocumentFactoryLicense();
 		
@@ -29,6 +34,10 @@ public class LicenseLoader {
 		}
 	}
 	
+	/**
+	 * Loads the Aspose License for the all the {@link #AsposeProduct}.
+	 * @throws Exception
+	 */
 	public static void loadLicenseForAllProducts() throws Exception {
 		for (AsposeProduct product : AsposeProduct.values()) {
 			loadLicenseforProduct(product);
