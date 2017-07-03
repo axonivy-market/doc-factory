@@ -1,4 +1,13 @@
 =============================== 
+IvyAddons 6070000 Release Notes 
+===============================
+
+* XIVY-1982: new Document search function by path, type, tags or creationDate has been added to the IDocumentOnServerPersistence. 
+Note: this has no consequence for the RIA FileManager component, and can only be used as API.
+* XIVY-1943: new ch.ivyteam.ivy.addons.docfactory.aspose.LicenseLoader class which allows loading all the different Aspose products 
+included in the IvyAddOns (Aspose.Words, cells, pdf, slides).
+
+=============================== 
 IvyAddons 6030000 Release Notes 
 ===============================
 
