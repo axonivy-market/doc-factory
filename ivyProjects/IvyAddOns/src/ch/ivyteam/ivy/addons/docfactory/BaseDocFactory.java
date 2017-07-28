@@ -10,6 +10,7 @@ import java.util.Hashtable;
 import java.util.List;
 
 import ch.ivyteam.ivy.addons.docfactory.aspose.AsposeFieldMergingCallback;
+import ch.ivyteam.ivy.addons.docfactory.aspose.DocumentWorker;
 import ch.ivyteam.ivy.addons.docfactory.response.ResponseHandler;
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.richdialog.exec.panel.IRichDialogPanel;
@@ -524,6 +525,17 @@ public abstract class BaseDocFactory{
 	protected Object fieldMergingCallback;
 	
 	/**
+	 * Deprecated because of typo in method name. Please use {@link #withFieldMergingCallBack(Object)} instead.
+	 * Will be removed in the future.
+	 * @param fieldMergingCallback
+	 * @return
+	 */
+	@Deprecated
+	public <T> BaseDocFactory withFielMergingCallBack(T fieldMergingCallback) {
+		return this.withFieldMergingCallBack(fieldMergingCallback);
+	}
+	
+	/**
 	 * Some DocFactory may allow injecting its own FieldMerging plug-in class for performing mail merging.
 	 * A good example is the {@link AsposeFieldMergingCallback} for Aspose.<br>
 	 * <b>Note:</b> at the time of the writing of this method, the default DocFactory is based on Aspose. 
@@ -531,14 +543,37 @@ public abstract class BaseDocFactory{
 	 * @param fieldMergingCallback
 	 * @return the baseDocFactory with the given fieldMergingCallback set.
 	 */
-	public <T> BaseDocFactory withFielMergingCallBack(T fieldMergingCallback) {
+	public <T> BaseDocFactory withFieldMergingCallBack(T fieldMergingCallback) {
 		this.fieldMergingCallback = fieldMergingCallback;
 		return this;
 	}
 	
 	@SuppressWarnings("unchecked")
-	protected <T> T getFielMergingCallBack() {
+	protected <T> T getFieldMergingCallBack() {
 		return (T) fieldMergingCallback;
+	}
+	
+	protected Object documentWorker;
+	
+	/**
+	 * Some DocFactory may allow injecting a DocumentWorker class which can apply some custom logic 
+	 * on the document after it has been produced by the factory and before it has been returned to the user.
+	 * <b>Note:</b> at the time of the writing of this method, the default DocFactory is based on Aspose.
+	 * A DocumentWorker Interface has been made for the AsposeDocFactory. See: {@link DocumentWorker} <br>
+	 * The AsposeDocFactory implements also its own {@link AsposeDocFactory#withDocumentWorker(DocumentWorker)} method, 
+	 * in the case some instantiate the AsposeDocFactory and not through {@link #getInstance()}.<br>
+	 * For the moment, only implementations of {@link DocumentWorker} are supported. Other kind of object will be ignored.
+	 * @param documentWorker
+	 * @return
+	 */
+	public <T> BaseDocFactory withDocumentWorker(T documentWorker) {
+		this.documentWorker = documentWorker;
+		return this;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public <T> T getDocumentWorker() {
+		return (T) documentWorker;
 	}
 	
 	

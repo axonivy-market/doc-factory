@@ -36,7 +36,7 @@ public class AsposeDocFactoryFileGenerator {
 			boolean generateBlankDocumentIfGivenDocIsNull) throws Exception {
 		FileOperationMessage fom = FileOperationMessage.generateErrorTypeFileOperationMessage("");
 		File file = null;
-
+		
 		if (document == null && generateBlankDocumentIfGivenDocIsNull) {
 			document = new Document();
 		}
@@ -57,6 +57,7 @@ public class AsposeDocFactoryFileGenerator {
 		case BaseDocFactory.PDF_FORMAT:
 			document.save(baseFilePath + DocFactoryConstants.PDF_EXTENSION);
 			file = new File(baseFilePath + DocFactoryConstants.PDF_EXTENSION);
+			
 			break;
 		case BaseDocFactory.HTML_FORMAT:
 			document.save(baseFilePath + DocFactoryConstants.HTML_EXTENSION, SaveFormat.HTML);
@@ -81,8 +82,12 @@ public class AsposeDocFactoryFileGenerator {
 		} catch (SecurityException ex) {
 			throw new Exception("A SecurityException occurred " + ex.getMessage(), ex);
 		}
-		fom = FileOperationMessage.generateSuccessTypeFileOperationMessage(Ivy.cms().co("/ch/ivyteam/ivy/addons/docfactory/messages/serialLetterSuccess")+ " \n" + file.getName());
+		fom = FileOperationMessage.generateSuccessTypeFileOperationMessage(
+				Ivy.cms().co("/ch/ivyteam/ivy/addons/docfactory/messages/serialLetterSuccess")+ " \n" + 
+						file.getName()
+			);
 		fom.addFile(file);
+		
 		return fom;
 	}
 

@@ -11,6 +11,7 @@ import java.util.Locale;
 
 import org.apache.commons.lang.StringUtils;
 
+import ch.ivyteam.ivy.addons.docfactory.aspose.DocumentWorker;
 import ch.ivyteam.ivy.addons.docfactory.mergefield.internal.MergeFieldsExtractor;
 import ch.ivyteam.ivy.addons.docfactory.response.ResponseHandler;
 import ch.ivyteam.ivy.addons.filemanager.FileHandler;
@@ -131,6 +132,20 @@ public class DocumentTemplate implements Serializable {
 			this.documentFactory = BaseDocFactory.getInstance();
 		}
 		this.documentFactory.withResponseHandler(responseHandler);
+		return this;
+	}
+	
+	/**
+	 * Some DocFactory may allow injecting a DocumentWorker class which can apply some custom logic 
+	 * on the document after it has been produced by the factory and before it has been returned to the user.
+	 * <b>Note:</b> at the time of the writing of this method, the default DocFactory is based on Aspose.
+	 * A DocumentWorker Interface has been made for the AsposeDocFactory. See: {@link DocumentWorker} <br>
+	 * For the moment, only implementations of {@link DocumentWorker} are supported. Other kind of object will be ignored.
+	 * @param documentWorker
+	 * @return
+	 */
+	public <T> DocumentTemplate withDocumentWorker(T documentWorker) {
+		this.documentFactory = BaseDocFactory.getInstance().withDocumentWorker(documentWorker);
 		return this;
 	}
 	
@@ -548,59 +563,9 @@ public class DocumentTemplate implements Serializable {
 	public FileOperationMessage generateDocument(){
 		if(this.documentFactory==null) {
 			//check if the document factory was already instantiated
-			this.documentFactory=BaseDocFactory.getInstance();
+			this.documentFactory = BaseDocFactory.getInstance();
 		}
 		return this.documentFactory.generateDocument(this);
-		/*if(this.tablesNamesAndFieldsmap!= null && !this.tablesNamesAndFieldsmap.isEmpty()) {
-			this.fileOperationMessage = this.documentFactory.generateDocumentWithRegions(
-					this.templatePath, 
-					this.outputName, 
-					this.outputPath, 
-					this.outputFormat, 
-					this.mergeFields, 
-					this.tablesNamesAndFieldsmap);
-		}else if(this.tablesNamesAndFieldsHashtable!=null && !this.tablesNamesAndFieldsHashtable.isEmpty()) {
-			this.fileOperationMessage = this.documentFactory.generateDocumentWithRegions(
-					this.templatePath, 
-					this.outputName, 
-					this.outputPath, 
-					this.outputFormat, 
-					this.mergeFields, 
-					this.tablesNamesAndFieldsHashtable);
-		}else if(this.parentDataSourceForNestedMailMerge!=null && !this.parentDataSourceForNestedMailMerge.isEmpty()) {
-			this.fileOperationMessage = this.documentFactory.generateDocumentWithNestedRegions(
-					this.templatePath, 
-					this.outputName, 
-					this.outputPath, 
-					this.outputFormat, 
-					this.mergeFields, 
-					this.parentDataSourceForNestedMailMerge, 
-					this.childrenDataSourcesForNestedMailMerge);
-		}else if(this.nestedDataSourceForNestedMailMerge!=null && !this.nestedDataSourceForNestedMailMerge.isEmpty()) {
-			this.fileOperationMessage = this.documentFactory.generateDocumentWithNestedRegions(
-					this.templatePath, 
-					this.outputName, 
-					this.outputPath, 
-					this.outputFormat, 
-					this.mergeFields, 
-					this.nestedDataSourceForNestedMailMerge);
-		}else if(this.treeData!=null) {
-			this.fileOperationMessage = this.documentFactory.generateDocumentWithNestedRegions(
-					this.templatePath, 
-					this.outputName, 
-					this.outputPath, 
-					this.outputFormat, 
-					this.mergeFields, 
-					this.treeData);
-		}else {
-			this.fileOperationMessage = this.documentFactory.generateDocument(
-					this.templatePath, 
-					this.outputName, 
-					this.outputPath, 
-					this.outputFormat, 
-					this.mergeFields);
-		}
-		return this.fileOperationMessage;*/
 	}
 
 	/**
