@@ -17,6 +17,7 @@ import org.apache.commons.lang.StringUtils;
 import ch.ivyteam.ivy.addons.docfactory.aspose.AsposeDocFactoryFileGenerator;
 import ch.ivyteam.ivy.addons.docfactory.aspose.AsposeFieldMergingCallback;
 import ch.ivyteam.ivy.addons.docfactory.aspose.AsposeProduct;
+import ch.ivyteam.ivy.addons.docfactory.aspose.DocumentWorker;
 import ch.ivyteam.ivy.addons.docfactory.aspose.LicenseLoader;
 import ch.ivyteam.ivy.addons.docfactory.aspose.MailMergeDataSource;
 import ch.ivyteam.ivy.addons.docfactory.aspose.MailMergeDataSourceGenerator;
@@ -69,14 +70,37 @@ public class AsposeDocFactory extends BaseDocFactory {
 
 	/** String used to stored the fileName used to generate a document */
 	String outputName;
+	
 
-	/**
-	 * Constructor
-	 *
-	 */
+	
 	public AsposeDocFactory(){
 		super();
 		parseLicense();
+	}
+	
+	/**
+	 * Set a DocumentWorker for applying one's own logic on the produced com.aspose.words.Document.
+	 * @see {@link DocumentWorker}
+	 * @param documentWorker
+	 * @return the AsposeDocFactory containing the given DocumentWorker.
+	 */
+	public AsposeDocFactory withDocumentWorker(DocumentWorker documentWorker) {
+		this.documentWorker = documentWorker;
+		return this;
+	}
+	
+	/**
+	 * Gets the DocumentWorker (see {@link DocumentWorker}) that have been set by {@link #withDocumentWorker(DocumentWorker)}.
+	 * @return the DocumentWorker or null if none has been set.
+	 * 
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public DocumentWorker getDocumentWorker() {
+		if(!(this.documentWorker instanceof DocumentWorker)) {
+			return null;
+		}
+		return (DocumentWorker) this.documentWorker;
 	}
 
 	/**
@@ -165,7 +189,6 @@ public class AsposeDocFactory extends BaseDocFactory {
 	public FileOperationMessage generateDocument(DocumentTemplate _documentTemplate) {
 		try {
 			this.doc = this.doMailMerge(_documentTemplate);
-			//System.out.println(_documentTemplate.getOutputFormat());
 			this.fileOperationMessage =  AsposeDocFactoryFileGenerator.exportDocumentToFile(
 					this.doc, 
 					this.formatGivenPathSetToDefaultIfBlank(_documentTemplate.getOutputPath()) + _documentTemplate.getOutputName(), 
@@ -702,7 +725,7 @@ public class AsposeDocFactory extends BaseDocFactory {
 			Collection<IMailMergeDataSource> mailMergeDataSources, Collection<?> dataTables) throws Exception {
 		Document document = new Document(FileUtil.formatPath(templatePath));
 		SimpleMergeFieldsHandler simpleMergeFieldsHandler = SimpleMergeFieldsHandler.forTemplateMergeFields(fields);
-		document.getMailMerge().setFieldMergingCallback(this.getFielMergingCallBack());
+		document.getMailMerge().setFieldMergingCallback(this.getFieldMergingCallBack());
 		document.getMailMerge().setCleanupOptions(MailMergeCleanupOptions.REMOVE_EMPTY_PARAGRAPHS);
 		document.getMailMerge().execute(simpleMergeFieldsHandler.getMergeFieldNames(), simpleMergeFieldsHandler.getMergeFieldValues());
 		if(mailMergeDataSources != null) {
@@ -725,6 +748,9 @@ public class AsposeDocFactory extends BaseDocFactory {
 		
 		document.getMailMerge().executeWithRegions(makeEmptyDataTable());
 		document.getMailMerge().deleteFields();
+		if(this.getDocumentWorker() != null) {
+			((DocumentWorker) documentWorker).postCreate(document);
+		}
 		return document;
 	}
 
@@ -1223,7 +1249,7 @@ public class AsposeDocFactory extends BaseDocFactory {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	protected <T> T getFielMergingCallBack() {
+	protected <T> T getFieldMergingCallBack() {
 		return (T) this.getAsposeFieldMergingCallback();
 	}
 
