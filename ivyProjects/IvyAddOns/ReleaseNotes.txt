@@ -1,4 +1,11 @@
 =============================== 
+IvyAddons 7000000 Release Notes 
+===============================
+
+* AIPROD-99: Document custom logic injection in DocFactory. See the ch.ivyteam.ivy.addons.docfactory.BaseDocFactory#withDocumentWorker javadoc. 
+https://jira.axonivy.com/jira/browse/AIPROD-99
+
+=============================== 
 IvyAddons 6070000 Release Notes 
 ===============================
 
