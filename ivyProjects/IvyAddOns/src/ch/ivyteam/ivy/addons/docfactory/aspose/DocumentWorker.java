@@ -14,6 +14,20 @@ import com.aspose.words.Document;
  */
 public interface DocumentWorker {
 	
-	void postCreate(Document document);
-
+	/**
+	 * Will be called before the mail merge logic has been performed on the document
+	 * @param document
+	 */
+	default void prepare(Document document) {
+		
+	}
+	
+	/**
+	 * Will be called after the mail merge logic has been performed on the document
+	 * @param document
+	 */
+	default void postCreate(Document document){
+		
+	}
+	
 }

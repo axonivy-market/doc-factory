@@ -724,6 +724,9 @@ public class AsposeDocFactory extends BaseDocFactory {
 	private Document doMailMerge(String templatePath, List<TemplateMergeField> fields, 
 			Collection<IMailMergeDataSource> mailMergeDataSources, Collection<?> dataTables) throws Exception {
 		Document document = new Document(FileUtil.formatPath(templatePath));
+		if(this.getDocumentWorker() != null) {
+			((DocumentWorker) documentWorker).prepare(document);
+		}
 		SimpleMergeFieldsHandler simpleMergeFieldsHandler = SimpleMergeFieldsHandler.forTemplateMergeFields(fields);
 		document.getMailMerge().setFieldMergingCallback(this.getFieldMergingCallBack());
 		document.getMailMerge().setCleanupOptions(MailMergeCleanupOptions.REMOVE_EMPTY_PARAGRAPHS);
