@@ -1,6 +1,7 @@
 package ch.ivyteam.ivy.addons.filemanager.restricted.database.sql;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +31,33 @@ public class DocumentOnServerGeneratorHelper {
 	public static DocumentOnServer buildDocumentOnServerWithResulSetRow(ResultSet rst, BasicConfigurationController configuration) throws Exception {
 		
 		assert(rst !=null):"Invalid ResultSet in buildDocumentOnServerWithResulSetRow method.";
+		DocumentOnServer doc = buildDocumentOnServer(rst);
+		
+		if(configuration!=null && configuration.isActivateFileType()) {
+			try {
+				long id = rst.getInt("filetypeid");
+				if(id>0) {
+					FileType ft = new FileType();
+					ft.setId(id);
+					doc.setFileType(ft);
+				}
+			}catch(Exception ex) {
+				//do nothing the file type is not mandatory
+				Ivy.log().warn("WARNING while getting the file type on "+doc.getFilename()+ " "+ex.getMessage(), ex);
+			}
+		}
+		
+		return doc;
+	}
+
+	/**
+	 * NOT PUBLIC API
+	 * @param rst
+	 * @return
+	 * @throws SQLException
+	 */
+	public static DocumentOnServer buildDocumentOnServer(ResultSet rst)
+			throws SQLException {
 		DocumentOnServer doc =  new DocumentOnServer();
 		doc.setId((long) rst.getInt("FileId"));
 		doc.setFileID(String.valueOf(rst.getInt("FileId")));
@@ -47,22 +75,8 @@ public class DocumentOnServerGeneratorHelper {
 		doc.setIsLocked(doc.getLocked().compareTo("1")==0);
 		doc.setLockingUserID(rst.getString("LockingUserId"));
 		doc.setDescription(rst.getString("Description"));
-		
-		if(configuration!=null && configuration.isActivateFileType()) {
-			try {
-				long id = rst.getInt("filetypeid");
-				if(id>0) {
-					FileType ft = new FileType();
-					ft.setId(id);
-					doc.setFileType(ft);
-				}
-			}catch(Exception ex) {
-				//do nothing the file type is not mandatory
-				Ivy.log().warn("WARNING while getting the file type on "+doc.getFilename()+ " "+ex.getMessage(), ex);
-			}
-		}
 		try {
-			int i = rst.getInt("versionnumber")>0?rst.getInt("versionnumber"):1;
+			int i = rst.getInt("versionnumber") > 0 ? rst.getInt("versionnumber") : 1;
 			doc.setVersionnumber(i);
 		}catch(Exception ex) {
 			doc.setVersionnumber(1);
