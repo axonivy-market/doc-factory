@@ -31,6 +31,16 @@ public abstract class AbstractFileTagsController {
 	public abstract FileTag modifyTag(long tagId, String tag) throws Exception;
 	
 	/**
+	 * Updates the tag denoted by the oldTag value for the given fileId
+	 * @param fileId the id of the file owning the tag to change. Must be greater than zero.
+	 * @param oldTag the value of the tag to update
+	 * @param newTag the new value for the tag
+	 * @return the FileTag with the new value. If no tag exists for the file with the oldTag value, then returns null.
+	 * @throws Exception
+	 */
+	public abstract FileTag updateFileTag(long fileId, String oldTag, String newTag) throws Exception;
+	
+	/**
 	 * deletes the tag corresponding to the given id
 	 * @param tagId
 	 * @throws Exception
@@ -73,6 +83,7 @@ public abstract class AbstractFileTagsController {
 	 */
 	public abstract java.util.List<FileTag> getFileTags(long fileId) throws Exception;
 	
+	
 	/**
 	 * Get all the tags beginning with the given search String. The search is case insensitive.
 	 * @param searchFor the String for the search
@@ -89,4 +100,6 @@ public abstract class AbstractFileTagsController {
 	 * @throws Exception
 	 */
 	public abstract void deleteFileTags(long fileid) throws Exception;
+	
+	
 }

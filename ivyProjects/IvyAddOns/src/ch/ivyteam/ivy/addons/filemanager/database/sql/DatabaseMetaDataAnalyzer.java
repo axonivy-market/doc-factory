@@ -3,6 +3,7 @@ package ch.ivyteam.ivy.addons.filemanager.database.sql;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 
+import ch.ivyteam.api.API;
 import ch.ivyteam.ivy.addons.filemanager.configuration.BasicConfigurationController;
 import ch.ivyteam.ivy.addons.filemanager.database.PersistenceConnectionManagerFactory;
 import ch.ivyteam.ivy.addons.filemanager.database.persistence.IPersistenceConnectionManager;
@@ -18,9 +19,8 @@ public class DatabaseMetaDataAnalyzer {
 	private boolean supportsGetGeneratedKeys;
 	
 	public DatabaseMetaDataAnalyzer (BasicConfigurationController configuration) {
-		if(configuration==null) {
-			throw new IllegalArgumentException("The BasicConfigurationController object cannot be null.");
-		}
+		API.checkNotNull(configuration, "The BasicConfigurationController object cannot be null.");
+		
 		@SuppressWarnings("unchecked")
 		IPersistenceConnectionManager<Connection> connectionManager = (IPersistenceConnectionManager<Connection>) PersistenceConnectionManagerFactory
 				.getPersistenceConnectionManagerInstance(configuration);
