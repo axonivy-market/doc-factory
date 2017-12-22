@@ -44,7 +44,7 @@ public class AsposePdfFactory extends PdfFactory {
 			pdfDocument1.save(result.getAbsolutePath());
 			return result;
 		} catch(Exception ex) {
-			Logger.getLogger(AsposePdfFactory.class.getName()).log(Level.SEVERE, "An error occurred while generating the pdf file.", ex);
+			//Logger.getLogger(AsposePdfFactory.class.getName()).log(Level.SEVERE, "An error occurred while generating the pdf file.", ex);
 			throw new DocFactoryException("An error occurred while generating the pdf file. " + ex.getMessage(), ex);
 		}
 	}

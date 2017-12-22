@@ -557,14 +557,14 @@ public abstract class BaseDocFactory{
 	
 	/**
 	 * Some DocFactory may allow injecting a DocumentWorker class which can apply some custom logic 
-	 * on the document after it has been produced by the factory and before it has been returned to the user.
+	 * on the document before or after mail merging and before it has been returned to the user.
 	 * <b>Note:</b> at the time of the writing of this method, the default DocFactory is based on Aspose.
 	 * A DocumentWorker Interface has been made for the AsposeDocFactory. See: {@link DocumentWorker} <br>
 	 * The AsposeDocFactory implements also its own {@link AsposeDocFactory#withDocumentWorker(DocumentWorker)} method, 
 	 * in the case some instantiate the AsposeDocFactory and not through {@link #getInstance()}.<br>
 	 * For the moment, only implementations of {@link DocumentWorker} are supported. Other kind of object will be ignored.
 	 * @param documentWorker
-	 * @return
+	 * @return the DocFactory with the DocumentWorker set
 	 */
 	public <T> BaseDocFactory withDocumentWorker(T documentWorker) {
 		this.documentWorker = documentWorker;
