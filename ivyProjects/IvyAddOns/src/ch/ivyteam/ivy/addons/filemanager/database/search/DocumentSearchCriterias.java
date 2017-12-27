@@ -41,7 +41,7 @@ public class DocumentSearchCriterias implements Serializable {
 		if(tags.length == 0) {
 			return this;
 		}
-		Arrays.asList(tags).stream().filter(tag -> !StringUtils.isBlank(tag)).forEach(tag -> tagsName.add(tag));
+		Arrays.asList(tags).stream().filter(tag -> (!StringUtils.isBlank(tag) && !tagsName.contains(tag))).forEach(tag -> tagsName.add(tag));
 		return this;
 	}
 	
