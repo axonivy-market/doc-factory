@@ -37,6 +37,10 @@ public class DocumentSearchCriterias implements Serializable {
 		return this;
 	}
 	
+	public boolean hasFileTypeCriteria() {
+		return !StringUtils.isBlank(fileTypeName);
+	}
+	
 	public DocumentSearchCriterias havingAllTags(String ... tags) {
 		if(tags.length == 0) {
 			return this;
@@ -48,6 +52,10 @@ public class DocumentSearchCriterias implements Serializable {
 	public DocumentSearchCriterias clearTags() {
 		tagsName.clear();
 		return this;
+	}
+	
+	public boolean hasHavingAllTagsCriteria() {
+		return !this.tagsName.isEmpty();
 	}
 	
 	public DocumentSearchCriterias clearAllExcludingFilePath() {
