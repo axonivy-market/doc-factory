@@ -14,7 +14,6 @@ import ch.ivyteam.ivy.addons.filemanager.database.persistence.IPersistenceConnec
 import ch.ivyteam.ivy.addons.filemanager.database.sql.DatabaseMetaDataAnalyzer;
 import ch.ivyteam.ivy.addons.filemanager.database.sql.PersistenceConnectionManagerReleaser;
 import ch.ivyteam.ivy.addons.filemanager.restricted.database.sql.DocumentOnServerGeneratorHelper;
-import ch.ivyteam.ivy.environment.Ivy;
 
 public class DocumentSearchService {
 
@@ -51,7 +50,6 @@ public class DocumentSearchService {
 		PreparedStatement pstmt = null;
 		try {
 			List<DocumentOnServer> docs = new ArrayList<>();
-			//Ivy.log().debug("Searching documents with the following query: {0}" , query);
 			pstmt = makePreparedStatement(query, searchCriteria);
 			rst = pstmt.executeQuery();
 			while(rst.next()) {
