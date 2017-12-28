@@ -7,7 +7,7 @@ import ch.ivyteam.ivy.addons.filemanager.configuration.FileManagerFullQualifiedT
 
 class DocumentSearchQueryBuilder {
 
-	static String build(DocumentSearchCriterias criteria, FileManagerFullQualifiedTableNamesBuilder fileManagerTablesNamespace, String escapeChar) {
+	static String buildPreparedStatementQuery(DocumentSearchCriterias criteria, FileManagerFullQualifiedTableNamesBuilder fileManagerTablesNamespace, String escapeChar) {
 		API.checkNotNull(criteria, "The DocumentSearchCriteria cannot be null.");
 		API.checkNotNull(fileManagerTablesNamespace, "The FileManagerTablesNamespace cannot be null.");
 		API.checkNotEmpty(escapeChar, "The escape character for the sql queries cannot be blank.");
@@ -31,8 +31,7 @@ class DocumentSearchQueryBuilder {
 				append(".fileid = ").
 				append(fileManagerTablesNamespace.getFileTagsFullQualifiedTableName()).
 				append(".fileid");
-		criteria.getTagsName().forEach(tag -> sb.append(" AND '").
-				append(tag).append( "' IN (SELECT tag FROM ").
+		criteria.getTagsName().forEach(tag -> sb.append(" AND ? IN (SELECT tag FROM ").
 				append(fileManagerTablesNamespace.getFileTagsFullQualifiedTableName()).append(" WHERE ").
 				append(fileManagerTablesNamespace.getDocumentFullQualifiedTableName()).append(".fileid = ").
 				append(fileManagerTablesNamespace.getFileTagsFullQualifiedTableName()).append(".fileid )")
@@ -48,21 +47,16 @@ class DocumentSearchQueryBuilder {
 				append(fileManagerTablesNamespace.getFileTypeFullQualifiedTableName()).
 				append(" ON ").
 				append(fileManagerTablesNamespace.getDocumentFullQualifiedTableName()).append(".filetypeid = ").
-				append(fileManagerTablesNamespace.getFileTypeFullQualifiedTableName()).append(".id AND filetype.name LIKE '").
-				append(escapeUnderscoreInString(criteria.getFileTypeName(), escapeChar)).append("' ESCAPE '").append(escapeChar).append("'");
+				append(fileManagerTablesNamespace.getFileTypeFullQualifiedTableName()).append(".id AND filetype.name LIKE ? ESCAPE '").append(escapeChar).append("'");
 		return sb.toString();
 	}
 
 	private static String getFilepathQueryPart(DocumentSearchCriterias criteria, FileManagerFullQualifiedTableNamesBuilder fileManagerTablesNamespace, String escapeChar) {
 		StringBuilder sb = new StringBuilder(" WHERE ")
 		.append(fileManagerTablesNamespace.getDocumentFullQualifiedTableName())
-		.append(".filepath LIKE '").append(escapeUnderscoreInString(criteria.getFilePathSearchCriteria(), escapeChar)).append("'").append(" ESCAPE '").append(escapeChar).append("'");
+		.append(".filepath LIKE ? ESCAPE '").append(escapeChar).append("'");
 		return sb.toString();
 
-	}
-
-	private static String escapeUnderscoreInString(String path, String escapeChar) {	
-		return path.replaceAll("_", "\\\\_");
 	}
 
 }
