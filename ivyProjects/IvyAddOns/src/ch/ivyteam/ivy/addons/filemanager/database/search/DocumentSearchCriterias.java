@@ -1,23 +1,23 @@
 package ch.ivyteam.ivy.addons.filemanager.database.search;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 
 import ch.ivyteam.api.API;
 import ch.ivyteam.ivy.addons.filemanager.util.PathUtil;
 
-public class DocumentSearchCriterias implements Serializable {
+public final class DocumentSearchCriterias implements Serializable {
 	
 	protected static final String EXCEPTION_MESSAGE_IF_FILEPATH_BLANK = "The filePath criteria must be specified for document search";
 
 	private static final long serialVersionUID = -6898515349628123984L;
 	
 	private String fileTypeName;
-	private List<String> tagsName = new ArrayList<>();
+	private Set<String> tagsName = new HashSet<>();
 	private String filePath;
 	
 	private DocumentSearchCriterias() {
@@ -45,7 +45,7 @@ public class DocumentSearchCriterias implements Serializable {
 		if(tags.length == 0) {
 			return this;
 		}
-		Arrays.asList(tags).stream().filter(tag -> (!StringUtils.isBlank(tag) && !tagsName.contains(tag))).forEach(tag -> tagsName.add(tag));
+		Arrays.asList(tags).stream().filter(tag -> !StringUtils.isBlank(tag)).forEach(tag -> tagsName.add(tag));
 		return this;
 	}
 	
@@ -74,7 +74,7 @@ public class DocumentSearchCriterias implements Serializable {
 		return fileTypeName;
 	}
 
-	public List<String> getTagsName() {
+	public Set<String> getTagsName() {
 		return tagsName;
 	}
 

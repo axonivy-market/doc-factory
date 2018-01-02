@@ -11,14 +11,20 @@ class DocumentSearchQueryBuilder {
 		API.checkNotNull(criteria, "The DocumentSearchCriteria cannot be null.");
 		API.checkNotNull(fileManagerTablesNamespace, "The FileManagerTablesNamespace cannot be null.");
 		API.checkNotEmpty(escapeChar, "The escape character for the sql queries cannot be blank.");
-		StringBuilder sb = new StringBuilder("SELECT * FROM ").
-				append(fileManagerTablesNamespace.getDocumentFullQualifiedTableName()).
+		StringBuilder sb = new StringBuilder(makeSelectDocumentsQuery(fileManagerTablesNamespace)).
 				append(getFileTypeQueryPart(criteria, fileManagerTablesNamespace, escapeChar)).
 				append(getFileTagsQueryPart(criteria, fileManagerTablesNamespace)).
 				append(getFilepathQueryPart(criteria, fileManagerTablesNamespace, escapeChar));
 		
 		return sb.toString();
 	}
+
+	public static String makeSelectDocumentsQuery(FileManagerFullQualifiedTableNamesBuilder fileManagerTablesNamespace) {
+		return new StringBuilder("SELECT * FROM ").
+				append(fileManagerTablesNamespace.getDocumentFullQualifiedTableName()).toString();
+	}
+	
+	
 
 	private static String getFileTagsQueryPart(DocumentSearchCriterias criteria, FileManagerFullQualifiedTableNamesBuilder fileManagerTablesNamespace) {
 		if(criteria.getTagsName().isEmpty()) {

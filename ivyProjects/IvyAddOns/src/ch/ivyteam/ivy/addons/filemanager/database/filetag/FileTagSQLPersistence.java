@@ -30,9 +30,19 @@ public class FileTagSQLPersistence implements IFileTagPersistence {
 	@SuppressWarnings("unchecked")
 	public FileTagSQLPersistence(BasicConfigurationController config) {
 		this.configuration=config;
-		this.connectionManager =  ((IPersistenceConnectionManager<Connection>) PersistenceConnectionManagerFactory
+		this.connectionManager = ((IPersistenceConnectionManager<Connection>) PersistenceConnectionManagerFactory
 				.getPersistenceConnectionManagerInstance(config));
 		this.initialize();
+	}
+	
+	/**
+	 * For unit tests
+	 * @param connectionManager
+	 * @param tableNameSpace
+	 */
+	FileTagSQLPersistence(IPersistenceConnectionManager<Connection> connectionManager, String tableNameSpace) {
+		this.connectionManager = connectionManager;
+		this.tableNameSpace = tableNameSpace;
 	}
 	
 	private void initialize() {
