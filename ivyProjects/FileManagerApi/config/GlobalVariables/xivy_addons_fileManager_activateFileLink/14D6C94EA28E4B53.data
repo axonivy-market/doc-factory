@@ -1,0 +1,1 @@
+{/value "0"/description "If set to 1 the file link feature will be activated.\nYou have to create a new Table in the filemanager database: filelink.\nThis feature allows creating links to existing documents."/environments * }
