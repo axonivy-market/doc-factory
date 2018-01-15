@@ -11,8 +11,8 @@
 	<classpathentry kind="con" path="WEBAPP_CONTAINER"/>
 	<classpathentry kind="con" path="ULC_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
-	<classpathentry exported="true" kind="lib" path="lib/javase.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/core.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/poi/poi-3.9-20121203.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/poi-3.9.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/core-3.2.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/javase-3.2.1.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

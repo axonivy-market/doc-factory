@@ -15,6 +15,18 @@
   <organization>
     <name>AXON IVY AG</name>
   </organization>
+  <dependencies>
+  	<dependency>
+    	<groupId>org.apache.poi</groupId>
+    	<artifactId>poi</artifactId>
+    	<version>3.9</version>
+	</dependency>
+  	<dependency>
+    	<groupId>com.google.zxing</groupId>
+    	<artifactId>javase</artifactId>
+    	<version>3.2.1</version>
+	</dependency>
+  </dependencies>
   <build>
     <plugins>
       <plugin>
@@ -22,6 +34,17 @@
         <artifactId>project-build-plugin</artifactId>
         <extensions>true</extensions>
       </plugin>
-    </plugins>
+	  <plugin>
+		<groupId>org.apache.maven.plugins</groupId> 
+		<artifactId>maven-dependency-plugin</artifactId>
+		<configuration>
+	      <includeArtifactIds>
+			poi,
+			javase,
+			core
+		  </includeArtifactIds>
+		</configuration>
+      </plugin>
+	</plugins>
   </build>
 </project>
