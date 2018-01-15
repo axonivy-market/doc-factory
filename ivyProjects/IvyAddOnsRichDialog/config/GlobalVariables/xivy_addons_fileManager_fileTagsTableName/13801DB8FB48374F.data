@@ -1,1 +1,0 @@
-{/value "tags"/description "This is the name of the table that stores all the file tags.\nTo be able to use this feature you have to activate the file tag in the fileManager configuration.\nThis feature only works with files stored as BLOB in the database."/environments * }
