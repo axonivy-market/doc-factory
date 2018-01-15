@@ -1,4 +1,9 @@
 doc/IvyAddOnsGuide/DocFactory/images/DocFactory/Thumbs.db
+ivyProjects/DocFactory/target
+ivyProjects/FileManagerApi/target
+ivyProjects/FileManagerHtmlDialog/target
+ivyProjects/IvyAddOns/target
+ivyProjects/IvyAddOnsCommons/target
 ivyProjects/IvyAddOnsRichDialog/classes
 ivyProjects/IvyAddOnsRichDialog/logs
 ivyProjects/IvyAddOnsRichDialog/src_dataClasses/*
