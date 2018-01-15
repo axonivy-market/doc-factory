@@ -15,6 +15,34 @@
     <version>7.1.0-SNAPSHOT</version>
     <relativePath>../build.maven/iar</relativePath>
   </parent>
+  <dependencies>
+    <dependency>
+        <groupId>ch.ivyteam.ivy.addons</groupId>
+        <artifactId>third-party-license</artifactId>
+		<version>1.1.0</version>    
+    </dependency>
+    <dependency>
+        <groupId>com.aspose</groupId>
+        <artifactId>aspose-cells</artifactId>
+		<version>8.5.1</version>    
+    </dependency>
+    <dependency>
+        <groupId>com.aspose</groupId>
+        <artifactId>aspose-pdf</artifactId>
+		<version>10.6.1</version>    
+    </dependency>
+    <dependency>
+        <groupId>com.aspose</groupId>
+        <artifactId>aspose-words</artifactId>
+		<version>15.7.0</version>  
+		<classifier>jdk16</classifier>  
+    </dependency>
+    <dependency>
+        <groupId>com.aspose</groupId>
+        <artifactId>aspose-slides</artifactId>
+		<version>15.6.0</version>    
+    </dependency>
+  </dependencies>
   <build>
     <plugins>
       <plugin>
@@ -22,6 +50,31 @@
         <artifactId>project-build-plugin</artifactId>
         <extensions>true</extensions>
       </plugin>
+	  <plugin>
+		<groupId>org.apache.maven.plugins</groupId> 
+		<artifactId>maven-dependency-plugin</artifactId>
+		<configuration>
+	      <includeArtifactIds>
+	      	third-party-license,
+	      	aspose-cells,
+	      	aspose-pdf,
+	      	aspose-words,
+	      	aspose-slides
+		  </includeArtifactIds>
+		</configuration>
+      </plugin>
     </plugins>
   </build>
+  <repositories>
+    <repository>
+        <id>axonivy</id>
+        <url>https://repo.axonivy.io/artifactory/ext-release-local</url>
+        <releases>
+           <enabled>true</enabled>
+        </releases>
+        <snapshots>
+          <enabled>false</enabled>
+        </snapshots>        
+     </repository>
+  </repositories>
 </project>
