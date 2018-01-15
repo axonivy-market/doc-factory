@@ -7,8 +7,13 @@
 	<packaging>pom</packaging>
 	
 	<modules>
+		<module>ivyProjects/IvyAddOnsCommons</module>
+		<module>ivyProjects/DocFactory</module>
+		<module>ivyProjects/FileManagerApi</module>
+		<module>ivyProjects/FileManagerHtmlDialog</module>
 		<module>ivyProjects/IvyAddOns</module>
-        <module>doc/IvyAddOnsGuide</module>
+		<module>ivyProjects/IvyAddOnsRichDialog</module>
+		<module>doc/IvyAddOnsGuide</module>
 	</modules>
 	
 	<build>
