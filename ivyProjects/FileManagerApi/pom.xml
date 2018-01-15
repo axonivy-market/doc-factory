@@ -2,14 +2,14 @@
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>ch.ivyteam.ivy</groupId>
+  <groupId>ch.ivyteam.ivy.addons</groupId>
   <artifactId>file-manager-api</artifactId>
   <version>7.1.0-SNAPSHOT</version>
   <packaging>iar</packaging>
   <dependencies>
     <dependency>
-      <groupId>ch.ivyteam.ivy</groupId>
-      <artifactId>ivy-add-ons-commons</artifactId>
+      <groupId>ch.ivyteam.ivy.addons</groupId>
+      <artifactId>commons</artifactId>
       <version>[7.1.0-SNAPSHOT,)</version>
       <type>iar</type>
     </dependency>

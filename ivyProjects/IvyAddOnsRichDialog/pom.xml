@@ -9,20 +9,20 @@
     <relativePath>../build.maven/iar/ria</relativePath>
   </parent>
   <groupId>ch.ivyteam.ivy.addons</groupId>
-  <artifactId>ch.ivyteam.ivy.addons</artifactId>
-  <version>7000000.0.0-SNAPSHOT</version>
+  <artifactId>rich-dialog</artifactId>
+  <version>7.1.0-SNAPSHOT</version>
   <packaging>iar</packaging>
   <name>IvyAddOns</name>
-  <description>This library contains various add-on components and helper artifacts to use in Xpert.ivy projects. 
+  <description>This library contains various add-on components and helper artifacts to use in Rich Dialogs of Xpert.ivy projects. 
 Please see the Xpert.ivy AddOns Documentation for more information.</description>
   <organization>
     <name>IvyTeam AG</name>
   </organization>
   <dependencies>
     <dependency>
-      <groupId>ch.ivyteam.ivy</groupId>
+      <groupId>ch.ivyteam.ivy.addons</groupId>
       <artifactId>file-manager-html-dialog</artifactId>
-      <version>[7.1.0.0-SNAPSHOT,)</version>
+      <version>[7.1.0-SNAPSHOT,)</version>
       <type>iar</type>
     </dependency>
   </dependencies>
