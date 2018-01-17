@@ -2,6 +2,7 @@ doc/IvyAddOnsGuide/DocFactory/images/DocFactory/Thumbs.db
 doc/IvyAddOnsGuide/target
 ivyProjects/DocFactory/lib/*.jar
 ivyProjects/DocFactory/target
+ivyProjects/FileManagerApi/lib/*.jar
 ivyProjects/FileManagerApi/target
 ivyProjects/IvyAddOns/target
 ivyProjects/IvyAddOnsCommons/lib/*.jar
