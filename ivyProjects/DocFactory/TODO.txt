@@ -1,1 +1,0 @@
-* Removed ULC stuff from AsposeDocFactory. Must be reintegrated if we want to support ULC further.
