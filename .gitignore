@@ -3,7 +3,6 @@ doc/IvyAddOnsGuide/target
 ivyProjects/DocFactory/lib/*.jar
 ivyProjects/DocFactory/target
 ivyProjects/FileManagerApi/target
-ivyProjects/FileManagerHtmlDialog/target
 ivyProjects/IvyAddOns/target
 ivyProjects/IvyAddOnsCommons/lib/*.jar
 ivyProjects/IvyAddOnsCommons/target
