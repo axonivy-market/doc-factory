@@ -1,0 +1,24 @@
+The following has changed in IvyAddOns 7.1:
+-------------------------------------------
+
+* Moved all RichDialogs and RichDialog specific java class from IvyAddOns to IvyAddOnsRichDialog.
+* Moved all DocFactory classes from IvyAddOns to DocFactory
+* Moved all FileManager classes from IvyAddOns to FileManagerApi
+* Moved all other stuff from IyvAddOns to IvyAddOnsCommons.
+* IvyAddOns project is empty but depends on DocFactory, FileManagerApi and IvyAddOnsCommons. Therefore user can still use IvyAddOns as before.
+
+Broken API:
+- Removed already deprecated ULC specific constructors from ch.ivyteam.ivy.addons.docfactory.AsposeDocFactory 
+- Method ch.ivyteam.ivy.addons.filemanager.FileHandler.saveStringAsJavaFile(...) removed.
+
+- Specific thumbnailer jars and their dependencies removed
+-- lib/thumbnailer/thumbnailer_plugin_images-*.jar
+-- lib/thumbnailer/thumbnailer_plugin_mime.*.jar
+-- lib/thumbnailer/thumbnailer_plugin_msoffice.*.jar
+-- lib/thumbnailer/thumbnailer_plugin_pdf.*.jar
+-- lib/thumbnailer/*.jar (dependencies)
+
+- HtmlDialog specific File Manager classes removed: 
+-- ch.ivyteam.ivy.addons.filemanager.html.configuration.HtmlConfigurationController
+-- ch.ivyteam.ivy.addons.filemanager.html.enums.Environment
+-- ch.ivyteam.ivy.addons.filemanager.html.thumbnailer.HtmlFileManagerThumbnailer

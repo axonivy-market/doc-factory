@@ -1,3 +1,0 @@
-Broken API:
-
-FileHandler.saveStringAsJavaFile removed.
