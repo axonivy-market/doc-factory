@@ -8,7 +8,7 @@ pipeline {
     stage('build') {
       steps {
         script {
-          maven cmd: '-s settings.xml clean install'
+          maven cmd: '-s settings.xml clean deploy'
         }
       }
     }
