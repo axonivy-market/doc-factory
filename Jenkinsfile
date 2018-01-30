@@ -1,5 +1,3 @@
-@Library('ivy-jenkins-shared-libraries') _
-
 pipeline {
   agent {
     dockerfile true
@@ -8,7 +6,7 @@ pipeline {
     stage('build') {
       steps {
         script {
-          maven cmd: 'clean install'
+          maven cmd: '-s settings.xml clean install'
         }
       }
     }
