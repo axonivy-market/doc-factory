@@ -1,29 +1,33 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<artifactId>doc.addons</artifactId>
-	<packaging>pom</packaging>
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>doc.addons</artifactId>
+  <packaging>pom</packaging>
 
-	<parent>
-		<groupId>ch.ivyteam.ivy.doc</groupId>
-		<artifactId>doc.config</artifactId>
-		<version>7.1.0-SNAPSHOT</version>
-	</parent>
-	
-	<properties>
-		<doc.source.dir>IvyAddOnsGuide</doc.source.dir>
-	</properties>
+  <parent>
+    <groupId>ch.ivyteam.ivy.doc</groupId>
+    <artifactId>doc.config</artifactId>
+    <version>7.1.0-SNAPSHOT</version>
+  </parent>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.codehaus.gmaven</groupId>
-				<artifactId>groovy-maven-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-assembly-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
+  <properties>
+    <doc.source.dir>IvyAddOnsGuide</doc.source.dir>
+  </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.gmaven</groupId>
+        <artifactId>groovy-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <version>${maven-deploy-plugin-version}</version>
+      </plugin>
+    </plugins>
+  </build>
 </project> 
