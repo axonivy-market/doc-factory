@@ -1,13 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+  xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>ch.ivyteam.ivy.project</groupId>
-    <artifactId>build.maven.iar</artifactId>
-    <version>7.1.0-SNAPSHOT</version>
-    <relativePath>../build.maven/iar</relativePath>
-  </parent>
   <groupId>ch.ivyteam.ivy.addons</groupId>
   <artifactId>commons</artifactId>
   <version>7.1.0-SNAPSHOT</version>
@@ -16,35 +11,49 @@
     <name>AXON IVY AG</name>
   </organization>
   <dependencies>
-  	<dependency>
-    	<groupId>org.apache.poi</groupId>
-    	<artifactId>poi</artifactId>
-    	<version>3.9</version>
-	</dependency>
-  	<dependency>
-    	<groupId>com.google.zxing</groupId>
-    	<artifactId>javase</artifactId>
-    	<version>3.2.1</version>
-	</dependency>
+    <dependency>
+      <groupId>org.apache.poi</groupId>
+      <artifactId>poi</artifactId>
+      <version>3.9</version>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>com.google.zxing</groupId>
+      <artifactId>javase</artifactId>
+      <version>3.2.1</version>
+      <optional>true</optional>
+    </dependency>
   </dependencies>
   <build>
     <plugins>
       <plugin>
         <groupId>com.axonivy.ivy.ci</groupId>
         <artifactId>project-build-plugin</artifactId>
+        <version>${project-build-plugin-version}</version>
         <extensions>true</extensions>
       </plugin>
-	  <plugin>
-		<groupId>org.apache.maven.plugins</groupId> 
-		<artifactId>maven-dependency-plugin</artifactId>
-		<configuration>
-	      <includeArtifactIds>
-			poi,
-			javase,
-			core
-		  </includeArtifactIds>
-		</configuration>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>${maven-dependency-plugin-version}</version>
+        <executions>
+          <execution>
+            <id>copy-dependencies</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>lib</outputDirectory>
+              <includeArtifactIds>
+                poi,
+                javase,
+                core
+              </includeArtifactIds>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
-	</plugins>
+    </plugins>
   </build>
 </project>
