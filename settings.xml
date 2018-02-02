@@ -13,8 +13,9 @@
     <profile>
       <id>integration-project-build-plugin</id>
       <properties>
-        <ivy.engine.cache.directory>${java.io.tmpdir}/ivyEngine</ivy.engine.cache.directory>
         <ivy.engine.directory>${java.io.tmpdir}/ivy-engine</ivy.engine.directory>
+        <ivy.engine.list.url>http://zugprobldmas/job/Trunk_All/lastSuccessfulBuild/</ivy.engine.list.url>
+        <ivy.engine.version>[7.1.0,]</ivy.engine.version>
       </properties>
     </profile>
     <profile>
@@ -65,6 +66,5 @@
     <activeProfile>integration-dist</activeProfile>
     <activeProfile>integration-repos</activeProfile>
   </activeProfiles>
-  
 
 </settings>

@@ -8,7 +8,7 @@ pipeline {
     stage('build') {
       steps {
         script {
-          maven cmd: '-s settings.xml -Divy.engine.list.url=http://zugprobldmas/job/Trunk_All/lastSuccessfulBuild/ -Divy.engine.directory=/tmp/ivyEngine clean deploy'
+          maven cmd: '-s settings.xml clean deploy'
         }
       }
     }
