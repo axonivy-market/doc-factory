@@ -14,6 +14,7 @@
       <id>integration-project-build-plugin</id>
       <properties>
         <ivy.engine.cache.directory>${java.io.tmpdir}/ivyEngine</ivy.engine.cache.directory>
+        <ivy.engine.directory>${java.io.tmpdir}/ivy-engine</ivy.engine.directory>
       </properties>
     </profile>
     <profile>
