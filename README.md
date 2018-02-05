@@ -8,7 +8,7 @@ With Axon.ivy 7.1 the code is now hosted here on BitBucket. Moreover, the single
 * IvyAddOnsCommons (ch.ivyteam.ivy.addons:commons) - Provides WaitForAsyncProcess, ResourceHelper, EnvironmentHelper, WaitTillLastTaskOfCase, ProcessParameter, QRCode, Sudo, ..
 * DocFactory ch.ivyteam.ivy.addons:doc-factory) - Provides Aspose DocFactory to create Word, PDF, Excel, Powerpoint documents
 * FileManagerApi (ch.ivyteam.ivy.addons:file-manager-api) Provides an extended file manager API 
-* IvyAddOns (ch.ivyteam.ivy.addons:ch.ivyteam.ivy.addons) Facade that includes IvyAddOnsCommons, DocFactory, FileManagerApi
+* IvyAddOns (ch.ivyteam.ivy.addons:ch.ivyteam.ivy.addons) Facade that includes IvyAddOnsCommons, DocFactory and FileManagerApi. For backwards compatibility of old projects that depend on IvyAddOns.
 * IvyAddOnsRichDialog (ch.ivyteam.ivy.addons:rich-dialog)- Provides all the functionality for Rich Dialogs like: File Manager, Dynamic Dialogs, Event Log, ...
 
 The idea behind this splitting is that Axon.ivy Projects can decide which functionality they need and depend on those projects they really need.
