@@ -205,7 +205,7 @@ Fs0 f14 actionDecl 'ch.ivyteam.ivy.addons.filemanager.FileUploadPreparer.FileUpl
 ' #txt
 Fs0 f14 actionTable 'out=in;
 ' #txt
-Fs0 f14 actionCode 'import ch.ivyteam.ivy.addons.filemanager.FileHandler;
+Fs0 f14 actionCode 'import ch.ivyteam.ivy.addons.filemanager.RichDialogFileHandler;
 if(!in.configurationController.rootPath.equalsIgnoreCase("")){
 	if(in.configurationController.storeFilesInDB)
 	{
@@ -213,7 +213,7 @@ if(!in.configurationController.rootPath.equalsIgnoreCase("")){
 	}else
 	{
 		for(java.io.File f: in.filesToUpload){
-			FileHandler.upload(f,in.configurationController.rootPath);
+			RichDialogFileHandler.upload(f,in.configurationController.rootPath);
 		}
 	}
 }

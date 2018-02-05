@@ -1443,7 +1443,7 @@ Ds0 f111 actionDecl 'ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHan
 ' #txt
 Ds0 f111 actionTable 'out=in;
 ' #txt
-Ds0 f111 actionCode 'import ch.ivyteam.ivy.addons.filemanager.FileHandler;
+Ds0 f111 actionCode 'import ch.ivyteam.ivy.addons.filemanager.RichDialogFileHandler;
 if(!in.userPropertiesHandler.getUserTempDir().trim().equalsIgnoreCase("")){
 	in.clientTempPath=in.userPropertiesHandler.getUserTempDir();
 }
@@ -1452,7 +1452,7 @@ in.baseTempDir=in.clientTempPath+in.clientApplicationTempDir;
 boolean b = false;
 if(in.#fileToWorkWith!=null){
 
-	b=FileHandler.download(in.fileToWorkWith,in.baseTempDir);
+	b=RichDialogFileHandler.download(in.fileToWorkWith,in.baseTempDir);
 	if(b){
 		java.io.File file = new java.io.File(in.baseTempDir+in.fileToWorkWith.getName());
 		if(in.#DesktopHandlerObject!=null){
@@ -1643,12 +1643,12 @@ Ds0 f133 actionDecl 'ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHan
 ' #txt
 Ds0 f133 actionTable 'out=in;
 ' #txt
-Ds0 f133 actionCode 'import ch.ivyteam.ivy.addons.filemanager.FileHandler;
+Ds0 f133 actionCode 'import ch.ivyteam.ivy.addons.filemanager.RichDialogFileHandler;
 in.attachments="";
 for(java.io.File f : in.emailContainer.attachments){
 	if(f.exists()){
 		boolean b = false;
-		b=FileHandler.download(f,in.clientTempPath);
+		b=RichDialogFileHandler.download(f,in.clientTempPath);
 		if(b){
 			in.attachments+=in.clientTempPath+f.getName()+";";
 		}
@@ -1824,12 +1824,13 @@ Ds0 f145 actionDecl 'ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHan
 Ds0 f145 actionTable 'out=in;
 ' #txt
 Ds0 f145 actionCode 'import ch.ivyteam.ivy.addons.filemanager.FileCouple;
+import ch.ivyteam.ivy.addons.filemanager.RichDialogFileHandler;
 import ch.ivyteam.ivy.addons.filemanager.FileHandler;
 FileCouple fc = new FileCouple();
 boolean b = false;
 in.baseTempDir=FileHandler.formatPathWithEndSeparator(in.clientTempPath+in.clientApplicationTempDir,false);
 if(in.#fileToCheckForEdit!=null){
-	b=FileHandler.download(in.fileToCheckForEdit,in.baseTempDir);
+	b=RichDialogFileHandler.download(in.fileToCheckForEdit,in.baseTempDir);
 	if(b){
 		java.io.File file = new java.io.File(in.baseTempDir+in.fileToCheckForEdit.getName());
 		in.DesktopHandlerObject.isFileEditable(file);
@@ -1903,6 +1904,7 @@ Ds0 f162 actionTable 'out=in;
 ' #txt
 Ds0 f162 actionCode 'import ch.ivyteam.ivy.addons.filemanager.FileAndTempDirCouple;
 import ch.ivyteam.ivy.addons.filemanager.FileHandler;
+import ch.ivyteam.ivy.addons.filemanager.RichDialogFileHandler;
 import ch.ivyteam.ivy.addons.filemanager.FileCouple;
 
 FileCouple fc = new FileCouple();
@@ -1915,7 +1917,7 @@ if(!in.lastCreatedTempDir.trim().equalsIgnoreCase("")){
 	for(FileAndTempDirCouple ftd : in.filesToEdit){
 		if(s.equalsIgnoreCase(ftd.tempDirName)){
 			java.io.File file = new java.io.File(in.lastCreatedTempDir+ftd.file.getName());
-		  b=FileHandler.download(ftd.file,in.lastCreatedTempDir);
+		  b=RichDialogFileHandler.download(ftd.file,in.lastCreatedTempDir);
 			//The file will be edited
 			fc.serverFile=ftd.file;
 			if(ftd.#documentOnServer!=null){
@@ -2378,7 +2380,7 @@ Ds0 f192 actionDecl 'ch.ivyteam.ivy.addons.filemanager.DesktopHandler.DesktopHan
 ' #txt
 Ds0 f192 actionTable 'out=in;
 ' #txt
-Ds0 f192 actionCode 'import ch.ivyteam.ivy.addons.filemanager.FileHandler;
+Ds0 f192 actionCode 'import ch.ivyteam.ivy.addons.filemanager.RichDialogFileHandler;
 if(!in.userPropertiesHandler.getUserTempDir().trim().equalsIgnoreCase("")){
 	in.clientTempPath=in.userPropertiesHandler.getUserTempDir();
 }
@@ -2393,7 +2395,7 @@ if(in.#documentOnServerToWorkWith!=null){
 		f=in.documentOnServerToWorkWith.ivyFile.getJavaFile();
 	}
 	if(f!=null){
-		b=FileHandler.download(f,in.baseTempDir);
+		b=RichDialogFileHandler.download(f,in.baseTempDir);
 		if(b){
 			java.io.File file = new java.io.File(in.baseTempDir+f.getName());
 			if(in.#DesktopHandlerObject!=null){
