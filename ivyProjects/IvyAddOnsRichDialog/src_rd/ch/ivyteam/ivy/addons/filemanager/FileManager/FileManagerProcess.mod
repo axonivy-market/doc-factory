@@ -2289,14 +2289,14 @@ us0 f150 actionDecl 'ch.ivyteam.ivy.addons.filemanager.FileManager.FileManagerDa
 ' #txt
 us0 f150 actionTable 'out=in;
 ' #txt
-us0 f150 actionCode 'import ch.ivyteam.ivy.addons.filemanager.FileHandler;
+us0 f150 actionCode 'import ch.ivyteam.ivy.addons.filemanager.RichDialogFileHandler;
 import ch.ivyteam.ivy.addons.filemanager.DocumentOnServer;
 
 try{
 	DocumentOnServer doc1=in.fileManagementHandler.getDocumentOnServerWithJavaFile(in.selectedDocument);
 	
 	if(doc1.getJavaFile().isFile()){
-		FileHandler.download(doc1.getJavaFile());
+		RichDialogFileHandler.download(doc1.getJavaFile());
 		if(in.configurationController.fileActionHistoryConfiguration.downloadFileTracked)
 		{
 			in.fileManagementHandler.getFileActionHistoryController().createNewActionHistory(Long.parseLong(doc1.fileID),6,in.applicationUserName,"");
@@ -2353,10 +2353,10 @@ us0 f154 actionDecl 'ch.ivyteam.ivy.addons.filemanager.FileManager.FileManagerDa
 ' #txt
 us0 f154 actionTable 'out=in;
 ' #txt
-us0 f154 actionCode 'import ch.ivyteam.ivy.addons.filemanager.FileHandler;
+us0 f154 actionCode 'import ch.ivyteam.ivy.addons.filemanager.RichDialogFileHandler;
 
 java.io.File f = in.fileManagementHandler.getDocumentOnServerWithJavaFile(in.selectedDocument).javaFile;
-in.responseBoolean=FileHandler.download(f,in.clientTempDirPath);' #txt
+in.responseBoolean=RichDialogFileHandler.download(f,in.clientTempDirPath);' #txt
 us0 f154 type ch.ivyteam.ivy.addons.filemanager.FileManager.FileManagerData #txt
 us0 f154 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>

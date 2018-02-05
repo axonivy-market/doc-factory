@@ -9,7 +9,15 @@ The following has changed in IvyAddOns 7.1:
 
 Broken API:
 - Removed already deprecated ULC specific constructors from ch.ivyteam.ivy.addons.docfactory.AsposeDocFactory 
-- Method ch.ivyteam.ivy.addons.filemanager.FileHandler.saveStringAsJavaFile(...) removed.
+- Class ch.ivyteam.ivy.addons.filemanager.FileHandler
+-- Method saveStringAsJavaFile(...) removed.
+-- Method upload(...) moved to class RichDialogFileHandler
+-- Methods download(...) moved to class RichDialogFileHandler
+-- Method getTreePath(...) moved to class RichDialogFileHandler
+-- Method getSystemPropertyNames moved to class RichDialogFileHandler
+-- Method getUserParametersNames moved to class RichDialogFileHandler
+-- Method formatPathWithClientSeparator moved to class RichDialogFileHandler
+-- Method getClientFileSeparator moved to class RichDialogFileHandler
 
 - Specific thumbnailer jars and their dependencies removed
 -- lib/thumbnailer/thumbnailer_plugin_images-*.jar
