@@ -5,11 +5,11 @@ IvyAddOns is an Axon.ivy Project that provides common functionality to other Axo
 Until Axon.ivy 7.1 IvyAddOns was a single Axon.ivy Project and its source code was hosted in the subversion repository in Zug (https://zugprovcssvn/svn/Entwicklung/Projects/IvyAddOns/). 
 With Axon.ivy 7.1 the code is now hosted here on BitBucket. Moreover, the single project is now split into multiple projects:
 
-* IvyAddOnsCommons
-* DocFactory
-* FileManagerApi
-* IvyAddOns
-* IvyAddOnsRichDialog
+* IvyAddOnsCommons (ch.ivyteam.ivy.addons:commons) - Provides WaitForAsyncProcess, ResourceHelper, EnvironmentHelper, WaitTillLastTaskOfCase, ProcessParameter, QRCode, Sudo, ..
+* DocFactory ch.ivyteam.ivy.addons:doc-factory) - Provides Aspose DocFactory to create Word, PDF, Excel, Powerpoint documents
+* FileManagerApi (ch.ivyteam.ivy.addons:file-manager-api) Provides an extended file manager API 
+* IvyAddOns (ch.ivyteam.ivy.addons:ch.ivyteam.ivy.addons) Facade that includes IvyAddOnsCommons, DocFactory, FileManagerApi
+* IvyAddOnsRichDialog (ch.ivyteam.ivy.addons:rich-dialog)- Provides all the functionality for Rich Dialogs like: File Manager, Dynamic Dialogs, Event Log, ...
 
 The idea behind this splitting is that the Axon.ivy Projects can decide which functionality they need and only use the project that delivers this functionality.
 
