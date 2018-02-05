@@ -11,7 +11,7 @@ With Axon.ivy 7.1 the code is now hosted here on BitBucket. Moreover, the single
 * IvyAddOns (ch.ivyteam.ivy.addons:ch.ivyteam.ivy.addons) Facade that includes IvyAddOnsCommons, DocFactory, FileManagerApi
 * IvyAddOnsRichDialog (ch.ivyteam.ivy.addons:rich-dialog)- Provides all the functionality for Rich Dialogs like: File Manager, Dynamic Dialogs, Event Log, ...
 
-The idea behind this splitting is that the Axon.ivy Projects can decide which functionality they need and only use the project that delivers this functionality.
+The idea behind this splitting is that Axon.ivy Projects can decide which functionality they need and depend on those projects they really need.
 
 ## CI/CD Infrastruction ##
 
