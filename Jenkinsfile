@@ -9,6 +9,12 @@ pipeline {
   }
   stages {
     stage('build') {
+      when {
+        branch 'master'
+        expression {
+          currentBuild.result == null || currentBuild.result == 'SUCCESS' 
+        }
+      }
       steps {
         script {
           maven cmd: '-s settings.xml clean deploy'
