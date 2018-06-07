@@ -1,0 +1,15 @@
+@CHARSET "ISO-8859-1";
+
+h1 {
+    color: #ff8000;
+}
+div {
+    color: #ae394e;
+    background-color: powderblue;
+    background: -webkit-linear-gradient(left top, powderblue, yellow); /* For Safari 5.1 to 6.0 */
+  	background: -o-linear-gradient(bottom right, powderblue, yellow); /* For Opera 11.1 to 12.0 */
+  	background: -moz-linear-gradient(bottom right, powderblue, yellow); /* For Firefox 3.6 to 15 */
+  	background: linear-gradient(to bottom right, powderblue, yellow); /* Standard syntax */
+    font-family: courier;
+    border: navy 1px solid;
+}

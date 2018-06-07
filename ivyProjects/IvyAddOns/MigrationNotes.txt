@@ -1,3 +1,11 @@
+The following has changed in IvyAddOns 7.1.1:
+---------------------------------------------
+* DocFactory API: new feature for setting the merge cleanup options.
+See javadoc in BaseDocFactory for:
+public abstract BaseDocFactory withSimpleMergeCleanupOption (SimpleMergeCleanupOptions simpleMergeCleanupOption);
+public abstract BaseDocFactory withRegionsMergeCleanupOption (MergeCleanupOptions mergeCleanupOption);
+
+
 The following has changed in IvyAddOns 7.1:
 -------------------------------------------
 

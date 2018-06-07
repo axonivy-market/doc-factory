@@ -14,6 +14,7 @@ import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 
+import ch.ivyteam.api.API;
 import ch.ivyteam.ivy.addons.docfactory.aspose.AsposeDocFactoryFileGenerator;
 import ch.ivyteam.ivy.addons.docfactory.aspose.AsposeFieldMergingCallback;
 import ch.ivyteam.ivy.addons.docfactory.aspose.AsposeProduct;
@@ -21,8 +22,11 @@ import ch.ivyteam.ivy.addons.docfactory.aspose.DocumentWorker;
 import ch.ivyteam.ivy.addons.docfactory.aspose.LicenseLoader;
 import ch.ivyteam.ivy.addons.docfactory.aspose.MailMergeDataSource;
 import ch.ivyteam.ivy.addons.docfactory.aspose.MailMergeDataSourceGenerator;
+import ch.ivyteam.ivy.addons.docfactory.aspose.options.AsposeMergeCleanupOptions;
 import ch.ivyteam.ivy.addons.docfactory.exception.DocumentGenerationException;
 import ch.ivyteam.ivy.addons.docfactory.mergefield.SimpleMergeFieldsHandler;
+import ch.ivyteam.ivy.addons.docfactory.options.MergeCleanupOptions;
+import ch.ivyteam.ivy.addons.docfactory.options.SimpleMergeCleanupOptions;
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.scripting.objects.CompositeObject;
 import ch.ivyteam.ivy.scripting.objects.Recordset;
@@ -694,15 +698,20 @@ public class AsposeDocFactory extends BaseDocFactory {
 		if(this.getDocumentWorker() != null) {
 			((DocumentWorker) documentWorker).prepare(document);
 		}
+		
 		SimpleMergeFieldsHandler simpleMergeFieldsHandler = SimpleMergeFieldsHandler.forTemplateMergeFields(fields);
+		
 		document.getMailMerge().setFieldMergingCallback(this.getFieldMergingCallBack());
-		document.getMailMerge().setCleanupOptions(MailMergeCleanupOptions.REMOVE_EMPTY_PARAGRAPHS);
+		
+		setSimpleMergeFieldCleanupOtions(document);
+		
 		document.getMailMerge().execute(simpleMergeFieldsHandler.getMergeFieldNames(), simpleMergeFieldsHandler.getMergeFieldValues());
 		if(mailMergeDataSources != null) {
 			for(IMailMergeDataSource m : mailMergeDataSources) {
 				document.getMailMerge().executeWithRegions(m);
 			}
 		}
+		
 		if(dataTables != null) {
 			for(Object obj: dataTables) {
 				if(obj instanceof DataTable) {
@@ -711,10 +720,7 @@ public class AsposeDocFactory extends BaseDocFactory {
 			}
 		}
 		
-		document.getMailMerge().setCleanupOptions(MailMergeCleanupOptions.REMOVE_UNUSED_FIELDS  
-				| MailMergeCleanupOptions.REMOVE_UNUSED_REGIONS 
-				| MailMergeCleanupOptions.REMOVE_CONTAINING_FIELDS 
-				| MailMergeCleanupOptions.REMOVE_EMPTY_PARAGRAPHS);
+		setRegionsMergeFieldCleanupOtions(document);
 		
 		document.getMailMerge().executeWithRegions(makeEmptyDataTable());
 		document.getMailMerge().deleteFields();
@@ -722,6 +728,24 @@ public class AsposeDocFactory extends BaseDocFactory {
 			((DocumentWorker) documentWorker).postCreate(document);
 		}
 		return document;
+	}
+
+	private void setSimpleMergeFieldCleanupOtions(Document document) {
+		setRemoveNullValueLines(document);
+		if(this.simpleMergeCleanupOptions.isRemovesEmptyParagraphs()) {
+			document.getMailMerge().setCleanupOptions(MailMergeCleanupOptions.REMOVE_EMPTY_PARAGRAPHS);
+		}
+	}
+
+	private void setRegionsMergeFieldCleanupOtions(Document document) {
+		setRemoveNullValueLines(document);
+		document.getMailMerge().setCleanupOptions(AsposeMergeCleanupOptions.getCleanupOptionIntValues(this.regionMergeCleanupOptions));
+	}
+	
+	private void setRemoveNullValueLines(Document document) {
+		if((this.getFieldMergingCallBack() instanceof AsposeFieldMergingCallback)) {
+			((AsposeFieldMergingCallback) this.getFieldMergingCallBack()).removeNullValuesLines(this.simpleMergeCleanupOptions.isRemovesBlankLines());
+		}
 	}
 
 	/**
@@ -1232,5 +1256,33 @@ public class AsposeDocFactory extends BaseDocFactory {
 			throw new IllegalArgumentException("The AsposeFieldMergingCallback must not be null.");
 		}
 		this.fieldMergingCallback = fieldMergingCallback;
+	}
+	
+	private SimpleMergeCleanupOptions simpleMergeCleanupOptions = SimpleMergeCleanupOptions.getRecommendedMergeCleanupOptionsForSimpleMerging();
+	private MergeCleanupOptions regionMergeCleanupOptions = MergeCleanupOptions.getRecommendedMergeCleanupOptionsForMergingWithRegions();
+
+	@Override
+	public BaseDocFactory withSimpleMergeCleanupOption(SimpleMergeCleanupOptions simpleMergeCleanupOption) {
+		API.checkNotNull(simpleMergeCleanupOption, "simpleMergeCleanupOptions");
+		this.simpleMergeCleanupOptions = simpleMergeCleanupOption;
+		return this;
+	}
+
+	@Override
+	public SimpleMergeCleanupOptions getSimpleMergeCleanupOptions() {
+		return this.simpleMergeCleanupOptions;
+	}
+
+	@Override
+	public BaseDocFactory withRegionsMergeCleanupOption(
+			MergeCleanupOptions mergeCleanupOption) {
+		API.checkNotNull(mergeCleanupOption, "mergeCleanupOptions");
+		this.regionMergeCleanupOptions = mergeCleanupOption;
+		return this;
+	}
+
+	@Override
+	public MergeCleanupOptions getRegionsMergeCleanupOptions() {
+		return this.regionMergeCleanupOptions;
 	}
 }

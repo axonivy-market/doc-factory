@@ -12,8 +12,11 @@ import java.util.Locale;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 
+import ch.ivyteam.api.API;
 import ch.ivyteam.ivy.addons.docfactory.aspose.DocumentWorker;
 import ch.ivyteam.ivy.addons.docfactory.mergefield.internal.MergeFieldsExtractor;
+import ch.ivyteam.ivy.addons.docfactory.options.MergeCleanupOptions;
+import ch.ivyteam.ivy.addons.docfactory.options.SimpleMergeCleanupOptions;
 import ch.ivyteam.ivy.addons.docfactory.response.ResponseHandler;
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.scripting.objects.CompositeObject;
@@ -800,6 +803,20 @@ public class DocumentTemplate implements Serializable {
 	 */
 	public void setTreeData(Tree treeData) {
 		this.treeData = treeData;
+	}
+	
+	public DocumentTemplate withSimpleMergeCleanupOptions(
+			SimpleMergeCleanupOptions simpleMergeCleanupOptions) {
+		API.checkNotNull(simpleMergeCleanupOptions, "simpleMergeCleanupOptions");
+		this.getDocumentFactory().withSimpleMergeCleanupOption(simpleMergeCleanupOptions);
+		return this;
+	}
+
+	public DocumentTemplate withRegionsMergeCleanupOptions(
+			MergeCleanupOptions mergeCleanupOptions) {
+		API.checkNotNull(mergeCleanupOptions, "mergeCleanupOptions");
+		this.getDocumentFactory().withRegionsMergeCleanupOption(mergeCleanupOptions);
+		return this;
 	}
 	
 	private void initializeFileOperationMessage() {
