@@ -16,6 +16,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import org.apache.commons.lang3.StringUtils;
+
 import ch.ivyteam.ivy.addons.docfactory.DocFactoryConstants;
 import ch.ivyteam.ivy.addons.docfactory.image.ImageDimensionCalculatorFactory;
 import ch.ivyteam.ivy.addons.docfactory.restricted.parser.HTMLParser;
@@ -51,16 +53,32 @@ import com.aspose.words.Section;
  */
 public class AsposeFieldMergingCallback implements IFieldMergingCallback {
 	
+	private boolean removeBlankValuesLines = true;
+
+	/**
+	 * if set to false, the lines containing only null mergefields values are not removed. The document gets an empty line there.<br />
+	 * The default value is true
+	 * @param removeNullValuesLines
+	 * @return the AsposeFieldMergingCallback which removeNullValuesLines property is set.
+	 */
+	public AsposeFieldMergingCallback removeNullValuesLines(boolean removeNullValuesLines) {
+		this.removeBlankValuesLines = removeNullValuesLines;
+		return this;
+	}
+	
 	@Override
-	public void fieldMerging(FieldMergingArgs e) throws Exception { 
-		if(e.getFieldValue() == null) {
+	public void fieldMerging(FieldMergingArgs fieldMergingArgs) throws Exception { 
+		if(fieldMergingArgs.getFieldValue() == null && removeBlankValuesLines) {
+			removeBlankLine(fieldMergingArgs);
 			return;
 		}
-		if(e.getFieldName().toLowerCase().startsWith(DocFactoryConstants.EMBEDDED_DOCUMENT_MERGEFIELD_NAME_START)) {
-			handleDocumentInsertion(e);
+		if(fieldMergingArgs.getFieldValue() != null && 
+				fieldMergingArgs.getFieldName().toLowerCase().startsWith(DocFactoryConstants.EMBEDDED_DOCUMENT_MERGEFIELD_NAME_START)) {
+			handleDocumentInsertion(fieldMergingArgs);
+			return;
 		}
-		if(e.getFieldValue() instanceof String && isHTML((String) e.getFieldValue())) {
-			handleHTMLInsertion(e);
+		if(fieldMergingArgs.getFieldValue() instanceof String && isHTML((String) fieldMergingArgs.getFieldValue())) {
+			handleHTMLInsertion(fieldMergingArgs);
 		}
 
 	}
@@ -198,6 +216,15 @@ public class AsposeFieldMergingCallback implements IFieldMergingCallback {
 	
 	private boolean isHTML(String fieldValue) {
 		return HTMLParser.isHTML(fieldValue);
+	}
+	
+	private void removeBlankLine(FieldMergingArgs fieldMergingArgs) throws Exception {
+		DocumentBuilder builder = new DocumentBuilder(fieldMergingArgs.getDocument());
+		builder.moveToMergeField(fieldMergingArgs.getFieldName());
+		Paragraph paragraph = builder.getCurrentParagraph();
+		if (StringUtils.isBlank(paragraph.getText())) {
+			paragraph.remove();
+		}
 	}
 
 }

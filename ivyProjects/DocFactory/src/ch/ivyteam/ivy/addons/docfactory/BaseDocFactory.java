@@ -11,6 +11,8 @@ import java.util.List;
 
 import ch.ivyteam.ivy.addons.docfactory.aspose.AsposeFieldMergingCallback;
 import ch.ivyteam.ivy.addons.docfactory.aspose.DocumentWorker;
+import ch.ivyteam.ivy.addons.docfactory.options.MergeCleanupOptions;
+import ch.ivyteam.ivy.addons.docfactory.options.SimpleMergeCleanupOptions;
 import ch.ivyteam.ivy.addons.docfactory.response.ResponseHandler;
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.scripting.objects.CompositeObject;
@@ -490,5 +492,26 @@ public abstract class BaseDocFactory{
 		return (T) documentWorker;
 	}
 	
+	/**
+	 * Allows defining exactly how the document will be cleaned after the simple mail merge. 
+	 * Use this only if you need to change the way the cleanup is done after simple mail merging.
+	 * By Default, the blank fields are removed and all the lines containing only blank fields are also removed.
+	 * @param simpleMergeCleanupOption cannot be null.
+	 * @return the baseDocfactory which simpleMergeCleanupOptions are set.
+	 */
+	public abstract BaseDocFactory withSimpleMergeCleanupOption (SimpleMergeCleanupOptions simpleMergeCleanupOption);
 	
+	public abstract SimpleMergeCleanupOptions getSimpleMergeCleanupOptions();
+	
+	/**
+	 * Allows defining exactly how the document will be cleaned after the mail merge with regions.
+	 * Use this only if you need to change the way the cleanup is done after mail merging with regions.
+	 * by default, and additionally to the default of the SimpleMergeCleanupOptions, 
+	 * the empty and unused regions, the unused fields and the containing empty fields are removed.
+	 * @param mergeCleanupOption cannot be null.
+	 * @return the baseDocfactory which MergeCleanupOptions are set.
+	 */
+	public abstract BaseDocFactory withRegionsMergeCleanupOption (MergeCleanupOptions mergeCleanupOption);
+	
+	public abstract MergeCleanupOptions getRegionsMergeCleanupOptions();
 }

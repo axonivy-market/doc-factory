@@ -1,0 +1,162 @@
+package ch.ivyteam.ivy.addons.docfactory;
+
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
+
+import java.math.BigDecimal;
+import java.util.Calendar;
+
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+
+import com.aspose.words.DataRow;
+import com.aspose.words.DataTable;
+
+import ch.ivyteam.ivy.ThirdPartyLicenses;
+import ch.ivyteam.ivy.addons.docfactory.aspose.LicenseLoader;
+import ch.ivyteam.ivy.addons.docfactory.test.data.Address;
+import ch.ivyteam.ivy.addons.docfactory.test.data.Insurance;
+import ch.ivyteam.ivy.addons.docfactory.test.data.InsuranceBasket;
+import ch.ivyteam.ivy.addons.docfactory.test.data.Person;
+import ch.ivyteam.ivy.cm.IContentManagementSystem;
+import ch.ivyteam.ivy.environment.Ivy;
+import ch.ivyteam.ivy.scripting.objects.File;
+import ch.ivyteam.ivy.scripting.objects.util.IvyScriptObjectEnvironment;
+import ch.ivyteam.log.Logger;
+
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({Ivy.class, ThirdPartyLicenses.class, File.class, LicenseLoader.class, IvyScriptObjectEnvironment.class})
+public class DocFactoryTest {
+	
+	@Rule
+	public ExpectedException thrown = ExpectedException.none();
+	
+	protected static final String TEMPLATE_PERSON_DOCX = "template_person.docx";
+
+	@Before
+	public void setup() throws Exception {
+		Logger mockLogger = mock(Logger.class);
+		doNothing().when(mockLogger).error(any(String.class));
+		doNothing().when(mockLogger).info(any(String.class));
+		doNothing().when(mockLogger).debug(any(String.class));
+
+		IContentManagementSystem mockedCms = mock(IContentManagementSystem.class);
+		when(mockedCms.co(any(String.class))).thenReturn("");
+
+		mockStatic(ThirdPartyLicenses.class);
+		mockStatic(Ivy.class);
+		mockStatic(LicenseLoader.class);
+		mockStatic(IvyScriptObjectEnvironment.class);
+		
+		when(Ivy.log()).thenReturn(mockLogger);
+		when(Ivy.cms()).thenReturn(mockedCms);
+		when(ThirdPartyLicenses.getDocumentFactoryLicense()).thenReturn(null);
+		when(IvyScriptObjectEnvironment.getIvyScriptObjectEnvironment()).thenReturn(new MyIvyScriptObjectEnvironment());
+	}
+	
+	protected java.io.File makeFile(String path) {
+		java.io.File resultFile = new java.io.File(path);
+		if(resultFile.isFile()) {
+			resultFile.delete();
+		}
+		if(!resultFile.getParentFile().isDirectory()) {
+			resultFile.getParentFile().mkdirs();
+		}
+		return resultFile;
+	}
+	
+	protected Person makePerson() {
+		return Person.withNameFirstname("Comba", "Emmanuel")
+				.withAddress(Address.withStreetZipCodeCityCountry("Muristrasse 4", "8000", "Zürich", "CH"))
+				.withBirthday(Calendar.getInstance().getTime())
+				.withInsuranceBasket(
+						InsuranceBasket.withInsurance(Insurance.withName("AXA").withContractNumber("sdfh735"))
+						.putInsurance(Insurance.withName("GENERALI").withContractNumber("fsghdg6666"))
+						.putInsurance(Insurance.withName("AB").withContractNumber("23445656")))
+						.withId(new BigDecimal(213546));
+	}
+
+	protected Person makePersonWithHTML() {
+		String htmlStreet = "Hey dude! This is my address:<br>"
+				+ "<b>My Street in bold</b>"
+				+ "<br /><font color='blue'>I am blue</font>"
+				+ "<br /><i><font color='red'>I am red and italic</font></i>"
+				+ "<br /><div style='color:green; font-family:courier;'>I am green and courier</div>"
+				+ "<a href='www.axonivy.com'>Come and visit us!</a><br />"
+				+ "<br /><ul><b>And a list:</b>"
+				+ "<li>one"
+				+ "<li>two"
+				+ "<li>three"
+				+ "</ul>";
+		return Person.withNameFirstname("Comba", "Emmanuel")
+				.withAddress(Address.withStreetZipCodeCityCountry(htmlStreet, "3005", "Bern", "CH"))
+				.withBirthday(Calendar.getInstance().getTime())
+				.withInsuranceBasket(
+						InsuranceBasket.withInsurance(Insurance.withName("AXA").withContractNumber("sdfh735"))
+						.putInsurance(Insurance.withName("GENERALI").withContractNumber("fsghdg6666"))
+						.putInsurance(Insurance.withName("AB").withContractNumber("23445656")))
+						.withId(new BigDecimal(213546));
+	}
+
+	protected Person makePersonWithHTMLFormattedInCssFile() {
+		String htmlStreet = 
+				"<html>"
+						+ "<head>"
+						+ "<link rel='stylesheet' href='styles.css'>"
+						+ "</head>"
+						+ "<body>"
+						+ "<h1>The style is defined in a css file.</h1>"
+						+ "<div>This is a div with a background and a border.</div>"
+						+ "</body>"
+						+ "</html>";
+		return Person.withNameFirstname("Comba", "Emmanuel")
+				.withAddress(Address.withStreetZipCodeCityCountry(htmlStreet, "3005", "Bern", "CH"))
+				.withBirthday(Calendar.getInstance().getTime())
+				.withInsuranceBasket(
+						InsuranceBasket.withInsurance(Insurance.withName("AXA").withContractNumber("sdfh735"))
+						.putInsurance(Insurance.withName("GENERALI").withContractNumber("fsghdg6666"))
+						.putInsurance(Insurance.withName("AB").withContractNumber("23445656")))
+						.withId(new BigDecimal(213546));
+	}
+
+	protected DataTable makeDataTable() {
+		//The name of the DataTable must be the same as the name of the merge field region (TableStart:itemPrices)
+		com.aspose.words.DataTable data = new DataTable("itemPrices");
+		// add the columns which names are the same as the merge fields in the data table region
+		data.getColumns().add("Item", String.class);
+		data.getColumns().add("Price", Number.class);
+		data.getColumns().add("Currency", String.class);
+		// add the rows
+		DataRow dr = data.newRow();
+		dr.set("Item", "T-Shirt");
+		dr.set("Price", 22.56);
+		dr.set("Currency", "$");
+		data.getRows().add(dr);
+		dr = data.newRow();
+		dr.set("Item", "Porsche");
+		dr.set("Price", 435345);
+		dr.set("Currency", "CHF");
+		data.getRows().add(dr);
+		dr = data.newRow();
+		dr.set("Item", "EM-Ticket");
+		dr.set("Price", 45);
+		dr.set("Currency", "CHF");
+		data.getRows().add(dr);
+		dr = data.newRow();
+		dr.set("Item", "Super PC");
+		dr.set("Price", 1500.00);
+		dr.set("Currency", "Euro");
+		data.getRows().add(dr);
+
+		return data;
+	}
+
+
+}
