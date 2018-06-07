@@ -1,14 +1,9 @@
 package ch.ivyteam.ivy.addons.docfactory;
 
+import static org.hamcrest.core.IsCollectionContaining.hasItem;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.hamcrest.core.IsCollectionContaining.*;
 
 import java.io.File;
 import java.io.Serializable;
@@ -19,41 +14,14 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Locale;
 
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
-import ch.ivyteam.ivy.ThirdPartyLicenses;
 import ch.ivyteam.ivy.addons.docfactory.test.data.Address;
 import ch.ivyteam.ivy.addons.docfactory.test.data.Insurance;
 import ch.ivyteam.ivy.addons.docfactory.test.data.InsuranceBasket;
 import ch.ivyteam.ivy.addons.docfactory.test.data.Person;
-import ch.ivyteam.ivy.cm.IContentManagementSystem;
-import ch.ivyteam.ivy.environment.Ivy;
-import ch.ivyteam.log.Logger;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({Ivy.class, ThirdPartyLicenses.class})
-public class ProduceDocumentWithNestedReportTest {
-
-	@Before
-	public void setup() throws Exception {
-		Logger mockLogger = mock(Logger.class);
-		doNothing().when(mockLogger).error(any(String.class));
-		doNothing().when(mockLogger).info(any(String.class));
-		doNothing().when(mockLogger).debug(any(String.class));
-
-		IContentManagementSystem mockedCms = mock(IContentManagementSystem.class);
-		when(mockedCms.co(any(String.class))).thenReturn("");
-
-		mockStatic(ThirdPartyLicenses.class);
-		mockStatic(Ivy.class);
-		when(Ivy.log()).thenReturn(mockLogger);
-		when(Ivy.cms()).thenReturn(mockedCms);
-		when(ThirdPartyLicenses.getDocumentFactoryLicense()).thenReturn(null);
-	}
+public class ProduceDocumentWithNestedReportTest extends DocFactoryTest {
 
 	@Test
 	public void produceDocument_for_reporting_with_nested_tables() throws Exception {
