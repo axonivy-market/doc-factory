@@ -3,11 +3,6 @@ package ch.ivyteam.ivy.addons.docfactory;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 import java.io.File;
 import java.io.Serializable;
@@ -17,37 +12,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
-import ch.ivyteam.ivy.ThirdPartyLicenses;
-import ch.ivyteam.ivy.cm.IContentManagementSystem;
-import ch.ivyteam.ivy.environment.Ivy;
-import ch.ivyteam.log.Logger;
-
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({Ivy.class, ThirdPartyLicenses.class})
-public class ProduceDocumentWithSimpleReportTest {
-	
-	@Before
-	public void setup() throws Exception {
-		Logger mockLogger = mock(Logger.class);
-		doNothing().when(mockLogger).error(any(String.class));
-		doNothing().when(mockLogger).info(any(String.class));
-		doNothing().when(mockLogger).debug(any(String.class));
-
-		IContentManagementSystem mockedCms = mock(IContentManagementSystem.class);
-		when(mockedCms.co(any(String.class))).thenReturn("");
-
-		mockStatic(ThirdPartyLicenses.class);
-		mockStatic(Ivy.class);
-		when(Ivy.log()).thenReturn(mockLogger);
-		when(Ivy.cms()).thenReturn(mockedCms);
-		when(ThirdPartyLicenses.getDocumentFactoryLicense()).thenReturn(null);
-	}
+public class ProduceDocumentWithSimpleReportTest extends DocFactoryTest {
 	
 	@Test
 	public void produceDocument_with_simple_tables() throws Exception {
@@ -101,7 +68,7 @@ public class ProduceDocumentWithSimpleReportTest {
 		return bean;
 	}
 
-	private class Address implements Serializable {
+	class Address implements Serializable {
 		private static final long serialVersionUID = 1L;
 		private String street;
 		private City city;
@@ -121,7 +88,7 @@ public class ProduceDocumentWithSimpleReportTest {
 		
 	}
 	
-	private class City implements Serializable {
+	class City implements Serializable {
 		private static final long serialVersionUID = 1L;
 		private String name;
 		private String zipCode;
@@ -152,7 +119,7 @@ public class ProduceDocumentWithSimpleReportTest {
 		
 	}
 	
-	private class BeanWithCollection implements Serializable {
+	class BeanWithCollection implements Serializable {
 		private static final long serialVersionUID = 1L;
 		
 		private String UID;
