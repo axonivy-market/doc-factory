@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>ch.ivyteam.ivy.addons</groupId>
   <artifactId>ch.ivyteam.ivy.addons</artifactId>
-  <version>7010100.0.0-SNAPSHOT</version>
+  <version>7010200.0.0-SNAPSHOT</version>
   <packaging>iar</packaging>
   <organization>
     <name>AXON IVY AG</name>
@@ -19,7 +19,7 @@
     <dependency>
       <groupId>ch.ivyteam.ivy.addons</groupId>
       <artifactId>file-manager-api</artifactId>
-      <version>[7.1.0-SNAPSHOT,)</version>
+      <version>[7.1.1-SNAPSHOT,)</version>
       <type>iar</type>
     </dependency>
   </dependencies>

@@ -26,6 +26,7 @@ import ch.ivyteam.ivy.addons.filemanager.database.filetype.AbstractFileTypesCont
 import ch.ivyteam.ivy.addons.filemanager.database.filetype.FileTypesController;
 import ch.ivyteam.ivy.addons.filemanager.database.persistence.IDocumentOnServerPersistence;
 import ch.ivyteam.ivy.addons.filemanager.database.persistence.IFolderOnServerPersistence;
+import ch.ivyteam.ivy.addons.filemanager.database.search.DocumentCreationDateSearch;
 import ch.ivyteam.ivy.addons.filemanager.database.security.AbstractDirectorySecurityController;
 import ch.ivyteam.ivy.addons.filemanager.database.security.DirectorySecurityUtil;
 import ch.ivyteam.ivy.addons.filemanager.database.security.SecurityHandler;
@@ -908,6 +909,19 @@ public class FileStoreDBHandler extends AbstractFileSecurityHandler {
 		ArrayList<DocumentOnServer> docs = new ArrayList<>();
 		docs.addAll(DocumentListFilterUtil.filterDocumentListIfFilterNotNull(this.docPersistence.getDocuments(_conditions), this.config.getDocumentListFilter()));
 		return docs;
+	}
+	
+	/**
+	 * get a let of documents based on the giver filter-search criteria
+	 * @param filepathCondition: FilePath pattern criteria, like "myApp/contracts/%", cannot be blank.
+	 * @param filetypeNameCondition: file type name pattern condition, can be blank if you don't want to search by type name.
+	 * @param tagNameCondition: file tag name pattern condition, can be blank if you don't want to search by tag name.
+	 * @param creationDateCondition the DocumentCreationDateSearch criteria. Can be null, if you don't want to search by creation date.
+	 * @return an ArrayList of DocumentOnServer objects. Empty if nothing found.
+	 * @throws Exception
+	 */
+	public ArrayList<DocumentOnServer> getDocumentsFilteredby(String filepathCondition, String filetypeNameCondition, String tagNameCondition, DocumentCreationDateSearch creationDateCondition) throws Exception {
+		return new ArrayList<DocumentOnServer>(this.docPersistence.getDocumentsFilteredby(filepathCondition, filetypeNameCondition, tagNameCondition, creationDateCondition));
 	}
 
 	/* (non-Javadoc)
