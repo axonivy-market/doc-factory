@@ -3,38 +3,83 @@ package ch.ivyteam.ivy.addons.docfactory.aspose;
 import java.io.File;
 import java.io.IOException;
 
+import ch.ivyteam.api.API;
 import ch.ivyteam.ivy.addons.docfactory.BaseDocFactory;
 import ch.ivyteam.ivy.addons.docfactory.DocFactoryConstants;
 import ch.ivyteam.ivy.addons.docfactory.FileOperationMessage;
 import ch.ivyteam.ivy.addons.docfactory.UnsupportedFormatException;
+import ch.ivyteam.ivy.addons.docfactory.options.DocumentCreationOptions;
 import ch.ivyteam.ivy.environment.Ivy;
 
+import com.aspose.words.DocSaveOptions;
 import com.aspose.words.Document;
 import com.aspose.words.OoxmlCompliance;
 import com.aspose.words.OoxmlSaveOptions;
+import com.aspose.words.PdfSaveOptions;
 import com.aspose.words.SaveFormat;
+import com.aspose.words.SaveOptions;
 
 public class AsposeDocFactoryFileGenerator {
+	
+	private DocumentCreationOptions documentCreationOptions = DocumentCreationOptions.getInstance();
+	
+	private AsposeDocFactoryFileGenerator() {}
+	
+	public static AsposeDocFactoryFileGenerator getInstance() {
+		return new AsposeDocFactoryFileGenerator();
+	}
+	
+	public AsposeDocFactoryFileGenerator withDocumentCreationOptions(DocumentCreationOptions documentCreationOptions) {
+		API.checkNotNull(documentCreationOptions, "documentCreationOptions");
+		this.documentCreationOptions = documentCreationOptions;
+		return this;
+	}
+	
+	public FileOperationMessage exportDocumentToFile(Document document, String baseFilePath, int outputFormat) throws Exception {
+		API.checkNotNull(document, "document");
+		API.checkNotEmpty(baseFilePath, "baseFilePath");
+		API.checkRange(outputFormat, "outputFormat", DocFactoryConstants.DOC_FORMAT, DocFactoryConstants.ODT_FORMAT);
+		
+		String filePath = makeFilePath(baseFilePath, outputFormat);
+		SaveOptions saveOptions;
+		if(outputFormat == DocFactoryConstants.DOCX_FORMAT) {
+			saveOptions = new OoxmlSaveOptions();
+			((OoxmlSaveOptions) saveOptions).setCompliance(OoxmlCompliance.ISO_29500_2008_TRANSITIONAL);
+			saveOptions.setSaveFormat(SaveFormat.DOCX);
+		} else if(outputFormat == DocFactoryConstants.PDF_FORMAT) {
+			saveOptions = new PdfSaveOptions();
+			((PdfSaveOptions) saveOptions).setPreserveFormFields(documentCreationOptions.isKeepFormFieldsEditableInPdf());
+		} else {
+			saveOptions = new DocSaveOptions();
+			saveOptions.setSaveFormat(getAsposeSaveFormat(outputFormat));
+		}
+		document.save(filePath, saveOptions);
+		return buildResult(new File(filePath));
+	}
+	
+	private String makeFilePath(String baseFilePath, int outputFormat) {
+		return baseFilePath + (outputFormat == DocFactoryConstants.PDF_FORMAT ? DocFactoryConstants.PDF_EXTENSION : 
+			outputFormat == DocFactoryConstants.DOCX_FORMAT ? DocFactoryConstants.DOCX_EXTENSION : 
+				outputFormat == DocFactoryConstants.DOC_FORMAT ? DocFactoryConstants.DOC_EXTENSION : 
+					outputFormat == DocFactoryConstants.HTML_FORMAT ? DocFactoryConstants.HTML_EXTENSION : 
+						outputFormat == DocFactoryConstants.ODT_FORMAT ? DocFactoryConstants.ODT_EXTENSION : DocFactoryConstants.TXT_EXTENSION);
+	}
+	
+	private int getAsposeSaveFormat(int outputFormat) {
+		return  (outputFormat == DocFactoryConstants.PDF_FORMAT ? SaveFormat.PDF : 
+			outputFormat == DocFactoryConstants.DOCX_FORMAT ? SaveFormat.DOCX : 
+				outputFormat == DocFactoryConstants.DOC_FORMAT ? SaveFormat.DOC : 
+					outputFormat == DocFactoryConstants.HTML_FORMAT ? SaveFormat.HTML : 
+						outputFormat == DocFactoryConstants.ODT_FORMAT ? SaveFormat.ODT : SaveFormat.DOC);
+	}
 
 	/**
-	 * Used to export an aspose word document to a file. <br>
-	 * Typically the Document has been generated during a mail merge operation
-	 * and is ready to be saved on disc.
-	 * 
-	 * @param document
-	 *            the com.aspose.words.Document that has to be exported as file
-	 * @param baseFilePath
-	 *            the file path without file extension. The extension is
-	 *            provided by the outputFormat parameter.
-	 * @param outputFormat The number representation of the wanted format (doc, docx, pdf...)
-	 * @param generateBlankDocumentIfGivenDocIsNull if true and the given Document is null, then a blank document will be generated, else if false and document is null an UnsupportedFormatException
-	 * will be thrown.
-	 * @return FileOperationMessage, if success the files List of this FileOperationMessage contains the only File generated with the given Document in the given format.
-	 * @throws Exception 
+	 * @deprecated
+	 * This is not used anymore by the AsposeDocFactory because it was not flexible enough for getting new Options.
 	 */
+	@Deprecated
 	public static FileOperationMessage exportDocumentToFile(Document document, String baseFilePath, int outputFormat,
 			boolean generateBlankDocumentIfGivenDocIsNull) throws Exception {
-		FileOperationMessage fom = FileOperationMessage.generateErrorTypeFileOperationMessage("");
 		File file = null;
 		
 		if (document == null && generateBlankDocumentIfGivenDocIsNull) {
@@ -75,6 +120,12 @@ public class AsposeDocFactoryFileGenerator {
 			throw new UnsupportedFormatException(Ivy.cms().co("/ch/ivyteam/ivy/addons/docfactory/messages/formatNotSupported"));
 		}
 		
+		return buildResult(file);
+	}
+
+	private static FileOperationMessage buildResult(File file)
+			throws IOException, Exception {
+		FileOperationMessage fom;
 		try {
 			if(!file.isFile()) {
 				throw new IOException("The file "+file.getName()+" could not be produced. the Aspose Document could not be exported as File.");
@@ -90,7 +141,7 @@ public class AsposeDocFactoryFileGenerator {
 		
 		return fom;
 	}
-
+	
 	private static void generateIllegalArgumentExceptionIfOneParameterIsNullOrAnEmptyString(
 			String message, Object... o) {
 		for (Object obj : o) {

@@ -15,6 +15,7 @@ import org.apache.commons.lang.StringUtils;
 import ch.ivyteam.api.API;
 import ch.ivyteam.ivy.addons.docfactory.aspose.DocumentWorker;
 import ch.ivyteam.ivy.addons.docfactory.mergefield.internal.MergeFieldsExtractor;
+import ch.ivyteam.ivy.addons.docfactory.options.DocumentCreationOptions;
 import ch.ivyteam.ivy.addons.docfactory.options.MergeCleanupOptions;
 import ch.ivyteam.ivy.addons.docfactory.options.SimpleMergeCleanupOptions;
 import ch.ivyteam.ivy.addons.docfactory.response.ResponseHandler;
@@ -110,6 +111,8 @@ public class DocumentTemplate implements Serializable {
 	
 	private Collection<Object> dataTables = new ArrayList<>();
 	
+	private DocumentCreationOptions documentCreationOptions = DocumentCreationOptions.getInstance();
+	
 	/**
 	 * Generates a DocumentTemplate with the given Template file
 	 * @param template a File as Template. Cannot be null.
@@ -120,7 +123,9 @@ public class DocumentTemplate implements Serializable {
 			throw new IllegalArgumentException("The template parameter cannot be null");
 		}
 		DocumentTemplate documentTemplate = new DocumentTemplate(template.getPath(),"","","",List.create(TemplateMergeField.class));
-		documentTemplate.setDocumentFactory(BaseDocFactory.getInstance());
+		documentTemplate.setDocumentFactory(BaseDocFactory.getInstance().
+				withDocumentCreationOptions(documentTemplate.documentCreationOptions)
+			);
 		return documentTemplate;
 	}
 	
@@ -830,6 +835,17 @@ public class DocumentTemplate implements Serializable {
 		this.outputName = (_outputName==null)?"":_outputName;
 		this.outputFormat = (_outputFormat==null)?"":_outputFormat;
 		this.mergeFields = List.create(TemplateMergeField.class);
+	}
+	
+	public DocumentCreationOptions getDocumentCreationOptions() {
+		return documentCreationOptions ;
+	}
+
+	public DocumentTemplate withDocumentCreationOptions(DocumentCreationOptions documentCreationOptions) {
+		API.checkNotNull(documentCreationOptions, "documentCreationOptions");
+		this.documentCreationOptions = documentCreationOptions;
+		this.documentFactory.withDocumentCreationOptions(this.documentCreationOptions);
+		return this;
 	}
 
 }

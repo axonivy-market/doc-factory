@@ -140,7 +140,8 @@ public class AsposeDocFactory extends BaseDocFactory {
 		int format = getFormatPosition(_outputFormat,UNSUPPORTED_FORMAT);
 		
 		try {
-			this.fileOperationMessage = AsposeDocFactoryFileGenerator.exportDocumentToFile(null, baseDocPath, format, true);
+			this.fileOperationMessage = getFileGenerator().
+					exportDocumentToFile(new Document(), baseDocPath, format);
 		} catch (Exception e) {
 			this.fileOperationMessage= FileOperationMessage.generateErrorTypeFileOperationMessage(e.getMessage());
 		}
@@ -162,11 +163,10 @@ public class AsposeDocFactory extends BaseDocFactory {
 	public FileOperationMessage generateDocument(DocumentTemplate _documentTemplate) {
 		try {
 			this.doc = this.doMailMerge(_documentTemplate);
-			this.fileOperationMessage =  AsposeDocFactoryFileGenerator.exportDocumentToFile(
-					this.doc, 
-					this.formatGivenPathSetToDefaultIfBlank(_documentTemplate.getOutputPath()) + _documentTemplate.getOutputName(), 
-					getFormatPosition(_documentTemplate.getOutputFormat(), PDF_FORMAT), 
-					false
+			this.fileOperationMessage =  getFileGenerator().
+					exportDocumentToFile(this.doc, 
+							this.formatGivenPathSetToDefaultIfBlank(_documentTemplate.getOutputPath()) + _documentTemplate.getOutputName(), 
+							getFormatPosition(_documentTemplate.getOutputFormat(), PDF_FORMAT)
 					);
 		} catch (Exception e) {
 			this.fileOperationMessage = FileOperationMessage.generateErrorTypeFileOperationMessage(e.getMessage());
@@ -352,7 +352,7 @@ public class AsposeDocFactory extends BaseDocFactory {
 					DocumentTemplate dt = iter.next();
 					String s = FileUtil.formatPathWithEndSeparator(dt.getOutputPath()) + dt.getOutputName();
 					int format = getFormatPosition(dt.getOutputFormat(), PDF_FORMAT);
-					FileOperationMessage fom  = AsposeDocFactoryFileGenerator.exportDocumentToFile(this.doMailMerge(dt), s, format, false);
+					FileOperationMessage fom  = getFileGenerator().exportDocumentToFile(this.doMailMerge(dt), s, format);
 					
 					if(fom.isSuccess() && fom.getFiles().size()==1) {
 						files.add(fom.getFiles().get(0));
@@ -411,8 +411,8 @@ public class AsposeDocFactory extends BaseDocFactory {
 			}
 			String baseDocPath= this.outputPath+this.outputName;
 			try {
-				FileOperationMessage fom  = AsposeDocFactoryFileGenerator.exportDocumentToFile(
-						this.doMailMerge(templatePath, templateParamslist, null, null), baseDocPath, format, false
+				FileOperationMessage fom  = getFileGenerator().exportDocumentToFile(
+						this.doMailMerge(templatePath, templateParamslist, null, null), baseDocPath, format
 						);
 				if(!fom.isError()) {
 					this.fileOperationMessage.addFiles(fom.getFiles());
@@ -477,8 +477,8 @@ public class AsposeDocFactory extends BaseDocFactory {
 			String baseDocPath = destinationPath + this.outputName;
 			Ivy.log().warn("OUTPUT PATH " + baseDocPath);
 			try {
-				FileOperationMessage fom = AsposeDocFactoryFileGenerator
-						.exportDocumentToFile(this.doMailMerge(templatePath, templateParamslist, null, null), baseDocPath, format, false);
+				FileOperationMessage fom = getFileGenerator().
+						exportDocumentToFile(this.doMailMerge(templatePath, templateParamslist, null, null), baseDocPath, format);
 				if(!fom.isError()) {
 					this.fileOperationMessage.addFiles(fom.getFiles());
 				}
@@ -559,7 +559,7 @@ public class AsposeDocFactory extends BaseDocFactory {
 				doc.getFirstSection().getPageSetup().setSectionStart(SectionStart.NEW_PAGE);
 				AppendDoc(docDest, doc);
 			}
-			this.fileOperationMessage  = AsposeDocFactoryFileGenerator.exportDocumentToFile(this.docDest, this.outputPath+this.outputName, format, false);
+			this.fileOperationMessage  = getFileGenerator().exportDocumentToFile(this.docDest, this.outputPath + this.outputName, format);
 		}
 		catch (Exception ex) {
 			this.fileOperationMessage = FileOperationMessage.generateErrorTypeFileOperationMessage(ex.getMessage());
@@ -611,7 +611,7 @@ public class AsposeDocFactory extends BaseDocFactory {
 				doc.getFirstSection().getPageSetup().setSectionStart(SectionStart.NEW_PAGE);
 				AppendDoc(docDest, doc);
 			}
-			this.fileOperationMessage  = AsposeDocFactoryFileGenerator.exportDocumentToFile(this.docDest, this.outputPath+this.outputName, format, false);
+			this.fileOperationMessage  = getFileGenerator().exportDocumentToFile(this.docDest, this.outputPath + this.outputName, format);
 		}
 		catch (Exception ex) {
 			this.fileOperationMessage=FileOperationMessage.generateErrorTypeFileOperationMessage(ex.getMessage());
@@ -760,7 +760,7 @@ public class AsposeDocFactory extends BaseDocFactory {
 		
 		String baseFilePath = this.outputPath + this.outputName;
 		int format = getFormatPosition(this.outputFormat, UNSUPPORTED_FORMAT);
-		this.fileOperationMessage  = AsposeDocFactoryFileGenerator.exportDocumentToFile(this.doc, baseFilePath, format, false);
+		this.fileOperationMessage  = getFileGenerator().exportDocumentToFile(this.doc, baseFilePath, format);
 		if(this.fileOperationMessage.isSuccess() && !this.fileOperationMessage.getFiles().isEmpty()) {
 			file = this.fileOperationMessage.getFiles().get(0);
 		}
@@ -1013,7 +1013,7 @@ public class AsposeDocFactory extends BaseDocFactory {
 		java.io.File file=null;
 		int format = getFormatPosition(this.outputFormat,UNSUPPORTED_FORMAT);
 		String baseFilePath = this.outputPath + this.outputName;
-		this.fileOperationMessage  = AsposeDocFactoryFileGenerator.exportDocumentToFile(document, baseFilePath, format, false);
+		this.fileOperationMessage  = getFileGenerator().exportDocumentToFile(document, baseFilePath, format);
 
 		if(!this.fileOperationMessage.getFiles().isEmpty()) {
 			file = this.fileOperationMessage.getFiles().get(0);
@@ -1284,5 +1284,10 @@ public class AsposeDocFactory extends BaseDocFactory {
 	@Override
 	public MergeCleanupOptions getRegionsMergeCleanupOptions() {
 		return this.regionMergeCleanupOptions;
+	}
+	
+	private AsposeDocFactoryFileGenerator getFileGenerator() {
+		return AsposeDocFactoryFileGenerator.getInstance().
+				withDocumentCreationOptions(documentCreationOptions);
 	}
 }

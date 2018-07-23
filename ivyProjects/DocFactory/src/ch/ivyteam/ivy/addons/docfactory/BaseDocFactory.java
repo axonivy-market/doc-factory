@@ -9,8 +9,10 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 
+import ch.ivyteam.api.API;
 import ch.ivyteam.ivy.addons.docfactory.aspose.AsposeFieldMergingCallback;
 import ch.ivyteam.ivy.addons.docfactory.aspose.DocumentWorker;
+import ch.ivyteam.ivy.addons.docfactory.options.DocumentCreationOptions;
 import ch.ivyteam.ivy.addons.docfactory.options.MergeCleanupOptions;
 import ch.ivyteam.ivy.addons.docfactory.options.SimpleMergeCleanupOptions;
 import ch.ivyteam.ivy.addons.docfactory.response.ResponseHandler;
@@ -514,4 +516,12 @@ public abstract class BaseDocFactory{
 	public abstract BaseDocFactory withRegionsMergeCleanupOption (MergeCleanupOptions mergeCleanupOption);
 	
 	public abstract MergeCleanupOptions getRegionsMergeCleanupOptions();
+	
+	DocumentCreationOptions documentCreationOptions = DocumentCreationOptions.getInstance();
+
+	public BaseDocFactory withDocumentCreationOptions(DocumentCreationOptions documentCreationOptions) {
+		API.checkNotNull(documentCreationOptions, "documentCreationOptions");
+		this.documentCreationOptions = documentCreationOptions;
+		return this;
+	}
 }
