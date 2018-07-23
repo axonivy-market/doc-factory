@@ -166,11 +166,12 @@ public class TemplateMergeField {
 			this.type = TemplateMergeFieldType.DATE;
 		} else if(value instanceof Enum<?>) {
 			this.type = TemplateMergeFieldType.ENUM;
-		}
-		else if (value instanceof Collection || value instanceof Map<?,?>) {
+		} else if (value instanceof Collection || value instanceof Map<?,?>) {
 			this.type = TemplateMergeFieldType.COLLECTION;
 			makeChildren();
-		} else {
+		} else if(value instanceof Class<?>) {
+			this.type = TemplateMergeFieldType.CLASS;
+		}  else {
 			this.type = TemplateMergeFieldType.OBJECT;
 			makeChildren();
 		}
@@ -216,7 +217,7 @@ public class TemplateMergeField {
 			return;
 		}
 		if(this.type.is(TemplateMergeFieldType.OBJECT)) {
-			this.children.addAll(MergeFieldsExtractor.getChildrenMergeFieldsForObjectMergeField(this));
+			this.children.addAll(MergeFieldsExtractor.getChildrenMergeFieldsOfTemplateMergeField(this));
 			for(TemplateMergeField tmf : this.children) {
 				if(tmf.isCollection()) {
 					this.nestedCollections.add(tmf);

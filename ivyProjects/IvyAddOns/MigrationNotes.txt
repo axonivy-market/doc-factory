@@ -1,5 +1,12 @@
 The following has changed in IvyAddOns 7.1.2 (7010200.0.0-SNAPSHOT):
 ---------------------------------------------
+* AIPROD-154: DocFactory allows creating editable PDFs
+* AF-18990: The fields that are Class objects are ignored while getting the mergefields properties in beans. This allows avoiding huge 
+collection of possible mergefields and therefore potential out of memory errors.
+
+
+The following has changed in IvyAddOns 7.1.2 (7010200.0.0-SNAPSHOT):
+---------------------------------------------
 * FilemanagerApi: FileStoreDbHandler gets a new method getDocumentsFilteredby
 
 The following has changed in IvyAddOns 7.1.1 (7010100.0.0-SNAPSHOT):
