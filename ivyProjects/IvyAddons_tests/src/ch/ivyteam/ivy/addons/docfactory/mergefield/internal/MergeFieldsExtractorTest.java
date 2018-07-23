@@ -1,5 +1,6 @@
 package ch.ivyteam.ivy.addons.docfactory.mergefield.internal;
 
+import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
 import static org.junit.Assert.*;
 
@@ -10,8 +11,12 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.junit.Test;
+
+import com.aspose.words.Document;
 
 import ch.ivyteam.ivy.addons.docfactory.TemplateMergeField;
 import ch.ivyteam.ivy.addons.docfactory.aspose.MailMergeDataSourceGenerator;
@@ -141,6 +146,40 @@ public class MergeFieldsExtractorTest {
 		}
 		return nb == expectedNumber;
 	}
+	
+	@Test
+	public void getMergeFields_doesNot_get_class_properties_children_fields() {
+		Person person = makePerson();
+		Collection<AdditionalInformation> infos = new ArrayList<>();
+		infos.add(new AdditionalInformation().withDate(new Date())
+				.withType(Person.class).withUsername("ec"));
+		infos.add(new AdditionalInformation().withDate(new Date())
+				.withType(Document.class).withUsername("test"));
+		infos.add(new AdditionalInformation().withDate(new Date())
+				.withType(String.class).withUsername("lt"));
+		person.setPersonalInformations(infos);
+		
+		Collection<TemplateMergeField> personMergeFields = MergeFieldsExtractor.getMergeFields(person);
+		
+		
+		Optional<TemplateMergeField> personAdditionalInformationsTemplateMergeField = personMergeFields.stream().
+				filter(tm -> tm.getMergeFieldName().equals("person.personalInformations")).findFirst();
+		
+		assertTrue(personAdditionalInformationsTemplateMergeField.get().isCollection());
+		
+		Collection<TemplateMergeField> additionalTemplateTypeMergeFields = 
+				personAdditionalInformationsTemplateMergeField.get().getChildren().
+					stream().filter(tm -> tm.getMergeFieldName().equals("additionalinformation.type")).
+					collect(Collectors.toList());
+		
+		assertThat(additionalTemplateTypeMergeFields, hasSize(infos.size()));
+		
+		assertTrue(haveAllNoChildrenMergeFields(additionalTemplateTypeMergeFields));
+	}
+	
+	private boolean haveAllNoChildrenMergeFields(Collection<TemplateMergeField> mergeFields) {
+		return mergeFields.stream().allMatch(tm -> tm.getChildren().isEmpty());
+	}
 
 	private Person makePerson() {
 		Person person = new Person();
@@ -194,6 +233,7 @@ public class MergeFieldsExtractorTest {
 		private long id;
 		private Date birthday;
 		private File paySlip;
+		private Collection<AdditionalInformation> personalInformations;
 		
 		public long getId() {
 			return id;
@@ -221,6 +261,13 @@ public class MergeFieldsExtractorTest {
 		public void setPaySlip(File paySlip) {
 			this.paySlip = paySlip;
 		}
+		public Collection<AdditionalInformation> getPersonalInformations() {
+			return personalInformations;
+		}
+		public void setPersonalInformations(
+				Collection<AdditionalInformation> personalInformations) {
+			this.personalInformations = personalInformations;
+		}
 		
 		
 	}
@@ -241,6 +288,52 @@ public class MergeFieldsExtractorTest {
 		}
 		public void setZipCode(String zipCode) {
 			this.zipCode = zipCode;
+		}
+	}
+	
+	class AdditionalInformation {
+		
+		private Class<?> type;
+		private Date date;
+		private String username;
+		
+		AdditionalInformation withType(Class<?> type){
+			this.type = type;
+			return this;
+		}
+		
+		AdditionalInformation withDate(Date date){
+			this.date = date;
+			return this;
+		}
+		
+		AdditionalInformation withUsername(String username){
+			this.username = username;
+			return this;
+		}
+
+		public Class<?> getType() {
+			return type;
+		}
+
+		public void setType(Class<?> type) {
+			this.type = type;
+		}
+
+		public Date getDate() {
+			return date;
+		}
+
+		public void setDate(Date date) {
+			this.date = date;
+		}
+
+		public String getUsername() {
+			return username;
+		}
+
+		public void setUsername(String username) {
+			this.username = username;
 		}
 	}
 	
