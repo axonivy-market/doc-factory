@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>ivyAddons_tests</groupId>
   <artifactId>ivyAddons_tests</artifactId>
-  <version>7010000.0.0-SNAPSHOT</version>
+  <version>7010500.0.0-SNAPSHOT</version>
   <packaging>iar</packaging>
   <organization>
     <name>AxonIvy AG</name>
@@ -13,7 +13,7 @@
     <dependency>
       <groupId>ch.ivyteam.ivy.addons</groupId>
       <artifactId>rich-dialog</artifactId>
-      <version>[7.1.0-SNAPSHOT,)</version>
+      <version>[7.1.1,)</version>
       <type>iar</type>
     </dependency>
   </dependencies>
