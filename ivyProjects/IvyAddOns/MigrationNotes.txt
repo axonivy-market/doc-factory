@@ -1,3 +1,7 @@
+The following has changed in IvyAddOns 7.1.5 (7010500.0.0-SNAPSHOT):
+---------------------------------------------
+*AIPROD-165: FIX DocFactory: DocumentGenerationException with HTML as output format
+
 The following has changed in IvyAddOns 7.1.2 (7010200.0.0-SNAPSHOT):
 ---------------------------------------------
 * AIPROD-154: DocFactory allows creating editable PDFs
