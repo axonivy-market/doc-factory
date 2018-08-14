@@ -11,8 +11,11 @@ import ch.ivyteam.ivy.addons.docfactory.UnsupportedFormatException;
 import ch.ivyteam.ivy.addons.docfactory.options.DocumentCreationOptions;
 import ch.ivyteam.ivy.environment.Ivy;
 
+import com.aspose.words.TxtSaveOptions;
 import com.aspose.words.DocSaveOptions;
 import com.aspose.words.Document;
+import com.aspose.words.HtmlSaveOptions;
+import com.aspose.words.OdtSaveOptions;
 import com.aspose.words.OoxmlCompliance;
 import com.aspose.words.OoxmlSaveOptions;
 import com.aspose.words.PdfSaveOptions;
@@ -41,6 +44,12 @@ public class AsposeDocFactoryFileGenerator {
 		API.checkRange(outputFormat, "outputFormat", DocFactoryConstants.DOC_FORMAT, DocFactoryConstants.ODT_FORMAT);
 		
 		String filePath = makeFilePath(baseFilePath, outputFormat);
+		SaveOptions saveOptions = getSaveOptionsForFormat(outputFormat);
+		document.save(filePath, saveOptions);
+		return buildResult(new File(filePath));
+	}
+
+	private SaveOptions getSaveOptionsForFormat(int outputFormat) {
 		SaveOptions saveOptions;
 		if(outputFormat == DocFactoryConstants.DOCX_FORMAT) {
 			saveOptions = new OoxmlSaveOptions();
@@ -49,12 +58,20 @@ public class AsposeDocFactoryFileGenerator {
 		} else if(outputFormat == DocFactoryConstants.PDF_FORMAT) {
 			saveOptions = new PdfSaveOptions();
 			((PdfSaveOptions) saveOptions).setPreserveFormFields(documentCreationOptions.isKeepFormFieldsEditableInPdf());
+		} else if(outputFormat == DocFactoryConstants.HTML_FORMAT) {
+			saveOptions = new HtmlSaveOptions(getAsposeSaveFormat(outputFormat));
+			saveOptions.setSaveFormat(SaveFormat.HTML);
+		} else if(outputFormat == DocFactoryConstants.ODT_FORMAT) {
+			saveOptions = new OdtSaveOptions(getAsposeSaveFormat(outputFormat));
+			saveOptions.setSaveFormat(SaveFormat.ODT);
+		} else if(outputFormat == DocFactoryConstants.TXT_FORMAT) {
+			saveOptions = new TxtSaveOptions();
+			saveOptions.setSaveFormat(SaveFormat.TEXT);
 		} else {
 			saveOptions = new DocSaveOptions();
 			saveOptions.setSaveFormat(getAsposeSaveFormat(outputFormat));
 		}
-		document.save(filePath, saveOptions);
-		return buildResult(new File(filePath));
+		return saveOptions;
 	}
 	
 	private String makeFilePath(String baseFilePath, int outputFormat) {
