@@ -1,6 +1,6 @@
 pipeline {
   triggers {
-    cron '@midnight'
+    cron 'H/15 * * * *'
   }
   agent {
     docker {
