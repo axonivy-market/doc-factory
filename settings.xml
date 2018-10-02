@@ -29,7 +29,7 @@
       <id>integration-repos</id>
       <repositories>
         <repository>
-          <id>repo.axonivy.io</id>
+          <id>repo.axonivy.io2</id>
           <url>https://repo.axonivy.io/artifactory/ext-release-local</url>
           <releases>
             <enabled>true</enabled>
