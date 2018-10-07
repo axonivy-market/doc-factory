@@ -21,8 +21,8 @@
     <profile>
       <id>integration-dist</id>
       <properties>
-      	<altDeploymentRepository>repo.axonivy.com::default::https://repo.axonivy.com/artifactory/libs-release-local</altDeploymentRepository>
-        <altSnapshotDeploymentRepository>repo.axonivy.com::default::https://repo.axonivy.com/artifactory/libs-snapshot-local</altSnapshotDeploymentRepository>
+      	<altDeploymentRepository>repo.axonivy.io::https://repo.axonivy.io/artifactory/ext-release-local</altDeploymentRepository>
+        <altSnapshotDeploymentRepository>repo.axonivy.io::https://repo.axonivy.io/artifactory/ext-snapshot-local</altSnapshotDeploymentRepository>
       </properties>
     </profile>
     <profile>
