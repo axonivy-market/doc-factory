@@ -34,7 +34,6 @@ import ch.ivyteam.ivy.scripting.objects.Tree;
 
 import com.aspose.words.DataTable;
 import com.aspose.words.Document;
-import com.aspose.words.IFieldMergingCallback;
 import com.aspose.words.IMailMergeDataSource;
 import com.aspose.words.ImportFormatMode;
 import com.aspose.words.MailMergeCleanupOptions;
@@ -1224,9 +1223,13 @@ public class AsposeDocFactory extends BaseDocFactory {
 	 * This method never returns null. If this object is not set, a new AsposeFieldMergingCallback object is instantiated and returned.
 	 * @return the AsposeFieldMergingCallback object
 	 */
-	public IFieldMergingCallback getAsposeFieldMergingCallback() {
+	public AsposeFieldMergingCallback getAsposeFieldMergingCallback() {
 		if(this.fieldMergingCallback==null) {
 			this.fieldMergingCallback = new AsposeFieldMergingCallback();
+		}
+		if(this.documentCreationOptions != null) {
+			((AsposeFieldMergingCallback) this.fieldMergingCallback).
+				withDocumentCreationOptions(documentCreationOptions);
 		}
 		return (AsposeFieldMergingCallback) this.fieldMergingCallback;
 	}

@@ -45,7 +45,7 @@ public class DocumentTemplateTest extends DocFactoryTest {
 
 		documentTemplate.putDataAsSourceForSimpleMailMerge(makePerson());
 
-		assertThat(documentTemplate.getMergeFields(), hasSize(11));
+		assertThat(documentTemplate.getMergeFields(), hasSize(12));
 	}
 	
 	@Test

@@ -15,6 +15,7 @@ public class Person implements Serializable {
 	private Date birthday;
 	private BigDecimal id;
 	private InsuranceBasket insuranceBasket;
+	private boolean acceptToBeContacted;
 
 	private Person() { }
 	
@@ -95,5 +96,18 @@ public class Person implements Serializable {
 
 	public void setInsuranceBasket(InsuranceBasket insuranceBasket) {
 		this.insuranceBasket = insuranceBasket;
+	}
+	
+	public boolean isAcceptToBeContacted() {
+		return acceptToBeContacted;
+	}
+
+	public void setAcceptToBeContacted(boolean acceptToBeContacted) {
+		this.acceptToBeContacted = acceptToBeContacted;
+	}
+
+	public Person acceptToBeContacted(boolean b) {
+		this.setAcceptToBeContacted(b);
+		return this;
 	}
 }
