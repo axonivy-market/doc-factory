@@ -18,8 +18,11 @@ import java.nio.file.Paths;
 
 import org.apache.commons.lang3.StringUtils;
 
+import ch.ivyteam.api.API;
 import ch.ivyteam.ivy.addons.docfactory.DocFactoryConstants;
+import ch.ivyteam.ivy.addons.docfactory.aspose.mergefield.BooleanToCheckBoxTransformer;
 import ch.ivyteam.ivy.addons.docfactory.image.ImageDimensionCalculatorFactory;
+import ch.ivyteam.ivy.addons.docfactory.options.DocumentCreationOptions;
 import ch.ivyteam.ivy.addons.docfactory.restricted.parser.HTMLParser;
 import ch.ivyteam.ivy.environment.Ivy;
 
@@ -54,6 +57,8 @@ import com.aspose.words.Section;
 public class AsposeFieldMergingCallback implements IFieldMergingCallback {
 	
 	private boolean removeBlankValuesLines = true;
+	
+	private DocumentCreationOptions documentCreationOptions = DocumentCreationOptions.getInstance();
 
 	/**
 	 * if set to false, the lines containing only null mergefields values are not removed. The document gets an empty line there.<br />
@@ -63,6 +68,20 @@ public class AsposeFieldMergingCallback implements IFieldMergingCallback {
 	 */
 	public AsposeFieldMergingCallback removeNullValuesLines(boolean removeNullValuesLines) {
 		this.removeBlankValuesLines = removeNullValuesLines;
+		return this;
+	}
+	
+	/**
+	 * set the document creation options. Only the properties relevant for the field merging are considered.
+	 * For the moment:<ul>
+	 * <li> displayBooleanValuesAsCheckBox
+	 * </ul>
+	 * @param documentCreationOptions the DocumentCreationOptions object. If null throws an IllegalArgumentException
+	 * @return the current AsposeFieldMergingCallback object
+	 */
+	public AsposeFieldMergingCallback withDocumentCreationOptions(DocumentCreationOptions documentCreationOptions) {
+		API.checkNotNull(documentCreationOptions, "documentCreationOptions");
+		this.documentCreationOptions = documentCreationOptions;
 		return this;
 	}
 	
@@ -77,6 +96,10 @@ public class AsposeFieldMergingCallback implements IFieldMergingCallback {
 			handleDocumentInsertion(fieldMergingArgs);
 			return;
 		}
+		if(fieldMergingArgs.getFieldValue() instanceof Boolean && documentCreationOptions.isDisplayBooleanValuesAsCheckBox()) {
+			BooleanToCheckBoxTransformer.displayFieldAsCheckBox(fieldMergingArgs);
+			return;
+        }
 		if(fieldMergingArgs.getFieldValue() instanceof String && isHTML((String) fieldMergingArgs.getFieldValue())) {
 			handleHTMLInsertion(fieldMergingArgs);
 		}
