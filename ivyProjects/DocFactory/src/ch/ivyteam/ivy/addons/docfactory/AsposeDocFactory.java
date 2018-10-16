@@ -77,6 +77,7 @@ public class AsposeDocFactory extends BaseDocFactory {
 	public AsposeDocFactory(){
 		super();
 		parseLicense();
+		this.fieldMergingCallback = new AsposeFieldMergingCallback();
 	}
 	
 	/**
@@ -161,6 +162,7 @@ public class AsposeDocFactory extends BaseDocFactory {
 	@Override
 	public FileOperationMessage generateDocument(DocumentTemplate _documentTemplate) {
 		try {
+			this.setFormat(_documentTemplate.getOutputFormat());
 			this.doc = this.doMailMerge(_documentTemplate);
 			this.fileOperationMessage =  getFileGenerator().
 					exportDocumentToFile(this.doc, 
@@ -1220,25 +1222,31 @@ public class AsposeDocFactory extends BaseDocFactory {
 
 	/**
 	 * Returns the AsposeFieldMergingCallback object that is responsible for applying special rules for mail merging for some merge fields.<br>
-	 * This method never returns null. If this object is not set, a new AsposeFieldMergingCallback object is instantiated and returned.
-	 * @return the AsposeFieldMergingCallback object
+	 * If the MergeFieldCallBack set in the DocFactory with the {@link BaseDocFactory#withFieldMergingCallBack(Object)} 
+	 * is not an AsposeFieldMergingCallback, then an IllegalStateException is thrown.<br>
+	 * So prefer calling the {@link #getFieldMergingCallBack()} method. This will ever work, even if the FieldMergingCallBack set is not an AsposeFieldMergingCallback.
 	 */
 	public AsposeFieldMergingCallback getAsposeFieldMergingCallback() {
-		if(this.fieldMergingCallback==null) {
-			this.fieldMergingCallback = new AsposeFieldMergingCallback();
+		if (!(this.fieldMergingCallback instanceof AsposeFieldMergingCallback)) {
+			throw new IllegalStateException(
+					"The fieldMergingCallback set in the AsposeDocFactory is not AsposeFieldMergingCallback instance.");
 		}
-		if(this.documentCreationOptions != null) {
-			((AsposeFieldMergingCallback) this.fieldMergingCallback).
-				withDocumentCreationOptions(documentCreationOptions);
+		AsposeFieldMergingCallback asposeMergeFieldCallback = (AsposeFieldMergingCallback) this.fieldMergingCallback;
+		if (this.documentCreationOptions != null) {
+			asposeMergeFieldCallback.withDocumentCreationOptions(documentCreationOptions);
 		}
-		return (AsposeFieldMergingCallback) this.fieldMergingCallback;
+		asposeMergeFieldCallback.setoutputFormat(this.outputFormat);
+		return asposeMergeFieldCallback;
 	}
 	
 
 	@SuppressWarnings("unchecked")
 	@Override
 	protected <T> T getFieldMergingCallBack() {
-		return (T) this.getAsposeFieldMergingCallback();
+		if (this.fieldMergingCallback instanceof AsposeFieldMergingCallback) {
+			return (T) this.getAsposeFieldMergingCallback();
+		}
+		return (T) this.fieldMergingCallback;
 	}
 
 	/**

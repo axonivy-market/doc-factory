@@ -28,7 +28,7 @@ public class BooleanToCheckBoxOptionIT extends DocFactoryTest {
 	}
 	
 	@Test
-	public void defaultFalseMergeFieldValueNotDisplayedAsCheckBox() {
+	public void default_False_mergeFieldValue_notDisplayedAsCheckBox() {
 		File resultFile = makeFile("test/documentTemplate/checkBox/default_false_not_displayed_as_checkbox.pdf");
 		
 		Person data = makePerson();
@@ -43,7 +43,7 @@ public class BooleanToCheckBoxOptionIT extends DocFactoryTest {
 	}
 	
 	@Test
-	public void defaultTrueMergeFieldValueNotDisplayedAsCheckBox() {
+	public void default_True_mergeFieldValue_notDisplayedAsCheckBox() {
 		File resultFile = makeFile("test/documentTemplate/checkBox/default_true_not_displayed_as_checkbox.pdf");
 		
 		Person data = makePerson();
@@ -58,7 +58,7 @@ public class BooleanToCheckBoxOptionIT extends DocFactoryTest {
 	}
 	
 	@Test
-	public void false_MergeFieldValue_Displayed_As_UnselectedCheckBox_output_pdf() {
+	public void false_mergeFieldValue_displayed_as_unselectedCheckBox_output_pdf() {
 		File resultFile = makeFile("test/documentTemplate/checkBox/false_displayed_as_unselected_checkbox.pdf");
 		
 		Person data = makePerson();
@@ -74,7 +74,7 @@ public class BooleanToCheckBoxOptionIT extends DocFactoryTest {
 	}
 	
 	@Test
-	public void true_MergeFieldValue_Displayed_As_selectedCheckBox_output_pdf() {
+	public void true_mergeFieldValue_displayed_as_selectedCheckBox_output_pdf() {
 		File resultFile = makeFile("test/documentTemplate/checkBox/true_displayed_as_selected_checkbox.pdf");
 		
 		Person data = makePerson();
@@ -90,7 +90,7 @@ public class BooleanToCheckBoxOptionIT extends DocFactoryTest {
 	}
 	
 	@Test
-	public void false_MergeFieldValue_Displayed_As_UnselectedCheckBox_output_doc() {
+	public void false_mergeFieldValue_displayed_as_unselectedCheckBox_output_doc() {
 		File resultFile = makeFile("test/documentTemplate/checkBox/false_displayed_as_unselected_checkbox.doc");
 		
 		Person data = makePerson();
@@ -106,7 +106,7 @@ public class BooleanToCheckBoxOptionIT extends DocFactoryTest {
 	}
 	
 	@Test
-	public void true_MergeFieldValue_Displayed_As_selectedCheckBox_output_doc() {
+	public void true_mergeFieldValue_displayed_as_selectedCheckBox_output_doc() {
 		File resultFile = makeFile("test/documentTemplate/checkBox/true_displayed_as_selected_checkbox.doc");
 		
 		Person data = makePerson();
@@ -122,7 +122,7 @@ public class BooleanToCheckBoxOptionIT extends DocFactoryTest {
 	}
 	
 	@Test
-	public void false_MergeFieldValue_Displayed_As_unselectedCheckBox_output_docx() {
+	public void false_mergeFieldValue_displayed_as_unselectedCheckBox_output_docx() {
 		File resultFile = makeFile("test/documentTemplate/checkBox/false_displayed_as_unselected_checkbox.docx");
 		
 		Person data = makePerson();
@@ -138,7 +138,7 @@ public class BooleanToCheckBoxOptionIT extends DocFactoryTest {
 	}
 	
 	@Test
-	public void true_MergeFieldValue_Displayed_As_selectedCheckBox_output_docx() {
+	public void true_mergeFieldValue_displayed_as_selectedCheckBox_output_docx() {
 		File resultFile = makeFile("test/documentTemplate/checkBox/true_displayed_as_selected_checkbox.docx");
 		
 		Person data = makePerson();
@@ -154,7 +154,7 @@ public class BooleanToCheckBoxOptionIT extends DocFactoryTest {
 	}
 	
 	@Test
-	public void false_MergeFieldValue_Displayed_As_UnselectedCheckBox_output_odt() {
+	public void false_mergeFieldValue_displayed_as_unselectedCheckBox_output_odt() {
 		File resultFile = makeFile("test/documentTemplate/checkBox/false_displayed_as_unselected_checkbox.odt");
 		
 		Person data = makePerson();
@@ -170,7 +170,7 @@ public class BooleanToCheckBoxOptionIT extends DocFactoryTest {
 	}
 	
 	@Test
-	public void true_MergeFieldValue_Displayed_As_selectedCheckBox_output_odt() {
+	public void true_mergeFieldValue_displayed_as_selectedCheckBox_output_odt() {
 		File resultFile = makeFile("test/documentTemplate/checkBox/true_displayed_as_selected_checkbox.odt");
 		
 		Person data = makePerson();
@@ -186,8 +186,8 @@ public class BooleanToCheckBoxOptionIT extends DocFactoryTest {
 	}
 	
 	@Test
-	public void false_MergeFieldValue_Displayed_As_UnselectedCheckBox_output_txt() {
-		File resultFile = makeFile("test/documentTemplate/checkBox/false_displayed_as_unselected_checkbox.txt");
+	public void false_mergeFieldValue_not_displayed_as_checkbox_in_txt() {
+		File resultFile = makeFile("test/documentTemplate/checkBox/false_not_displayed_as_unselected_checkbox.txt");
 		
 		Person data = makePerson();
 		data.acceptToBeContacted(false);
@@ -202,8 +202,8 @@ public class BooleanToCheckBoxOptionIT extends DocFactoryTest {
 	}
 	
 	@Test
-	public void true_MergeFieldValue_Displayed_As_selectedCheckBox_output_txt() {
-		File resultFile = makeFile("test/documentTemplate/checkBox/true_displayed_as_selected_checkbox.txt");
+	public void true_mergeFieldValue_not_displayed_as_checkbox_in_txt() {
+		File resultFile = makeFile("test/documentTemplate/checkBox/true_not_displayed_as_selected_checkbox.txt");
 		
 		Person data = makePerson();
 		data.acceptToBeContacted(true);
@@ -218,7 +218,7 @@ public class BooleanToCheckBoxOptionIT extends DocFactoryTest {
 	}
 	
 	@Test
-	public void false_MergeFieldValue_Displayed_As_UnselectedCheckBox_output_html() {
+	public void false_mergeFieldValue_displayed_as_unselectedCheckBox_output_html() {
 		File resultFile = makeFile("test/documentTemplate/checkBox/false_displayed_as_unselected_checkbox.html");
 		
 		Person data = makePerson();
@@ -234,7 +234,7 @@ public class BooleanToCheckBoxOptionIT extends DocFactoryTest {
 	}
 	
 	@Test
-	public void true_MergeFieldValue_Displayed_As_selectedCheckBox_output_html() {
+	public void true_mergeFieldValue_displayed_as_selectedCheckBox_output_html() {
 		File resultFile = makeFile("test/documentTemplate/checkBox/true_displayed_as_selected_checkbox.html");
 		
 		Person data = makePerson();
