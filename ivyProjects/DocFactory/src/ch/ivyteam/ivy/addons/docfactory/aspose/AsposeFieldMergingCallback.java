@@ -56,9 +56,13 @@ import com.aspose.words.Section;
  */
 public class AsposeFieldMergingCallback implements IFieldMergingCallback {
 	
+	private static final String TXT_FORMAT = "txt";
+	
 	private boolean removeBlankValuesLines = true;
 	
 	private DocumentCreationOptions documentCreationOptions = DocumentCreationOptions.getInstance();
+	
+	private String outputFormat;
 
 	/**
 	 * if set to false, the lines containing only null mergefields values are not removed. The document gets an empty line there.<br />
@@ -96,7 +100,9 @@ public class AsposeFieldMergingCallback implements IFieldMergingCallback {
 			handleDocumentInsertion(fieldMergingArgs);
 			return;
 		}
-		if(fieldMergingArgs.getFieldValue() instanceof Boolean && documentCreationOptions.isDisplayBooleanValuesAsCheckBox()) {
+		System.out.println(outputFormat);
+		if(!TXT_FORMAT.equalsIgnoreCase(outputFormat) && 
+				fieldMergingArgs.getFieldValue() instanceof Boolean && documentCreationOptions.isDisplayBooleanValuesAsCheckBox()) {
 			BooleanToCheckBoxTransformer.displayFieldAsCheckBox(fieldMergingArgs);
 			return;
         }
@@ -145,6 +151,10 @@ public class AsposeFieldMergingCallback implements IFieldMergingCallback {
 			}
 			e.setImageStream(imageStream);
 		}
+	}
+	
+	public void setoutputFormat(String outputFormat) {
+		this.outputFormat = outputFormat;
 	}
 
 	private void handleDocumentInsertion(FieldMergingArgs e) throws Exception,
