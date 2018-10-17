@@ -153,7 +153,7 @@ public class DocumentTemplate implements Serializable {
 	 * @return
 	 */
 	public <T> DocumentTemplate withDocumentWorker(T documentWorker) {
-		this.documentFactory = BaseDocFactory.getInstance().withDocumentWorker(documentWorker);
+		this.documentFactory.withDocumentWorker(documentWorker);
 		return this;
 	}
 	
