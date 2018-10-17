@@ -462,6 +462,7 @@ public abstract class BaseDocFactory{
 	 * @return the baseDocFactory with the given fieldMergingCallback set.
 	 */
 	public <T> BaseDocFactory withFieldMergingCallBack(T fieldMergingCallback) {
+		API.checkNotNull(fieldMergingCallback, "fieldMergingCallback");
 		this.fieldMergingCallback = fieldMergingCallback;
 		return this;
 	}
