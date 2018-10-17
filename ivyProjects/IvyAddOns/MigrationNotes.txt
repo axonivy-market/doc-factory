@@ -1,4 +1,4 @@
-The following has changed in IvyAddOns 7.1.6 (7010600.0.0-SNAPSHOT):
+The following has changed in IvyAddOns 7010600.0.0 (7010600.0.0-SNAPSHOT):
 ---------------------------------------------
 *AIPROD- 146 Option for displaying boolean values as check boxes.
 
