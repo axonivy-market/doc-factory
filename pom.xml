@@ -13,6 +13,7 @@
 		<module>ivyProjects/FileManagerApi</module>
 		<module>ivyProjects/IvyAddOns</module>
 		<module>ivyProjects/IvyAddOnsRichDialog</module>
+		<module>ivyProjects/IvyAddons_tests</module>
 		<module>doc/IvyAddOnsGuide</module>
 	</modules>
 	

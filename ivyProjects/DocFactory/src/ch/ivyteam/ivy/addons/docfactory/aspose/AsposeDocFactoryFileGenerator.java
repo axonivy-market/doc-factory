@@ -8,6 +8,7 @@ import ch.ivyteam.ivy.addons.docfactory.BaseDocFactory;
 import ch.ivyteam.ivy.addons.docfactory.DocFactoryConstants;
 import ch.ivyteam.ivy.addons.docfactory.FileOperationMessage;
 import ch.ivyteam.ivy.addons.docfactory.UnsupportedFormatException;
+import ch.ivyteam.ivy.addons.docfactory.aspose.document.DocumentBlankPageRemover;
 import ch.ivyteam.ivy.addons.docfactory.options.DocumentCreationOptions;
 import ch.ivyteam.ivy.environment.Ivy;
 
@@ -43,10 +44,19 @@ public class AsposeDocFactoryFileGenerator {
 		API.checkNotEmpty(baseFilePath, "baseFilePath");
 		API.checkRange(outputFormat, "outputFormat", DocFactoryConstants.DOC_FORMAT, DocFactoryConstants.ODT_FORMAT);
 		
+		applyDocumentCreationOptions(document);
+		
 		String filePath = makeFilePath(baseFilePath, outputFormat);
 		SaveOptions saveOptions = getSaveOptionsForFormat(outputFormat);
 		document.save(filePath, saveOptions);
 		return buildResult(new File(filePath));
+	}
+
+	private void applyDocumentCreationOptions(Document document) throws Exception {
+		if(documentCreationOptions.isRemoveBlankPages()) {
+			DocumentBlankPageRemover.removesBlankPage(document);
+		}
+		
 	}
 
 	private SaveOptions getSaveOptionsForFormat(int outputFormat) {

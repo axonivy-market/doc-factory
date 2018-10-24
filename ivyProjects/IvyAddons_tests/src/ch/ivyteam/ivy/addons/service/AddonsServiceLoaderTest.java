@@ -39,7 +39,7 @@ public class AddonsServiceLoaderTest {
 	public void testIfUrlPointsToJarAddJarNameToStringSet_JarFile_urlAdded() {
 		Set<String> jarsInClassPath = new HashSet<String>();
 		try {
-			java.io.File f = new java.io.File("E:\\my\\test\\cool.jar");
+			java.io.File f = new java.io.File("/tmp/cool.jar");
 			AddonsServiceLoader.ifUrlPointsToJarAddJarNameToStringSet(jarsInClassPath, f.toURI().toURL());
 		} catch (MalformedURLException e) {
 			System.out.println(e.getMessage());
