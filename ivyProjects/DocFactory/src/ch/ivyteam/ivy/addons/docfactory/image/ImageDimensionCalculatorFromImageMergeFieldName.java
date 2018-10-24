@@ -40,7 +40,6 @@ public class ImageDimensionCalculatorFromImageMergeFieldName implements
 			if(widthSub.length() == 0) {
 				return 0;
 			}
-			System.out.println(widthSub);
 			try {
 				return Integer.parseInt(widthSub);
 			} catch (Exception ex) {
@@ -59,7 +58,6 @@ public class ImageDimensionCalculatorFromImageMergeFieldName implements
 			if(heightSub.length() == 0) {
 				return 0;
 			}
-			System.out.println(heightSub);
 			try {
 				return Integer.parseInt(heightSub);
 			} catch (Exception ex) {
