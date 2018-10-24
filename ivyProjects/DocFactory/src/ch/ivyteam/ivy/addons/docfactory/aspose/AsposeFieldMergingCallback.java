@@ -100,7 +100,6 @@ public class AsposeFieldMergingCallback implements IFieldMergingCallback {
 			handleDocumentInsertion(fieldMergingArgs);
 			return;
 		}
-		System.out.println(outputFormat);
 		if(!TXT_FORMAT.equalsIgnoreCase(outputFormat) && 
 				fieldMergingArgs.getFieldValue() instanceof Boolean && documentCreationOptions.isDisplayBooleanValuesAsCheckBox()) {
 			BooleanToCheckBoxTransformer.displayFieldAsCheckBox(fieldMergingArgs);
