@@ -1,3 +1,7 @@
+The following has changed in IvyAddOns 7010700.0.0 (7010700.0.0-SNAPSHOT):
+---------------------------------------------
+*AIPROD- 149 Option for removing all the blank pages. 
+
 The following has changed in IvyAddOns 7010600.0.0 (7010600.0.0-SNAPSHOT):
 ---------------------------------------------
 *AIPROD- 146 Option for displaying boolean values as check boxes.
