@@ -130,6 +130,282 @@ public class DocumentTemplate implements Serializable {
 	}
 	
 	/**
+	 * empty constructor
+	 */
+	public DocumentTemplate() {
+		this("","","","",List.create(TemplateMergeField.class));
+	}
+
+	/**
+	 * Constructor, instantiate the DocumentTemplate's variable
+	 * @param _templatePath : the path where to find the template
+	 * @param _outputPath : the path where to save the new generated File
+	 * @param _outputName : the name of the new generated File
+	 * @param _outputFormat : the format of the new generated File
+	 * @param _mergeFields : the list of TemplateMergeFields. Each TemplateMergeFields is a Key/value pair.<br>
+	 * The key is the name of the mergeField that can be found in the template<br>
+	 * The value is the String that will replace the mergeField in the template during the template merging.
+	 */
+	public DocumentTemplate(String _templatePath, String _outputPath, String _outputName, 
+			String _outputFormat, List<TemplateMergeField> _mergeFields) {
+		super();
+		initializeConstructorVariables(_templatePath, _outputPath, _outputName,
+				_outputFormat);
+		if(_mergeFields != null) {
+			this.mergeFields = _mergeFields;
+		}
+
+		initializeFileOperationMessage();
+	}
+
+	/**
+	 * Constructor, instantiate the DocumentTemplate's variable
+	 * @param _templatePath : the path where to find the template
+	 * @param _outputPath : the path where to save the new generated File
+	 * @param _outputName : the name of the new generated File
+	 * @param _outputFormat : the format of the new generated File
+	 * @param _mergeFields : the list of TemplateMergeFields. Each TemplateMergeFields is a Key/value pair.<br>
+	 * The key is the name of the mergeField that can be found in the template<br>
+	 * The value is the String that will replace the mergeField in the template during the template merging.
+	 * @param _tablesNamesAndFieldsmap: an HashMap containing the tables name contained in the template as keys and the compositeObjects whose values should be inserted in the corresponding table.
+	 * if not null or not empty and if the template contains Merge Regions, the Merge Regions are going to be filled as table with the values.
+	 */
+	public DocumentTemplate(String _templatePath, String _outputPath, String _outputName, 
+			String _outputFormat, List<TemplateMergeField> _mergeFields, HashMap<String , 
+			java.util.List<CompositeObject>> _tablesNamesAndFieldsmap) {
+		super();
+		initializeConstructorVariables(_templatePath, _outputPath, _outputName,
+				_outputFormat);
+		if(_mergeFields != null) {
+			setMergeFields(_mergeFields);
+		}
+
+		this.setTablesNamesAndFieldsmap(_tablesNamesAndFieldsmap);
+
+		initializeFileOperationMessage();
+	}
+
+	/**
+	 * Constructor, instantiate the DocumentTemplate's variable
+	 * @param _templatePath : the path where to find the template
+	 * @param _outputPath : the path where to save the new generated File
+	 * @param _outputName : the name of the new generated File
+	 * @param _outputFormat : the format of the new generated File
+	 * @param _mergeFields : the list of TemplateMergeFields. Each TemplateMergeFields is a Key/value pair.<br>
+	 * The key is the name of the mergeField that can be found in the template<br>
+	 * The value is the String that will replace the mergeField in the template during the template merging.
+	 * @param _tablesNamesAndFieldsHashtable: an Hashtable containing the tables name contained in the template as keys and the values should be inserted in the corresponding table as a ch.ivyteam.ivy.scripting.objects.Recordset.<br>
+	 * if not null or not empty and if the template contains Merge Regions, the Merge Regions are going to be filled as table with the values.
+	 */
+	public DocumentTemplate(String _templatePath, String _outputPath, String _outputName, 
+			String _outputFormat, List<TemplateMergeField> _mergeFields, 
+			Hashtable<String , Recordset> _tablesNamesAndFieldsHashtable) {
+		super();
+		initializeConstructorVariables(_templatePath, _outputPath, _outputName,
+				_outputFormat);
+		if(_mergeFields != null) {
+			setMergeFields(_mergeFields);
+		}
+
+		this.setTablesNamesAndFieldsHashtable(_tablesNamesAndFieldsHashtable);
+
+		initializeFileOperationMessage();
+	}
+
+	/**
+	 * Constructor, instantiates the DocumentTemplate's variable.
+	 * Supports Nested merge mail regions for reporting.
+	 * @param _templatePath : the path where to find the template
+	 * @param _outputPath : the path where to save the new generated File
+	 * @param _outputName : the name of the new generated File
+	 * @param _outputFormat : the format of the new generated File
+	 * @param _data : An initialized DataClass that contains the informations that should be inserted in the document.<br>
+	 * The merge fields of the template have to be the same as the names of the dataClass fields.
+	 * The key is the name of the mergeField that can be found in the template<br>
+	 * The value is the String that will replace the mergeField in the template during the template merging.
+	 */
+	public DocumentTemplate(String _templatePath, String _outputPath, String _outputName, String _outputFormat, CompositeObject _data) {
+		super();
+		initializeConstructorVariables(_templatePath, _outputPath, _outputName,
+				_outputFormat);
+		if(_data != null) {
+			this.mergeFields = DataClassToMergefields.transformDataClassInMergeField(_data);
+			this.tablesNamesAndFieldsHashtable = DataClassToMergefields.transformDataClassInTablesNamesAndFields(_data);
+			this.nestedDataSourceForNestedMailMerge = List.create(CompositeObject.class);
+			this.nestedDataSourceForNestedMailMerge.add(_data);
+		}
+
+		initializeFileOperationMessage();
+	}
+
+	/**
+	 * Constructor, instantiates the DocumentTemplate's variable
+	 * @param _templatePath : the path where to find the template
+	 * @param _outputPath : the path where to save the new generated File
+	 * @param _outputName : the name of the new generated File
+	 * @param _outputFormat : the format of the new generated File
+	 * @param _data : An initialized DataClass that contains the informations that should be inserted in the document.<br>
+	 * The merge fields of the template have to be the same as the names of the dataClass fields.
+	 * The key is the name of the mergeField that can be found in the template<br>
+	 * The value is the String that will replace the mergeField in the template during the template merging.
+	 * @param _tablesNamesAndFieldsmap: an HashMap containing the tables name contained in the template as keys and the compositeObjects whose values should be inserted in the corresponding table.
+	 * if not null or not empty and if the template contains Merge Regions, the Merge Regions are going to be filled as table with the values.
+	 */
+	public DocumentTemplate(String _templatePath, String _outputPath, String _outputName, String _outputFormat, CompositeObject _data, HashMap<String , java.util.List<CompositeObject>> _tablesNamesAndFieldsmap) {
+		super();
+		initializeConstructorVariables(_templatePath, _outputPath, _outputName,
+				_outputFormat);
+		if(_data != null) {
+			this.mergeFields = DataClassToMergefields.transformDataClassInMergeField(_data);
+			this.tablesNamesAndFieldsHashtable = DataClassToMergefields.transformDataClassInTablesNamesAndFields(_data);
+		}
+
+		this.setTablesNamesAndFieldsmap(_tablesNamesAndFieldsmap);
+
+		initializeFileOperationMessage();
+	}
+
+	/**
+	 * Constructor, instantiates the DocumentTemplate's variable
+	 * @param _templatePath : the path where to find the template
+	 * @param _outputPath : the path where to save the new generated File
+	 * @param _outputName : the name of the new generated File
+	 * @param _outputFormat : the format of the new generated File
+	 * @param _data : An initialized DataClass that contains the informations that should be inserted in the document.<br>
+	 * The merge fields of the template have to be the same as the names of the dataClass fields.
+	 * The key is the name of the mergeField that can be found in the template<br>
+	 * The value is the String that will replace the mergeField in the template during the template merging.
+	 * @param _tablesNamesAndFieldsHashtable: a java.util.Hashtable containing the tables name contained in the template as keys and the values should be inserted in the corresponding table as a ch.ivyteam.ivy.scripting.objects.Recordset.<br>
+	 * if not null or not empty and if the template contains Merge Regions, the Merge Regions are going to be filled as table with the values.
+	 */
+	public DocumentTemplate(String _templatePath, String _outputPath, String _outputName, String _outputFormat, CompositeObject _data, Hashtable<String , Recordset> _tablesNamesAndFieldsHashtable) {
+		super();
+		initializeConstructorVariables(_templatePath, _outputPath, _outputName,
+				_outputFormat);
+		if(_data != null) {
+			this.mergeFields = DataClassToMergefields.transformDataClassInMergeField(_data);
+			this.tablesNamesAndFieldsHashtable = DataClassToMergefields.transformDataClassInTablesNamesAndFields(_data);
+		}
+
+		this.setTablesNamesAndFieldsHashtable(_tablesNamesAndFieldsHashtable);
+
+		initializeFileOperationMessage();
+	}
+	
+	/**
+	 * Constructor, instantiates the DocumentTemplate's variable
+	 * @param _templatePath : the path where to find the template
+	 * @param _outputPath : the path where to save the new generated File
+	 * @param _outputName : the name of the new generated File
+	 * @param _outputFormat : the format of the new generated File
+	 * @param _data : An initialized DataClass that contains the informations that should be inserted in the document.<br>
+	 * The merge fields of the template have to be the same as the names of the dataClass fields.
+	 * The key is the name of the mergeField that can be found in the template<br>
+	 * The value is the String that will replace the mergeField in the template during the template merging.
+	 * @param _parentDataSourceForNestedMailMerge: List<CompositeObject> parent data
+	 * @param _childrenDataSourcesForNestedMailMerge: List<List<CompositeObject>> child data
+	 * The two last parameters are used together for mail merge with Nested regions. 
+	 * The parentDataSource List contains the DataClasses corresponding to the parent table and the
+	 * childrenDataSource contains the list of DataClasses that are nested in the parent table.
+	 * the parentDataSourceForNestedMailMerge list and childrenDataSourcesForNestedMailMerge list must have the same number of elements.
+	 * The first parent dataclass object correspond to the first child list of dataclasses, the second one to the second one and so on... . 
+	 * Here only one level of nested table is supported.
+	 */
+	public DocumentTemplate(String _templatePath, String _outputPath, String _outputName, String _outputFormat, CompositeObject _data, List<CompositeObject> _parentDataSourceForNestedMailMerge,List<List<CompositeObject>> _childrenDataSourcesForNestedMailMerge) {
+		super();
+		initializeConstructorVariables(_templatePath, _outputPath, _outputName,
+				_outputFormat);
+		if(_data != null) {
+			setMergeFields(DataClassToMergefields.transformDataClassInMergeField(_data));
+			this.tablesNamesAndFieldsHashtable = DataClassToMergefields.transformDataClassInTablesNamesAndFields(_data);
+		}
+
+		if(_parentDataSourceForNestedMailMerge!=null && !_parentDataSourceForNestedMailMerge.isEmpty()) {
+			this.setParentDataSourceForNestedMailMerge(_parentDataSourceForNestedMailMerge);
+			if(_childrenDataSourcesForNestedMailMerge!=null && !_childrenDataSourcesForNestedMailMerge.isEmpty()) {
+				this.setChildrenDataSourcesForNestedMailMerge(_childrenDataSourcesForNestedMailMerge);
+			}
+		}
+
+		initializeFileOperationMessage();
+	}
+	
+	/**
+	 * Constructor, instantiates the DocumentTemplate's variable
+	 * @param _templatePath : the path where to find the template
+	 * @param _outputPath : the path where to save the new generated File
+	 * @param _outputName : the name of the new generated File
+	 * @param _outputFormat : the format of the new generated File
+	 * @param _data : An initialized DataClass that contains the informations that should be inserted in the document.<br>
+	 * The merge fields of the template have to be the same as the names of the dataClass fields.
+	 * The key is the name of the mergeField that can be found in the template<br>
+	 * The value is the String that will replace the mergeField in the template during the template merging.
+	 * @param _nestedDataSourceForNestedMailMerge: List of CompositeObject - Used for mail merge with Nested regions. 
+	 * In this case each dataclass may contain lists of other nested dataclasses and so on... .
+	 * There is no limit in nesting regions.
+	 */
+	public DocumentTemplate(String _templatePath, String _outputPath, String _outputName, String _outputFormat, CompositeObject _data, List<CompositeObject> _nestedDataSourceForNestedMailMerge) {
+		super();
+		initializeConstructorVariables(_templatePath, _outputPath, _outputName,
+				_outputFormat);
+		if(_data != null) {
+			this.mergeFields = DataClassToMergefields.transformDataClassInMergeField(_data);
+			this.tablesNamesAndFieldsHashtable = DataClassToMergefields.transformDataClassInTablesNamesAndFields(_data);
+		}
+
+		if(_nestedDataSourceForNestedMailMerge!=null && !_nestedDataSourceForNestedMailMerge.isEmpty()) {
+			this.setNestedDataSourceForNestedMailMerge(_nestedDataSourceForNestedMailMerge);
+		}
+
+		initializeFileOperationMessage();
+	}
+	
+	/**
+	 * Constructor, instantiates the DocumentTemplate's variable
+	 * @param _templatePath : the path where to find the template
+	 * @param _outputPath : the path where to save the new generated File
+	 * @param _outputName : the name of the new generated File
+	 * @param _outputFormat : the format of the new generated File
+	 * @param _treeData : Tree used to fill the merge fields contain in the template with nested mail merge regions.<br>
+	 * The root node may contain an initialized DataClass that contains the informations that should be inserted in the document outside of the nested regions.<br>
+	 * The merge fields of the template have to be the same as the names of the dataClass fields.
+	 * The key is the name of the mergeField that can be found in the template<br>
+	 * The value is the String that will replace the mergeField in the template during the template merging.
+	 */
+	public DocumentTemplate(String _templatePath, String _outputPath, String _outputName, String _outputFormat, Tree _treeData) {
+		super();
+		initializeConstructorVariables(_templatePath, _outputPath, _outputName,
+				_outputFormat);
+		if(_treeData!=null) {
+			if( _treeData.getValue()!=null) {
+				CompositeObject obj;
+				try {
+					obj = (CompositeObject) _treeData.getValue(); 
+					this.mergeFields = DataClassToMergefields.transformDataClassInMergeField(obj);
+					this.tablesNamesAndFieldsHashtable = DataClassToMergefields.transformDataClassInTablesNamesAndFields(obj);
+				}catch(Exception ex) {
+					//ignore the Exception the _treeData does not have a real DataClass object, 
+					//so we do not have any merge fields.
+				}
+			}
+			this.treeData=_treeData;
+		}
+		
+		initializeFileOperationMessage();
+	}
+	
+	private void initializeConstructorVariables(String _templatePath,
+			String _outputPath, String _outputName, String _outputFormat) {
+		this.documentFactory = BaseDocFactory.getInstance();
+		this.documentFactory.withDocumentCreationOptions(this.documentCreationOptions);
+		this.templatePath = (_templatePath==null)?"":_templatePath;
+		this.outputPath = (_outputPath==null)?"":_outputPath;
+		this.outputName = (_outputName==null)?"":_outputName;
+		this.outputFormat = (_outputFormat==null)?"":_outputFormat;
+		this.mergeFields = List.create(TemplateMergeField.class);
+	}
+	
+	/**
 	 * Set the responseHandler that will be used as callBack Response in the document Factory
 	 * @see {@link BaseDocFactory#withResponseHandler(ResponseHandler)}
 	 * @param responseHandler ResponseHandler . May be null.
@@ -297,270 +573,7 @@ public class DocumentTemplate implements Serializable {
 		
 	}
 	
-	/**
-	 * empty constructor
-	 */
-	public DocumentTemplate() {
-		this("","","","",List.create(TemplateMergeField.class));
-	}
-
-	/**
-	 * Constructor, instantiate the DocumentTemplate's variable
-	 * @param _templatePath : the path where to find the template
-	 * @param _outputPath : the path where to save the new generated File
-	 * @param _outputName : the name of the new generated File
-	 * @param _outputFormat : the format of the new generated File
-	 * @param _mergeFields : the list of TemplateMergeFields. Each TemplateMergeFields is a Key/value pair.<br>
-	 * The key is the name of the mergeField that can be found in the template<br>
-	 * The value is the String that will replace the mergeField in the template during the template merging.
-	 */
-	public DocumentTemplate(String _templatePath, String _outputPath, String _outputName, 
-			String _outputFormat, List<TemplateMergeField> _mergeFields) {
-		super();
-		initializeConstructorVariables(_templatePath, _outputPath, _outputName,
-				_outputFormat);
-		if(_mergeFields != null) {
-			this.mergeFields = _mergeFields;
-		}
-
-		initializeFileOperationMessage();
-	}
-
-	/**
-	 * Constructor, instantiate the DocumentTemplate's variable
-	 * @param _templatePath : the path where to find the template
-	 * @param _outputPath : the path where to save the new generated File
-	 * @param _outputName : the name of the new generated File
-	 * @param _outputFormat : the format of the new generated File
-	 * @param _mergeFields : the list of TemplateMergeFields. Each TemplateMergeFields is a Key/value pair.<br>
-	 * The key is the name of the mergeField that can be found in the template<br>
-	 * The value is the String that will replace the mergeField in the template during the template merging.
-	 * @param _tablesNamesAndFieldsmap: an HashMap containing the tables name contained in the template as keys and the compositeObjects whose values should be inserted in the corresponding table.
-	 * if not null or not empty and if the template contains Merge Regions, the Merge Regions are going to be filled as table with the values.
-	 */
-	public DocumentTemplate(String _templatePath, String _outputPath, String _outputName, 
-			String _outputFormat, List<TemplateMergeField> _mergeFields, HashMap<String , 
-			java.util.List<CompositeObject>> _tablesNamesAndFieldsmap) {
-		super();
-		initializeConstructorVariables(_templatePath, _outputPath, _outputName,
-				_outputFormat);
-		if(_mergeFields != null) {
-			setMergeFields(_mergeFields);
-		}
-
-		this.setTablesNamesAndFieldsmap(_tablesNamesAndFieldsmap);
-
-		initializeFileOperationMessage();
-	}
-
-	/**
-	 * Constructor, instantiate the DocumentTemplate's variable
-	 * @param _templatePath : the path where to find the template
-	 * @param _outputPath : the path where to save the new generated File
-	 * @param _outputName : the name of the new generated File
-	 * @param _outputFormat : the format of the new generated File
-	 * @param _mergeFields : the list of TemplateMergeFields. Each TemplateMergeFields is a Key/value pair.<br>
-	 * The key is the name of the mergeField that can be found in the template<br>
-	 * The value is the String that will replace the mergeField in the template during the template merging.
-	 * @param _tablesNamesAndFieldsHashtable: an Hashtable containing the tables name contained in the template as keys and the values should be inserted in the corresponding table as a ch.ivyteam.ivy.scripting.objects.Recordset.<br>
-	 * if not null or not empty and if the template contains Merge Regions, the Merge Regions are going to be filled as table with the values.
-	 */
-	public DocumentTemplate(String _templatePath, String _outputPath, String _outputName, 
-			String _outputFormat, List<TemplateMergeField> _mergeFields, 
-			Hashtable<String , Recordset> _tablesNamesAndFieldsHashtable) {
-		super();
-		initializeConstructorVariables(_templatePath, _outputPath, _outputName,
-				_outputFormat);
-		if(_mergeFields != null) {
-			setMergeFields(_mergeFields);
-		}
-
-		this.setTablesNamesAndFieldsHashtable(_tablesNamesAndFieldsHashtable);
-
-		initializeFileOperationMessage();
-	}
-
-	/**
-	 * Constructor, instantiates the DocumentTemplate's variable.
-	 * Supports Nested merge mail regions for reporting.
-	 * @param _templatePath : the path where to find the template
-	 * @param _outputPath : the path where to save the new generated File
-	 * @param _outputName : the name of the new generated File
-	 * @param _outputFormat : the format of the new generated File
-	 * @param _data : An initialised DataClass that contains the informations that should be inserted in the document.<br>
-	 * The merge fields of the template have to be the same as the names of the dataClass fields.
-	 * The key is the name of the mergeField that can be found in the template<br>
-	 * The value is the String that will replace the mergeField in the template during the template merging.
-	 */
-	public DocumentTemplate(String _templatePath, String _outputPath, String _outputName, String _outputFormat, CompositeObject _data) {
-		super();
-		initializeConstructorVariables(_templatePath, _outputPath, _outputName,
-				_outputFormat);
-		if(_data != null) {
-			this.mergeFields = DataClassToMergefields.transformDataClassInMergeField(_data);
-			this.tablesNamesAndFieldsHashtable = DataClassToMergefields.transformDataClassInTablesNamesAndFields(_data);
-			this.nestedDataSourceForNestedMailMerge = List.create(CompositeObject.class);
-			this.nestedDataSourceForNestedMailMerge.add(_data);
-		}
-
-		initializeFileOperationMessage();
-	}
-
-	/**
-	 * Constructor, instantiates the DocumentTemplate's variable
-	 * @param _templatePath : the path where to find the template
-	 * @param _outputPath : the path where to save the new generated File
-	 * @param _outputName : the name of the new generated File
-	 * @param _outputFormat : the format of the new generated File
-	 * @param _data : An initialised DataClass that contains the informations that should be inserted in the document.<br>
-	 * The merge fields of the template have to be the same as the names of the dataClass fields.
-	 * The key is the name of the mergeField that can be found in the template<br>
-	 * The value is the String that will replace the mergeField in the template during the template merging.
-	 * @param _tablesNamesAndFieldsmap: an HashMap containing the tables name contained in the template as keys and the compositeObjects whose values should be inserted in the corresponding table.
-	 * if not null or not empty and if the template contains Merge Regions, the Merge Regions are going to be filled as table with the values.
-	 */
-	public DocumentTemplate(String _templatePath, String _outputPath, String _outputName, String _outputFormat, CompositeObject _data, HashMap<String , java.util.List<CompositeObject>> _tablesNamesAndFieldsmap) {
-		super();
-		initializeConstructorVariables(_templatePath, _outputPath, _outputName,
-				_outputFormat);
-		if(_data != null) {
-			this.mergeFields = DataClassToMergefields.transformDataClassInMergeField(_data);
-			this.tablesNamesAndFieldsHashtable = DataClassToMergefields.transformDataClassInTablesNamesAndFields(_data);
-		}
-
-		this.setTablesNamesAndFieldsmap(_tablesNamesAndFieldsmap);
-
-		initializeFileOperationMessage();
-	}
-
-	/**
-	 * Constructor, instantiates the DocumentTemplate's variable
-	 * @param _templatePath : the path where to find the template
-	 * @param _outputPath : the path where to save the new generated File
-	 * @param _outputName : the name of the new generated File
-	 * @param _outputFormat : the format of the new generated File
-	 * @param _data : An initialised DataClass that contains the informations that should be inserted in the document.<br>
-	 * The merge fields of the template have to be the same as the names of the dataClass fields.
-	 * The key is the name of the mergeField that can be found in the template<br>
-	 * The value is the String that will replace the mergeField in the template during the template merging.
-	 * @param _tablesNamesAndFieldsHashtable: a java.util.Hashtable containing the tables name contained in the template as keys and the values should be inserted in the corresponding table as a ch.ivyteam.ivy.scripting.objects.Recordset.<br>
-	 * if not null or not empty and if the template contains Merge Regions, the Merge Regions are going to be filled as table with the values.
-	 */
-	public DocumentTemplate(String _templatePath, String _outputPath, String _outputName, String _outputFormat, CompositeObject _data, Hashtable<String , Recordset> _tablesNamesAndFieldsHashtable) {
-		super();
-		initializeConstructorVariables(_templatePath, _outputPath, _outputName,
-				_outputFormat);
-		if(_data != null) {
-			this.mergeFields = DataClassToMergefields.transformDataClassInMergeField(_data);
-			this.tablesNamesAndFieldsHashtable = DataClassToMergefields.transformDataClassInTablesNamesAndFields(_data);
-		}
-
-		this.setTablesNamesAndFieldsHashtable(_tablesNamesAndFieldsHashtable);
-
-		initializeFileOperationMessage();
-	}
 	
-	/**
-	 * Constructor, instantiates the DocumentTemplate's variable
-	 * @param _templatePath : the path where to find the template
-	 * @param _outputPath : the path where to save the new generated File
-	 * @param _outputName : the name of the new generated File
-	 * @param _outputFormat : the format of the new generated File
-	 * @param _data : An initialised DataClass that contains the informations that should be inserted in the document.<br>
-	 * The merge fields of the template have to be the same as the names of the dataClass fields.
-	 * The key is the name of the mergeField that can be found in the template<br>
-	 * The value is the String that will replace the mergeField in the template during the template merging.
-	 * @param _parentDataSourceForNestedMailMerge: List<CompositeObject> parent data
-	 * @param _childrenDataSourcesForNestedMailMerge: List<List<CompositeObject>> child data
-	 * The two last parameters are used together for mail merge with Nested regions. 
-	 * The parentDataSource List contains the DataClasses corresponding to the parent table and the
-	 * childrenDataSource contains the list of DataClasses that are nested in the parent table.
-	 * the parentDataSourceForNestedMailMerge list and childrenDataSourcesForNestedMailMerge list must have the same number of elements.
-	 * The first parent dataclass object correspond to the first child list of dataclasses, the second one to the second one and so on... . 
-	 * Here only one level of nested table is supported.
-	 */
-	public DocumentTemplate(String _templatePath, String _outputPath, String _outputName, String _outputFormat, CompositeObject _data, List<CompositeObject> _parentDataSourceForNestedMailMerge,List<List<CompositeObject>> _childrenDataSourcesForNestedMailMerge) {
-		super();
-		initializeConstructorVariables(_templatePath, _outputPath, _outputName,
-				_outputFormat);
-		if(_data != null) {
-			setMergeFields(DataClassToMergefields.transformDataClassInMergeField(_data));
-			this.tablesNamesAndFieldsHashtable = DataClassToMergefields.transformDataClassInTablesNamesAndFields(_data);
-		}
-
-		if(_parentDataSourceForNestedMailMerge!=null && !_parentDataSourceForNestedMailMerge.isEmpty()) {
-			this.setParentDataSourceForNestedMailMerge(_parentDataSourceForNestedMailMerge);
-			if(_childrenDataSourcesForNestedMailMerge!=null && !_childrenDataSourcesForNestedMailMerge.isEmpty()) {
-				this.setChildrenDataSourcesForNestedMailMerge(_childrenDataSourcesForNestedMailMerge);
-			}
-		}
-
-		initializeFileOperationMessage();
-	}
-	
-	/**
-	 * Constructor, instantiates the DocumentTemplate's variable
-	 * @param _templatePath : the path where to find the template
-	 * @param _outputPath : the path where to save the new generated File
-	 * @param _outputName : the name of the new generated File
-	 * @param _outputFormat : the format of the new generated File
-	 * @param _data : An initialised DataClass that contains the informations that should be inserted in the document.<br>
-	 * The merge fields of the template have to be the same as the names of the dataClass fields.
-	 * The key is the name of the mergeField that can be found in the template<br>
-	 * The value is the String that will replace the mergeField in the template during the template merging.
-	 * @param _nestedDataSourceForNestedMailMerge: List of CompositeObject - Used for mail merge with Nested regions. 
-	 * In this case each dataclass may contain lists of other nested dataclasses and so on... .
-	 * There is no limit in nesting regions.
-	 */
-	public DocumentTemplate(String _templatePath, String _outputPath, String _outputName, String _outputFormat, CompositeObject _data, List<CompositeObject> _nestedDataSourceForNestedMailMerge) {
-		super();
-		initializeConstructorVariables(_templatePath, _outputPath, _outputName,
-				_outputFormat);
-		if(_data != null) {
-			this.mergeFields = DataClassToMergefields.transformDataClassInMergeField(_data);
-			this.tablesNamesAndFieldsHashtable = DataClassToMergefields.transformDataClassInTablesNamesAndFields(_data);
-		}
-
-		if(_nestedDataSourceForNestedMailMerge!=null && !_nestedDataSourceForNestedMailMerge.isEmpty()) {
-			this.setNestedDataSourceForNestedMailMerge(_nestedDataSourceForNestedMailMerge);
-		}
-
-		initializeFileOperationMessage();
-	}
-	
-	/**
-	 * Constructor, instantiates the DocumentTemplate's variable
-	 * @param _templatePath : the path where to find the template
-	 * @param _outputPath : the path where to save the new generated File
-	 * @param _outputName : the name of the new generated File
-	 * @param _outputFormat : the format of the new generated File
-	 * @param _treeData : Tree used to fill the merge fields contain in the template with nested mail merge regions.<br>
-	 * The root node may contain an initialised DataClass that contains the informations that should be inserted in the document outside of the nested regions.<br>
-	 * The merge fields of the template have to be the same as the names of the dataClass fields.
-	 * The key is the name of the mergeField that can be found in the template<br>
-	 * The value is the String that will replace the mergeField in the template during the template merging.
-	 */
-	public DocumentTemplate(String _templatePath, String _outputPath, String _outputName, String _outputFormat, Tree _treeData) {
-		super();
-		initializeConstructorVariables(_templatePath, _outputPath, _outputName,
-				_outputFormat);
-		if(_treeData!=null) {
-			if( _treeData.getValue()!=null) {
-				CompositeObject obj;
-				try {
-					obj = (CompositeObject) _treeData.getValue(); 
-					this.mergeFields = DataClassToMergefields.transformDataClassInMergeField(obj);
-					this.tablesNamesAndFieldsHashtable = DataClassToMergefields.transformDataClassInTablesNamesAndFields(obj);
-				}catch(Exception ex) {
-					//ignore the Exception the _treeData does not have a real DataClass object, 
-					//so we do not have any merge fields.
-				}
-			}
-			this.treeData=_treeData;
-		}
-		
-		initializeFileOperationMessage();
-	}
 
 	/**
 	 * Try to generate the document with his objects variables.<br>
@@ -828,15 +841,6 @@ public class DocumentTemplate implements Serializable {
 		this.fileOperationMessage= FileOperationMessage.generateInformationTypeFileOperationMessage("");
 	}
 
-	private void initializeConstructorVariables(String _templatePath,
-			String _outputPath, String _outputName, String _outputFormat) {
-		this.templatePath = (_templatePath==null)?"":_templatePath;
-		this.outputPath = (_outputPath==null)?"":_outputPath;
-		this.outputName = (_outputName==null)?"":_outputName;
-		this.outputFormat = (_outputFormat==null)?"":_outputFormat;
-		this.mergeFields = List.create(TemplateMergeField.class);
-	}
-	
 	public DocumentCreationOptions getDocumentCreationOptions() {
 		return documentCreationOptions ;
 	}

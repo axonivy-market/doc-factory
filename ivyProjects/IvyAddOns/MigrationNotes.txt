@@ -1,3 +1,11 @@
+The following has changed in IvyAddOns 7010800.0.0
+---------------------------------------------
+
+* AIPROD-172
+DocFactory: When the DocumentTemplate was instantiated with constructors 
+and not with the "withTemplate" static method the internal DocFactory may have been null 
+which was a problem if you had set the DocumentWorker with the withDocumentWorker method (Here there was an NPE).
+
 The following has changed in IvyAddOns 7010700.0.0 (7010700.0.0-SNAPSHOT):
 ---------------------------------------------
 *AIPROD- 149 Option for removing all the blank pages. 
