@@ -852,7 +852,6 @@ IDocumentOnServerPersistence {
 			query = query.replace("-CREATIONDATE CONDITION-", "AND" + creationDateCondition.getQuery());
 		}
 		Ivy.log().debug(query);
-		System.out.println(query);
 		try {
 			stmt = this.connectionManager.getConnection().prepareStatement(query);
 			if(hasFileTypeCondition && hasFileTagCondition) {
