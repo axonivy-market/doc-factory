@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>ch.ivyteam.ivy.addons</groupId>
   <artifactId>file-manager-api</artifactId>
-  <version>7.1.5</version>
+  <version>7.2</version>
   <packaging>iar</packaging>
   <organization>
     <name>AXON IVY AG</name>
