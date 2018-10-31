@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>ivyAddons_tests</groupId>
   <artifactId>ivyAddons_tests</artifactId>
-  <version>7010800.0.0</version>
+  <version>7020000.0.0</version>
   <packaging>iar</packaging>
   <organization>
     <name>AxonIvy AG</name>
@@ -14,14 +14,14 @@
     <mockito.version>2.13.0</mockito.version>
     <objenesis.version>2.6</objenesis.version>
     <powermock.version>2.0.0-beta.5</powermock.version>
-    <cglib-nodep.version>3.2.8</cglib-nodep.version>
     <junit.version>4.12</junit.version>
+    <cglib-nodep.version>3.2.8</cglib-nodep.version>
   </properties>
   <dependencies>
     <dependency>
       <groupId>ch.ivyteam.ivy.addons</groupId>
       <artifactId>rich-dialog</artifactId>
-      <version>[7.1.4,)</version>
+      <version>[7.2,)</version>
       <type>iar</type>
     </dependency>
     <dependency>
