@@ -832,7 +832,8 @@ IDocumentOnServerPersistence {
 		API.checkNotEmpty(filepathCondition, "Search condition for the file path");
 		PreparedStatement stmt = null;
 		ResultSet rst = null;
-		String query = DocumentOnServerSQLQueries.SELECT_ALL_DOCUMENTS_BY_FILTERING_Q.replace(DocumentOnServerSQLQueries.TABLENAMESPACE_PLACEHOLDER, this.fileTableNameSpace);
+		String query = DocumentOnServerSQLQueries.SELECT_ALL_DOCUMENTS_BY_FILTERING_Q
+				.replace(DocumentOnServerSQLQueries.TABLENAMESPACE_PLACEHOLDER, this.fileTableNameSpace);
 		boolean hasFileTypeCondition = true;
 		boolean hasFileTagCondition = true;
 		List<DocumentOnServer> docs = new ArrayList<>();
@@ -851,7 +852,7 @@ IDocumentOnServerPersistence {
 			query = query.replace("-CREATIONDATE CONDITION-", "AND" + creationDateCondition.getQuery());
 		}
 		Ivy.log().debug(query);
-		
+		System.out.println(query);
 		try {
 			stmt = this.connectionManager.getConnection().prepareStatement(query);
 			if(hasFileTypeCondition && hasFileTagCondition) {
@@ -911,6 +912,14 @@ IDocumentOnServerPersistence {
 		}
 		
 		return docs;
+	}
+	
+	/**
+	 * For unit tests
+	 * @param filetableNameSpace
+	 */
+	protected void setFileTableNamSpace(String filetableNameSpace) {
+		this.fileTableNameSpace = filetableNameSpace;
 	}
 
 }
