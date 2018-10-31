@@ -45,8 +45,6 @@ public class DocumentOnServerSQLQueries {
 			+ "WHERE " + TABLENAMESPACE_PLACEHOLDER + ".filepath LIKE ? -CREATIONDATE CONDITION- "
 			+ "ORDER BY uploadedfiles.fileid DESC;";
 	
-	
-	
 	/**
 	 * Insert a new Document in the files table<br>
 	 * INSERT INTO --file table-- (FileName, FilePath, CreationUserId, CreationDate, CreationTime, 
