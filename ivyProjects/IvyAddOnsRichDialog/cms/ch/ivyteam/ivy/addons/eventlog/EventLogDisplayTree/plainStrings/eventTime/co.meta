@@ -1,4 +1,0 @@
-co: name={eventTime} description={} changed={2011-02-21 17:26:16 CET} changedby={tipaj} visualorder={0} guid={12CE8ECFB0A3A401} parentguid={} typeguid={E6AFEA2034301F66} id={} parentid={} typeid={}
-val: guid={12CE8ECFB0E3614F} datatype={} isdefault={true} langid={en} description={} validfrom={2010-12-15 08:27:13 CET} validto={} changed={2010-12-15 08:28:44 CET} changedby={tipaj} properties={} id={}
-val: guid={12CE8EE5E5EE3FE3} datatype={} isdefault={false} langid={fr} description={} validfrom={2010-12-15 08:28:44 CET} validto={} changed={2010-12-15 08:28:49 CET} changedby={tipaj} properties={} id={}
-val: guid={12E490AEE68FDE28} datatype={} isdefault={false} langid={de} description={} validfrom={2011-02-21 17:26:12 CET} validto={} changed={2011-02-21 17:26:16 CET} changedby={tipaj} properties={} id={}

@@ -1,6 +1,0 @@
-RichDialogPanelDefinition #class
-ch.ivyteam.ivy.addons.filemanager.processes #namespace
-panel ch.ivyteam.ivy.addons.filemanager.FileManager.FileManagerPanel #field
-panel PERSISTENT #fieldModifier
-fileManagerConfiguration ch.ivyteam.ivy.addons.filemanager.configuration.FileManagerConfigurationController #field
-fileManagerConfiguration PERSISTENT #fieldModifier

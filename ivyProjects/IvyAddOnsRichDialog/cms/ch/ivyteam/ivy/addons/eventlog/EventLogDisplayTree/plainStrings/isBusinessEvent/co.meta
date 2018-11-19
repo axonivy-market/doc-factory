@@ -1,4 +1,0 @@
-co: name={isBusinessEvent} description={} changed={2011-02-21 17:38:40 CET} changedby={tipaj} visualorder={0} guid={12CE8EDA3ADBD74A} parentguid={} typeguid={E6AFEA2034301F66} id={} parentid={} typeid={}
-val: guid={12CE8EDA3B19F074} datatype={} isdefault={true} langid={en} description={} validfrom={2010-12-15 08:27:56 CET} validto={} changed={2010-12-15 08:29:38 CET} changedby={tipaj} properties={} id={}
-val: guid={12E491648DAFCFB8} datatype={} isdefault={false} langid={de} description={} validfrom={2011-02-21 17:38:36 CET} validto={} changed={2011-02-21 17:38:40 CET} changedby={tipaj} properties={} id={}
-val: guid={12CE8EF1290F24AE} datatype={} isdefault={false} langid={fr} description={} validfrom={2010-12-15 08:29:30 CET} validto={} changed={2010-12-15 08:29:37 CET} changedby={tipaj} properties={} id={}

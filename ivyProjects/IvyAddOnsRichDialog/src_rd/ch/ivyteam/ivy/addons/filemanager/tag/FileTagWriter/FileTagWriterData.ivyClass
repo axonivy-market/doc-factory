@@ -1,8 +1,0 @@
-FileTagWriterData #class
-ch.ivyteam.ivy.addons.filemanager.tag.FileTagWriter #namespace
-fileTag ch.ivyteam.ivy.addons.filemanager.FileTag #field
-fileTag PERSISTENT #fieldModifier
-actionCancelled Boolean #field
-actionCancelled PERSISTENT #fieldModifier
-documentName String #field
-documentName PERSISTENT #fieldModifier

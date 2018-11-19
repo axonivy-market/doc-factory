@@ -1,8 +1,0 @@
-FileActionHistoryViewerData #class
-ch.ivyteam.ivy.addons.filemanager.fileaction.FileActionHistoryViewer #namespace
-fileid Long #field
-fileActions List<ch.ivyteam.ivy.addons.filemanager.FileAction> #field
-errorUtil ch.ivyteam.ivy.addons.filemanager.ErrorUtil #field
-fileActionHistoryController ch.ivyteam.ivy.addons.filemanager.database.fileaction.FileActionHistoryController #field
-lang String #field
-document ch.ivyteam.ivy.addons.filemanager.DocumentOnServer #field

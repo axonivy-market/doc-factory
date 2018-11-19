@@ -1,8 +1,0 @@
-# Xpert.ivy RichDialog Event-Mapping Data
-# 2012-07-03 18:04:03 | 4.3.2.39971 | 1.0
-~.cancelButton@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:13847B0C023E2C74/1384D53675A33931 # FileDescriptionInputProcess.mod/cancel
-~.okButton@ACTION[]--->ch.ivyteam.ivy.process.ProcessStart:13847B0C023E2C74/1384D52DC5C1D9DD # FileDescriptionInputProcess.mod/ok
-~.TextArea@KEY[]--->ch.ivyteam.ivy.process.ProcessStart:13847B0C023E2C74/1384D53B01A9135E # FileDescriptionInputProcess.mod/inputChanged
-~.TextArea@VALUE_CHANGED[]--->ch.ivyteam.ivy.process.ProcessStart:13847B0C023E2C74/1384D53B01A9135E # FileDescriptionInputProcess.mod/inputChanged
-~@RD_METHODCALL[start()]--->ch.ivyteam.ivy.process.ProcessStart:13847B0C023E2C74/13847B0C03B4447B
-~@RD_METHODCALL[start(String,Number,String)]--->ch.ivyteam.ivy.process.ProcessStart:13847B0C023E2C74/1384D59647E50C93

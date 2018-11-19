@@ -1,4 +1,0 @@
-co: name={chooseDirectory} description={} changed={2012-03-05 15:28:46 CET} changedby={ec} visualorder={0} guid={135DFEAAB9D93046} parentguid={} typeguid={E6AFEA2034301F66} id={} parentid={} typeid={}
-val: guid={135DFEF4F29B831F} datatype={} isdefault={false} langid={de} description={} validfrom={2012-03-04 23:53:28 CET} validto={} changed={2012-03-05 15:28:46 CET} changedby={ec} properties={} id={}
-val: guid={135DFEAABA260A88} datatype={} isdefault={true} langid={en} description={} validfrom={2012-03-04 23:53:12 CET} validto={} changed={2012-03-05 01:03:45 CET} changedby={ec} properties={} id={}
-val: guid={135DFEF4F8AB6676} datatype={} isdefault={false} langid={fr} description={} validfrom={2012-03-04 23:53:26 CET} validto={} changed={2012-03-04 23:58:17 CET} changedby={ec} properties={} id={}

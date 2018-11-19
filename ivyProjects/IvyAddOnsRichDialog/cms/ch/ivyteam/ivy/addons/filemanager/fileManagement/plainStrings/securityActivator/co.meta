@@ -1,4 +1,0 @@
-co: name={securityActivator} description={} changed={2012-01-24 19:07:29 GMT} changedby={ec} visualorder={0} guid={135111DA1696287B} parentguid={} typeguid={E6AFEA2034301F66} id={} parentid={} typeid={}
-val: guid={135111DA17AAB0DE} datatype={} isdefault={false} langid={de} description={} validfrom={2012-01-24 19:03:19 GMT} validto={} changed={2012-01-24 19:07:29 GMT} changedby={ec} properties={} id={}
-val: guid={135111DA187305C0} datatype={} isdefault={true} langid={en} description={} validfrom={2012-01-24 19:02:49 GMT} validto={} changed={2012-01-24 19:07:29 GMT} changedby={ec} properties={} id={}
-val: guid={135111DA16F6FF80} datatype={} isdefault={false} langid={fr} description={} validfrom={2012-01-24 19:03:16 GMT} validto={} changed={2012-01-24 19:07:29 GMT} changedby={ec} properties={} id={}
