@@ -1,7 +1,0 @@
-EventSourceData #class
-'This dataclass is used internally by the filemanager to compute and redirect some event dynamically.' #classComment
-ch.ivyteam.ivy.addons.filemanager #namespace
-eventSource Object #field
-sourceName String #field
-flag Boolean #field
-actionType Number #field

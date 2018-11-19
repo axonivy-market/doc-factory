@@ -1,8 +1,0 @@
-# Xpert.ivy RichDialog Event-Mapping Data
-# 2013-08-09 11:07:26 | 5.0.0.42720 | 1.0
-~@RD_METHODCALL[getLanguage()]--->ch.ivyteam.ivy.process.ProcessStart:140639A3B002179A/140639CA6CF6E6F5
-~@RD_METHODCALL[getTranslation()]--->ch.ivyteam.ivy.process.ProcessStart:140639A3B002179A/140639CB9568104F
-~@RD_METHODCALL[setLanguage(String)]--->ch.ivyteam.ivy.process.ProcessStart:140639A3B002179A/140639C9D4EB8284
-~@RD_METHODCALL[setTranslation(String)]--->ch.ivyteam.ivy.process.ProcessStart:140639A3B002179A/140639CB29FD4422
-~@RD_METHODCALL[start()]--->ch.ivyteam.ivy.process.ProcessStart:140639A3B002179A/140639A3B2FD1152
-~@RD_METHODCALL[start(String,String)]--->ch.ivyteam.ivy.process.ProcessStart:140639A3B002179A/140639C9186B2E2C
