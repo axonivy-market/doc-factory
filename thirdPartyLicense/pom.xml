@@ -5,7 +5,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>ch.ivyteam.ivy.addons</groupId>
-	<artifactId>third-party-license</artifactId>
+	<artifactId>ch.ivyteam.ivy.thirdparty.license</artifactId>
 	<version>7.3.0-SNAPSHOT</version>
 	<packaging>eclipse-plugin</packaging>
 	
@@ -25,14 +25,6 @@
 		</repository>
 	</repositories>
 	
-	<distributionManagement>
-		<repository>
-			<id>zugprodrone.snapshots</id>
-			<name>Thirdparty Library Repository</name>
-			<url>http://deploy:deploy-key@zugprodrone:8080/maven/thirdparty.lib/</url>
-		</repository>
-	</distributionManagement>
-	
 	<build>
 		<sourceDirectory>src</sourceDirectory>
 		<resources>
@@ -49,5 +41,14 @@
 				<extensions>true</extensions>
 			</plugin>
 		</plugins>
+
+        <pluginManagement>
+			<plugins>
+				<plugin>
+					<artifactId>maven-deploy-plugin</artifactId>
+					<configuration><skip>true</skip></configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 	</build>
 </project>
