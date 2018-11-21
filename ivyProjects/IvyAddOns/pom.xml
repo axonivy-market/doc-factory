@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>ch.ivyteam.ivy.addons</groupId>
   <artifactId>ch.ivyteam.ivy.addons</artifactId>
-  <version>7020000.0.0</version>
+  <version>7030000.0.0</version>
   <packaging>iar</packaging>
   <organization>
     <name>AXON IVY AG</name>
