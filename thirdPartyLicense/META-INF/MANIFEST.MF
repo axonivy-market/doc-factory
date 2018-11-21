@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-SymbolicName: ch.ivyteam.ivy.thirdparty.license
+Bundle-SymbolicName: ch.ivyteam.ivy.thirdparty.license;singleton:=true
 Bundle-Version: 7.3.0.qualifier
 Bundle-Vendor: AXON Ivy AG
 Bundle-ActivationPolicy: lazy
