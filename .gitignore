@@ -1,4 +1,3 @@
 doc/IvyAddOnsGuide/DocFactory/images/DocFactory/Thumbs.db
-doc/IvyAddOnsGuide/target
-thirdPartyLicense/target
+**/target
 .metadata
