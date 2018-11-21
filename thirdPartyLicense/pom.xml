@@ -15,6 +15,7 @@
 	
 	<properties>
 		<tycho-version>1.2.0</tycho-version>
+        <java.compiler.compliance>1.8</java.compiler.compliance>
 	</properties>
 	
 	<repositories>
@@ -44,6 +45,15 @@
 
         <pluginManagement>
 			<plugins>
+                <plugin>
+					<!-- enable tycho build extension -->
+					<groupId>org.eclipse.tycho</groupId>
+					<artifactId>tycho-compiler-plugin</artifactId>
+					<configuration>
+						<source>${java.compiler.compliance}</source>
+						<target>${java.compiler.compliance}</target>
+					</configuration>
+				</plugin>
 				<plugin>
 					<artifactId>maven-deploy-plugin</artifactId>
 					<configuration><skip>true</skip></configuration>
