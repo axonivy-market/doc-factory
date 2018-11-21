@@ -2,12 +2,27 @@
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
+  <parent>
+  	<groupId>ch.ivyteam.ivy</groupId>
+	<artifactId>ch.ivyteam.ivy.build</artifactId>
+	<version>7.3.0-SNAPSHOT</version>
+  </parent>
   <groupId>ch.ivyteam.ivy.addons</groupId>
   <artifactId>third-party-license</artifactId>
-  <version>1.1.0</version>
+  <version>7.3.0</version>
   <organization>
     <name>AXON IVY AG</name>
   </organization>
+  <repositories>
+	<repository>
+		<id>zugpronexus.build</id>
+		<name>Internal Build Repository</name>
+		<url>http://zugpronexus:8081/nexus/content/groups/build</url>
+		<snapshots>
+			<updatePolicy>always</updatePolicy>
+		</snapshots>
+	</repository>
+  </repositories>
   <build>
   	<sourceDirectory>src</sourceDirectory>
   	<resources>
@@ -15,13 +30,5 @@
        <directory>resources</directory>
      </resource>
    </resources>
-   <pluginManagement>
-		<plugins>
-			<plugin>
-				<artifactId>maven-deploy-plugin</artifactId>
-				<configuration><skip>true</skip></configuration>
-			</plugin>
-		</plugins>
-	</pluginManagement>
   </build>
 </project>
