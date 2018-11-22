@@ -10,14 +10,19 @@ pipeline {
   }
   stages {
     stage('build') {
-      when {
-        branch 'master'
-      }
       steps {
         script {
-          maven cmd: '-s settings.xml clean deploy'
+          if (env.BRANCH_NAME == 'master' || 
+              env.BRANCH_NAME == '7.0' || 
+              env.BRANCH_NAME == '6.0') 
+          {
+            script { maven cmd: '-s settings.xml deploy -U' }
+          } else {
+            script { maven cmd: '-s settings.xml verify -U' }
+          }
         }
       }
     }
   }
 }
+
