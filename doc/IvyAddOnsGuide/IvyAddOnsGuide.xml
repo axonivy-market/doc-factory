@@ -12,7 +12,6 @@
     <xi:include href="Introduction/Introduction.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
     <xi:include href="DynamicDialog/DynamicDialog.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
     <xi:include href="DocFactory/DocFactory.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
-    <xi:include href="CommonRichDialogs/CommonRichDialogs.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
     <xi:include href="FileManager/FileManager.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
     <xi:include href="JavaHelpers/JavaHelpers.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
     <xi:include href="Libraries/Libraries.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
