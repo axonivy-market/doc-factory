@@ -6,6 +6,9 @@ pipeline {
   agent {
     dockerfile true
   }
+  options {
+    buildDiscarder(logRotator(artifactNumToKeepStr: '5'))
+  }
   stages {
     stage('build') {
       steps {
