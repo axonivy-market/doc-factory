@@ -15,6 +15,7 @@ pipeline {
           } else {
             script { maven cmd: '-s settings.xml verify -U' }
           }
+          archiveArtifacts '**/target/*.iar, **/IvyAddOnsGuide/target/*.zip'
         }
       }
     }
