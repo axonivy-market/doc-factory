@@ -5,13 +5,11 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Locale;
 
-import ch.ivyteam.anything.Anything;
 import ch.ivyteam.api.IvyScriptVisibility;
 import ch.ivyteam.api.PublicAPI;
 import ch.ivyteam.ivy.location.ILocationService;
 import ch.ivyteam.ivy.persistence.PersistencyException;
 import ch.ivyteam.ivy.security.EMailNotificationKind;
-import ch.ivyteam.ivy.security.IRichDialogUserContext;
 import ch.ivyteam.ivy.security.IRole;
 import ch.ivyteam.ivy.security.ISecurityContext;
 import ch.ivyteam.ivy.security.IUser;
@@ -19,6 +17,7 @@ import ch.ivyteam.ivy.security.IUserAbsence;
 import ch.ivyteam.ivy.security.IUserEMailNotificationSettings;
 import ch.ivyteam.ivy.security.IUserSubstitute;
 import ch.ivyteam.ivy.security.IUserToken;
+import ch.ivyteam.ivy.security.SubstitutionType;
 
 public class MyIUser implements IUser {
 
@@ -90,15 +89,6 @@ public class MyIUser implements IUser {
 	}
 
 	@Override
-	@PublicAPI(IvyScriptVisibility.HIDDEN)
-	public IRichDialogUserContext createRichDialogUserContext(
-			String componentName, String contextName, Anything anything)
-			throws PersistencyException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	@PublicAPI(IvyScriptVisibility.EXPERT)
 	public IUserSubstitute createSubstitute(IUser mySubstitute,
 			IRole forThisRole, String description) throws PersistencyException {
@@ -109,14 +99,6 @@ public class MyIUser implements IUser {
 	@Override
 	@PublicAPI(IvyScriptVisibility.EXPERT)
 	public void deleteAbsence(IUserAbsence absence) throws PersistencyException {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	@PublicAPI(IvyScriptVisibility.HIDDEN)
-	public void deleteRichDialogUserContext(IRichDialogUserContext configuration)
-			throws PersistencyException {
 		// TODO Auto-generated method stub
 
 	}
@@ -204,15 +186,6 @@ public class MyIUser implements IUser {
 	@Override
 	@PublicAPI(IvyScriptVisibility.ADVANCED)
 	public String getProperty(String name) throws PersistencyException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	@PublicAPI(IvyScriptVisibility.HIDDEN)
-	public IRichDialogUserContext getRichDialogUserContext(
-			String componentName, String contextName)
-			throws PersistencyException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -338,6 +311,19 @@ public class MyIUser implements IUser {
 
 	@Override
 	public ILocationService locations() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public IUserSubstitute createSubstitute(IUser mySubstitute, IRole forThisRole, String description,
+			SubstitutionType type) throws PersistencyException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<IUserSubstitute> getActiveSubstitutions() throws PersistencyException {
 		// TODO Auto-generated method stub
 		return null;
 	}
