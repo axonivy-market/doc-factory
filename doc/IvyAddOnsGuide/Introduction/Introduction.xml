@@ -3,7 +3,7 @@
 	<title>Introduction</title>
 	<para>The <emphasis role="italic">IvyAddOns</emphasis> project is provided as a convenience
 			<emphasis role="italic">utility project</emphasis> for Axon.ivy developers. It contains
-		various reusable components, such as utility Java classes, Rich Dialogs, CMS entries etc.
-		The <emphasis role="italic">IvyAddOns</emphasis> project can be used as base project for own
+		various reusable components, such as utility Java classes, CMS entries etc. The <emphasis
+			role="italic">IvyAddOns</emphasis> project can be used as base project for own
 		applications. </para>
 </chapter>

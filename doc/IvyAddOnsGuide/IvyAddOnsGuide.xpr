@@ -104,7 +104,6 @@
         </options>
     </meta>
     <projectTree name="IvyAddOnsGuide.xpr">
-        <folder path="CommonRichDialogs/"/>
         <folder path="DocFactory/"/>
         <folder path="DynamicDialog/"/>
         <folder path="FileManager/"/>
