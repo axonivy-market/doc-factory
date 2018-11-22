@@ -15,7 +15,7 @@
 		<dependency>
 			<groupId>ch.ivyteam.ivy.addons</groupId>
 			<artifactId>doc-factory</artifactId>
-			<version>[7.3,)</version>
+			<version>[7.3.0-SNAPSHOT,)</version>
 			<type>iar</type>
 		</dependency>
 		<dependency>
