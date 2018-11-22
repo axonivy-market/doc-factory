@@ -1,104 +1,103 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project version="12.1">
+<project version="12.2">
     <meta>
-        <filters directoryPatterns="" filePatterns=""
-            positiveFilePatterns="" showHiddenFiles="false"/>
+        <filters directoryPatterns="" filePatterns="" positiveFilePatterns="" showHiddenFiles="false"/>
         <options>
-            <serialized version="12.1">
+            <serialized version="12.2" xml:space="preserve">
                 <map>
                     <entry>
-                        <String xml:space="preserve">code-templates</String>
+                        <String>code-templates</String>
                         <codeTemplateItem-array>
                             <codeTemplateItem>
                                 <field name="contentType">
-                                    <String xml:space="preserve">text/xml</String>
+                                    <String>text/xml</String>
                                 </field>
                                 <field name="unparsedInsertString">
-                                    <String xml:space="preserve">@appname@</String>
+                                    <String>@appname@</String>
                                 </field>
                                 <field name="descriptionString">
-                                    <String xml:space="preserve">Axon.ivy</String>
+                                    <String>Axon.ivy</String>
                                 </field>
                                 <field name="renderString">
-                                    <String xml:space="preserve">appname</String>
+                                    <String>appname</String>
                                 </field>
                                 <field name="enabled">
-                                    <Boolean xml:space="preserve">true</Boolean>
+                                    <Boolean>true</Boolean>
                                 </field>
                             </codeTemplateItem>
                             <codeTemplateItem>
                                 <field name="contentType">
-                                    <String xml:space="preserve">text/xml</String>
+                                    <String>text/xml</String>
                                 </field>
                                 <field name="unparsedInsertString">
-                                    <String xml:space="preserve">@date@</String>
+                                    <String>@date@</String>
                                 </field>
                                 <field name="descriptionString">
-                                    <String xml:space="preserve">dd.mm.yyyy</String>
+                                    <String>dd.mm.yyyy</String>
                                 </field>
                                 <field name="renderString">
-                                    <String xml:space="preserve">date</String>
+                                    <String>date</String>
                                 </field>
                                 <field name="enabled">
-                                    <Boolean xml:space="preserve">true</Boolean>
+                                    <Boolean>true</Boolean>
                                 </field>
                             </codeTemplateItem>
                             <codeTemplateItem>
                                 <field name="contentType">
-                                    <String xml:space="preserve">text/xml</String>
+                                    <String>text/xml</String>
                                 </field>
                                 <field name="unparsedInsertString">
-                                    <String xml:space="preserve">@vendor@</String>
+                                    <String>@vendor@</String>
                                 </field>
                                 <field name="descriptionString">
-                                    <String xml:space="preserve">ivyTeam AG</String>
+                                    <String>ivyTeam AG</String>
                                 </field>
                                 <field name="renderString">
-                                    <String xml:space="preserve">vendor</String>
+                                    <String>vendor</String>
                                 </field>
                                 <field name="enabled">
-                                    <Boolean xml:space="preserve">true</Boolean>
+                                    <Boolean>true</Boolean>
                                 </field>
                             </codeTemplateItem>
                             <codeTemplateItem>
                                 <field name="contentType">
-                                    <String xml:space="preserve">text/xml</String>
+                                    <String>text/xml</String>
                                 </field>
                                 <field name="unparsedInsertString">
-                                    <String xml:space="preserve">@version@</String>
+                                    <String>@version@</String>
                                 </field>
                                 <field name="descriptionString">
-                                    <String xml:space="preserve">4.x</String>
+                                    <String>4.x</String>
                                 </field>
                                 <field name="renderString">
-                                    <String xml:space="preserve">version</String>
+                                    <String>version</String>
                                 </field>
                                 <field name="enabled">
-                                    <Boolean xml:space="preserve">true</Boolean>
+                                    <Boolean>true</Boolean>
                                 </field>
                             </codeTemplateItem>
                             <codeTemplateItem>
                                 <field name="contentType">
-                                    <String xml:space="preserve">text/xml</String>
+                                    <String>text/xml</String>
                                 </field>
                                 <field name="unparsedInsertString">
-                                    <String xml:space="preserve">@year@</String>
+                                    <String>@year@</String>
                                 </field>
                                 <field name="descriptionString">
-                                    <String xml:space="preserve">20xx</String>
+                                    <String>20xx</String>
                                 </field>
                                 <field name="renderString">
-                                    <String xml:space="preserve">year</String>
+                                    <String>year</String>
                                 </field>
                                 <field name="enabled">
-                                    <Boolean xml:space="preserve">true</Boolean>
+                                    <Boolean>true</Boolean>
                                 </field>
                             </codeTemplateItem>
                         </codeTemplateItem-array>
                     </entry>
                     <entry>
-                        <String xml:space="preserve">key.code.templates.option.pane</String>
-                        <Boolean xml:space="preserve">true</Boolean>
+                        <String>key.code.templates.option.pane</String>
+                        <Boolean>true</Boolean>
                     </entry>
                 </map>
             </serialized>
@@ -114,6 +113,5 @@
         <folder path="Libraries/"/>
         <folder path="WaitForAsyncProcess/"/>
         <file name="IvyAddOnsGuide.xml"/>
-        <file name="SampleChapter.xml"/>
     </projectTree>
 </project>
