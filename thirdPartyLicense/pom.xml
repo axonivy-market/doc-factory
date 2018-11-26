@@ -8,16 +8,16 @@
 	<artifactId>ch.ivyteam.ivy.thirdparty.license</artifactId>
 	<version>7.3.0-SNAPSHOT</version>
 	<packaging>eclipse-plugin</packaging>
-	
+
 	<organization>
 		<name>AXON Ivy AG</name>
 	</organization>
-	
+
 	<properties>
 		<tycho-version>1.2.0</tycho-version>
-        <java.compiler.compliance>1.8</java.compiler.compliance>
+		<java.compiler.compliance>1.8</java.compiler.compliance>
 	</properties>
-	
+
 	<repositories>
 		<repository>
 			<id>ivy.core</id>
@@ -25,15 +25,25 @@
 			<url>https://file.axonivy.rocks/p2/nightly/</url>
 		</repository>
 	</repositories>
-	
+
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
 	<build>
 		<sourceDirectory>src</sourceDirectory>
+		<testSourceDirectory>src_test</testSourceDirectory>
 		<resources>
 			<resource>
 				<directory>resources</directory>
 			</resource>
 		</resources>
-		
+
 		<plugins>
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
@@ -41,14 +51,47 @@
 				<version>${tycho-version}</version>
 				<extensions>true</extensions>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.0</version>
+				<executions>
+					<execution>
+						<id>test.compile</id>
+						<goals>
+							<goal>testCompile</goal>
+						</goals>
+						<phase>test-compile</phase>
+					</execution>
+				</executions>
+				<configuration>
+					<source>${java.compiler.compliance}</source>
+					<target>${java.compiler.compliance}</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>3.0.0-M1</version>
+				<executions>
+					<execution>
+						<id>test-junit</id>
+						<goals>
+							<goal>test</goal>
+						</goals>
+						<phase>test</phase>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 
-        <pluginManagement>
+		<pluginManagement>
 			<plugins>
-                <plugin>
+				<plugin>
 					<!-- enable tycho build extension -->
 					<groupId>org.eclipse.tycho</groupId>
 					<artifactId>tycho-compiler-plugin</artifactId>
+					<version>${tycho-version}</version>
 					<configuration>
 						<source>${java.compiler.compliance}</source>
 						<target>${java.compiler.compliance}</target>
@@ -56,7 +99,41 @@
 				</plugin>
 				<plugin>
 					<artifactId>maven-deploy-plugin</artifactId>
-					<configuration><skip>true</skip></configuration>
+					<configuration>
+						<skip>true</skip>
+					</configuration>
+				</plugin>
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.eclipse.tycho
+										</groupId>
+										<artifactId>
+											tycho-compiler-plugin
+										</artifactId>
+										<versionRange>
+											[1.2.0,)
+										</versionRange>
+										<goals>
+											<goal>compile</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
 				</plugin>
 			</plugins>
 		</pluginManagement>
