@@ -18,6 +18,7 @@ pipeline {
           } else {
             script { maven cmd: '-s settings.xml verify -U' }
           }
+          junit '**/target/surefire-reports/**/*.xml' 
           archiveArtifacts '**/target/*.iar, **/IvyAddOnsGuide/target/*.zip'
         }
       }
