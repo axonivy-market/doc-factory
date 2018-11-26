@@ -33,7 +33,7 @@ import ch.ivyteam.log.Logger;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({Ivy.class, ThirdPartyLicenses.class, File.class, LicenseLoader.class, IvyScriptObjectEnvironment.class})
-public class DocFactoryTest {
+public abstract class DocFactoryTest {
 	
 	@Rule
 	public ExpectedException thrown = ExpectedException.none();
@@ -74,7 +74,7 @@ public class DocFactoryTest {
 	
 	protected Person makePerson() {
 		return Person.withNameFirstname("Comba", "Emmanuel")
-				.withAddress(Address.withStreetZipCodeCityCountry("Muristrasse 4", "8000", "Zürich", "CH"))
+				.withAddress(Address.withStreetZipCodeCityCountry("Muristrasse 4", "8000", "Zï¿½rich", "CH"))
 				.withBirthday(Calendar.getInstance().getTime())
 				.withInsuranceBasket(
 						InsuranceBasket.withInsurance(Insurance.withName("AXA").withContractNumber("sdfh735"))
