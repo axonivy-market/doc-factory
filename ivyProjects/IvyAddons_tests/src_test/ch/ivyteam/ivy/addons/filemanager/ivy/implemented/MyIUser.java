@@ -323,13 +323,6 @@ public class MyIUser implements IUser {
 	}
 
 	@Override
-    public IUserSubstitute createSubstitute(IUser mySubstitute, IRole role, String description,
-            SubstitutionType type) throws PersistencyException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public List<IUserSubstitute> getActiveSubstitutions() throws PersistencyException {
 		// TODO Auto-generated method stub
 		return null;
