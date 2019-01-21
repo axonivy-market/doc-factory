@@ -258,5 +258,9 @@ public class MyIRole implements IRole {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	
+	@Override
+	public boolean isDynamic() {
+		return false;
+	}
 }
