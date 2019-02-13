@@ -29,7 +29,7 @@ public class DocumentTemplateTest extends DocFactoryTest {
 	private static final String OUTPUT_FORMAT = ".pdf";
 	private static final String OUTPUT_FILENAME = "output_filename";
 	private static final String OUTPUT_PATH = "/outputpath";
-	private static final String TEMPLATE_PATH = "template.docx";
+	private static final String TEMPLATE_PATH = "resources/template.docx";
 	
 	private DocumentWorker documentWorker = new PageColorDocumentWorker();
 
@@ -188,7 +188,7 @@ public class DocumentTemplateTest extends DocFactoryTest {
 	@Test
 	public void produceDocument_with_file_to_insert() throws URISyntaxException {
 		File template = new File(this.getClass().getResource(TEMPLATE_PERSON_DOCX).toURI().getPath());
-		File otherDocumentToInject = new File(this.getClass().getResource("another_doc.doc").toURI().getPath());
+		File otherDocumentToInject = new File(this.getClass().getResource("resources/files/another_doc.doc").toURI().getPath());
 
 		DocumentTemplate documentTemplate = DocumentTemplate.
 				withTemplate(template).

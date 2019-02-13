@@ -23,7 +23,7 @@ public class FieldMergingCallbackInjectionTest extends DocFactoryTest {
 	
 	@Test
 	public void inject_fieldMergingCallback_test() throws Exception {
-		File template = new File(this.getClass().getResource("template_for_testing_null_value.docx").toURI().getPath());
+		File template = new File(this.getClass().getResource(TEMPLATE_WITH_FIELDS_FORM_DOCX).toURI().getPath());
 		
 		//prepare the data that will be injected in the merge-fields
 		Person person = Person

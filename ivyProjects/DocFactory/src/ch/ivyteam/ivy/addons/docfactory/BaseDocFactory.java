@@ -14,6 +14,7 @@ import ch.ivyteam.ivy.addons.docfactory.aspose.AsposeFieldMergingCallback;
 import ch.ivyteam.ivy.addons.docfactory.aspose.DocumentWorker;
 import ch.ivyteam.ivy.addons.docfactory.options.DocumentCreationOptions;
 import ch.ivyteam.ivy.addons.docfactory.options.MergeCleanupOptions;
+import ch.ivyteam.ivy.addons.docfactory.options.MultipleDocumentsCreationOptions;
 import ch.ivyteam.ivy.addons.docfactory.options.SimpleMergeCleanupOptions;
 import ch.ivyteam.ivy.addons.docfactory.response.ResponseHandler;
 import ch.ivyteam.ivy.environment.Ivy;
@@ -148,12 +149,25 @@ public abstract class BaseDocFactory{
 	 * Method to generate one or more documents<br>
 	 * with a list of DocumentTemplates Objects containing all the necessary variables for this operation.<br>
 	 * Here each of the DocumentTemplate will generate a single File.<br>
-	 * @param list : List of DocumentTemplates. <br>
+	 * @param documentTemplates : List of DocumentTemplates. <br>
 	 * @return The fileOperationMessage object containing the Type of the message (FileHandler.SUCCESS, ERROR, INFORMATION_MESSAGE),<br>
 	 *  the text of the message and null File Object<br>
 	 *  @see DocumentTemplate
 	 */
-	public abstract FileOperationMessage generateDocuments(List<DocumentTemplate> list);
+	public abstract FileOperationMessage generateDocuments(List<DocumentTemplate> documentTemplates);
+	
+	/**
+	 * Similar to {@link BaseDocFactory#generateDocuments(List)} but with the {@link DocumentCreationOptions} object for fine options.<br />
+	 * By default the options are set for creating each DocumentTemplate File separately, you can turn this off with {@link DocumentCreationOptions#createSingleFileForEachDocument(boolean)}.
+	 * If the given {@link DocumentCreationOptions#isCreateOneFileByAppendingAllTheDocuments()} returns true, 
+	 * then all the given DocumentTemplate objects will also generate a file appending all the documents together.<br />
+	 * The {@link DocumentCreationOptions} holds also a {@link FileAppenderOptions} object for setting the fine options in the case you append all the documents in one file.
+	 * @param documentTemplates The List of the document templates. Each of them generates a file by mail merging.
+	 * @param multipleDocumentsCreationOptions {@link DocumentCreationOptions} object for setting the options for this operation (should it generate single files, appends all the files in one ...)
+	 * @return A FileOperationMessage with the list of the java.io.File produced by this operation.
+	 */
+	public abstract FileOperationMessage generateDocuments(List<DocumentTemplate> documentTemplates, MultipleDocumentsCreationOptions multipleDocumentsCreationOptions);
+	
 	
 	/**
 	 * Method to generate one or more documents in the same destination folder<br>
