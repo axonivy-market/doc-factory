@@ -25,7 +25,7 @@ public class ProduceDocumentWithNestedReportTest extends DocFactoryTest {
 
 	@Test
 	public void produceDocument_for_reporting_with_nested_tables() throws Exception {
-		File template = new File(this.getClass().getResource("template_with_nested_tables.docx").toURI().getPath());
+		File template = new File(this.getClass().getResource("resources/template_with_nested_tables.docx").toURI().getPath());
 		
 		InputData data = new InputData();
 		data.setCreationDate(Calendar.getInstance().getTime());

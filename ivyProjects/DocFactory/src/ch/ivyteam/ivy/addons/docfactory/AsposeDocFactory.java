@@ -14,8 +14,16 @@ import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.aspose.words.DataTable;
+import com.aspose.words.Document;
+import com.aspose.words.IMailMergeDataSource;
+import com.aspose.words.MailMergeCleanupOptions;
+import com.aspose.words.SaveFormat;
+import com.aspose.words.SectionStart;
+
 import ch.ivyteam.api.API;
 import ch.ivyteam.ivy.addons.docfactory.aspose.AsposeDocFactoryFileGenerator;
+import ch.ivyteam.ivy.addons.docfactory.aspose.AsposeDocumentAppender;
 import ch.ivyteam.ivy.addons.docfactory.aspose.AsposeFieldMergingCallback;
 import ch.ivyteam.ivy.addons.docfactory.aspose.AsposeProduct;
 import ch.ivyteam.ivy.addons.docfactory.aspose.DocumentWorker;
@@ -26,21 +34,12 @@ import ch.ivyteam.ivy.addons.docfactory.aspose.options.AsposeMergeCleanupOptions
 import ch.ivyteam.ivy.addons.docfactory.exception.DocumentGenerationException;
 import ch.ivyteam.ivy.addons.docfactory.mergefield.SimpleMergeFieldsHandler;
 import ch.ivyteam.ivy.addons.docfactory.options.MergeCleanupOptions;
+import ch.ivyteam.ivy.addons.docfactory.options.MultipleDocumentsCreationOptions;
 import ch.ivyteam.ivy.addons.docfactory.options.SimpleMergeCleanupOptions;
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.scripting.objects.CompositeObject;
 import ch.ivyteam.ivy.scripting.objects.Recordset;
 import ch.ivyteam.ivy.scripting.objects.Tree;
-
-import com.aspose.words.DataTable;
-import com.aspose.words.Document;
-import com.aspose.words.IMailMergeDataSource;
-import com.aspose.words.ImportFormatMode;
-import com.aspose.words.MailMergeCleanupOptions;
-import com.aspose.words.Node;
-import com.aspose.words.SaveFormat;
-import com.aspose.words.Section;
-import com.aspose.words.SectionStart;
 
 
 /**
@@ -329,7 +328,7 @@ public class AsposeDocFactory extends BaseDocFactory {
 	 * Here each of the DocumentTemplate will generate a single File.<br>
 	 * Each single DocumentTemplate can have its own format, path, template...
 	 * The Merge Mail with regions (Table) is now supported.
-	 * @param list of DocumentTemplate: List<DocumentTemplate> list
+	 * @param documentTemplates of DocumentTemplate: List<DocumentTemplate> list
 	 * @return a fileOperationMessage. This object contains the type of Message (SUCCESS, ERROR), the message, <br>
 	 * and the List of generated Files. If a DocumentTemplate didn't contain valid parameters, its output File will be null. <br>
 	 * If you want to have an exact trace of the operation's result for each DocumentTemplate, <br>
@@ -338,32 +337,75 @@ public class AsposeDocFactory extends BaseDocFactory {
 	 * @see #generateDocuments(String, String, String, List)
 	 */
 	@Override
-	public FileOperationMessage generateDocuments(List<DocumentTemplate> list) {
-		this.fileOperationMessage = FileOperationMessage.generateSuccessTypeFileOperationMessage("Success");
-		if(list==null || list.isEmpty()) {
-			//list null or empty => we return an ERROR
+	public FileOperationMessage generateDocuments(List<DocumentTemplate> documentTemplates) {
+		return generateDocuments(documentTemplates, MultipleDocumentsCreationOptions
+				.getInstance()
+				.createSingleFileForEachDocument(true)
+				.createOneFileByAppendingAllTheDocuments(false)
+		);
+	}
+	
+	/**
+	 * Generate Documents with a List of DocumentTemplate objects and given options for specific multiple documents creation.<br>
+	 * @param documentTemplates List<DocumentTemplate>
+	 * @param multipleDocumentsCreationOptions : The {@link MultipleDocumentsCreationOptions} object defining options for the documents creation. 
+	 * Cannot be null and at least one of these two method should return true:<br />
+	 * {@link MultipleDocumentsCreationOptions#isCreateOneFileByAppendingAllTheDocuments()} or {@link MultipleDocumentsCreationOptions#isCreateSingleFileForEachDocument()}
+	 * @return a fileOperationMessage. This object contains the type of Message (SUCCESS, ERROR), the message, <br>
+	 * and the List of generated Files.
+	 */
+	@Override
+	public FileOperationMessage generateDocuments(List<DocumentTemplate> documentTemplates, MultipleDocumentsCreationOptions multipleDocumentsCreationOptions) {
+		API.checkNotNull(multipleDocumentsCreationOptions, "MultipleDocumentsCreationOptions multipleDocumentsCreationOptions");
+		if(!multipleDocumentsCreationOptions.isCreateOneFileByAppendingAllTheDocuments() && !multipleDocumentsCreationOptions.isCreateSingleFileForEachDocument()) {
+			throw new IllegalArgumentException("The given MultipleDocumentsCreationOptions object is not set for creating any document.");
+		}
+		if(documentTemplates == null || documentTemplates.isEmpty()) {
 			this.fileOperationMessage.setType(ch.ivyteam.ivy.addons.docfactory.FileOperationMessage.ERROR_MESSAGE);
 			this.fileOperationMessage.setMessage(Ivy.cms().co("/ch/ivyteam/ivy/addons/docfactory/messages/EmptyMergeFields"));
 			this.fileOperationMessage.emptyFileList();
-		} else { // we go through the list of Document template Objects and make a new File with each of them
-			Iterator<DocumentTemplate> iter = list.iterator();
-			ArrayList<java.io.File> files = new ArrayList<java.io.File>();
-			while(iter.hasNext()) {
-				try {
-					DocumentTemplate dt = iter.next();
-					String s = FileUtil.formatPathWithEndSeparator(dt.getOutputPath()) + dt.getOutputName();
+			return this.fileOperationMessage;
+		} 
+		this.fileOperationMessage = FileOperationMessage.generateSuccessTypeFileOperationMessage("Success");
+		List<java.io.File> files = new ArrayList<>();
+		List<Document> mergedDocuments = new ArrayList<>();
+		documentTemplates.forEach(dt -> {
+					String resultFilePath = FileUtil.formatPathWithEndSeparator(dt.getOutputPath()) + dt.getOutputName();
 					int format = getFormatPosition(dt.getOutputFormat(), PDF_FORMAT);
-					FileOperationMessage fom  = getFileGenerator().exportDocumentToFile(this.doMailMerge(dt), s, format);
-					
-					if(fom.isSuccess() && fom.getFiles().size()==1) {
-						files.add(fom.getFiles().get(0));
+					try {
+						mergedDocuments.add(this.doMailMerge(dt));
+						if (multipleDocumentsCreationOptions.isCreateSingleFileForEachDocument()) {
+							FileOperationMessage result = getFileGenerator().exportDocumentToFile(mergedDocuments.get(mergedDocuments.size() - 1),
+											resultFilePath, format);
+							if (result.isSuccess() && result.getFiles().size() == 1) {
+								files.add(result.getFiles().get(0));
+							}
+						}
+					} catch (Exception e) {
+						Ivy.log().warn("[DOCFACTORY] An exception occurred while generating files from a list of DocumentTemplate. "
+										+ "The following file could not be produced: {0}. Processing the next DocumentTemplate.",
+										e, resultFilePath);
 					}
-				} catch (Exception e) {
-					//do nothing and generate the next one.
-				}
+				});
+		if (multipleDocumentsCreationOptions.isCreateOneFileByAppendingAllTheDocuments()) {
+			try {
+				FileOperationMessage result = getFileGenerator().exportDocumentToFile(
+						AsposeDocumentAppender.appendDocuments(mergedDocuments, multipleDocumentsCreationOptions.getFileAppenderOptions()),
+						multipleDocumentsCreationOptions.getFileAppenderOptions().getAppendedFileAbsolutePathWithoutFormatEnding(),
+						multipleDocumentsCreationOptions.getFileAppenderOptions().getAppendedFileOutputFormat()
+				);
+				files.add(result.getFiles().get(0));
+			} catch (Exception e) {
+				Ivy.log().error("[DOCFACTORY] An exception occurred while appendending a list of merged documents together. "
+								+ "The following file could not be produced: {0}.",
+								e, multipleDocumentsCreationOptions.getFileAppenderOptions().getAppendedFileAbsolutePath());
+				this.fileOperationMessage = FileOperationMessage.generateErrorTypeFileOperationMessage(
+						"[DOCFACTORY] An exception occurred while appendending a list of merged documents together. " + e.getMessage());
 			}
-			this.fileOperationMessage.addFiles(files);
 		}
+
+		this.fileOperationMessage.addFiles(files);
+
 		handleResponse(true);
 		return this.fileOperationMessage;
 	}
@@ -558,7 +600,7 @@ public class AsposeDocFactory extends BaseDocFactory {
 			while(iter.hasNext()) {
 				doc = doMailMerge(templatePath, iter.next(), null, null);
 				doc.getFirstSection().getPageSetup().setSectionStart(SectionStart.NEW_PAGE);
-				AppendDoc(docDest, doc);
+				AsposeDocumentAppender.appendDoc(docDest, doc);
 			}
 			this.fileOperationMessage  = getFileGenerator().exportDocumentToFile(this.docDest, this.outputPath + this.outputName, format);
 		}
@@ -610,7 +652,7 @@ public class AsposeDocFactory extends BaseDocFactory {
 			while(iter.hasNext()) {
 				doc=doMailMerge(iter.next());
 				doc.getFirstSection().getPageSetup().setSectionStart(SectionStart.NEW_PAGE);
-				AppendDoc(docDest, doc);
+				AsposeDocumentAppender.appendDoc(docDest, doc);
 			}
 			this.fileOperationMessage  = getFileGenerator().exportDocumentToFile(this.docDest, this.outputPath + this.outputName, format);
 		}
@@ -768,31 +810,6 @@ public class AsposeDocFactory extends BaseDocFactory {
 		return file;
 	}
 
-
-	/**
-	 * A useful function that you can use to easily append one document to another.
-	 * @param dstDoc : The destination document where to append to
-	 * @param srcDoc : The source document.
-	 */
-	private void AppendDoc(Document dstDoc, Document srcDoc) throws Exception {
-		// Loop through all sections in the source document.
-		// Section nodes are immediate children of the Document node so we can just enumerate the Document.
-		int x = srcDoc.getSections().getCount();
-		for (int i=0; i<x;i++) {
-			// Because we are copying a section from one document to another,
-			// it is required to import the Section node into the destination document.
-			// This adjusts any document-specific references to styles, lists, etc.
-			//
-			// Importing a node creates a copy of the original node, but the copy
-			// is ready to be inserted into the destination document.
-			Section srcSection = srcDoc.getSections().get(i);
-			Node dstSection = dstDoc.importNode(srcSection, true, ImportFormatMode.KEEP_SOURCE_FORMATTING);
-
-			// Now the new section node can be appended to the destination document.
-			dstDoc.appendChild(dstSection);
-		}
-	}
-
 	@Override
 	public Class<? extends AsposeDocFactory> getFactoryClass() {
 		return this.getClass();
@@ -804,14 +821,17 @@ public class AsposeDocFactory extends BaseDocFactory {
 	 * @return the position of the given format in the format supported list
 	 */
 	private int getFormatPosition(String format, int default_format_position_if_not_found) {
-		int a=default_format_position_if_not_found;
-		for(int i =0; i<SUPPORTED_OUTPUT_FORMATS.length;i++) {
+		int result = default_format_position_if_not_found;
+		if(format.startsWith(".")) {
+			format = format.substring(1);
+		}
+		for(int i = 0; i < SUPPORTED_OUTPUT_FORMATS.length; i++) {
 			if(format.trim().equalsIgnoreCase(SUPPORTED_OUTPUT_FORMATS[i])) {
-				a=i;
+				result = i;
 				break;
 			}
 		}
-		return a;
+		return result;
 	}
 
 	/**

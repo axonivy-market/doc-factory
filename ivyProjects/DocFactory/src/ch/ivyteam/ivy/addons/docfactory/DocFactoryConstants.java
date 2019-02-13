@@ -23,5 +23,7 @@ public final class DocFactoryConstants {
 	public static final String EMBEDDED_DOCUMENT_MERGEFIELD_NAME_START = "document_";
 	
 	public static final Locale DEFAULT_LOCALE = Locale.getDefault();
+	
+	public static final String DEFAULT_FILE_NAME = "defaultDocFactoryFileName";
 
 }
