@@ -11,7 +11,7 @@ import ch.ivyteam.ivy.addons.docfactory.options.MultipleDocumentsCreationOptions
 
 /**
  * 
- * @since version 7001100.0.0
+ * @since version 7.3.0
  *
  */
 public abstract class FileAppender {
