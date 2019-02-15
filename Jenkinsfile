@@ -7,7 +7,7 @@ pipeline {
     dockerfile true
   }
   options {
-    buildDiscarder(logRotator(artifactNumToKeepStr: '5'))
+    buildDiscarder(numToKeepStr: '30', logRotator(artifactNumToKeepStr: '5'))
   }
   stages {
     stage('build') {
