@@ -4,50 +4,21 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 import java.io.File;
 import java.net.URISyntaxException;
 
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
-import ch.ivyteam.ivy.ThirdPartyLicenses;
 import ch.ivyteam.ivy.addons.docfactory.response.ResponseHandler;
-import ch.ivyteam.ivy.cm.IContentManagementSystem;
-import ch.ivyteam.ivy.environment.Ivy;
-import ch.ivyteam.log.Logger;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({Ivy.class, ThirdPartyLicenses.class})
-public class BaseDocFactoryResponseHandlerTest {
+public class BaseDocFactoryResponseHandlerTest extends DocFactoryTest {
 	
-	@Before
-	public void setup() throws Exception {
-		Logger mockLogger = mock(Logger.class);
-		doNothing().when(mockLogger).error(any(String.class));
-		doNothing().when(mockLogger).info(any(String.class));
-		doNothing().when(mockLogger).debug(any(String.class));
-
-		IContentManagementSystem mockedCms = mock(IContentManagementSystem.class);
-		when(mockedCms.co(any(String.class))).thenReturn("");
-
-		mockStatic(ThirdPartyLicenses.class);
-		mockStatic(Ivy.class);
-		when(Ivy.log()).thenReturn(mockLogger);
-		when(Ivy.cms()).thenReturn(mockedCms);
-		when(ThirdPartyLicenses.getDocumentFactoryLicense()).thenReturn(null);
-	}
-
+	
 	@Test
 	public void withResponseHandler_set_responseHandler() {
 		ResponseHandler responseHandler = new MyResponseHandler();
@@ -82,7 +53,7 @@ public class BaseDocFactoryResponseHandlerTest {
 		ResponseHandler responseHandler = mock(MyResponseHandler.class);
 		Mockito.doNothing().when(responseHandler).handleDocFactoryResponse(any(FileOperationMessage.class));
 		
-		File template = new File(this.getClass().getResource("template_person.docx").toURI().getPath());
+		File template = new File(this.getClass().getResource(TEMPLATE_PERSON_DOCX).toURI().getPath());
 
 		DocumentTemplate documentTemplate = DocumentTemplate.
 				withTemplate(template).

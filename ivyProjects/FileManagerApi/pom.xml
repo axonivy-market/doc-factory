@@ -4,11 +4,21 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>ch.ivyteam.ivy.addons</groupId>
   <artifactId>file-manager-api</artifactId>
-  <version>7.2</version>
+  <version>7.3</version>
   <packaging>iar</packaging>
   <organization>
     <name>AXON IVY AG</name>
   </organization>
+  <distributionManagement>
+    <repository>
+      <id>repo.axonivy.io</id>
+      <url>https://repo.axonivy.io/artifactory/ext-release-local</url>
+    </repository>
+    <snapshotRepository>
+      <id>repo.axonivy.io</id>
+      <url>https://repo.axonivy.io/artifactory/ext-snapshot-local</url>
+    </snapshotRepository>
+  </distributionManagement>
   <dependencies>
     <dependency>
       <groupId>ch.ivyteam.ivy.addons</groupId>
@@ -23,20 +33,6 @@
       <optional>true</optional>
     </dependency>
   </dependencies>
-  
-  <distributionManagement>
-    <repository>
-  	  <id>repo.axonivy.io</id>
-  	  <layout>default</layout>
-  	  <url>https://repo.axonivy.io/artifactory/ext-release-local</url>
-    </repository>
-    <snapshotRepository>
-  	  <id>repo.axonivy.io</id>
-  	  <layout>default</layout>
-  	  <url>https://repo.axonivy.io/artifactory/ext-snapshot-local</url>
-    </snapshotRepository>
-  </distributionManagement>
-  
   <build>
     <plugins>
       <plugin>

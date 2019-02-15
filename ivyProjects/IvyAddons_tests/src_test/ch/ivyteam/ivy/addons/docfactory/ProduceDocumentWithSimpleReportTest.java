@@ -18,7 +18,7 @@ public class ProduceDocumentWithSimpleReportTest extends DocFactoryTest {
 	
 	@Test
 	public void produceDocument_with_simple_tables() throws Exception {
-		File template = new File(this.getClass().getResource("template_with_simple_tables.docx").toURI().getPath());
+		File template = new File(this.getClass().getResource("resources/template_with_simple_tables.docx").toURI().getPath());
 
 		DocumentTemplate documentTemplate = DocumentTemplate.
 				withTemplate(template).

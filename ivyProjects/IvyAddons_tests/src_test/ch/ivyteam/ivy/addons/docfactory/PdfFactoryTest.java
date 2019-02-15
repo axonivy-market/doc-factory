@@ -37,8 +37,8 @@ public class PdfFactoryTest extends DocFactoryTest {
 
 	@Test
 	public void appendPdfFiles() throws Exception {
-		java.io.File pdf1 = new java.io.File(PdfFactoryTest.class.getResource("pdf1.pdf").toURI().getPath());
-		java.io.File pdf2 = new java.io.File(PdfFactoryTest.class.getResource("pdf2.pdf").toURI().getPath());
+		java.io.File pdf1 = new java.io.File(PdfFactoryTest.class.getResource("resources/files/pdf1.pdf").toURI().getPath());
+		java.io.File pdf2 = new java.io.File(PdfFactoryTest.class.getResource("resources/files/pdf2.pdf").toURI().getPath());
 		
 		List<java.io.File> filesToAppend = new ArrayList<>();
 		filesToAppend.add(pdf1);

@@ -18,7 +18,7 @@ public class DocumentTemplateWithDocumentCreationOptionsIT extends DocFactoryTes
 	@Before
 	public void setup() throws Exception {
 		super.setup();
-		template = new File(this.getClass().getResource("template_with_field_form.docx").toURI().getPath());
+		template = new File(this.getClass().getResource(TEMPLATE_WITH_FIELDS_FORM_DOCX).toURI().getPath());
 	}
 
 	@Test

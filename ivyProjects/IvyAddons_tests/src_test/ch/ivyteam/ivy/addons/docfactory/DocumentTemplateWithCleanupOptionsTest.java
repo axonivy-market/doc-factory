@@ -17,11 +17,9 @@ import ch.ivyteam.ivy.addons.docfactory.test.data.Person;
 
 public class DocumentTemplateWithCleanupOptionsTest extends DocFactoryTest {
 	
-	private static final String TEMPLATE_DOCX = "template_for_testing_null_value.docx"; 
-	
 	@Test
 	public void documentTemplate_has_default_cleanupOptions_byDefault() throws URISyntaxException {
-		File template = new File(this.getClass().getResource(TEMPLATE_DOCX).toURI().getPath());
+		File template = new File(this.getClass().getResource(TEMPLATE_FOR_TESTING_NULL_VALUES_DOCX).toURI().getPath());
 		DocumentTemplate documentTemplate = DocumentTemplate.withTemplate(template);
 		
 		SimpleMergeCleanupOptions simpleMergeCleanupOptions = documentTemplate.getDocumentFactory().getSimpleMergeCleanupOptions();
@@ -42,7 +40,7 @@ public class DocumentTemplateWithCleanupOptionsTest extends DocFactoryTest {
 	
 	@Test
 	public void withSimpleMergeCleanupOptions_changes_the_cleanupOptions_for_simple_merging() throws URISyntaxException {
-		File template = new File(this.getClass().getResource(TEMPLATE_DOCX).toURI().getPath());
+		File template = new File(this.getClass().getResource(TEMPLATE_FOR_TESTING_NULL_VALUES_DOCX).toURI().getPath());
 		
 		SimpleMergeCleanupOptions changedSimpleMergeCleanupOptions = new SimpleMergeCleanupOptions().
 				removingBlankLines(false).
@@ -61,7 +59,7 @@ public class DocumentTemplateWithCleanupOptionsTest extends DocFactoryTest {
 	
 	@Test
 	public void withRegionsMergeCleanupOptions_changes_the_cleanupOptions_for_simple_merging() throws URISyntaxException {
-		File template = new File(this.getClass().getResource(TEMPLATE_DOCX).toURI().getPath());
+		File template = new File(this.getClass().getResource(TEMPLATE_FOR_TESTING_NULL_VALUES_DOCX).toURI().getPath());
 		
 		MergeCleanupOptions changedMergeCleanupOptions = new MergeCleanupOptions().
 				removingBlankLines(false).
@@ -86,7 +84,7 @@ public class DocumentTemplateWithCleanupOptionsTest extends DocFactoryTest {
 
 	@Test
 	public void produceDocument_by_default_removes_lines_with_only_empty_string_values() throws URISyntaxException {
-		File template = new File(this.getClass().getResource(TEMPLATE_DOCX).toURI().getPath());
+		File template = new File(this.getClass().getResource(TEMPLATE_FOR_TESTING_NULL_VALUES_DOCX).toURI().getPath());
 
 		Person p = makePerson();
 		// the name and firstname are in the same line, if they are both empty the line should be removed
@@ -108,7 +106,7 @@ public class DocumentTemplateWithCleanupOptionsTest extends DocFactoryTest {
 	
 	@Test
 	public void produceDocument_by_default_keeps_lines_with_at_least_one_not_empty_string_values() throws URISyntaxException {
-		File template = new File(this.getClass().getResource(TEMPLATE_DOCX).toURI().getPath());
+		File template = new File(this.getClass().getResource(TEMPLATE_FOR_TESTING_NULL_VALUES_DOCX).toURI().getPath());
 
 		Person p = makePerson();
 		// the name and firstname are in the same line, if they are both empty the line should be removed
@@ -130,7 +128,7 @@ public class DocumentTemplateWithCleanupOptionsTest extends DocFactoryTest {
 	
 	@Test
 	public void produceDocument_by_default_removes_lines_with_only_null_values() throws URISyntaxException {
-		File template = new File(this.getClass().getResource(TEMPLATE_DOCX).toURI().getPath());
+		File template = new File(this.getClass().getResource(TEMPLATE_FOR_TESTING_NULL_VALUES_DOCX).toURI().getPath());
 
 		Person p = makePerson();
 		// the name and firstname are in the same line, if they are both null the line should be removed
@@ -152,7 +150,7 @@ public class DocumentTemplateWithCleanupOptionsTest extends DocFactoryTest {
 	
 	@Test
 	public void produceDocument_by_default_removes_blank_lines_resulting_from_mailMerge() throws URISyntaxException {
-		File template = new File(this.getClass().getResource(TEMPLATE_DOCX).toURI().getPath());
+		File template = new File(this.getClass().getResource(TEMPLATE_FOR_TESTING_NULL_VALUES_DOCX).toURI().getPath());
 
 		Person p = makePerson();
 		// the name and firstname are in the same line, if they are both null the line should be removed
@@ -174,7 +172,7 @@ public class DocumentTemplateWithCleanupOptionsTest extends DocFactoryTest {
 	
 	@Test
 	public void produceDocument_withSimpleMergeCleanupOptions_notRemovingBlankLines_keeps_blank_lines_resulting_from_mailMerge() throws URISyntaxException {
-		File template = new File(this.getClass().getResource(TEMPLATE_DOCX).toURI().getPath());
+		File template = new File(this.getClass().getResource(TEMPLATE_FOR_TESTING_NULL_VALUES_DOCX).toURI().getPath());
 
 		Person p = makePerson();
 		p.setFirstname(null);
@@ -199,7 +197,7 @@ public class DocumentTemplateWithCleanupOptionsTest extends DocFactoryTest {
 	
 	@Test
 	public void produceDocument_withSimpleMergeCleanupOptions_notRemovingBlankLines_keeps_lines_with_null_values() throws URISyntaxException {
-		File template = new File(this.getClass().getResource(TEMPLATE_DOCX).toURI().getPath());
+		File template = new File(this.getClass().getResource(TEMPLATE_FOR_TESTING_NULL_VALUES_DOCX).toURI().getPath());
 
 		Person p = makePerson();
 		p.setFirstname(null);

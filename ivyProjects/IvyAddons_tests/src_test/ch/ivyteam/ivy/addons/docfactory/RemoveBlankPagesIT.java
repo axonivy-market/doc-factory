@@ -19,7 +19,7 @@ public class RemoveBlankPagesIT extends DocFactoryTest {
 	@Before
 	public void setup() throws Exception {
 		super.setup();
-		File template = new File(this.getClass().getResource("template_with_blank_pages.docx").toURI().getPath());
+		File template = new File(this.getClass().getResource("resources/template_with_blank_pages.docx").toURI().getPath());
 		
 		documentTemplate = DocumentTemplate.
 				withTemplate(template).
