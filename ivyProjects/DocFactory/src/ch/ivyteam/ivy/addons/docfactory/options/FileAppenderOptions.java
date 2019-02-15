@@ -13,7 +13,7 @@ import ch.ivyteam.ivy.environment.Ivy;
 /**
  * This class represents different options that may be useful for setting how different files (See {@link FileAppender})
  * or documents (See {@link BaseDocFactory#generateDocuments(java.util.List, MultipleDocumentsCreationOptions)}) may be appended together in a common file.
- * @since version 7001100.0.0
+ * @since version 7.3.0
  */
 public class FileAppenderOptions {
 	

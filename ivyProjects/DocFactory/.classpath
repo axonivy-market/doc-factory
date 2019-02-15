@@ -18,6 +18,5 @@
 	<classpathentry exported="true" kind="lib" path="lib/aspose-pdf-10.6.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/aspose-slides-15.6.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/aspose-words-15.7.0-jdk16.jar"/>
-	<classpathentry kind="lib" path="lib/third-party-license-1.1.0.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
