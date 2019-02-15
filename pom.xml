@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>addons.modules</artifactId>
 	<groupId>ch.ivyteam.ivy.addons</groupId>
-	<version>7.2.0-SNAPSHOT</version>
+	<version>7.3.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	
 	<modules>

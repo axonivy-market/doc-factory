@@ -1,0 +1,7 @@
+---------------------------------------------
+IvyAddons 7.3.0 Release Notes 
+---------------------------------------------
+*AIPROD-174
+- New ch.ivyteam.ivy.addons.docfactory.FileAppender for appending pdf files together (old PdfFactory) and Office files together.
+- The BaseDocFactory has a new method for appending DocumentTemplate together at mail merge time: 
+docFactory.generateDocuments(List<DocumentTemplate> docuemntTemplates, MultipleDocumentsCreationOptions multipleDocumentsCreationOptions)

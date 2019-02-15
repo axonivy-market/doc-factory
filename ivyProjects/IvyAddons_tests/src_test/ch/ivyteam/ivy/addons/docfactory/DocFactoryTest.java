@@ -38,7 +38,9 @@ public abstract class DocFactoryTest {
 	@Rule
 	public ExpectedException thrown = ExpectedException.none();
 	
-	protected static final String TEMPLATE_PERSON_DOCX = "template_person.docx";
+	protected static final String TEMPLATE_PERSON_DOCX = "resources/template_person.docx";
+	protected static final String TEMPLATE_WITH_FIELDS_FORM_DOCX = "resources/template_with_field_form.docx";
+	protected static final String TEMPLATE_FOR_TESTING_NULL_VALUES_DOCX = "resources/template_for_testing_null_value.docx";
 
 	@Before
 	public void setup() throws Exception {
