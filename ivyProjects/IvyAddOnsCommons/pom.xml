@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>ch.ivyteam.ivy.addons</groupId>
   <artifactId>commons</artifactId>
-  <version>7.2</version>
+  <version>7.3.0-SNAPSHOT</version>
   <packaging>iar</packaging>
   <organization>
     <name>AXON IVY AG</name>
@@ -23,20 +23,7 @@
       <optional>true</optional>
     </dependency>
   </dependencies>
-  
-  <distributionManagement>
-    <repository>
-  	  <id>repo.axonivy.io</id>
-  	  <layout>default</layout>
-  	  <url>https://repo.axonivy.io/artifactory/ext-release-local</url>
-    </repository>
-    <snapshotRepository>
-  	  <id>repo.axonivy.io</id>
-  	  <layout>default</layout>
-  	  <url>https://repo.axonivy.io/artifactory/ext-snapshot-local</url>
-    </snapshotRepository>
-  </distributionManagement>
-  
+    
   <build>
     <plugins>
       <plugin>
