@@ -23,6 +23,13 @@ import com.aspose.words.SaveFormat;
 import com.aspose.words.SaveOptions;
 import com.aspose.words.TxtSaveOptions;
 
+/**
+ * This AsposeDocFactoryFileGenerator is used internally by the DocumentTemplate and the AsposeDocFatory for generating a File 
+ * with given Aspose Document after mail merging. <br />
+ * <b>You should not use this Class</b> but instead the {@link ch.ivyteam.ivy.addons.docfactory.DocumentTemplate#produceDocument(File)} or 
+ * an instance of the {@link ch.ivyteam.ivy.addons.docfactory.BaseDocFactory#getInstance()} class with its generateDocument methods. 
+ *
+ */
 public class AsposeDocFactoryFileGenerator {
 	
 	private DocumentCreationOptions documentCreationOptions = DocumentCreationOptions.getInstance();
@@ -33,6 +40,12 @@ public class AsposeDocFactoryFileGenerator {
 		return new AsposeDocFactoryFileGenerator();
 	}
 	
+	/**
+	 * Set the {@link #DocumentCreationOptions} for this AsposeDocFactoryFileGenerator. 
+	 * The DocumentCreationOptions contains diverse options for the final file generation (e.g should a PDF be editable ...)
+	 * @param documentCreationOptions the DocumentCreationOptions object, cannot be null.
+	 * @return the AsposeDocFactoryFileGenerator object which DocumentCreationOptions has been set.
+	 */
 	public AsposeDocFactoryFileGenerator withDocumentCreationOptions(DocumentCreationOptions documentCreationOptions) {
 		API.checkNotNull(documentCreationOptions, "documentCreationOptions");
 		this.documentCreationOptions = documentCreationOptions;
