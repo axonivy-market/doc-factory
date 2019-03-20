@@ -1,6 +1,11 @@
 ---------------------------------------------
 IvyAddons 7.3.0 Release Notes 
 ---------------------------------------------
+*AF-22096
+DocFactory: new DocumentCreationOptions property (removeWhiteSpaceInPdfEditableFields) for removing the white spaces leaved after mail merge in an editable PDF.
+See also https://forum.aspose.com/t/fillable-word-docs-to-fillable-pdfs/15360
+LicenseLoader stores internally the Aspose product licenses already loaded in a given Ivy project so that we don't need to load the license file unnecessarily.
+
 *AIPROD-174
 - New ch.ivyteam.ivy.addons.docfactory.FileAppender for appending pdf files together (old PdfFactory) and Office files together.
 - The BaseDocFactory has a new method for appending DocumentTemplate together at mail merge time: 
