@@ -1,34 +1,34 @@
 package ch.ivyteam.ivy.addons.docfactory.options;
 
 public class DocumentCreationOptions {
-	
+
 	private boolean keepFormFieldsEditableInPdf;
 	private boolean removeWhiteSpaceInPdfEditableFields;
 	private boolean displayBooleanValuesAsCheckBox;
 	private boolean removeBlankPages;
-	
+
 	private DocumentCreationOptions() {}
-	
+
 	public static DocumentCreationOptions getInstance() {
 		DocumentCreationOptions documentCreationOptions  = new DocumentCreationOptions();
 		return documentCreationOptions;
 	}
-	
+
 	public DocumentCreationOptions keepFormFieldsEditableInPdf(boolean keepFormFieldsEditable) {
 		this.keepFormFieldsEditableInPdf = keepFormFieldsEditable;
 		return this;
 	}
-	
+
 	public DocumentCreationOptions removeWhiteSpaceInPdfEditableFields(boolean removeWhiteSpaceInPdfEditableFields) {
 		this.setRemoveWhiteSpaceInPdfEditableFields(removeWhiteSpaceInPdfEditableFields);
 		return this;
 	}
-	
+
 	public DocumentCreationOptions displayBooleanValuesAsCheckBox(boolean displayBooleanValuesAsCheckBox) {
 		this.displayBooleanValuesAsCheckBox = displayBooleanValuesAsCheckBox;
 		return this;
 	}
-	
+
 	public DocumentCreationOptions removeBlankPages(boolean removeBlankPages) {
 		this.removeBlankPages = removeBlankPages;
 		return this;
