@@ -12,7 +12,6 @@ import org.hsqldb.Server;
 
 import ch.ivyteam.ivy.addons.filemanager.database.persistence.IPersistenceConnectionManager;
 
-@SuppressWarnings("restriction")
 public class HsqlDBFilemanager implements IPersistenceConnectionManager<Connection> {
 
 	private Connection conn = null;
@@ -43,9 +42,7 @@ public class HsqlDBFilemanager implements IPersistenceConnectionManager<Connecti
 		try {
 			getConnection().createStatement().execute(getCreateTablesQuery());
 		} catch (Exception ex) {
-			if(isTableAlreadyExistsException(ex)) {
-				System.out.println("No need to create tables, they already exist.");
-			} else {
+			if(!isTableAlreadyExistsException(ex)) {
 				System.err.println(ex.getClass().getName() + " " + ex.getMessage());
 			}
 		} finally {
