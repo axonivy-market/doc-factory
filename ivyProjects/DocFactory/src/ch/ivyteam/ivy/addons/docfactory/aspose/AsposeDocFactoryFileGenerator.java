@@ -33,6 +33,7 @@ import com.aspose.words.TxtSaveOptions;
 public class AsposeDocFactoryFileGenerator {
 	
 	private DocumentCreationOptions documentCreationOptions = DocumentCreationOptions.getInstance();
+	private DocumentWorker documentWorker;
 	
 	private AsposeDocFactoryFileGenerator() {}
 	
@@ -49,6 +50,18 @@ public class AsposeDocFactoryFileGenerator {
 	public AsposeDocFactoryFileGenerator withDocumentCreationOptions(DocumentCreationOptions documentCreationOptions) {
 		API.checkNotNull(documentCreationOptions, "documentCreationOptions");
 		this.documentCreationOptions = documentCreationOptions;
+		return this;
+	}
+	
+	/**
+	 * Set the {@link ch.ivyteam.ivy.addons.docfactory.aspose.DocumentWorker} for this AsposeDocFactoryFileGenerator.
+	 * If set the {@link ch.ivyteam.ivy.addons.docfactory.aspose.DocumentWorker#onGeneratedFile(Document, File)}
+	 *  logic will be applied after the file has been generated
+	 * @param documentWorker the {@link ch.ivyteam.ivy.addons.docfactory.aspose.DocumentWorker} implementation to set. Null is accepted.
+	 * @return the AsposeDocFactoryFileGenerator object which documentWorker has been set.
+	 */
+	public AsposeDocFactoryFileGenerator withDocumentWorker(DocumentWorker documentWorker) {
+		this.documentWorker = documentWorker;
 		return this;
 	}
 	
@@ -73,6 +86,9 @@ public class AsposeDocFactoryFileGenerator {
 		
 		if(outputFormat == DocFactoryConstants.PDF_FORMAT && this.documentCreationOptions.isRemoveWhiteSpaceInPdfEditableFields()) {
 			this.clearWhiteSpacePdfFieldsFromPdf(filePath);
+		}
+		if(this.documentWorker != null) {
+			return buildResult(this.documentWorker.onGeneratedFile(document, new File(filePath)));
 		}
 		return buildResult(new File(filePath));
 	}
