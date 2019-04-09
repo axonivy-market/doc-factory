@@ -167,7 +167,7 @@ public class AsposeDocFactoryFileGenerator {
 		FileOperationMessage fom;
 		try {
 			if(!file.isFile()) {
-				throw new IOException("The file "+file.getName()+" could not be produced. the Aspose Document could not be exported as File.");
+				throw new IOException("The file " + file.getName() + " could not be produced. the Aspose Document could not be exported as File.");
 			}
 		} catch (SecurityException ex) {
 			throw new Exception("A SecurityException occurred " + ex.getMessage(), ex);
