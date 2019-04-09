@@ -965,6 +965,7 @@ public class AsposeDocFactory extends BaseDocFactory {
 
 	/**
 	 * We set the format. If the given format is invalid, we set it to "doc" per default.
+	 * @param format like (doc, docx, pdf ...). If blank or not supported, the "doc" format will be automatically set by default.
 	 */
 	@Override
 	public void setFormat(String format) {

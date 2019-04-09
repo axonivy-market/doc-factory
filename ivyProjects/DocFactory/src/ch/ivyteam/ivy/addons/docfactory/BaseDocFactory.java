@@ -371,13 +371,14 @@ public abstract class BaseDocFactory{
 	}
 	/**
 	 * set the desired Format
-	 * @param format : the string representation of the desired outputFormat
+	 * @param format : the string representation of the desired outputFormat. Cannot be blank.
 	 */
-	public void setFormat(String format){
+	public void setFormat(String format) {
 		this.outputFormat = setFormatWithoutLeadingDot(format);
 	}
 
 	protected String setFormatWithoutLeadingDot(String format) {
+		API.checkNotBlank(format, "the format");
 		return format.startsWith(".") ? format.substring(1) : format;
 	}
 	
@@ -437,10 +438,10 @@ public abstract class BaseDocFactory{
 	public static BaseDocFactory getInstance() {
 		BaseDocFactory basedoc = null;
 		try {
-			if(!StringUtils.isBlank(System.getProperty(DOCUMENT_FACTORY_IMPLEMENTATION_SYSTEM_PROPERTY))){
-				basedoc= (BaseDocFactory) Class.forName(System.getProperty("document.factory")).newInstance();
-			}else{
+			if(StringUtils.isBlank(System.getProperty(DOCUMENT_FACTORY_IMPLEMENTATION_SYSTEM_PROPERTY))){
 				basedoc= (BaseDocFactory) Class.forName("ch.ivyteam.ivy.addons.docfactory.AsposeDocFactory").newInstance();
+			}else{
+				basedoc= (BaseDocFactory) Class.forName(System.getProperty("document.factory")).newInstance();
 			}
 		} catch (Exception e) {
 			Ivy.log().error("Exception generating the docFactory. "+e.getMessage(),e);
