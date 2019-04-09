@@ -50,8 +50,12 @@ public interface DocumentWorker {
 	 * @param generatedFile
 	 *            the file which has been generated. In this method you will
 	 *            have some actions on this file.
-	 * @return the File that has been generated. The DocFactory will return this
-	 *         File.
+	 * @return the File that the docFactory should return after your logic has been performed. 
+	 * In a lot of cases you will simply return the file that has been passed as parameter and 
+	 * on which you have applied your logic.
+	 * In some cases you may want to return another file resulting of your logic.<br />
+	 * <b>Note:</b> it is important that you never return null here and 
+	 * the result file must exist (file.isFile() must return true). Else the DocFactory will throw a DocumentGenerationException.
 	 */
 
 	default File onGeneratedFile(Document document, File generatedFile) {
