@@ -57,7 +57,6 @@ public interface DocumentWorker {
 	 * <b>Note:</b> it is important that you never return null here and 
 	 * the result file must exist (file.isFile() must return true). Else the DocFactory will throw a DocumentGenerationException.
 	 */
-
 	default File onGeneratedFile(Document document, File generatedFile) {
 		return generatedFile;
 	}
