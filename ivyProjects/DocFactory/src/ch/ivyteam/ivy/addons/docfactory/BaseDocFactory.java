@@ -1,18 +1,18 @@
-/**
- * 
- */
 package ch.ivyteam.ivy.addons.docfactory;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang3.StringUtils;
 
 import ch.ivyteam.api.API;
 import ch.ivyteam.ivy.addons.docfactory.aspose.AsposeFieldMergingCallback;
 import ch.ivyteam.ivy.addons.docfactory.aspose.DocumentWorker;
 import ch.ivyteam.ivy.addons.docfactory.options.DocumentCreationOptions;
+import ch.ivyteam.ivy.addons.docfactory.options.FileAppenderOptions;
 import ch.ivyteam.ivy.addons.docfactory.options.MergeCleanupOptions;
 import ch.ivyteam.ivy.addons.docfactory.options.MultipleDocumentsCreationOptions;
 import ch.ivyteam.ivy.addons.docfactory.options.SimpleMergeCleanupOptions;
@@ -33,7 +33,11 @@ import ch.ivyteam.ivy.scripting.objects.Tree;
  */
 public abstract class BaseDocFactory{
 	
-	protected String outputPath, outputFormat, basicFileName;
+	private static final String DOCUMENT_FACTORY_IMPLEMENTATION_SYSTEM_PROPERTY = "document.factory";
+	
+	protected String outputPath;
+	protected String outputFormat;
+	protected String basicFileName;
 		
 	/** */
 	private ResponseHandler responseHandler;
@@ -76,37 +80,37 @@ public abstract class BaseDocFactory{
 	
 	/**
 	 * Method to generate a blank document
-	 * @param _outputName : name of the output File
-	 * @param _outputPath : where to save the new generated File on the server
-	 * @param _outputFormat : format ".doc", ".docx", ".pdf", or ".html"
+	 * @param outputName : name of the output File
+	 * @param outputPath : where to save the new generated File on the server
+	 * @param outputFormat : format ".doc", ".docx", ".pdf", or ".html"
 	 *@return The fileOperationMessage object containing the Type of the message (FileHandler.SUCCESS, ERROR, INFORMATION_MESSAGE),<br>
 	 *  the text of the message and <br>
 	 *  the java.io.File generated in case of success, else null.<br>
 	 */
-	public abstract FileOperationMessage generateBlankDocument(String _outputName, String _outputPath, String _outputFormat);
+	public abstract FileOperationMessage generateBlankDocument(String outputName, String outputPath, String outputFormat);
 	
 	/**
 	 * Method to generate one document
 	 * @param templatePath the template path taht is used as document's model for the fields merging.
 	 * @param fileName the name of the File that will be generated
-	 * @param _outputpath : where to save the new generated File on the server
-	 * @param _outputformat : format ".doc", ".docx", ".pdf", or ".html" 
+	 * @param outputPath : where to save the new generated File on the server
+	 * @param outputFormat : format ".doc", ".docx", ".pdf", or ".html" 
 	 * @param list : List of parameters (TemplateMergeField objects).
 	 * @return The fileOperationMessage object containing the Type of the message (FileHandler.SUCCESS, ERROR, INFORMATION_MESSAGE),<br>
 	 *  the text of the message and <br>
 	 *  the java.io.File generated in case of success, else null.<br>
 	 */
-	public abstract FileOperationMessage generateDocument(String templatePath, String fileName, String _outputpath, String _outputformat, List<TemplateMergeField> list);
+	public abstract FileOperationMessage generateDocument(String templatePath, String fileName, String outputPath, String outputFormat, List<TemplateMergeField> list);
 	
 	/**
 	 * Method to generate one document
-	 * @param _documentTemplate the DocumentTemplate Object containing all the necessary variables for this operation<br>
+	 * @param documentTemplate the DocumentTemplate Object containing all the necessary variables for this operation<br>
 	 * @return The fileOperationMessage object containing the Type of the message (FileHandler.SUCCESS, ERROR, INFORMATION_MESSAGE),<br>
 	 *  the text of the message and <br>
 	 *  the java.io.File generated in case of success, else null.<br>
 	 *  @see DocumentTemplate
 	 */
-	public abstract FileOperationMessage generateDocument(DocumentTemplate _documentTemplate);
+	public abstract FileOperationMessage generateDocument(DocumentTemplate documentTemplate);
 	
 	/**
 	 * Method to generate one document
@@ -169,111 +173,112 @@ public abstract class BaseDocFactory{
 	public abstract FileOperationMessage generateDocuments(List<DocumentTemplate> documentTemplates, MultipleDocumentsCreationOptions multipleDocumentsCreationOptions);
 	
 	
+	
 	/**
 	 * Method to generate one or more documents in the same destination folder<br>
 	 * By convention, the name of each File is given by the first TemplateMergeField, which key name must be "filename".
 	 * @param templatePath : where to find the template
-	 * @param _outputPath : where to save the new generated File on the server
-	 * @param _outputFormat : format ".doc", ".docx", ".pdf", ".txt" or ".html" 
+	 * @param outputPath : where to save the new generated File on the server
+	 * @param outputFormat : format ".doc", ".docx", ".pdf", ".txt" or ".html" 
 	 * @param list : List of List of parameters (TemplateMergeField objects). <br>
 	 * Each List of TemplateMergeField objects in the primary List will be turned into a new document.
 	 * @return The fileOperationMessage object containing the Type of the message (FileHandler.SUCCESS, ERROR, INFORMATION_MESSAGE),<br>
 	 *  the text of the message and null File Object<br>
 	 */
-	public abstract FileOperationMessage generateDocuments(String templatePath, String _outputPath, String _outputFormat, List<List<TemplateMergeField>> list);
+	public abstract FileOperationMessage generateDocuments(String templatePath, String outputPath, String outputFormat, List<List<TemplateMergeField>> list);
 	
 	/**
 	 * Method to generate one or more documents each one can be saved in a different destination folder.<br>
 	 * By convention, the name of each File is given by the first TemplateMergeField, which key name must be "filename".<br>
 	 * By convention, the name of each destination folder is given by the second TemplateMergeField, which key name must be "destinationPath".<br>
 	 * @param templatePath : where to save the new generated File on the server
-	 * @param _outputFormat : format ".doc", ".docx", ".pdf", ".txt" or ".html"  
+	 * @param outputFormat : format ".doc", ".docx", ".pdf", ".txt" or ".html"  
 	 * @param list : List of List of parameters (TemplateMergeField objects). <br>
 	 * Each List of TemplateMergeField objects in the primary List will be turned into a new document.
 	 * @return The fileOperationMessage object containing the Type of the message (FileHandler.SUCCESS, ERROR, INFORMATION_MESSAGE),<br>
 	 *  the text of the message and null File Object<br>
 	 */
-	public abstract FileOperationMessage generateDocumentsWithDifferentDestination(String templatePath, String _outputFormat, List<List<TemplateMergeField>> list);
+	public abstract FileOperationMessage generateDocumentsWithDifferentDestination(String templatePath, String outputFormat, List<List<TemplateMergeField>> list);
 	
 	
 	/**
 	 * Method to generate one document with merge mail. Mail Merge with regions supported.<br>
-	 * @param _templatePath: the template path that is used as document's model for the fields merging.
-	 * @param _outoutName: optional String for the name of the created document
-	 * @param _outputPath: optional String for the destination folder path
-	 * @param _outputFormat: format ".doc", ".docx", ".pdf", ".txt" or ".html" 
-	 * @param _mergefields: a List of ch.ivyteam.ivy.addons.docfactory.TemplateMergeField Objects for "normal" mail merge.
-	 * @param _tablesNamesAndFieldsmap: HashMap<String, List<CompositeObject>> HashMap containing the tables names (merge regions) from the template an the Lists of dataClasses Objects to feed the tables. 
+	 * @param templatePath: the template path that is used as document's model for the fields merging.
+	 * @param utoutName: optional String for the name of the created document
+	 * @param outputPath: optional String for the destination folder path
+	 * @param outputFormat: format ".doc", ".docx", ".pdf", ".txt" or ".html" 
+	 * @param mergefields: a List of ch.ivyteam.ivy.addons.docfactory.TemplateMergeField Objects for "normal" mail merge.
+	 * @param tablesNamesAndFieldsmap: HashMap<String, List<CompositeObject>> HashMap containing the tables names (merge regions) from the template an the Lists of dataClasses Objects to feed the tables. 
 	 * @return The fileOperationMessage object containing the Type of the message (FileHandler.SUCCESS, ERROR, INFORMATION_MESSAGE),<br>
 	 *  the text of the message and null File Object<br>
 	 */
-	public abstract FileOperationMessage generateDocumentWithRegions(String _templatePath, String _outputName, String _outputPath, String _outputFormat, List<TemplateMergeField> _mergefields, HashMap<String, List<CompositeObject>> _tablesNamesAndFieldsmap);
+	public abstract FileOperationMessage generateDocumentWithRegions(String templatePath, String outputName, String outputPath, String outputFormat, List<TemplateMergeField> mergefields, Map<String, List<CompositeObject>> tablesNamesAndFieldsmap);
 	
 	/**
 	 * Method to generate one document with merge mail. Mail Merge with regions supported.<br>
-	 * @param _templatePath: the template path that is used as document's model for the fields merging.
-	 * @param _outoutName: optional String for the name of the created document
-	 * @param _outputPath: optional String for the destination folder path
-	 * @param _outputFormat: format ".doc", ".docx", ".pdf", ".txt" or ".html" 
-	 * @param _mergefields: a List of ch.ivyteam.ivy.addons.docfactory.TemplateMergeField Objects for "normal" mail merge.
-	 * @param _hashtable: Hashtable<String, Recordset> each String is the table Name in  the template with its corresponding Recordset to feed the table. <br>
+	 * @param templatePath: the template path that is used as document's model for the fields merging.
+	 * @param outoutName: optional String for the name of the created document
+	 * @param outputPath: optional String for the destination folder path
+	 * @param outputFormat: format ".doc", ".docx", ".pdf", ".txt" or ".html" 
+	 * @param mergefields: a List of ch.ivyteam.ivy.addons.docfactory.TemplateMergeField Objects for "normal" mail merge.
+	 * @param hashtable: Hashtable<String, Recordset> each String is the table Name in  the template with its corresponding Recordset to feed the table. <br>
 	 * Each recordset column name should correspond to a merge region field name in its corresponding table.
 	 * @return The fileOperationMessage object containing the Type of the message (FileHandler.SUCCESS, ERROR, INFORMATION_MESSAGE),<br>
 	 *  the text of the message and null File Object<br>
 	 */
-	public abstract FileOperationMessage generateDocumentWithRegions(String _templatePath, String _outputName, String _outputPath, String _outputFormat, List<TemplateMergeField> _mergefields, Hashtable<String, Recordset> _hashtable);
+	public abstract FileOperationMessage generateDocumentWithRegions(String templatePath, String outputName, String outputPath, String outputFormat, List<TemplateMergeField> mergefields, Hashtable<String, Recordset> hashtable);
 	
 	/**
 	 * Method to generate one document with merge mail. Mail Merge with regions supported.<br>
-	 * @param _templatePath: the template path that is used as document's model for the fields merging.
-	 * @param _outoutName: optional String for the name of the created document
-	 * @param _outputPath: optional String for the destination folder path
-	 * @param _outputFormat: format ".doc", ".docx", ".pdf", ".txt" or ".html" 
-	 * @param _mergefields: a List of ch.ivyteam.ivy.addons.docfactory.TemplateMergeField Objects for "normal" mail merge.
-	 * @param _tablesNames: list of String representing the table names in the template
-	 * @param _tables_fieldsNames: for each table a list of String representing each merge field with region name (column name)
+	 * @param templatePath: the template path that is used as document's model for the fields merging.
+	 * @param outoutName: optional String for the name of the created document
+	 * @param outputPath: optional String for the destination folder path
+	 * @param outputFormat: format ".doc", ".docx", ".pdf", ".txt" or ".html" 
+	 * @param mergefields: a List of ch.ivyteam.ivy.addons.docfactory.TemplateMergeField Objects for "normal" mail merge.
+	 * @param tablesNames: list of String representing the table names in the template
+	 * @param tables_fieldsNames: for each table a list of String representing each merge field with region name (column name)
 	 * @param tables_rowsValues: for each table a list of list of values (list of rows) to feed the corresponding table.
 	 * @return The fileOperationMessage object containing the Type of the message (FileHandler.SUCCESS, ERROR, INFORMATION_MESSAGE),<br>
 	 *  the text of the message and null File Object<br>
 	 */
-	public abstract FileOperationMessage generateDocumentWithRegions(String _templatePath, String _outputName, String _outputPath, String _outputFormat, List<TemplateMergeField> _mergefields, List<String> _tablesNames, List<List<String>> _tables_fieldsNames, List<List<List<Object>>> tables_rowsValues);
+	public abstract FileOperationMessage generateDocumentWithRegions(String templatePath, String outputName, String outputPath, String outputFormat, List<TemplateMergeField> mergefields, List<String> tablesNames, List<List<String>> tables_fieldsNames, List<List<List<Object>>> tables_rowsValues);
 	
 	/**
 	 * 
-	 * @param _templatePath
-	 * @param _outputName
-	 * @param _outputPath
-	 * @param _outputFormat
-	 * @param _mergefields
+	 * @param templatePath
+	 * @param outputName
+	 * @param outputPath
+	 * @param outputFormat
+	 * @param mergefields
 	 * @param parentDataSource
 	 * @param childrenDataSources
 	 * @return
 	 */
-	public abstract FileOperationMessage generateDocumentWithNestedRegions(String _templatePath, String _outputName, String _outputPath, String _outputFormat, List<TemplateMergeField> _mergefields, ch.ivyteam.ivy.scripting.objects.List<CompositeObject> parentDataSource, ch.ivyteam.ivy.scripting.objects.List<ch.ivyteam.ivy.scripting.objects.List<CompositeObject>> childrenDataSources);
+	public abstract FileOperationMessage generateDocumentWithNestedRegions(String templatePath, String outputName, String outputPath, String outputFormat, List<TemplateMergeField> mergefields, ch.ivyteam.ivy.scripting.objects.List<CompositeObject> parentDataSource, ch.ivyteam.ivy.scripting.objects.List<ch.ivyteam.ivy.scripting.objects.List<CompositeObject>> childrenDataSources);
 	
 	/**
 	 * 
-	 * @param _templatePath
-	 * @param _outputName
-	 * @param _outputPath
-	 * @param _outputFormat
-	 * @param _mergefields
+	 * @param templatePath
+	 * @param outputName
+	 * @param outputPath
+	 * @param outputFormat
+	 * @param mergefields
 	 * @param nestedDataSource
 	 * @return
 	 */
-	public abstract FileOperationMessage generateDocumentWithNestedRegions(String _templatePath, String _outputName, String _outputPath, String _outputFormat, List<TemplateMergeField> _mergefields, ch.ivyteam.ivy.scripting.objects.List<CompositeObject> nestedDataSource);
+	public abstract FileOperationMessage generateDocumentWithNestedRegions(String templatePath, String outputName, String outputPath, String outputFormat, List<TemplateMergeField> mergefields, ch.ivyteam.ivy.scripting.objects.List<CompositeObject> nestedDataSource);
 	
 	/**
 	 * 
-	 * @param _templatePath
-	 * @param _outputName
-	 * @param _outputPath
-	 * @param _outputFormat
-	 * @param _mergefields
-	 * @param _treeDataSource
+	 * @param templatePath
+	 * @param outputName
+	 * @param outputPath
+	 * @param outputFormat
+	 * @param mergefields
+	 * @param treeDataSource
 	 * @return
 	 */
-	public abstract FileOperationMessage generateDocumentWithNestedRegions(String _templatePath, String _outputName, String _outputPath, String _outputFormat, List<TemplateMergeField> _mergefields, Tree _treeDataSource);
+	public abstract FileOperationMessage generateDocumentWithNestedRegions(String templatePath, String outputName, String outputPath, String outputFormat, List<TemplateMergeField> mergefields, Tree treeDataSource);
 	
 	/**
 	 * Method to generate one or more documents each one can be saved in a different destination folder.<br>
@@ -289,46 +294,46 @@ public abstract class BaseDocFactory{
 	
 	/**
 	 * Method to generate multiple documents appended in one File
-	 * @param _outputName: the name of the new created letter if null or empty, we try to get the first<br>
+	 * @param outputName: the name of the new created letter if null or empty, we try to get the first<br>
 	 * MergeField form the first element in the List. If it has the Key name "filename", we take it, else we take "serialLetter".
-	 * @param _outputPath : where to save the new generated File on the server
-	 * @param _outputFormat : format ".doc", ".docx", ".pdf", or ".html" 
+	 * @param outputPath : where to save the new generated File on the server
+	 * @param outputFormat : format ".doc", ".docx", ".pdf", or ".html" 
 	 * @param list : List of List of parameters (TemplateMergeField objects). <br>
 	 * Each List of TemplateMergeField objects in the primary List will be turned into a new page in the final File.
 	 * @return The fileOperationMessage object containing the Type of the message (FileHandler.SUCCESS, ERROR, INFORMATION_MESSAGE),<br>
 	 *  the text of the message and <br>
 	 *  the java.io.File generated in case of success, else null.<br> 
 	 
-	public abstract fileOperationMessage generateMultipleDocumentsInOne(String _outputName, String _outputPath, String _outputFormat,List<List<TemplateMergeField>> list);
+	public abstract fileOperationMessage generateMultipleDocumentsInOne(String outputName, String outputPath, String outputFormat,List<List<TemplateMergeField>> list);
 	*/
 	
 	/**
 	 * Method to generate multiple documents appended in one File
 	 * @param templatePath : the path leading to the template (document model) used to produce the letters with mail merging
-	 * @param _outputName : the name of the generated java.io.File
-	 * @param _outputPath : where to save the new generated File on the server
-	 * @param _outputFormat : format ".doc", ".docx", ".pdf", or ".html" 
+	 * @param outputName : the name of the generated java.io.File
+	 * @param outputPath : where to save the new generated File on the server
+	 * @param outputFormat : format ".doc", ".docx", ".pdf", or ".html" 
 	 * @param list : List of List of parameters (TemplateMergeField objects). <br>
 	 * Each List of TemplateMergeField objects in the primary List will be turned into a new page in the final File.
 	 * @return The fileOperationMessage object containing the Type of the message (FileHandler.SUCCESS, ERROR, INFORMATION_MESSAGE),<br>
 	 *  the text of the message and <br>
 	 *  the java.io.File generated in case of success, else null.<br> 
 	 */
-	public abstract FileOperationMessage generateMultipleDocumentsInOne(String templatePath, String _outputName, String _outputPath, String _outputFormat,List<List<TemplateMergeField>> list);
+	public abstract FileOperationMessage generateMultipleDocumentsInOne(String templatePath, String outputName, String outputPath, String outputFormat,List<List<TemplateMergeField>> list);
 	
 	/**
 	 * Method to generate multiple documents appended in one File<br>
 	 * Here the template path has to be indicated into the documentTemplate objects
-	 * @param _outputPath : where to save the new generated File on the server (can have a default like "ivy_RIA_files")
-	 * @param _outputName : the desired Name for the document (can have a default like "letter_nanotime")
-	 * @param _outputFormat : format ".doc" (can be the default), ".docx", ....
+	 * @param outputPath : where to save the new generated File on the server (can have a default like "ivy_RIA_files")
+	 * @param outputName : the desired Name for the document (can have a default like "letter_nanotime")
+	 * @param outputFormat : format ".doc" (can be the default), ".docx", ....
 	 * @param list : List DocumentTemplate Objects. Each one contains the necessary variables for its output. 
 	 * @return The fileOperationMessage object containing the Type of the message (FileHandler.SUCCESS, ERROR, INFORMATION_MESSAGE),<br>
 	 *  the text of the message and <br>
 	 *  the java.io.File generated in case of success, else null.<br> 
 	 * @see DocumentTemplate
 	 */
-	public abstract FileOperationMessage generateMultipleDocumentsInOne(String _outputPath, String _outputName, String _outputFormat,List<DocumentTemplate> list);
+	public abstract FileOperationMessage generateMultipleDocumentsInOne(String outputPath, String outputName, String outputFormat,List<DocumentTemplate> list);
 	
 	/**
 	 * returns the list of the Merge Fields names in a template
@@ -366,12 +371,17 @@ public abstract class BaseDocFactory{
 	}
 	/**
 	 * set the desired Format
-	 * @param format : the string representatiion of the desired outputFormat
+	 * @param format : the string representation of the desired outputFormat. Cannot be blank.
 	 */
-	public void setFormat(String format){
-		if(format.startsWith(".")) format = format.substring(1);
-		this.outputFormat=format;
+	public void setFormat(String format) {
+		this.outputFormat = setFormatWithoutLeadingDot(format);
 	}
+
+	protected String setFormatWithoutLeadingDot(String format) {
+		API.checkNotBlank(format, "the format");
+		return format.startsWith(".") ? format.substring(1) : format;
+	}
+	
 	/**
 	 * get the outputFormat as String
 	 * @return The outputFormat
@@ -428,10 +438,10 @@ public abstract class BaseDocFactory{
 	public static BaseDocFactory getInstance() {
 		BaseDocFactory basedoc = null;
 		try {
-			if(System.getProperty("document.factory")!=null && !System.getProperty("document.factory").trim().isEmpty()){
-				basedoc= (BaseDocFactory) Class.forName(System.getProperty("document.factory")).newInstance();
-			}else{
+			if(StringUtils.isBlank(System.getProperty(DOCUMENT_FACTORY_IMPLEMENTATION_SYSTEM_PROPERTY))){
 				basedoc= (BaseDocFactory) Class.forName("ch.ivyteam.ivy.addons.docfactory.AsposeDocFactory").newInstance();
+			}else{
+				basedoc= (BaseDocFactory) Class.forName(System.getProperty("document.factory")).newInstance();
 			}
 		} catch (Exception e) {
 			Ivy.log().error("Exception generating the docFactory. "+e.getMessage(),e);
@@ -457,6 +467,7 @@ public abstract class BaseDocFactory{
 	protected Object fieldMergingCallback;
 	
 	/**
+	 * @deprecated
 	 * Deprecated because of typo in method name. Please use {@link #withFieldMergingCallBack(Object)} instead.
 	 * Will be removed in the future.
 	 * @param fieldMergingCallback

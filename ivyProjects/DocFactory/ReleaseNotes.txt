@@ -1,5 +1,15 @@
 ---------------------------------------------
-IvyAddons 7.3.0 Release Notes 
+7.4.0 Release Notes 
+---------------------------------------------
+
+*AIPROD-177
+DocFactory: the DocumentWorker logic injection interface has a new method 
+(default File onGeneratedFile(Document document, File generatedFile))
+for performing some logic on the file that has been generated after 
+the template and the data have been merged together.
+
+---------------------------------------------
+7.3.0 Release Notes 
 ---------------------------------------------
 *AF-22096
 - DocFactory: new DocumentCreationOptions property (removeWhiteSpaceInPdfEditableFields) for removing the white spaces leaved after mail merge in an editable PDF.
