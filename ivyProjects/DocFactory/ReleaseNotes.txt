@@ -8,6 +8,10 @@ DocFactory: the DocumentWorker logic injection interface has a new method
 for performing some logic on the file that has been generated after 
 the template and the data have been merged together.
 
+*AIPROD-187
+FIX: The DocumentTemplate public FileOperationMessage produceDocument(File destinationDocument) method 
+stores the produced files on windows in an Ivy relative path even if the file path in an absolute one.
+
 ---------------------------------------------
 7.3.0 Release Notes 
 ---------------------------------------------

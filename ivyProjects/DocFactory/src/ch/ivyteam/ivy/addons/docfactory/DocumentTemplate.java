@@ -563,7 +563,7 @@ public class DocumentTemplate implements Serializable {
 		}
 		this.outputFormat = FilenameUtils.getExtension(destinationDocument.getName());
 		try {
-			this.outputPath = FilenameUtils.getPathNoEndSeparator(destinationDocument.getPath());
+			this.outputPath = FilenameUtils.getFullPathNoEndSeparator(destinationDocument.getPath());
 			this.outputName = FilenameUtils.getBaseName(destinationDocument.getName());
 		} catch (Exception e) {
 			this.fileOperationMessage = FileOperationMessage.generateErrorTypeFileOperationMessage(e.getMessage());
