@@ -1,20 +1,20 @@
 package ch.ivyteam.ivy.addons.docfactory;
 
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
-import org.apache.commons.lang3.SystemUtils;
+import java.io.File;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-
-import static org.mockito.Mockito.*;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.hamcrest.CoreMatchers.is;
-
-import java.io.File;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(BaseDocFactory.class)
@@ -41,13 +41,9 @@ public class DocumentTemplateProduceFileOutputPathTest {
 		
 		documentTemplate.produceDocument(resultFile);
 		
-		String expectedOuptPath = null;
-		if(SystemUtils.IS_OS_WINDOWS) {
-			expectedOuptPath = "C:/designer/ivy/files/application/letters".replace('/', File.separatorChar);
-		} else {
-			expectedOuptPath = "designer/ivy/files/application/letters".replace('/', File.separatorChar);
-		}
-		assertThat(documentTemplate.getOutputPath(), is(expectedOuptPath));
+		String expectedOuputPath = "C:/designer/ivy/files/application/letters".replace('/', File.separatorChar);
+		
+		assertThat(documentTemplate.getOutputPath(), is(expectedOuputPath));
 	}
 	
 	@Test
