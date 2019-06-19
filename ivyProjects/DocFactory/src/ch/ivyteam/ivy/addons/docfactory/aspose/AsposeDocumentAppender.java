@@ -15,9 +15,11 @@ import com.aspose.words.SectionStart;
 public class AsposeDocumentAppender {
 	
 	/**
-	 * Appends the given list of Documents together. The first Document is the first part of the produced document, the second one the second part and do on ...
-	 * @param documents
-	 * @param FileAppenderOptions
+	 * Appends the given list of Documents together. 
+	 * The first Document is the first part of the produced document, the second one the second part and do on ...
+	 * @param documents the Document Objects that should be appended together
+	 * @param FileAppenderOptions Options for fine tuning the way the documents will be appended. See {@link FileAppenderOptions#getDocumentAppendingStart()},
+	 * {@link FileAppenderOptions#isUseHeadersFootersFromLeadingPage()} and {@link FileAppenderOptions#isRestartPageNumbering()} 
 	 * @return The document containing all the Documents appended together
 	 * @throws Exception
 	 */
@@ -25,7 +27,8 @@ public class AsposeDocumentAppender {
 		API.checkNotEmpty(documents, "List<Document> documents");
 		API.checkNotNull(fileAppenderOptions, "FileAppenderOptions fileAppenderOptions");
 		
-		Document firstDoc = documents.remove(0);
+		// deep clone the leading document because of Issue https://jira.axonivy.com/jira/browse/AIPROD-189
+		Document firstDoc = (Document) documents.remove(0).deepClone(true);
 		int sectionStart = DocumentAppendingStart.CONTINUOUS.equals(fileAppenderOptions.getDocumentAppendingStart()) ? SectionStart.CONTINUOUS : SectionStart.NEW_PAGE;
 		for(Document doc: documents) {
 			doc.getFirstSection().getPageSetup().setSectionStart(sectionStart);
