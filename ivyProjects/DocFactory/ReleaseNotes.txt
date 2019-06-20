@@ -12,6 +12,12 @@ the template and the data have been merged together.
 FIX: The DocumentTemplate public FileOperationMessage produceDocument(File destinationDocument) method 
 stores the produced files on windows in an Ivy relative path even if the file path in an absolute one.
 
+*AIPROD-189
+FIX: When we generate documents based on the same template, the method
+public FileOperationMessage generateDocuments(List<DocumentTemplate> documentTemplates, MultipleDocumentsCreationOptions multipleDocumentsCreationOptions) 
+generates an appended file with only the first document content if the MultipleDocumentsCreationOptions says we have to generate separated files for each Document 
+AND one file resulting of the concatenation of all the n documents.
+
 ---------------------------------------------
 7.3.0 Release Notes 
 ---------------------------------------------
