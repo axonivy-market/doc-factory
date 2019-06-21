@@ -3,7 +3,8 @@ package ch.ivyteam.ivy.addons.docfactory;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.collection.IsIterableContainingInOrder.contains;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.net.URISyntaxException;
@@ -60,7 +61,7 @@ public class BaseDocFactoryGenerateDocumentsIT extends DocFactoryTest {
 	}
 
 	@Test
-	public void generateDocuments_eachSingleDoc_and_appendedDoc_created() throws Exception {
+	public void generateDocuments_eachHavingADifferentTemplate_singleDocs_and_appendedDoc_created() throws Exception {
 		documentTemplate1.setOutputName("file1");
 		documentTemplate2.setOutputName("file2");
 		documentTemplate3.setOutputName("file3");
@@ -95,6 +96,86 @@ public class BaseDocFactoryGenerateDocumentsIT extends DocFactoryTest {
 		assertThat(resultFilePaths, 
 				contains(resultFile1.getAbsolutePath(), resultFile2.getAbsolutePath(), resultFile3.getAbsolutePath(), resultFile4.getAbsolutePath()));
 		assertTrue(resultFile1.isFile() && resultFile2.isFile() && resultFile3.isFile() && resultFile4.isFile());
+	}
+	
+	@Test
+	public void generateDocuments_eachHavingADifferentTemplate_appendedDoc_contains_asmanypages_as_the_documents_number() throws Exception {
+		documentTemplate1.setOutputName("file1");
+		documentTemplate2.setOutputName("file2");
+		documentTemplate3.setOutputName("file3");
+		
+		List<DocumentTemplate> documentTemplates = new ArrayList<>();
+		documentTemplates.add(documentTemplate1);
+		documentTemplates.add(documentTemplate2);
+		documentTemplates.add(documentTemplate3);
+		
+		FileOperationMessage result = docFactory.generateDocuments(documentTemplates, 
+				MultipleDocumentsCreationOptions.getInstance()
+				.createOneFileByAppendingAllTheDocuments(true)
+				.createSingleFileForEachDocument(true)
+				.withFileAppenderOptions(
+						FileAppenderOptions.getInstance()
+						.withAppendedFileParentDirectoryPath(TEST_DIRECTORY_RELATIVE_PATH)
+						.withAppendedFileName("bigFile")
+						)
+				);
+		
+		File appendedFile = result.getFiles().get(result.getFiles().size() - 1);
+		com.aspose.pdf.Document pdfDocument = new com.aspose.pdf.Document(appendedFile.getAbsolutePath());
+		
+		assertThat(pdfDocument.getPages().size(), is(documentTemplates.size()));
+	}
+	
+	@Test
+	public void generateDocuments_allHavingSameTemplate_eachSingleDoc_and_appendedDoc_created() throws Exception {
+		List<DocumentTemplate> documentTemplates = makeDocumentTemplatesWithSameTemplateFile();
+		
+		FileOperationMessage result = docFactory.generateDocuments(documentTemplates, 
+				MultipleDocumentsCreationOptions.getInstance()
+				.createOneFileByAppendingAllTheDocuments(true)
+				.createSingleFileForEachDocument(true)
+				.withFileAppenderOptions(
+						FileAppenderOptions.getInstance()
+						.withAppendedFileParentDirectoryPath(TEST_DIRECTORY_RELATIVE_PATH)
+						.withAppendedFileName("bigFileSameTemplate")
+						)
+				);
+		List<String> resultFilePaths = new ArrayList<>();
+		for(File file: result.getFiles()) {
+			resultFilePaths.add(file.getAbsolutePath());
+		}
+		
+		File resultFile1 = new File(TEST_DIRECTORY_RELATIVE_PATH + "/fileSameTemplate1.pdf");
+		File resultFile2 = new File(TEST_DIRECTORY_RELATIVE_PATH + "/fileSameTemplate2.pdf");
+		File resultFile3 = new File(TEST_DIRECTORY_RELATIVE_PATH + "/fileSameTemplate3.pdf");
+		File resultFile4 = new File(TEST_DIRECTORY_RELATIVE_PATH + "/bigFileSameTemplate.pdf");
+		
+		assertThat(result.isSuccess(), is(true));
+		assertThat(result.getFiles(), hasSize(4));
+		assertThat(resultFilePaths, 
+				contains(resultFile1.getAbsolutePath(), resultFile2.getAbsolutePath(), resultFile3.getAbsolutePath(), resultFile4.getAbsolutePath()));
+		assertTrue(resultFile1.isFile() && resultFile2.isFile() && resultFile3.isFile() && resultFile4.isFile());
+	}
+	
+	@Test
+	public void generateDocuments_allHavingSameTemplate_appendedDoc_contains_asmanypages_as_the_documents_number() throws Exception {
+		List<DocumentTemplate> documentTemplates = makeDocumentTemplatesWithSameTemplateFile();
+		
+		FileOperationMessage result = docFactory.generateDocuments(documentTemplates, 
+				MultipleDocumentsCreationOptions.getInstance()
+				.createOneFileByAppendingAllTheDocuments(true)
+				.createSingleFileForEachDocument(true)
+				.withFileAppenderOptions(
+						FileAppenderOptions.getInstance()
+						.withAppendedFileParentDirectoryPath(TEST_DIRECTORY_RELATIVE_PATH)
+						.withAppendedFileName("bigFileSameTemplate")
+						)
+				);
+		
+		File appendedFile = result.getFiles().get(result.getFiles().size() - 1);
+		com.aspose.pdf.Document pdfDocument = new com.aspose.pdf.Document(appendedFile.getAbsolutePath());
+		
+		assertThat(pdfDocument.getPages().size(), is(documentTemplates.size()));
 	}
 	
 	@Test
@@ -221,6 +302,33 @@ public class BaseDocFactoryGenerateDocumentsIT extends DocFactoryTest {
 				contains(resultFile1.getAbsolutePath(), resultFile2.getAbsolutePath(), resultFile3.getAbsolutePath()));
 		assertTrue(resultFile1.isFile() && resultFile2.isFile() && resultFile3.isFile());
 		
+	}
+	
+	private List<DocumentTemplate> makeDocumentTemplatesWithSameTemplateFile() {
+		Person person = makePerson();
+		documentTemplate1 = DocumentTemplate.withTemplate(TEMPLATE_1).putDataAsSourceForSimpleMailMerge(person).useLocale(Locale.GERMAN);
+		person = makePerson();
+		person.setName("Abcde");
+		person.setFirstname("Fghij");
+		documentTemplate2 = DocumentTemplate.withTemplate(TEMPLATE_1).putDataAsSourceForSimpleMailMerge(person).useLocale(Locale.GERMAN);
+		person = makePerson();
+		person.setName("Klmnop");
+		person.setFirstname("Qurstw");
+		documentTemplate3 = DocumentTemplate.withTemplate(TEMPLATE_1).putDataAsSourceForSimpleMailMerge(person).useLocale(Locale.GERMAN);
+		
+		documentTemplate1.setOutputPath(TEST_DIRECTORY_RELATIVE_PATH);
+		documentTemplate2.setOutputPath(TEST_DIRECTORY_RELATIVE_PATH);
+		documentTemplate3.setOutputPath(TEST_DIRECTORY_RELATIVE_PATH);
+		
+		documentTemplate1.setOutputName("fileSameTemplate1");
+		documentTemplate2.setOutputName("fileSameTemplate2");
+		documentTemplate3.setOutputName("fileSameTemplate3");
+		
+		List<DocumentTemplate> documentTemplates = new ArrayList<>();
+		documentTemplates.add(documentTemplate1);
+		documentTemplates.add(documentTemplate2);
+		documentTemplates.add(documentTemplate3);
+		return documentTemplates;
 	}
 
 }
