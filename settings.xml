@@ -5,7 +5,7 @@
     <profile>
       <id>integration-versions</id>
       <properties>
-        <project-build-plugin-version>7.3.0</project-build-plugin-version>
+        <project-build-plugin-version>7.4.0-SNAPSHOT</project-build-plugin-version>
         <maven-dependency-plugin-version>3.0.2</maven-dependency-plugin-version>
         <maven-deploy-plugin-version>2.8.2</maven-deploy-plugin-version>
       </properties>
