@@ -13,9 +13,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 
 import ch.ivyteam.ivy.scripting.objects.File;
 
+// tell powermock to ignore things different in java 11 
+// see https://github.com/mockito/mockito/issues/1562
+@PowerMockIgnore({"com.sun.org.apache.xerces.*", "com.aspose.pdf.*"}) 
 public class PdfFactoryTest extends DocFactoryTest {
 	
 	@Mock

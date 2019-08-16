@@ -10,7 +10,7 @@
     <name>AxonIvy AG</name>
   </organization>
   <properties>
-    <powermock.version>1.7.4</powermock.version>
+    <powermock2.version>2.0.2</powermock2.version>
   </properties>
   <dependencies>
     <dependency>
@@ -39,14 +39,14 @@
     </dependency>
     <dependency>
       <groupId>org.powermock</groupId>
-      <artifactId>powermock-api-mockito</artifactId>
-      <version>${powermock.version}</version>
+      <artifactId>powermock-api-mockito2</artifactId>
+      <version>${powermock2.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.powermock</groupId>
       <artifactId>powermock-module-junit4</artifactId>
-      <version>${powermock.version}</version>
+      <version>${powermock2.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
