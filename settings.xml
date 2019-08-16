@@ -14,7 +14,7 @@
       <id>integration-project-build-plugin</id>
       <properties>
         <ivy.engine.directory>${java.io.tmpdir}/ivy-engine</ivy.engine.directory>
-        <ivy.engine.list.url>http://zugprobldmas/job/Trunk_All/lastSuccessfulBuild/</ivy.engine.list.url>
+        <ivy.engine.list.url>http://zugprojenkins/job/ivy-core_product/job/master/lastSuccessfulBuild/</ivy.engine.list.url>
         <ivy.engine.version>[7.3.0,]</ivy.engine.version>
       </properties>
     </profile>
