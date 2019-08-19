@@ -14,8 +14,7 @@
 		<module>ivyProjects/FileManagerApi</module>
 		<module>ivyProjects/IvyAddOns</module>
 		<module>ivyProjects/IvyAddons_tests</module>
-<!-- addon guide cannot be build curenntly, see: https://bitbucket.org/snippets/afu_axonivy/EM69dq -->
-<!--		<module>doc/IvyAddOnsGuide</module> -->
+		<module>doc/IvyAddOnsGuide</module>
 	</modules>
 	
 	<build>
