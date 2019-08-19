@@ -13,6 +13,7 @@ import java.util.Locale;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 
 import com.aspose.pdf.CryptoAlgorithm;
 import com.aspose.pdf.Permissions;
@@ -22,6 +23,9 @@ import ch.ivyteam.api.API;
 import ch.ivyteam.ivy.addons.docfactory.aspose.DocumentWorker;
 import ch.ivyteam.ivy.addons.docfactory.exception.DocumentGenerationException;
 
+// tell powermock to ignore things different in java 11 
+// see https://github.com/mockito/mockito/issues/1562
+@PowerMockIgnore({"com.sun.org.apache.xerces.*", "com.aspose.pdf.*"}) 
 public class DocumentWorkerInjectionForPostFileProduceTest extends DocFactoryTest {
 	
 	private static final String PROTECTED_FILE_PATH = "test/documentWorker/aPasswordProtectedFile.pdf";
