@@ -18,6 +18,7 @@ import ch.ivyteam.ivy.scripting.objects.Tree;
 import ch.ivyteam.ivy.scripting.objects.util.MetaType.MetaTypeList;
 
 import com.aspose.words.IMailMergeDataSource;
+import com.aspose.words.ref.Ref;
 
 /**
  * @author lt
@@ -236,14 +237,19 @@ public class MailMergeDataSource implements IMailMergeDataSource {
 		tableName = name;
 	}
 
-	@Override
+	@Deprecated
 	public boolean getValue(String fieldName, Object[] fieldValue) throws Exception {
+		return getValue(fieldName, new Ref<Object>(fieldValue[0]));
+	}
+	
+	@Override
+	public boolean getValue(String fieldName, Ref<Object> fieldValue) throws Exception {
 		try {
 			if (tableValues.getKeys().contains(fieldName)) {
-				fieldValue[0] = tableValues.getColumn(fieldName).get(rowIndex);
+				fieldValue.set(tableValues.getColumn(fieldName).get(rowIndex));
 				return true;
 			} else {
-				fieldValue[0] = 0;
+				fieldValue.set(0);
 				return false;
 			}
 		}catch (Exception e){
