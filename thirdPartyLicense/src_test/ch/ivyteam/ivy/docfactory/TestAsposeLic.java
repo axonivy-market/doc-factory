@@ -70,7 +70,7 @@ public class TestAsposeLic
     Assert.assertNotNull("not available in headless env", licStream);
 
     String licVal = IOUtils.toString(licStream, StandardCharsets.UTF_8);
-    Assert.assertTrue("licence must contain Andreas Balsiger", licVal.contains("ivyTeam AG"));
+    Assert.assertTrue("licence must contain ivyTeam AG", licVal.contains("ivyTeam AG"));
   }
 
   private static final class Module extends AbstractModule
