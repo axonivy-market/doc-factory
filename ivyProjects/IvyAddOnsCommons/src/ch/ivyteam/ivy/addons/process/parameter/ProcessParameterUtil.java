@@ -32,9 +32,8 @@ public class ProcessParameterUtil {
 	 * @param record to convert
 	 * @return the {@link Map} from <code>record</code>
 	 */
-	@SuppressWarnings("unchecked")
-	public static Map convertRecordToMap(final Record record) {
-		final Map map = new HashMap();
+	public static Map<String,Object> convertRecordToMap(final Record record) {
+		final Map<String,Object> map = new HashMap<>();
 		if(record != null) {
 			final List<String> keys = record.getKeys();
 			for(final String key : keys) {
@@ -50,11 +49,10 @@ public class ProcessParameterUtil {
 	 * @param map to convert
 	 * @return the {@link Record} from <code>map</code>
 	 */
-	@SuppressWarnings("unchecked")
-	public static Record convertMapToRecord(final Map map) {
+	public static Record convertMapToRecord(final Map<?,?> map) {
 		final Record record = new Record();
 		if(map != null) {
-			final Set keySet = map.keySet();
+			final Set<?> keySet = map.keySet();
 			for(final Object key : keySet) {
 				record.putField((String) key, map.get(key));
 			}
@@ -67,12 +65,11 @@ public class ProcessParameterUtil {
 	 * @param recordset to convert
 	 * @return the {@link java.util.List} of {@link Map} from <code>recordset</code>
 	 */
-	@SuppressWarnings("unchecked")
-	public static java.util.List<Map> convertRecordsetToListOfMap(final Recordset recordset) {
-		final java.util.List<Map> list = new ArrayList<Map>();
+	public static java.util.List<Map<?,?>> convertRecordsetToListOfMap(final Recordset recordset) {
+		final java.util.List<Map<?,?>> list = new ArrayList<>();
 		if(recordset != null) {
 			// store the keys of the recordset
-			final Map keys = new HashMap();
+			final Map<String,java.util.List<String>> keys = new HashMap<>();
 			keys.put(RECORDSET_KEYS, recordset.getKeys());
 			list.add(keys);
 			final List<Record> records = recordset.getRecords();
@@ -90,13 +87,13 @@ public class ProcessParameterUtil {
 	 * @return the {@link Recordset} from <code>list</code>
 	 */
 	@SuppressWarnings("unchecked")
-	public static Recordset convertListOfMapToRecordset(final java.util.List<Map> list) {
+	public static Recordset convertListOfMapToRecordset(final java.util.List<Map<?,?>> list) {
 		Recordset recordset = new Recordset();
 		if(list != null) {
 			// first entry of list are the keys
 			List<String> keys = (List<String>) list.get(0).get(RECORDSET_KEYS);
 			recordset = new Recordset(keys);
-			for(final Map map : list) {
+			for(final Map<?,?> map : list) {
 				if(map.containsKey(RECORDSET_KEYS)) {
 					continue;
 				} else {
@@ -115,13 +112,14 @@ public class ProcessParameterUtil {
 	 * @return an Ivy {@link List} from <code>list</code>
 	 */
 	@SuppressWarnings("unchecked")
-	public static List convertJavaListToIvyList(final java.util.List list, Class listType) {
+	public static List<?> convertJavaListToIvyList(final java.util.List<?> list, Class<?> listType) {
 		if(listType == null) {
 			listType = Object.class;
 		}
 		if(list == null) {
 			return List.create(listType);
 		} else {
+			@SuppressWarnings("rawtypes")
 			final List ivyList = List.create(listType);
 			ivyList.addAll(list);
 			return ivyList;
@@ -133,12 +131,11 @@ public class ProcessParameterUtil {
 	 * @param list to convert
 	 * @return a {@link java.util.List} from <code>list</code> or <code>null</code> if <code>list</code> is null
 	 */
-	@SuppressWarnings("unchecked")
-	public static java.util.List convertIvyListToJavaList(final List list) {
+	public static java.util.List<?> convertIvyListToJavaList(final List<?> list) {
 		if (list == null) {
 			return null;
 		} else {
-			final Class clazz = list.getMemberType().getJavaClass();
+			final Class<?> clazz = list.getMemberType().getJavaClass();
 			if(isTypeSupported(clazz)) {
 				return getArrayListForClass(list, clazz);
 			} else {
@@ -153,28 +150,27 @@ public class ProcessParameterUtil {
 	 * @param clazz generic class type of the ivy list
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	private static java.util.List getArrayListForClass(final List list,
-			final Class clazz) {
+	private static java.util.List<?> getArrayListForClass(final List<?> list,
+			final Class<?> clazz) {
 		// only store List with the types supported by ProcessParameter
 		if(clazz.equals(String.class)) {
-			return new ArrayList<String>(list);
+			return new ArrayList<>(list);
 		} else if(clazz.equals(Number.class)) {
-			return new ArrayList<Number>(list);
+			return new ArrayList<>(list);
 		} else if(clazz.equals(Date.class)) {
-			return new ArrayList<Date>(list);
+			return new ArrayList<>(list);
 		} else if(clazz.equals(Time.class)) {
-			return new ArrayList<Time>(list);
+			return new ArrayList<>(list);
 		} else if(clazz.equals(DateTime.class)) {
-			return new ArrayList<DateTime>(list);
+			return new ArrayList<>(list);
 		} else if(clazz.equals(Boolean.class)) {
-			return new ArrayList<Boolean>(list);
+			return new ArrayList<>(list);
 		} else if(clazz.equals(File.class)) {
-			return new ArrayList<File>(list);
+			return new ArrayList<>(list);
 		} else if(clazz.equals(ProcessParameter.class)) {
 			return new ArrayList<ProcessParameter>();
 		} else {
-			return new ArrayList(list);
+			return new ArrayList<>(list);
 		}
 	}
 
@@ -183,8 +179,7 @@ public class ProcessParameterUtil {
 	 * @param clazz the Class to check
 	 * @return true if supported, otherwise false
 	 */
-	@SuppressWarnings("unchecked")
-	public static boolean isTypeSupported(final Class clazz) {
+	public static boolean isTypeSupported(final Class<?> clazz) {
 		return String.class.isAssignableFrom(clazz)
 				|| Number.class.isAssignableFrom(clazz)
 				|| Date.class.isAssignableFrom(clazz)

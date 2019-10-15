@@ -436,17 +436,16 @@ public abstract class BaseDocFactory{
 	 * @return an Instance of the implemented Document Factory
 	 */
 	public static BaseDocFactory getInstance() {
-		BaseDocFactory basedoc = null;
 		try {
 			if(StringUtils.isBlank(System.getProperty(DOCUMENT_FACTORY_IMPLEMENTATION_SYSTEM_PROPERTY))){
-				basedoc= (BaseDocFactory) Class.forName("ch.ivyteam.ivy.addons.docfactory.AsposeDocFactory").newInstance();
+				return new AsposeDocFactory();
 			}else{
-				basedoc= (BaseDocFactory) Class.forName(System.getProperty("document.factory")).newInstance();
+				return (BaseDocFactory) Class.forName(System.getProperty("document.factory")).getDeclaredConstructor().newInstance();
 			}
 		} catch (Exception e) {
 			Ivy.log().error("Exception generating the docFactory. "+e.getMessage(),e);
+			return null;
 		} 
-		return basedoc;
 	}
 	
 	/**

@@ -18,7 +18,6 @@ import ch.ivyteam.ivy.environment.Ivy;
  * @since October 2012
  * 
  */
-@SuppressWarnings("restriction")
 public class ResourcesHelper
 {
 

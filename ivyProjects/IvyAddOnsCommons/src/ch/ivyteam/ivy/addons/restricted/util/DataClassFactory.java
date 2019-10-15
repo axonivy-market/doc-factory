@@ -1,5 +1,6 @@
 package ch.ivyteam.ivy.addons.restricted.util;
 
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
@@ -66,18 +67,10 @@ public final class DataClassFactory
       }
       else
       {
-        object = clazz.newInstance();
+        object = clazz.getDeclaredConstructor().newInstance();
       }
     }
-    catch (InstantiationException e)
-    {
-      throw new AddonsException(e);
-    }
-    catch (IllegalAccessException e)
-    {
-      throw new AddonsException(e);
-    }
-    catch (IllegalArgumentException e)
+    catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e)
     {
       throw new AddonsException(e);
     }
