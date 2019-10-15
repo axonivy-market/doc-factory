@@ -13,12 +13,13 @@
 	<classpathentry exported="true" kind="con" path="IVY_CONTAINER"/>
 	<classpathentry kind="con" path="WEBAPP_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
-	<classpathentry exported="true" kind="lib" path="lib/aspose-cells-8.5.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/aspose-pdf-10.6.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/aspose-slides-15.6.0.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/aspose-words-15.7.0-jdk16.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/aspose-cells-19.9.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/aspose-pdf-19.9.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/aspose-slides-19.9-jdk16.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/aspose-words-19.9-jdk17.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11">
 		<attributes>
+			<attribute name="module" value="true"/>
 			<attribute name="owner.project.facets" value="java"/>
 		</attributes>
 	</classpathentry>
