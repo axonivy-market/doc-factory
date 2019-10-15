@@ -390,10 +390,4 @@ public class FileVersioningController extends AbstractFileVersioningController {
 		}
 	}
 	
-	private synchronized void fireFileVersionDeletedEvent(FileVersion fileVersion) {
-		FileVersionActionEvent fileVersionActionEvent = new FileVersionActionEvent(fileVersion);
-		for(FileVersionActionListener listener: fileVersionActionListeners) {
-			listener.fileVersiondeleted(fileVersionActionEvent);
-		}
-	}
 }

@@ -48,7 +48,7 @@ public class WaitForAsyncProcessChecker {
 	 * This method checks if there are any processes that have finished
 	 * @return returns true if 1 or more events are fired, otherwise false
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("deprecation")
 	public boolean checkForFinishedProcesses() {
 		/*
 		 * for each IntermediateEvent that is WAITING we get the EventIdentifier and search for all
@@ -113,7 +113,7 @@ public class WaitForAsyncProcessChecker {
 						for(int j = 0; j < caseCount; j++) {
 							final ICase theCase = cases.get(j);
 							try {
-								final Map map = ProcessDataDbService.loadProcessParameter(theCase);
+								final Map<?,?> map = ProcessDataDbService.loadProcessParameter(theCase);
 								// check if we have data
 								if(map != null) {
 									final String key = (String) map.get(WaitForAsyncProcessHelper.PARAM_NAME);

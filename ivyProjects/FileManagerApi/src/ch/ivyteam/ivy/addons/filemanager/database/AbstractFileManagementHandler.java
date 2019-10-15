@@ -1181,7 +1181,7 @@ public abstract class AbstractFileManagementHandler {
 					.forName(
 							System
 									.getProperty("file.management.indexation.class"))
-					.newInstance();
+					.getDeclaredConstructor().newInstance();
 		} else {
 			// This is the default FileManagementHandler with filemanager as ivy
 			// DB connexionName and UPLOADEDFILES as Table name.
