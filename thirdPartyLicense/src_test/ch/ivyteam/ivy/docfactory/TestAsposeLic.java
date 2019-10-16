@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.nio.charset.StandardCharsets;
-import java.util.EnumSet;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -17,7 +16,6 @@ import com.google.inject.Provides;
 
 import ch.ivyteam.di.restricted.DiCore;
 import ch.ivyteam.ivy.ThirdPartyLicenses;
-import ch.ivyteam.ivy.ThirdPartyLicenses.Version;
 import ch.ivyteam.ivy.server.IServer;
 
 public class TestAsposeLic
@@ -26,14 +24,8 @@ public class TestAsposeLic
   @Test
   public void licStream_withoutEngine() throws IOException
   {
-    @SuppressWarnings("deprecation")
     InputStream licStream = ThirdPartyLicenses.getDocumentFactoryLicense();
     assertEmptyLicence(licStream);
-    for (Version version : EnumSet.allOf(Version.class))
-    {
-      licStream = ThirdPartyLicenses.getDocumentFactoryLicense(version);
-      assertEmptyLicence(licStream);
-    }
   }
 
   private void assertEmptyLicence(InputStream licStream) throws IOException
@@ -50,14 +42,8 @@ public class TestAsposeLic
     DiCore.installModules(new Module());
     try
     {
-      @SuppressWarnings("deprecation")
       InputStream licStream = ThirdPartyLicenses.getDocumentFactoryLicense();
       assertValidLicence(licStream);
-      for (Version version : EnumSet.allOf(Version.class))
-      {
-        licStream = ThirdPartyLicenses.getDocumentFactoryLicense(version);
-        assertValidLicence(licStream);
-      }
     }
     finally
     {
