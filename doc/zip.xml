@@ -1,0 +1,28 @@
+<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
+    <id>zip</id>
+    <includeBaseDirectory>false</includeBaseDirectory>
+
+    <formats>
+        <format>zip</format>
+    </formats>
+    
+    <fileSets>
+        <fileSet>
+            <directory>build/html</directory>
+            <outputDirectory>.</outputDirectory>
+            <excludes>
+                <!-- sphinx pretty search results artifact -->
+                <exclude>_raw_sources/**</exclude>
+
+                <!-- .doctrees are python build artifacts -->
+                <exclude>_sources/.doctrees/**</exclude>
+
+                <!-- these javascripts are also provided as min version -->
+                <exclude>_static/underscore-1.3.1.js</exclude>
+                <exclude>_static/jquery-3.4.1.js</exclude>
+            </excludes>
+        </fileSet>
+    </fileSets>
+</assembly>
