@@ -63,6 +63,8 @@ There are two constructors: The default constructor :file:`public
 FileOperationMessage()` and :file:`public FileOperationMessage(String message,
 List<File> files, int type)`
 
+.. _df-callable-processes-document-template:
+
 DocumentTemplate
 ^^^^^^^^^^^^^^^^
 
@@ -70,6 +72,9 @@ The **DocumentTemplate** class represents a whole letter or document to be
 generated. It contains all the necessary information to be able to generate a
 new document with a mail merge engine. The information is placed into the
 following variables, each of them can be accessed through get/set methods:
+
+.. tip::
+   For more information about the methods please have a look at the **JavaDoc**.
 
 .. table:: DocumentTemplate attributes
 
@@ -129,3 +134,67 @@ following variables, each of them can be accessed through get/set methods:
 cannot be used together to perform mail merge with regions. If one is set, then
 the other one is cleared. So you have to decide if you use Recordsets or List of
 CompositeObjects to fill your merge regions.
+
+There are several constructors, that are all documented in javadoc style
+
+
+Callable Processes
+------------------
+
+Two callable processes are available to ease usage of the document factory. They
+are located in the IvyAddOns Functional Processes folder:
+
+.. figure:: /_static/images/doc-factory/callable-processes.png
+
+
+writeSerialLetterToOneCorrespondent
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The Callable named **writeSerialLetterToOneCorrespondent** contains seven
+callable subcess starts. 
+
+The first one (writeSerialLetterToOneCorrespondant) allows writing a single
+document with a template by providing a single list of **TemplateMergeField**
+objects. Here is the description of this callable that you can find in the ivy
+process mod file:
+
+.. figure:: /_static/images/doc-factory/callable-processes-1.png
+
+The second one (writeDocumentWithOneDataClass) allows writing a single document
+with a template by providing a **CompositeObject (DataClass)**. Here is the
+description of this callable that you can find in the ivy process mod file:
+
+.. figure:: /_static/images/doc-factory/callable-processes-3.png
+
+Other ones (writeDocumentWithMailMergeTable) allow writing a single document
+with a template that can contain merge mail with regions (tables). Here is the
+description of this callable that you can find in the ivy process mod file:
+
+.. figure:: /_static/images/doc-factory/callable-processes-4.png
+
+The last three ones allows writing a single document with a template that can
+contain merge mail with nested regions (tables). 
+
+   * writeDocumentWithMailMergeNestedTable(String,String,String,String, 
+     List<CompositeObject>,List<List<CompositeObject>>)
+   * writeDocumentWithMailMergeNestedTableWithTree(String,String,String,
+     String,Tree)
+   * writeDocumentWithMailMergeNestedTableWithListOfDatas(String,String,
+     String,String,CompositeObject, List<CompositeObject>)
+
+.. figure:: /_static/images/doc-factory/mail-merge-nested-5.png
+
+
+writeSerialLetterToManyCorrespondents 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ 
+
+The callable named **writeSerialLetterToManyCorrespondents** allows writing more
+than one document with a list of **DocumentTemplate** objects. Each
+**DocumentTemplate** object is going to produce a document. Merge mail with
+regions and merge mail with nested regions are now supported, because the
+DocumentTemplate Object encapsulates the necessary parameters to perform such
+merges (:ref:`DocumentTemplate <df-callable-processes-document-template>`). Here
+is the description of this callable that you can find in the ivy process mod
+file:
+
+.. figure:: /_static/images/doc-factory/callable-processes-2.png
