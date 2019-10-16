@@ -1,34 +1,42 @@
 DocFactory
 ************
 
-You are now reading |ivy-designer| documentation. In case you want to know more
-on:
+A Document Factory is a system that allows generating automatically documents
+like serial letters with the help of documents models like Microsoft Office
+Templates (:file:`.dot` or :file:`.dotx` files).
 
-* :dev-url:`Download </download>` the **latest** |axon-ivy| version.
+The document Factory system in the Ivy Add-ons project is open and can be
+extended. At the moment it is only implemented with the commercial Java API
+`Aspose <www.aspose.com>`_. You can add your own implementation with another
+API. :ref:`Read more <df-doc-factory-object>` in the doc factory section below.
 
-* Read the Readme.html in the installation directory for the **system requirements**.
-* Working with Axon.ivy Designer: Start with the :dev-url:`Quick Start Tutorial </tutorial>`.
-* Explore demo projects by :ref:`importing <importing-demo-projects>` them in the |ivy-designer|.
-* Read the engine guide to know how to adminsitrate an |ivy-engine|.
-* Go trough the Migration Notes to upgrade an existing ivy project.
+This solution works with Microsoft Office Templates. Each template contains
+fixed text and dynamic merges fields. A Merge field is a placeholder for text
+information. Each merge field has a name and will be filled with the information
+you provide to the document Factory system. For example a merge field could be
+the address or the name of a correspondent for a letter.
 
-All above mentioned documentations are brief and tend to describe only necessary
-functionality. We highly encourage reading these documentations to speed up your
-development, to get to know new features or to eliminate potential problems.
+.. table:: Terms and Definitions used in the DocFactory chapter
 
-.. tip::
-
-  Do not forget, anytime you find some unknown feature, hitting ``F1``
-  will show you a context sensitive compact help!
-
+   +------------------+---------------------------------------------------------------------------------------------------------------------+
+   | Document Factory | The document Factory System implemented in the Ivy Add-ons Project                                                  |
+   +------------------+---------------------------------------------------------------------------------------------------------------------+
+   | Template         | A Microsoft Office template (document model)                                                                        |
+   +------------------+---------------------------------------------------------------------------------------------------------------------+
+   | Merge field      | Placeholder for text information in the template                                                                    |
+   +------------------+---------------------------------------------------------------------------------------------------------------------+
+   | Document         | If not defined, this is a letter or document generated with the help of a template after the mail merging operation |
+   +------------------+---------------------------------------------------------------------------------------------------------------------+
+   | Mail merging     | Document generation with the replacement of the merge fields with the corresponding information                     |
+   +------------------+---------------------------------------------------------------------------------------------------------------------+
+   | Format           | The format in which the serial document has to be saved (doc, txt, html…)                                           |
+   +------------------+---------------------------------------------------------------------------------------------------------------------+
 
 .. toctree::
    :maxdepth: 1
 
-   workbench
-   perspectives
-   menus
-   toolbar
-   shortcuts
-   preferences
-   common-ui-components
+   mail-merging
+   complex-mergefields
+   callable-processes
+   demos
+   doc-factory-object

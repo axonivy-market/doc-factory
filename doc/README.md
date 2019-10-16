@@ -81,11 +81,11 @@ Use Eclipse or Visual Studio Code.
 
 - Warnings
 
-	.. Warn:: Attention! Make a backup!
+	.. warning:: Attention! Make a backup!
 
 - Tips
 
-	.. Tip:: Best Practice. Advice!
+	.. tip:: Best Practice. Advice!
 
 - External Link
 
