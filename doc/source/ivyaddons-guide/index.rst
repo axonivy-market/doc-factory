@@ -8,3 +8,4 @@ IvyAddOns Guide
 
    introduction/index
    doc-factory/index
+   async-process/index
