@@ -14,7 +14,6 @@
 		<module>ivyProjects/FileManagerApi</module>
 		<module>ivyProjects/IvyAddOns</module>
 		<module>ivyProjects/IvyAddons_tests</module>
-		<module>docbook/IvyAddOnsGuide</module>
 	</modules>
 	
 	<build>
