@@ -24,7 +24,10 @@ development, to get to know new features or to eliminate potential problems.
 About |ivy-addons|
 ==================
 
-The IvyAddOns project is provided as a convenience utility project for Axon.ivy
-developers. It contains various reusable components, such as utility Java
-classes, CMS entries etc. The IvyAddOns project can be used as base project for
-own applications. 
+The |ivy-addons| project is provided as a convenience utility project for
+Axon.ivy developers. It contains various reusable components, such as utility
+Java classes, CMS entries etc. The |ivy-addons| project can be used as base
+project for own applications. 
+
+
+.. |ivy-addons| replace:: IvyAddOns
