@@ -132,7 +132,7 @@ The previous nested mail merging was made by using List of Ivy DataClasses built
 
 .. figure:: /_static/images/doc-factory/mail-merge-nested-4.png
 
-It is very important to create your templates with this in mind: 
+**It is very important to create your templates with this in mind:**
 
    * Each TableStart merge field has to be named like the corresponding
      dataclass: e.g. the TableStart:Employee will correspond to the Employee data
