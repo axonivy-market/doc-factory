@@ -135,14 +135,14 @@ cannot be used together to perform mail merge with regions. If one is set, then
 the other one is cleared. So you have to decide if you use Recordsets or List of
 CompositeObjects to fill your merge regions.
 
-There are several constructors, that are all documented in javadoc style
+There are several constructors, that are all documented in JavaDoc.
 
 
 Callable Processes
 ------------------
 
 Two callable processes are available to ease usage of the document factory. They
-are located in the IvyAddOns Functional Processes folder:
+are located in the IvyAddOns *Functional Processes* folder:
 
 .. figure:: /_static/images/doc-factory/callable-processes.png
 
