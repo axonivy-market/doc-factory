@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Callable;
 
-import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -79,37 +78,33 @@ public class ProjectAdvisor
 		ProjectAdvisor projectAdvisor = sAdvisors.get(pmv);
 		if (projectAdvisor == null)
 		{
-			Properties properties = new Properties();
-			try
-			{
-				IFile propertiesFile = SecurityManagerFactory.getSecurityManager().executeAsSystem2(new Callable<IFile>() {
-							public IFile call() throws Exception
-							{
-								return (IFile) pmv.getProject().findMember(ADVISOR_PROPERTIES_PATH);
-							}
-						});
-				InputStream is = null;
-				try
-				{
-					// find advisor properties
-					is = propertiesFile.getContents();
-					if (is != null)
-					{
-						properties.load(is);
-					}
-				}
-				finally
-				{
-					IOUtils.closeQuietly(is);
-				}
-			}
-			catch (Throwable t)
-			{
-				properties.setProperty("error", "Could not read properties. Reason: " + t.getClass().getSimpleName() + ", " + t.getMessage() + ".");
-			}
-			projectAdvisor = new ProjectAdvisor(properties);
-			sAdvisors.put(pmv, projectAdvisor);
+			return null;
 		}
+			
+		Properties properties = new Properties();
+		try
+		{
+			IFile propertiesFile = SecurityManagerFactory.getSecurityManager().executeAsSystem2(new Callable<IFile>() {
+				public IFile call() throws Exception
+				{
+					return (IFile) pmv.getProject().findMember(ADVISOR_PROPERTIES_PATH);
+				}
+			});
+			try(InputStream is = propertiesFile.getContents();)
+			{
+				// find advisor properties
+				if (is != null)
+				{
+					properties.load(is);
+				}
+			}
+		}
+		catch (Throwable t)
+		{
+			properties.setProperty("error", "Could not read properties. Reason: " + t.getClass().getSimpleName() + ", " + t.getMessage() + ".");
+		}
+		projectAdvisor = new ProjectAdvisor(properties);
+		sAdvisors.put(pmv, projectAdvisor);
 		return projectAdvisor;
 	}
 

@@ -13,11 +13,12 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import com.aspose.words.DataRow;
-import com.aspose.words.DataTable;
+import com.aspose.words.net.System.Data.DataRow;
+import com.aspose.words.net.System.Data.DataTable;
 
 import ch.ivyteam.ivy.ThirdPartyLicenses;
 import ch.ivyteam.ivy.addons.docfactory.aspose.LicenseLoader;
@@ -32,6 +33,9 @@ import ch.ivyteam.ivy.scripting.objects.util.IvyScriptObjectEnvironment;
 import ch.ivyteam.log.Logger;
 
 @RunWith(PowerMockRunner.class)
+//tell powermock to ignore things different in java 11 
+//see https://github.com/mockito/mockito/issues/1562
+@PowerMockIgnore({"com.sun.org.apache.xerces.*", "com.aspose.pdf.*"}) 
 @PrepareForTest({Ivy.class, ThirdPartyLicenses.class, File.class, LicenseLoader.class, IvyScriptObjectEnvironment.class})
 public abstract class DocFactoryTest {
 	
@@ -131,7 +135,7 @@ public abstract class DocFactoryTest {
 
 	protected DataTable makeDataTable() {
 		//The name of the DataTable must be the same as the name of the merge field region (TableStart:itemPrices)
-		com.aspose.words.DataTable data = new DataTable("itemPrices");
+		com.aspose.words.net.System.Data.DataTable data = new DataTable("itemPrices");
 		// add the columns which names are the same as the merge fields in the data table region
 		data.getColumns().add("Item", String.class);
 		data.getColumns().add("Price", Number.class);

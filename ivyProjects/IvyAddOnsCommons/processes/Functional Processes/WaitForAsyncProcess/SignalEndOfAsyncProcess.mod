@@ -1,11 +1,9 @@
 [Ivy]
-[>Created: Thu May 19 08:17:20 CEST 2011]
-1305425C2ECC621D 3.17 #module
+1305425C2ECC621D 7.5.0 #module
 >Proto >Proto Collection #zClass
 Ss0 SignalEndOfAsyncProcess Big #zClass
 Ss0 B #cInfo
 Ss0 #process
-Ss0 @TextInP .resExport .resExport #zField
 Ss0 @TextInP .type .type #zField
 Ss0 @TextInP .processKind .processKind #zField
 Ss0 @AnnotationInP-0n ai ai #zField
@@ -20,16 +18,12 @@ Ss0 @StartSub f5 '' #zField
 Ss0 @PushWFArc f6 '' #zField
 Ss0 @InfoButton f7 '' #zField
 >Proto Ss0 Ss0 SignalEndOfAsyncProcess #zField
-Ss0 f0 inParamDecl '<java.lang.String parameterName,ch.ivyteam.ivy.addons.process.parameter.ProcessParameter parameter> param;' #txt
+Ss0 f0 inParamDecl '<String parameterName,ch.ivyteam.ivy.addons.process.parameter.ProcessParameter parameter> param;' #txt
 Ss0 f0 inParamTable 'out.parameter=param.parameter;
 out.parameterName=param.parameterName;
 ' #txt
-Ss0 f0 outParamDecl '<> result;
-' #txt
-Ss0 f0 actionDecl 'ch.ivyteam.ivy.addons.process.parameter.Data out;
-' #txt
+Ss0 f0 outParamDecl '<> result;' #txt
 Ss0 f0 callSignature signalEnd(String,ch.ivyteam.ivy.addons.process.parameter.ProcessParameter) #txt
-Ss0 f0 type ch.ivyteam.ivy.addons.process.parameter.Data #txt
 Ss0 f0 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -41,11 +35,8 @@ Ss0 f0 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 ' #txt
 Ss0 f0 99 35 26 26 14 0 #rect
 Ss0 f0 @|StartSubIcon #fIcon
-Ss0 f1 type ch.ivyteam.ivy.addons.process.parameter.Data #txt
 Ss0 f1 99 291 26 26 14 0 #rect
 Ss0 f1 @|EndSubIcon #fIcon
-Ss0 f4 actionDecl 'ch.ivyteam.ivy.addons.process.parameter.Data out;
-' #txt
 Ss0 f4 actionTable 'out=in;
 ' #txt
 Ss0 f4 actionCode 'import java.util.*;
@@ -58,7 +49,6 @@ map.put(WaitForAsyncProcessHelper.PARAM, in.parameter);
 
 WaitForAsyncProcess.signalEndOfProcess(ivy.case, map);
 ' #txt
-Ss0 f4 type ch.ivyteam.ivy.addons.process.parameter.Data #txt
 Ss0 f4 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -78,12 +68,8 @@ Ss0 f5 inParamDecl '<> param;' #txt
 Ss0 f5 inParamTable 'out.parameter=null;
 out.parameterName="";
 ' #txt
-Ss0 f5 outParamDecl '<> result;
-' #txt
-Ss0 f5 actionDecl 'ch.ivyteam.ivy.addons.process.parameter.Data out;
-' #txt
+Ss0 f5 outParamDecl '<> result;' #txt
 Ss0 f5 callSignature signalEndNoParameter() #txt
-Ss0 f5 type ch.ivyteam.ivy.addons.process.parameter.Data #txt
 Ss0 f5 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>

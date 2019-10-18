@@ -25,7 +25,7 @@ public class PublicAPIHelper
    * @param caseIdentifier
    * @return case, if not found it returns null
    */
-  public static ICase findCase(final int caseIdentifier)
+  public static ICase findCase(final long caseIdentifier)
   {
     ICase wfCase = null;
 
