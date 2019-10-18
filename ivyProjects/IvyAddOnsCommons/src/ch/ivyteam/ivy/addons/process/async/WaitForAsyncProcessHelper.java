@@ -54,7 +54,7 @@ public class WaitForAsyncProcessHelper {
 	private static final ScheduledExecutorService sExecutorService = Executors.newScheduledThreadPool(THREAD_POOL_SIZE);
 	
 	/** stores all cases that are currently locked by the signalEndOfProcess method */
-	volatile private static Set<Integer> sLockedCases = new HashSet<Integer>();
+	volatile private static Set<Long> sLockedCases = new HashSet<>();
 	
 	/** lock for sLockedCases */
 	private static final Lock sLockedCasesLock = new ReentrantLock();
@@ -77,8 +77,8 @@ public class WaitForAsyncProcessHelper {
 	
 				@Override
 				public Void call() throws Exception {
-					caseToRegister.setAdditionalProperty(HAS_PROCESS_ENDED, FALSE);
-					caseToRegister.setAdditionalProperty(EVENT_ID, eventId);
+					caseToRegister.customFields().textField(HAS_PROCESS_ENDED).set(FALSE);
+					caseToRegister.customFields().textField(EVENT_ID).set(eventId);
 					return null;
 				}
 			});
@@ -95,8 +95,7 @@ public class WaitForAsyncProcessHelper {
 	 * @param params a map with 2 entries: <code>PARAM_NAME</code> (name of the parameter) and 
 	 * <code>PARAM</code> (the ProcessParameter object)
 	 */
-	@SuppressWarnings("unchecked")
-	public static void signalEndOfProcess(final ICase caseToEnd, final Map params) {
+	public static void signalEndOfProcess(final ICase caseToEnd, final Map<?,?> params) {
 		/* 
 		 *  In the case that eventId is not set on the case when we want to signal the end of process, we wait
 		 *  for DELAY_PROCESS_END_TIME milliseconds before we check again. If its still empty, we ignore
@@ -109,7 +108,7 @@ public class WaitForAsyncProcessHelper {
 		boolean doDelayInvocationOfEndProcess = false;
 		try {
 			// check if we have an eventId. if not set a delay 
-			if(caseToEnd.getAdditionalProperty(EVENT_ID) == null) {
+			if(!caseToEnd.customFields().textField(EVENT_ID).isPresent()) {
 				doDelayInvocationOfEndProcess = true;
 			}
 			final ISecurityContext securityContext = caseToEnd.getApplication().getSecurityContext();
@@ -124,7 +123,7 @@ public class WaitForAsyncProcessHelper {
 							@Override
 							public Void call() throws Exception {
 								try {
-									final String eventId = caseToEnd.getAdditionalProperty(EVENT_ID);
+									final String eventId = caseToEnd.customFields().textField(EVENT_ID).getOrNull();
 									// check if we have an eventId 
 									if (eventId != null	&& eventId.length() > 0) {
 										// we have an eventId
@@ -136,7 +135,7 @@ public class WaitForAsyncProcessHelper {
 										} finally {
 											// set the HAS_PROCESS_ENDED additional property to TRUE
 											// so we know in poll() that the process has ended
-											caseToEnd.setAdditionalProperty(HAS_PROCESS_ENDED, TRUE);
+											caseToEnd.customFields().textField(HAS_PROCESS_ENDED).set(TRUE);
 										}
 									}
 								} catch (Exception e) {
@@ -195,8 +194,8 @@ public class WaitForAsyncProcessHelper {
 			// otherwise isCaseLocked would be called for each
 			// ICase over all instances of this bean
 			// which means it could start to block.
-			caseToLock.setAdditionalProperty(CHECK_FOR_CASE_LOCK, TRUE);
-			sLockedCases.add(caseToLock.getIdentifier());
+			caseToLock.customFields().textField(CHECK_FOR_CASE_LOCK).set(TRUE);
+			sLockedCases.add(caseToLock.getId());
 		} catch (PersistencyException e) {
 			//
 		} finally {
@@ -214,7 +213,7 @@ public class WaitForAsyncProcessHelper {
 		if(WaitForAsyncProcessHelper.hasCaseCheckForCaseLockFlagSet(caseToUnlock)) {
 			sLockedCasesLock.lock();
 			try {
-				sLockedCases.remove(caseToUnlock.getIdentifier());
+				sLockedCases.remove(caseToUnlock.getId());
 			} finally {
 				sLockedCasesLock.unlock();
 			}
@@ -232,7 +231,7 @@ public class WaitForAsyncProcessHelper {
 		if(WaitForAsyncProcessHelper.hasCaseCheckForCaseLockFlagSet(theCase)) {
 			sLockedCasesLock.lock();
 			try {
-				return sLockedCases.contains(theCase.getIdentifier());
+				return sLockedCases.contains(theCase.getId());
 			} finally {
 				sLockedCasesLock.unlock();
 			}
@@ -248,7 +247,7 @@ public class WaitForAsyncProcessHelper {
 	 */
 	public static boolean hasCaseCheckForCaseLockFlagSet(final ICase theCase) {
 		try {
-			return TRUE.equals(theCase.getAdditionalProperty(CHECK_FOR_CASE_LOCK));
+			return TRUE.equals(theCase.customFields().textField(CHECK_FOR_CASE_LOCK).getOrDefault(FALSE));
 		} catch (PersistencyException e) {
 			return false;
 		}

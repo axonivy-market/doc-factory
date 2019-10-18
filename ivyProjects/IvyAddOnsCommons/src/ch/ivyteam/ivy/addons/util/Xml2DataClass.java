@@ -85,9 +85,8 @@ public final class Xml2DataClass extends ExploreHandler<Class<?>>
     explorer.explore(object.getClass());
   }
 
-  @SuppressWarnings("unchecked")
   @Override
-  public boolean startNode(Class propertyType, String name, String qualifiedName) throws AddonsException
+  public boolean startNode(Class<?> propertyType, String name, String qualifiedName) throws AddonsException
   {
     Node xmlCurrentNode;
     Object value;
@@ -106,7 +105,7 @@ public final class Xml2DataClass extends ExploreHandler<Class<?>>
 
     if (parentObject instanceof List)
     {
-      List list = (List) parentObject;
+      List<?> list = (List<?>) parentObject;
       xmlCurrentNode = findNode(name, parentElement, list.size());
     }
     else
@@ -135,7 +134,8 @@ public final class Xml2DataClass extends ExploreHandler<Class<?>>
       }
       if (parentObject instanceof List)
       {
-        List list = (List) parentObject;
+        @SuppressWarnings("unchecked")
+		List<Object> list = (List<Object>) parentObject;
         list.add(value);
       }
       else

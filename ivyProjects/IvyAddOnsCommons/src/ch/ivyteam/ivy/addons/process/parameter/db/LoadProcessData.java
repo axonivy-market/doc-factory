@@ -18,8 +18,7 @@ import ch.ivyteam.ivy.workflow.ICase;
  * @author hsp
  * @since Pilatus
  */
-@SuppressWarnings({ "unchecked" })
-public class LoadProcessData extends AbstractProcessDataDbAction<Map> {
+public class LoadProcessData extends AbstractProcessDataDbAction<Map<?,?>> {
 
 	public LoadProcessData(ICase theCase) {
 		super(theCase, null);
@@ -33,19 +32,19 @@ public class LoadProcessData extends AbstractProcessDataDbAction<Map> {
 
 	@Override
 	public void setParameterForStatement(final PreparedStatement statement) throws SQLException {
-		statement.setInt(1, fCaseId);
+		statement.setLong(1, fCaseId);
 		statement.setString(2, fEventId);
 	}
 
 	@Override
-	public Map processResultSet(final ResultSet resultSet) throws PersistencyException {
+	public Map<?,?> processResultSet(final ResultSet resultSet) throws PersistencyException {
 		// get the map back from the database
 		try {
 			if(resultSet.next()) {
 				final byte[] bytes = resultSet.getBytes(1);
 				ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(new ByteArrayInputStream(bytes)));
 				try {
-					return (Map) in.readObject();
+					return (Map<?,?>) in.readObject();
 				} catch (IOException e) {
 					throw new PersistencyException(e);
 				} catch (ClassNotFoundException e) {

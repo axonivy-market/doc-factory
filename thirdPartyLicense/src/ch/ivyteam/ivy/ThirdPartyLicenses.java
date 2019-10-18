@@ -12,43 +12,23 @@ public class ThirdPartyLicenses
 {
   public static final String PROPERTIES_PATH = "ch/ivyteam/ivy/docfactory/licenses.props";
 
-  public enum Version
-  {
-    ASPOSE_2015("aspose2015"), 
-    ASPOSE_2019("aspose2019");
-
-    private final String licenceName;
-
-    private Version(String licenceName)
-    {
-      this.licenceName = licenceName;
-    }
-
-    public String getLicenceName()
-    {
-      return licenceName;
-    }
-  }
-
   /**
    * @return lic stream
    * @throws FileNotFoundException
-   * @deprecated will return old Aspose 2015 licence. Use {@link #getDocumentFactoryLicense(Version)} to specify which licence you want to have.
    */
-  @Deprecated
   public static InputStream getDocumentFactoryLicense() throws IOException
   {
-    return getDocumentFactoryLicense(Version.ASPOSE_2015);
+    return getDocumentFactoryLicense("aspose2019");
   }
 
   /**
    * Returns the document factory license as inputStream to be used in the
    * different aspose products.
-   * @param version the version of the license
+   * @param licName identifier
    * @return lic stream
    * @throws FileNotFoundException
    */
-  public static InputStream getDocumentFactoryLicense(Version version) throws IOException
+  private static InputStream getDocumentFactoryLicense(String licName) throws IOException
   {
     if (!Server.get().isRunning())
     {
@@ -60,7 +40,7 @@ public class ThirdPartyLicenses
     {
       props.load(propsIn);
     }
-    String val = props.getProperty(version.licenceName);
+    String val = props.getProperty(licName);
     return new ByteArrayInputStream(val.getBytes());
   }
 

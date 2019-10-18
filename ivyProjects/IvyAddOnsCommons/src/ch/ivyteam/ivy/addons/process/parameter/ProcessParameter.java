@@ -37,22 +37,18 @@ public class ProcessParameter implements Serializable {
 	final private Map<String, Boolean> booleanMap;
 	final private Map<String, File> fileMap;
 	
-	@SuppressWarnings("unchecked")
 	// there are problems when serializing Ivy List. Use java List and convert between them
-	final private Map<String, java.util.List> listMap;
+	final private Map<String, java.util.List<?>> listMap;
 	// we need to store the generic type of the list so we can later rebuild it with the correct generic type
 	final private Map<String, String> listTypeMap;
 	final private Map<String, ProcessParameter> processParameterMap;
 	
 	// there are problems when serializing Record. Use a java Map and convert between them
-	@SuppressWarnings("unchecked")
-	final private Map<String, Map> recordMap;
+	final private Map<String, Map<?,?>> recordMap;
 	
 	// there are problems when serializing Recordset. Use a java List<Map> and convert between them
-	@SuppressWarnings("unchecked")
-	final private Map<String, java.util.List<Map>> recordsetMap;
+	final private Map<String, java.util.List<Map<?,?>>> recordsetMap;
 	
-	@SuppressWarnings("unchecked")
 	public ProcessParameter() {
 		stringMap = new HashMap<String, String>();
 		numberMap = new HashMap<String, Number>();
@@ -61,11 +57,11 @@ public class ProcessParameter implements Serializable {
 		dateTimeMap = new HashMap<String, DateTime>();
 		booleanMap = new HashMap<String, Boolean>();
 		fileMap = new HashMap<String, File>();
-		listMap = new HashMap<String, java.util.List>();
+		listMap = new HashMap<>();
 		listTypeMap = new HashMap<String, String>();
 		processParameterMap = new HashMap<String, ProcessParameter>();
-		recordMap = new HashMap<String, Map>();
-		recordsetMap = new HashMap<String, java.util.List<Map>>();
+		recordMap = new HashMap<>();
+		recordsetMap = new HashMap<>();
 	}
 	
 	/**
@@ -137,8 +133,7 @@ public class ProcessParameter implements Serializable {
 	 * @param key key of the value
 	 * @return the {@link List} for <code>key</code> or null if it doesn't exist
 	 */
-	@SuppressWarnings("unchecked")
-	public List getList(final String key) {
+	public List<?> getList(final String key) {
 		try {
 			return ProcessParameterUtil.convertJavaListToIvyList(listMap.get(key), Class.forName(listTypeMap.get(key)));
 		} catch (ClassNotFoundException e) {
@@ -257,8 +252,7 @@ public class ProcessParameter implements Serializable {
 	 * @param value value to put inside the {@link ProcessParameter}
 	 * @return this {@link ProcessParameter} object
 	 */	
-	@SuppressWarnings("unchecked")
-	public ProcessParameter putList(final String key, final List value) {
+	public ProcessParameter putList(final String key, final List<?> value) {
 		listTypeMap.put(key, value.getMemberType().getJavaClass().getName());
 		listMap.put(key, ProcessParameterUtil.convertIvyListToJavaList(value));
 		return this;

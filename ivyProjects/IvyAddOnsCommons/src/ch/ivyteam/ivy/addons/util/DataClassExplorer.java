@@ -67,7 +67,7 @@ public final class DataClassExplorer<T extends Object>
    * @throws AddonsException
    */
   @Deprecated
-  public DataClassExplorer(ExploreHandler handler) throws AddonsException
+  public DataClassExplorer(@SuppressWarnings("rawtypes") ExploreHandler handler) throws AddonsException
   {
     this(handler, Class.class);
   }

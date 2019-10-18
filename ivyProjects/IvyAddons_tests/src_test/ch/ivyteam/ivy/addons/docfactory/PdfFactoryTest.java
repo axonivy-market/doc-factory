@@ -6,9 +6,15 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -41,8 +47,8 @@ public class PdfFactoryTest extends DocFactoryTest {
 
 	@Test
 	public void appendPdfFiles() throws Exception {
-		java.io.File pdf1 = new java.io.File(PdfFactoryTest.class.getResource("resources/files/pdf1.pdf").toURI().getPath());
-		java.io.File pdf2 = new java.io.File(PdfFactoryTest.class.getResource("resources/files/pdf2.pdf").toURI().getPath());
+		java.io.File pdf1 = fromResource("resources/files/pdf1.pdf");
+		java.io.File pdf2 = fromResource("resources/files/pdf2.pdf");
 		
 		List<java.io.File> filesToAppend = new ArrayList<>();
 		filesToAppend.add(pdf1);
@@ -56,6 +62,20 @@ public class PdfFactoryTest extends DocFactoryTest {
 		
 		java.io.File result = PdfFactory.get().appendPdfFiles("appended_pdf_files.pdf", filesToAppend).getJavaFile();
 		assertTrue(result.isFile() );
+	}
+	
+	private static java.io.File fromResource(String classRelativePath) throws IOException
+	{
+		java.io.File ref = new java.io.File(classRelativePath);
+		String baseName = StringUtils.substringBefore(ref.getName(), ".");
+		String ext = StringUtils.substringAfterLast(ref.getName(), ".");
+		java.io.File resource = java.nio.file.Files.createTempFile(baseName, ext).toFile();
+		try(InputStream is = PdfFactoryTest.class.getResourceAsStream(classRelativePath);
+			OutputStream os = new FileOutputStream(resource))
+		{
+			IOUtils.copy(is, os);
+		}
+		return resource;
 	}
 
 }

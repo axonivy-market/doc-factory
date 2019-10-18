@@ -1,6 +1,5 @@
 [Ivy]
-[>Created: Thu May 10 21:11:18 EDT 2012]
-124971223DD62955 3.17 #module
+124971223DD62955 7.5.0 #module
 >Proto >Proto Collection #zClass
 wr0 writeSerialLetter Big #zClass
 wr0 B #cInfo
@@ -10,7 +9,6 @@ wr0 @TextInP .responsibility .responsibility #zField
 wr0 @AnnotationInP-0n ai ai #zField
 wr0 @MessageFlowInP-0n messageIn messageIn #zField
 wr0 @MessageFlowOutP-0n messageOut messageOut #zField
-wr0 @TextInP .resExport .resExport #zField
 wr0 @TextInP .type .type #zField
 wr0 @TextInP .processKind .processKind #zField
 wr0 @StartSub f0 '' #zField
@@ -114,21 +112,17 @@ wr0 @EndSub f97 '' #zField
 wr0 @PushWFArc f98 '' #zField
 wr0 @InfoButton f99 '' #zField
 >Proto wr0 wr0 writeSerialLetter #zField
-wr0 f0 inParamDecl '<List<ch.ivyteam.ivy.addons.docfactory.TemplateMergeField> listOfTemplateMergeFields,java.lang.String optionalOutputpath,java.lang.String optionalLetterName,java.lang.String optionalOutputFormat,java.lang.String templatePath> param;' #txt
+wr0 f0 inParamDecl '<List<ch.ivyteam.ivy.addons.docfactory.TemplateMergeField> listOfTemplateMergeFields,String optionalOutputpath,String optionalLetterName,String optionalOutputFormat,String templatePath> param;' #txt
 wr0 f0 inParamTable 'out.mergeFieldsList=param.listOfTemplateMergeFields;
 out.outputFormat=param.optionalOutputFormat;
 out.outputPath=param.optionalOutputpath;
 out.serialLetterName=param.optionalLetterName;
 out.templatePath=param.templatePath;
 ' #txt
-wr0 f0 outParamDecl '<ch.ivyteam.ivy.addons.docfactory.FileOperationMessage fileOperationMessage> result;
-' #txt
+wr0 f0 outParamDecl '<ch.ivyteam.ivy.addons.docfactory.FileOperationMessage fileOperationMessage> result;' #txt
 wr0 f0 outParamTable 'result.fileOperationMessage=in.fileOperationMessage;
 ' #txt
-wr0 f0 actionDecl 'ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter out;
-' #txt
 wr0 f0 callSignature writeSerialLetterToOneCorrespondant(List<ch.ivyteam.ivy.addons.docfactory.TemplateMergeField>,String,String,String,String) #txt
-wr0 f0 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
 wr0 f0 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -162,16 +156,12 @@ In this callable, just one java.io.File should be created.</desc>
 ' #txt
 wr0 f0 139 67 26 26 -98 -31 #rect
 wr0 f0 @|StartSubIcon #fIcon
-wr0 f1 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
 wr0 f1 139 363 26 26 14 0 #rect
 wr0 f1 @|EndSubIcon #fIcon
-wr0 f4 actionDecl 'ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter out;
-' #txt
 wr0 f4 actionTable 'out=in;
 ' #txt
 wr0 f4 actionCode 'import ch.ivyteam.ivy.addons.docfactory.BaseDocFactory;
 in.documentFactory= BaseDocFactory.getInstance();' #txt
-wr0 f4 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
 wr0 f4 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -184,14 +174,11 @@ Object</name>
 ' #txt
 wr0 f4 134 140 36 24 22 -15 #rect
 wr0 f4 @|StepIcon #fIcon
-wr0 f7 actionDecl 'ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter out;
-' #txt
 wr0 f7 actionTable 'out=in;
 ' #txt
 wr0 f7 actionCode '
 out.fileOperationMessage = 
 in.documentFactory.generateDocument(in.templatePath,in.serialLetterName,in.outputPath,in.outputFormat,in.mergeFieldsList);' #txt
-wr0 f7 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
 wr0 f7 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -207,8 +194,6 @@ wr0 f6 expr out #txt
 wr0 f6 152 316 152 363 #arcP
 wr0 f2 expr out #txt
 wr0 f2 152 93 152 140 #arcP
-wr0 f3 actionDecl 'ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter out;
-' #txt
 wr0 f3 actionTable 'out=in;
 ' #txt
 wr0 f3 actionCode 'import ch.ivyteam.ivy.addons.docfactory.FileUtil;
@@ -231,7 +216,6 @@ if(in.#serialLetterName == null || in.serialLetterName.trim().equalsIgnoreCase("
 if(in.outputPath==null || in.outputPath.trim().equalsIgnoreCase("")){
 	out.outputPath="ivy_RIA_files";
 }' #txt
-wr0 f3 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
 wr0 f3 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -289,21 +273,17 @@ In this callable, just one java.io.File should be created.</name>
 wr0 f9 44 427 521 362 -255 -176 #rect
 wr0 f9 @|IBIcon #fIcon
 wr0 f9 -657956|-1|-16777216 #nodeStyle
-wr0 f10 inParamDecl '<ch.ivyteam.ivy.scripting.objects.CompositeObject data,java.lang.String optionalOutputpath,java.lang.String optionalLetterName,java.lang.String optionalOutputFormat,java.lang.String templatePath> param;' #txt
+wr0 f10 inParamDecl '<CompositeObject data,String optionalOutputpath,String optionalLetterName,String optionalOutputFormat,String templatePath> param;' #txt
 wr0 f10 inParamTable 'out.data=param.data;
 out.outputFormat=param.optionalOutputFormat;
 out.outputPath=param.optionalOutputpath;
 out.serialLetterName=param.optionalLetterName;
 out.templatePath=param.templatePath;
 ' #txt
-wr0 f10 outParamDecl '<ch.ivyteam.ivy.addons.docfactory.FileOperationMessage fileOperationMessage> result;
-' #txt
+wr0 f10 outParamDecl '<ch.ivyteam.ivy.addons.docfactory.FileOperationMessage fileOperationMessage> result;' #txt
 wr0 f10 outParamTable 'result.fileOperationMessage=in.fileOperationMessage;
 ' #txt
-wr0 f10 actionDecl 'ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter out;
-' #txt
 wr0 f10 callSignature writeDocumentWithOneDataClass(ch.ivyteam.ivy.scripting.objects.CompositeObject,String,String,String,String) #txt
-wr0 f10 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
 wr0 f10 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -381,14 +361,11 @@ In this callable, just one java.io.File should be created.</name>
 wr0 f11 593 411 654 410 -322 -200 #rect
 wr0 f11 @|IBIcon #fIcon
 wr0 f11 -657956|-1|-16777216 #nodeStyle
-wr0 f12 actionDecl 'ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter out;
-' #txt
 wr0 f12 actionTable 'out=in;
 ' #txt
 wr0 f12 actionCode 'import ch.ivyteam.ivy.addons.docfactory.BaseDocFactory;
 
 in.documentFactory= BaseDocFactory.getInstance();' #txt
-wr0 f12 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
 wr0 f12 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -403,8 +380,6 @@ wr0 f12 774 132 36 24 30 -16 #rect
 wr0 f12 @|StepIcon #fIcon
 wr0 f13 expr out #txt
 wr0 f13 792 77 792 132 #arcP
-wr0 f14 actionDecl 'ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter out;
-' #txt
 wr0 f14 actionTable 'out=in;
 ' #txt
 wr0 f14 actionCode '
@@ -430,7 +405,6 @@ if(in.outputPath==null || in.outputPath.trim().equalsIgnoreCase("")){
 }
 
 ' #txt
-wr0 f14 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
 wr0 f14 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -446,14 +420,11 @@ wr0 f14 774 196 36 24 22 -18 #rect
 wr0 f14 @|StepIcon #fIcon
 wr0 f15 expr out #txt
 wr0 f15 792 156 792 196 #arcP
-wr0 f16 actionDecl 'ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter out;
-' #txt
 wr0 f16 actionTable 'out=in;
 ' #txt
 wr0 f16 actionCode 'import ch.ivyteam.ivy.addons.docfactory.DocumentTemplate;
 
 out.documentTemplate = new DocumentTemplate(in.templatePath,in.outputPath, in.serialLetterName,in.outputFormat,in.data);' #txt
-wr0 f16 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
 wr0 f16 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -467,12 +438,9 @@ wr0 f16 774 236 36 24 20 -2 #rect
 wr0 f16 @|StepIcon #fIcon
 wr0 f17 expr out #txt
 wr0 f17 792 220 792 236 #arcP
-wr0 f18 actionDecl 'ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter out;
-' #txt
 wr0 f18 actionTable 'out=in;
 ' #txt
 wr0 f18 actionCode out.fileOperationMessage=in.documentFactory.generateDocument(in.documentTemplate); #txt
-wr0 f18 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
 wr0 f18 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -486,12 +454,11 @@ wr0 f18 774 284 36 24 20 -2 #rect
 wr0 f18 @|StepIcon #fIcon
 wr0 f19 expr out #txt
 wr0 f19 792 260 792 284 #arcP
-wr0 f20 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
 wr0 f20 779 363 26 26 14 0 #rect
 wr0 f20 @|EndSubIcon #fIcon
 wr0 f21 expr out #txt
 wr0 f21 792 308 792 363 #arcP
-wr0 f22 inParamDecl '<List<ch.ivyteam.ivy.addons.docfactory.TemplateMergeField> listOfTemplateMergeFields,java.lang.String optionalOutputpath,java.lang.String optionalLetterName,java.lang.String optionalOutputFormat,java.lang.String templatePath,List<java.lang.String> tableNamesList,List<List<ch.ivyteam.ivy.scripting.objects.CompositeObject>> datasForTables> param;' #txt
+wr0 f22 inParamDecl '<List<ch.ivyteam.ivy.addons.docfactory.TemplateMergeField> listOfTemplateMergeFields,String optionalOutputpath,String optionalLetterName,String optionalOutputFormat,String templatePath,List<String> tableNamesList,List<List<CompositeObject>> datasForTables> param;' #txt
 wr0 f22 inParamTable 'out.ListOfCompositeObjectsToFillTheTables=param.datasForTables;
 out.mergeFieldsList=param.listOfTemplateMergeFields;
 out.outputFormat=param.optionalOutputFormat;
@@ -500,14 +467,10 @@ out.serialLetterName=param.optionalLetterName;
 out.tablesNamesList=param.tableNamesList;
 out.templatePath=param.templatePath;
 ' #txt
-wr0 f22 outParamDecl '<ch.ivyteam.ivy.addons.docfactory.FileOperationMessage fileOperationMessage> result;
-' #txt
+wr0 f22 outParamDecl '<ch.ivyteam.ivy.addons.docfactory.FileOperationMessage fileOperationMessage> result;' #txt
 wr0 f22 outParamTable 'result.fileOperationMessage=in.fileOperationMessage;
 ' #txt
-wr0 f22 actionDecl 'ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter out;
-' #txt
 wr0 f22 callSignature writeDocumentWithMailMergeTable(List<ch.ivyteam.ivy.addons.docfactory.TemplateMergeField>,String,String,String,String,List<String>,List<List<ch.ivyteam.ivy.scripting.objects.CompositeObject>>) #txt
-wr0 f22 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
 wr0 f22 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -555,8 +518,6 @@ In these callables, just one java.io.File should be created.</desc>
 ' #txt
 wr0 f22 1459 59 26 26 16 -36 #rect
 wr0 f22 @|StartSubIcon #fIcon
-wr0 f23 actionDecl 'ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter out;
-' #txt
 wr0 f23 actionTable 'out=in;
 ' #txt
 wr0 f23 actionCode 'import java.util.HashMap;
@@ -580,7 +541,6 @@ try{
 }
 
 ' #txt
-wr0 f23 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
 wr0 f23 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -595,8 +555,6 @@ and write the serialLetter</name>
 ' #txt
 wr0 f23 1454 292 36 24 22 -9 #rect
 wr0 f23 @|StepIcon #fIcon
-wr0 f24 actionDecl 'ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter out;
-' #txt
 wr0 f24 actionTable 'out=in;
 ' #txt
 wr0 f24 actionCode 'import ch.ivyteam.ivy.addons.docfactory.FileUtil;
@@ -621,7 +579,6 @@ if(in.outputPath==null || in.outputPath.trim().equalsIgnoreCase("")){
 }
 
 ' #txt
-wr0 f24 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
 wr0 f24 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -634,13 +591,10 @@ outputPath / outputLetterName </name>
 ' #txt
 wr0 f24 1454 212 36 24 22 -18 #rect
 wr0 f24 @|StepIcon #fIcon
-wr0 f25 actionDecl 'ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter out;
-' #txt
 wr0 f25 actionTable 'out=in;
 ' #txt
 wr0 f25 actionCode 'import ch.ivyteam.ivy.addons.docfactory.BaseDocFactory;
 in.documentFactory= BaseDocFactory.getInstance();' #txt
-wr0 f25 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
 wr0 f25 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -659,12 +613,11 @@ wr0 f27 expr out #txt
 wr0 f27 1472 236 1472 292 #arcP
 wr0 f28 expr out #txt
 wr0 f28 1472 85 1472 140 #arcP
-wr0 f29 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
 wr0 f29 1459 363 26 26 14 0 #rect
 wr0 f29 @|EndSubIcon #fIcon
 wr0 f30 expr out #txt
 wr0 f30 1472 316 1472 363 #arcP
-wr0 f31 inParamDecl '<List<ch.ivyteam.ivy.addons.docfactory.TemplateMergeField> listOfTemplateMergeFields,java.lang.String optionalOutputpath,java.lang.String optionalLetterName,java.lang.String optionalOutputFormat,java.lang.String templatePath,List<java.lang.String> tableNamesList,List<ch.ivyteam.ivy.scripting.objects.Recordset> recordsetsList> param;' #txt
+wr0 f31 inParamDecl '<List<ch.ivyteam.ivy.addons.docfactory.TemplateMergeField> listOfTemplateMergeFields,String optionalOutputpath,String optionalLetterName,String optionalOutputFormat,String templatePath,List<String> tableNamesList,List<Recordset> recordsetsList> param;' #txt
 wr0 f31 inParamTable 'out.ListOfRecordsets=param.recordsetsList;
 out.mergeFieldsList=param.listOfTemplateMergeFields;
 out.outputFormat=param.optionalOutputFormat;
@@ -673,14 +626,10 @@ out.serialLetterName=param.optionalLetterName;
 out.tablesNamesList=param.tableNamesList;
 out.templatePath=param.templatePath;
 ' #txt
-wr0 f31 outParamDecl '<ch.ivyteam.ivy.addons.docfactory.FileOperationMessage fileOperationMessage> result;
-' #txt
+wr0 f31 outParamDecl '<ch.ivyteam.ivy.addons.docfactory.FileOperationMessage fileOperationMessage> result;' #txt
 wr0 f31 outParamTable 'result.fileOperationMessage=in.fileOperationMessage;
 ' #txt
-wr0 f31 actionDecl 'ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter out;
-' #txt
 wr0 f31 callSignature writeDocumentWithMailMergeTable(List<ch.ivyteam.ivy.addons.docfactory.TemplateMergeField>,String,String,String,String,List<String>,List<Recordset>) #txt
-wr0 f31 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
 wr0 f31 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -728,13 +677,10 @@ In these callables, just one java.io.File should be created.</desc>
 ' #txt
 wr0 f31 2051 51 26 26 17 -31 #rect
 wr0 f31 @|StartSubIcon #fIcon
-wr0 f32 actionDecl 'ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter out;
-' #txt
 wr0 f32 actionTable 'out=in;
 ' #txt
 wr0 f32 actionCode 'import ch.ivyteam.ivy.addons.docfactory.BaseDocFactory;
 in.documentFactory= BaseDocFactory.getInstance();' #txt
-wr0 f32 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
 wr0 f32 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -747,8 +693,6 @@ Object</name>
 ' #txt
 wr0 f32 2046 132 36 24 22 -15 #rect
 wr0 f32 @|StepIcon #fIcon
-wr0 f33 actionDecl 'ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter out;
-' #txt
 wr0 f33 actionTable 'out=in;
 ' #txt
 wr0 f33 actionCode 'import java.util.Hashtable;
@@ -771,7 +715,6 @@ try{
 }
 
 ' #txt
-wr0 f33 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
 wr0 f33 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -786,8 +729,6 @@ and write the serialLetter</name>
 ' #txt
 wr0 f33 2046 284 36 24 22 -9 #rect
 wr0 f33 @|StepIcon #fIcon
-wr0 f34 actionDecl 'ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter out;
-' #txt
 wr0 f34 actionTable 'out=in;
 ' #txt
 wr0 f34 actionCode 'import ch.ivyteam.ivy.addons.docfactory.FileUtil;
@@ -812,7 +753,6 @@ if(in.outputPath==null || in.outputPath.trim().equalsIgnoreCase("")){
 }
 
 ' #txt
-wr0 f34 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
 wr0 f34 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -831,12 +771,11 @@ wr0 f36 expr out #txt
 wr0 f36 2064 228 2064 284 #arcP
 wr0 f37 expr out #txt
 wr0 f37 2064 77 2064 132 #arcP
-wr0 f38 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
 wr0 f38 2051 363 26 26 14 0 #rect
 wr0 f38 @|EndSubIcon #fIcon
 wr0 f39 expr out #txt
 wr0 f39 2064 308 2064 363 #arcP
-wr0 f40 inParamDecl '<List<ch.ivyteam.ivy.addons.docfactory.TemplateMergeField> listOfTemplateMergeFields,java.lang.String optionalOutputpath,java.lang.String optionalLetterName,java.lang.String optionalOutputFormat,java.lang.String templatePath,List<java.lang.String> tableNamesList,List<List<java.lang.String>> tablesFieldsNames,List<List<List<java.lang.Object>>> tablesRowsValues> param;' #txt
+wr0 f40 inParamDecl '<List<ch.ivyteam.ivy.addons.docfactory.TemplateMergeField> listOfTemplateMergeFields,String optionalOutputpath,String optionalLetterName,String optionalOutputFormat,String templatePath,List<String> tableNamesList,List<List<String>> tablesFieldsNames,List<List<List<Object>>> tablesRowsValues> param;' #txt
 wr0 f40 inParamTable 'out.ListOfTableFieldsNames=param.tablesFieldsNames;
 out.ListOfTablesRows=param.tablesRowsValues;
 out.mergeFieldsList=param.listOfTemplateMergeFields;
@@ -846,14 +785,10 @@ out.serialLetterName=param.optionalLetterName;
 out.tablesNamesList=param.tableNamesList;
 out.templatePath=param.templatePath;
 ' #txt
-wr0 f40 outParamDecl '<ch.ivyteam.ivy.addons.docfactory.FileOperationMessage fileOperationMessage> result;
-' #txt
+wr0 f40 outParamDecl '<ch.ivyteam.ivy.addons.docfactory.FileOperationMessage fileOperationMessage> result;' #txt
 wr0 f40 outParamTable 'result.fileOperationMessage=in.fileOperationMessage;
 ' #txt
-wr0 f40 actionDecl 'ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter out;
-' #txt
 wr0 f40 callSignature writeDocumentWithMailMergeTable(List<ch.ivyteam.ivy.addons.docfactory.TemplateMergeField>,String,String,String,String,List<String>,List<List<String>>,List<List<List>>) #txt
-wr0 f40 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
 wr0 f40 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -902,8 +837,6 @@ In these callables, just one java.io.File should be created.</desc>
 ' #txt
 wr0 f40 2427 51 26 26 19 -35 #rect
 wr0 f40 @|StartSubIcon #fIcon
-wr0 f41 actionDecl 'ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter out;
-' #txt
 wr0 f41 actionTable 'out=in;
 ' #txt
 wr0 f41 actionCode 'import ch.ivyteam.ivy.addons.docfactory.FileUtil;
@@ -928,7 +861,6 @@ if(in.outputPath==null || in.outputPath.trim().equalsIgnoreCase("")){
 }
 
 ' #txt
-wr0 f41 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
 wr0 f41 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -941,13 +873,10 @@ outputPath / outputLetterName </name>
 ' #txt
 wr0 f41 2422 212 36 24 22 -18 #rect
 wr0 f41 @|StepIcon #fIcon
-wr0 f42 actionDecl 'ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter out;
-' #txt
 wr0 f42 actionTable 'out=in;
 ' #txt
 wr0 f42 actionCode 'import ch.ivyteam.ivy.addons.docfactory.BaseDocFactory;
 in.documentFactory= BaseDocFactory.getInstance();' #txt
-wr0 f42 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
 wr0 f42 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -960,8 +889,6 @@ Object</name>
 ' #txt
 wr0 f42 2422 140 36 24 22 -15 #rect
 wr0 f42 @|StepIcon #fIcon
-wr0 f43 actionDecl 'ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter out;
-' #txt
 wr0 f43 actionTable 'out=in;
 ' #txt
 wr0 f43 actionCode '
@@ -973,7 +900,6 @@ try{
 }
 
 ' #txt
-wr0 f43 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
 wr0 f43 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -991,7 +917,6 @@ wr0 f45 expr out #txt
 wr0 f45 2440 236 2440 292 #arcP
 wr0 f46 expr out #txt
 wr0 f46 2440 77 2440 140 #arcP
-wr0 f47 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
 wr0 f47 2427 363 26 26 14 0 #rect
 wr0 f47 @|EndSubIcon #fIcon
 wr0 f48 expr out #txt
@@ -1057,7 +982,7 @@ In these callables, just one java.io.File should be created.</name>
 wr0 f49 1350 412 1188 585 -417 -288 #rect
 wr0 f49 @|IBIcon #fIcon
 wr0 f49 -657956|-1|-16777216 #nodeStyle
-wr0 f50 inParamDecl '<ch.ivyteam.ivy.scripting.objects.CompositeObject data,java.lang.String optionalOutputpath,java.lang.String optionalLetterName,java.lang.String optionalOutputFormat,java.lang.String templatePath,List<java.lang.String> tableNamesList,List<List<ch.ivyteam.ivy.scripting.objects.CompositeObject>> datasForTables> param;' #txt
+wr0 f50 inParamDecl '<CompositeObject data,String optionalOutputpath,String optionalLetterName,String optionalOutputFormat,String templatePath,List<String> tableNamesList,List<List<CompositeObject>> datasForTables> param;' #txt
 wr0 f50 inParamTable 'out.data=param.data;
 out.ListOfCompositeObjectsToFillTheTables=param.datasForTables;
 out.outputFormat=param.optionalOutputFormat;
@@ -1066,14 +991,10 @@ out.serialLetterName=param.optionalLetterName;
 out.tablesNamesList=param.tableNamesList;
 out.templatePath=param.templatePath;
 ' #txt
-wr0 f50 outParamDecl '<ch.ivyteam.ivy.addons.docfactory.FileOperationMessage fileOperationMessage> result;
-' #txt
+wr0 f50 outParamDecl '<ch.ivyteam.ivy.addons.docfactory.FileOperationMessage fileOperationMessage> result;' #txt
 wr0 f50 outParamTable 'result.fileOperationMessage=in.fileOperationMessage;
 ' #txt
-wr0 f50 actionDecl 'ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter out;
-' #txt
 wr0 f50 callSignature writeDocumentWithMailMergeTable(ch.ivyteam.ivy.scripting.objects.CompositeObject,String,String,String,String,List<String>,List<List<ch.ivyteam.ivy.scripting.objects.CompositeObject>>) #txt
-wr0 f50 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
 wr0 f50 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -1088,8 +1009,6 @@ List&lt;String&gt;,List&lt;List&lt;CompositeObject&gt;&gt;)</name>
 ' #txt
 wr0 f50 1347 59 26 26 -244 -41 #rect
 wr0 f50 @|StartSubIcon #fIcon
-wr0 f51 actionDecl 'ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter out;
-' #txt
 wr0 f51 actionTable 'out=in;
 ' #txt
 wr0 f51 actionCode 'import ch.ivyteam.ivy.addons.docfactory.DocumentTemplate;
@@ -1107,7 +1026,6 @@ in.ListOfCompositeObjectsToFillTheTables.size()==in.tablesNamesList.size()){
 	
 }
 out.documentTemplate = new DocumentTemplate(in.templatePath,in.outputPath, in.serialLetterName,in.outputFormat,in.data,map);' #txt
-wr0 f51 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
 wr0 f51 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -1119,8 +1037,6 @@ wr0 f51 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 ' #txt
 wr0 f51 1342 236 36 24 -163 -11 #rect
 wr0 f51 @|StepIcon #fIcon
-wr0 f52 actionDecl 'ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter out;
-' #txt
 wr0 f52 actionTable 'out=in;
 ' #txt
 wr0 f52 actionCode '
@@ -1146,7 +1062,6 @@ if(in.outputPath==null || in.outputPath.trim().equalsIgnoreCase("")){
 }
 
 ' #txt
-wr0 f52 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
 wr0 f52 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -1160,14 +1075,11 @@ outputPath / outputLetterName
 ' #txt
 wr0 f52 1342 196 36 24 -187 -26 #rect
 wr0 f52 @|StepIcon #fIcon
-wr0 f53 actionDecl 'ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter out;
-' #txt
 wr0 f53 actionTable 'out=in;
 ' #txt
 wr0 f53 actionCode 'import ch.ivyteam.ivy.addons.docfactory.BaseDocFactory;
 
 in.documentFactory= BaseDocFactory.getInstance();' #txt
-wr0 f53 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
 wr0 f53 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -1180,12 +1092,9 @@ Object</name>
 ' #txt
 wr0 f53 1342 148 36 24 -175 -18 #rect
 wr0 f53 @|StepIcon #fIcon
-wr0 f54 actionDecl 'ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter out;
-' #txt
 wr0 f54 actionTable 'out=in;
 ' #txt
 wr0 f54 actionCode out.fileOperationMessage=in.documentFactory.generateDocument(in.documentTemplate); #txt
-wr0 f54 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
 wr0 f54 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -1205,12 +1114,11 @@ wr0 f57 expr out #txt
 wr0 f57 1360 260 1360 300 #arcP
 wr0 f58 expr out #txt
 wr0 f58 1360 85 1360 148 #arcP
-wr0 f59 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
 wr0 f59 1347 363 26 26 14 0 #rect
 wr0 f59 @|EndSubIcon #fIcon
 wr0 f60 expr out #txt
 wr0 f60 1360 324 1360 363 #arcP
-wr0 f61 inParamDecl '<ch.ivyteam.ivy.scripting.objects.CompositeObject data,java.lang.String optionalOutputpath,java.lang.String optionalLetterName,java.lang.String optionalOutputFormat,java.lang.String templatePath,List<java.lang.String> tableNamesList,List<ch.ivyteam.ivy.scripting.objects.Recordset> recordsetsList> param;' #txt
+wr0 f61 inParamDecl '<CompositeObject data,String optionalOutputpath,String optionalLetterName,String optionalOutputFormat,String templatePath,List<String> tableNamesList,List<Recordset> recordsetsList> param;' #txt
 wr0 f61 inParamTable 'out.data=param.data;
 out.ListOfRecordsets=param.recordsetsList;
 out.outputFormat=param.optionalOutputFormat;
@@ -1219,12 +1127,8 @@ out.serialLetterName=param.optionalLetterName;
 out.tablesNamesList=param.tableNamesList;
 out.templatePath=param.templatePath;
 ' #txt
-wr0 f61 outParamDecl '<ch.ivyteam.ivy.addons.docfactory.FileOperationMessage fileOperationMessage> result;
-' #txt
-wr0 f61 actionDecl 'ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter out;
-' #txt
+wr0 f61 outParamDecl '<ch.ivyteam.ivy.addons.docfactory.FileOperationMessage fileOperationMessage> result;' #txt
 wr0 f61 callSignature writeDocumentWithMailMergeTable(ch.ivyteam.ivy.scripting.objects.CompositeObject,String,String,String,String,List<String>,List<Recordset>) #txt
-wr0 f61 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
 wr0 f61 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -1239,8 +1143,6 @@ List&lt;String&gt;,List&lt;Recordset&gt;)</name>
 ' #txt
 wr0 f61 1931 51 26 26 -171 -37 #rect
 wr0 f61 @|StartSubIcon #fIcon
-wr0 f62 actionDecl 'ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter out;
-' #txt
 wr0 f62 actionTable 'out=in;
 ' #txt
 wr0 f62 actionCode '
@@ -1266,7 +1168,6 @@ if(in.outputPath==null || in.outputPath.trim().equalsIgnoreCase("")){
 }
 
 ' #txt
-wr0 f62 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
 wr0 f62 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -1280,8 +1181,6 @@ outputPath / outputLetterName
 ' #txt
 wr0 f62 1926 188 36 24 -183 -18 #rect
 wr0 f62 @|StepIcon #fIcon
-wr0 f63 actionDecl 'ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter out;
-' #txt
 wr0 f63 actionTable 'out=in;
 ' #txt
 wr0 f63 actionCode 'import ch.ivyteam.ivy.addons.docfactory.DocumentTemplate;
@@ -1298,7 +1197,6 @@ if(in.tablesNamesList.size()>0 &&
 	}
 }
 out.documentTemplate = new DocumentTemplate(in.templatePath,in.outputPath, in.serialLetterName,in.outputFormat,in.data,htable);' #txt
-wr0 f63 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
 wr0 f63 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -1310,14 +1208,11 @@ wr0 f63 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 ' #txt
 wr0 f63 1926 228 36 24 -160 -9 #rect
 wr0 f63 @|StepIcon #fIcon
-wr0 f64 actionDecl 'ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter out;
-' #txt
 wr0 f64 actionTable 'out=in;
 ' #txt
 wr0 f64 actionCode 'import ch.ivyteam.ivy.addons.docfactory.BaseDocFactory;
 
 in.documentFactory= BaseDocFactory.getInstance();' #txt
-wr0 f64 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
 wr0 f64 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -1330,12 +1225,9 @@ Object</name>
 ' #txt
 wr0 f64 1926 140 36 24 -168 -23 #rect
 wr0 f64 @|StepIcon #fIcon
-wr0 f65 actionDecl 'ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter out;
-' #txt
 wr0 f65 actionTable 'out=in;
 ' #txt
 wr0 f65 actionCode out.fileOperationMessage=in.documentFactory.generateDocument(in.documentTemplate); #txt
-wr0 f65 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
 wr0 f65 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -1355,12 +1247,11 @@ wr0 f68 expr out #txt
 wr0 f68 1944 252 1944 292 #arcP
 wr0 f69 expr out #txt
 wr0 f69 1944 77 1944 140 #arcP
-wr0 f70 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
 wr0 f70 1931 363 26 26 14 0 #rect
 wr0 f70 @|EndSubIcon #fIcon
 wr0 f71 expr out #txt
 wr0 f71 1944 316 1944 363 #arcP
-wr0 f72 inParamDecl '<java.lang.String optionalOutputpath,java.lang.String optionalLetterName,java.lang.String optionalOutputFormat,java.lang.String templatePath,ch.ivyteam.ivy.scripting.objects.CompositeObject DataForMailMergeOutOfTables,List<ch.ivyteam.ivy.scripting.objects.CompositeObject> parentTableDatas,List<List<ch.ivyteam.ivy.scripting.objects.CompositeObject>> nestedChildrenTableDatas> param;' #txt
+wr0 f72 inParamDecl '<String optionalOutputpath,String optionalLetterName,String optionalOutputFormat,String templatePath,CompositeObject DataForMailMergeOutOfTables,List<CompositeObject> parentTableDatas,List<List<CompositeObject>> nestedChildrenTableDatas> param;' #txt
 wr0 f72 inParamTable 'out.data=param.DataForMailMergeOutOfTables;
 out.ListOfCompositeObjectsToFillTheTables=param.nestedChildrenTableDatas;
 out.ListOfParentCompositeObjects=param.parentTableDatas;
@@ -1369,14 +1260,10 @@ out.outputPath=param.optionalOutputpath;
 out.serialLetterName=param.optionalLetterName;
 out.templatePath=param.templatePath;
 ' #txt
-wr0 f72 outParamDecl '<ch.ivyteam.ivy.addons.docfactory.FileOperationMessage fileOperationMessage> result;
-' #txt
+wr0 f72 outParamDecl '<ch.ivyteam.ivy.addons.docfactory.FileOperationMessage fileOperationMessage> result;' #txt
 wr0 f72 outParamTable 'result.fileOperationMessage=in.fileOperationMessage;
 ' #txt
-wr0 f72 actionDecl 'ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter out;
-' #txt
 wr0 f72 callSignature writeDocumentWithMailMergeNestedTable(String,String,String,String,ch.ivyteam.ivy.scripting.objects.CompositeObject,List<ch.ivyteam.ivy.scripting.objects.CompositeObject>,List<List<ch.ivyteam.ivy.scripting.objects.CompositeObject>>) #txt
-wr0 f72 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
 wr0 f72 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -1405,13 +1292,10 @@ In these callables, just one java.io.File should be created.</desc>
 ' #txt
 wr0 f72 2779 43 26 26 26 -24 #rect
 wr0 f72 @|StartSubIcon #fIcon
-wr0 f73 actionDecl 'ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter out;
-' #txt
 wr0 f73 actionTable 'out=in;
 ' #txt
 wr0 f73 actionCode 'import ch.ivyteam.ivy.addons.docfactory.BaseDocFactory;
 in.documentFactory= BaseDocFactory.getInstance();' #txt
-wr0 f73 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
 wr0 f73 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -1424,8 +1308,6 @@ Object</name>
 ' #txt
 wr0 f73 2774 132 36 24 22 -15 #rect
 wr0 f73 @|StepIcon #fIcon
-wr0 f74 actionDecl 'ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter out;
-' #txt
 wr0 f74 actionTable 'out=in;
 ' #txt
 wr0 f74 actionCode '
@@ -1439,7 +1321,6 @@ in.documentTemplate.generateDocument();
 }
 
 ' #txt
-wr0 f74 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
 wr0 f74 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -1451,8 +1332,6 @@ wr0 f74 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 ' #txt
 wr0 f74 2774 284 36 24 22 -9 #rect
 wr0 f74 @|StepIcon #fIcon
-wr0 f75 actionDecl 'ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter out;
-' #txt
 wr0 f75 actionTable 'out=in;
 ' #txt
 wr0 f75 actionCode 'import ch.ivyteam.ivy.addons.docfactory.FileUtil;
@@ -1477,7 +1356,6 @@ if(in.outputPath==null || in.outputPath.trim().equalsIgnoreCase("")){
 }
 
 ' #txt
-wr0 f75 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
 wr0 f75 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -1496,18 +1374,14 @@ wr0 f77 expr out #txt
 wr0 f77 2792 228 2792 284 #arcP
 wr0 f78 expr out #txt
 wr0 f78 2792 69 2792 132 #arcP
-wr0 f79 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
 wr0 f79 2779 363 26 26 14 0 #rect
 wr0 f79 @|EndSubIcon #fIcon
 wr0 f80 expr out #txt
 wr0 f80 2792 308 2792 363 #arcP
-wr0 f81 actionDecl 'ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter out;
-' #txt
 wr0 f81 actionTable 'out=in;
 ' #txt
 wr0 f81 actionCode 'import ch.ivyteam.ivy.addons.docfactory.BaseDocFactory;
 in.documentFactory= BaseDocFactory.getInstance();' #txt
-wr0 f81 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
 wr0 f81 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -1520,8 +1394,6 @@ Object</name>
 ' #txt
 wr0 f81 3174 132 36 24 22 -15 #rect
 wr0 f81 @|StepIcon #fIcon
-wr0 f82 actionDecl 'ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter out;
-' #txt
 wr0 f82 actionTable 'out=in;
 ' #txt
 wr0 f82 actionCode 'import ch.ivyteam.ivy.addons.docfactory.FileUtil;
@@ -1546,7 +1418,6 @@ if(in.outputPath==null || in.outputPath.trim().equalsIgnoreCase("")){
 }
 
 ' #txt
-wr0 f82 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
 wr0 f82 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -1559,8 +1430,6 @@ outputPath / outputLetterName </name>
 ' #txt
 wr0 f82 3174 204 36 24 22 -18 #rect
 wr0 f82 @|StepIcon #fIcon
-wr0 f83 actionDecl 'ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter out;
-' #txt
 wr0 f83 actionTable 'out=in;
 ' #txt
 wr0 f83 actionCode '
@@ -1574,7 +1443,6 @@ in.documentTemplate.generateDocument();
 }
 
 ' #txt
-wr0 f83 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
 wr0 f83 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -1586,21 +1454,17 @@ wr0 f83 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 ' #txt
 wr0 f83 3174 284 36 24 22 -9 #rect
 wr0 f83 @|StepIcon #fIcon
-wr0 f84 inParamDecl '<java.lang.String optionalOutputpath,java.lang.String optionalLetterName,java.lang.String optionalOutputFormat,java.lang.String templatePath,ch.ivyteam.ivy.scripting.objects.Tree treeData> param;' #txt
+wr0 f84 inParamDecl '<String optionalOutputpath,String optionalLetterName,String optionalOutputFormat,String templatePath,Tree treeData> param;' #txt
 wr0 f84 inParamTable 'out.outputFormat=param.optionalOutputFormat;
 out.outputPath=param.optionalOutputpath;
 out.serialLetterName=param.optionalLetterName;
 out.templatePath=param.templatePath;
 out.TreeDataForNestedMailMerge=param.treeData;
 ' #txt
-wr0 f84 outParamDecl '<ch.ivyteam.ivy.addons.docfactory.FileOperationMessage fileOperationMessage> result;
-' #txt
+wr0 f84 outParamDecl '<ch.ivyteam.ivy.addons.docfactory.FileOperationMessage fileOperationMessage> result;' #txt
 wr0 f84 outParamTable 'result.fileOperationMessage=in.fileOperationMessage;
 ' #txt
-wr0 f84 actionDecl 'ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter out;
-' #txt
 wr0 f84 callSignature writeDocumentWithMailMergeNestedTableWithTree(String,String,String,String,Tree) #txt
-wr0 f84 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
 wr0 f84 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -1635,12 +1499,11 @@ wr0 f86 expr out #txt
 wr0 f86 3192 228 3192 284 #arcP
 wr0 f87 expr out #txt
 wr0 f87 3192 69 3192 132 #arcP
-wr0 f88 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
 wr0 f88 3179 371 26 26 14 0 #rect
 wr0 f88 @|EndSubIcon #fIcon
 wr0 f89 expr out #txt
 wr0 f89 3192 308 3192 371 #arcP
-wr0 f90 inParamDecl '<java.lang.String optionalOutputpath,java.lang.String optionalLetterName,java.lang.String optionalOutputFormat,java.lang.String templatePath,ch.ivyteam.ivy.scripting.objects.CompositeObject aData,List<ch.ivyteam.ivy.scripting.objects.CompositeObject> nestedListOfDatas> param;' #txt
+wr0 f90 inParamDecl '<String optionalOutputpath,String optionalLetterName,String optionalOutputFormat,String templatePath,CompositeObject aData,List<CompositeObject> nestedListOfDatas> param;' #txt
 wr0 f90 inParamTable 'out.data=param.aData;
 out.ListOfParentCompositeObjects=param.nestedListOfDatas;
 out.outputFormat=param.optionalOutputFormat;
@@ -1648,14 +1511,10 @@ out.outputPath=param.optionalOutputpath;
 out.serialLetterName=param.optionalLetterName;
 out.templatePath=param.templatePath;
 ' #txt
-wr0 f90 outParamDecl '<ch.ivyteam.ivy.addons.docfactory.FileOperationMessage fileOperationMessage> result;
-' #txt
+wr0 f90 outParamDecl '<ch.ivyteam.ivy.addons.docfactory.FileOperationMessage fileOperationMessage> result;' #txt
 wr0 f90 outParamTable 'result.fileOperationMessage=in.fileOperationMessage;
 ' #txt
-wr0 f90 actionDecl 'ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter out;
-' #txt
 wr0 f90 callSignature writeDocumentWithMailMergeNestedTableWithListOfDatas(String,String,String,String,ch.ivyteam.ivy.scripting.objects.CompositeObject,List<ch.ivyteam.ivy.scripting.objects.CompositeObject>) #txt
-wr0 f90 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
 wr0 f90 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -1682,8 +1541,6 @@ In these callables, just one java.io.File should be created.</desc>
 ' #txt
 wr0 f90 3611 43 26 26 26 -24 #rect
 wr0 f90 @|StartSubIcon #fIcon
-wr0 f91 actionDecl 'ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter out;
-' #txt
 wr0 f91 actionTable 'out=in;
 ' #txt
 wr0 f91 actionCode '
@@ -1697,7 +1554,6 @@ in.documentTemplate.generateDocument();
 }
 
 ' #txt
-wr0 f91 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
 wr0 f91 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -1709,8 +1565,6 @@ wr0 f91 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 ' #txt
 wr0 f91 3606 284 36 24 22 -9 #rect
 wr0 f91 @|StepIcon #fIcon
-wr0 f92 actionDecl 'ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter out;
-' #txt
 wr0 f92 actionTable 'out=in;
 ' #txt
 wr0 f92 actionCode 'import ch.ivyteam.ivy.addons.docfactory.FileUtil;
@@ -1735,7 +1589,6 @@ if(in.outputPath==null || in.outputPath.trim().equalsIgnoreCase("")){
 }
 
 ' #txt
-wr0 f92 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
 wr0 f92 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -1748,13 +1601,10 @@ outputPath / outputLetterName </name>
 ' #txt
 wr0 f92 3606 204 36 24 22 -18 #rect
 wr0 f92 @|StepIcon #fIcon
-wr0 f93 actionDecl 'ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter out;
-' #txt
 wr0 f93 actionTable 'out=in;
 ' #txt
 wr0 f93 actionCode 'import ch.ivyteam.ivy.addons.docfactory.BaseDocFactory;
 in.documentFactory= BaseDocFactory.getInstance();' #txt
-wr0 f93 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
 wr0 f93 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -1773,7 +1623,6 @@ wr0 f95 expr out #txt
 wr0 f95 3624 228 3624 284 #arcP
 wr0 f96 expr out #txt
 wr0 f96 3624 69 3624 132 #arcP
-wr0 f97 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter #txt
 wr0 f97 3611 371 26 26 14 0 #rect
 wr0 f97 @|EndSubIcon #fIcon
 wr0 f98 expr out #txt

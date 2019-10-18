@@ -1,6 +1,5 @@
 [Ivy]
-[>Created: Sun May 13 22:06:19 EDT 2012]
-1249FCC8592E4E39 3.17 #module
+1249FCC8592E4E39 7.5.0 #module
 >Proto >Proto Collection #zClass
 ws0 writeSerialLetterToManyCorrespondants Big #zClass
 ws0 B #cInfo
@@ -8,7 +7,6 @@ ws0 #process
 ws0 @TextInP .xml .xml #zField
 ws0 @TextInP .responsibility .responsibility #zField
 ws0 @AnnotationInP-0n ai ai #zField
-ws0 @TextInP .resExport .resExport #zField
 ws0 @TextInP .type .type #zField
 ws0 @TextInP .processKind .processKind #zField
 ws0 @MessageFlowInP-0n messageIn messageIn #zField
@@ -26,7 +24,7 @@ ws0 @PushWFArc f3 '' #zField
 ws0 @PushWFArc f4 '' #zField
 ws0 @InfoButton f5 '' #zField
 >Proto ws0 ws0 writeSerialLetterToManyCorrespondants #zField
-ws0 f0 inParamDecl '<java.lang.String optionalSingleDocumentOutputPath,List<ch.ivyteam.ivy.addons.docfactory.DocumentTemplate> documentTemplatesList,java.lang.Boolean allInOneDocument,java.lang.Boolean allInSeparatesDocuments,java.lang.String optionalSingleDocumentFormat,java.lang.String optionalSingleDocumentName> param;' #txt
+ws0 f0 inParamDecl '<String optionalSingleDocumentOutputPath,List<ch.ivyteam.ivy.addons.docfactory.DocumentTemplate> documentTemplatesList,Boolean allInOneDocument,Boolean allInSeparatesDocuments,String optionalSingleDocumentFormat,String optionalSingleDocumentName> param;' #txt
 ws0 f0 inParamTable 'out.manyDocuments=param.allInSeparatesDocuments;
 out.oneDocument=param.allInOneDocument;
 out.oneDocumentFormat=param.optionalSingleDocumentFormat;
@@ -34,15 +32,11 @@ out.oneDocumentName=param.optionalSingleDocumentName;
 out.oneDocumentPath=param.optionalSingleDocumentOutputPath;
 out.templateDocumentsList=param.documentTemplatesList;
 ' #txt
-ws0 f0 outParamDecl '<ch.ivyteam.ivy.addons.docfactory.FileOperationMessage FileOperationMessage,List<ch.ivyteam.ivy.addons.docfactory.FileOperationMessage> listOfFileOperationMessages> result;
-' #txt
+ws0 f0 outParamDecl '<ch.ivyteam.ivy.addons.docfactory.FileOperationMessage FileOperationMessage,List<ch.ivyteam.ivy.addons.docfactory.FileOperationMessage> listOfFileOperationMessages> result;' #txt
 ws0 f0 outParamTable 'result.FileOperationMessage=in.fileOperationMessage;
 result.listOfFileOperationMessages=in.listofFileOperationMessages;
 ' #txt
-ws0 f0 actionDecl 'ch.ivyteam.ivy.addons.docfactory.WriteSerialLetterToMany out;
-' #txt
 ws0 f0 callSignature writeSerialLettersToManyCorrespondents(String,List<ch.ivyteam.ivy.addons.docfactory.DocumentTemplate>,Boolean,Boolean,String,String) #txt
-ws0 f0 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetterToMany #txt
 ws0 f0 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -54,7 +48,6 @@ ws0 f0 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 ' #txt
 ws0 f0 323 59 26 26 -104 -39 #rect
 ws0 f0 @|StartSubIcon #fIcon
-ws0 f1 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetterToMany #txt
 ws0 f1 323 395 26 26 14 0 #rect
 ws0 f1 @|EndSubIcon #fIcon
 ws0 f11 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -86,8 +79,6 @@ is going to generate one single letter.</name>
 ws0 f12 35 267 234 74 -112 -32 #rect
 ws0 f12 @|IBIcon #fIcon
 ws0 f12 -7484683|-1|-16777216 #nodeStyle
-ws0 f14 actionDecl 'ch.ivyteam.ivy.addons.docfactory.WriteSerialLetterToMany out;
-' #txt
 ws0 f14 actionTable 'out=in;
 ' #txt
 ws0 f14 actionCode 'import ch.ivyteam.ivy.addons.docfactory.BaseDocFactory;
@@ -98,7 +89,6 @@ if(in.oneDocument){
 		in.fileOperationMessage = in.documentFactory.generateMultipleDocumentsInOne( in.oneDocumentPath,in.oneDocumentName,in.oneDocumentFormat,in.templateDocumentsList);
 	}
 }' #txt
-ws0 f14 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetterToMany #txt
 ws0 f14 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -110,8 +100,6 @@ ws0 f14 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 ' #txt
 ws0 f14 318 188 36 24 22 -9 #rect
 ws0 f14 @|StepIcon #fIcon
-ws0 f16 actionDecl 'ch.ivyteam.ivy.addons.docfactory.WriteSerialLetterToMany out;
-' #txt
 ws0 f16 actionTable 'out=in;
 ' #txt
 ws0 f16 actionCode 'import ch.ivyteam.ivy.addons.docfactory.TemplateMergeField;
@@ -130,7 +118,6 @@ if(in.manyDocuments){
 	
 	
 }' #txt
-ws0 f16 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetterToMany #txt
 ws0 f16 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -142,14 +129,11 @@ ws0 f16 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 ' #txt
 ws0 f16 318 292 36 24 22 -8 #rect
 ws0 f16 @|StepIcon #fIcon
-ws0 f9 actionDecl 'ch.ivyteam.ivy.addons.docfactory.WriteSerialLetterToMany out;
-' #txt
 ws0 f9 actionTable 'out=in;
 ' #txt
 ws0 f9 actionCode 'import ch.ivyteam.ivy.addons.docfactory.BaseDocFactory;
 in.documentFactory= BaseDocFactory.getInstance();
 ' #txt
-ws0 f9 type ch.ivyteam.ivy.addons.docfactory.WriteSerialLetterToMany #txt
 ws0 f9 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -189,7 +173,7 @@ The DocumentTemplates objects have two fields that can be used for that purpose:
 The keys (String) of the Maps are the tables'' names contained in the template. 
 The Names of the tables in the template are given by a Start Mergefield(TableStart:nameOfTheTable).
 2. The Merge Mail With Nested Regions is supported.
-Nested mail merge regions are at least two regions in which one is defined entirely inside the other, so they are “nested” in one another.
+Nested mail merge regions are at least two regions in which one is defined entirely inside the other, so they are ï¿½nestedï¿½ in one another.
 The DocumentTemplates objects have fields/attributes that can be used for that purpose:
     . List&lt;CompositeObject&gt; parentDataSourceForNestedMailMerge and List&lt;List&lt;CompositeObject&gt;&gt; childrenDataSourcesForNestedMailMerge.
       With these attributes set, only one nested level is supported: the parent list contains the information for the parent table/region,

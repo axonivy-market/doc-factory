@@ -19,8 +19,7 @@ public class ProcessDataDbService {
 	 * @param theCase <code>data</code> belongs to this case
 	 * @throws PersistencyException
 	 */
-	@SuppressWarnings("unchecked")
-	public static void saveProcessData(final Map data, final ICase theCase) throws PersistencyException {
+	public static void saveProcessData(final Map<?,?> data, final ICase theCase) throws PersistencyException {
 		new InsertProcessData(theCase, data).execute();
 	}
 
@@ -30,8 +29,7 @@ public class ProcessDataDbService {
 	 * @return a map with the data or null if there is no data
 	 * @throws PersistencyException
 	 */
-	@SuppressWarnings("unchecked")
-	public static Map loadProcessParameter(final ICase theCase) throws PersistencyException {
+	public static Map<?,?> loadProcessParameter(final ICase theCase) throws PersistencyException {
 		return new LoadProcessData(theCase).executeQuery();
 	}
 

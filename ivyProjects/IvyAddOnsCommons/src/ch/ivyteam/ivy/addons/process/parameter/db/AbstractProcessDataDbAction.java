@@ -34,28 +34,26 @@ public abstract class AbstractProcessDataDbAction<T> {
 	protected final ICase fTheCase;
 	
 	/** the data for the DB action */
-	@SuppressWarnings("unchecked")
-	protected final Map fData;
+	protected final Map<?,?> fData;
 	
 	/** the eventId for the DB action */
 	protected final String fEventId;
 	
 	/** the caseId for the DB action */
-	protected final Integer fCaseId;
+	protected final Long fCaseId;
 	
-	@SuppressWarnings("unchecked")
-	public AbstractProcessDataDbAction(final ICase theCase, final Map data) {
+	public AbstractProcessDataDbAction(final ICase theCase, final Map<?,?> data) {
 		String eventId = "";
 		this.fTheCase = theCase;
 		if(theCase != null) {
-			this.fCaseId = theCase.getIdentifier();
+			this.fCaseId = theCase.getId();
 			try {
-				eventId = theCase.getAdditionalProperty(WaitForAsyncProcessHelper.EVENT_ID);
+				eventId = theCase.customFields().textField(WaitForAsyncProcessHelper.EVENT_ID).getOrNull();
 			} catch (PersistencyException e) {
 				//
 			}
 		} else {
-			this.fCaseId = 0;
+			this.fCaseId = 0l;
 		}
 		this.fData = data;
 		this.fEventId = eventId;
