@@ -13,6 +13,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -32,6 +33,9 @@ import ch.ivyteam.ivy.scripting.objects.util.IvyScriptObjectEnvironment;
 import ch.ivyteam.log.Logger;
 
 @RunWith(PowerMockRunner.class)
+//tell powermock to ignore things different in java 11 
+//see https://github.com/mockito/mockito/issues/1562
+@PowerMockIgnore({"com.sun.org.apache.xerces.*", "com.aspose.pdf.*"}) 
 @PrepareForTest({Ivy.class, ThirdPartyLicenses.class, File.class, LicenseLoader.class, IvyScriptObjectEnvironment.class})
 public abstract class DocFactoryTest {
 	
