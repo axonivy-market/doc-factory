@@ -33,8 +33,9 @@ pipeline {
         script {
           docker.image('axonivy/build-container:read-the-docs-1.1').inside {
             sh "make -C /doc-build html BASEDIR='${env.WORKSPACE}/doc'"
-          }
+          }          
           archiveArtifacts 'doc/build/html/**/*'
+          recordIssues tools: [sphinxBuild()], unstableTotalAll: 1
         }
       }
     }
