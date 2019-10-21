@@ -23,7 +23,7 @@ pipeline {
               script { maven cmd: '-s settings.xml verify -U -Dmaven.test.failure.ignore=true' }
             }
             junit '**/target/surefire-reports/**/*.xml'
-            archiveArtifacts '**/target/*.iar, **/IvyAddOnsGuide/target/*.zip'
+            archiveArtifacts '**/target/*.iar'
           }
         }
       }
