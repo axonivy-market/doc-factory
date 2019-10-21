@@ -17,9 +17,7 @@ import ch.ivyteam.ivy.workflow.ICase;
  */
 public class InsertProcessData extends AbstractProcessDataDbAction<Void> {
 	
-	
-	@SuppressWarnings("unchecked")
-	public InsertProcessData(ICase theCase, Map data) {
+	public InsertProcessData(ICase theCase, Map<?,?> data) {
 		super(theCase, data);
 	}
 
@@ -42,7 +40,7 @@ public class InsertProcessData extends AbstractProcessDataDbAction<Void> {
 				out.close();				
 			}
 			final byte[] byteArray = bos.toByteArray();
-			statement.setInt(1, fCaseId);
+			statement.setLong(1, fCaseId);
 			statement.setString(2, fEventId);
 			statement.setBytes(3, byteArray);
 		} catch (IOException e) {

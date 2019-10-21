@@ -25,7 +25,7 @@ public class DeleteProcessData extends AbstractProcessDataDbAction<Void> {
 
 	@Override
 	public void setParameterForStatement(final PreparedStatement statement) throws SQLException {
-		statement.setInt(1, fCaseId);
+		statement.setLong(1, fCaseId);
 		statement.setString(2, fEventId);
 	}
 

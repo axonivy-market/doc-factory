@@ -34,7 +34,7 @@ import ch.ivyteam.ivy.scripting.objects.CompositeObject;
 import ch.ivyteam.ivy.scripting.objects.Recordset;
 import ch.ivyteam.ivy.scripting.objects.Tree;
 
-import com.aspose.words.DataTable;
+import com.aspose.words.net.System.Data.DataTable;
 import com.aspose.words.Document;
 import com.aspose.words.IMailMergeDataSource;
 import com.aspose.words.MailMergeCleanupOptions;

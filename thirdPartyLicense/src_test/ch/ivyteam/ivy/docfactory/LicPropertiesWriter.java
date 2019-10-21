@@ -11,7 +11,6 @@ import java.util.Properties;
 import org.apache.commons.io.IOUtils;
 
 import ch.ivyteam.ivy.ThirdPartyLicenses;
-import ch.ivyteam.ivy.ThirdPartyLicenses.Version;
 
 public class LicPropertiesWriter
 {
@@ -22,8 +21,7 @@ public class LicPropertiesWriter
     try (OutputStream licPropsOut = new FileOutputStream(resources))
     {
       Properties licenses = new Properties();
-      licenses.put(Version.ASPOSE_2015.getLicenceName(), readLicence("docfactory_2015_08_28.lic"));
-      licenses.put(Version.ASPOSE_2019.getLicenceName(), readLicence("docfactory_2019.lic"));
+      licenses.put("aspose2019", readLicence("docfactory_2019.lic"));
       licenses.store(licPropsOut, "internal");
       System.out.println("wrote licenses to " + resources);
     }

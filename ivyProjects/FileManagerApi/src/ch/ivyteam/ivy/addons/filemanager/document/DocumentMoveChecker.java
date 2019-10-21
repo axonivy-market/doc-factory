@@ -9,8 +9,6 @@ import ch.ivyteam.ivy.addons.filemanager.DocumentOnServer;
 import ch.ivyteam.ivy.addons.filemanager.ReturnedMessage;
 import ch.ivyteam.ivy.addons.filemanager.database.AbstractFileManagementHandler;
 import ch.ivyteam.ivy.addons.filemanager.database.filelink.FileLink;
-import ch.ivyteam.ivy.addons.filemanager.util.MethodArgumentsChecker;
-import ch.ivyteam.ivy.environment.Ivy;
 
 public final class DocumentMoveChecker {
 	
