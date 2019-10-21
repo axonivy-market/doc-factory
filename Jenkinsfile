@@ -16,7 +16,7 @@ pipeline {
     stage('build') {
       steps {
         script {
-          docker.build('maven-build', '-f Dockerfile build').inside {
+          docker.build('maven-build', '-f Dockerfile .').inside {
             if (env.BRANCH_NAME == 'master'){
               script { maven cmd: '-s settings.xml deploy -U -Dmaven.test.failure.ignore=true' }
             } else {
