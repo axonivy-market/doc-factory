@@ -57,8 +57,7 @@ public class WaitForAsyncProcess extends AbstractProcessIntermediateEventBean {
 	 * @param params a map with 2 entries: <code>PARAM_NAME</code> (name of the parameter) and 
 	 * <code>PARAM</code> (the ProcessParameter object)
 	 */
-	@SuppressWarnings("unchecked")
-	public static void signalEndOfProcess(final ICase caseToEnd, final Map params) {
+	public static void signalEndOfProcess(final ICase caseToEnd, final Map<?,?> params) {
 		WaitForAsyncProcessHelper.signalEndOfProcess(caseToEnd, params);
 	}
 	

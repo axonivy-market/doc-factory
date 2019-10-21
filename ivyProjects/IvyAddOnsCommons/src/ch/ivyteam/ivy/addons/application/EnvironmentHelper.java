@@ -19,7 +19,6 @@ import ch.ivyteam.ivy.workflow.IWorkflowSession;
  * @since October 2012
  * 
  */
-@SuppressWarnings("restriction")
 public class EnvironmentHelper
 {
   
