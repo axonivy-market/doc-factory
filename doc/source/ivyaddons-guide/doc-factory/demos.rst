@@ -1,5 +1,4 @@
 Demos
 =====
 
-Some new demos are in development. Until they are released please have a look at
-the 7.0 documentation.
+In the DocFactoryDemos Project that is available in the Designer Ivy Project Import you will find a number of hands-on examples how to create documents with the DocFactory.  
