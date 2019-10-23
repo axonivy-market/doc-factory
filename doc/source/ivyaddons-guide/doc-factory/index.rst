@@ -2,19 +2,21 @@ DocFactory
 ************
 
 A Document Factory is a system that allows generating automatically documents
-like serial letters with the help of documents models like Microsoft Office
-Templates (:file:`.dot` or :file:`.dotx` files).
+like serial letters with the help of Microsoft Office Templates (:file:`.dot` or :file:`.dotx` files).
 
-The document Factory system in the Ivy Add-ons project is open and can be
-extended. At the moment it is only implemented with the commercial Java API
-`Aspose <www.aspose.com>`_. You can add your own implementation with another
-API. :ref:`Read more <df-doc-factory-object>` in the doc factory section below.
+The Document Factory is open and can be extended. At the moment it is implemented 
+with the commercial Java Library `Aspose <https://www.aspose.com>`_ that is included in Axon.ivy platform.
 
-This solution works with Microsoft Office Templates. Each template contains
-fixed text and dynamic merges fields. A Merge field is a placeholder for text
-information. Each merge field has a name and will be filled with the information
-you provide to the document Factory system. For example a merge field could be
-the address or the name of a correspondent for a letter.
+.. tip::
+
+   The Document Factory currently bundles the modules: aspose-words, aspose-cells, aspose-pdf, aspose-slides.
+   However there are further aspose modules such as aspose-barcode, aspose-ocr, aspose-diagram and more, that you can use in Axon.ivy.
+   For that you have to add modules from the `Aspose repository <https://repository.aspose.com/repo>`_ to your ivy project 
+   and call the java API. You can find the complete documentation on the aspose web site at `Aspose <https://www.aspose.com>`_. 
+
+Microsoft Office templates contains fixed text and dynamic merges fields. 
+A Merge field is a placeholder for text information. Each merge field has a name and will be filled with the information
+you provide to the document Factory system. For example a merge field could be the address or the name of a correspondent for a letter.
 
 .. table:: Terms and Definitions used in the DocFactory chapter
 
@@ -31,6 +33,8 @@ the address or the name of a correspondent for a letter.
    +------------------+---------------------------------------------------------------------------------------------------------------------+
    | Format           | The format in which the serial document has to be saved (doc, txt, html…)                                           |
    +------------------+---------------------------------------------------------------------------------------------------------------------+
+
+Read more about the Document Factory API and the merging of fields in microsoftt office templates in the sections below.
 
 .. toctree::
    :maxdepth: 1
