@@ -11,7 +11,7 @@ with the commercial Java Library `Aspose <https://www.aspose.com>`_ that is incl
 
    The Document Factory currently bundles the modules: aspose-words, aspose-cells, aspose-pdf, aspose-slides.
    However there are further aspose modules such as aspose-barcode, aspose-ocr, aspose-diagram and more, that you can use in Axon.ivy.
-   For that you have to add modules from the `Aspose repository <https://repository.aspose.com/repo>`_ to your ivy project 
+   For that you have to add modules from the `Aspose repository <https://repository.aspose.com/repo/com/aspose/>`_ to your ivy project 
    and call the java API. You can find the complete documentation on the aspose web site at `Aspose <https://www.aspose.com>`_. 
 
 Microsoft Office templates contains fixed text and dynamic merges fields. 
