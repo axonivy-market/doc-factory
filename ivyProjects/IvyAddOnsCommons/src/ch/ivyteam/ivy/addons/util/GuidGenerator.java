@@ -3,6 +3,8 @@ package ch.ivyteam.ivy.addons.util;
 import java.util.Random;
 import java.util.regex.Pattern;
 
+import ch.ivyteam.ivy.environment.Ivy;
+
 /**
  * This class generates unique ID's.
  *
@@ -120,16 +122,16 @@ public class GuidGenerator
    */
   public static void main(String[] args)
   {
-    System.out.println("-------------- Test output (always the same) ---------------");
+    Ivy.log().info("-------------- Test output (always the same) ---------------");
     GuidGenerator.init(1L);
-    System.out.println("New GUID A: " + GuidGenerator.generateID());
-    System.out.println("New GUID B: " + GuidGenerator.generateID());
-    System.out.println("New GUID C: " + GuidGenerator.generateID());
-    System.out.println("And same again (after reset of generator):");
+    Ivy.log().info("New GUID A: " + GuidGenerator.generateID());
+    Ivy.log().info("New GUID B: " + GuidGenerator.generateID());
+    Ivy.log().info("New GUID C: " + GuidGenerator.generateID());
+    Ivy.log().info("And same again (after reset of generator):");
     GuidGenerator.init(1L);
-    System.out.println("New GUID A: " + GuidGenerator.generateID());
-    System.out.println("New GUID B: " + GuidGenerator.generateID());
-    System.out.println("New GUID C: " + GuidGenerator.generateID());
+    Ivy.log().info("New GUID A: " + GuidGenerator.generateID());
+    Ivy.log().info("New GUID B: " + GuidGenerator.generateID());
+    Ivy.log().info("New GUID C: " + GuidGenerator.generateID());
 
     String[] guids = { 
             "ABCDEF0123456789", // ok
@@ -140,13 +142,13 @@ public class GuidGenerator
             "ABCDEF01234567890" }; // too long : fail
     for (String guid : guids)
     {
-      System.out.println(guid + " is GUID: " + isGuid(guid));
+    	Ivy.log().info(guid + " is GUID: " + isGuid(guid));
     }
-    System.out.println("\n--------- Some really unique ID's (for copy/paste) ---------");
+    Ivy.log().info("\n--------- Some really unique ID's (for copy/paste) ---------");
     GuidGenerator.init(System.currentTimeMillis());
     for (int i=0; i<10; i++)
     {
-      System.out.println("New unique GUID: " + GuidGenerator.generateID());
+    	Ivy.log().info("New unique GUID: " + GuidGenerator.generateID());
     }
   }
   

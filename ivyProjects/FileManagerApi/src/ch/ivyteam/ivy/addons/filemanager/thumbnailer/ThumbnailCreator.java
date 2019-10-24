@@ -263,11 +263,6 @@ public class ThumbnailCreator implements Thumbnailer, ThumbnailerConstants {
 				return true;
 			} catch (Exception e) {
 				Ivy.log().warn("executeThumbnailers in ThumbnailCreator: ",e);
-				// This Thumbnailer apparently wasn't suitable, so try next
-				System.out.println("Warning: "
-						+ thumbnailer.getClass().getName()
-						+ " could not handle the file " + input.getName()
-						+ " (trying next)");
 			}
 		}
 		return false;
@@ -391,7 +386,7 @@ public class ThumbnailCreator implements Thumbnailer, ThumbnailerConstants {
 				result = thumbnailer.generateFullSizeImages(input, detectedMimeType, totalPagesForGenerating);
 			} catch (Exception e) {
 				// This Thumbnailer apparently wasn't suitable, so try next
-				System.out.println("Warning: "
+				Ivy.log().info("Warning: "
 						+ thumbnailer.getClass().getName()
 						+ " could not handle the file " + input.getName()
 						+ " (trying next)");
