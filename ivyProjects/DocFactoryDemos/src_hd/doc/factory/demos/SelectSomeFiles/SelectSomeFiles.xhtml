@@ -1,0 +1,48 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:ic="http://ivyteam.ch/jsf/component"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	>
+<h:body>
+<ui:composition template="/layouts/basic.xhtml">
+<ui:define name="title">CreateDocument</ui:define>
+<ui:define name="content">
+<style>
+table tr > td{
+	padding: 5px;
+}
+
+.ui-radiobutton{
+	margin: 0 7px 0 0 !important;
+}
+
+.btn{
+    color: #fff !important;
+    margin-right:15px;
+}
+
+#form\:file{
+	padding-top:18px
+}
+</style>
+<h3>DocFactoryDemos: Combine Files to one PDFeUpload and &#160;</h3>
+<br></br>
+	<h:form id="form" enctype="multipart/form-data">
+		<h:panelGrid columns="1">
+			<f:facet name="header">
+				<p:messages></p:messages>
+			</f:facet>
+			
+			<p:outputLabel value="Upload some PDF documents"/>
+			<p:fileUpload mode="advanced" multiple="true" allowTypes=" /(\.|\/)(pdf)$/" value="#{data.files}" fileUploadListener="#{logic.uploadFile}" update="@form"></p:fileUpload>
+			<p:commandButton styleClass="btn btn-success" actionListener="#{logic.createDocument}" value="Create Document" ajax="false" disabled="#{data.files eq null}"/>
+		</h:panelGrid>
+	</h:form>
+	
+</ui:define>
+</ui:composition>
+</h:body>
+</html>

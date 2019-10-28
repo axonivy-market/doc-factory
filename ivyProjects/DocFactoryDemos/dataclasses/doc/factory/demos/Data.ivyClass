@@ -1,0 +1,15 @@
+Data #class
+doc.factory.demos #namespace
+mergeFields List<ch.ivyteam.ivy.addons.docfactory.TemplateMergeField> #field
+position doc.factory.demos.Position #field
+positions List<doc.factory.demos.Position> #field
+report doc.factory.demos.Report #field
+tableNames List #field
+tableRecords List<Recordset> #field
+templateFile java.io.File #field
+templateFile java.io.File #fieldComment
+documentId Long #field
+documentId PERSISTENT #fieldModifier
+fileList List<java.io.File> #field
+fileList java.io.Files #fieldComment
+str String #field

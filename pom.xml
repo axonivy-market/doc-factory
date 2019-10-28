@@ -11,6 +11,7 @@
         <module>thirdPartyLicense.p2</module>
 		<module>ivyProjects/IvyAddOnsCommons</module>
 		<module>ivyProjects/DocFactory</module>
+		<module>ivyProjects/DocFactoryDemos</module>
 		<module>ivyProjects/FileManagerApi</module>
 		<module>ivyProjects/IvyAddOns</module>
 		<module>ivyProjects/IvyAddons_tests</module>
