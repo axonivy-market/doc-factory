@@ -3,8 +3,6 @@ package ch.ivyteam.ivy.addons.util;
 import java.util.Random;
 import java.util.regex.Pattern;
 
-import ch.ivyteam.ivy.environment.Ivy;
-
 /**
  * This class generates unique ID's.
  *
@@ -114,42 +112,6 @@ public class GuidGenerator
       return false;
     
     return guidPattern.matcher(string).matches();
-  }
-
-  /**
-   * "Testmethod"
-   * @param  args  No args required.
-   */
-  public static void main(String[] args)
-  {
-    Ivy.log().info("-------------- Test output (always the same) ---------------");
-    GuidGenerator.init(1L);
-    Ivy.log().info("New GUID A: " + GuidGenerator.generateID());
-    Ivy.log().info("New GUID B: " + GuidGenerator.generateID());
-    Ivy.log().info("New GUID C: " + GuidGenerator.generateID());
-    Ivy.log().info("And same again (after reset of generator):");
-    GuidGenerator.init(1L);
-    Ivy.log().info("New GUID A: " + GuidGenerator.generateID());
-    Ivy.log().info("New GUID B: " + GuidGenerator.generateID());
-    Ivy.log().info("New GUID C: " + GuidGenerator.generateID());
-
-    String[] guids = { 
-            "ABCDEF0123456789", // ok
-            "3a29384759872783", // lowercase char : fail
-            "9283746589283746", // digits only : ok
-            "AAAAAAAAFFFFFFFF", // chars only : ok
-            "ABC123",           // too short : fail
-            "ABCDEF01234567890" }; // too long : fail
-    for (String guid : guids)
-    {
-    	Ivy.log().info(guid + " is GUID: " + isGuid(guid));
-    }
-    Ivy.log().info("\n--------- Some really unique ID's (for copy/paste) ---------");
-    GuidGenerator.init(System.currentTimeMillis());
-    for (int i=0; i<10; i++)
-    {
-    	Ivy.log().info("New unique GUID: " + GuidGenerator.generateID());
-    }
   }
   
 }
