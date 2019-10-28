@@ -1,0 +1,10 @@
+Report #class
+doc.factory.demos #namespace
+employee String #field
+employee PERSISTENT #fieldModifier
+from Date #field
+from PERSISTENT #fieldModifier
+till Date #field
+till PERSISTENT #fieldModifier
+projects List<doc.factory.demos.Project> #field
+projects PERSISTENT #fieldModifier
