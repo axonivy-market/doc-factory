@@ -24,8 +24,8 @@ public class FilesUtil
    */
   public static void setFileRef(java.io.File file) throws IOException
   {
-    Ivy.session().setAttribute("docRef",Ivy.html().fileref(new File(file.getParentFile().getName() + "/" + file.getName())));
-    Ivy.session().setAttribute("docFilename", file.getName());
+    File ivyFile = new File(file.getParentFile().getName() + "/" + file.getName(), false);
+    setFileRef(ivyFile);
   }
 
   public static ch.ivyteam.ivy.scripting.objects.File primeToIvyFile(UploadedFile file)
