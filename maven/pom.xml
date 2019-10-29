@@ -17,6 +17,10 @@
         <project-build-plugin-version>7.4.0</project-build-plugin-version>
         <maven-dependency-plugin-version>3.0.2</maven-dependency-plugin-version>
         <maven-deploy-plugin-version>2.8.2</maven-deploy-plugin-version>
+
+        <ivy.engine.directory>${java.io.tmpdir}/ivy-engine</ivy.engine.directory>
+        <ivy.engine.list.url>http://zugprojenkins/job/ivy-core_product/job/master/lastSuccessfulBuild/</ivy.engine.list.url>
+        <ivy.engine.version>[7.3.0,]</ivy.engine.version>
     </properties>
 
     <distributionManagement>
@@ -55,5 +59,39 @@
             </plugin>
         </plugins>
     </build>
+
+    <repositories>
+        <repository>
+            <id>axonivy</id>
+            <url>https://repo.axonivy.io/artifactory/ext-release-local</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+
+        <repository>
+            <id>zugpronexus.snapshots</id>
+            <name>Integration repository ZUG</name>
+            <snapshots>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+            <url>http://zugpronexus:8081/nexus/content/groups/build</url>
+            <layout>default</layout>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>zugpronexus.snapshots</id>
+            <name>Internal Plugin Build Integration Repository</name>
+            <url>http://zugpronexus:8081/nexus/content/groups/build-plugins</url>
+            <snapshots>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
 
 </project>

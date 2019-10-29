@@ -24,9 +24,9 @@ pipeline {
 
           docker.build('maven-build', '-f Dockerfile .').inside {
             def phase = env.BRANCH_NAME == 'master' ? 'deploy' : 'verify'
-            maven cmd: "clean -s settings.xml ${phase} -Dmaven.test.failure.ignore=true"
+            maven cmd: "clean ${phase} -Dmaven.test.failure.ignore=true"
 
-            dir ('doc') {              
+            dir ('doc') {
               maven cmd: "clean ${phase}"
             }
           }
