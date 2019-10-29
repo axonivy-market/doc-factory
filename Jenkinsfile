@@ -27,7 +27,7 @@ pipeline {
             maven cmd: "clean -s settings.xml ${phase} -Dmaven.test.failure.ignore=true"
 
             dir ('doc') {              
-              maven cmd: "clean -s settings.xml ${phase}"
+              maven cmd: "clean ${phase}"
             }
           }
           archiveArtifacts '**/target/*.iar'
