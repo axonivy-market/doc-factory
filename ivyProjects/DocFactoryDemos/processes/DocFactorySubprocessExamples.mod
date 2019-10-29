@@ -141,7 +141,7 @@ De0 f7 actionTable 'out=in;
 ' #txt
 De0 f7 actionCode 'import ch.ivyteam.ivy.cm.IContentObjectValue;
 
-File tempFile = new File("/Templates/myTemplateWithMergeFields.doc", true);
+File tempFile = new File("Templates/myTemplateWithMergeFields.doc", true);
     ivy.log.debug("javafile "+tempFile);  
 if (!tempFile.exists())
 {
@@ -259,7 +259,7 @@ De0 f13 actionTable 'out=in;
 ' #txt
 De0 f13 actionCode 'import ch.ivyteam.ivy.cm.IContentObjectValue;
 
-File tempFile = new File("/Templates/myTemplateWithObjectData.doc", true);
+File tempFile = new File("Templates/myTemplateWithObjectData.doc", true);
 if (!tempFile.exists())
 {
     //legt leeres file an (muss vorhanden sein für export)
@@ -293,7 +293,7 @@ De0 f20 actionTable 'out=in;
 ' #txt
 De0 f20 actionCode 'import ch.ivyteam.ivy.cm.IContentObjectValue;
 
-File tempFile = new File("/Templates/myTemplateWithTable.doc", true);
+File tempFile = new File("Templates/myTemplateWithTable.doc", true);
 
 if (!tempFile.exists())
 {
@@ -381,7 +381,7 @@ De0 f27 actionTable 'out=in;
 ' #txt
 De0 f27 actionCode 'import ch.ivyteam.ivy.cm.IContentObjectValue;
 
-File tempFile = new File("/Templates/myTemplateWithConditionalText.doc", true);
+File tempFile = new File("Templates/myTemplateWithConditionalText.doc", true);
 
 if (!tempFile.exists())
 {
@@ -521,7 +521,7 @@ De0 f38 actionTable 'out=in;
 ' #txt
 De0 f38 actionCode 'import ch.ivyteam.ivy.cm.IContentObjectValue;
 
-File tempFile = new File("/Templates/myTemplateWithNestedTables.doc", true);
+File tempFile = new File("Templates/myTemplateWithNestedTables.doc", true);
 
 if (!tempFile.exists())
 {
