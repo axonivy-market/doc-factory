@@ -13,9 +13,6 @@
             <directory>build/html</directory>
             <outputDirectory>.</outputDirectory>
             <excludes>
-                <!-- sphinx pretty search results artifact -->
-                <exclude>_raw_sources/**</exclude>
-
                 <!-- .doctrees are python build artifacts -->
                 <exclude>_sources/.doctrees/**</exclude>
 
