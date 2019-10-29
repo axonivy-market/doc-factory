@@ -2,178 +2,181 @@ package ch.ivyteam.ivy.docFactoryExamples;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-
-import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpServletResponse;
 
 import ch.ivyteam.ivy.addons.docfactory.aspose.AsposeProduct;
 import ch.ivyteam.ivy.addons.docfactory.aspose.LicenseLoader;
 import ch.ivyteam.ivy.environment.Ivy;
 
-public class DocumentCreator {
-	private String name;
-	private Date date;
-	private byte[] image;
-	private String imageName;
-	private ch.ivyteam.ivy.scripting.objects.File ivyFile;
-	private java.util.List<String> expectations;
-	private String newExpectation;
-	private String memberType;
+public class DocumentCreator
+{
+  private String name;
+  private Date date;
+  private byte[] image;
+  private String imageName;
+  private ch.ivyteam.ivy.scripting.objects.File ivyFile;
+  private java.util.List<String> expectations;
+  private String newExpectation;
+  private String memberType;
 
-	private String slideTitle;
-	private int numberOfSlide;
+  private String slideTitle;
+  private int numberOfSlide;
 
-	public final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+  public final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
-	public void init() {
-		expectations = new ArrayList<>();
-		expectations.add("Sunshine");
-		expectations.add("Beach Bar");
-		memberType = "1";
-		slideTitle = "DocFactory Demos: Aspose PPT example";
-		numberOfSlide = 1;
+  public void init()
+  {
+    expectations = new ArrayList<>();
+    expectations.add("Sunshine");
+    expectations.add("Beach Bar");
+    memberType = "1";
+    slideTitle = "DocFactory Demos: Aspose PPT example";
+    numberOfSlide = 1;
 
-		// Load license for aspose slides & cell
-		try {
-			LicenseLoader.loadLicenseforProduct(AsposeProduct.SLIDES);
-			LicenseLoader.loadLicenseforProduct(AsposeProduct.CELLS);
-		} catch (Exception e) {
-			Ivy.log().error(e);
-		}
-	}
+    // Load license for aspose slides & cell
+    try
+    {
+      LicenseLoader.loadLicenseforProduct(AsposeProduct.SLIDES);
+      LicenseLoader.loadLicenseforProduct(AsposeProduct.CELLS);
+    }
+    catch (Exception e)
+    {
+      Ivy.log().error(e);
+    }
+  }
 
-	public File createWordDocument() throws IOException {
-	  File template = new LocalResource("resources/myDocumentCreatorTemplate.docx").asFile();
-	  File result = new DocxCreator(this).create(template);
-	  return result;
-	}
+  public File createWordDocument() throws IOException
+  {
+    File template = new LocalResource("resources/myDocumentCreatorTemplate.docx").asFile();
+    File result = new DocxCreator(this).create(template);
+    return result;
+  }
 
-	public File createMultiDocument() throws IOException {
-	  File template = new LocalResource("resources/mySimpleDocTemplate.docx").asFile();
-	  File result = new DocxCreator(this).createMulti(template);
-	  return result;
-	}
+  public File createMultiDocument() throws IOException
+  {
+    File template = new LocalResource("resources/mySimpleDocTemplate.docx").asFile();
+    File result = new DocxCreator(this).createMulti(template);
+    return result;
+  }
 
-	public File createSimpleDocument()  {
-	  File template = new LocalResource("resources/myDocumentCreatorTemplate.docx").asFile();
-	  File result = new DocxCreator(this).createSimple(template);
-	  return result;
-	}
+  public File createSimpleDocument()
+  {
+    File template = new LocalResource("resources/myDocumentCreatorTemplate.docx").asFile();
+    File result = new DocxCreator(this).createSimple(template);
+    return result;
+  }
 
-	public File createPowerPoint() throws IOException {
-	  java.io.File template = new LocalResource("resources/myPowerPointTemplate.pptx").asFile();
-	  java.io.File result = new PptCreator(this).create(template);
-	  return result;
-	}
-	
-	public File createExcel() throws Exception {
-	  return new XlsxCreator(this).create();
-	}
+  public File createPowerPoint() throws IOException
+  {
+    java.io.File template = new LocalResource("resources/myPowerPointTemplate.pptx").asFile();
+    java.io.File result = new PptCreator(this).create(template);
+    return result;
+  }
 
-	public void download(File file) throws IOException {
-		FacesContext facesContext = FacesContext.getCurrentInstance();
+  public File createExcel() throws Exception
+  {
+    return new XlsxCreator(this).create();
+  }
 
-		if (file != null) {
-			HttpServletResponse response = (HttpServletResponse) facesContext.getExternalContext().getResponse();
-			String fileName = file.getName();
+  public String getName()
+  {
+    return name;
+  }
 
-			response.reset();
-			response.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
-			response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
+  public void setName(String name)
+  {
+    this.name = name;
+  }
 
-			OutputStream responseOutputStream = response.getOutputStream();
-			responseOutputStream.write(Files.readAllBytes(file.toPath()));
-			responseOutputStream.flush();
-			responseOutputStream.close();
-			facesContext.responseComplete();
-		} else {
-			Ivy.log().info("Template NULL");
-		}
-	}
+  public Date getDate()
+  {
+    return date;
+  }
 
-	public String getName() {
-		return name;
-	}
+  public void setDate(Date date)
+  {
+    this.date = date;
+  }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+  public java.util.List<String> getExpectations()
+  {
+    return expectations;
+  }
 
-	public Date getDate() {
-		return date;
-	}
+  public void setExpectations(java.util.List<String> expectations)
+  {
+    this.expectations = expectations;
+  }
 
-	public void setDate(Date date) {
-		this.date = date;
-	}
+  public String getNewExpectation()
+  {
+    return newExpectation;
+  }
 
-	public java.util.List<String> getExpectations() {
-		return expectations;
-	}
+  public void setNewExpectation(String newExpectation)
+  {
+    this.newExpectation = newExpectation;
+  }
 
-	public void setExpectations(java.util.List<String> expectations) {
-		this.expectations = expectations;
-	}
+  public byte[] getImage()
+  {
+    return image;
+  }
 
-	public String getNewExpectation() {
-		return newExpectation;
-	}
+  public void setImage(byte[] image)
+  {
+    this.image = image;
+  }
 
-	public void setNewExpectation(String newExpectation) {
-		this.newExpectation = newExpectation;
-	}
+  public String getImageName()
+  {
+    return imageName;
+  }
 
-	public byte[] getImage() {
-		return image;
-	}
+  public void setImageName(String imageName)
+  {
+    this.imageName = imageName;
+  }
 
-	public void setImage(byte[] image) {
-		this.image = image;
-	}
+  public ch.ivyteam.ivy.scripting.objects.File getIvyFile()
+  {
+    return ivyFile;
+  }
 
-	public String getImageName() {
-		return imageName;
-	}
+  public void setIvyFile(ch.ivyteam.ivy.scripting.objects.File ivyFile)
+  {
+    this.ivyFile = ivyFile;
+  }
 
-	public void setImageName(String imageName) {
-		this.imageName = imageName;
-	}
+  public String getMemberType()
+  {
+    return memberType;
+  }
 
-	public ch.ivyteam.ivy.scripting.objects.File getIvyFile() {
-		return ivyFile;
-	}
+  public void setMemberType(String memberType)
+  {
+    this.memberType = memberType;
+  }
 
-	public void setIvyFile(ch.ivyteam.ivy.scripting.objects.File ivyFile) {
-		this.ivyFile = ivyFile;
-	}
+  public String getSlideTitle()
+  {
+    return slideTitle;
+  }
 
-	public String getMemberType() {
-		return memberType;
-	}
+  public void setSlideTitle(String slideTitle)
+  {
+    this.slideTitle = slideTitle;
+  }
 
-	public void setMemberType(String memberType) {
-		this.memberType = memberType;
-	}
+  public int getNumberOfSlide()
+  {
+    return numberOfSlide;
+  }
 
-	public String getSlideTitle() {
-		return slideTitle;
-	}
-
-	public void setSlideTitle(String slideTitle) {
-		this.slideTitle = slideTitle;
-	}
-
-	public int getNumberOfSlide() {
-		return numberOfSlide;
-	}
-
-	public void setNumberOfSlide(int numberOfSlide) {
-		this.numberOfSlide = numberOfSlide;
-	}
-
+  public void setNumberOfSlide(int numberOfSlide)
+  {
+    this.numberOfSlide = numberOfSlide;
+  }
 }
