@@ -20,17 +20,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
 
-import ch.ivyteam.ivy.addons.docfactory.AsposeDocFactory;
-import ch.ivyteam.ivy.addons.docfactory.DocumentTemplate;
-import ch.ivyteam.ivy.addons.docfactory.FileOperationMessage;
-import ch.ivyteam.ivy.addons.docfactory.TemplateMergeField;
-import ch.ivyteam.ivy.addons.docfactory.aspose.AsposeProduct;
-import ch.ivyteam.ivy.addons.docfactory.aspose.LicenseLoader;
-import ch.ivyteam.ivy.environment.Ivy;
-import ch.ivyteam.ivy.scripting.objects.List;
-import ch.ivyteam.ivy.scripting.objects.Record;
-import ch.ivyteam.ivy.scripting.objects.Recordset;
-
 import com.aspose.cells.BorderType;
 import com.aspose.cells.CellBorderType;
 import com.aspose.cells.Color;
@@ -57,6 +46,17 @@ import com.aspose.words.Node;
 import com.aspose.words.NodeType;
 import com.aspose.words.Paragraph;
 import com.aspose.words.Table;
+
+import ch.ivyteam.ivy.addons.docfactory.AsposeDocFactory;
+import ch.ivyteam.ivy.addons.docfactory.DocumentTemplate;
+import ch.ivyteam.ivy.addons.docfactory.FileOperationMessage;
+import ch.ivyteam.ivy.addons.docfactory.TemplateMergeField;
+import ch.ivyteam.ivy.addons.docfactory.aspose.AsposeProduct;
+import ch.ivyteam.ivy.addons.docfactory.aspose.LicenseLoader;
+import ch.ivyteam.ivy.environment.Ivy;
+import ch.ivyteam.ivy.scripting.objects.List;
+import ch.ivyteam.ivy.scripting.objects.Record;
+import ch.ivyteam.ivy.scripting.objects.Recordset;
 
 public class DocumentCreator {
 	private String name;
@@ -90,6 +90,21 @@ public class DocumentCreator {
 		}
 	}
 
+	private static Hashtable<String, Recordset> asTable(java.util.List<String> expectations)
+	{
+	  Hashtable<String, Recordset> tablesNamesAndFieldsHashtable = new Hashtable<String, Recordset>();
+          Recordset rs = new Recordset();
+          for (int i = 0; i < expectations.size(); i++) 
+          {
+                  Record r = new Record();
+                  r.putField("counter", i + 1);
+                  r.putField("content", expectations.get(i));
+                  rs.add(r);
+          }
+          tablesNamesAndFieldsHashtable.put("expect", rs);
+          return tablesNamesAndFieldsHashtable;
+	}
+	
 	public File createWordDocument() {
 		FieldMergingCallBack fieldMergingCallback = new FieldMergingCallBack(200, 200);
 
@@ -118,20 +133,7 @@ public class DocumentCreator {
 		documentTemplate.setOutputPath("files/application/ivy_DocFactoryDemo");
 		documentTemplate.setOutputFormat("docx");
 		documentTemplate.setMergeFields(mergeFields);
-
-		Hashtable<String, Recordset> tablesNamesAndFieldsHashtable = new Hashtable<String, Recordset>();
-
-		Recordset rs = new Recordset();
-
-		for (int i = 0; i < expectations.size(); i++) {
-			Record r = new Record();
-			r.putField("counter", i + 1);
-			r.putField("content", expectations.get(i));
-			rs.add(r);
-		}
-
-		tablesNamesAndFieldsHashtable.put("expect", rs);
-		documentTemplate.setTablesNamesAndFieldsHashtable(tablesNamesAndFieldsHashtable);
+		documentTemplate.setTablesNamesAndFieldsHashtable(asTable(expectations));
 
 		FileOperationMessage fileOperationMessage = asposeDocFactory.generateDocument(documentTemplate);
 
@@ -238,17 +240,7 @@ public class DocumentCreator {
 		documentTemplate6.setOutputFormat("txt");
 		documentTemplate6.setMergeFields(mergeFields);
 
-		Hashtable<String, Recordset> tablesNamesAndFieldsHashtable = new Hashtable<String, Recordset>();
-		Recordset rs = new Recordset();
-
-		for (int i = 0; i < expectations.size(); i++) {
-			Record r = new Record();
-			r.putField("counter", i + 1);
-			r.putField("content", expectations.get(i));
-			rs.add(r);
-		}
-
-		tablesNamesAndFieldsHashtable.put("expect", rs);
+		Hashtable<String, Recordset> tablesNamesAndFieldsHashtable = asTable(expectations);
 		documentTemplate1.setTablesNamesAndFieldsHashtable(tablesNamesAndFieldsHashtable);
 		documentTemplate2.setTablesNamesAndFieldsHashtable(tablesNamesAndFieldsHashtable);
 		documentTemplate3.setTablesNamesAndFieldsHashtable(tablesNamesAndFieldsHashtable);
