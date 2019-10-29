@@ -21,9 +21,6 @@ public class DocumentCreator
   private String newExpectation;
   private String memberType;
 
-  private String slideTitle;
-  private int numberOfSlide;
-
   public final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
   public void init()
@@ -32,8 +29,6 @@ public class DocumentCreator
     expectations.add("Sunshine");
     expectations.add("Beach Bar");
     memberType = "1";
-    slideTitle = "DocFactory Demos: Aspose PPT example";
-    numberOfSlide = 1;
 
     // Load license for aspose slides & cell
     try
@@ -158,25 +153,5 @@ public class DocumentCreator
   public void setMemberType(String memberType)
   {
     this.memberType = memberType;
-  }
-
-  public String getSlideTitle()
-  {
-    return slideTitle;
-  }
-
-  public void setSlideTitle(String slideTitle)
-  {
-    this.slideTitle = slideTitle;
-  }
-
-  public int getNumberOfSlide()
-  {
-    return numberOfSlide;
-  }
-
-  public void setNumberOfSlide(int numberOfSlide)
-  {
-    this.numberOfSlide = numberOfSlide;
   }
 }
