@@ -25,25 +25,58 @@ public class TestApiExamples
           .followRedirects(Redirect.NORMAL)
           .cookieHandler(new CookieManager())
           .build();
+  
+  private final String docFactoryApiExamples = EngineUrl.process()+"/DocFactoryDemos/16B45CBCE0D2056C";
 
   @Test
   public void docWithCompositeObj() throws Exception
   {
-    HttpResponse<String> response = request(EngineUrl.process()+"/DocFactoryDemos/16B45CBCE0D2056C/start6.ivp");
+    HttpResponse<String> response = request(docFactoryApiExamples+"/start6.ivp");
     String docLink = getDocLink(response);
     assertThat(docLink).endsWith("DocWithCompositeObject.pdf");
-    
-    assertThat(checkFile(docLink).headers().firstValue(HttpHeaders.CONTENT_TYPE).get())
-      .isEqualTo("application/pdf");
+    assertThat(contentType(checkFile(docLink))).isEqualTo("application/pdf");
+  }
+  
+  @Test
+  public void docWithNestedTablesPDF() throws Exception
+  {
+    HttpResponse<String> response = request(docFactoryApiExamples+"/start3.ivp");
+    String docLink = getDocLink(response);
+    assertThat(docLink).endsWith("DocWithFullNestedTables.pdf");
+    assertThat(contentType(checkFile(docLink))).isEqualTo("application/pdf");
+  }
+  
+  @Test
+  public void docWithNestedTablesDOCX() throws Exception
+  {
+    HttpResponse<String> response = request(docFactoryApiExamples+"/start4.ivp");
+    String docLink = getDocLink(response);
+    assertThat(docLink).endsWith("DocWithFullNestedTables.docx");
+    assertThat(contentType(checkFile(docLink)))
+      .isEqualTo("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+  }
+  
+  @Test
+  public void docWithNestedTablesHTML() throws Exception
+  {
+    HttpResponse<String> response = request(docFactoryApiExamples+"/start5.ivp");
+    String docLink = getDocLink(response);
+    assertThat(docLink).endsWith("DocWithFullNestedTables.html");
+    assertThat(contentType(checkFile(docLink))).isEqualTo("text/html");
   }
 
-  private static String getDocLink(HttpResponse<String> response)
+  private static String getDocLink(HttpResponse<String> response) 
   {
     assertThat(response.statusCode())
       .as(response.toString()+"\n"+response.body())
       .isEqualTo(200);
     Element result = Jsoup.parse(response.body()).getElementById("docLink");
     return result.getElementsByTag("a").attr("href");
+  }
+  
+  private static String contentType(HttpResponse<?> response)
+  {
+    return response.headers().firstValue(HttpHeaders.CONTENT_TYPE).get();
   }
   
   private HttpResponse<String> request(String uri) throws Exception
