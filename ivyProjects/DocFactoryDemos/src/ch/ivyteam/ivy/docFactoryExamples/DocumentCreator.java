@@ -26,17 +26,6 @@ import com.aspose.cells.Style;
 import com.aspose.cells.TextAlignmentType;
 import com.aspose.cells.Workbook;
 import com.aspose.cells.Worksheet;
-import com.aspose.slides.AutoShape;
-import com.aspose.slides.IPPImage;
-import com.aspose.slides.IPictureFrame;
-import com.aspose.slides.IRow;
-import com.aspose.slides.IShape;
-import com.aspose.slides.ISlide;
-import com.aspose.slides.ISlideCollection;
-import com.aspose.slides.ITable;
-import com.aspose.slides.Presentation;
-import com.aspose.slides.SaveFormat;
-import com.aspose.slides.ShapeType;
 import com.aspose.words.Cell;
 import com.aspose.words.Document;
 import com.aspose.words.DocumentBuilder;
@@ -70,7 +59,7 @@ public class DocumentCreator {
 	private String slideTitle;
 	private int numberOfSlide;
 
-	private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+	public final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
 	public void init() {
 		expectations = new ArrayList<>();
@@ -308,59 +297,11 @@ public class DocumentCreator {
 
 	public File createPowerPoint() throws IOException {
 		// Load template
-		LocalResource loader = new LocalResource("resources/myPowerPointTemplate.pptx");
-		Presentation presentation = new Presentation(loader.asPath().toString());
-
-		ch.ivyteam.ivy.scripting.objects.File tempFileIvy = 
-		        new ch.ivyteam.ivy.scripting.objects.File("PowerPointDocument.pptx", false);
-		
-		ISlideCollection slds = presentation.getSlides();
-		ISlide slideOne = slds.get_Item(0);
-
-		// Binding shape data
-		updateText(slideOne, "{title}", this.slideTitle);
-		updateText(slideOne, "{name}", this.name);
-		updateText(slideOne, "{date}", dateFormat.format(this.date));
-
-		// Binding image
-		if (this.image != null && this.image.length > 0) {
-			IPPImage imgx = presentation.getImages().addImage(this.image);
-			IShape imagePlaceHolder = findShape(slideOne, "{image}");
-			IPictureFrame pf = slideOne.getShapes().addPictureFrame(ShapeType.Rectangle, imagePlaceHolder.getX(),
-					imagePlaceHolder.getY(), imagePlaceHolder.getWidth(), imagePlaceHolder.getHeight(), imgx);
-			pf.setAlternativeText("My inserted Image");
-			// Do other things with image, Setting relative scale width and height
-			// pf.setRelativeScaleHeight(0.8f);
-
-			// remove image placeholder
-			slideOne.getShapes().remove(imagePlaceHolder);
-		}
-
-		// Binding table data
-		ITable table = findTable(slideOne);
-
-		for (int i = 0; i < expectations.size(); i++) {
-			IRow row = table.getRows().get_Item(1);
-			row.get_Item(0).getTextFrame().setText(i + 1 + "");
-			row.get_Item(1).getTextFrame().setText(expectations.get(i));
-			table.getRows().addClone(row, false);
-		}
-
-		// remove empty row
-		table.getRows().removeAt(1, true);
-
-		if (numberOfSlide > 1) {
-			for (int i = 0; i < numberOfSlide - 1; i++) {
-				ISlide clone = presentation.getSlides().get_Item(0);
-				presentation.getSlides().addClone(clone);
-			}
-		}
-
-		presentation.save(tempFileIvy.getAbsolutePath(), SaveFormat.Pptx);
-
-		return tempFileIvy.getJavaFile();
+		java.io.File template = new LocalResource("resources/myPowerPointTemplate.pptx").asFile();
+		java.io.File result = new PptCreator(this).create(template);
+		return result;
 	}
-
+	
 	public File createExcel() throws Exception {
 		// Create excel file
 		ch.ivyteam.ivy.scripting.objects.File tempExcel = 
@@ -425,34 +366,6 @@ public class DocumentCreator {
 		workbook.save(tempExcel.getAbsolutePath());
 
 		return tempExcel.getJavaFile();
-	}
-
-	private void updateText(ISlide slide, String textToReplace, String newText) {
-		AutoShape shape = findShape(slide, textToReplace);
-		if (shape != null) {
-			shape.getTextFrame().setText(newText);
-		}
-	}
-
-	private AutoShape findShape(ISlide slide, String alttext) {
-		for (int i = 0; i < slide.getShapes().size(); i++) {
-			if (slide.getShapes().get_Item(i) instanceof AutoShape) {
-				if (((AutoShape) slide.getShapes().get_Item(i)).getTextFrame().getText().trim().equalsIgnoreCase(alttext)) {
-					return (AutoShape) slide.getShapes().get_Item(i);
-				}
-			}
-		}
-
-		return null;
-	}
-
-	private ITable findTable(ISlide slide) {
-		for (IShape shape : slide.getShapes()) {
-			if (shape instanceof ITable) {
-				return (ITable) shape;
-			}
-		}
-		return null;
 	}
 
 	public void download(File file) throws IOException {
