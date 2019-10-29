@@ -116,8 +116,7 @@ public class DocumentCreator {
 		// AsposeDocFactory asposeDocFactory = (AsposeDocFactory) AsposeDocFactory.getInstance();
 
 		// Load template
-		ResourceLoader loader = new ResourceLoader();
-		Path templatePath = loader.getResource("resources/myDocumentCreatorTemplate.docx").toPath();
+		Path templatePath = new LocalResource("resources/myDocumentCreatorTemplate.docx").asPath();
 
 		List<TemplateMergeField> mergeFields = new List<>();
 		mergeFields.add(new TemplateMergeField("goldMember", memberType.equals("2")));
@@ -190,8 +189,8 @@ public class DocumentCreator {
 		AsposeDocFactory asposeDocFactory = (AsposeDocFactory) BaseDocFactory.getInstance().withFieldMergingCallBack(fieldMergingCallback);
 
 		// Load template
-		ResourceLoader loader = new ResourceLoader();
-		Path templatePath = loader.getResource("resources/mySimpleDocTemplate.docx").toPath();
+		LocalResource loader = new LocalResource("resources/mySimpleDocTemplate.docx");
+		Path templatePath = loader.asPath();
 
 		List<TemplateMergeField> mergeFields = new List<>();
 		mergeFields.add(new TemplateMergeField("goldMember", memberType.equals("2")));
@@ -289,8 +288,7 @@ public class DocumentCreator {
 		AsposeDocFactory asposeDocFactory = (AsposeDocFactory) BaseDocFactory.getInstance();
 
 		// Load template
-		ResourceLoader loader = new ResourceLoader();
-		Path templatePath = loader.getResource("resources/myDocumentCreatorTemplate.docx").toPath();
+		Path templatePath = new LocalResource("resources/myDocumentCreatorTemplate.docx").asPath();
 
 		// Create value for MergeField
 		List<TemplateMergeField> mergeFields = new List<>();
@@ -312,9 +310,8 @@ public class DocumentCreator {
 
 	public File createPowerPoint() {
 		// Load template
-		ResourceLoader loader = new ResourceLoader();
-		Path templatePath = loader.getResource("resources/myPowerPointTemplate.pptx").toPath();
-		Presentation presentation = new Presentation(templatePath.toString());
+		LocalResource loader = new LocalResource("resources/myPowerPointTemplate.pptx");
+		Presentation presentation = new Presentation(loader.asPath().toString());
 
 		ch.ivyteam.ivy.scripting.objects.File tempFileIvy = null;
 		try {
