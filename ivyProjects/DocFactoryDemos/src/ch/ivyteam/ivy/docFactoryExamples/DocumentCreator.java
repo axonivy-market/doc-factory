@@ -1,9 +1,7 @@
 package ch.ivyteam.ivy.docFactoryExamples;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
@@ -11,9 +9,6 @@ import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Hashtable;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletResponse;
@@ -26,13 +21,6 @@ import com.aspose.cells.Style;
 import com.aspose.cells.TextAlignmentType;
 import com.aspose.cells.Workbook;
 import com.aspose.cells.Worksheet;
-import com.aspose.words.Cell;
-import com.aspose.words.Document;
-import com.aspose.words.DocumentBuilder;
-import com.aspose.words.Node;
-import com.aspose.words.NodeType;
-import com.aspose.words.Paragraph;
-import com.aspose.words.Table;
 
 import ch.ivyteam.ivy.addons.docfactory.AsposeDocFactory;
 import ch.ivyteam.ivy.addons.docfactory.BaseDocFactory;
@@ -43,8 +31,6 @@ import ch.ivyteam.ivy.addons.docfactory.aspose.AsposeProduct;
 import ch.ivyteam.ivy.addons.docfactory.aspose.LicenseLoader;
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.scripting.objects.List;
-import ch.ivyteam.ivy.scripting.objects.Record;
-import ch.ivyteam.ivy.scripting.objects.Recordset;
 
 public class DocumentCreator {
 	private String name;
@@ -78,198 +64,17 @@ public class DocumentCreator {
 		}
 	}
 
-	private static Hashtable<String, Recordset> asTable(java.util.List<String> expectations)
-	{
-	  Hashtable<String, Recordset> tablesNamesAndFieldsHashtable = new Hashtable<String, Recordset>();
-          Recordset rs = new Recordset();
-          for (int i = 0; i < expectations.size(); i++) 
-          {
-                  Record r = new Record();
-                  r.putField("counter", i + 1);
-                  r.putField("content", expectations.get(i));
-                  rs.add(r);
-          }
-          tablesNamesAndFieldsHashtable.put("expect", rs);
-          return tablesNamesAndFieldsHashtable;
+	public File createWordDocument() throws IOException {
+	  File template = new LocalResource("resources/myDocumentCreatorTemplate.docx").asFile();
+	  File result = new DocxCreator(this).create(template);
+	  return result;
 	}
-	
-	public File createWordDocument() {
-		FieldMergingCallBack fieldMergingCallback = new FieldMergingCallBack(200, 200);
-
-		// Use custom call back, allows to use byte array and scaling for image
-		AsposeDocFactory asposeDocFactory = (AsposeDocFactory) BaseDocFactory.getInstance().withFieldMergingCallBack(fieldMergingCallback);
-
-		// Default call back AsposeFieldMergingCallback, this supports java file to merge image
-		// AsposeDocFactory asposeDocFactory = (AsposeDocFactory) AsposeDocFactory.getInstance();
-
-		// Load template
-		Path templatePath = new LocalResource("resources/myDocumentCreatorTemplate.docx").asPath();
-
-		List<TemplateMergeField> mergeFields = new List<>();
-		mergeFields.add(new TemplateMergeField("goldMember", memberType.equals("2")));
-		mergeFields.add(new TemplateMergeField("name", this.name));
-		mergeFields.add(new TemplateMergeField("date", dateFormat.format(date)));
-		if(image !=null )
-		{
-			mergeFields.add(new TemplateMergeField("image", this.image));
-		}
-		
-		DocumentTemplate documentTemplate = new DocumentTemplate();
-		documentTemplate.setTemplatePath(templatePath.toString());
-		documentTemplate.setOutputName("WordDocument");
-		documentTemplate.setOutputPath("files/application/ivy_DocFactoryDemo");
-		documentTemplate.setOutputFormat("docx");
-		documentTemplate.setMergeFields(mergeFields);
-		documentTemplate.setTablesNamesAndFieldsHashtable(asTable(expectations));
-
-		FileOperationMessage fileOperationMessage = asposeDocFactory.generateDocument(documentTemplate);
-
-		/* Aspose basic part to insert more stuff into the generated document*/
-		File resultFile = fileOperationMessage.getFiles().get(0);
-		Document doc = null;
-		try {
-			doc = new Document(resultFile.getAbsolutePath());
-
-			// Insert image
-			DocumentBuilder builder = new DocumentBuilder(doc);
-			Table table = findTable(doc, "table_for_scaled_image");
-			Cell cell = table.getFirstRow().getCells().get(0);
-			// Clear placeHolder text
-			cell.getLastParagraph().remove();
-			cell.appendChild(new Paragraph(doc));
-
-			// Add and scale image
-			builder.moveTo(cell.getFirstParagraph());
-			if (image !=null) 
-			{
-				builder.insertImage(this.image, 60, 60);
-			}	
-			// insert scaled image from web
-			//builder.insertImage("http://www.gstatic.com/tv/thumb/persons/406338/406338_v9_bb.jpg", 200, 260);
-			
-			doc.save(resultFile.getAbsolutePath());
-		} catch (Exception e) {
-			Ivy.log().error(e);
-		}
-
-		return resultFile;
-	}
-
-        private static Table findTable(Document doc, String text)
-        {
-          // find table by index
-          // table = (Table) doc.getChild(NodeType.TABLE, 2, true);
-      
-          // find table by inner text
-          Node[] tables = doc.getChildNodes(NodeType.TABLE, true).toArray();
-          for (int i = 0; i < tables.length; i++) {
-          	Table t = (Table) tables[i];
-          	if (t.getRows().get(0).getCells().get(0).getText().trim().contains(text)) {
-          		return t;
-          	}
-          }
-          return null;
-        }
 
 	public File createMultiDocument() throws IOException {
-		FieldMergingCallBack fieldMergingCallback = new FieldMergingCallBack(200, 200);
-		AsposeDocFactory asposeDocFactory = (AsposeDocFactory) BaseDocFactory.getInstance().withFieldMergingCallBack(fieldMergingCallback);
-
-		// Load template
-		LocalResource loader = new LocalResource("resources/mySimpleDocTemplate.docx");
-		Path templatePath = loader.asPath();
-
-		List<TemplateMergeField> mergeFields = new List<>();
-		mergeFields.add(new TemplateMergeField("goldMember", memberType.equals("2")));
-		mergeFields.add(new TemplateMergeField("name", this.name));
-		mergeFields.add(new TemplateMergeField("image", this.image));
-		mergeFields.add(new TemplateMergeField("date", dateFormat.format(date)));
-
-		List<DocumentTemplate> documentTemplates = new List<DocumentTemplate>();
-
-		DocumentTemplate documentTemplate1 = new DocumentTemplate();
-		documentTemplate1.setTemplatePath(templatePath.toString());
-		documentTemplate1.setOutputName("simple1");
-		documentTemplate1.setOutputPath("files/application/ivy_DocFactoryDemo");		
-		documentTemplate1.setOutputFormat("docx");
-		documentTemplate1.setMergeFields(mergeFields);
-
-		DocumentTemplate documentTemplate2 = new DocumentTemplate();
-		documentTemplate2.setTemplatePath(templatePath.toString());
-		documentTemplate2.setOutputName("simple2");
-		documentTemplate2.setOutputPath("files/application/ivy_DocFactoryDemo");		
-		documentTemplate2.setOutputFormat("pdf");
-		documentTemplate2.setMergeFields(mergeFields);
-
-		DocumentTemplate documentTemplate3 = new DocumentTemplate();
-		documentTemplate3.setTemplatePath(templatePath.toString());
-		documentTemplate3.setOutputName("simple3");
-		documentTemplate3.setOutputPath("files/application/ivy_DocFactoryDemo");		
-		documentTemplate3.setOutputFormat("html");
-		documentTemplate3.setMergeFields(mergeFields);
-
-		DocumentTemplate documentTemplate4 = new DocumentTemplate();
-		documentTemplate4.setTemplatePath(templatePath.toString());
-		documentTemplate4.setOutputName("simple4");
-		documentTemplate4.setOutputPath("files/application/ivy_DocFactoryDemo");		
-		documentTemplate4.setOutputFormat("odt");
-		documentTemplate4.setMergeFields(mergeFields);
-
-		DocumentTemplate documentTemplate5 = new DocumentTemplate();
-		documentTemplate5.setTemplatePath(templatePath.toString());
-		documentTemplate5.setOutputName("simple5");
-		documentTemplate5.setOutputPath("files/application/ivy_DocFactoryDemo");		
-		documentTemplate5.setOutputFormat("doc");
-		documentTemplate5.setMergeFields(mergeFields);
-
-		DocumentTemplate documentTemplate6 = new DocumentTemplate();
-		documentTemplate6.setTemplatePath(templatePath.toString());
-		documentTemplate6.setOutputName("simple6");
-		documentTemplate6.setOutputPath("files/application/ivy_DocFactoryDemo");		
-		documentTemplate6.setOutputFormat("txt");
-		documentTemplate6.setMergeFields(mergeFields);
-
-		Hashtable<String, Recordset> tablesNamesAndFieldsHashtable = asTable(expectations);
-		documentTemplate1.setTablesNamesAndFieldsHashtable(tablesNamesAndFieldsHashtable);
-		documentTemplate2.setTablesNamesAndFieldsHashtable(tablesNamesAndFieldsHashtable);
-		documentTemplate3.setTablesNamesAndFieldsHashtable(tablesNamesAndFieldsHashtable);
-		documentTemplate4.setTablesNamesAndFieldsHashtable(tablesNamesAndFieldsHashtable);
-		documentTemplate5.setTablesNamesAndFieldsHashtable(tablesNamesAndFieldsHashtable);
-		documentTemplate6.setTablesNamesAndFieldsHashtable(tablesNamesAndFieldsHashtable);
-
-		documentTemplates.add(documentTemplate1);
-		documentTemplates.add(documentTemplate2);
-		documentTemplates.add(documentTemplate3);
-		documentTemplates.add(documentTemplate4);
-		documentTemplates.add(documentTemplate5);
-		documentTemplates.add(documentTemplate6);
-
-		FileOperationMessage fileOperationMessage = asposeDocFactory.generateDocuments(documentTemplates);
-
-		Ivy.log().info(fileOperationMessage.getFiles());
-		ch.ivyteam.ivy.scripting.objects.File zip = new ch.ivyteam.ivy.scripting.objects.File("DocFactoryDemo_Documents.zip", true);
-		zip(zip.getJavaFile(), fileOperationMessage.getFiles());
-		return zip.getJavaFile();
+	  File template = new LocalResource("resources/mySimpleDocTemplate.docx").asFile();
+	  File result = new DocxCreator(this).createMulti(template);
+	  return result;
 	}
-
-        private static void zip(File javaFile, List<File> files) throws IOException
-        {
-          try(
-            FileOutputStream fos = new FileOutputStream(javaFile);
-            BufferedOutputStream bos = new BufferedOutputStream(fos);
-            ZipOutputStream zos = new ZipOutputStream(bos);
-          )
-          {
-            for (File file : files)
-            {
-              ZipEntry e = new ZipEntry(file.getName());
-              zos.putNextEntry(e);
-              byte[] data = Files.readAllBytes(file.toPath());
-              zos.write(data, 0, data.length);
-              zos.closeEntry();
-            }
-          }
-        }
 
 	public File createSimpleDocument()  {
 		AsposeDocFactory asposeDocFactory = (AsposeDocFactory) BaseDocFactory.getInstance();
