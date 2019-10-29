@@ -114,7 +114,7 @@ De0 f4 111 240 136 240 #arcP
 De0 f5 processCall 'Functional Processes/writeSerialLetterToOneCorrespondent:writeDocumentWithMailMergeTable(List<ch.ivyteam.ivy.addons.docfactory.TemplateMergeField>,String,String,String,String,List<String>,List<Recordset>)' #txt
 De0 f5 requestActionDecl '<List<ch.ivyteam.ivy.addons.docfactory.TemplateMergeField> listOfTemplateMergeFields,String optionalOutputpath,String optionalLetterName,String optionalOutputFormat,String templatePath,List<String> tableNamesList,List<Recordset> recordsetsList> param;' #txt
 De0 f5 requestMappingAction 'param.listOfTemplateMergeFields=in.mergeFields;
-param.optionalOutputpath="files/application/ivy_DocFactoryDemo";
+param.optionalOutputpath=new File("ivy_DocFactoryDemo").getAbsolutePath();
 param.optionalLetterName="DocWithMergeFields";
 param.optionalOutputFormat="docx";
 param.templatePath=in.templateFile.getAbsolutePath();
@@ -230,7 +230,7 @@ De0 f11 @|StepIcon #fIcon
 De0 f12 processCall 'Functional Processes/writeSerialLetterToOneCorrespondent:writeDocumentWithOneDataClass(ch.ivyteam.ivy.scripting.objects.CompositeObject,String,String,String,String)' #txt
 De0 f12 requestActionDecl '<CompositeObject data,String optionalOutputpath,String optionalLetterName,String optionalOutputFormat,String templatePath> param;' #txt
 De0 f12 requestMappingAction 'param.data=in.position;
-param.optionalOutputpath="files/application/ivy_DocFactoryDemo";
+param.optionalOutputpath=new File("ivy_DocFactoryDemo").getAbsolutePath();
 param.optionalLetterName="DocWithObjectData";
 param.optionalOutputFormat="pdf";
 param.templatePath=in.templateFile.getAbsolutePath();
@@ -321,7 +321,7 @@ De0 f20 @|StepIcon #fIcon
 De0 f22 processCall 'Functional Processes/writeSerialLetterToOneCorrespondent:writeDocumentWithMailMergeTable(List<ch.ivyteam.ivy.addons.docfactory.TemplateMergeField>,String,String,String,String,List<String>,List<Recordset>)' #txt
 De0 f22 requestActionDecl '<List<ch.ivyteam.ivy.addons.docfactory.TemplateMergeField> listOfTemplateMergeFields,String optionalOutputpath,String optionalLetterName,String optionalOutputFormat,String templatePath,List<String> tableNamesList,List<Recordset> recordsetsList> param;' #txt
 De0 f22 requestMappingAction 'param.listOfTemplateMergeFields=in.mergeFields;
-param.optionalOutputpath="files/application/ivy_DocFactoryDemo";
+param.optionalOutputpath=new File("ivy_DocFactoryDemo").getAbsolutePath();
 param.optionalLetterName="DocWithTable";
 param.optionalOutputFormat="pdf";
 param.templatePath=in.templateFile.getAbsolutePath();
@@ -409,7 +409,7 @@ De0 f27 @|StepIcon #fIcon
 De0 f29 processCall 'Functional Processes/writeSerialLetterToOneCorrespondent:writeSerialLetterToOneCorrespondant(List<ch.ivyteam.ivy.addons.docfactory.TemplateMergeField>,String,String,String,String)' #txt
 De0 f29 requestActionDecl '<List<ch.ivyteam.ivy.addons.docfactory.TemplateMergeField> listOfTemplateMergeFields,String optionalOutputpath,String optionalLetterName,String optionalOutputFormat,String templatePath> param;' #txt
 De0 f29 requestMappingAction 'param.listOfTemplateMergeFields=in.mergeFields;
-param.optionalOutputpath="files/application/ivy_DocFactoryDemo";
+param.optionalOutputpath=new File("ivy_DocFactoryDemo").getAbsolutePath();
 param.optionalLetterName="DocWithConditionalText";
 param.optionalOutputFormat="pdf";
 param.templatePath=in.templateFile.getAbsolutePath();
@@ -490,7 +490,7 @@ De0 f34 expr out #txt
 De0 f34 448 792 528 792 #arcP
 De0 f37 processCall 'Functional Processes/writeSerialLetterToOneCorrespondent:writeDocumentWithMailMergeNestedTableWithListOfDatas(String,String,String,String,ch.ivyteam.ivy.scripting.objects.CompositeObject,List<ch.ivyteam.ivy.scripting.objects.CompositeObject>)' #txt
 De0 f37 requestActionDecl '<String optionalOutputpath,String optionalLetterName,String optionalOutputFormat,String templatePath,CompositeObject aData,List<CompositeObject> nestedListOfDatas> param;' #txt
-De0 f37 requestMappingAction 'param.optionalOutputpath="files/application/ivy_DocFactoryDemo";
+De0 f37 requestMappingAction 'param.optionalOutputpath=new File("ivy_DocFactoryDemo").getAbsolutePath();
 param.optionalLetterName="DocWithNestedTables";
 param.optionalOutputFormat="pdf";
 param.templatePath=in.templateFile.getAbsolutePath();
