@@ -1,16 +1,14 @@
 package ch.ivyteam.ivy.docFactoryExamples;
 
-import java.io.IOException;
+import com.aspose.words.Document;
+import com.aspose.words.DocumentBuilder;
+import com.aspose.words.SaveFormat;
 
 import ch.ivyteam.ivy.addons.docfactory.aspose.AsposeProduct;
 import ch.ivyteam.ivy.addons.docfactory.aspose.LicenseLoader;
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.workflow.document.IDocument;
 import ch.ivyteam.ivy.workflow.document.Path;
-
-import com.aspose.words.Document;
-import com.aspose.words.DocumentBuilder;
-import com.aspose.words.SaveFormat;
 
 public class SimpleDocumentCreator {
 	private String name;
@@ -30,13 +28,8 @@ public class SimpleDocumentCreator {
 		String bindingName = name.trim().replace(" ", "_");
 
 		Document doc = null;
-		ch.ivyteam.ivy.scripting.objects.File tempFileIvy = null;
-		try {
-			// Create temporary file
-			tempFileIvy = new ch.ivyteam.ivy.scripting.objects.File("Hello_" + bindingName + ".pdf", true);
-		} catch (IOException e) {
-			Ivy.log().error(e);
-		}
+		ch.ivyteam.ivy.scripting.objects.File tempFileIvy = 
+		        new ch.ivyteam.ivy.scripting.objects.File("Hello_" + bindingName + ".pdf", true);
 
 		doc = new Document();
 		// Write some text

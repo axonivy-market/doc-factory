@@ -18,8 +18,6 @@ import java.util.zip.ZipOutputStream;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.io.FileUtils;
-
 import com.aspose.cells.BorderType;
 import com.aspose.cells.CellBorderType;
 import com.aspose.cells.Color;
@@ -308,18 +306,14 @@ public class DocumentCreator {
 		return fileOperationMessage.getFiles().get(0);
 	}
 
-	public File createPowerPoint() {
+	public File createPowerPoint() throws IOException {
 		// Load template
 		LocalResource loader = new LocalResource("resources/myPowerPointTemplate.pptx");
 		Presentation presentation = new Presentation(loader.asPath().toString());
 
-		ch.ivyteam.ivy.scripting.objects.File tempFileIvy = null;
-		try {
-			tempFileIvy = new ch.ivyteam.ivy.scripting.objects.File("PowerPointDocument.pptx", false);
-		} catch (IOException e) {
-			Ivy.log().error(e.getMessage());
-		}
-
+		ch.ivyteam.ivy.scripting.objects.File tempFileIvy = 
+		        new ch.ivyteam.ivy.scripting.objects.File("PowerPointDocument.pptx", false);
+		
 		ISlideCollection slds = presentation.getSlides();
 		ISlide slideOne = slds.get_Item(0);
 
@@ -369,13 +363,8 @@ public class DocumentCreator {
 
 	public File createExcel() throws Exception {
 		// Create excel file
-		ch.ivyteam.ivy.scripting.objects.File tempExcel = null;
-		try {
-			tempExcel = new ch.ivyteam.ivy.scripting.objects.File("ExcelDocument.xlsx", false);
-
-		} catch (IOException e) {
-			Ivy.log().error(e.getMessage());
-		}
+		ch.ivyteam.ivy.scripting.objects.File tempExcel = 
+		    new ch.ivyteam.ivy.scripting.objects.File("ExcelDocument.xlsx", false);
 
 		Workbook workbook = new Workbook();
 		Worksheet worksheet = workbook.getWorksheets().get("Sheet1");
@@ -485,18 +474,6 @@ public class DocumentCreator {
 		} else {
 			Ivy.log().info("Template NULL");
 		}
-	}
-
-	public ch.ivyteam.ivy.scripting.objects.File getIvyFileFromByteArray(String fileName, byte[] content) {
-		ch.ivyteam.ivy.scripting.objects.File ivyFile = null;
-		try {
-			ivyFile = new ch.ivyteam.ivy.scripting.objects.File(fileName, true);
-			FileUtils.writeByteArrayToFile(ivyFile.getJavaFile(), content);
-		} catch (IOException e) {
-			Ivy.log().debug(e);
-		}
-
-		return ivyFile;
 	}
 
 	public String getName() {
