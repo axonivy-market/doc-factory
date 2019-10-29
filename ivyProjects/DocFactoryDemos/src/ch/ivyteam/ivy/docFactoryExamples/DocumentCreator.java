@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,15 +21,9 @@ import com.aspose.cells.TextAlignmentType;
 import com.aspose.cells.Workbook;
 import com.aspose.cells.Worksheet;
 
-import ch.ivyteam.ivy.addons.docfactory.AsposeDocFactory;
-import ch.ivyteam.ivy.addons.docfactory.BaseDocFactory;
-import ch.ivyteam.ivy.addons.docfactory.DocumentTemplate;
-import ch.ivyteam.ivy.addons.docfactory.FileOperationMessage;
-import ch.ivyteam.ivy.addons.docfactory.TemplateMergeField;
 import ch.ivyteam.ivy.addons.docfactory.aspose.AsposeProduct;
 import ch.ivyteam.ivy.addons.docfactory.aspose.LicenseLoader;
 import ch.ivyteam.ivy.environment.Ivy;
-import ch.ivyteam.ivy.scripting.objects.List;
 
 public class DocumentCreator {
 	private String name;
@@ -77,27 +70,9 @@ public class DocumentCreator {
 	}
 
 	public File createSimpleDocument()  {
-		AsposeDocFactory asposeDocFactory = (AsposeDocFactory) BaseDocFactory.getInstance();
-
-		// Load template
-		Path templatePath = new LocalResource("resources/myDocumentCreatorTemplate.docx").asPath();
-
-		// Create value for MergeField
-		List<TemplateMergeField> mergeFields = new List<>();
-		mergeFields.add(new TemplateMergeField("name", this.name));
-		mergeFields.add(new TemplateMergeField("date", dateFormat.format(date)));
-
-		// Create input for AsposeDocFactory
-		DocumentTemplate documentTemplate = new DocumentTemplate();
-		documentTemplate.setTemplatePath(templatePath.toString());
-		documentTemplate.setOutputName("DocFactoryDemo_SimpleDocument");
-		documentTemplate.setOutputFormat("docx");
-		documentTemplate.setMergeFields(mergeFields);
-
-		// Create document
-		FileOperationMessage fileOperationMessage = asposeDocFactory.generateDocument(documentTemplate);
-
-		return fileOperationMessage.getFiles().get(0);
+	  File template = new LocalResource("resources/myDocumentCreatorTemplate.docx").asFile();
+	  File result = new DocxCreator(this).createSimple(template);
+	  return result;
 	}
 
 	public File createPowerPoint() throws IOException {
