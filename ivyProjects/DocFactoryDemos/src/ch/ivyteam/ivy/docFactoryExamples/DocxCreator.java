@@ -59,15 +59,8 @@ public class DocxCreator
   
   public java.io.File create(java.io.File template) throws IOException
   {
-    FieldMergingCallBack fieldMergingCallback = new FieldMergingCallBack(200, 200);
-
     // Use custom call back, allows to use byte array and scaling for image
-    AsposeDocFactory asposeDocFactory = (AsposeDocFactory) BaseDocFactory.getInstance().withFieldMergingCallBack(fieldMergingCallback);
-
-    // Default call back AsposeFieldMergingCallback, this supports java file to merge image
-    // AsposeDocFactory asposeDocFactory = (AsposeDocFactory) AsposeDocFactory.getInstance();
-
-    // Load template
+    FieldMergingCallBack fieldMergingCallback = new FieldMergingCallBack(200, 200);
 
     List<TemplateMergeField> mergeFields = new List<>();
     mergeFields.add(new TemplateMergeField("goldMember", service.getMemberType().equals("2")));
@@ -86,8 +79,8 @@ public class DocxCreator
     documentTemplate.setMergeFields(mergeFields);
     documentTemplate.setTablesNamesAndFieldsHashtable(asTable(service.getExpectations()));
 
+    AsposeDocFactory asposeDocFactory = (AsposeDocFactory) BaseDocFactory.getInstance().withFieldMergingCallBack(fieldMergingCallback);
     FileOperationMessage fileOperationMessage = asposeDocFactory.generateDocument(documentTemplate);
-
     /* Aspose basic part to insert more stuff into the generated document*/
     File resultFile = fileOperationMessage.getFiles().get(0);
     Document doc = null;
@@ -110,7 +103,6 @@ public class DocxCreator
       }       
       // insert scaled image from web
       //builder.insertImage("http://www.gstatic.com/tv/thumb/persons/406338/406338_v9_bb.jpg", 200, 260);
-      
       doc.save(resultFile.getAbsolutePath());
     } catch (Exception e) 
     {
@@ -125,9 +117,7 @@ public class DocxCreator
     FieldMergingCallBack fieldMergingCallback = new FieldMergingCallBack(200, 200);
     AsposeDocFactory asposeDocFactory = (AsposeDocFactory) BaseDocFactory.getInstance().withFieldMergingCallBack(fieldMergingCallback);
 
-    // Load template
     Path templatePath = template.toPath();
-
     List<TemplateMergeField> mergeFields = new List<>();
     mergeFields.add(new TemplateMergeField("goldMember", service.getMemberType().equals("2")));
     mergeFields.add(new TemplateMergeField("name", service.getName()));
