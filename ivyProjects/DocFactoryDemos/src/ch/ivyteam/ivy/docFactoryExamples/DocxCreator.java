@@ -37,6 +37,26 @@ public class DocxCreator
     this.service = service;
   }
   
+  public java.io.File createSimple(java.io.File template)
+  {
+    // Create value for MergeField
+    List<TemplateMergeField> mergeFields = new List<>();
+    mergeFields.add(new TemplateMergeField("name", service.getName()));
+    mergeFields.add(new TemplateMergeField("date", service.dateFormat.format(service.getDate())));
+
+    // Create input for AsposeDocFactory
+    DocumentTemplate documentTemplate = new DocumentTemplate();
+    documentTemplate.setTemplatePath(template.toPath().toString());
+    documentTemplate.setOutputName("DocFactoryDemo_SimpleDocument");
+    documentTemplate.setOutputFormat("docx");
+    documentTemplate.setMergeFields(mergeFields);
+
+    // Create document
+    AsposeDocFactory asposeDocFactory = (AsposeDocFactory) BaseDocFactory.getInstance();
+    FileOperationMessage fileOperationMessage = asposeDocFactory.generateDocument(documentTemplate);
+    return fileOperationMessage.getFiles().get(0);
+  }
+  
   public java.io.File create(java.io.File template) throws IOException
   {
     FieldMergingCallBack fieldMergingCallback = new FieldMergingCallBack(200, 200);
