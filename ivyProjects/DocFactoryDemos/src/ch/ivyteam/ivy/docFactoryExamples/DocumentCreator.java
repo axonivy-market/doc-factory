@@ -145,23 +145,10 @@ public class DocumentCreator {
 
 			// Insert image
 			DocumentBuilder builder = new DocumentBuilder(doc);
-			Table table = null;
-			// find table by index
-			// table = (Table) doc.getChild(NodeType.TABLE, 2, true);
-
-			// find table by inner text
-			Node[] tables = doc.getChildNodes(NodeType.TABLE, true).toArray();
-			for (int i = 0; i < tables.length; i++) {
-				Table t = (Table) tables[i];
-				if (t.getRows().get(0).getCells().get(0).getText().trim().contains("table_for_scaled_image")) {
-					table = t;
-					break;
-				}
-			}
+			Table table = findTable(doc, "table_for_scaled_image");
 			Cell cell = table.getFirstRow().getCells().get(0);
 			// Clear placeHolder text
-			Paragraph para = (Paragraph) cell.getLastParagraph();
-			para.remove();
+			cell.getLastParagraph().remove();
 			cell.appendChild(new Paragraph(doc));
 
 			// Add and scale image
@@ -172,7 +159,6 @@ public class DocumentCreator {
 			}	
 			// insert scaled image from web
 			//builder.insertImage("http://www.gstatic.com/tv/thumb/persons/406338/406338_v9_bb.jpg", 200, 260);
-
 			
 			doc.save(resultFile.getAbsolutePath());
 		} catch (Exception e) {
@@ -181,6 +167,22 @@ public class DocumentCreator {
 
 		return resultFile;
 	}
+
+        private static Table findTable(Document doc, String text)
+        {
+          // find table by index
+          // table = (Table) doc.getChild(NodeType.TABLE, 2, true);
+      
+          // find table by inner text
+          Node[] tables = doc.getChildNodes(NodeType.TABLE, true).toArray();
+          for (int i = 0; i < tables.length; i++) {
+          	Table t = (Table) tables[i];
+          	if (t.getRows().get(0).getCells().get(0).getText().trim().contains(text)) {
+          		return t;
+          	}
+          }
+          return null;
+        }
 
 	public File createMultiDocument() throws IOException {
 		FieldMergingCallBack fieldMergingCallback = new FieldMergingCallBack(200, 200);
@@ -259,27 +261,28 @@ public class DocumentCreator {
 
 		Ivy.log().info(fileOperationMessage.getFiles());
 		ch.ivyteam.ivy.scripting.objects.File zip = new ch.ivyteam.ivy.scripting.objects.File("DocFactoryDemo_Documents.zip", true);
-		FileOutputStream fos = new FileOutputStream(zip.getJavaFile().getAbsolutePath());
-		BufferedOutputStream bos = new BufferedOutputStream(fos);
-		ZipOutputStream zos = new ZipOutputStream(bos);
-
-		try {
-			for (File file : fileOperationMessage.getFiles()) {
-				ZipEntry e = new ZipEntry(file.getName());
-				zos.putNextEntry(e);
-				byte[] data = Files.readAllBytes(file.toPath());
-				zos.write(data, 0, data.length);
-				zos.closeEntry();
-			}
-
-		} catch (IOException e) {
-			Ivy.log().error(e);
-		} finally {
-			zos.close();
-		}
-
+		zip(zip.getJavaFile(), fileOperationMessage.getFiles());
 		return zip.getJavaFile();
 	}
+
+        private static void zip(File javaFile, List<File> files) throws IOException
+        {
+          try(
+            FileOutputStream fos = new FileOutputStream(javaFile);
+            BufferedOutputStream bos = new BufferedOutputStream(fos);
+            ZipOutputStream zos = new ZipOutputStream(bos);
+          )
+          {
+            for (File file : files)
+            {
+              ZipEntry e = new ZipEntry(file.getName());
+              zos.putNextEntry(e);
+              byte[] data = Files.readAllBytes(file.toPath());
+              zos.write(data, 0, data.length);
+              zos.closeEntry();
+            }
+          }
+        }
 
 	public File createSimpleDocument() throws IOException {
 		AsposeDocFactory asposeDocFactory = (AsposeDocFactory) AsposeDocFactory.getInstance();
