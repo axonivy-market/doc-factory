@@ -16,13 +16,18 @@ import com.aspose.slides.Presentation;
 import com.aspose.slides.SaveFormat;
 import com.aspose.slides.ShapeType;
 
-class PptCreator{
-  
+class PptCreator
+{
   private final DocumentCreator service;
+  private final String slideTitle;
+  private final int numberOfSlide;
 
   PptCreator(DocumentCreator service)
   {
     this.service = service;
+    
+    slideTitle = "DocFactory Demos: Aspose PPT example";
+    numberOfSlide = 1;
   }
 
   public java.io.File create(java.io.File template) throws IOException
@@ -36,7 +41,7 @@ class PptCreator{
     ISlide slideOne = slds.get_Item(0);
 
     // Binding shape data
-    updateText(slideOne, "{title}", service.getSlideTitle());
+    updateText(slideOne, "{title}", slideTitle);
     updateText(slideOne, "{name}", service.getName());
     updateText(slideOne, "{date}", service.dateFormat.format(service.getDate()));
 
@@ -71,9 +76,9 @@ class PptCreator{
     // remove empty row
     table.getRows().removeAt(1, true);
 
-    if (service.getNumberOfSlide() > 1)
+    if (numberOfSlide > 1)
     {
-      for (int i = 0; i < service.getNumberOfSlide() - 1; i++)
+      for (int i = 0; i < numberOfSlide - 1; i++)
       {
         ISlide clone = presentation.getSlides().get_Item(0);
         presentation.getSlides().addClone(clone);
