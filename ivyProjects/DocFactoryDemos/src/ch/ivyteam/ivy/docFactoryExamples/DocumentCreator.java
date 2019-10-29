@@ -48,6 +48,7 @@ import com.aspose.words.Paragraph;
 import com.aspose.words.Table;
 
 import ch.ivyteam.ivy.addons.docfactory.AsposeDocFactory;
+import ch.ivyteam.ivy.addons.docfactory.BaseDocFactory;
 import ch.ivyteam.ivy.addons.docfactory.DocumentTemplate;
 import ch.ivyteam.ivy.addons.docfactory.FileOperationMessage;
 import ch.ivyteam.ivy.addons.docfactory.TemplateMergeField;
@@ -109,7 +110,7 @@ public class DocumentCreator {
 		FieldMergingCallBack fieldMergingCallback = new FieldMergingCallBack(200, 200);
 
 		// Use custom call back, allows to use byte array and scaling for image
-		AsposeDocFactory asposeDocFactory = (AsposeDocFactory) AsposeDocFactory.getInstance().withFieldMergingCallBack(fieldMergingCallback);
+		AsposeDocFactory asposeDocFactory = (AsposeDocFactory) BaseDocFactory.getInstance().withFieldMergingCallBack(fieldMergingCallback);
 
 		// Default call back AsposeFieldMergingCallback, this supports java file to merge image
 		// AsposeDocFactory asposeDocFactory = (AsposeDocFactory) AsposeDocFactory.getInstance();
@@ -186,7 +187,7 @@ public class DocumentCreator {
 
 	public File createMultiDocument() throws IOException {
 		FieldMergingCallBack fieldMergingCallback = new FieldMergingCallBack(200, 200);
-		AsposeDocFactory asposeDocFactory = (AsposeDocFactory) AsposeDocFactory.getInstance().withFieldMergingCallBack(fieldMergingCallback);
+		AsposeDocFactory asposeDocFactory = (AsposeDocFactory) BaseDocFactory.getInstance().withFieldMergingCallBack(fieldMergingCallback);
 
 		// Load template
 		ResourceLoader loader = new ResourceLoader();
@@ -284,8 +285,8 @@ public class DocumentCreator {
           }
         }
 
-	public File createSimpleDocument() throws IOException {
-		AsposeDocFactory asposeDocFactory = (AsposeDocFactory) AsposeDocFactory.getInstance();
+	public File createSimpleDocument()  {
+		AsposeDocFactory asposeDocFactory = (AsposeDocFactory) BaseDocFactory.getInstance();
 
 		// Load template
 		ResourceLoader loader = new ResourceLoader();
