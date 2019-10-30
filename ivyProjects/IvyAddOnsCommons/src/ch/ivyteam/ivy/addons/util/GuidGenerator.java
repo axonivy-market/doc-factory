@@ -113,41 +113,5 @@ public class GuidGenerator
     
     return guidPattern.matcher(string).matches();
   }
-
-  /**
-   * "Testmethod"
-   * @param  args  No args required.
-   */
-  public static void main(String[] args)
-  {
-    System.out.println("-------------- Test output (always the same) ---------------");
-    GuidGenerator.init(1L);
-    System.out.println("New GUID A: " + GuidGenerator.generateID());
-    System.out.println("New GUID B: " + GuidGenerator.generateID());
-    System.out.println("New GUID C: " + GuidGenerator.generateID());
-    System.out.println("And same again (after reset of generator):");
-    GuidGenerator.init(1L);
-    System.out.println("New GUID A: " + GuidGenerator.generateID());
-    System.out.println("New GUID B: " + GuidGenerator.generateID());
-    System.out.println("New GUID C: " + GuidGenerator.generateID());
-
-    String[] guids = { 
-            "ABCDEF0123456789", // ok
-            "3a29384759872783", // lowercase char : fail
-            "9283746589283746", // digits only : ok
-            "AAAAAAAAFFFFFFFF", // chars only : ok
-            "ABC123",           // too short : fail
-            "ABCDEF01234567890" }; // too long : fail
-    for (String guid : guids)
-    {
-      System.out.println(guid + " is GUID: " + isGuid(guid));
-    }
-    System.out.println("\n--------- Some really unique ID's (for copy/paste) ---------");
-    GuidGenerator.init(System.currentTimeMillis());
-    for (int i=0; i<10; i++)
-    {
-      System.out.println("New unique GUID: " + GuidGenerator.generateID());
-    }
-  }
   
 }
