@@ -16,7 +16,7 @@ pipeline {
     stage('build') {
       steps {
         script {
-          docker.image('axonivy/build-container:read-the-docs-1.1').inside {
+          docker.image('axonivy/build-container:read-the-docs-1.2').inside {
             sh "make -C /doc-build html BASEDIR='${env.WORKSPACE}/doc'"
           }
           archiveArtifacts 'doc/build/html/**/*'
@@ -24,7 +24,11 @@ pipeline {
 
           docker.build('maven-build', '-f Dockerfile .').inside {
             def phase = env.BRANCH_NAME == 'master' ? 'deploy' : 'verify'
-            maven cmd: "-s settings.xml ${phase} -U -Dmaven.test.failure.ignore=true"
+            maven cmd: "clean ${phase} -Dmaven.test.failure.ignore=true"
+
+            dir ('doc') {
+              maven cmd: "clean ${phase}"
+            }
           }
           archiveArtifacts '**/target/*.iar'
           junit '**/target/surefire-reports/**/*.xml'

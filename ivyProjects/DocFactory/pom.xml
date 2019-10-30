@@ -2,27 +2,21 @@
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>ch.ivyteam.ivy.addons</groupId>
-  <artifactId>doc-factory</artifactId>
-  <version>8.0.0-SNAPSHOT</version>
-  <packaging>iar</packaging>
-  <organization>
-    <name>AXON IVY AG</name>
-  </organization>
   
+  <parent>
+    <groupId>ch.ivyteam.ivy.addons</groupId>
+    <artifactId>config</artifactId>
+    <version>${revision}</version>
+    <relativePath>../../maven</relativePath>
+  </parent>
+
+  <artifactId>docfactory</artifactId>
+  <packaging>iar</packaging>
+
   <properties>
     <aspose.version>19.9</aspose.version>
   </properties>
-  <distributionManagement>
-    <repository>
-      <id>repo.axonivy.io</id>
-      <url>https://repo.axonivy.io/artifactory/ext-release-local</url>
-    </repository>
-    <snapshotRepository>
-      <id>repo.axonivy.io</id>
-      <url>https://repo.axonivy.io/artifactory/ext-snapshot-local</url>
-    </snapshotRepository>
-  </distributionManagement>
+ 
   <repositories>
     <repository>
       <id>aspose.com</id>
