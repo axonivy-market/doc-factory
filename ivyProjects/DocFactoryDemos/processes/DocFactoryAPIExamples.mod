@@ -178,9 +178,9 @@ Ds0 f0 512 402 160 44 -60 -16 #rect
 Ds0 f0 @|StepIcon #fIcon
 Ds0 f4 actionTable 'out=in;
 ' #txt
-Ds0 f4 actionCode 'import ch.ivyteam.ivy.docFactoryExamples.ResourceLoader;
+Ds0 f4 actionCode 'import ch.ivyteam.ivy.docFactoryExamples.LocalResource;
 
-out.templateFile = new ResourceLoader().getResource("resources/myAPITemplateWithNestedTables.docx");' #txt
+out.templateFile = new LocalResource("resources/myAPITemplateWithNestedTables.docx").asFile();' #txt
 Ds0 f4 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -277,9 +277,9 @@ Ds0 f6 144 530 128 44 -57 -8 #rect
 Ds0 f6 @|StepIcon #fIcon
 Ds0 f7 actionTable 'out=in;
 ' #txt
-Ds0 f7 actionCode 'import ch.ivyteam.ivy.docFactoryExamples.ResourceLoader;
+Ds0 f7 actionCode 'import ch.ivyteam.ivy.docFactoryExamples.LocalResource;
 
-out.templateFile = new ResourceLoader().getResource("resources/myAPITemplateWithNestedTables.docx");' #txt
+out.templateFile = new LocalResource("resources/myAPITemplateWithNestedTables.docx").asFile();' #txt
 Ds0 f7 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -418,9 +418,9 @@ Ds0 f5 144 674 128 44 -57 -8 #rect
 Ds0 f5 @|StepIcon #fIcon
 Ds0 f9 actionTable 'out=in;
 ' #txt
-Ds0 f9 actionCode 'import ch.ivyteam.ivy.docFactoryExamples.ResourceLoader;
+Ds0 f9 actionCode 'import ch.ivyteam.ivy.docFactoryExamples.LocalResource;
 
-out.templateFile = new ResourceLoader().getResource("resources/myAPITemplateWithNestedTables.docx");' #txt
+out.templateFile = new LocalResource("resources/myAPITemplateWithNestedTables.docx").asFile();' #txt
 Ds0 f9 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -495,9 +495,9 @@ Ds0 f25 expr out #txt
 Ds0 f25 95 696 144 696 #arcP
 Ds0 f28 actionTable 'out=in;
 ' #txt
-Ds0 f28 actionCode 'import ch.ivyteam.ivy.docFactoryExamples.ResourceLoader;
+Ds0 f28 actionCode 'import ch.ivyteam.ivy.docFactoryExamples.LocalResource;
 
-out.templateFile = new ResourceLoader().getResource("resources/myAPITemplateWithCompositeObject.docx");' #txt
+out.templateFile = new LocalResource("resources/myAPITemplateWithCompositeObject.docx").asFile();' #txt
 Ds0 f28 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
