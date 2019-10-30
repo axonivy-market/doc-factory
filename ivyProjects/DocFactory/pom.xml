@@ -10,7 +10,8 @@
     <relativePath>../../maven</relativePath>
   </parent>
 
-  <artifactId>docfactory</artifactId>
+  <groupId>ch.ivyteam.ivy.addons</groupId>
+  <artifactId>doc-factory</artifactId>
   <packaging>iar</packaging>
 
   <properties>
@@ -86,5 +87,6 @@
         </executions>
       </plugin>
     </plugins>
+    
   </build>
 </project>
