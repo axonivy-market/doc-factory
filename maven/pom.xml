@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>ch.ivyteam.ivy.addons</groupId>
+    <artifactId>config</artifactId>
+    <version>${revision}</version>
+    <packaging>pom</packaging>
+
+    <organization>
+        <name>AXON Ivy AG</name>
+    </organization>
+
+    <properties>
+        <revision>8.0.0-SNAPSHOT</revision>
+
+        <project-build-plugin-version>7.4.0</project-build-plugin-version>
+        <maven-dependency-plugin-version>3.0.2</maven-dependency-plugin-version>
+        <maven-deploy-plugin-version>2.8.2</maven-deploy-plugin-version>
+        <tycho-version>1.5.0</tycho-version>
+
+        <ivy.engine.directory>${java.io.tmpdir}/ivy-engine</ivy.engine.directory>
+        <ivy.engine.list.url>http://zugprojenkins/job/ivy-core_product/job/master/lastSuccessfulBuild/</ivy.engine.list.url>
+        <ivy.engine.version>[7.3.0,]</ivy.engine.version>
+    </properties>
+
+    <distributionManagement>
+        <repository>
+            <id>repo.axonivy.io</id>
+            <url>https://repo.axonivy.io/artifactory/ext-release-local</url>
+        </repository>
+
+        <snapshotRepository>
+            <id>repo.axonivy.io</id>
+            <url>https://repo.axonivy.io/artifactory/ext-snapshot-local</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+                <version>1.1.0</version>
+                <executions>
+                    <execution>
+                        <id>flatten</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>flatten</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>flatten.clean</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+        
+        <pluginManagement>
+    	<plugins>
+    		<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+    		<plugin>
+    			<groupId>org.eclipse.m2e</groupId>
+    			<artifactId>lifecycle-mapping</artifactId>
+    			<version>1.0.0</version>
+    			<configuration>
+    				<lifecycleMappingMetadata>
+    					<pluginExecutions>
+    						<pluginExecution>
+    							<pluginExecutionFilter>
+    								<groupId>org.codehaus.mojo</groupId>
+    								<artifactId>
+    									flatten-maven-plugin
+    								</artifactId>
+    								<versionRange>
+    									[1.1.0,)
+    								</versionRange>
+    								<goals>
+    									<goal>flatten</goal>
+    								</goals>
+    							</pluginExecutionFilter>
+    							<action>
+    								<ignore></ignore>
+    							</action>
+    						</pluginExecution>
+    					</pluginExecutions>
+    				</lifecycleMappingMetadata>
+    			</configuration>
+    		</plugin>
+    	</plugins>
+    </pluginManagement>
+    </build>
+
+    <repositories>
+        <repository>
+            <id>axonivy</id>
+            <url>https://repo.axonivy.io/artifactory/ext-release-local</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+
+        <repository>
+            <id>zugpronexus.snapshots</id>
+            <name>Integration repository ZUG</name>
+            <snapshots>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+            <url>http://zugpronexus:8081/nexus/content/groups/build</url>
+            <layout>default</layout>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>zugpronexus.snapshots</id>
+            <name>Internal Plugin Build Integration Repository</name>
+            <url>http://zugpronexus:8081/nexus/content/groups/build-plugins</url>
+            <snapshots>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
+    
+</project>
