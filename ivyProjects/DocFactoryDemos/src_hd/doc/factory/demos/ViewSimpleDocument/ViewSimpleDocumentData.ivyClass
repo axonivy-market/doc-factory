@@ -1,0 +1,4 @@
+ViewSimpleDocumentData #class
+doc.factory.demos.ViewSimpleDocument #namespace
+service ch.ivyteam.ivy.docFactoryExamples.SimpleDocumentViewer #field
+service PERSISTENT #fieldModifier

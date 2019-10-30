@@ -1,0 +1,10 @@
+Project #class
+doc.factory.demos #namespace
+positions List<doc.factory.demos.Position> #field
+positions PERSISTENT #fieldModifier
+title String #field
+title PERSISTENT #fieldModifier
+nr Number #field
+nr PERSISTENT #fieldModifier
+position doc.factory.demos.Position #field
+position PERSISTENT #fieldModifier

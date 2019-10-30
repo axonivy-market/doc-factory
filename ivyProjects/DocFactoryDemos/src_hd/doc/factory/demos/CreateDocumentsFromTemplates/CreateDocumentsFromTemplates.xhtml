@@ -1,0 +1,92 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:ic="http://ivyteam.ch/jsf/component"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	>
+<h:body>
+	<ui:composition template="/layouts/basic.xhtml">
+		<ui:define name="title">Basic Binding Word</ui:define>
+		<ui:define name="content">
+		<style>
+		table tr > td{
+			padding: 5px;
+		}
+		
+		.ui-radiobutton{
+			margin: 0 7px 0 0 !important;
+		}
+		
+		.btn{
+		    color: #fff !important;
+		    margin-right:15px;
+		}
+		
+		#form\:file{
+			padding-top:18px
+		}
+		</style>		
+		<h3>DocFactoryDemos: Document Creation Capabilities </h3>
+		
+			<h:form id="form" enctype="multipart/form-data">
+					<f:facet name="header">
+						<p:messages></p:messages>
+					</f:facet>
+				<h:panelGrid columns="3">
+					
+					<p:outputLabel for="name" value="Your Name"/>
+					<p:inputText id="name" value="#{data.service.name}" required="true"/>
+					<br />
+
+					<p:outputLabel for="date" value="Select a Date" />
+					<p:calendar id="date" value="#{data.service.date}" pattern="dd/MM/yyyy" autocomplete="off" required="true"/>
+					<br />
+					<p:outputLabel for="file" value="Choose an Image" />
+					<p:fileUpload id="file" auto="true" fileUploadListener="#{logic.fileUpload}" mode="advanced" update="fileName"/>
+					<h:outputText id="fileName" value="#{data.service.imageName}" />
+
+					<p:outputLabel for="memberType" value="Member Type" />
+
+					<p:selectOneRadio id="memberType" value="#{data.service.memberType}">
+			            <f:selectItem itemLabel="Silver" itemValue="1" />
+			            <f:selectItem itemLabel="Gold" itemValue="2" />
+			        </p:selectOneRadio>
+			        <h:outputText/>
+				</h:panelGrid>
+				
+				<br/>
+				<h4>Your Wish List </h4>
+				<h:panelGrid columns="2">
+
+					<p:dataTable id="expectTable" var="item"
+						value="#{data.service.expectations}" rowIndexVar="index"
+						style="width:500px">
+						<p:column headerText="#" style="width:50px;text-align:center">
+							<h:outputText value="#{index + 1}" />
+						</p:column>
+
+						<p:column headerText="Content">
+							<h:outputText value="#{item}" />
+						</p:column>
+					</p:dataTable>
+					<br />
+					<h:panelGroup>
+					<p:inputText value="#{data.service.newExpectation}"/>
+					<p:commandButton actionListener="#{logic.addNewExpectation}"
+						value="Add new" update="expectTable" />
+						</h:panelGroup>
+				</h:panelGrid>
+				<br />
+
+<h4>Create and download the created files</h4>
+				<p:commandLink styleClass="btn btn-primary" actionListener="#{logic.download()}" value="Create DOCX" ajax="false" />
+				<p:commandLink styleClass="btn btn-primary" actionListener="#{logic.downloadMultiFile()}" value="Create Multiple Formats" ajax="false" />
+				<p:commandLink styleClass="btn btn-warning" actionListener="#{logic.downloadPowerPoint()}" value="Create PPTX" ajax="false" />
+				<p:commandLink styleClass="btn btn-success" actionListener="#{logic.downloadExcel()}" value="Create XLSX" ajax="false" />			
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>
