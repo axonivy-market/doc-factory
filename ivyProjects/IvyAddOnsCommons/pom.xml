@@ -2,23 +2,17 @@
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>ch.ivyteam.ivy.addons</groupId>
+
+  <parent>
+    <groupId>ch.ivyteam.ivy.addons</groupId>
+    <artifactId>config</artifactId>
+    <version>${revision}</version>
+    <relativePath>../../maven</relativePath>
+  </parent>
+
   <artifactId>commons</artifactId>
-  <version>8.0-SNAPSHOT</version>
   <packaging>iar</packaging>
-  <organization>
-    <name>AXON IVY AG</name>
-  </organization>
-  <distributionManagement>
-    <repository>
-      <id>repo.axonivy.io</id>
-      <url>https://repo.axonivy.io/artifactory/ext-release-local</url>
-    </repository>
-    <snapshotRepository>
-      <id>repo.axonivy.io</id>
-      <url>https://repo.axonivy.io/artifactory/ext-snapshot-local</url>
-    </snapshotRepository>
-  </distributionManagement>
+
   <dependencies>
     <dependency>
       <groupId>org.apache.poi</groupId>
@@ -33,6 +27,7 @@
       <optional>true</optional>
     </dependency>
   </dependencies>
+
   <build>
     <plugins>
       <plugin>
@@ -41,6 +36,7 @@
         <version>${project-build-plugin-version}</version>
         <extensions>true</extensions>
       </plugin>
+
       <plugin>
         <artifactId>maven-dependency-plugin</artifactId>
         <version>${maven-dependency-plugin-version}</version>
@@ -53,9 +49,11 @@
             </goals>
             <configuration>
               <outputDirectory>lib</outputDirectory>
-              <includeArtifactIds>poi,
+              <includeArtifactIds>
+                poi,
                 javase,
-                core</includeArtifactIds>
+                core
+              </includeArtifactIds>
             </configuration>
           </execution>
         </executions>
