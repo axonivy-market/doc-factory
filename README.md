@@ -34,3 +34,10 @@ http://zugprojenkins/job/ivy-project-ivy-addons/
 It deploys the IvyAddOns projects to the following maven repository:
 
 https://repo.axonivy.io/artifactory/ext-snapshot-local/ch/ivyteam/ivy/addons/
+
+
+## Releasing since 8.0
+
+1. Remove `-SNAPSHOT` from maven property `revision` in `maven/pom.xml`
+2. Commit / Push and run build
+3. Update `revision` in `maven/pom.xml` to next release version
