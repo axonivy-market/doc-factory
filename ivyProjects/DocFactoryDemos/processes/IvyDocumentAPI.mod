@@ -37,7 +37,7 @@ II0 f3 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 </elementInfo>
 ' #txt
 II0 f3 @C|.responsibility Everybody #txt
-II0 f3 81 145 30 30 -20 31 #rect
+II0 f3 81 145 30 30 -23 31 #rect
 II0 f3 @|StartRequestIcon #fIcon
 II0 f8 dialogId doc.factory.demos.CreateSimpleDocument #txt
 II0 f8 startMethod start() #txt
@@ -50,7 +50,7 @@ out.documentId=result.documentId;
 II0 f8 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
-        <name>Create Document&#xD;
+        <name>Create document&#13;
 Attach it to case documents</name>
         <nameStyle>44,5
 </nameStyle>
@@ -73,7 +73,7 @@ II0 f4 responseMappingAction 'out=in;
 II0 f4 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
-        <name>View Document&#13;
+        <name>View document&#13;
 from case</name>
         <nameStyle>24,5
 </nameStyle>
@@ -84,7 +84,9 @@ II0 f4 432 138 128 44 -41 -16 #rect
 II0 f4 @|UserDialogIcon #fIcon
 II0 f12 actionTable 'out=in1;
 ' #txt
-II0 f12 taskData 'TaskA.NAM=View the Document' #txt
+II0 f12 taskData 'TaskA.NAM=Task\: View attached document
+TaskA.ROL=Everybody
+TaskA.TYPE=0' #txt
 II0 f12 template "" #txt
 II0 f12 369 145 30 30 0 16 #rect
 II0 f12 @|TaskSwitchSimpleIcon #fIcon

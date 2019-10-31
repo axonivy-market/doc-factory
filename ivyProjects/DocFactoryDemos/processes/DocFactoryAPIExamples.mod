@@ -95,19 +95,19 @@ out.report.till= new Date();
 // project 1
 Project pr = new Project();
 pr.nr = 23.100;
-pr.title = "The red brown Fox";
+pr.title = "Release 8";
 
 Position p = new Position();
 p.date = ''11.9.2019'';
 p.code = 43;
-p.description = "ghj aadfs adsf";
+p.description = "Mailand";
 p.unit.amount=190;
 p.unit.text = "Km";
 pr.positions.add(p);
 p = new Position();
 p.date = ''21.9.2019'';
 p.code = 43;
-p.description = "döns du eimm";
+p.description = "Madrid";
 p.unit.amount=85;
 p.unit.text = "Km";
 pr.positions.add(p);
@@ -117,23 +117,24 @@ out.report.projects.add(pr);
 // project 2
 pr = new Project();
 pr.nr = 10.500;
-pr.title = "Over the Rainbow";
+pr.title = "Summer Sale";
 
 p = new Position();
 p.date = ''23.9.2019'';
 p.code = 18;
-p.description = "ekn lwe lskfj dflj";
+p.description = "Coffee Cups";
 p.unit.amount=60;
 p.unit.text = "Pieces";
 pr.positions.add(p);
 p = new Position();
 p.date = ''29.9.2019'';
 p.code = 18;
-p.description = "rtzundsav asf";
+p.description = "Travel Expenses";
 p.unit.amount=10;
 p.unit.text = "Hours";
 pr.positions.add(p);
 out.report.projects.add(pr);
+
 
 ' #txt
 Ds0 f21 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -223,19 +224,19 @@ out.report.till= new Date();
 // project 1
 Project pr = new Project();
 pr.nr = 23.100;
-pr.title = "The red brown Fox";
+pr.title = "Release 8";
 
 Position p = new Position();
 p.date = ''11.9.2019'';
 p.code = 43;
-p.description = "ghj aadfs adsf";
+p.description = "Mailand";
 p.unit.amount=190;
 p.unit.text = "Km";
 pr.positions.add(p);
 p = new Position();
 p.date = ''21.9.2019'';
 p.code = 43;
-p.description = "döns du eimm";
+p.description = "Madrid";
 p.unit.amount=85;
 p.unit.text = "Km";
 pr.positions.add(p);
@@ -245,23 +246,26 @@ out.report.projects.add(pr);
 // project 2
 pr = new Project();
 pr.nr = 10.500;
-pr.title = "Over the Rainbow";
+pr.title = "Summer Sale";
 
 p = new Position();
 p.date = ''23.9.2019'';
 p.code = 18;
-p.description = "ekn lwe lskfj dflj";
+p.description = "Coffee Cups";
 p.unit.amount=60;
 p.unit.text = "Pieces";
 pr.positions.add(p);
 p = new Position();
 p.date = ''29.9.2019'';
 p.code = 18;
-p.description = "rtzundsav asf";
+p.description = "Travel Expenses";
 p.unit.amount=10;
 p.unit.text = "Hours";
 pr.positions.add(p);
 out.report.projects.add(pr);
+
+
+
 
 ' #txt
 Ds0 f6 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -363,20 +367,20 @@ out.report.till= new Date();
 
 // project 1
 Project pr = new Project();
-pr.nr = 23.1;
-pr.title = "The red brown Fox";
+pr.nr = 23.100;
+pr.title = "Release 8";
 
 Position p = new Position();
 p.date = ''11.9.2019'';
 p.code = 43;
-p.description = "ghj aadfs adsf";
+p.description = "Mailand";
 p.unit.amount=190;
 p.unit.text = "Km";
 pr.positions.add(p);
 p = new Position();
 p.date = ''21.9.2019'';
 p.code = 43;
-p.description = "döns du eimm";
+p.description = "Madrid";
 p.unit.amount=85;
 p.unit.text = "Km";
 pr.positions.add(p);
@@ -386,23 +390,24 @@ out.report.projects.add(pr);
 // project 2
 pr = new Project();
 pr.nr = 10.500;
-pr.title = "Over the Rainbow";
+pr.title = "Summer Sale";
 
 p = new Position();
 p.date = ''23.9.2019'';
 p.code = 18;
-p.description = "ekn lwe lskfj dflj";
+p.description = "Coffee Cups";
 p.unit.amount=60;
 p.unit.text = "Pieces";
 pr.positions.add(p);
 p = new Position();
 p.date = ''29.9.2019'';
 p.code = 18;
-p.description = "rtzundsav asf";
+p.description = "Travel Expenses";
 p.unit.amount=10;
 p.unit.text = "Hours";
 pr.positions.add(p);
 out.report.projects.add(pr);
+
 
 ' #txt
 Ds0 f5 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -575,8 +580,8 @@ Ds0 f36 actionCode 'import doc.factory.demos.Position;
 Position p = new Position();
 p.date = ''11.9.2019'';
 p.code = 1243;
-p.description = "Öb dem lumik aosdadf";
-p.unit.amount=190;
+p.description = "Paris";
+p.unit.amount=1900;
 p.unit.text = "Km";
 
 out.position = p;

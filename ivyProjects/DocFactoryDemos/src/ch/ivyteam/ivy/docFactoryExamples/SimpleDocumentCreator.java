@@ -38,8 +38,14 @@ public class SimpleDocumentCreator
 
     Document doc = new Document();
     DocumentBuilder builder = new DocumentBuilder(doc);
-    // Write some text
+    // Write logo and some text
+    builder.insertImage("webapps/ivy/resources/layouts/images/axon_ivy_logo.png", 212, 46);
+    builder.insertParagraph();
+    builder.insertHorizontalRule();
+    builder.insertParagraph();
+    builder.writeln();
     builder.writeln("Hello " + name);
+    builder.writeln();
     builder.writeln("Nice to meet you :)");
 
     // Save to ivy temporary file
