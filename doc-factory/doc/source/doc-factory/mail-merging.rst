@@ -8,7 +8,7 @@ letters to different correspondents. It is widely used as a consistent way to
 unify the letter correspondence in companies or administrations. The mechanism
 of mail merging can be resumed with the following picture:
 
-.. figure:: /_static/images/doc-factory/mail-merge.png
+.. figure:: /_static/images/mail-merge.png
 
 At the heart of the mechanism lies a Merge Mail Engine. This Engine receives
 some Data from a Data Source (DB, XML …) and replaces merge fields in the
@@ -24,7 +24,7 @@ document Factory with other engines.
 .. _df-mail-merging-regions:
 
 Mail Merging with Regions
-=========================
+-------------------------
 
 .. warning:: 
 
@@ -61,11 +61,11 @@ Follow these simple rules when marking a region:
 
 The following picture shows a template with a mail merge region:
 
-.. figure:: /_static/images/doc-factory/mail-merge-region-template.png
+.. figure:: /_static/images/mail-merge-region-template.png
 
 The following picture shows the result of the mail merge with regions:
 
-.. figure:: /_static/images/doc-factory/mail-merge-region-result.png
+.. figure:: /_static/images/mail-merge-region-result.png
 
 We have provided some callables subprocesses to ease the use of mail merge and
 mail merge with regions. Please refer to the :ref:`next section <df-doc-factory-object>`.
@@ -73,7 +73,7 @@ mail merge with regions. Please refer to the :ref:`next section <df-doc-factory-
 .. _df-mail-merging-nested_regions:
 
 Mail Merging with Nested Regions
-================================
+--------------------------------
 
 .. warning:: 
 
@@ -100,7 +100,7 @@ document with hierarchical data. Nested mail merge regions are at least two
 regions in which one is defined entirely inside the other, so they are “nested”
 in one another. In a document it looks like this:
 
-.. figure:: /_static/images/doc-factory/mail-merge-nested-1.png
+.. figure:: /_static/images/mail-merge-nested-1.png
 
 There are a few things you need to consider when preparing nested mail merge
 regions and merge regions in general:
@@ -120,17 +120,17 @@ regions and merge regions in general:
 
 The following picture shows a template with a mail merge region:
 
-.. figure:: /_static/images/doc-factory/mail-merge-nested-2.png
+.. figure:: /_static/images/mail-merge-nested-2.png
 
 The following picture shows the result of the mail merge with regions:
 
-.. figure:: /_static/images/doc-factory/mail-merge-nested-3.png
+.. figure:: /_static/images/mail-merge-nested-3.png
 
 .. _mail-merge-nested-mapping:
 
 The previous nested mail merging was made by using List of Ivy DataClasses built as following:
 
-.. figure:: /_static/images/doc-factory/mail-merge-nested-4.png
+.. figure:: /_static/images/mail-merge-nested-4.png
 
 **It is very important to create your templates with this in mind:**
 

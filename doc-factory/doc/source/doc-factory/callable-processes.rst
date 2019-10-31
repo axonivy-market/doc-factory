@@ -1,10 +1,10 @@
 .. _df-callable-processes:
 
-Callable Processes for generating Serial Letters and documents
-==============================================================
+Callable Processes
+==================
 
-Two Callable Processes are available from the AddOns project and at your
-disposal, to cover a maximum of your needs in the letter production. They use
+Two Callable Processes are available from the DocFactory project and at your
+service, to cover a maximum of your needs in the letter production. They use
 three kinds of Java Objects to perform their task.
 
 
@@ -144,7 +144,7 @@ Callable Processes
 Two callable processes are available to ease usage of the document factory. They
 are located in the IvyAddOns *Functional Processes* folder:
 
-.. figure:: /_static/images/doc-factory/callable-processes.png
+.. figure:: /_static/images/callable-processes.png
 
 
 writeSerialLetterToOneCorrespondent
@@ -158,19 +158,19 @@ document with a template by providing a single list of **TemplateMergeField**
 objects. Here is the description of this callable that you can find in the ivy
 process mod file:
 
-.. figure:: /_static/images/doc-factory/callable-processes-1.png
+.. figure:: /_static/images/callable-processes-1.png
 
 The second one (writeDocumentWithOneDataClass) allows writing a single document
 with a template by providing a **CompositeObject (DataClass)**. Here is the
 description of this callable that you can find in the ivy process mod file:
 
-.. figure:: /_static/images/doc-factory/callable-processes-3.png
+.. figure:: /_static/images/callable-processes-3.png
 
 Other ones (writeDocumentWithMailMergeTable) allow writing a single document
 with a template that can contain merge mail with regions (tables). Here is the
 description of this callable that you can find in the ivy process mod file:
 
-.. figure:: /_static/images/doc-factory/callable-processes-4.png
+.. figure:: /_static/images/callable-processes-4.png
 
 The last three ones allows writing a single document with a template that can
 contain merge mail with nested regions (tables). 
@@ -182,7 +182,7 @@ contain merge mail with nested regions (tables).
    * writeDocumentWithMailMergeNestedTableWithListOfDatas(String,String,
      String,String,CompositeObject, List<CompositeObject>)
 
-.. figure:: /_static/images/doc-factory/mail-merge-nested-5.png
+.. figure:: /_static/images/mail-merge-nested-5.png
 
 
 writeSerialLetterToManyCorrespondents 
@@ -197,4 +197,4 @@ merges (:ref:`DocumentTemplate <df-callable-processes-document-template>`). Here
 is the description of this callable that you can find in the ivy process mod
 file:
 
-.. figure:: /_static/images/doc-factory/callable-processes-2.png
+.. figure:: /_static/images/callable-processes-2.png

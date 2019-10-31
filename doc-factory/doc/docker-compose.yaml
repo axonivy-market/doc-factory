@@ -5,5 +5,5 @@ services:
     ports:
      - "8000:8000"
     volumes:
-     - "./..:/ivy-project-ivy-addons"     
-    entrypoint: "make livehtml BASEDIR=/ivy-project-ivy-addons/doc"
+     - ".:/doc-factory-doc"
+    entrypoint: "make livehtml BASEDIR=/doc-factory-doc"
