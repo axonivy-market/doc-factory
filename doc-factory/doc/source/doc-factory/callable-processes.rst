@@ -3,8 +3,8 @@
 Callable Processes
 ==================
 
-Two Callable Processes are available from the AddOns project and at your
-disposal, to cover a maximum of your needs in the letter production. They use
+Two Callable Processes are available from the DocFactory project and at your
+service, to cover a maximum of your needs in the letter production. They use
 three kinds of Java Objects to perform their task.
 
 
