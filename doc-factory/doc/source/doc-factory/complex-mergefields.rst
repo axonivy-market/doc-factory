@@ -13,6 +13,6 @@ gender of the person. Such a Field can be inserted and viewed by using the
 Alt+F9 shortcut in the template. Please refer to your Office documentation to
 learn how to set these kinds of fields:
 
-.. figure:: /_static/images/doc-factory/mergefield.png
+.. figure:: /_static/images/mergefield.png
 
 To see such a conditional Field in action, please refer to the Demo with a dataclass

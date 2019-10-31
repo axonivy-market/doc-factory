@@ -4,7 +4,7 @@ DocFactory
 A Document Factory is a system that allows generating automatically documents
 like serial letters with the help of Microsoft Office Templates (:file:`.dot` or :file:`.dotx` files).
 
-The Document Factory is open and can be extended. At the moment it is implemented 
+The Document Factory can be extended to cover your project requirements. At the moment it is implemented 
 with the commercial Java Library `Aspose <https://www.aspose.com>`_ that is included in Axon.ivy platform.
 
 .. tip::
@@ -38,9 +38,9 @@ Read more about the Document Factory API and the merging of fields in microsoftt
 
 .. toctree::
    :maxdepth: 1
+   :caption: Doc Factory
 
-   mail-merging
-   complex-mergefields
-   callable-processes
-   demos
-   doc-factory-object
+   doc-factory/mail-merging
+   doc-factory/callable-processes
+   doc-factory/demos
+   doc-factory/doc-factory-object
