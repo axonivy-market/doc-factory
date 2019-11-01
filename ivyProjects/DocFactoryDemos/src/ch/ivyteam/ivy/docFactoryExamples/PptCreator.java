@@ -35,8 +35,9 @@ class PptCreator
     Presentation presentation = new Presentation(template.toPath().toString());
 
     ch.ivyteam.ivy.scripting.objects.File tempFileIvy = new ch.ivyteam.ivy.scripting.objects.File(
-            "PowerPointDocument.pptx", false);
-
+            "ivy_DocFactoryDemo/PowerPointDocument.pptx", false);
+    tempFileIvy.createNewFile();
+    
     ISlideCollection slds = presentation.getSlides();
     ISlide slideOne = slds.get_Item(0);
 

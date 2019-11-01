@@ -107,28 +107,31 @@ import com.aspose.barcode.generation.BarcodeGenerator;
  
 IvyAsposeBarcodeLicenceLoader.init();
 
+File tempFile = new File("ivy_DocFactoryDemo");
+tempFile.mkdir();
+
 BarcodeGenerator generator = new BarcodeGenerator(EncodeTypes.CODE_128);
 generator.setCodeText(in.str);
-generator.save(new File("code128.png").getJavaFile().getPath());
+generator.save(new File("ivy_DocFactoryDemo/code128.png").getJavaFile().getPath());
          
 generator.setBarcodeType(EncodeTypes.QR);
 generator.getParameters().setResolution(200);
-generator.save(new File("codeQR.png").getJavaFile().getPath());      
+generator.save(new File("ivy_DocFactoryDemo/codeQR.png").getJavaFile().getPath());      
                    
 generator.setBarcodeType(EncodeTypes.EAN_14);
-generator.save(new File("codeEAN_14.png").getJavaFile().getPath());        
+generator.save(new File("ivy_DocFactoryDemo/codeEAN_14.png").getJavaFile().getPath());        
          
 generator.setBarcodeType(EncodeTypes.DOT_CODE);
 generator.getParameters().setResolution(50);
-generator.save(new File("codeDOT.png").getJavaFile().getPath());      
+generator.save(new File("ivy_DocFactoryDemo/codeDOT.png").getJavaFile().getPath());      
      
 generator.setBarcodeType(EncodeTypes.ISBN);
 generator.getParameters().setResolution(150);
-generator.save(new File("codeISBN.png").getJavaFile().getPath());    
+generator.save(new File("ivy_DocFactoryDemo/codeISBN.png").getJavaFile().getPath());    
 
 generator.setBarcodeType(EncodeTypes.DATA_MATRIX);
 generator.getParameters().setResolution(300);
-generator.save(new File("codeMatrix.png").getJavaFile().getPath());           ' #txt
+generator.save(new File("ivy_DocFactoryDemo/codeMatrix.png").getJavaFile().getPath());           ' #txt
 Ds0 f16 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>

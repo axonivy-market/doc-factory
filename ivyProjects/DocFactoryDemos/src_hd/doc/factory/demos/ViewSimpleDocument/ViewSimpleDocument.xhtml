@@ -10,13 +10,10 @@
 	<ui:composition template="/layouts/basic.xhtml">
 		<ui:define name="title">ViewDocument</ui:define>
 		<ui:define name="content">
-		<h3>DocFactoryDemos: View generated Document</h3>
-		<br></br>
+		<h3>DocFactoryDemos: Attached Document</h3><br></br>
 			<h:form id="form">
 				<h5>Document attached to Case [#{ivy.case.getId()}]</h5>
-				<p:media value="#{data.service.documentPath}" width="100%" height="600px">
-				    Click <h:outputLink value="#{data.service.documentPath}">here</h:outputLink> to download the pdf document.
-				</p:media>
+				<pe:documentViewer url="#{data.service.documentPath}" height="900" zoom="75"></pe:documentViewer>
 			</h:form>
 		</ui:define>
 	</ui:composition>

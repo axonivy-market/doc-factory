@@ -27,7 +27,8 @@ class XlsxCreator
   {
     // Create excel file
     ch.ivyteam.ivy.scripting.objects.File tempExcel = 
-      new ch.ivyteam.ivy.scripting.objects.File("ExcelDocument.xlsx", false);
+      new ch.ivyteam.ivy.scripting.objects.File("ivy_DocFactoryDemo/ExcelDocument.xlsx", false);
+    tempExcel.createNewFile();
 
     Workbook workbook = new Workbook();
     Worksheet worksheet = workbook.getWorksheets().get("Sheet1");
