@@ -58,7 +58,14 @@ Vs0 f5 109 160 211 160 #arcP
 Vs0 f6 actionTable 'out=in;
 ' #txt
 Vs0 f6 actionCode in.service.init(); #txt
-Vs0 f6 168 42 112 44 0 -8 #rect
+Vs0 f6 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>init</name>
+    </language>
+</elementInfo>
+' #txt
+Vs0 f6 168 42 112 44 -8 -8 #rect
 Vs0 f6 @|StepIcon #fIcon
 Vs0 f7 expr out #txt
 Vs0 f7 109 64 168 64 #arcP

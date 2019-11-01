@@ -130,6 +130,8 @@ Cs0 f6 328 352 339 352 #arcP
 Cs0 f7 expr out #txt
 Cs0 f7 109 352 120 352 #arcP
 Cs0 f13 actionTable 'out=in;
+out.service.date=new Date();
+out.service.name=ivy.session.getSessionUserName();
 ' #txt
 Cs0 f13 actionCode in.service.init(); #txt
 Cs0 f13 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>

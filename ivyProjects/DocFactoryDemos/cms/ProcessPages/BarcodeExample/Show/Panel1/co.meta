@@ -1,2 +1,2 @@
-co: name={Panel1} description={} changed={2019-10-24 13:39:54 CEST} changedby={bb} visualorder={0} guid={16DFD90E5AA5E7ED} parentguid={} typeguid={E6AFEA1F1421A232} id={} parentid={} typeid={}
-val: guid={16DFD90E5AEBFDFC} datatype={} isdefault={true} langid={en} description={} validfrom={2019-10-24 11:26:21 CEST} validto={} changed={2019-10-24 13:39:54 CEST} changedby={bb} properties={} id={}
+co: name={Panel1} description={} changed={2019-10-30 17:14:57 CET} changedby={bb} visualorder={0} guid={16DFD90E5AA5E7ED} parentguid={} typeguid={E6AFEA1F1421A232} id={} parentid={} typeid={}
+val: guid={16DFD90E5AEBFDFC} datatype={} isdefault={true} langid={en} description={} validfrom={2019-10-24 11:26:21 CEST} validto={} changed={2019-10-30 17:14:57 CET} changedby={bb} properties={} id={}

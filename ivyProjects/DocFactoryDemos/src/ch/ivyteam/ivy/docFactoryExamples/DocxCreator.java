@@ -71,10 +71,11 @@ public class DocxCreator
             mergeFields.add(new TemplateMergeField("image", service.getImage()));
     }
     
+    ch.ivyteam.ivy.scripting.objects.File output = new ch.ivyteam.ivy.scripting.objects.File("ivy_DocFactoryDemo/WordDocument");
     DocumentTemplate documentTemplate = new DocumentTemplate();
     documentTemplate.setTemplatePath(template.toPath().toString());
-    documentTemplate.setOutputName("WordDocument");
-    documentTemplate.setOutputPath("files/application/ivy_DocFactoryDemo");
+    documentTemplate.setOutputName(output.getName());
+    documentTemplate.setOutputPath(output.getParentFile().getAbsolutePath());
     documentTemplate.setOutputFormat("docx");
     documentTemplate.setMergeFields(mergeFields);
     documentTemplate.setTablesNamesAndFieldsHashtable(asTable(service.getExpectations()));
@@ -126,45 +127,46 @@ public class DocxCreator
 
     List<DocumentTemplate> documentTemplates = new List<DocumentTemplate>();
 
+    ch.ivyteam.ivy.scripting.objects.File output = new ch.ivyteam.ivy.scripting.objects.File("ivy_DocFactoryDemo/outputDocument", true);
     DocumentTemplate documentTemplate1 = new DocumentTemplate();
     documentTemplate1.setTemplatePath(templatePath.toString());
     documentTemplate1.setOutputName("simple1");
-    documentTemplate1.setOutputPath("files/application/ivy_DocFactoryDemo");                
+    documentTemplate1.setOutputPath(output.getParentFile().getAbsolutePath());                
     documentTemplate1.setOutputFormat("docx");
     documentTemplate1.setMergeFields(mergeFields);
 
     DocumentTemplate documentTemplate2 = new DocumentTemplate();
     documentTemplate2.setTemplatePath(templatePath.toString());
     documentTemplate2.setOutputName("simple2");
-    documentTemplate2.setOutputPath("files/application/ivy_DocFactoryDemo");                
+    documentTemplate2.setOutputPath(output.getParentFile().getAbsolutePath());                
     documentTemplate2.setOutputFormat("pdf");
     documentTemplate2.setMergeFields(mergeFields);
 
     DocumentTemplate documentTemplate3 = new DocumentTemplate();
     documentTemplate3.setTemplatePath(templatePath.toString());
     documentTemplate3.setOutputName("simple3");
-    documentTemplate3.setOutputPath("files/application/ivy_DocFactoryDemo");                
+    documentTemplate3.setOutputPath(output.getParentFile().getAbsolutePath());                
     documentTemplate3.setOutputFormat("html");
     documentTemplate3.setMergeFields(mergeFields);
 
     DocumentTemplate documentTemplate4 = new DocumentTemplate();
     documentTemplate4.setTemplatePath(templatePath.toString());
     documentTemplate4.setOutputName("simple4");
-    documentTemplate4.setOutputPath("files/application/ivy_DocFactoryDemo");                
+    documentTemplate4.setOutputPath(output.getParentFile().getAbsolutePath());                
     documentTemplate4.setOutputFormat("odt");
     documentTemplate4.setMergeFields(mergeFields);
 
     DocumentTemplate documentTemplate5 = new DocumentTemplate();
     documentTemplate5.setTemplatePath(templatePath.toString());
     documentTemplate5.setOutputName("simple5");
-    documentTemplate5.setOutputPath("files/application/ivy_DocFactoryDemo");                
+    documentTemplate5.setOutputPath(output.getParentFile().getAbsolutePath());                
     documentTemplate5.setOutputFormat("doc");
     documentTemplate5.setMergeFields(mergeFields);
 
     DocumentTemplate documentTemplate6 = new DocumentTemplate();
     documentTemplate6.setTemplatePath(templatePath.toString());
     documentTemplate6.setOutputName("simple6");
-    documentTemplate6.setOutputPath("files/application/ivy_DocFactoryDemo");                
+    documentTemplate6.setOutputPath(output.getParentFile().getAbsolutePath());                
     documentTemplate6.setOutputFormat("txt");
     documentTemplate6.setMergeFields(mergeFields);
 
@@ -186,11 +188,12 @@ public class DocxCreator
     FileOperationMessage fileOperationMessage = asposeDocFactory.generateDocuments(documentTemplates);
 
     Ivy.log().info(fileOperationMessage.getFiles());
-    ch.ivyteam.ivy.scripting.objects.File zip = new ch.ivyteam.ivy.scripting.objects.File("DocFactoryDemo_Documents.zip", true);
+    ch.ivyteam.ivy.scripting.objects.File zip = new ch.ivyteam.ivy.scripting.objects.File("ivy_DocFactoryDemo/Documents.zip");
+    zip.getParentFile().mkdir();
     zip(zip.getJavaFile(), fileOperationMessage.getFiles());
     return zip.getJavaFile();
   }
-  
+   
   private static Hashtable<String, Recordset> asTable(java.util.List<String> expectations)
   {
     Hashtable<String, Recordset> tablesNamesAndFieldsHashtable = new Hashtable<String, Recordset>();

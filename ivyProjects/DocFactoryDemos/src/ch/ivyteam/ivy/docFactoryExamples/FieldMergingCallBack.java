@@ -40,10 +40,10 @@ public class FieldMergingCallBack extends AsposeFieldMergingCallback
   public void imageFieldMerging(ImageFieldMergingArgs imageFieldMergingArgs) throws Exception
   {
     // The field value is a byte array, cast it and create a stream on it.
-    if (imageFieldMergingArgs.getFieldValue() != null)
+    if (imageFieldMergingArgs.getFieldValue() instanceof byte[])
     {
-      ByteArrayInputStream imageStream = new ByteArrayInputStream(
-              (byte[]) imageFieldMergingArgs.getFieldValue());
+      byte[] bytes = (byte[]) imageFieldMergingArgs.getFieldValue();
+      ByteArrayInputStream imageStream = new ByteArrayInputStream(bytes);
       // Now the mail merge engine will retrieve the image from the stream.
       imageFieldMergingArgs.setImageStream(imageStream);
       imageFieldMergingArgs.setImageWidth(new MergeFieldImageDimension(this.width));
