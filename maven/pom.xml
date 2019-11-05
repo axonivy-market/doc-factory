@@ -49,6 +49,10 @@
                         <goals>
                             <goal>flatten</goal>
                         </goals>
+                        <configuration>
+	                        <outputDirectory>${project.build.directory}</outputDirectory>
+	                        <flattenedPomFilename>pom.xml</flattenedPomFilename>
+                        </configuration>
                     </execution>
                     <execution>
                         <id>flatten.clean</id>
@@ -60,40 +64,59 @@
                 </executions>
             </plugin>
         </plugins>
-        
-        <pluginManagement>
-    	<plugins>
-    		<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
-    		<plugin>
-    			<groupId>org.eclipse.m2e</groupId>
-    			<artifactId>lifecycle-mapping</artifactId>
-    			<version>1.0.0</version>
-    			<configuration>
-    				<lifecycleMappingMetadata>
-    					<pluginExecutions>
-    						<pluginExecution>
-    							<pluginExecutionFilter>
-    								<groupId>org.codehaus.mojo</groupId>
-    								<artifactId>
-    									flatten-maven-plugin
-    								</artifactId>
-    								<versionRange>
-    									[1.1.0,)
-    								</versionRange>
-    								<goals>
-    									<goal>flatten</goal>
-    								</goals>
-    							</pluginExecutionFilter>
-    							<action>
-    								<ignore></ignore>
-    							</action>
-    						</pluginExecution>
-    					</pluginExecutions>
-    				</lifecycleMappingMetadata>
-    			</configuration>
-    		</plugin>
-    	</plugins>
-    </pluginManagement>
+
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>com.axonivy.ivy.ci</groupId>
+					<artifactId>project-build-plugin</artifactId>
+					<version>[7.0.0,</version>
+					<configuration>
+						<!-- favour flattened pom.xml over default -->
+						<iarFileSets>
+							<iarFileSet>
+								<directory>target</directory>
+								<include>pom.xml</include>
+							</iarFileSet>
+						</iarFileSets>
+						<iarExcludes>
+							<iarExclude>pom.xml</iarExclude>
+						</iarExcludes>
+					</configuration>
+				</plugin>
+	
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.codehaus.mojo</groupId>
+										<artifactId>
+											flatten-maven-plugin
+										</artifactId>
+										<versionRange>
+											[1.1.0,)
+										</versionRange>
+										<goals>
+											<goal>flatten</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
     </build>
 
     <repositories>
