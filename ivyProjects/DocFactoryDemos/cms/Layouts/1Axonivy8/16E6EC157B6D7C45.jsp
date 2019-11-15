@@ -10,9 +10,6 @@
   <title><%=Advisor.getAdvisor().getApplicationName()%> <%=Advisor.getAdvisor().getVersion().getVersionString(Version.DETAIL_PATCH,Version.FORM_SHORT)%></title>
   <link rel="shortcut icon" href="../../../shared/images/ivy_favicon_48.png" />
 
-  <!-- Bootstrap  -->
-  <link href="../../../shared/css/bootstrap.min.css" rel="stylesheet">
-  <link href="../../../shared/css/ivy-common-6.css" rel="stylesheet"> 
   <link rel="stylesheet" type="text/css" href="<%=ivy.style()%>"/>
 
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -29,19 +26,6 @@
 	  <a class="ivy-logo" href="<%=ivy.html.applicationHomeRef()%>">
         <img src="../../../shared/images/axon_ivy_logo.png" alt="Axon.ivy">
       </a>
-  </div>
-</div>
-<div class="navbar ivy-subnav">
-  <div class="navbar-inner">
-    <div class="container">
-      <div class="row">
-  	  <ul class="nav nav-pills">
-          <li class=""><a href="<%= ivy.html.applicationHomeRef()%>" target="_top">WF Home</a></li>
-          <li class=""><a href="<%= ivy.html.taskListRef()%>">Task List</a></li>
-          <li class=""><a href="<%= ivy.html.processStartListRef()%>">Process List</a></li>
-        </ul>
-      </div>
-    </div>
   </div>
 </div>
 

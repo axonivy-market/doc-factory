@@ -9,25 +9,7 @@
 <h:body>
 	<ui:composition template="/layouts/basic.xhtml">
 		<ui:define name="title">Basic Binding Word</ui:define>
-		<ui:define name="content">
-		<style>
-		table tr > td{
-			padding: 5px;
-		}
-		
-		.ui-radiobutton{
-			margin: 0 7px 0 0 !important;
-		}
-		
-		.btn{
-		    color: #fff !important;
-		    margin-right:15px;
-		}
-		
-		#form\:file{
-			padding-top:18px
-		}
-		</style>		
+		<ui:define name="content">	
 		<h3>DocFactoryDemos: Document Creation Capabilities </h3>
 		
 			<h:form id="form" enctype="multipart/form-data">
@@ -44,7 +26,7 @@
 					<p:calendar id="date" value="#{data.service.date}" pattern="dd/MM/yyyy" autocomplete="off" required="true"/>
 					<br />
 					<p:outputLabel for="file" value="Choose an Image" />
-					<p:fileUpload id="file" auto="true" fileUploadListener="#{logic.fileUpload}" mode="advanced" update="fileName"/>
+					<p:fileUpload id="file" auto="true" fileUploadListener="#{logic.fileUpload}" mode="simple" update="fileName"/>
 					<h:outputText id="fileName" value="#{data.service.imageName}" />
 
 					<p:outputLabel for="memberType" value="Member Type" />
@@ -81,10 +63,10 @@
 				<br />
 
 <h4>Create and download the created files</h4>
-				<p:commandLink styleClass="btn btn-primary" actionListener="#{logic.download()}" value="Create DOCX" ajax="false" />
-				<p:commandLink styleClass="btn btn-primary" actionListener="#{logic.downloadMultiFile()}" value="Create Multiple Formats" ajax="false" />
-				<p:commandLink styleClass="btn btn-warning" actionListener="#{logic.downloadPowerPoint()}" value="Create PPTX" ajax="false" />
-				<p:commandLink styleClass="btn btn-success" actionListener="#{logic.downloadExcel()}" value="Create XLSX" ajax="false" />			
+				<p:commandButton styleClass="btn btn-primary" actionListener="#{logic.download()}" value="Create DOCX" ajax="false" />
+				<p:commandButton styleClass="btn btn-primary" actionListener="#{logic.downloadMultiFile()}" value="Create Multiple Formats" ajax="false" />
+				<p:commandButton styleClass="btn btn-warning" actionListener="#{logic.downloadPowerPoint()}" value="Create PPTX" ajax="false" />
+				<p:commandButton styleClass="btn btn-success" actionListener="#{logic.downloadExcel()}" value="Create XLSX" ajax="false" />			
 			</h:form>
 		</ui:define>
 	</ui:composition>
