@@ -32,7 +32,7 @@ pipeline {
             sh "make -C /doc-build html BASEDIR='${env.WORKSPACE}/doc-factory/doc' VERSION='${currentVersion}'"
           }
           archiveArtifacts 'doc-factory/doc/build/html/**/*'
-          recordIssues tools: [sphinxBuild()], unstableTotalAll: 1
+          recordIssues tools: [eclipse(), sphinxBuild()], unstableTotalAll: 1
 
           echo 'deploy doc'
           docker.build('maven-build', '-f Dockerfile .').inside {            

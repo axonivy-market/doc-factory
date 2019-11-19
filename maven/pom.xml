@@ -14,7 +14,7 @@
     <properties>
         <revision>8.0.0-SNAPSHOT</revision>
 
-        <project-build-plugin-version>8.0.0</project-build-plugin-version>
+        <project-build-plugin-version>8.1.0-SNAPSHOT</project-build-plugin-version>
         <maven-dependency-plugin-version>3.0.2</maven-dependency-plugin-version>
         <maven-deploy-plugin-version>2.8.2</maven-deploy-plugin-version>
         <tycho-version>1.5.0</tycho-version>
@@ -79,6 +79,7 @@
 								<include>pom.xml</include>
 							</iarFileSet>
 						</iarFileSets>
+						<compilerWarnings>true</compilerWarnings>
 					</configuration>
 				</plugin>
 	
