@@ -18,7 +18,6 @@ import ch.ivyteam.ivy.persistence.ITransactionExecutable;
 import ch.ivyteam.ivy.persistence.PersistencyException;
 import ch.ivyteam.ivy.persistence.db.DatabasePersistencyService;
 import ch.ivyteam.ivy.persistence.db.DatabaseTransaction;
-import ch.ivyteam.ivy.persistence.db.DatabaseUtil;
 import ch.ivyteam.ivy.persistence.db.IPreparedStatementExecutable;
 import ch.ivyteam.ivy.scripting.objects.List;
 import ch.ivyteam.ivy.scripting.objects.Record;
@@ -62,7 +61,6 @@ public class IvySystemDBReuser {
 
 			public Void execute(IPersistentTransaction transaction) throws PersistencyException {
 				DatabaseTransaction dt = (DatabaseTransaction)transaction;
-				ResultSet res = null;
 				PreparedStatement stmt;
 				String createFileManagerTable = "CREATE TABLE IWA_UPLOADEDFILE (" +
 				"FILEID INT NOT NULL,"+
@@ -81,9 +79,8 @@ public class IvySystemDBReuser {
 				"PRIMARY KEY (FILEID)"+
 				");";
 				Connection con = dt.getDbConnection().getConnection();
-				try
+				try (ResultSet res = con.getMetaData().getTables(null, null, _tableName.trim(), null))
 				{
-					res = con.getMetaData().getTables(null, null, _tableName.trim(), null);
 					if(!res.next())
 					{//the table doesn't exists
 						// get a jdbc prepared statement
@@ -106,11 +103,6 @@ public class IvySystemDBReuser {
 				{
 					throw new PersistencyException(ex);
 				}
-				finally
-				{
-					DatabaseUtil.close(res);
-				}
-
 			}});
 	}
 	
@@ -135,11 +127,10 @@ public class IvySystemDBReuser {
 			throw(new PersistencyException("Invalid PreparedStatement"));
 		}
 
-		ResultSet rst = null;
 		
 		List<Record> recordList= (List<Record>) List.create(Record.class);
-		try{
-			rst=_stmt.executeQuery();
+		try (ResultSet rst=_stmt.executeQuery())
+		{
 			ResultSetMetaData rsmd = rst.getMetaData();
 			int numCols = rsmd.getColumnCount();
 			List<String> colNames= List.create(String.class);
@@ -160,9 +151,6 @@ public class IvySystemDBReuser {
 			}
 		}catch(Exception ex){
 			Ivy.log().error(ex.getMessage(), ex);
-		}finally
-		{
-			DatabaseUtil.close(rst);
 		}
 		return recordList;
 	}
