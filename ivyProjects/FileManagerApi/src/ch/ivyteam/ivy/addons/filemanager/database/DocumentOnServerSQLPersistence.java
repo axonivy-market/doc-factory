@@ -706,18 +706,15 @@ IDocumentOnServerPersistence {
 			}
 			query.append(_conditions.get(numConditions));
 		}
-		PreparedStatement stmt = null;
-		ResultSet rst = null;
-		try {
-			stmt = this.connectionManager.getConnection().prepareStatement(query.toString());
-			Ivy.log().debug(query.toString());
-			rst = stmt.executeQuery();
+		try (PreparedStatement stmt = this.connectionManager.getConnection().prepareStatement(query.toString());
+		     ResultSet rst = stmt.executeQuery())
+		{
 			recordList=SqlPersistenceHelper.getRecordsListFromResulSet(rst);
 			if(recordList!=null) {
 				al.addAll(DocumentOnServerGeneratorHelper.makeDocsWithRecordList(recordList, configuration));
 			}
 		} finally {
-			PersistenceConnectionManagerReleaser.release(this.connectionManager, stmt, rst, "getDocuments(List<String> conditions)", this.getClass());
+			connectionManager.closeConnection();
 		}
 		if(this.configuration.isActivateFileType() && this.fileTypesController!=null) {
 			for(DocumentOnServer doc:al) {

@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import ch.ivyteam.db.jdbc.DatabaseUtil;
 import ch.ivyteam.ivy.addons.filemanager.DocumentOnServer;
 import ch.ivyteam.ivy.addons.filemanager.FileVersion;
 import ch.ivyteam.ivy.addons.filemanager.configuration.BasicConfigurationController;
@@ -267,7 +266,6 @@ public class FileVersioningSQLPersistence implements IFileVersionPersistence {
 		// Query to update the number version in the main file table
 		String q4 = FileVersioningSQLQueries.UPDATE_FILE_INFORMATION.replace(FileVersioningSQLQueries.FILE_TABLENAMESPACE_PLACEHOLDER, this.fileTableName);
 		PreparedStatement stmt=null;
-		ResultSet rs = null;
 		try {
 			boolean flag = true;
 			try {
@@ -284,18 +282,14 @@ public class FileVersioningSQLPersistence implements IFileVersionPersistence {
 			stmt.setString(5, doc.getUserID());
 			stmt.setString(6, doc.getFilename());
 			stmt.executeUpdate();
-			try {
-				rs = stmt.getGeneratedKeys();
+			try (ResultSet rs = stmt.getGeneratedKeys())
+			{
 				if (rs != null && rs.next()) {
 					// Retrieve the auto generated key.
 					vid = rs.getInt(1);
 				}
 			} catch (Exception fex) {
 				// The JDBC Driver doesn't accept the PreparedStatement.RETURN_GENERATED_KEYS... ignore
-			} finally {
-				if(rs!=null) {
-					DatabaseUtil.close(rs);
-				}
 			}
 			closeStatement(stmt);
 			if (!flag || vid <= 0) {
@@ -343,9 +337,8 @@ public class FileVersioningSQLPersistence implements IFileVersionPersistence {
 				stmt.executeUpdate();
 			}
 			Ivy.log().debug("File Version created "+vid);
-			rs = null;
-			try {
-				rs = stmt.getGeneratedKeys();
+			try (ResultSet rs = stmt.getGeneratedKeys())
+			{
 				if (rs != null && rs.next()) {
 					// Retrieve the auto generated key.
 					vcid = rs.getInt(1);
@@ -398,9 +391,11 @@ public class FileVersioningSQLPersistence implements IFileVersionPersistence {
 			fv.setUser((filemanagerItemMetaData==null || filemanagerItemMetaData.getCreationUserId().isEmpty())?
 					Ivy.session().getSessionUserName():filemanagerItemMetaData.getCreationUserId());
 			fv.setVersionNumber(vn);
-			rs.close();
 		} finally {
-			PersistenceConnectionManagerReleaser.release(this.connectionManager, stmt, rs, "createNewVersion", this.getClass());
+			if (stmt != null) {
+				stmt.close();
+			}
+			connectionManager.closeConnection();
 		}
 		return fv;
 	}
@@ -676,11 +671,10 @@ public class FileVersioningSQLPersistence implements IFileVersionPersistence {
 			throw(new SQLException("Invalid PreparedStatement","PreparedStatement Null"));
 		}
 
-		ResultSet rst = null;
 		List<Record> recordList= new ArrayList<Record>();
 		
-		try{
-			rst=_stmt.executeQuery();
+		try (ResultSet rst = _stmt.executeQuery())
+		{
 			ResultSetMetaData rsmd = rst.getMetaData();
 			int numCols = rsmd.getColumnCount();
 			List<String> colNames= new ArrayList<String>();
@@ -700,10 +694,10 @@ public class FileVersioningSQLPersistence implements IFileVersionPersistence {
 				recordList.add(rec);
 			}
 			rst.close();
-		}catch(Exception ex){
+		}
+		catch(Exception ex)
+		{
 			Ivy.log().error(ex.getMessage(), ex);
-		}finally {
-			DatabaseUtil.close(rst);
 		}
 		return recordList;
 	}
