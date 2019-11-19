@@ -79,6 +79,7 @@
 								<include>pom.xml</include>
 							</iarFileSet>
 						</iarFileSets>
+						<compilerWarnings>true</compilerWarnings>
 					</configuration>
 				</plugin>
 	

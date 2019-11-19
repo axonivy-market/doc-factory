@@ -21,7 +21,8 @@ pipeline {
           echo 'build projects'
           docker.build('maven-build', '-f Dockerfile .').inside {
             def phase = env.BRANCH_NAME == 'master' ? 'deploy' : 'verify'
-            maven cmd: "clean ${phase} -Dmaven.test.failure.ignore=true"
+            maven cmd: "clean ${phase} -Dmaven.test.failure.ignore=true " +
+              "-Dproject-build-plugin-version=8.1.0-SNAPSHOT "
             currentVersion = getCurrentVersion();
           }
           archiveArtifacts '**/target/*.iar'
@@ -32,7 +33,7 @@ pipeline {
             sh "make -C /doc-build html BASEDIR='${env.WORKSPACE}/doc-factory/doc' VERSION='${currentVersion}'"
           }
           archiveArtifacts 'doc-factory/doc/build/html/**/*'
-          recordIssues tools: [sphinxBuild()], unstableTotalAll: 1
+          recordIssues tools: [eclipse(), sphinxBuild()], unstableTotalAll: 1
 
           echo 'deploy doc'
           docker.build('maven-build', '-f Dockerfile .').inside {            
