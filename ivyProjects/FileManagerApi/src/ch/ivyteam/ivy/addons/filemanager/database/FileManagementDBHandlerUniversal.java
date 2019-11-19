@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.Callable;
 
-import ch.ivyteam.db.jdbc.DatabaseUtil;
 import ch.ivyteam.ivy.db.IExternalDatabase;
 import ch.ivyteam.ivy.db.IExternalDatabaseApplicationContext;
 import ch.ivyteam.ivy.db.IExternalDatabaseRuntimeConnection;
@@ -247,9 +246,8 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		try {
 			connection = getDatabase().getAndLockConnection();
 			Connection jdbcConnection=connection.getDatabaseConnection();
-			PreparedStatement stmt = null;
-			try{
-				stmt = jdbcConnection.prepareStatement(query.toString());
+			try (PreparedStatement stmt = jdbcConnection.prepareStatement(query.toString()))
+			{
 				recordList=executeStmt(stmt);
 				if(recordList!=null){
 					for(Record rec: recordList){
@@ -276,8 +274,6 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 						al.add(doc);
 					}
 				}
-			}finally{
-				DatabaseUtil.close(stmt);
 			}
 		} finally{
 			if(connection!=null ){
@@ -319,9 +315,8 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 				//query="SELECT * FROM "+this.tableNamespace+" WHERE Locked=1 AND FilePath LIKE '"+folderPath+"%' AND FilePath NOT LIKE '"+folderPath+"%["+java.io.File.separator+"]%'";
 				query="SELECT * FROM "+this.tableNameSpace+" WHERE Locked=1 AND FilePath LIKE ? ESCAPE '"+escapeChar+"' AND FilePath NOT LIKE ? ESCAPE '"+escapeChar+"'";
 			}
-			PreparedStatement stmt = null;
-			try{
-				stmt = jdbcConnection.prepareStatement(query);
+			try (PreparedStatement stmt = jdbcConnection.prepareStatement(query))
+			{
 				if(_isrecursive)
 				{
 					stmt.setString(1, folderPath+"%");
@@ -331,8 +326,6 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 					stmt.setString(2, folderPath+"%/%");
 				}
 				recordList=executeStmt(stmt);
-			}finally{
-				DatabaseUtil.close(stmt);
 			}
 		} finally{
 			if(connection!=null ){
@@ -378,12 +371,9 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		try {
 			connection = getDatabase().getAndLockConnection();
 			Connection jdbcConnection=connection.getDatabaseConnection();
-			PreparedStatement stmt = null;
-			try{
-				stmt = jdbcConnection.prepareStatement(_query);
+			try (PreparedStatement stmt = jdbcConnection.prepareStatement(_query))
+			{
 				stmt.execute();
-			}finally{
-				DatabaseUtil.close(stmt);
 			}
 		} finally{
 			if(connection!=null ){
@@ -426,9 +416,8 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		try {
 			connection = getDatabase().getAndLockConnection();
 			Connection jdbcConnection=connection.getDatabaseConnection();
-			PreparedStatement stmt=null;
-			try{
-				stmt = jdbcConnection.prepareStatement(_query);
+			try (PreparedStatement stmt = jdbcConnection.prepareStatement(_query))
+			{
 				int i = 1;
 				for(KeyValuePair kvp: _KVP)
 				{
@@ -447,9 +436,7 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 				}
 
 				rows=stmt.executeUpdate();
-			}finally{
-				DatabaseUtil.close(stmt);
-			}			
+			}	
 		} finally{
 			if(connection!=null ){
 				database.giveBackAndUnlockConnection(connection);
@@ -476,10 +463,9 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 			Connection jdbcConnection=connection.getDatabaseConnection();
 			String query= "UPDATE "+this.tableNameSpace+" SET FileName = ?, FilePath = ?, ModificationDate = ?, ModificationTime = ?, ModificationUserId = ? WHERE FilePath = ?";
 
-			PreparedStatement stmt = null;
-			try{
-				String newPath = _doc.getPath().substring(0,escapeBackSlash(_doc.getPath()).lastIndexOf("/"))+"/"+_newName.trim();
-				stmt = jdbcConnection.prepareStatement(query);
+			String newPath = _doc.getPath().substring(0,escapeBackSlash(_doc.getPath()).lastIndexOf("/"))+"/"+_newName.trim();
+			try (PreparedStatement stmt = jdbcConnection.prepareStatement(query))
+			{
 				stmt.setString(1, _newName.trim());
 				stmt.setString(2, newPath);
 				stmt.setString(3, new Date().format("dd.MM.yyyy"));
@@ -487,9 +473,6 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 				stmt.setString(5, _userID);
 				stmt.setString(6, escapeBackSlash(_doc.getPath()));
 				i=stmt.executeUpdate();
-			}
-			finally{
-				DatabaseUtil.close(stmt);
 			}
 		} 
 		finally{
@@ -519,18 +502,14 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 			connection = getDatabase().getAndLockConnection();
 			Connection jdbcConnection=connection.getDatabaseConnection();
 			String query= "UPDATE "+this.tableNameSpace+" SET FileSize = ?, ModificationDate = ?, ModificationTime = ?, ModificationUserId = ? WHERE FilePath = ?";
-			PreparedStatement stmt = null;
-			try{			
-				stmt = jdbcConnection.prepareStatement(query);
+			try (PreparedStatement stmt = jdbcConnection.prepareStatement(query))
+			{			
 				stmt.setString(1, FileHandler.getFileSize(_file));
 				stmt.setString(2, new Date().format("dd.MM.yyyy"));
 				stmt.setString(3, new Time().format("HH:mm.ss"));
 				stmt.setString(4, _userID);
 				stmt.setString(5, escapeBackSlash(_file.getPath()));
 				stmt.executeUpdate();
-			}
-			finally{
-				DatabaseUtil.close(stmt);
 			}
 		} 
 		finally{
@@ -558,17 +537,14 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 			connection = getDatabase().getAndLockConnection();
 			Connection jdbcConnection=connection.getDatabaseConnection();
 			String query = "UPDATE "+this.tableNameSpace+" SET Locked=1, LockingUserId= ? WHERE FilePath = ? AND (LockingUserId = ? OR Locked <> 1)";
-			PreparedStatement stmt = null;
-			try{
-				stmt = jdbcConnection.prepareStatement(query);
+			try (PreparedStatement stmt = jdbcConnection.prepareStatement(query))
+			{
 				stmt.setString(1, _userIn.trim());
 				stmt.setString(2, escapeBackSlash(_doc.getPath()));
 				stmt.setString(3, _userIn.trim());
 				if(stmt.executeUpdate()>0){
 					flag = true;
 				}
-			}finally{
-				DatabaseUtil.close(stmt);
 			}
 		} finally{
 			if(connection!=null ){
@@ -596,17 +572,14 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 			connection = getDatabase().getAndLockConnection();
 			Connection jdbcConnection=connection.getDatabaseConnection();
 			String query = "UPDATE "+this.tableNameSpace+" SET Locked=1, LockingUserId= ? WHERE FilePath = ? AND (LockingUserId = ? OR Locked <> 1)";
-			PreparedStatement stmt = null;
-			try{
-				stmt = jdbcConnection.prepareStatement(query);
+			try (PreparedStatement stmt = jdbcConnection.prepareStatement(query))
+			{
 				stmt.setString(1, _userIn.trim());
 				stmt.setString(2, escapeBackSlash(_file.getPath()));
 				stmt.setString(3, _userIn.trim());
 				if(stmt.executeUpdate()>0){
 					flag = true;
 				}
-			}finally{
-				DatabaseUtil.close(stmt);
 			}
 		} finally{
 			if(connection!=null ){
@@ -628,23 +601,20 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 			throw new Exception("Invalid DocumentOnServer Object in unlockDocument method.");
 		}
 		boolean flag = false;
+
 		IExternalDatabaseRuntimeConnection connection=null;
 		try {
 			connection = getDatabase().getAndLockConnection();
 			Connection jdbcConnection=connection.getDatabaseConnection();
 			String query = "UPDATE "+this.tableNameSpace+" SET Locked=0, LockingUserId= ? WHERE FilePath = ?";
-			PreparedStatement stmt = null;
-			try{
-				stmt = jdbcConnection.prepareStatement(query);
+			try (PreparedStatement stmt = jdbcConnection.prepareStatement(query))
+			{
 				stmt.setString(1, "");
 				stmt.setString(2,escapeBackSlash( _doc.getPath()));
 				if(stmt.executeUpdate()>0){
 					flag = true;
 				}
-			}finally{
-				DatabaseUtil.close(stmt);
 			}
-
 		}finally{
 			if(connection!=null ){
 				database.giveBackAndUnlockConnection(connection);
@@ -670,18 +640,14 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 			connection = getDatabase().getAndLockConnection();
 			Connection jdbcConnection=connection.getDatabaseConnection();
 			String query = "UPDATE "+this.tableNameSpace+" SET Locked=0, LockingUserId= ? WHERE FilePath = ?";
-			PreparedStatement stmt = null;
-			try{
-				stmt = jdbcConnection.prepareStatement(query);
+			try (PreparedStatement stmt = jdbcConnection.prepareStatement(query))
+			{
 				stmt.setString(1, "");
 				stmt.setString(2, escapeBackSlash(_file.getPath()));
 				if(stmt.executeUpdate()>0){
 					flag = true;
 				}
-			}finally{
-				DatabaseUtil.close(stmt);
 			}
-
 		}finally{
 			if(connection!=null ){
 				database.giveBackAndUnlockConnection(connection);
@@ -709,17 +675,14 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 			connection = getDatabase().getAndLockConnection();
 			Connection jdbcConnection=connection.getDatabaseConnection();
 			String query = "UPDATE "+this.tableNameSpace+" SET Locked=0, LockingUserId = ? WHERE FilePath = ? AND LockingUserId = ?";
-			PreparedStatement stmt = null;
-			try{
-				stmt = jdbcConnection.prepareStatement(query);
+			try (PreparedStatement stmt = jdbcConnection.prepareStatement(query))
+			{
 				stmt.setString(1, "");
 				stmt.setString(2, escapeBackSlash(_doc.getPath()));
 				stmt.setString(3, _user.trim());
 				if(stmt.executeUpdate()>0){
 					flag = true;
 				}
-			}finally{
-				DatabaseUtil.close(stmt);
 			}
 
 		}finally{
@@ -749,17 +712,14 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 			connection = getDatabase().getAndLockConnection();
 			Connection jdbcConnection=connection.getDatabaseConnection();
 			String query = "UPDATE "+this.tableNameSpace+" SET Locked=0, LockingUserId= ? WHERE FilePath = ? AND LockingUserId = ?";
-			PreparedStatement stmt = null;
-			try{
-				stmt = jdbcConnection.prepareStatement(query);
+			try (PreparedStatement stmt = jdbcConnection.prepareStatement(query))
+			{
 				stmt.setString(1, "");
 				stmt.setString(2, escapeBackSlash(_file.getPath()));
 				stmt.setString(3, _user.trim());
 				if(stmt.executeUpdate()>0){
 					flag = true;
 				}
-			}finally{
-				DatabaseUtil.close(stmt);
 			}
 
 		}finally{
@@ -796,9 +756,8 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 				//query="UPDATE "+ tableName + " SET Locked = 0 WHERE LockingUserId LIKE '"+user+"' AND FilePath LIKE '"+folderPath+"%' AND FilePath NOT LIKE '"+folderPath+"%["+java.io.File.separator+"]%'";
 				query="UPDATE "+ this.tableNameSpace + " SET Locked = 0, LockingUserId= ? WHERE LockingUserId = ? AND FilePath LIKE ? ESCAPE '"+escapeChar+"' AND FilePath NOT LIKE ? ESCAPE '"+escapeChar+"'";
 			}
-			PreparedStatement stmt = null;
-			try{
-				stmt = jdbcConnection.prepareStatement(query);
+			try (PreparedStatement stmt = jdbcConnection.prepareStatement(query))
+			{
 				if(_recursive)
 				{
 					stmt.setString(1, "");
@@ -815,8 +774,6 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 					stmt.executeUpdate();
 				}
 
-			}finally{
-				DatabaseUtil.close(stmt);
 			}
 		}finally{
 			if(connection!=null ){
@@ -846,9 +803,8 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		try {
 			connection = getDatabase().getAndLockConnection();
 			Connection jdbcConnection=connection.getDatabaseConnection();
-			PreparedStatement stmt = null;
-			try{
-				stmt = jdbcConnection.prepareStatement(base);
+			try (PreparedStatement stmt = jdbcConnection.prepareStatement(base))
+			{
 				stmt.setString(1, _file.getName());
 				stmt.setString(2, escapeBackSlash(_file.getPath()));
 				stmt.setString(3, _user);
@@ -862,8 +818,6 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 				stmt.setString(11, time);
 				stmt.setString(12, "");
 				insertedId= stmt.executeUpdate();
-			}finally{
-				DatabaseUtil.close(stmt);
 			}
 		}finally{
 			if(connection!=null ){
@@ -890,9 +844,8 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		try {
 			connection = getDatabase().getAndLockConnection();
 			Connection jdbcConnection=connection.getDatabaseConnection();
-			PreparedStatement stmt = null;
-			try{
-				stmt = jdbcConnection.prepareStatement(base);
+			try (PreparedStatement stmt = jdbcConnection.prepareStatement(base))
+			{
 				stmt.setString(1, _file.getName());
 				stmt.setString(2, _destinationPath+_file.getName());
 				stmt.setString(3, _user);
@@ -906,8 +859,6 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 				stmt.setString(11, time);
 				stmt.setString(12, "");
 				insertedId= stmt.executeUpdate();
-			}finally{
-				DatabaseUtil.close(stmt);
 			}
 		}finally{
 			if(connection!=null ){
@@ -937,9 +888,8 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		try {
 			connection = getDatabase().getAndLockConnection();
 			Connection jdbcConnection=connection.getDatabaseConnection();
-			PreparedStatement stmt = null;
-			try{
-				stmt = jdbcConnection.prepareStatement(base);
+			try (PreparedStatement stmt = jdbcConnection.prepareStatement(base))
+			{
 				stmt.setString(1, _document.getFilename());
 				stmt.setString(2, escapeBackSlash(_document.getPath()));
 				stmt.setString(3, _document.getUserID());
@@ -958,8 +908,6 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 				}
 				stmt.setString(12, s);
 				insertedId= stmt.executeUpdate();
-			}finally{
-				DatabaseUtil.close(stmt);
 			}
 		}finally{
 			if(connection!=null ){
@@ -993,9 +941,8 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		try {
 			connection = getDatabase().getAndLockConnection();
 			Connection jdbcConnection=connection.getDatabaseConnection();
-			PreparedStatement stmt = null;
-			try{
-				stmt = jdbcConnection.prepareStatement(base);
+			try (PreparedStatement stmt = jdbcConnection.prepareStatement(base))
+			{
 				for(DocumentOnServer doc: _documents){
 
 					stmt.setString(1, doc.getFilename());
@@ -1018,8 +965,6 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 					//Ivy.log().info(stmt.toString());
 					insertedIDs+=stmt.executeUpdate();
 				}
-			}finally{
-				DatabaseUtil.close(stmt);
 			}
 		}finally{
 			if(connection!=null ){
@@ -1054,9 +999,8 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		try {
 			connection = getDatabase().getAndLockConnection();
 			Connection jdbcConnection=connection.getDatabaseConnection();
-			PreparedStatement stmt = null;
-			try{
-				stmt = jdbcConnection.prepareStatement(base);
+			try (PreparedStatement stmt = jdbcConnection.prepareStatement(base))
+			{
 				for(java.io.File file: _files){
 					stmt.setString(1, file.getName());
 					stmt.setString(2, escapeBackSlash(file.getPath()));
@@ -1073,8 +1017,6 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 					//Ivy.log().info(stmt.toString());
 					insertedIDs+=stmt.executeUpdate();
 				}
-			}finally{
-				DatabaseUtil.close(stmt);
 			}
 		}finally{
 			if(connection!=null ){
@@ -1110,9 +1052,8 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		try {
 			connection = getDatabase().getAndLockConnection();
 			Connection jdbcConnection=connection.getDatabaseConnection();
-			PreparedStatement stmt = null;
-			try{
-				stmt = jdbcConnection.prepareStatement(base);
+			try (PreparedStatement stmt = jdbcConnection.prepareStatement(base))
+			{
 				for(java.io.File file: _files){
 					stmt.setString(1, file.getName());
 					stmt.setString(2, _destinationPath+file.getName());
@@ -1129,8 +1070,6 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 					//Ivy.log().info(stmt.toString());
 					insertedIDs+=stmt.executeUpdate();
 				}
-			}finally{
-				DatabaseUtil.close(stmt);
 			}
 		}finally{
 			if(connection!=null ){
@@ -1159,15 +1098,12 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		try {
 			connection = getDatabase().getAndLockConnection();
 			Connection jdbcConnection=connection.getDatabaseConnection();
-			PreparedStatement stmt = null;
-			try{
-				stmt = jdbcConnection.prepareStatement(base);
+			try (PreparedStatement stmt = jdbcConnection.prepareStatement(base))
+			{
 				for(java.io.File file: _files){
 					stmt.setString(1, escapeBackSlash(file.getPath()));
 					deletedFiles+=stmt.executeUpdate();
 				}
-			}finally{
-				DatabaseUtil.close(stmt);
 			}
 		}finally{
 			if(connection!=null ){
@@ -1197,15 +1133,12 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		try {
 			connection = getDatabase().getAndLockConnection();
 			Connection jdbcConnection=connection.getDatabaseConnection();
-			PreparedStatement stmt = null;
-			try{
-				stmt = jdbcConnection.prepareStatement(base);
+			try (PreparedStatement stmt = jdbcConnection.prepareStatement(base))
+			{
 				for(java.io.File file: _files){
 					stmt.setString(1, escapeBackSlash(file.getPath()));
 					deletedFiles+=stmt.executeUpdate();
 				}
-			}finally{
-				DatabaseUtil.close(stmt);
 			}
 		}finally{
 			if(connection!=null ){
@@ -1234,15 +1167,12 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		try {
 			connection = getDatabase().getAndLockConnection();
 			Connection jdbcConnection=connection.getDatabaseConnection();
-			PreparedStatement stmt = null;
-			try{
-				stmt = jdbcConnection.prepareStatement(base);
+			try (PreparedStatement stmt = jdbcConnection.prepareStatement(base))
+			{
 				for(DocumentOnServer doc: _documents){
 					stmt.setString(1, escapeBackSlash(doc.getPath()));
 					deletedFiles+=stmt.executeUpdate();
 				}
-			}finally{
-				DatabaseUtil.close(stmt);
 			}
 		}finally{
 			if(connection!=null ){
@@ -1275,15 +1205,12 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		try {
 			connection = getDatabase().getAndLockConnection();
 			Connection jdbcConnection=connection.getDatabaseConnection();
-			PreparedStatement stmt = null;
-			try{
-				stmt = jdbcConnection.prepareStatement(base);
+			try (PreparedStatement stmt = jdbcConnection.prepareStatement(base))
+			{
 				for(DocumentOnServer doc: _documents){
 					stmt.setString(1, escapeBackSlash(doc.getPath()));
 					deletedFiles+=stmt.executeUpdate();
 				}
-			}finally{
-				DatabaseUtil.close(stmt);
 			}
 		}finally{
 			if(connection!=null ){
@@ -1308,17 +1235,14 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		try {
 			connection = getDatabase().getAndLockConnection();
 			Connection jdbcConnection=connection.getDatabaseConnection();
-			PreparedStatement stmt = null;
-			try{
-				stmt = jdbcConnection.prepareStatement(sql);
+			try (PreparedStatement stmt = jdbcConnection.prepareStatement(sql))
+			{
 				stmt.setString(1,escapeBackSlash(_file.getPath()));
 				ResultSet rst = stmt.executeQuery();
 				if(rst.next())
 				{
 					retour=true;
 				}
-			}finally{
-				DatabaseUtil.close(stmt);
 			}
 		}finally{
 			if(connection!=null ){
@@ -1349,9 +1273,8 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		try {
 			connection = getDatabase().getAndLockConnection();
 			Connection jdbcConnection=connection.getDatabaseConnection();
-			PreparedStatement stmt = null;
-			try{
-				stmt = jdbcConnection.prepareStatement(sql);
+			try (PreparedStatement stmt = jdbcConnection.prepareStatement(sql))
+			{
 				stmt.setString(1,escapeBackSlash(_file.getPath()));
 				stmt.setString(2,_user.trim());
 				ResultSet rst = stmt.executeQuery();
@@ -1359,8 +1282,6 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 				{
 					retour=true;
 				}
-			}finally{
-				DatabaseUtil.close(stmt);
 			}
 		}finally{
 			if(connection!=null ){
@@ -1385,17 +1306,14 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		try {
 			connection = getDatabase().getAndLockConnection();
 			Connection jdbcConnection=connection.getDatabaseConnection();
-			PreparedStatement stmt = null;
-			try{
-				stmt = jdbcConnection.prepareStatement(sql);
+			try (PreparedStatement stmt = jdbcConnection.prepareStatement(sql))
+			{
 				stmt.setString(1,escapeBackSlash(_doc.getPath()));
 				ResultSet rst = stmt.executeQuery();
 				if(rst.next())
 				{
 					retour=true;
 				}
-			}finally{
-				DatabaseUtil.close(stmt);
 			}
 		}finally{
 			if(connection!=null ){
@@ -1414,9 +1332,8 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		try {
 			connection = getDatabase().getAndLockConnection();
 			Connection jdbcConnection=connection.getDatabaseConnection();
-			PreparedStatement stmt = null;
-			try{
-				stmt = jdbcConnection.prepareStatement(sql);
+			try (PreparedStatement stmt = jdbcConnection.prepareStatement(sql))
+			{
 				stmt.setString(1,escapeBackSlash(_doc.getPath()));
 				stmt.setString(2,_user.trim());
 				ResultSet rst = stmt.executeQuery();
@@ -1424,8 +1341,6 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 				{
 					retour=true;
 				}
-			}finally{
-				DatabaseUtil.close(stmt);
 			}
 		}finally{
 			if(connection!=null ){
@@ -1502,50 +1417,6 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 	public Class<? extends AbstractFileManagementHandler> getFileManagementHandlerClass() {
 		return this.getClass();
 	}
-
-	/**
-	 * allows executing a prepareStatement and returns the resulting recordset.<br>
-	 * If the preparedStatement execution returns an empty Resultset then the RecordSet will be empty.
-	 * The calling method is responsible to give back the preparedStatement with DatabaseUtil.close(stmt);
-	 * @param _stmt
-	 * @return
-	 * @throws Exception
-	 
-	private static Recordset executeStatement(PreparedStatement _stmt) throws Exception{
-
-		if(_stmt == null){
-			throw(new SQLException("Invalid PreparedStatement","PreparedStatement Null"));
-		}
-
-		ResultSet rst = null;
-		Recordset r= new Recordset();
-
-		rst=_stmt.executeQuery();
-		try{
-			ResultSetMetaData rsmd = rst.getMetaData();
-			int numCols = rsmd.getColumnCount();
-			List<String> colNames= List.create(String.class);
-			for(int i=1; i<=numCols; i++){
-				colNames.add(rsmd.getColumnName(i));
-				//Ivy.log().debug(rsmd.getColumnName(i));
-			}
-			while(rst.next()){
-				List<Object> values = List.create(numCols);
-				for(int i=1; i<=numCols; i++){
-					if(rst.getString(i)==null)
-						values.add(" ");
-					else values.add(rst.getString(i));
-				}
-				Record rec = new Record(colNames,values);
-				r.add(rec);
-			}
-		}finally
-		{
-			DatabaseUtil.close(rst);
-		}
-
-		return r;
-	}*/
 	
 	private static List<Record> executeStmt(PreparedStatement _stmt) throws Exception{
 
@@ -1553,10 +1424,9 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 			throw(new SQLException("Invalid PreparedStatement","PreparedStatement Null"));
 		}
 
-		ResultSet rst = null;
-		rst=_stmt.executeQuery();
 		List<Record> recordList= (List<Record>) List.create(Record.class);
-		try{
+		try (ResultSet rst=_stmt.executeQuery())
+		{
 			ResultSetMetaData rsmd = rst.getMetaData();
 			int numCols = rsmd.getColumnCount();
 			List<String> colNames= List.create(String.class);
@@ -1575,11 +1445,10 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 				Record rec = new Record(colNames,values);
 				recordList.add(rec);
 			}
-		}catch(Exception ex){
-			Ivy.log().error(ex.getMessage(), ex);
-		}finally
+		}
+		catch(Exception ex)
 		{
-			DatabaseUtil.close(rst);
+			Ivy.log().error(ex.getMessage(), ex);
 		}
 		return recordList;
 	}
@@ -1838,13 +1707,10 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 			Connection jdbcConnection=connection.getDatabaseConnection();
 
 			query="SELECT * FROM "+this.tableNameSpace+" WHERE FilePath = ?";
-			PreparedStatement stmt = null;
-			try{
-				stmt = jdbcConnection.prepareStatement(query);
+			try (PreparedStatement stmt = jdbcConnection.prepareStatement(query))
+			{
 				stmt.setString(1, filePath);
 				recordList=executeStmt(stmt);
-			}finally{
-				DatabaseUtil.close(stmt);
 			}
 		} finally{
 			if(connection!=null ){
@@ -1900,13 +1766,10 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 			Connection jdbcConnection=connection.getDatabaseConnection();
 
 			query="SELECT * FROM "+this.tableNameSpace+" WHERE FileId = ?";
-			PreparedStatement stmt = null;
-			try{
-				stmt = jdbcConnection.prepareStatement(query);
+			try (PreparedStatement stmt = jdbcConnection.prepareStatement(query))
+			{
 				stmt.setLong(1, fileId);
 				recordList=executeStmt(stmt);
-			}finally{
-				DatabaseUtil.close(stmt);
 			}
 		} finally{
 			if(connection!=null ){
@@ -2078,9 +1941,8 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 			connection = getDatabase().getAndLockConnection();
 			Connection jdbcConnection=connection.getDatabaseConnection();
 			String query ="UPDATE "+this.tableNameSpace+" SET FilePath = ? WHERE FileId = ?";
-			PreparedStatement stmt = null;
-			try{
-				stmt = jdbcConnection.prepareStatement(query);
+			try (PreparedStatement stmt = jdbcConnection.prepareStatement(query))
+			{
 				for (DocumentOnServer doc: docs){
 					try{
 						String p = path+"/";
@@ -2092,8 +1954,6 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 						Ivy.log().error("Error in renameDirectory method while renaming the path of a file.", ex);
 					}
 				}
-			}finally{
-				DatabaseUtil.close(stmt);
 			}
 		} finally{
 			if(connection!=null ){
@@ -2342,10 +2202,9 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		try {
 			connection = getDatabase().getAndLockConnection();
 			Connection jdbcConnection=connection.getDatabaseConnection();
-			PreparedStatement stmt = null;
 			String query = "UPDATE "+this.tableNameSpace+" SET Description = ? WHERE FileId = ?";
-			try{
-				stmt = jdbcConnection.prepareStatement(query);
+			try (PreparedStatement stmt = jdbcConnection.prepareStatement(query))
+			{
 				stmt.setString(1,description);
 				stmt.setInt(2,id);
 				int i = stmt.executeUpdate();
@@ -2353,8 +2212,6 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 					message.setType(FileHandler.ERROR_MESSAGE);
 					message.setText(Ivy.cms().co("/ch/ivyteam/ivy/addons/filemanager/fileManagement/messages/error/fileNotfound"));
 				}
-			}finally{
-				DatabaseUtil.close(stmt);
 			}
 
 		}finally{
@@ -2681,10 +2538,9 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 		try {
 			connection = getDatabase().getAndLockConnection();
 			Connection jdbcConnection=connection.getDatabaseConnection();
-			PreparedStatement stmt = null;
 			String query = "UPDATE "+this.tableNameSpace+" SET Description = ? WHERE FilePath = ?";
-			try{
-				stmt = jdbcConnection.prepareStatement(query);
+			try (PreparedStatement stmt = jdbcConnection.prepareStatement(query))
+			{
 				stmt.setString(1,description);
 				stmt.setString(2,escapeBackSlash(path));
 				int i = stmt.executeUpdate();
@@ -2692,8 +2548,6 @@ public class FileManagementDBHandlerUniversal extends AbstractFileManagementHand
 					message.setType(FileHandler.ERROR_MESSAGE);
 					message.setText(Ivy.cms().co("/ch/ivyteam/ivy/addons/filemanager/fileManagement/messages/error/fileNotfound")+" "+path);
 				}
-			}finally{
-				DatabaseUtil.close(stmt);
 			}
 
 		}finally{
