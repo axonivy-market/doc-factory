@@ -10,7 +10,6 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import ch.ivyteam.db.jdbc.DatabaseUtil;
 import ch.ivyteam.ivy.addons.filemanager.DocumentOnServer;
 import ch.ivyteam.ivy.addons.filemanager.FileHandler;
 import ch.ivyteam.ivy.addons.filemanager.ReturnedMessage;
@@ -29,15 +28,13 @@ public abstract class FileManagementStaticController {
 
 
 	private static List<Record> executeStmt(PreparedStatement _stmt) throws Exception{
-
 		if(_stmt == null){
 			throw(new SQLException("Invalid PreparedStatement","PreparedStatement Null"));
 		}
 
-		ResultSet rst = null;
-		rst=_stmt.executeQuery();
 		List<Record> recordList= (List<Record>) List.create(Record.class);
-		try{
+		try (ResultSet rst =_stmt.executeQuery())
+		{
 			ResultSetMetaData rsmd = rst.getMetaData();
 			int numCols = rsmd.getColumnCount();
 			List<String> colNames= List.create(String.class);
@@ -58,9 +55,6 @@ public abstract class FileManagementStaticController {
 			}
 		}catch(Exception ex){
 			Ivy.log().error(ex.getMessage(), ex);
-		}finally
-		{
-			DatabaseUtil.close(rst);
 		}
 		return recordList;
 	}
@@ -105,9 +99,8 @@ public abstract class FileManagementStaticController {
 			{
 				query="SELECT * FROM "+tableNameSpace+" WHERE FilePath LIKE ? ESCAPE '"+escapeChar+"' AND FilePath NOT LIKE ? ESCAPE '"+escapeChar+"'";
 			}
-			PreparedStatement stmt = null;
-			try{
-				stmt = jdbcConnection.prepareStatement(query);
+			try (PreparedStatement stmt = jdbcConnection.prepareStatement(query))
+			{
 				if(_isRecursive)
 				{
 					stmt.setString(1, folderPath+"%");
@@ -117,8 +110,6 @@ public abstract class FileManagementStaticController {
 					stmt.setString(2, folderPath+"%/%");
 				}
 				recordList=executeStmt(stmt);
-			}finally{
-				DatabaseUtil.close(stmt);
 			}
 		} finally{
 			if(database != null && connection!=null ){
@@ -190,24 +181,23 @@ public abstract class FileManagementStaticController {
 		try {
 			connection = database.getAndLockConnection();
 			Connection jdbcConnection=connection.getDatabaseConnection();
-			PreparedStatement stmt = null;
-			try{
 				if(ids!=null)
 				{
-					stmt = jdbcConnection.prepareStatement(query);
-					for(int i=0; i<ids.length; i++)
+					try (PreparedStatement stmt = jdbcConnection.prepareStatement(query))
 					{
-						stmt.setInt(1, ids[i]);
-						stmt.executeUpdate();
+						for(int i=0; i<ids.length; i++)
+						{
+							stmt.setInt(1, ids[i]);
+							stmt.executeUpdate();
+						}
 					}
 				}
 				_directoryPath=PathUtil.escapeUnderscoreInPath(_directoryPath);
-				stmt = jdbcConnection.prepareStatement(base);
-				stmt.setString(1, _directoryPath+"/%");
-				stmt.executeUpdate();
-			}finally{
-				DatabaseUtil.close(stmt);
-			}
+				try (PreparedStatement stmt = jdbcConnection.prepareStatement(base))
+				{
+					stmt.setString(1, _directoryPath+"/%");
+					stmt.executeUpdate();
+				}
 		}finally{
 			if(database!=null && connection!=null ){
 				database.giveBackAndUnlockConnection(connection);
@@ -243,9 +233,8 @@ public abstract class FileManagementStaticController {
 			Connection jdbcConnection=connection.getDatabaseConnection();
 
 			query="SELECT FileId FROM "+tableNameSpace+" WHERE FilePath LIKE ? ESCAPE '"+escapeChar+"'";
-			PreparedStatement stmt = null;
-			try{
-				stmt = jdbcConnection.prepareStatement(query);
+			try (PreparedStatement stmt = jdbcConnection.prepareStatement(query))
+			{
 				stmt.setString(1, _path);
 				recordList =executeStmt(stmt);
 				int j=0;
@@ -260,8 +249,6 @@ public abstract class FileManagementStaticController {
 
 					}
 				}
-			}finally{
-				DatabaseUtil.close(stmt);
 			}
 		} finally{
 			if(database != null && connection!=null ){

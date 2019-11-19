@@ -246,20 +246,20 @@ public class FolderOnServerSQLPersistence implements IFolderOnServerPersistence 
 		String query =FolderOnServerSQLQueries.SELECT_DIRECTORY_BY_PATH
 				.replace(DocumentOnServerSQLQueries.TABLENAMESPACE_PLACEHOLDER, this.directoriesTableNameSpace);
 
-		PreparedStatement stmt=null;
 		FolderOnServer fos = null;
-		ResultSet rst = null;
-		try {
-			stmt = this.connectionManager.getConnection().prepareStatement(query);
+		try (PreparedStatement stmt = this.connectionManager.getConnection().prepareStatement(query))
+		{
 			stmt.setString(1, PathUtil.formatPathForDirectoryWithoutLastSeparator(directoryPath));
-			rst = stmt.executeQuery();
-			Ivy.log().debug("FolderOnServer get {0} {1}",query,directoryPath);
-			List<Record> records = SqlPersistenceHelper.getRecordsListFromResulSet(rst);
-			if(!records.isEmpty()) {				
-				fos = this.makeFolderOnServerFromRecord(records.get(0),false);
+			try (ResultSet rst = stmt.executeQuery())
+			{
+				Ivy.log().debug("FolderOnServer get {0} {1}",query,directoryPath);
+				List<Record> records = SqlPersistenceHelper.getRecordsListFromResulSet(rst);
+				if(!records.isEmpty()) {				
+					fos = this.makeFolderOnServerFromRecord(records.get(0),false);
+				}
 			}
 		} finally {
-			PersistenceConnectionManagerReleaser.release(this.connectionManager, stmt, rst, "get(String directoryPath)", this.getClass());
+			connectionManager.closeConnection();
 		}
 		if(fos!=null && this.dirI18nPersistence!=null) {
 			setFolderTranslation(fos);
@@ -278,20 +278,22 @@ public class FolderOnServerSQLPersistence implements IFolderOnServerPersistence 
 				.replace(DocumentOnServerSQLQueries.TABLENAMESPACE_PLACEHOLDER, this.directoriesTableNameSpace)
 				.replace(DocumentOnServerSQLQueries.ESCAPECHAR_PLACEHOLDER, dbmdAnalyzer.getEscapeChar());
 		
-		PreparedStatement stmt=null;
 		FolderOnServer fos = null;
-		ResultSet rst = null;
-		try {
-			stmt = this.connectionManager.getConnection().prepareStatement(query);
+		try (PreparedStatement stmt = this.connectionManager.getConnection().prepareStatement(query))
+		{
 			stmt.setLong(1, id);
-			rst = stmt.executeQuery();
-			Ivy.log().debug("FolderOnServer get {0} {1}",query,id);
-			List<Record> records = SqlPersistenceHelper.getRecordsListFromResulSet(rst);
-			if(!records.isEmpty()) {				
-				fos = this.makeFolderOnServerFromRecord(records.get(0),false);
+			try (ResultSet rst = stmt.executeQuery())
+			{
+				Ivy.log().debug("FolderOnServer get {0} {1}",query,id);
+				List<Record> records = SqlPersistenceHelper.getRecordsListFromResulSet(rst);
+				if(!records.isEmpty()) {				
+					fos = this.makeFolderOnServerFromRecord(records.get(0),false);
+				}
 			}
-		} finally {
-			PersistenceConnectionManagerReleaser.release(this.connectionManager, stmt, rst, "get(long id)", this.getClass());
+		} 
+		finally
+		{
+			connectionManager.closeConnection();
 		}
 		if(fos!=null && this.dirI18nPersistence!=null) {
 			setFolderTranslation(fos);
@@ -301,9 +303,6 @@ public class FolderOnServerSQLPersistence implements IFolderOnServerPersistence 
 
 	}
 
-	/* (non-Javadoc)
-	 * @see ch.ivyteam.ivy.addons.filemanager.IItemPersistence#getList(java.lang.String, boolean)
-	 */
 	@Override
 	public List<FolderOnServer> getList(String rootPath, boolean recursive)
 			throws Exception {
@@ -319,26 +318,27 @@ public class FolderOnServerSQLPersistence implements IFolderOnServerPersistence 
 					.replace(DocumentOnServerSQLQueries.TABLENAMESPACE_PLACEHOLDER, this.directoriesTableNameSpace)
 					.replace(DocumentOnServerSQLQueries.ESCAPECHAR_PLACEHOLDER, dbmdAnalyzer.getEscapeChar())
 				);
-		PreparedStatement stmt=null;
-		ResultSet rst = null;
-		try {
-			stmt = this.connectionManager.getConnection().prepareStatement(query);
+		try (PreparedStatement stmt = this.connectionManager.getConnection().prepareStatement(query))
+		{
 			stmt.setString(1, rootPath+"/%");
 			Ivy.log().debug(query+" "+rootPath);
 			if(!recursive) {
 				stmt.setString(2, rootPath+"/%/%");
 			}
-			rst = stmt.executeQuery();
-			List<Record> records = SqlPersistenceHelper.getRecordsListFromResulSet(rst);
-			Ivy.log().debug("Found folders "+records.size());
-			if(!records.isEmpty()) {
-				for(Record rec : records) {
-					FolderOnServer fos = this.makeFolderOnServerFromRecord(rec,false);
-					lFos.add(fos);
+			try (ResultSet rst = stmt.executeQuery())
+			{
+				List<Record> records = SqlPersistenceHelper.getRecordsListFromResulSet(rst);
+				Ivy.log().debug("Found folders "+records.size());
+				if(!records.isEmpty()) {
+					for(Record rec : records) {
+						FolderOnServer fos = this.makeFolderOnServerFromRecord(rec,false);
+						lFos.add(fos);
+					}
 				}
 			}
-		} finally {
-			PersistenceConnectionManagerReleaser.release(this.connectionManager, stmt, rst, "getList", this.getClass());
+		} finally
+		{
+			connectionManager.closeConnection();
 		}
 		if(this.dirI18nPersistence!=null) {
 			setFoldersTranslation(lFos);

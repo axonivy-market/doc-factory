@@ -7,7 +7,6 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
-import ch.ivyteam.db.jdbc.DatabaseUtil;
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.scripting.objects.List;
 import ch.ivyteam.ivy.scripting.objects.Record;
@@ -51,11 +50,9 @@ public class SqlPersistenceHelper {
 			}
 		}catch(Exception ex){
 			Ivy.log().error(ex.getMessage(), ex);
-		}finally
-		{
-			DatabaseUtil.close(rst);
 		}
 		return recordList;
 	}
 
+	
 }

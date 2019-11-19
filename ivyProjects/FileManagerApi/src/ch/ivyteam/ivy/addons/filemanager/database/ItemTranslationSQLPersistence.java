@@ -12,7 +12,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
-import ch.ivyteam.db.jdbc.DatabaseUtil;
 import ch.ivyteam.ivy.addons.filemanager.DocumentOnServer;
 import ch.ivyteam.ivy.addons.filemanager.FileManagementHandlersFactory;
 import ch.ivyteam.ivy.addons.filemanager.FolderOnServer;
@@ -25,12 +24,7 @@ import ch.ivyteam.ivy.addons.filemanager.database.persistence.TranslatedFileMana
 import ch.ivyteam.ivy.addons.filemanager.database.sql.TranslateItemSQLQueries;
 import ch.ivyteam.ivy.environment.Ivy;
 
-/**
- * @author ec
- *
- */
-public class ItemTranslationSQLPersistence implements
-		IItemTranslationPersistence {
+public class ItemTranslationSQLPersistence implements IItemTranslationPersistence {
 
 	private BasicConfigurationController configuration;
 	private IPersistenceConnectionManager<Connection> connectionManager =null;
@@ -256,44 +250,33 @@ public class ItemTranslationSQLPersistence implements
 		
 		String query = TranslateItemSQLQueries.SELECT_TRANSLATIONS_BY_TRANSLATED_ITEMID.replace(TranslateItemSQLQueries.TRANSLATION_TABLENAMESPACE_PLACEHOLDER, this.tableNameSpace);
 
-		PreparedStatement stmt=null;
-		ResultSet rst = null;
 		ItemTranslation tr = new ItemTranslation(id, null);
-		try {
-			stmt = this.connectionManager.getConnection().prepareStatement(query);
+		try (PreparedStatement stmt = this.connectionManager.getConnection().prepareStatement(query)) 
+		{
 			stmt.setLong(1, id);
-			rst = stmt.executeQuery();
-			HashMap<String,String> map = new HashMap<String,String>();
-			while(rst.next()) {
-				map.put(rst.getString("lang"), rst.getString("tr")==null?"":rst.getString("tr"));
-			}
-			for(Language l : this.langs) {
-				if(!map.containsKey(l.getIsoName())) {
-					map.put(l.getIsoName(), "");
+			try (ResultSet rst = stmt.executeQuery())
+			{
+				HashMap<String,String> map = new HashMap<String,String>();
+				while(rst.next()) {
+					map.put(rst.getString("lang"), rst.getString("tr")==null?"":rst.getString("tr"));
 				}
-			}
-			tr.setTranslations(map);
-			rst.close();
-		}finally {
-			if(rst!=null) {
-				DatabaseUtil.close(rst);
-			}
-			if(stmt!=null) {
-				try {
-					stmt.close();
-				} catch( SQLException ex) {
-					Ivy.log().error("PreparedStatement cannot be closed in create method, LanguageSQLPersistence.",ex);
+				for(Language l : this.langs) {
+					if(!map.containsKey(l.getIsoName())) {
+						map.put(l.getIsoName(), "");
+					}
 				}
+				tr.setTranslations(map);
+				rst.close();
 			}
+		}
+		finally
+		{
 			this.connectionManager.closeConnection();
 		}
 		
 		return tr;
 	}
 
-	/* (non-Javadoc)
-	 * @see ch.ivyteam.ivy.addons.filemanager.IItemPersistence#delete(java.lang.Object)
-	 */
 	@Override
 	public boolean delete(ItemTranslation itemTranslation) throws Exception {
 		assert(itemTranslation !=null && itemTranslation.getTranslatedItemId()>0):"IllegalArgumentException in update ItemTranslationSQLPersistence.";
@@ -322,36 +305,24 @@ public class ItemTranslationSQLPersistence implements
 		assert(id>0):"IllegalArgumentException in get(long id) ItemTranslationSQLPersistence.";
 		
 		String query = TranslateItemSQLQueries.SELECT_TRANSLATIONS_BY_TRANSLATED_ITEMID.replace(TranslateItemSQLQueries.TRANSLATION_TABLENAMESPACE_PLACEHOLDER, this.tableNameSpace);
-		PreparedStatement stmt=null;
 		ItemTranslation tr = null;
-		ResultSet rst = null;
-		try {
-			stmt = this.connectionManager.getConnection().prepareStatement(query);
+		try (PreparedStatement stmt = this.connectionManager.getConnection().prepareStatement(query))
+		{
 			stmt.setLong(1, id);
-			rst = stmt.executeQuery();
-			
-			HashMap<String,String> map = new HashMap<String,String>();
-			while(rst.next()) {
-				if(tr==null) {
-					tr = new ItemTranslation(id, null);
+			try (ResultSet rst = stmt.executeQuery())
+			{
+				HashMap<String,String> map = new HashMap<String,String>();
+				while(rst.next()) {
+					if(tr==null) {
+						tr = new ItemTranslation(id, null);
+					}
+					map.put(rst.getString("lang"), rst.getString("tr"));
 				}
-				map.put(rst.getString("lang"), rst.getString("tr"));
+				if(tr!=null) {
+					tr.setTranslations(map);
+				}
 			}
-			if(tr!=null) {
-				tr.setTranslations(map);
-			}
-			rst.close();
 		}finally {
-			if(rst!=null) {
-				DatabaseUtil.close(rst);
-			}
-			if(stmt!=null) {
-				try {
-					stmt.close();
-				} catch( SQLException ex) {
-					Ivy.log().error("PreparedStatement cannot be closed in create method, LanguageSQLPersistence.",ex);
-				}
-			}
 			this.connectionManager.closeConnection();
 		}
 		

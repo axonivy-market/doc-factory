@@ -13,7 +13,6 @@ import ch.ivyteam.ivy.persistence.IPersistentTransaction;
 import ch.ivyteam.ivy.persistence.ITransactionExecutable;
 import ch.ivyteam.ivy.persistence.PersistencyException;
 import ch.ivyteam.ivy.persistence.db.DatabaseTransaction;
-import ch.ivyteam.ivy.persistence.db.DatabaseUtil;
 import ch.ivyteam.ivy.server.IServer;
 import ch.ivyteam.ivy.server.ServerFactory;
 import ch.ivyteam.ivy.workflow.ICase;
@@ -127,23 +126,21 @@ public abstract class AbstractProcessDataDbAction<T> {
 					throws PersistencyException {
 				final DatabaseTransaction dt = (DatabaseTransaction) transaction;
 				final Connection connection = dt.getDbConnection().getConnection();
-				ResultSet resultSet = null;
 				try {
 					final PreparedStatement statement = dt.getDbConnection().getPreparedStatement(connection.nativeSQL(sqlQuery));
 					try {
 						setParameterForStatement(statement);
 						if(doReturnValue) {
-							resultSet = statement.executeQuery();
-							return processResultSet(resultSet);
+							try (ResultSet resultSet = statement.executeQuery())
+							{
+								return processResultSet(resultSet);
+							}
 						} else {
 							statement.execute();
 							return null;
 						}
 					} finally {
 						dt.getDbConnection().giveBackPreparedStatement(statement);
-						if(resultSet != null) {
-							DatabaseUtil.close(resultSet);
-						}
 					}
 				} catch(SQLException e) {
 					//
