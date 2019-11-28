@@ -1,7 +1,6 @@
 package ch.ivyteam.ivy.addons.docfactory.options;
 
 import ch.ivyteam.api.API;
-import ch.ivyteam.ivy.addons.docfactory.BaseDocFactory;
 
 /**
  * The {@link MultipleDocumentsCreationOptions} is used in operations where multiple documents are merged and are appended together. It defines options like: 
@@ -23,7 +22,7 @@ public class MultipleDocumentsCreationOptions {
 	}
 	
 	/**
-	 * Used by the DocFactory in its {@link BaseDocFactory#generateDocuments(java.util.List, MultipleDocumentsCreationOptions)} method.
+	 * Used by the DocFactory in its {@link ch.ivyteam.ivy.addons.docfactory.BaseDocFactory#generateDocuments(java.util.List, MultipleDocumentsCreationOptions)} method.
 	 * @param createSingleFileForEachDocument if true each given documentTemplate will generate one single document file. By default this is true. 
 	 * You can set it false, if you want to only generate a single file by appending all the Documents in one file. 
 	 * See {@link MultipleDocumentsCreationOptions#createOneFileByAppendingAllTheDocuments(boolean)}
@@ -35,7 +34,7 @@ public class MultipleDocumentsCreationOptions {
 	}
 	
 	/**
-	 * Used by the DocFactory in its {@link BaseDocFactory#generateDocuments(java.util.List, MultipleDocumentsCreationOptions)} method.
+	 * Used by the DocFactory in its {@link ch.ivyteam.ivy.addons.docfactory.BaseDocFactory#generateDocuments(java.util.List, MultipleDocumentsCreationOptions)} method.
 	 * @param createOneFileByAppendingAllTheDocuments if true, the DocumentTemplates will be appended in one file which name is set it this DocumentAppenderOptions object
 	 * by its {@link MultipleDocumentsCreationOptions#forAppenderSingleFileName(String)} method. 
 	 * @return
@@ -46,7 +45,7 @@ public class MultipleDocumentsCreationOptions {
 	}
 	
 	/**
-	 * Used by the DocFactory in its {@link BaseDocFactory#generateDocuments(java.util.List, MultipleDocumentsCreationOptions)} method.
+	 * Used by the DocFactory in its {@link ch.ivyteam.ivy.addons.docfactory.BaseDocFactory#generateDocuments(java.util.List, MultipleDocumentsCreationOptions)} method.
 	 * The FileAppenderOptions contains the options for producing a file appending other files or documents.
 	 * @param fileAppenderOptions FileAppenderOptions contains the options for producing a file appending other files or documents. Cannot be null.
 	 * @return

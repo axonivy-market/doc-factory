@@ -2,12 +2,11 @@ package ch.ivyteam.ivy.addons.process.parameter.db;
 
 import java.util.Map;
 
-import ch.ivyteam.ivy.addons.process.async.WaitForAsyncProcess;
 import ch.ivyteam.ivy.persistence.PersistencyException;
 import ch.ivyteam.ivy.workflow.ICase;
 
 /**
- * This class provides methods to save, load and delete process data from {@link WaitForAsyncProcess}
+ * This class provides methods to save, load and delete process data from {@link ch.ivyteam.ivy.addons.process.async.WaitForAsyncProcess}
  * @author hsp
  * @since Pilatus
  */

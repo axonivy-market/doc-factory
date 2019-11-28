@@ -8,10 +8,10 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Map;
 
-import ch.ivyteam.ivy.addons.process.async.WaitForAsyncProcess;
 import ch.ivyteam.ivy.workflow.ICase;
+
 /**
- * Use this class to insert the Case Process Data after you received {@link WaitForAsyncProcess.PROCESS_END_SIGNAL}
+ * Use this class to insert the Case Process Data after you received {@link ch.ivyteam.ivy.addons.process.async.WaitForAsyncProcess.PROCESS_END_SIGNAL}
  * @author hsp
  * @since Pilatus
  */

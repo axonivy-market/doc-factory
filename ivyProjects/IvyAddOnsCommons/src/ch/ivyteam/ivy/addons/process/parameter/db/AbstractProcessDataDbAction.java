@@ -12,7 +12,6 @@ import ch.ivyteam.ivy.persistence.IPersistencyService;
 import ch.ivyteam.ivy.persistence.IPersistentTransaction;
 import ch.ivyteam.ivy.persistence.ITransactionExecutable;
 import ch.ivyteam.ivy.persistence.PersistencyException;
-import ch.ivyteam.ivy.persistence.db.DatabaseTransaction;
 import ch.ivyteam.ivy.server.IServer;
 import ch.ivyteam.ivy.server.ServerFactory;
 import ch.ivyteam.ivy.workflow.ICase;
@@ -23,7 +22,6 @@ import ch.ivyteam.ivy.workflow.ICase;
  * @author hsp
  * @since Pilatus
  */
-@SuppressWarnings("restriction")
 public abstract class AbstractProcessDataDbAction<T> {
 	
 	/** we store the process data in this table */
@@ -59,10 +57,6 @@ public abstract class AbstractProcessDataDbAction<T> {
 		
 	}
 	
-	/**
-	 * Gets the persistency service
-	 * @return persistency service
-	 */
 	private static IPersistencyService getPersistencyService() {
 		final IServer server = ServerFactory.getServer();
 		final IPersistencyManager pm = server.getPersistencyManager();
@@ -122,9 +116,8 @@ public abstract class AbstractProcessDataDbAction<T> {
 		T value = getPersistencyService().execute(new ITransactionExecutable<T>(){
 
 			@Override
-			public T execute(IPersistentTransaction transaction)
-					throws PersistencyException {
-				final DatabaseTransaction dt = (DatabaseTransaction) transaction;
+			public T execute(IPersistentTransaction transaction) throws PersistencyException {
+				final ch.ivyteam.ivy.persistence.db.DatabaseTransaction dt = (ch.ivyteam.ivy.persistence.db.DatabaseTransaction) transaction;
 				final Connection connection = dt.getDbConnection().getConnection();
 				try {
 					final PreparedStatement statement = dt.getDbConnection().getPreparedStatement(connection.nativeSQL(sqlQuery));

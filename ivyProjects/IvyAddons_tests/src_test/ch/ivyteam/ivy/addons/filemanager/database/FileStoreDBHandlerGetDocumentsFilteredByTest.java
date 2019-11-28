@@ -29,7 +29,6 @@ import ch.ivyteam.ivy.addons.filemanager.configuration.BasicConfigurationControl
 import ch.ivyteam.ivy.addons.filemanager.database.db.FilemanagerTestDataMaker;
 import ch.ivyteam.ivy.addons.filemanager.database.db.HsqlDBFilemanager;
 import ch.ivyteam.ivy.addons.filemanager.database.search.DocumentCreationDateSearch;
-import ch.ivyteam.ivy.addons.filemanager.ivy.implemented.MyILogger;
 import ch.ivyteam.ivy.environment.Ivy;
 
 @RunWith(PowerMockRunner.class)
@@ -54,8 +53,6 @@ public class FileStoreDBHandlerGetDocumentsFilteredByTest {
 	FileStoreDBHandler fileStoreDBHandler;
 	
 	private Set<Long> documentsIdsInTestDb = new HashSet<>();
-	
-	private long docId1, docId2, docId3, docId4, docId5, docId6, docId7;
 	
 	private final static String FILETYPENAME_CONDITION = "BILL";
 	private final static String FILETAGNAME_CONDITION = "STATUS=ACCEPTED";
@@ -97,13 +94,13 @@ public class FileStoreDBHandlerGetDocumentsFilteredByTest {
 		long typeId1 = FilemanagerTestDataMaker.insertFileType("KLARA", "BILL");
 		long typeId2 = FilemanagerTestDataMaker.insertFileType("KLARA", "PAYSLIP");
 		
-		docId1 = FilemanagerTestDataMaker.insertDocumentWithOptionalTagsInTestDb("test1.doc", "luz/tenant1/employees/test1.doc", typeId1, "STATUS=REVIEW_PENDING", "DOC_TYPE=OFFICE/WORD");
-		docId2 = FilemanagerTestDataMaker.insertDocumentWithOptionalTagsInTestDb("test2.doc", "luz/tenant1/employees/test2.doc", typeId2, "STATUS=ACCEPTED", "DOC_TYPE=OFFICE/WORD");
-		docId3 = FilemanagerTestDataMaker.insertDocumentWithOptionalTagsInTestDb("test3.doc", "luz/tenant2/employees/test3.doc", typeId2, "STATUS=REVIEW_PENDING", "DOC_TYPE=OFFICE/WORD", "EMPLOYEE=ALL");
-		docId4 = FilemanagerTestDataMaker.insertDocumentWithOptionalTagsInTestDb("test4.doc", "luz/tenant2/employees/test4.doc", typeId1, "STATUS=ACCEPTED", "DOC_TYPE=OFFICE/WORD", "EMPLOYEE=88");
-		docId5 = FilemanagerTestDataMaker.insertDocumentWithOptionalTagsInTestDb("test5.doc", "luz/tenant3/employees/test5.doc", typeId2, "STATUS=ACCEPTED", "DOC_TYPE=OFFICE/WORD", "EMPLOYEE=44");
-		docId6 = FilemanagerTestDataMaker.insertDocumentWithOptionalTagsInTestDb("test6.pdf", "luz/tenant3/employees/test6.pdf", typeId1, "DOC_TYPE=PDF");
-		docId7 = FilemanagerTestDataMaker.insertDocumentWithOptionalTagsInTestDb("test7.doc", "luz/tenant1/employees/test7.doc", typeId2, "DOC_TYPE=OFFICE/WORD");
+		FilemanagerTestDataMaker.insertDocumentWithOptionalTagsInTestDb("test1.doc", "luz/tenant1/employees/test1.doc", typeId1, "STATUS=REVIEW_PENDING", "DOC_TYPE=OFFICE/WORD");
+		FilemanagerTestDataMaker.insertDocumentWithOptionalTagsInTestDb("test2.doc", "luz/tenant1/employees/test2.doc", typeId2, "STATUS=ACCEPTED", "DOC_TYPE=OFFICE/WORD");
+		FilemanagerTestDataMaker.insertDocumentWithOptionalTagsInTestDb("test3.doc", "luz/tenant2/employees/test3.doc", typeId2, "STATUS=REVIEW_PENDING", "DOC_TYPE=OFFICE/WORD", "EMPLOYEE=ALL");
+		FilemanagerTestDataMaker.insertDocumentWithOptionalTagsInTestDb("test4.doc", "luz/tenant2/employees/test4.doc", typeId1, "STATUS=ACCEPTED", "DOC_TYPE=OFFICE/WORD", "EMPLOYEE=88");
+		FilemanagerTestDataMaker.insertDocumentWithOptionalTagsInTestDb("test5.doc", "luz/tenant3/employees/test5.doc", typeId2, "STATUS=ACCEPTED", "DOC_TYPE=OFFICE/WORD", "EMPLOYEE=44");
+		FilemanagerTestDataMaker.insertDocumentWithOptionalTagsInTestDb("test6.pdf", "luz/tenant3/employees/test6.pdf", typeId1, "DOC_TYPE=PDF");
+		FilemanagerTestDataMaker.insertDocumentWithOptionalTagsInTestDb("test7.doc", "luz/tenant1/employees/test7.doc", typeId2, "DOC_TYPE=OFFICE/WORD");
 	}
 
 	@Test

@@ -22,19 +22,11 @@ import ch.ivyteam.ivy.cm.exceptions.UnsupportedLanguageException;
 import ch.ivyteam.ivy.cm.impl.ContentManagementEvent;
 import ch.ivyteam.ivy.persistence.PersistencyException;
 import ch.ivyteam.ivy.search.internal.IndexedObject;
-import ch.ivyteam.ivy.search.restricted.ISearchQuery;
-import ch.ivyteam.ivy.search.restricted.ISearchableField;
-import ch.ivyteam.ivy.search.restricted.ISearchableSystem;
 import ch.ivyteam.ivy.search.restricted.exceptions.IndexException;
-import ch.ivyteam.ivy.search.restricted.exceptions.SearchEngineNotAvailableException;
-import ch.ivyteam.ivy.search.restricted.indexed.IIndexedObject;
-import ch.ivyteam.ivy.search.restricted.indexed.IIndexedObject;
 import ch.ivyteam.ivy.search.restricted.indexed.IIndexedSearchQuery;
 import ch.ivyteam.ivy.search.restricted.indexed.IIndexedSearchableSystem;
 import ch.ivyteam.ivy.search.restricted.indexed.ISearchIndex;
-import ch.ivyteam.ivy.search.restricted.indexed.ISearchQueryTerm;
 import ch.ivyteam.ivy.search.restricted.indexed.ISearchableIndexField;
-import ch.ivyteam.ivy.search.restricted.indexed.SearchOperator;
 import ch.ivyteam.ivy.search.restricted.indexed.SearchQueryBuilder.Field;
 
 /**
@@ -63,7 +55,7 @@ public class MyCMS implements IContentManagementSystem {
 	}
 
 	@Override
-	public Object getAdapter(Class arg0) {
+	public <T> T getAdapter(Class<T> arg0) {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -12,7 +12,6 @@ import org.apache.commons.beanutils.BeanUtils;
 import ch.ivyteam.ivy.addons.filemanager.database.AbstractFileManagementHandler;
 import ch.ivyteam.ivy.addons.filemanager.database.fileaction.FileActionConfiguration;
 import ch.ivyteam.ivy.addons.filemanager.database.filetype.FileTypeListFilter;
-import ch.ivyteam.ivy.addons.filemanager.database.filetype.FileTypesController;
 import ch.ivyteam.ivy.addons.filemanager.database.security.DocumentFilter;
 import ch.ivyteam.ivy.addons.filemanager.database.security.SecurityHandler;
 import ch.ivyteam.ivy.addons.filemanager.document.filter.DocumentListFilter;
@@ -827,7 +826,7 @@ public class BasicConfigurationController implements Serializable {
 	}
 
 	/**
-	 * Used by the {@link FileTypesController} to filter the FileType Objects in the methods returning List of FileType.
+	 * Used by the {@link ch.ivyteam.ivy.addons.filemanager.database.filetype.FileTypesController} to filter the FileType Objects in the methods returning List of FileType.
 	 * @return the fileTypeListFilter
 	 */
 	public FileTypeListFilter getFileTypeListFilter() {
@@ -835,7 +834,7 @@ public class BasicConfigurationController implements Serializable {
 	}
 
 	/**
-	 * Used by the {@link FileTypesController} to filter the FileType Objects in the methods returning List of FileType.
+	 * Used by the {@link ch.ivyteam.ivy.addons.filemanager.database.filetype.FileTypesController} to filter the FileType Objects in the methods returning List of FileType.
 	 * @param fileTypeListFilter the fileTypeListFilter to set
 	 */
 	public void setFileTypeListFilter(FileTypeListFilter fileTypeListFilter) {
