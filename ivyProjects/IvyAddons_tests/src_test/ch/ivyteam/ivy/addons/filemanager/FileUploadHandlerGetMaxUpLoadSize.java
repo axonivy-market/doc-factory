@@ -19,7 +19,7 @@ public class FileUploadHandlerGetMaxUpLoadSize {
 		if(maxSize>=1024) {
 			float f = (float) maxSize;
 			if(f%1024>0) {
-				Double d = new Double(f/1024);
+				Double d = Double.valueOf(f/1024);
 				s=new DecimalFormat("0.00").format(d);
 			}else{
 				double i = f/1024.0;

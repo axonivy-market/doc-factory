@@ -1,6 +1,3 @@
-/**
- * 
- */
 package ch.ivyteam.ivy.addons.filemanager.database;
 
 
@@ -16,7 +13,6 @@ import ch.ivyteam.ivy.addons.filemanager.database.persistence.IFileVersionPersis
 import ch.ivyteam.ivy.addons.filemanager.database.persistence.IItemTranslationPersistence;
 import ch.ivyteam.ivy.addons.filemanager.database.persistence.IDocumentOnServerPersistence;
 import ch.ivyteam.ivy.addons.filemanager.database.persistence.IFileTypePersistence;
-import ch.ivyteam.ivy.addons.filemanager.database.persistence.IFileTypeTranslationPersistence;
 import ch.ivyteam.ivy.addons.filemanager.database.persistence.IFolderOnServerPersistence;
 import ch.ivyteam.ivy.addons.filemanager.database.persistence.ILanguagePersistence;
 import ch.ivyteam.ivy.addons.filemanager.database.persistence.IPersistenceConnectionManager;
@@ -101,18 +97,18 @@ public class PersistenceConnectionManagerFactory {
 	public static IThumbnailPersistence getIThumbnailPersistenceInstance(BasicConfigurationController configuration) throws Exception {
 		return new ThumbnailSQLPersistence(configuration);
 	}
-	
+
 	/**
-	 * Returns an {@link IFileTypeTranslationPersistence} object responsible for managing the persistence of the file types translation
+	 * Returns an {@link ch.ivyteam.ivy.addons.filemanager.database.persistence.IFileTypeTranslationPersistence} object responsible for managing the persistence of the file types translation
 	 * @param config a {@link BasicConfigurationController} object containing all the necessary information for instantiating the persistence object.
 	 * @param TranslatedFileManagerItemsEnum Enum to be able to choose the right Item as declared see {@link TranslatedFileManagerItemsEnum}
-	 * @return an {@link IFileTypeTranslationPersistence} object responsible for managing the persistence of the file types translation
+	 * @return an {@link ch.ivyteam.ivy.addons.filemanager.database.persistence.IFileTypeTranslationPersistence} object responsible for managing the persistence of the file types translation
 	 * @throws Exception
 	 */
 	public static IItemTranslationPersistence getIItemTranslationPersistenceInstance(BasicConfigurationController config, TranslatedFileManagerItemsEnum itemType) throws Exception {
 		return new ItemTranslationSQLPersistence(config, itemType);
 	}
-	
+
 	/**
 	 * Returns an {@link IFileTagPersistence} object responsible for managing the persistence of the file tags.
 	 * @param config a {@link BasicConfigurationController} object containing all the necessary information for instantiating the persistence object.

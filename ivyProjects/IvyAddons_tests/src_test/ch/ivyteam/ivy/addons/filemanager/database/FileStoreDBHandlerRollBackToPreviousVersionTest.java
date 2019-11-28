@@ -31,6 +31,7 @@ import ch.ivyteam.ivy.addons.filemanager.listener.FileActionEvent;
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(IvyGlobalVariableHandler.class)
+@SuppressWarnings("deprecation")
 public class FileStoreDBHandlerRollBackToPreviousVersionTest {
 	
 	BasicConfigurationController config = null;

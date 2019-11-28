@@ -227,7 +227,7 @@ public class MergeFieldsExtractorTest {
 
 	}
 	
-	private class Person extends SimplePerson {
+	public class Person extends SimplePerson {
 		private static final long serialVersionUID = 1L;
 		Address address;
 		private long id;
@@ -337,7 +337,7 @@ public class MergeFieldsExtractorTest {
 		}
 	}
 	
-	private class BeanWithCollection implements Serializable {
+	public class BeanWithCollection implements Serializable {
 		private static final long serialVersionUID = 1L;
 		
 		private String UID;
