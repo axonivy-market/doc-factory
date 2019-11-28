@@ -533,7 +533,7 @@ public class ItemTranslationTest {
 		
 		ItemTranslationSQLPersistence trans = new ItemTranslationSQLPersistence(mockedConfig,0, this.getLanguages());
 		trans.setIPersistenceConnectionManager(spyMockedConnManager);
-		ItemTranslationSQLPersistence spyTrans = spy(trans);
+		spy(trans);
 		assertTrue(trans.delete(this.initializeItemTranslation()));
 	}
 	

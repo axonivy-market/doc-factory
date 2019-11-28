@@ -1,19 +1,15 @@
-/**
- * 
- */
 package ch.ivyteam.ivy.addons.filemanager.database.persistence;
 
 import java.util.List;
 
 import ch.ivyteam.ivy.addons.filemanager.DocumentOnServer;
-import ch.ivyteam.ivy.addons.filemanager.database.PersistenceConnectionManagerFactory;
 import ch.ivyteam.ivy.addons.filemanager.database.search.DocumentCreationDateSearch;
 
 /**
  * This interface is sub-interface of IItemPersistence for the particular DocumentOnServer data type.<br>
  * This Interface have to be implemented by classes responsible for the DocumentOnServer persistence.<br>
  * This class extends the {@link IItemPersistence} class.<br>
- * To get an instance of this interface please use the appropriate static method of the {@link PersistenceConnectionManagerFactory}. 
+ * To get an instance of this interface please use the appropriate static method of the {@link ch.ivyteam.ivy.addons.filemanager.database.PersistenceConnectionManagerFactory}. 
  * @author ec (ecomba@soreco.ch)
  * @since 01/07/2013
  * @author ec

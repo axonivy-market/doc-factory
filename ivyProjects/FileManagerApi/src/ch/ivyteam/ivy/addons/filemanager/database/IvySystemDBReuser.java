@@ -1,6 +1,3 @@
-/**
- * 
- */
 package ch.ivyteam.ivy.addons.filemanager.database;
 
 import java.sql.Connection;
@@ -29,9 +26,7 @@ import ch.ivyteam.ivy.server.ServerFactory;
  * @since 28.01.2010
  * This class is used to connect the FileManager to the 
  * Ivy System DB.
- * 
  */
-@SuppressWarnings("restriction")
 public class IvySystemDBReuser {
 
 	/**

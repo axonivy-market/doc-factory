@@ -49,6 +49,7 @@ import ch.ivyteam.ivy.workflow.IWorkflowSession;
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({IvyRoleHelper.class, Ivy.class})
+@SuppressWarnings("deprecation")
 public class FileStoreDBHandlerDeleteDirectoryTest {
 
 	@Test

@@ -35,7 +35,6 @@ import ch.ivyteam.ivy.environment.Ivy;
  *	This class is the FileManager DB Handler with the Ivy System Database.
  *	It is used if the informations about the Files in the File manager are stored in a table located in the IvySystem DB.
  */
-@SuppressWarnings("restriction")
 public class FileManagementIvySystemDBHandler extends AbstractFileManagementHandler{
 	String tableName = null; // the table name to use in queries
 
@@ -399,7 +398,7 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 	 */
 	public int updateDocuments(final List<KeyValuePair> _KVP, List<String> _conditions)throws Exception{
 
-		Integer result = new Integer(0);
+		Integer result = Integer.valueOf(0);
 		if(_KVP.isEmpty())
 		{//do nothing if the list of KeyValuePairs is empty
 			return 0;
@@ -444,7 +443,7 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 						}
 						i++;
 					}
-					return new Integer(stmt.executeUpdate());
+					return Integer.valueOf(stmt.executeUpdate());
 				}
 				catch (SQLException ex) {
 					throw new PersistencyException(ex);
@@ -866,7 +865,7 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 				}catch(SQLException ex){
 					throw new PersistencyException(ex);
 				}
-				return new Integer(i);
+				return Integer.valueOf(i);
 			}
 
 		});
@@ -914,7 +913,7 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 				}catch(SQLException ex){
 					throw new PersistencyException(ex);
 				}
-				return new Integer(i);
+				return Integer.valueOf(i);
 			}
 
 		});
@@ -962,7 +961,7 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 				}catch(SQLException ex){
 					throw new PersistencyException(ex);
 				}
-				return new Integer(i);
+				return Integer.valueOf(i);
 
 			}
 
@@ -1165,7 +1164,7 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 						}
 					}
 				}
-				return new Integer(i);
+				return Integer.valueOf(i);
 			}
 
 				}
@@ -1206,7 +1205,7 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 						}
 					}
 				}
-				return new Integer(i);
+				return Integer.valueOf(i);
 			}
 
 				}
@@ -1237,7 +1236,7 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 				try {
 					stmt.setString(1,escapeBackSlash(_file.getPath()));
 					List<Record> l =IvySystemDBReuser.executeStmt(stmt);
-					return new Integer(l.size());
+					return Integer.valueOf(l.size());
 
 				} catch (SQLException ex) {
 					throw new PersistencyException(ex);
@@ -1274,7 +1273,7 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 					stmt.setString(1,escapeBackSlash(_file.getPath()));
 					stmt.setString(2,_user);
 					List<Record> l =IvySystemDBReuser.executeStmt(stmt);
-					return new Integer(l.size());
+					return Integer.valueOf(l.size());
 
 				} catch (SQLException ex) {
 					throw new PersistencyException(ex);
@@ -1309,7 +1308,7 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 				try {
 					stmt.setString(1,escapeBackSlash(_doc.getPath()));
 					List<Record> l =IvySystemDBReuser.executeStmt(stmt);
-					return new Integer(l.size());
+					return Integer.valueOf(l.size());
 
 				} catch (SQLException ex) {
 					throw new PersistencyException(ex);
@@ -1339,7 +1338,7 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 					stmt.setString(1,escapeBackSlash(_doc.getPath()));
 					stmt.setString(2,_user.trim());
 					List<Record> l =IvySystemDBReuser.executeStmt(stmt);
-					return new Integer(l.size());
+					return Integer.valueOf(l.size());
 				} catch (SQLException ex) {
 					throw new PersistencyException(ex);
 				}
@@ -1935,7 +1934,7 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 				}catch (SQLException ex) {
 					throw new PersistencyException(ex);
 				}
-				return new Integer(i);
+				return Integer.valueOf(i);
 			}
 		});
 		if(i<0){
@@ -1998,7 +1997,7 @@ public class FileManagementIvySystemDBHandler extends AbstractFileManagementHand
 				}catch (SQLException ex) {
 					throw new PersistencyException(ex);
 				}
-				return new Integer(i);
+				return Integer.valueOf(i);
 			}
 		});
 		if(i<0){

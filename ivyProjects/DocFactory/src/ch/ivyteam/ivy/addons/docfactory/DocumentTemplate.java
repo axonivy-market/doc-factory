@@ -13,7 +13,6 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 
 import ch.ivyteam.api.API;
-import ch.ivyteam.ivy.addons.docfactory.aspose.DocumentWorker;
 import ch.ivyteam.ivy.addons.docfactory.mergefield.internal.MergeFieldsExtractor;
 import ch.ivyteam.ivy.addons.docfactory.options.DocumentCreationOptions;
 import ch.ivyteam.ivy.addons.docfactory.options.MergeCleanupOptions;
@@ -34,9 +33,6 @@ import ch.ivyteam.ivy.scripting.objects.util.MetaType;
  */
 public class DocumentTemplate implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 6318771680896773119L;
 
 	/** the path where to find the template */
@@ -423,8 +419,8 @@ public class DocumentTemplate implements Serializable {
 	 * Some DocFactory may allow injecting a DocumentWorker class which can apply some custom logic 
 	 * on the document after it has been produced by the factory and before it has been returned to the user.
 	 * <b>Note:</b> at the time of the writing of this method, the default DocFactory is based on Aspose.
-	 * A DocumentWorker Interface has been made for the AsposeDocFactory. See: {@link DocumentWorker} <br>
-	 * For the moment, only implementations of {@link DocumentWorker} are supported. Other kind of object will be ignored.
+	 * A DocumentWorker Interface has been made for the AsposeDocFactory. See: {@link ch.ivyteam.ivy.addons.docfactory.aspose.DocumentWorker} <br>
+	 * For the moment, only implementations of {@link ch.ivyteam.ivy.addons.docfactory.aspose.DocumentWorker} are supported. Other kind of object will be ignored.
 	 * @param documentWorker
 	 * @return
 	 */

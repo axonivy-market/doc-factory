@@ -177,13 +177,12 @@ public abstract class FileManagementStaticController {
 		Ivy.log().info("We get the file ids...");
 		int[] ids = getFileIdsUnderPath(database, tableNameSpace, _directoryPath+"/%", escapeChar);
 		Ivy.log().info("File ids under the path to delete" +_directoryPath + " "+ids.length);
-		IExternalDatabaseRuntimeConnection connection=null;
+		Connection connection=null;
 		try {
-			connection = database.getAndLockConnection();
-			Connection jdbcConnection=connection.getDatabaseConnection();
+			connection = database.getConnection();
 				if(ids!=null)
 				{
-					try (PreparedStatement stmt = jdbcConnection.prepareStatement(query))
+					try (PreparedStatement stmt = connection.prepareStatement(query))
 					{
 						for(int i=0; i<ids.length; i++)
 						{
@@ -193,14 +192,14 @@ public abstract class FileManagementStaticController {
 					}
 				}
 				_directoryPath=PathUtil.escapeUnderscoreInPath(_directoryPath);
-				try (PreparedStatement stmt = jdbcConnection.prepareStatement(base))
+				try (PreparedStatement stmt = connection.prepareStatement(base))
 				{
 					stmt.setString(1, _directoryPath+"/%");
 					stmt.executeUpdate();
 				}
 		}finally{
-			if(database!=null && connection!=null ){
-				database.giveBackAndUnlockConnection(connection);
+			if(connection!=null ){
+				connection.close();
 			}
 		}
 		return message;
@@ -226,14 +225,13 @@ public abstract class FileManagementStaticController {
 		_path=PathUtil.escapeUnderscoreInPath(_path);
 		String query="";
 
-		IExternalDatabaseRuntimeConnection connection = null;
+		Connection connection = null;
 		List<Record> recordList= (List<Record>) List.create(Record.class);
 		try {
-			connection = database.getAndLockConnection();
-			Connection jdbcConnection=connection.getDatabaseConnection();
+			connection = database.getConnection();
 
 			query="SELECT FileId FROM "+tableNameSpace+" WHERE FilePath LIKE ? ESCAPE '"+escapeChar+"'";
-			try (PreparedStatement stmt = jdbcConnection.prepareStatement(query))
+			try (PreparedStatement stmt = connection.prepareStatement(query))
 			{
 				stmt.setString(1, _path);
 				recordList =executeStmt(stmt);
@@ -251,8 +249,8 @@ public abstract class FileManagementStaticController {
 				}
 			}
 		} finally{
-			if(database != null && connection!=null ){
-				database.giveBackAndUnlockConnection(connection);
+			if (connection!=null ){
+				connection.close();
 			}
 		}
 		return i;

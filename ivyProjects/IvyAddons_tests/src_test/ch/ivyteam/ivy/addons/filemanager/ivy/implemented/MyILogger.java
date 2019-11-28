@@ -4,7 +4,6 @@ import org.apache.log4j.Priority;
 
 import ch.ivyteam.api.IvyScriptVisibility;
 import ch.ivyteam.api.PublicAPI;
-import ch.ivyteam.log.ILogger;
 import ch.ivyteam.log.Logger;
 
 public class MyILogger extends Logger {

@@ -7,12 +7,9 @@ import java.util.stream.Collectors;
 import ch.ivyteam.api.API;
 import ch.ivyteam.ivy.addons.docfactory.aspose.AsposeFileAppender;
 import ch.ivyteam.ivy.addons.docfactory.options.FileAppenderOptions;
-import ch.ivyteam.ivy.addons.docfactory.options.MultipleDocumentsCreationOptions;
 
 /**
- * 
  * @since version 7.3.0
- *
  */
 public abstract class FileAppender {
 	
@@ -64,7 +61,7 @@ public abstract class FileAppender {
 	}
 	
 	/**
-	 * Appends the given pdf files together and produces a File with the options set in the {@link MultipleDocumentsCreationOptions}.
+	 * Appends the given pdf files together and produces a File with the options set in the {@link ch.ivyteam.ivy.addons.docfactory.options.MultipleDocumentsCreationOptions}.
 	 * All non pdf files will be ignored.
 	 * @param filesToAppendTogether the List of Pdf java.io.File to be appended. The first File will be the first part of the produced document, 
 	 * the second one will be the second part ... Cannot be null or empty. All non pdf files will be ignored.
@@ -75,7 +72,7 @@ public abstract class FileAppender {
 	public abstract File appendPdfFiles(List<File> filesToAppendTogether, FileAppenderOptions fileAppenderOptions) throws Exception;
 	
 	/**
-	 * Appends the given office (doc, docx, odt) files together and produces a File with the options set in the {@link MultipleDocumentsCreationOptions}. 
+	 * Appends the given office (doc, docx, odt) files together and produces a File with the options set in the {@link ch.ivyteam.ivy.addons.docfactory.options.MultipleDocumentsCreationOptions}. 
 	 * All non office (doc, docx, odt) files will be ignored.
 	 * @param filesToAppendTogether the List of office (doc, docx, odt) java.io.File to be appended. The first File will be the first part of the produced document, 
 	 * the second one will be the second part ... Cannot be null or empty. All non office (doc, docx, odt) files will be ignored.

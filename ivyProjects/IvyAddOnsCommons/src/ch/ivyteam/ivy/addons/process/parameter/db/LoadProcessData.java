@@ -9,12 +9,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
 
-import ch.ivyteam.ivy.addons.process.async.WaitForAsyncProcess;
 import ch.ivyteam.ivy.persistence.PersistencyException;
 import ch.ivyteam.ivy.workflow.ICase;
 
 /**
- * Use this class to load the Case Process Data before you fire the event in {@link WaitForAsyncProcess}
+ * Use this class to load the Case Process Data before you fire the event in {@link ch.ivyteam.ivy.addons.process.async.WaitForAsyncProcess}
  * @author hsp
  * @since Pilatus
  */

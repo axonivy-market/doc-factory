@@ -1,22 +1,12 @@
-/**
- * 
- */
 package ch.ivyteam.ivy.addons.filemanager.database.filetype;
-
-import java.sql.SQLException;
 
 import ch.ivyteam.ivy.addons.filemanager.DocumentOnServer;
 import ch.ivyteam.ivy.addons.filemanager.FileType;
-import ch.ivyteam.ivy.persistence.PersistencyException;
 
 /**
  * @author ec
- *
  */
 public abstract class AbstractFileTypesController {
-	
-	
-	
 	
 	/**
 	 * Creates a new FileType.
@@ -24,7 +14,7 @@ public abstract class AbstractFileTypesController {
 	 * @param optionalApplicationName: String the application name for which the file type is created. can be empty or null
 	 * @return the newly created FileType object. Its id will be greater than zero.
 	 * @throws Exception if any SQL Exceptions occur or the name argument is null or an empty String.<br> 
-	 * An SQLException will be also thrown if a FileType with the same name and same applicationName already exists.
+	 * An java.sql.SQLException will be also thrown if a FileType with the same name and same applicationName already exists.
 	 */
 	public abstract FileType createFileType(String name, String optionalApplicationName) throws Exception;
 	
@@ -35,7 +25,7 @@ public abstract class AbstractFileTypesController {
 	 * If the id is 0 then it will try to create a new one.
 	 * @return the modified or created FileType object.
 	 * @throws Exception if any SQL Exceptions occur or the FileType name is null or an empty String.<br> 
-	 * An SQLException will be also thrown if a FileType with the same name and same applicationName already exists.
+	 * An java.sql.SQLException will be also thrown if a FileType with the same name and same applicationName already exists.
 	 */
 	public abstract FileType modifyFileType(FileType ft) throws Exception;
 	
@@ -53,8 +43,8 @@ public abstract class AbstractFileTypesController {
 	 * @param fileTypeId the FileType id
 	 * @return
 	 * @throws Exception 
-	 * @throws SQLException 
-	 * @throws PersistencyException 
+	 * @throws java.sql.SQLException 
+	 * @throws ch.ivyteam.ivy.persistence.PersistencyException 
 	 */
 	public abstract FileType getFileTypeWithId(long fileTypeId) throws Exception;
 	
@@ -67,8 +57,8 @@ public abstract class AbstractFileTypesController {
 	 * @param optionalApplicationName the name of the application (not mandatory)
 	 * @return a FileType corresponding to the name and application that you provided as parameters.<br> 
 	 * If no file type has the given name and application name, then the returned FileType has empty field values.
-	 * @throws PersistencyException
-	 * @throws SQLException
+	 * @throws ch.ivyteam.ivy.persistence.PersistencyException
+	 * @throws java.sql.SQLException
 	 * @throws Exception
 	 */
 	public abstract FileType getFileTypeWithName(String typeName, String optionalApplicationName) throws Exception;
@@ -78,8 +68,8 @@ public abstract class AbstractFileTypesController {
 	 * If the provided applicationName is null or an empty String, it will return all the file types without application name information.
 	 * @param applicationName the application name (ex: xcrm, xrec, xjob, epd, ...) or null if you want to get all the file types without application name.
 	 * @return java.util.List<FileType> the list of all the fileTypes declared for one application or without any application link if the input parameter was set to null.
-	 * @throws PersistencyException
-	 * @throws SQLException
+	 * @throws ch.ivyteam.ivy.persistence.PersistencyException
+	 * @throws java.sql.SQLException
 	 * @throws Exception
 	 */
 	public abstract java.util.List<FileType> getFileTypesWithAppName(String applicationName) throws Exception;
@@ -87,8 +77,8 @@ public abstract class AbstractFileTypesController {
 	/**
 	 * returns all the file types
 	 * @return the list of file types
-	 * @throws PersistencyException
-	 * @throws SQLException
+	 * @throws ch.ivyteam.ivy.persistence.PersistencyException
+	 * @throws java.sql.SQLException
 	 * @throws Exception
 	 */
 	public abstract java.util.List<FileType> getAllFileTypes() throws Exception;
