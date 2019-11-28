@@ -1,6 +1,3 @@
-/**
- * 
- */
 package ch.ivyteam.ivy.addons.filemanager.database;
 
 import java.sql.Connection;
@@ -8,7 +5,6 @@ import java.util.concurrent.Callable;
 
 import ch.ivyteam.ivy.db.IExternalDatabase;
 import ch.ivyteam.ivy.db.IExternalDatabaseApplicationContext;
-import ch.ivyteam.ivy.db.IExternalDatabaseRuntimeConnection;
 import ch.ivyteam.ivy.environment.Ivy;
 
 /**
@@ -26,7 +22,7 @@ public class IvyExternalDatabaseConnectionManager implements
 		IDatabaseConnectionManager {
 
 	private IExternalDatabase database = null;
-	private IExternalDatabaseRuntimeConnection ivyConnection =null;
+	private Connection ivyConnection =null;
 	private String ivyDbConnectionName = null;
 	
 	/**
@@ -44,28 +40,23 @@ public class IvyExternalDatabaseConnectionManager implements
 
 	@Override
 	public Connection getConnection() throws Exception {
-		this.ivyConnection = this.getDatabaseRuntimeConnection();
-		return this.ivyConnection.getDatabaseConnection();
+		this.ivyConnection = getDatabaseRuntimeConnection();
+		return this.ivyConnection;
 	}
 
 	@Override
 	public void closeConnection() throws Exception {		
 		if(this.ivyConnection!=null ){
-			this.database.giveBackAndUnlockConnection(this.ivyConnection);
+			ivyConnection.close();
 			this.ivyConnection=null;
 			Ivy.log().debug("Ivy connection closed");
 		}
 	}
 	
-	/**
-	 * private method for getting the IExternalDatabaseRuntimeConnection object
-	 * @return
-	 * @throws Exception
-	 */
-	private IExternalDatabaseRuntimeConnection getDatabaseRuntimeConnection() throws Exception {
+	private Connection getDatabaseRuntimeConnection() throws Exception {
 		this.database=this.getDatabase();
 		if(this.ivyConnection==null) {
-			this.ivyConnection = this.database.getAndLockConnection();
+			this.ivyConnection = this.database.getConnection();
 		}
 		return this.ivyConnection;
 	}

@@ -3,15 +3,12 @@ package ch.ivyteam.ivy.addons.process.parameter;
 import java.util.HashMap;
 import java.util.Map;
 
-import ch.ivyteam.ivy.addons.process.async.WaitForAsyncProcess;
-
 /**
- * 
- * The result Object of {@link WaitForAsyncProcess}. Stores all {@link ProcessParameter}
+ * The result Object of {@link ch.ivyteam.ivy.addons.process.async.WaitForAsyncProcess}. Stores all {@link ProcessParameter}
  * that were sendt by the asynchronous processes
  *
  * @author hsp
- * @see WaitForAsyncProcess
+ * @see ch.ivyteam.ivy.addons.process.async.WaitForAsyncProcess
  * @see ProcessParameter
  * @since Pilatus
  */

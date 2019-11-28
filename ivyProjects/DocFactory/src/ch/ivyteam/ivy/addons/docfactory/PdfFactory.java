@@ -4,7 +4,6 @@ import java.util.List;
 
 import ch.ivyteam.ivy.addons.docfactory.aspose.AsposePdfFactory;
 import ch.ivyteam.ivy.addons.docfactory.exception.DocFactoryException;
-import ch.ivyteam.ivy.addons.docfactory.exception.DocumentGenerationException;
 import ch.ivyteam.ivy.scripting.objects.File;
 
 public abstract class PdfFactory {
@@ -20,7 +19,7 @@ public abstract class PdfFactory {
 	 * @return the Ivy File that contains all the pdf files appended together. 
 	 * This File is produced in the Ivy Session directory, so it will be lost after the session has been closed. 
 	 * You have to ensure that it will be saved in a persistent storage (other directory on the server FileSystem, database...) if you need it later on.
-	 * @throws DocumentGenerationException if an exception occurred
+	 * @throws ch.ivyteam.ivy.addons.docfactory.exception.DocumentGenerationException if an exception occurred
 	 * @throws DocFactoryException 
 	 */
 	public abstract File appendPdfFiles(String resultFileName, List<java.io.File> pdfsToAppend) throws DocFactoryException;

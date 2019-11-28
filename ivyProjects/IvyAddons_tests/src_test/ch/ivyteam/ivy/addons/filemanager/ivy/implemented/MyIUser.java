@@ -19,6 +19,7 @@ import ch.ivyteam.ivy.security.IUserSubstitute;
 import ch.ivyteam.ivy.security.IUserToken;
 import ch.ivyteam.ivy.security.SubstitutionType;
 
+@SuppressWarnings("deprecation")
 public class MyIUser implements IUser {
 
 	@Override

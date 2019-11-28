@@ -1,6 +1,3 @@
-/**
- * 
- */
 package ch.ivyteam.ivy.addons.filemanager.database;
 
 import java.sql.Connection;
@@ -15,10 +12,8 @@ import java.util.concurrent.Callable;
 
 import ch.ivyteam.ivy.db.IExternalDatabase;
 import ch.ivyteam.ivy.db.IExternalDatabaseApplicationContext;
-import ch.ivyteam.ivy.db.IExternalDatabaseRuntimeConnection;
 import ch.ivyteam.ivy.environment.EnvironmentNotAvailableException;
 import ch.ivyteam.ivy.environment.Ivy;
-import ch.ivyteam.ivy.persistence.PersistencyException;
 import ch.ivyteam.ivy.scripting.objects.List;
 import ch.ivyteam.ivy.scripting.objects.Record;
 import ch.ivyteam.ivy.scripting.objects.Recordset;
@@ -31,7 +26,6 @@ import ch.ivyteam.ivy.addons.filemanager.KeyValuePair;
  * It was delvelopped for the FileManagement System and specially for an MS SQL Server connection.<br>
  * Other Classes extending this one exists for some other DB Engine for the Filemenager : IvyMySQLDBReuser, IvyPOSTGRESQLDBReuser.
  */
-@SuppressWarnings("restriction")
 public class IvyDBReuser {
 
 
@@ -56,7 +50,7 @@ public class IvyDBReuser {
 	 * creates a Table for the FileManager in the   Db if it doesn't exists.
 	 * @param _dbConnectionName: the name of the Ivy DB Connection
 	 * @param the table name to create if not exists
-	 * @throws PersistencyException
+	 * @throws ch.ivyteam.ivy.persistence.PersistencyException
 	 * @throws SQLException 
 	 *
 	 */
@@ -78,17 +72,16 @@ public class IvyDBReuser {
 		"PRIMARY KEY (FILEID)"+
 		");";
 		IExternalDatabase database = getDatabase(_dbConnectionName);
-		IExternalDatabaseRuntimeConnection connection = database.getAndLockConnection();
-		Connection jdbcConnection;
+		Connection connection = null;
 		try
 		{
-			jdbcConnection = connection.getDatabaseConnection();
-			try (ResultSet res = jdbcConnection.getMetaData().getTables(null, null, _tableName.trim(), null))
+			connection = database.getConnection();
+			try (ResultSet res = connection.getMetaData().getTables(null, null, _tableName.trim(), null))
 			{
 				if(!res.next())
 				{//the table doesn't exists
 					// get a jdbc prepared statement
-					try (PreparedStatement stmt = jdbcConnection.prepareStatement(jdbcConnection.nativeSQL(createFileManagerTable)))
+					try (PreparedStatement stmt = connection.prepareStatement(connection.nativeSQL(createFileManagerTable)))
 					{
 						//Ivy.log().info("TRY TO EXECUTE: "+con.nativeSQL(createFileManagerTable));
 						// execute stmt
@@ -99,10 +92,18 @@ public class IvyDBReuser {
 		}
 		finally
 		{
-			database.giveBackAndUnlockConnection(connection);
+			close(connection);
 		}
 	}
 
+	private static void close(Connection connection) throws SQLException
+	{
+		if (connection != null)
+		{
+			connection.close();
+		}
+	}
+	
 	/**
 	 * returns the list of the column names in a table from a Microsoft SQL DB.<br>
 	 * @param _nameOfTheDatabaseConnection : the user friendly name of the ivy database connection
@@ -119,12 +120,12 @@ public class IvyDBReuser {
 		}
 		ArrayList<String> columns= new ArrayList<String>();
 		IExternalDatabase database = getDatabase(_nameOfTheDatabaseConnection);
-		IExternalDatabaseRuntimeConnection connection = database.getAndLockConnection();
-		Connection jdbcConnection;
+		Connection connection = null;
+		
 		try{
-			jdbcConnection=connection.getDatabaseConnection();
+			connection=database.getConnection();
 			String sql="SELECT * FROM INFORMATION_SCHEMA.Columns where TABLE_NAME = '"+_nameOfTheTable+"'";
-			try (Statement stmt = jdbcConnection.createStatement();
+			try (Statement stmt = connection.createStatement();
 			     ResultSet rst = stmt.executeQuery(sql))
 			{
 				ResultSetMetaData rsmd = rst.getMetaData();
@@ -137,7 +138,7 @@ public class IvyDBReuser {
 				}
 			}
 		}finally{
-			database.giveBackAndUnlockConnection(connection);
+			close(connection);
 		}
 		return columns;
 	}
@@ -155,12 +156,12 @@ public class IvyDBReuser {
 			throw(new SQLException("Invalid Ivy Database connection Name","Connection to Database refused"));
 		}
 		IExternalDatabase database = getDatabase(_nameOfTheDatabaseConnection);
-		IExternalDatabaseRuntimeConnection connection = database.getAndLockConnection();
-		Connection jdbcConnection;
+		Connection connection = null;
+		
 		Recordset r= new Recordset();
 		try {
-			jdbcConnection=connection.getDatabaseConnection();
-			try (Statement stmt = jdbcConnection.createStatement();
+			connection=database.getConnection();
+			try (Statement stmt = connection.createStatement();
 				 ResultSet rst = stmt.executeQuery(_sql)) {
 				ResultSetMetaData rsmd = rst.getMetaData();
 				int numCols = rsmd.getColumnCount();
@@ -182,7 +183,7 @@ public class IvyDBReuser {
 				}
 			}
 		}finally{
-			database.giveBackAndUnlockConnection(connection);
+			close(connection);
 		}
 		return r;
 	}
@@ -196,19 +197,19 @@ public class IvyDBReuser {
 	 * @param sql: the SQL Query as a String
 	 * @return the ch.ivyteam.ivy.scripting.objects.Recordset build with the ResultSet of the query execution
 	 * @throws SQLException
-	 * @throws PersistencyException 
+	 * @throws ch.ivyteam.ivy.persistence.PersistencyException 
 	 */
 	public static Recordset execute(String _nameOfTheDatabaseConnection, String _sql) throws Exception{
 		if(!checkNameOfDBConnection(_nameOfTheDatabaseConnection)){
 			throw(new SQLException("Invalid Ivy Database connection Name","Connection to Database refused"));
 		}
 		IExternalDatabase database = getDatabase(_nameOfTheDatabaseConnection);
-		IExternalDatabaseRuntimeConnection connection = database.getAndLockConnection();
-		Connection jdbcConnection;
+		Connection connection = null;
+		
 		Recordset r= new Recordset();
 		try {
-			jdbcConnection=connection.getDatabaseConnection();
-			try (Statement stmt = jdbcConnection.createStatement())
+			connection=database.getConnection();
+			try (Statement stmt = connection.createStatement())
 			{
 				boolean b =stmt.execute(_sql);
 				if(b)
@@ -235,7 +236,7 @@ public class IvyDBReuser {
 				}
 			}
 		}finally{
-			database.giveBackAndUnlockConnection(connection);
+			close(connection);
 		}
 		return r;
 	}
@@ -246,15 +247,15 @@ public class IvyDBReuser {
 	 * @param sql: the SQL Query as a String
 	 * @return the number of changed rows
 	 * @throws SQLException
-	 * @throws PersistencyException 
+	 * @throws ch.ivyteam.ivy.persistence.PersistencyException 
 	 */
 	public static int updateQuery(String _nameOfTheDatabaseConnection, String _sql) throws Exception{
 		if(!checkNameOfDBConnection(_nameOfTheDatabaseConnection)){
 			throw(new SQLException("Invalid Ivy Database connection Name","Connection to Database refused"));
 		}
 		IExternalDatabase database = getDatabase(_nameOfTheDatabaseConnection);
-		IExternalDatabaseRuntimeConnection connection = database.getAndLockConnection();
-		Connection jdbcConnection;
+		Connection connection = null;
+		
 		int rows=0;
 
 		//check if the query is an UPDATE, Insert or delete query, if not throws an SQLException
@@ -263,13 +264,13 @@ public class IvyDBReuser {
 			throw(new SQLException("The query "+_sql+" is not an UPDATE, INSERT or DELETE query.","Use of updateQuery(String sql) method in IvyDBReuser refused."));
 		}
 		try {
-			jdbcConnection=connection.getDatabaseConnection();
-			try (Statement stmt = jdbcConnection.createStatement())
+			connection=database.getConnection();
+			try (Statement stmt = connection.createStatement())
 			{
 				rows=stmt.executeUpdate(_sql, Statement.RETURN_GENERATED_KEYS);
 			}
 		}finally{
-			database.giveBackAndUnlockConnection(connection);
+			close(connection);
 		}
 		return rows;
 	}
@@ -282,7 +283,7 @@ public class IvyDBReuser {
 	 * @param conditions: a List of String conditions, it must contain at least one element
 	 * @return the number of changed rows
 	 * @throws SQLException
-	 * @throws PersistencyException 
+	 * @throws ch.ivyteam.ivy.persistence.PersistencyException 
 	 */
 	public static int updateQuery(String _nameOfTheDatabaseConnection, String _tableName, List<KeyValuePair> _KVP, List<String> _conditions) throws Exception{
 		if(!checkNameOfDBConnection(_nameOfTheDatabaseConnection))
@@ -290,8 +291,8 @@ public class IvyDBReuser {
 			throw(new SQLException("Invalid Ivy Database connection Name","Connection to Database refused"));
 		}
 		IExternalDatabase database = getDatabase(_nameOfTheDatabaseConnection);
-		IExternalDatabaseRuntimeConnection connection = database.getAndLockConnection();
-		Connection jdbcConnection;
+		Connection connection = null;
+		
 		int rows=0;
 		if(_KVP==null || _KVP.size()==0 || _conditions==null || _conditions.size()==0)
 		{
@@ -310,13 +311,13 @@ public class IvyDBReuser {
 		sql+=_conditions.get(numConditions);
 
 		try {
-			jdbcConnection=connection.getDatabaseConnection();
-			try (Statement stmt = jdbcConnection.createStatement())
+			connection=database.getConnection();
+			try (Statement stmt = connection.createStatement())
 			{
 				rows=stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
 			}
 		}finally{
-			database.giveBackAndUnlockConnection(connection);
+			close(connection);
 		}
 		return rows;
 	}
@@ -327,7 +328,7 @@ public class IvyDBReuser {
 	 * @param sql: the List<String> of SQL Queries 
 	 * @return the number of successfull inserted queries
 	 * @throws SQLException
-	 * @throws PersistencyException 
+	 * @throws ch.ivyteam.ivy.persistence.PersistencyException 
 	 */
 	public static int insertQueries(String _nameOfTheDatabaseConnection, List<String> _sql) throws Exception{
 		if(!checkNameOfDBConnection(_nameOfTheDatabaseConnection))
@@ -335,12 +336,11 @@ public class IvyDBReuser {
 			throw(new SQLException("Invalid Ivy Database connection Name","Connection to Database refused"));
 		}
 		IExternalDatabase database = getDatabase(_nameOfTheDatabaseConnection);
-		IExternalDatabaseRuntimeConnection connection = database.getAndLockConnection();
-		Connection jdbcConnection;
+		Connection connection = null;
 		int insertedIDs = 0;
 		try {
-			jdbcConnection=connection.getDatabaseConnection();
-			try (Statement stmt = jdbcConnection.createStatement())
+			connection=database.getConnection();
+			try (Statement stmt = connection.createStatement())
 			{
 				for(String query: _sql){
 					if(!isInsertQuery(query)){
@@ -350,7 +350,7 @@ public class IvyDBReuser {
 				}
 			}
 		}finally{
-			database.giveBackAndUnlockConnection(connection);
+			close(connection);
 		}
 		return insertedIDs;
 	}
@@ -361,7 +361,7 @@ public class IvyDBReuser {
 	 * @param sql: the SQL Query
 	 * @return the inserted ID of the query execution, , -1 if the insertion failed.
 	 * @throws SQLException
-	 * @throws PersistencyException 
+	 * @throws ch.ivyteam.ivy.persistence.PersistencyException 
 	 */
 	public static int insertQuery(String _nameOfTheDatabaseConnection, String _sql) throws Exception{
 		if(!checkNameOfDBConnection(_nameOfTheDatabaseConnection))
@@ -369,8 +369,8 @@ public class IvyDBReuser {
 			throw(new SQLException("Invalid Ivy Database connection Name","Connection to Database refused"));
 		}
 		IExternalDatabase database = getDatabase(_nameOfTheDatabaseConnection);
-		IExternalDatabaseRuntimeConnection connection = database.getAndLockConnection();
-		Connection jdbcConnection;
+		Connection connection = null;
+		
 		int insertedId = -1;
 
 		if(!isInsertQuery(_sql))
@@ -378,8 +378,8 @@ public class IvyDBReuser {
 			return insertedId;
 		}
 		try {
-			jdbcConnection=connection.getDatabaseConnection();
-			try (Statement stmt = jdbcConnection.createStatement())
+			connection=database.getConnection();			
+			try (Statement stmt = connection.createStatement())
 			{
 				stmt.executeUpdate(_sql, Statement.RETURN_GENERATED_KEYS);
 				try (ResultSet rst= stmt.getGeneratedKeys())
@@ -391,7 +391,7 @@ public class IvyDBReuser {
 				}
 			}
 		}finally{
-			database.giveBackAndUnlockConnection(connection);
+			close(connection);
 		}
 
 		return insertedId;
@@ -405,7 +405,7 @@ public class IvyDBReuser {
 	 * @param values: List<String> the list of the values of the new Item in the same oder as the valuesName List
 	 * @return the id of the inserted Item
 	 * @throws SQLException
-	 * @throws PersistencyException 
+	 * @throws ch.ivyteam.ivy.persistence.PersistencyException 
 	 */
 	public static int insertItem(String _nameOfTheDatabaseConnection, String _nameOfTheTable, List<String> _valuesName, List<String> _values) throws Exception{
 		if(!checkNameOfDBConnection(_nameOfTheDatabaseConnection))
@@ -413,8 +413,8 @@ public class IvyDBReuser {
 			throw(new SQLException("Invalid Ivy Database connection Name","Connection to Database refused"));
 		}
 		IExternalDatabase database = getDatabase(_nameOfTheDatabaseConnection);
-		IExternalDatabaseRuntimeConnection connection = database.getAndLockConnection();
-		Connection jdbcConnection;
+		Connection connection = null;
+		
 		int insertedId = -1;
 
 		String query= "INSERT INTO "+ _nameOfTheTable +" (";
@@ -429,8 +429,8 @@ public class IvyDBReuser {
 		query=query.substring(0, query.lastIndexOf(","));
 		query+=")";
 		try {
-			jdbcConnection=connection.getDatabaseConnection();
-			try (Statement stmt = jdbcConnection.createStatement())
+			connection=database.getConnection();
+			try (Statement stmt = connection.createStatement())
 			{
 				stmt.executeUpdate(query, Statement.RETURN_GENERATED_KEYS);
 				try (ResultSet rst= stmt.getGeneratedKeys())
@@ -441,7 +441,7 @@ public class IvyDBReuser {
 				}
 			}
 		}finally{
-			database.giveBackAndUnlockConnection(connection);
+			close(connection);
 		}
 		return insertedId;
 	}
@@ -452,7 +452,7 @@ public class IvyDBReuser {
 	 * @param sql: the List<String> of SQL Queries 
 	 * @return the number of deleted Items
 	 * @throws SQLException
-	 * @throws PersistencyException 
+	 * @throws ch.ivyteam.ivy.persistence.PersistencyException 
 	 */
 	public static int deleteQueries(String _nameOfTheDatabaseConnection, List<String> _sql) throws Exception{
 		if(!checkNameOfDBConnection(_nameOfTheDatabaseConnection))
@@ -460,13 +460,11 @@ public class IvyDBReuser {
 			throw(new SQLException("Invalid Ivy Database connection Name","Connection to Database refused"));
 		}
 		IExternalDatabase database = getDatabase(_nameOfTheDatabaseConnection);
-		IExternalDatabaseRuntimeConnection connection = database.getAndLockConnection();
-		Connection jdbcConnection;
+		Connection connection = null;
 		int itemsDeleted=0;
-
 		try {
-			jdbcConnection=connection.getDatabaseConnection();
-			try (Statement stmt = jdbcConnection.createStatement())
+			connection=database.getConnection();
+			try (Statement stmt = connection.createStatement())
 			{
 				stmt.getUpdateCount();
 				for(String query: _sql){
@@ -478,7 +476,7 @@ public class IvyDBReuser {
 				}
 			}
 		}finally{
-			database.giveBackAndUnlockConnection(connection);
+			close(connection);
 		}
 
 		return itemsDeleted;

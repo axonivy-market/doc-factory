@@ -7,11 +7,10 @@ import org.apache.commons.lang3.StringUtils;
 import ch.ivyteam.api.API;
 import ch.ivyteam.ivy.addons.docfactory.BaseDocFactory;
 import ch.ivyteam.ivy.addons.docfactory.DocFactoryConstants;
-import ch.ivyteam.ivy.addons.docfactory.FileAppender;
 import ch.ivyteam.ivy.environment.Ivy;
 
 /**
- * This class represents different options that may be useful for setting how different files (See {@link FileAppender})
+ * This class represents different options that may be useful for setting how different files (See {@link ch.ivyteam.ivy.addons.docfactory.FileAppender})
  * or documents (See {@link BaseDocFactory#generateDocuments(java.util.List, MultipleDocumentsCreationOptions)}) may be appended together in a common file.
  * @since version 7.3.0
  */

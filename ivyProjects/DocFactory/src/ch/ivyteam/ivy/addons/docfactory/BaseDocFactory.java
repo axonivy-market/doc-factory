@@ -9,10 +9,7 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 
 import ch.ivyteam.api.API;
-import ch.ivyteam.ivy.addons.docfactory.aspose.AsposeFieldMergingCallback;
-import ch.ivyteam.ivy.addons.docfactory.aspose.DocumentWorker;
 import ch.ivyteam.ivy.addons.docfactory.options.DocumentCreationOptions;
-import ch.ivyteam.ivy.addons.docfactory.options.FileAppenderOptions;
 import ch.ivyteam.ivy.addons.docfactory.options.MergeCleanupOptions;
 import ch.ivyteam.ivy.addons.docfactory.options.MultipleDocumentsCreationOptions;
 import ch.ivyteam.ivy.addons.docfactory.options.SimpleMergeCleanupOptions;
@@ -165,7 +162,7 @@ public abstract class BaseDocFactory{
 	 * By default the options are set for creating each DocumentTemplate File separately, you can turn this off with {@link DocumentCreationOptions#createSingleFileForEachDocument(boolean)}.
 	 * If the given {@link DocumentCreationOptions#isCreateOneFileByAppendingAllTheDocuments()} returns true, 
 	 * then all the given DocumentTemplate objects will also generate a file appending all the documents together.<br />
-	 * The {@link DocumentCreationOptions} holds also a {@link FileAppenderOptions} object for setting the fine options in the case you append all the documents in one file.
+	 * The {@link DocumentCreationOptions} holds also a {@link ch.ivyteam.ivy.addons.docfactory.options.FileAppenderOptions} object for setting the fine options in the case you append all the documents in one file.
 	 * @param documentTemplates The List of the document templates. Each of them generates a file by mail merging.
 	 * @param multipleDocumentsCreationOptions {@link DocumentCreationOptions} object for setting the options for this operation (should it generate single files, appends all the files in one ...)
 	 * @return A FileOperationMessage with the list of the java.io.File produced by this operation.
@@ -479,7 +476,7 @@ public abstract class BaseDocFactory{
 	
 	/**
 	 * Some DocFactory may allow injecting its own FieldMerging plug-in class for performing mail merging.
-	 * A good example is the {@link AsposeFieldMergingCallback} for Aspose.<br>
+	 * A good example is the {@link ch.ivyteam.ivy.addons.docfactory.aspose.AsposeFieldMergingCallback} for Aspose.<br>
 	 * <b>Note:</b> at the time of the writing of this method, the default DocFactory is based on Aspose. 
 	 * As there is already a default one, You don't need to set the fieldMergingCallback unless you really need it.
 	 * @param fieldMergingCallback
@@ -502,10 +499,10 @@ public abstract class BaseDocFactory{
 	 * Some DocFactory may allow injecting a DocumentWorker class which can apply some custom logic 
 	 * on the document before or after mail merging and before it has been returned to the user.
 	 * <b>Note:</b> at the time of the writing of this method, the default DocFactory is based on Aspose.
-	 * A DocumentWorker Interface has been made for the AsposeDocFactory. See: {@link DocumentWorker} <br>
+	 * A DocumentWorker Interface has been made for the AsposeDocFactory. See: {@link ch.ivyteam.ivy.addons.docfactory.aspose.DocumentWorker} <br>
 	 * The AsposeDocFactory implements also its own {@link AsposeDocFactory#withDocumentWorker(DocumentWorker)} method, 
 	 * in the case some instantiate the AsposeDocFactory and not through {@link #getInstance()}.<br>
-	 * For the moment, only implementations of {@link DocumentWorker} are supported. Other kind of object will be ignored.
+	 * For the moment, only implementations of {@link ch.ivyteam.ivy.addons.docfactory.aspose.DocumentWorker} are supported. Other kind of object will be ignored.
 	 * @param documentWorker
 	 * @return the DocFactory with the DocumentWorker set
 	 */

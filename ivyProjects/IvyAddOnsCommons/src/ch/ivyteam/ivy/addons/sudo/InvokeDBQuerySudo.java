@@ -12,7 +12,6 @@ import java.util.concurrent.Callable;
 import ch.ivyteam.ivy.addons.util.AddonsException;
 import ch.ivyteam.ivy.db.IExternalDatabase;
 import ch.ivyteam.ivy.db.IExternalDatabaseApplicationContext;
-import ch.ivyteam.ivy.db.IExternalDatabaseRuntimeConnection;
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.persistence.PersistencyException;
 import ch.ivyteam.ivy.security.SecurityManagerFactory;
@@ -52,17 +51,12 @@ public final class InvokeDBQuerySudo implements Callable<List<String[]>>
     this.dbConfigName = configuration;
   }
 
-  /**
-   * {@inheritDoc}
-   */
   public final List<String[]> call() throws PersistencyException, SQLException, AddonsException
   {
     // THIS METHOD USES NON-PUBLIC API CLASSES AND METHODS!
     // COPY AT OWN RISK (API IS NOT GUARANTEED TO BE STABLE)
     IExternalDatabaseApplicationContext context;
     IExternalDatabase database;
-    IExternalDatabaseRuntimeConnection connection;
-    Connection jdbcConnection;
 
     Statement statement;
     ResultSet resultSet;
@@ -79,13 +73,11 @@ public final class InvokeDBQuerySudo implements Callable<List<String[]>>
     context = (IExternalDatabaseApplicationContext) Ivy.session().getWorkflowContext().getApplication()
             .getAdapter(IExternalDatabaseApplicationContext.class);
     database = context.getExternalDatabase(dbConfigName);
-    connection = database.getAndLockConnection();
-
-    jdbcConnection = connection.getDatabaseConnection();
+    Connection connection = database.getConnection();
     try
     {
       // do whatever you want to do with the jdbc connection
-      statement = jdbcConnection.createStatement();
+      statement = connection.createStatement();
       resultSet = statement.executeQuery(query);
       metaData = resultSet.getMetaData();
 
@@ -107,8 +99,7 @@ public final class InvokeDBQuerySudo implements Callable<List<String[]>>
     }
     catch (SQLException e)
     {
-      // close the connection in case of errors
-      jdbcConnection.close();
+      connection.close();
       throw new AddonsException(e);
     }
     finally
@@ -122,7 +113,10 @@ public final class InvokeDBQuerySudo implements Callable<List<String[]>>
         statement.close();
       }
       // give back the connection to the environment
-      database.giveBackAndUnlockConnection(connection);
+      if (connection != null)
+      {
+    	  connection.close();
+      }
     }
     return result;
   }

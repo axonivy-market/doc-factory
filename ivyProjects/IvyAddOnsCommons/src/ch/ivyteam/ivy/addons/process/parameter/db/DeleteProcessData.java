@@ -3,11 +3,10 @@ package ch.ivyteam.ivy.addons.process.parameter.db;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import ch.ivyteam.ivy.addons.process.async.WaitForAsyncProcess;
 import ch.ivyteam.ivy.workflow.ICase;
 
 /**
- * Use this class to delete the Case Process Data before you fire the event in {@link WaitForAsyncProcess}
+ * Use this class to delete the Case Process Data before you fire the event in {@link ch.ivyteam.ivy.addons.process.async.WaitForAsyncProcess}
  * @author hsp
  * @since Pilatus
  */

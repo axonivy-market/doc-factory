@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-import ch.ivyteam.ivy.addons.process.async.WaitForAsyncProcess;
 import ch.ivyteam.ivy.scripting.objects.Date;
 import ch.ivyteam.ivy.scripting.objects.DateTime;
 import ch.ivyteam.ivy.scripting.objects.File;
@@ -16,10 +15,10 @@ import ch.ivyteam.ivy.scripting.objects.Time;
 /**
  * This class stores process data that are sendt from
  * SignalEndOfAsyncProcess and retrieved by the
- * {@link WaitForAsyncProcess} IntermediateEvent bean
+ * {@link ch.ivyteam.ivy.addons.process.async.WaitForAsyncProcess} IntermediateEvent bean
  * 
  * @author hsp
- * @see WaitForAsyncProcess
+ * @see ch.ivyteam.ivy.addons.process.async.WaitForAsyncProcess
  * @since Pilatus
  */
 public class ProcessParameter implements Serializable {
