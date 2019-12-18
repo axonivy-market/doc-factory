@@ -29,7 +29,7 @@ The idea behind this splitting is that Axon.ivy Projects can decide which functi
 
 The following build on our Jenkins in Zug builds all projects for the master branch.
 
-http://zugprojenkins/job/ivy-project-ivy-addons/
+https://jenkins.ivyteam.io/job/ivy-project-ivy-addons/
 
 It deploys the IvyAddOns projects to the following maven repository:
 
