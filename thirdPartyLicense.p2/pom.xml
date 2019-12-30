@@ -25,10 +25,13 @@
 
     <distributionManagement>
 		<repository>
-			<id>zugprodrone.snapshots</id>
-			<name>Thirdparty Library Repository</name>
-			<url>http://deploy:deploy-key@zugprodrone:8080/maven/thirdparty.lib/</url>
-		</repository>
+			<id>drone.ivyteam.io</id>
+			<url>https://drone.ivyteam.io/maven/addons/</url>
+        </repository>
+        <snapshotRepository>
+			<id>drone.ivyteam.io</id>
+			<url>https://drone.ivyteam.io/maven/addons/</url>
+        </snapshotRepository>
 	</distributionManagement>
 
 	<build>
