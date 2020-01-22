@@ -10,6 +10,7 @@
     <relativePath>../../maven</relativePath>
   </parent>
   
+  <groupId>ch.ivyteam.ivy.addons</groupId>
   <artifactId>file-manager-api</artifactId>
   <packaging>iar</packaging>
   
