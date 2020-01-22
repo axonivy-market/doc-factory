@@ -14,9 +14,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.mockito.Mock;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
@@ -31,13 +32,20 @@ public class PdfFactoryTest extends DocFactoryTest {
 	@Mock
 	File f;
 	
+	@Rule
+	public TemporaryFolder tempFolder = new TemporaryFolder();
+	
+	private java.io.File path;
+	
 	@Before
 	public void setup() throws Exception {
 		super.setup();
 		
+		path = tempFolder.newFile("bigPdf.pdf");
+		
 		f = mock(File.class);   
-		when(f.getAbsolutePath()).thenReturn("test/bigPdf.pdf");
-		PowerMockito.whenNew(File.class).withArguments("bigPdf.pdf", true).thenReturn(f);
+		when(f.getAbsolutePath()).thenReturn(path.getAbsolutePath());
+		PowerMockito.whenNew(File.class).withArguments(path.getName(), true).thenReturn(f);
 	}
 
 	@Test
@@ -47,29 +55,18 @@ public class PdfFactoryTest extends DocFactoryTest {
 
 	@Test
 	public void appendPdfFiles() throws Exception {
-		java.io.File pdf1 = fromResource("resources/files/pdf1.pdf");
-		java.io.File pdf2 = fromResource("resources/files/pdf2.pdf");
-		
 		List<java.io.File> filesToAppend = new ArrayList<>();
-		filesToAppend.add(pdf1);
-		filesToAppend.add(pdf2);
-		
-		java.io.File jf = new java.io.File(f.getAbsolutePath());
-		if(jf.isFile()) {
-			jf.delete();
-		}
-		jf.createNewFile();
-		
+		filesToAppend.add(fromResource("resources/files/pdf1.pdf"));
+		filesToAppend.add(fromResource("resources/files/pdf2.pdf"));
+
 		java.io.File result = PdfFactory.get().appendPdfFiles("appended_pdf_files.pdf", filesToAppend).getJavaFile();
-		assertTrue(result.isFile() );
+		assertTrue(result.isFile());
 	}
 	
-	private static java.io.File fromResource(String classRelativePath) throws IOException
+	private java.io.File fromResource(String classRelativePath) throws IOException
 	{
 		java.io.File ref = new java.io.File(classRelativePath);
-		String baseName = StringUtils.substringBefore(ref.getName(), ".");
-		String ext = StringUtils.substringAfterLast(ref.getName(), ".");
-		java.io.File resource = java.nio.file.Files.createTempFile(baseName, ext).toFile();
+		java.io.File resource = tempFolder.newFile(ref.getName());
 		try(InputStream is = PdfFactoryTest.class.getResourceAsStream(classRelativePath);
 			OutputStream os = new FileOutputStream(resource))
 		{
