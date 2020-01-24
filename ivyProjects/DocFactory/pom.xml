@@ -74,6 +74,8 @@
               <rules>
                 <requirePluginVersions>
                   <message>Don't use project-build-plugin SNAPSHOT version</message>
+                  <banLatest>false</banLatest>
+                  <banRelease>false</banRelease>
                   <banSnapshots>true</banSnapshots>
                 </requirePluginVersions>
               </rules>
