@@ -12,7 +12,7 @@
     </organization>
 
     <properties>
-        <revision>8.0.1-SNAPSHOT</revision>
+        <revision>8.0.2</revision>
 
         <project-build-plugin-version>8.0.0</project-build-plugin-version>
         <maven-dependency-plugin-version>3.0.2</maven-dependency-plugin-version>
@@ -137,6 +137,14 @@
             </snapshots>
             <url>http://zugpronexus:8081/nexus/content/groups/build</url>
             <layout>default</layout>
+        </repository>
+
+        <repository>
+            <id>central.snapshots</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <snapshots>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
         </repository>
     </repositories>
 
