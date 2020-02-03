@@ -20,8 +20,8 @@
         <tycho-version>1.5.0</tycho-version>
 
         <ivy.engine.directory>${java.io.tmpdir}/ivy-engine</ivy.engine.directory>
-        <ivy.engine.list.url>https://jenkins.ivyteam.io/job/ivy-core_product/job/master/lastSuccessfulBuild/</ivy.engine.list.url>
-        <ivy.engine.version>[8.0.0,]</ivy.engine.version>
+        <ivy.engine.list.url>https://jenkins.ivyteam.io/job/ivy-core_product/job/release%252F8.0/lastSuccessfulBuild/</ivy.engine.list.url>
+        <ivy.engine.version>[8.0.0,9.0.0)</ivy.engine.version>
     </properties>
 
     <distributionManagement>
