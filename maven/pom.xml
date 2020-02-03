@@ -12,7 +12,7 @@
     </organization>
 
     <properties>
-        <revision>8.0.3-SNAPSHOT</revision>
+        <revision>9.1.0-SNAPSHOT</revision>
 
         <project-build-plugin-version>8.0.0</project-build-plugin-version>
         <maven-dependency-plugin-version>3.0.2</maven-dependency-plugin-version>
@@ -21,7 +21,7 @@
 
         <ivy.engine.directory>${java.io.tmpdir}/ivy-engine</ivy.engine.directory>
         <ivy.engine.list.url>https://jenkins.ivyteam.io/job/ivy-core_product/job/master/lastSuccessfulBuild/</ivy.engine.list.url>
-        <ivy.engine.version>[8.0.0,]</ivy.engine.version>
+        <ivy.engine.version>[9.1.0,]</ivy.engine.version>
     </properties>
 
     <distributionManagement>
