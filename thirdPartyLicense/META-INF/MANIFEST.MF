@@ -8,5 +8,5 @@ Eclipse-ExtensibleAPI: true
 Bundle-ClassPath: patch.jar,
  .
 Export-Package: ch.ivyteam.ivy
-Require-Bundle: ch.ivyteam.ivy.server;bundle-version="7.3.0"
+Require-Bundle: ch.ivyteam.ivy.server;bundle-version="8.0.0"
 Bundle-Name: Third party licence
