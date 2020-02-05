@@ -82,6 +82,14 @@ Cs0 f10 @|UdProcessEndIcon #fIcon
 Cs0 f9 actionTable 'out=in;
 ' #txt
 Cs0 f9 actionCode 'import ch.ivyteam.ivy.docFactoryExamples.Util.FilesUtil;
+
+// uploaded image 
+if(in.service.ivyFile.read().length() >0 )
+{
+	in.service.image = in.service.ivyFile.readBinary(); 
+	in.service.imageName = in.service.ivyFile.getName();
+}
+
 FilesUtil.downloadJsf(in.service.createWordDocument());' #txt
 Cs0 f9 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
@@ -114,6 +122,14 @@ Cs0 f4 @|UdProcessEndIcon #fIcon
 Cs0 f5 actionTable 'out=in;
 ' #txt
 Cs0 f5 actionCode 'import ch.ivyteam.ivy.docFactoryExamples.Util.FilesUtil;
+
+// uploaded image 
+if(in.service.ivyFile.read().length() >0 )
+{
+	in.service.image = in.service.ivyFile.readBinary(); 
+	in.service.imageName = in.service.ivyFile.getName();
+}
+
 FilesUtil.downloadJsf(in.service.createMultiDocument());' #txt
 Cs0 f5 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
@@ -123,12 +139,12 @@ and download them in a ZIP</name>
     </language>
 </elementInfo>
 ' #txt
-Cs0 f5 120 330 208 44 -83 -15 #rect
+Cs0 f5 140 328 168 48 -83 -15 #rect
 Cs0 f5 @|StepIcon #fIcon
 Cs0 f6 expr out #txt
-Cs0 f6 328 352 339 352 #arcP
+Cs0 f6 308 352 339 352 #arcP
 Cs0 f7 expr out #txt
-Cs0 f7 109 352 120 352 #arcP
+Cs0 f7 109 352 140 352 #arcP
 Cs0 f13 actionTable 'out=in;
 out.service.date=new Date();
 out.service.name=ivy.session.getSessionUserName();
@@ -219,6 +235,14 @@ Cs0 f25 @|UdMethodIcon #fIcon
 Cs0 f26 actionTable 'out=in;
 ' #txt
 Cs0 f26 actionCode 'import ch.ivyteam.ivy.docFactoryExamples.Util.FilesUtil;
+
+// uploaded image 
+if(in.service.ivyFile.read().length() >0 )
+{
+	in.service.image = in.service.ivyFile.readBinary(); 
+	in.service.imageName = in.service.ivyFile.getName();
+}
+
 FilesUtil.downloadJsf(in.service.createPowerPoint());' #txt
 Cs0 f26 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
@@ -240,6 +264,18 @@ Cs0 f30 @|UdProcessEndIcon #fIcon
 Cs0 f31 actionTable 'out=in;
 ' #txt
 Cs0 f31 actionCode 'import ch.ivyteam.ivy.docFactoryExamples.Util.FilesUtil;
+
+// uploaded image 
+if(in.service.ivyFile.read().length() >0 )
+{
+	in.service.image = in.service.ivyFile.readBinary(); 
+	in.service.imageName = in.service.ivyFile.getName();
+}
+else
+{
+	in.service.ivyFile = null;
+}
+
 FilesUtil.downloadJsf(in.service.createExcel());' #txt
 Cs0 f31 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
