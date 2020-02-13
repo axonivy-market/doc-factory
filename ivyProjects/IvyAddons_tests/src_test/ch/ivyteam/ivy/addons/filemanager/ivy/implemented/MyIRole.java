@@ -9,6 +9,7 @@ import ch.ivyteam.ivy.security.IRole;
 import ch.ivyteam.ivy.security.ISecurityContext;
 import ch.ivyteam.ivy.security.IUser;
 import ch.ivyteam.ivy.security.IUserToken;
+import ch.ivyteam.ivy.security.user.IRoleUsers;
 
 public class MyIRole implements IRole {
 	
@@ -173,6 +174,12 @@ public class MyIRole implements IRole {
 	@Override
 	@PublicAPI(IvyScriptVisibility.EXPERT)
 	public List<IUser> getUsers() throws PersistencyException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public IRoleUsers users() {
 		// TODO Auto-generated method stub
 		return null;
 	}
