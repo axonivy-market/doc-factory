@@ -1,6 +1,8 @@
 package ch.ivyteam.ivy.addons.docfactory.aspose;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 
 import ch.ivyteam.api.API;
@@ -26,24 +28,48 @@ public class AsposePdfFactory extends PdfFactory {
 	}
 
 	@Override
-	public File appendPdfFiles(String resultFileName, List<java.io.File> pdfsToAppend) throws DocFactoryException {
-		API.checkNotEmpty(resultFileName, "resultFileName");
+	public File appendPdfFiles(String resultFilePath, List<java.io.File> pdfsToAppend) throws DocFactoryException {
+		API.checkNotEmpty(resultFilePath, "resultFileName");
 		API.checkNotNull(pdfsToAppend, "pdfsToAppend");
 		API.checkNotEmpty(pdfsToAppend, "pdfsToAppend");
 		
 		try {
-			Document pdfDocument1 = new Document(new FileInputStream(pdfsToAppend.get(0)));
-			
-			for(java.io.File pdf: pdfsToAppend.subList(1, pdfsToAppend.size())) {
-				Document pdfDocument = new Document(new FileInputStream(pdf));
-				pdfDocument1.getPages().add(pdfDocument.getPages());
-			}
-			File result = new File(resultFileName, true);
-			pdfDocument1.save(result.getAbsolutePath());
-			return result;
+			Document pdfDocument = new Document(new FileInputStream(pdfsToAppend.get(0)));
+			return appendFilesToDocument(pdfDocument, pdfsToAppend.subList(1, pdfsToAppend.size()), resultFilePath);
 		} catch(Exception ex) {
-			//Logger.getLogger(AsposePdfFactory.class.getName()).log(Level.SEVERE, "An error occurred while generating the pdf file.", ex);
 			throw new DocFactoryException("An error occurred while generating the pdf file. " + ex.getMessage(), ex);
+		} 
+	}
+	
+	/**
+	 * Only visible for testing
+	 */
+	protected File appendFilesToDocument(Document document, List<java.io.File> pdfsToAppend, String resultFilePath) throws IOException {
+		try {
+			for(java.io.File pdf: pdfsToAppend) {
+				appendPdfDocuments(document, new Document(new FileInputStream(pdf)));
+			}
+			File result = new File(resultFilePath, true);
+			document.save(result.getAbsolutePath());
+			return result;
+		} finally {
+			if(document != null) {
+				document.close();
+			}
+		}
+	}
+
+	/**
+	 * Only visible for testing
+	 */
+	protected void appendPdfDocuments(Document pdfDocument, Document appendedPdfDocument)
+			throws FileNotFoundException {
+		try {
+			pdfDocument.getPages().add(appendedPdfDocument.getPages());
+		} finally {
+			if(appendedPdfDocument != null) {
+				appendedPdfDocument.close();
+			}
 		}
 	}
 
