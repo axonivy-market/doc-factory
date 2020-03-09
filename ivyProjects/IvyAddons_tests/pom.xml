@@ -15,7 +15,7 @@
   <packaging>iar</packaging>
 
   <properties>
-    <powermock2.version>2.0.2</powermock2.version>
+    <powermock2.version>2.0.5</powermock2.version>
   </properties>
 
   <dependencies>
@@ -43,6 +43,30 @@
       <version>1.8.0.10</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+	  <groupId>org.javassist</groupId>
+	  <artifactId>javassist</artifactId>
+	  <version>3.18.0-GA</version>
+	  <scope>test</scope>
+	</dependency>
+    <dependency>
+	  <groupId>org.mockito</groupId>
+	  <artifactId>mockito-core</artifactId>
+	  <version>3.2.4</version>
+	  <scope>test</scope>
+	</dependency>
+	<dependency>
+	  <groupId>net.bytebuddy</groupId>
+	  <artifactId>byte-buddy-agent</artifactId>
+	  <version>1.10.5</version>
+	  <scope>test</scope>
+	</dependency>
+	<dependency>
+	  <groupId>org.objenesis</groupId>
+	  <artifactId>objenesis</artifactId>
+	  <version>2.6</version>
+	  <scope>test</scope>
+	</dependency>
     <dependency>
       <groupId>org.powermock</groupId>
       <artifactId>powermock-api-mockito2</artifactId>
