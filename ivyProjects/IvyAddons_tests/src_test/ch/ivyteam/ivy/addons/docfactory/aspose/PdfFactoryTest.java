@@ -21,11 +21,11 @@ import org.mockito.Mock;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 
+import com.aspose.pdf.Document;
+
 import ch.ivyteam.ivy.addons.docfactory.DocFactoryTest;
 import ch.ivyteam.ivy.addons.docfactory.PdfFactory;
 import ch.ivyteam.ivy.scripting.objects.File;
-
-import com.aspose.pdf.Document;
 
 @PrepareForTest(Document.class)
 public class PdfFactoryTest extends DocFactoryTest {
