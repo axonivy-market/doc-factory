@@ -35,7 +35,8 @@ import ch.ivyteam.log.Logger;
 @RunWith(PowerMockRunner.class)
 //tell powermock to ignore things different in java 11 
 //see https://github.com/mockito/mockito/issues/1562
-@PowerMockIgnore({"com.sun.org.apache.xerces.*", "com.aspose.pdf.*"}) 
+@PowerMockIgnore({"com.sun.org.apache.xerces.*", "javax.management.*", "com.sun.org.apache.xerces.*", 
+	"javax.xml.parsers.*", "org.xml.*", "org.w3c.dom.*"}) 
 @PrepareForTest({Ivy.class, ThirdPartyLicenses.class, File.class, LicenseLoader.class, IvyScriptObjectEnvironment.class})
 public abstract class DocFactoryTest {
 	
