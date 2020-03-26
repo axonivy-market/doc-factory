@@ -22,7 +22,7 @@ pipeline {
           docker.build('maven-build', '-f Dockerfile .').inside {
             def phase = env.BRANCH_NAME == 'master' ? 'deploy' : 'verify'
             maven cmd: "clean ${phase} -Dmaven.test.failure.ignore=true " +
-              "-Dproject-build-plugin-version=8.0.3 "
+              "-Dproject-build-plugin-version=8.0.3 -Divy.compiler.warnings=false "
             currentVersion = getCurrentVersion();
           }
           archiveArtifacts '**/target/*.iar'
