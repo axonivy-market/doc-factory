@@ -1,4 +1,4 @@
-package ch.ivyteam.ivy.docFactoryExamples.Util;
+package ch.ivyteam.ivy.docFactoryExamples;
 
 import java.io.InputStream;
 
@@ -8,7 +8,7 @@ import ch.ivyteam.ivy.ThirdPartyLicenses;
 /*
  * Initialize the licence for the barcode library
  */
-public class IvyAsposeBarcodeLicenceLoader {
+public class IvyAsposeBarcoder {
 
 	public static void init() throws Exception
 	{

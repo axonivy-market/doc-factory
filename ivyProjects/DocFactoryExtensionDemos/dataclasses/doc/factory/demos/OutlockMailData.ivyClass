@@ -1,0 +1,10 @@
+OutlockMailData #class
+doc.factory.demos #namespace
+msgFile File #field
+msgFile PERSISTENT #fieldModifier
+attachment File #field
+attachment PERSISTENT #fieldModifier
+name String #field
+name PERSISTENT #fieldModifier
+emailaddress String #field
+emailaddress PERSISTENT #fieldModifier
