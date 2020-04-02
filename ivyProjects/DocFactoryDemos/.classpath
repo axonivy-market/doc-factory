@@ -39,6 +39,5 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/aspose-barcode-19.9.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
