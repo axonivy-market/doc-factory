@@ -6,7 +6,7 @@ public class EngineUrl
 
   public static String base()
   {
-    return System.getProperty("test.engine.url", "http://localhost:8081/ivy/");
+    return System.getProperty("test.engine.url", "http://localhost:8081/");
   }
 
   public static String rest()
@@ -21,7 +21,7 @@ public class EngineUrl
 
   public static String getServletUrl(String servletContext)
   {
-    return base() + servletContext + "/" + applicationName();
+    return base() + applicationName() + "/" + servletContext;
   }
 
   public static String applicationName()
