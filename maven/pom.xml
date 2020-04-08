@@ -176,6 +176,13 @@
                 <updatePolicy>always</updatePolicy>
             </snapshots>
         </pluginRepository>
+        <pluginRepository>
+            <id>central.snapshots</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <snapshots>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </pluginRepository>
     </pluginRepositories>
     
 </project>
