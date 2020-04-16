@@ -52,6 +52,10 @@
                         <configuration>
 	                        <outputDirectory>${project.build.directory}</outputDirectory>
 	                        <flattenedPomFilename>pom.xml</flattenedPomFilename>
+	                        <!-- pomElements needs to be removed once we use the released version 9.1.0 of project-build-plugin! -->
+	                        <pomElements>
+	                            <pluginRepositories/>
+	                        </pomElements>
                         </configuration>
                     </execution>
                     <execution>
