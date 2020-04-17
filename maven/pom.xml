@@ -55,6 +55,7 @@
 	                        <!-- pomElements needs to be removed once we use the released version 9.1.0 of project-build-plugin! -->
 	                        <pomElements>
 	                            <pluginRepositories/>
+                                <repositories/>
 	                        </pomElements>
                         </configuration>
                     </execution>
@@ -153,16 +154,6 @@
         </repository>
 
         <repository>
-            <id>zugpronexus.snapshots</id>
-            <name>Integration repository ZUG</name>
-            <snapshots>
-                <updatePolicy>always</updatePolicy>
-            </snapshots>
-            <url>http://zugpronexus:8081/nexus/content/groups/build</url>
-            <layout>default</layout>
-        </repository>
-
-        <repository>
             <id>central.snapshots</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
             <releases>
@@ -175,14 +166,6 @@
     </repositories>
 
     <pluginRepositories>
-        <pluginRepository>
-            <id>zugpronexus.snapshots</id>
-            <name>Internal Plugin Build Integration Repository</name>
-            <url>http://zugpronexus:8081/nexus/content/groups/build-plugins</url>
-            <snapshots>
-                <updatePolicy>always</updatePolicy>
-            </snapshots>
-        </pluginRepository>
         <pluginRepository>
             <id>central.snapshots</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
