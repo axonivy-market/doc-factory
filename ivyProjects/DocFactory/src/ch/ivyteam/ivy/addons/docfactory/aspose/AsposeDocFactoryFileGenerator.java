@@ -6,9 +6,13 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 import ch.ivyteam.api.API;
+import ch.ivyteam.ivy.addons.docfactory.BaseDocFactory;
 import ch.ivyteam.ivy.addons.docfactory.DocFactoryConstants;
 import ch.ivyteam.ivy.addons.docfactory.FileOperationMessage;
+import ch.ivyteam.ivy.addons.docfactory.PdfFactory;
+import ch.ivyteam.ivy.addons.docfactory.UnsupportedFormatException;
 import ch.ivyteam.ivy.addons.docfactory.aspose.document.DocumentBlankPageRemover;
+import ch.ivyteam.ivy.addons.docfactory.exception.DocFactoryException;
 import ch.ivyteam.ivy.addons.docfactory.options.DocumentCreationOptions;
 import ch.ivyteam.ivy.environment.Ivy;
 
@@ -31,16 +35,16 @@ import com.aspose.words.TxtSaveOptions;
  *
  */
 public class AsposeDocFactoryFileGenerator {
-	
+
 	private DocumentCreationOptions documentCreationOptions = DocumentCreationOptions.getInstance();
 	private DocumentWorker documentWorker;
-	
+
 	private AsposeDocFactoryFileGenerator() {}
-	
+
 	public static AsposeDocFactoryFileGenerator getInstance() {
 		return new AsposeDocFactoryFileGenerator();
 	}
-	
+
 	/**
 	 * Set the {@link #DocumentCreationOptions} for this AsposeDocFactoryFileGenerator. 
 	 * The DocumentCreationOptions contains diverse options for the final file generation (e.g should a PDF be editable ...)
@@ -64,7 +68,7 @@ public class AsposeDocFactoryFileGenerator {
 		this.documentWorker = documentWorker;
 		return this;
 	}
-	
+
 	/**
 	 * Saves the given aspose Document to the given baseFilePath with the outputFormat
 	 * @param document the Aspose Document cannot be null.
@@ -84,15 +88,26 @@ public class AsposeDocFactoryFileGenerator {
 		SaveOptions saveOptions = getSaveOptionsForFormat(outputFormat);
 		document.save(filePath, saveOptions);
 		
-		if(outputFormat == DocFactoryConstants.PDF_FORMAT && this.documentCreationOptions.isRemoveWhiteSpaceInPdfEditableFields()) {
-			this.clearWhiteSpacePdfFieldsFromPdf(filePath);
+		if(outputFormat == DocFactoryConstants.PDF_FORMAT) {
+			applyPdfSpecificActions(filePath);
 		}
+		
 		if(this.documentWorker != null) {
-			return buildResult(this.documentWorker.onGeneratedFile(document, new File(filePath)));
+			return  buildResult(this.documentWorker.onGeneratedFile(document, new File(filePath)));
 		}
 		return buildResult(new File(filePath));
 	}
-	
+
+	private void applyPdfSpecificActions(String filePath) throws IllegalArgumentException, DocFactoryException {
+		if(this.documentCreationOptions.getPdfOptions().isRemoveWhiteSpaceInPdfEditableFields()) {
+			this.clearWhiteSpacePdfFieldsFromPdf(filePath);
+		}
+		if(this.documentCreationOptions.getPdfOptions().getPdfAType() != null) {
+			PdfFactory.get().convertToPdfA(filePath, this.documentCreationOptions.getPdfOptions().getPdfAType());
+		}
+		
+	}
+
 	private void applyDocumentCreationOptions(Document document) throws Exception {
 		if(documentCreationOptions.isRemoveBlankPages()) {
 			DocumentBlankPageRemover.removesBlankPage(document);
@@ -107,7 +122,7 @@ public class AsposeDocFactoryFileGenerator {
 			saveOptions.setSaveFormat(SaveFormat.DOCX);
 		} else if(outputFormat == DocFactoryConstants.PDF_FORMAT) {
 			saveOptions = new PdfSaveOptions();
-			((PdfSaveOptions) saveOptions).setPreserveFormFields(documentCreationOptions.isKeepFormFieldsEditableInPdf());
+			((PdfSaveOptions) saveOptions).setPreserveFormFields(documentCreationOptions.getPdfOptions().isKeepFormFieldsEditableInPdf());
 		} else if(outputFormat == DocFactoryConstants.HTML_FORMAT) {
 			saveOptions = new HtmlSaveOptions(getAsposeSaveFormat(outputFormat));
 			saveOptions.setSaveFormat(SaveFormat.HTML);
@@ -123,7 +138,7 @@ public class AsposeDocFactoryFileGenerator {
 		}
 		return saveOptions;
 	}
-	
+
 	private String makeFilePath(String baseFilePath, int outputFormat) {
 		return baseFilePath + (outputFormat == DocFactoryConstants.PDF_FORMAT ? DocFactoryConstants.PDF_EXTENSION : 
 			outputFormat == DocFactoryConstants.DOCX_FORMAT ? DocFactoryConstants.DOCX_EXTENSION : 
@@ -131,7 +146,7 @@ public class AsposeDocFactoryFileGenerator {
 					outputFormat == DocFactoryConstants.HTML_FORMAT ? DocFactoryConstants.HTML_EXTENSION : 
 						outputFormat == DocFactoryConstants.ODT_FORMAT ? DocFactoryConstants.ODT_EXTENSION : DocFactoryConstants.TXT_EXTENSION);
 	}
-	
+
 	private int getAsposeSaveFormat(int outputFormat) {
 		return  (outputFormat == DocFactoryConstants.PDF_FORMAT ? SaveFormat.PDF : 
 			outputFormat == DocFactoryConstants.DOCX_FORMAT ? SaveFormat.DOCX : 
@@ -153,7 +168,7 @@ public class AsposeDocFactoryFileGenerator {
 		cleanPdfFields(pdfDoc.getForm().getFields());
 		pdfDoc.save(filePath);
 	}
-	
+
 	private static void cleanPdfFields(com.aspose.pdf.Field[] fields) {
 		Stream.of(fields).forEach(field -> {
 			if (Objects.nonNull(field.getValue())) {
@@ -162,12 +177,78 @@ public class AsposeDocFactoryFileGenerator {
 		});
 	}
 
+	/**
+	 * @deprecated
+	 * This is not used anymore by the AsposeDocFactory because it was not flexible enough for getting new Options.
+	 * Please set the document options with {@link #withDocumentCreationOptions(DocumentCreationOptions)} and use {@link #exportDocumentToFile(Document, String, int)} instead.
+	 * <b>Will be removed in the Docfactory 7.3.0-SNAPSHOT</b>
+	 */
+	@Deprecated
+	public static FileOperationMessage exportDocumentToFile(Document document, String baseFilePath, int outputFormat,
+			boolean generateBlankDocumentIfGivenDocIsNull) throws Exception {
+		File file = null;
+		
+		if (document == null && generateBlankDocumentIfGivenDocIsNull) {
+			document = new Document();
+		}
+		generateIllegalArgumentExceptionIfOneParameterIsNullOrAnEmptyString("The document or baseFilePath parameter is not valid.", document, baseFilePath);
+		switch (outputFormat) {
+		case BaseDocFactory.DOC_FORMAT:
+			document.save(baseFilePath + DocFactoryConstants.DOC_EXTENSION, SaveFormat.DOC);
+			file = new File(baseFilePath + DocFactoryConstants.DOC_EXTENSION);
+			break;
+		case BaseDocFactory.DOCX_FORMAT:
+			OoxmlSaveOptions ooxmlSaveOptions = new OoxmlSaveOptions();
+			ooxmlSaveOptions.setCompliance(OoxmlCompliance.ISO_29500_2008_TRANSITIONAL);
+			ooxmlSaveOptions.setSaveFormat(SaveFormat.DOCX);
+			document.getCompatibilityOptions().setUICompat97To2003(true);
+			document.save(baseFilePath + DocFactoryConstants.DOCX_EXTENSION, ooxmlSaveOptions);
+			file = new File(baseFilePath + DocFactoryConstants.DOCX_EXTENSION);
+			break;
+		case BaseDocFactory.PDF_FORMAT:
+			document.save(baseFilePath + DocFactoryConstants.PDF_EXTENSION);
+			file = new File(baseFilePath + DocFactoryConstants.PDF_EXTENSION);
+			
+			break;
+		case BaseDocFactory.HTML_FORMAT:
+			document.save(baseFilePath + DocFactoryConstants.HTML_EXTENSION, SaveFormat.HTML);
+			file = new File(baseFilePath + DocFactoryConstants.HTML_EXTENSION);
+			break;
+		case BaseDocFactory.TXT_FORMAT:
+			document.save(baseFilePath + DocFactoryConstants.TXT_EXTENSION, SaveFormat.TEXT);
+			file = new File(baseFilePath + DocFactoryConstants.TXT_EXTENSION);
+			break;
+		case BaseDocFactory.ODT_FORMAT:
+			document.save(baseFilePath + DocFactoryConstants.ODT_EXTENSION, SaveFormat.ODT);
+			file = new File(baseFilePath + DocFactoryConstants.ODT_EXTENSION);
+			break;
+		default:
+			throw new UnsupportedFormatException(Ivy.cms().co("/ch/ivyteam/ivy/addons/docfactory/messages/formatNotSupported"));
+		}
+		
+		return buildResult(file);
+	}
+
+	private static void generateIllegalArgumentExceptionIfOneParameterIsNullOrAnEmptyString(
+			String message, Object... o) {
+		for (Object obj : o) {
+			if (o == null) {
+				throw new IllegalArgumentException(message);
+			}
+			if (obj instanceof String) {
+				if (((String) obj).trim().isEmpty()) {
+					throw new IllegalArgumentException(message);
+				}
+			}
+		}
+	}
+
 	private static FileOperationMessage buildResult(File file)
-			throws IOException, Exception {
+			throws Exception {
 		FileOperationMessage fom;
 		try {
 			if(!file.isFile()) {
-				throw new IOException("The file " + file.getName() + " could not be produced. the Aspose Document could not be exported as File.");
+				throw new IOException("The file "+file.getName()+" could not be produced. the Aspose Document could not be exported as File.");
 			}
 		} catch (SecurityException ex) {
 			throw new Exception("A SecurityException occurred " + ex.getMessage(), ex);
@@ -180,4 +261,7 @@ public class AsposeDocFactoryFileGenerator {
 		
 		return fom;
 	}
+
+	
+
 }
