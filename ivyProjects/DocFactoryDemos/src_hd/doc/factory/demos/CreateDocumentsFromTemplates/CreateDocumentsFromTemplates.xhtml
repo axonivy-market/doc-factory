@@ -26,7 +26,7 @@
 					<p:calendar id="date" value="#{data.service.date}" pattern="dd/MM/yyyy" autocomplete="off" required="true"/>
 					<br />
 					<p:outputLabel for="file" value="Choose an Image" />
-					<p:fileUpload id="file" auto="true" fileUploadListener="#{logic.fileUpload}" mode="simple" update="fileName"/>
+					<p:fileUpload id="file" auto="true" value="#{data.service.ivyFile}" fileUploadListener="#{logic.fileUpload}" mode="simple" skinSimple="true"/>
 					<h:outputText id="fileName" value="#{data.service.imageName}" />
 
 					<p:outputLabel for="memberType" value="Member Type" />
@@ -55,7 +55,7 @@
 					</p:dataTable>
 					<br />
 					<h:panelGroup>
-					<p:inputText value="#{data.service.newExpectation}"/>
+			<p:inputText value="#{data.service.newExpectation}" style="width:80%; padding:6px; margin-right:5px;"/>
 					<p:commandButton actionListener="#{logic.addNewExpectation}"
 						value="Add new" update="expectTable" />
 						</h:panelGroup>
