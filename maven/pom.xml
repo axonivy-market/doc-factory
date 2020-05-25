@@ -12,7 +12,7 @@
     </organization>
 
     <properties>
-        <revision>8.0.3-SNAPSHOT</revision>
+        <revision>8.0.6-SNAPSHOT</revision>
 
         <project-build-plugin-version>8.0.0</project-build-plugin-version>
         <maven-dependency-plugin-version>3.0.2</maven-dependency-plugin-version>
@@ -20,8 +20,8 @@
         <tycho-version>1.5.0</tycho-version>
 
         <ivy.engine.directory>${java.io.tmpdir}/ivy-engine</ivy.engine.directory>
-        <ivy.engine.list.url>https://jenkins.ivyteam.io/job/ivy-core_product/job/master/lastSuccessfulBuild/</ivy.engine.list.url>
-        <ivy.engine.version>[8.0.0,]</ivy.engine.version>
+        <ivy.engine.list.url>https://jenkins.ivyteam.io/job/ivy-core_product/job/release%252F8.0/lastSuccessfulBuild/</ivy.engine.list.url>
+        <ivy.engine.version>[8.0.0,9.0.0)</ivy.engine.version>
     </properties>
 
     <distributionManagement>
@@ -68,7 +68,8 @@
 		<pluginManagement>
 			<plugins>
 				<plugin>
-					<groupId>com.axonivy.ivy.ci</groupId>
+					<groupId>com.axonivy.ivmaven/pom.xml: needs update
+					y.ci</groupId>
 					<artifactId>project-build-plugin</artifactId>
 					<version>[8.0.0,</version>
 					<configuration>
@@ -80,7 +81,8 @@
 							</iarFileSet>
 						</iarFileSets>
 						<compilerWarnings>true</compilerWarnings>
-					</configuration>
+					</configuration>maven/pom.xml: needs update
+					
 				</plugin>
 	
 				<!--This plugin's configuration is used to store Eclipse m2e settings 
@@ -103,6 +105,26 @@
 										</versionRange>
 										<goals>
 											<goal>flatten</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.apache.maven.plugins
+										</groupId>
+										<artifactId>
+											maven-dependency-plugin
+										</artifactId>
+										<versionRange>
+											[3.0.2,)
+										</versionRange>
+										<goals>
+											<goal>properties</goal>
+											<goal>copy-dependencies</goal>
 										</goals>
 									</pluginExecutionFilter>
 									<action>
