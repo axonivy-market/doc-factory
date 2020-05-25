@@ -82,6 +82,8 @@
                   <banRelease>false</banRelease>
                   <banSnapshots>true</banSnapshots>
                   <unCheckedPluginList>
+                    <!--Remove again if the project-build-plugin 9.1.0 is released-->
+                    com.axonivy.ivy.ci:project-build-plugin,
                     org.apache.maven.plugins:maven-surefire-plugin,
                     org.apache.maven.plugins:maven-clean-plugin,
                     org.apache.maven.plugins:maven-install-plugin,
