@@ -2,26 +2,51 @@ package ch.ivyteam.ivy.addons.filemanager.ivy.implemented;
 
 import java.util.Set;
 
-import ch.ivyteam.api.IvyScriptVisibility;
-import ch.ivyteam.api.PublicAPI;
 import ch.ivyteam.ivy.globalvars.IGlobalVariableContext;
 
 
 public class MyGlobalVariableContext implements IGlobalVariableContext {
 
-	@Override
-	@PublicAPI(IvyScriptVisibility.EXPERT)
-	public String get(String varName) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+  @Override
+  public String get(String varName)
+  {
+    return null;
+  }
 
-	@Override
-	public Set<String> getVariableNames() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+  @Override
+  public Set<String> getVariableNames()
+  {
+    return null;
+  }
 
-	
+  @Override
+  public String set(String name, String value)
+  {
+    return null;
+  }
+
+  @Override
+  public String reset(String name)
+  {
+    return null;
+  }
+
+  @Override
+  public String getForEnvironment(String environment, String name)
+  {
+    return null;
+  }
+
+  @Override
+  public String setForEnvironment(String environment, String name, String value)
+  {
+    return null;
+  }
+
+  @Override
+  public String resetForEnvironment(String environment, String name)
+  {
+    return null;
+  }
 
 }

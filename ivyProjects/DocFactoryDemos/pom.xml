@@ -38,12 +38,6 @@
 			<version>[${project.version},)</version>
 			<type>iar</type>
 		</dependency>
-		<dependency>
-			<groupId>com.aspose</groupId>
-			<artifactId>aspose-barcode</artifactId>
-			<version>${aspose.version}</version>
-			<optional>true</optional>
-		</dependency>
 	</dependencies>
 
 	<build>
