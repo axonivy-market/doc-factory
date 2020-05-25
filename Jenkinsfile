@@ -9,7 +9,7 @@ pipeline {
   }
 
   options {
-    buildDiscarder(logRotator(numToKeepStr: '30', artifactNumToKeepStr: '5'))
+    buildDiscarder(logRotator(numToKeepStr: '30', artifactNumToKeepStr: '2'))
   }
 
   stages {
@@ -20,8 +20,7 @@ pipeline {
 
           echo 'build projects'
           docker.build('maven-build', '-f Dockerfile .').inside {
-            def phase = env.BRANCH_NAME == 'master' ? 'deploy' : 'verify'
-            maven cmd: "clean ${phase} -Dmaven.test.failure.ignore=true " +
+            maven cmd: "clean deploy -Dmaven.test.failure.ignore=true " +
               "-Dproject-build-plugin-version=8.0.1 "
             currentVersion = getCurrentVersion();
           }

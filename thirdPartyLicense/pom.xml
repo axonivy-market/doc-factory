@@ -24,7 +24,7 @@
 		<repository>
 			<id>ivy.core</id>
 			<layout>p2</layout>
-			<url>https://file.axonivy.rocks/p2/nightly/</url>
+			<url>https://file.axonivy.rocks/p2/lts-8.0/</url>
 		</repository>
 	</repositories>
 
