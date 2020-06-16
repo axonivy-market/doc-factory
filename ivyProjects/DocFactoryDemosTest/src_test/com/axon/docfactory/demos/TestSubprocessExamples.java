@@ -63,4 +63,13 @@ public class TestSubprocessExamples
     assertThat(contentType(http.head(docLink))).isEqualTo(DocType.PDF);
   }
   
+  @Test
+  public void docWithNestedObject() throws Exception
+  {
+    HttpResponse<String> response = http.request(suprocessExamples+"/start6.ivp");
+    String docLink = getDocLink(response);
+    assertThat(docLink).endsWith("DocWithNestedObject.pdf");
+    assertThat(contentType(http.head(docLink))).isEqualTo(DocType.PDF);
+  }  
+  
 }
