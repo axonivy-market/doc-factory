@@ -111,6 +111,17 @@ wr0 @PushWFArc f96 '' #zField
 wr0 @EndSub f97 '' #zField
 wr0 @PushWFArc f98 '' #zField
 wr0 @InfoButton f99 '' #zField
+wr0 @StartSub f100 '' #zField
+wr0 @EndSub f101 '' #zField
+wr0 @GridStep f102 '' #zField
+wr0 @GridStep f103 '' #zField
+wr0 @GridStep f104 '' #zField
+wr0 @GridStep f105 '' #zField
+wr0 @PushWFArc f106 '' #zField
+wr0 @PushWFArc f107 '' #zField
+wr0 @PushWFArc f108 '' #zField
+wr0 @PushWFArc f109 '' #zField
+wr0 @PushWFArc f110 '' #zField
 >Proto wr0 wr0 writeSerialLetter #zField
 wr0 f0 inParamDecl '<List<ch.ivyteam.ivy.addons.docfactory.TemplateMergeField> listOfTemplateMergeFields,String optionalOutputpath,String optionalLetterName,String optionalOutputFormat,String templatePath> param;' #txt
 wr0 f0 inParamTable 'out.mergeFieldsList=param.listOfTemplateMergeFields;
@@ -154,7 +165,7 @@ In this callable, just one java.io.File should be created.</desc>
     </language>
 </elementInfo>
 ' #txt
-wr0 f0 139 67 26 26 -98 -31 #rect
+wr0 f0 139 67 26 26 -98 -38 #rect
 wr0 f0 @|StartSubIcon #fIcon
 wr0 f1 139 363 26 26 14 0 #rect
 wr0 f1 @|EndSubIcon #fIcon
@@ -287,8 +298,10 @@ wr0 f10 callSignature writeDocumentWithOneDataClass(ch.ivyteam.ivy.scripting.obj
 wr0 f10 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
-        <name>writeDocumentWithOneDataClass(CompositeObject,String,String,String,String)</name>
-        <nameStyle>74,5,7
+        <name>writeDocumentWithOneDataClass(&#13;
+CompositeObject,&#13;
+String,String,String,String)</name>
+        <nameStyle>78,5
 </nameStyle>
         <desc>This callable produces a document with a data (DataClass) and 
 with the help of a document factory Object.
@@ -301,9 +314,9 @@ Mandatory input Parameters:
 -&gt; data . The values of the DataClass fields are going to be used to fill the template and to produce the document.
 The fields of the data have to be named like the fields of the template.
 Optional input parameters:
--&gt; optionalOutputPath: where to store the created java.io.File. By default &quot;ivy_RIA_files&quot;
--&gt; optionalOutputFormat: by default the first supported one (in general it will be &quot;doc&quot;
--&gt; optionalLetterName: the file name of the letter. By default &quot;letter&quot;+ the nanoTime, 
+-&gt; optionalOutputPath: where to store the created java.io.File. By default "ivy_RIA_files"
+-&gt; optionalOutputFormat: by default the first supported one (in general it will be "doc"
+-&gt; optionalLetterName: the file name of the letter. By default "letter"+ the nanoTime, 
 to be sure the file doesn''t overwrite any other.
 
 It returns a FileOperationMessage Object that contains:
@@ -315,7 +328,7 @@ In this callable, just one java.io.File should be created.</desc>
     </language>
 </elementInfo>
 ' #txt
-wr0 f10 779 51 26 26 -204 -34 #rect
+wr0 f10 643 51 26 26 -173 -36 #rect
 wr0 f10 @|StartSubIcon #fIcon
 wr0 f11 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
@@ -376,10 +389,10 @@ Object</name>
     </language>
 </elementInfo>
 ' #txt
-wr0 f12 774 132 36 24 30 -16 #rect
+wr0 f12 638 132 36 24 30 -16 #rect
 wr0 f12 @|StepIcon #fIcon
 wr0 f13 expr out #txt
-wr0 f13 792 77 792 132 #arcP
+wr0 f13 656 77 656 132 #arcP
 wr0 f14 actionTable 'out=in;
 ' #txt
 wr0 f14 actionCode '
@@ -416,10 +429,10 @@ outputPath / outputLetterName
     </language>
 </elementInfo>
 ' #txt
-wr0 f14 774 196 36 24 22 -18 #rect
+wr0 f14 638 196 36 24 22 -18 #rect
 wr0 f14 @|StepIcon #fIcon
 wr0 f15 expr out #txt
-wr0 f15 792 156 792 196 #arcP
+wr0 f15 656 156 656 196 #arcP
 wr0 f16 actionTable 'out=in;
 ' #txt
 wr0 f16 actionCode 'import ch.ivyteam.ivy.addons.docfactory.DocumentTemplate;
@@ -434,10 +447,10 @@ wr0 f16 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-wr0 f16 774 236 36 24 20 -2 #rect
+wr0 f16 638 236 36 24 20 -2 #rect
 wr0 f16 @|StepIcon #fIcon
 wr0 f17 expr out #txt
-wr0 f17 792 220 792 236 #arcP
+wr0 f17 656 220 656 236 #arcP
 wr0 f18 actionTable 'out=in;
 ' #txt
 wr0 f18 actionCode out.fileOperationMessage=in.documentFactory.generateDocument(in.documentTemplate); #txt
@@ -450,14 +463,14 @@ wr0 f18 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     </language>
 </elementInfo>
 ' #txt
-wr0 f18 774 284 36 24 20 -2 #rect
+wr0 f18 638 284 36 24 20 -2 #rect
 wr0 f18 @|StepIcon #fIcon
 wr0 f19 expr out #txt
-wr0 f19 792 260 792 284 #arcP
-wr0 f20 779 363 26 26 14 0 #rect
+wr0 f19 656 260 656 284 #arcP
+wr0 f20 643 363 26 26 14 0 #rect
 wr0 f20 @|EndSubIcon #fIcon
 wr0 f21 expr out #txt
-wr0 f21 792 308 792 363 #arcP
+wr0 f21 656 308 656 363 #arcP
 wr0 f22 inParamDecl '<List<ch.ivyteam.ivy.addons.docfactory.TemplateMergeField> listOfTemplateMergeFields,String optionalOutputpath,String optionalLetterName,String optionalOutputFormat,String templatePath,List<String> tableNamesList,List<List<CompositeObject>> datasForTables> param;' #txt
 wr0 f22 inParamTable 'out.ListOfCompositeObjectsToFillTheTables=param.datasForTables;
 out.mergeFieldsList=param.listOfTemplateMergeFields;
@@ -1007,7 +1020,7 @@ List&lt;String&gt;,List&lt;List&lt;CompositeObject&gt;&gt;)</name>
     </language>
 </elementInfo>
 ' #txt
-wr0 f50 1347 59 26 26 -244 -41 #rect
+wr0 f50 1347 59 26 26 -246 -48 #rect
 wr0 f50 @|StartSubIcon #fIcon
 wr0 f51 actionTable 'out=in;
 ' #txt
@@ -1677,6 +1690,149 @@ In these callables, just one java.io.File should be created.</name>
 wr0 f99 2771 427 1002 410 -371 -200 #rect
 wr0 f99 @|IBIcon #fIcon
 wr0 f99 -657956|-1|-16777216 #nodeStyle
+wr0 f100 inParamDecl '<CompositeObject data,String optionalOutputpath,String optionalLetterName,String optionalOutputFormat,String templatePath> param;' #txt
+wr0 f100 inParamTable 'out.data=param.data;
+out.outputFormat=param.optionalOutputFormat;
+out.outputPath=param.optionalOutputpath;
+out.serialLetterName=param.optionalLetterName;
+out.templatePath=param.templatePath;
+' #txt
+wr0 f100 outParamDecl '<ch.ivyteam.ivy.addons.docfactory.FileOperationMessage fileOperationMessage> result;' #txt
+wr0 f100 outParamTable 'result.fileOperationMessage=in.fileOperationMessage;
+' #txt
+wr0 f100 callSignature writeDocumentWithNestedDataClass(CompositeObject,String,String,String,String) #txt
+wr0 f100 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>writeDocumentWithNestedDataClass(&#13;
+CompositeObject, &#13;
+String,String,String,String)</name>
+        <desc>This callable produces a document with a data (DataClass) and 
+with the help of a document factory Object.
+The Document Factory Object is a Java Object that can parse a document model
+that contains mergefields and replace those mergefields by some String Data.
+
+This callable takes some mandatory and some optional input parameters.
+Mandatory input Parameters:
+-&gt; TemplatePath: this is the path of the template (document model)
+-&gt; data . The values of the DataClass fields are going to be used to fill the template and to produce the document.
+The fields of the data have to be named like the fields of the template.
+Optional input parameters:
+-&gt; optionalOutputPath: where to store the created java.io.File. By default "ivy_RIA_files"
+-&gt; optionalOutputFormat: by default the first supported one (in general it will be "doc"
+-&gt; optionalLetterName: the file name of the letter. By default "letter"+ the nanoTime, 
+to be sure the file doesn''t overwrite any other.
+
+It returns a FileOperationMessage Object that contains:
+a Type indicating if the operation was successfull,
+a message in the Session User language,
+a list of java.io.File that were created during the porcess.
+
+In this callable, just one java.io.File should be created.</desc>
+    </language>
+</elementInfo>
+' #txt
+wr0 f100 979 51 26 26 -161 -38 #rect
+wr0 f100 @|StartSubIcon #fIcon
+wr0 f101 979 363 26 26 14 0 #rect
+wr0 f101 @|EndSubIcon #fIcon
+wr0 f102 actionTable 'out=in;
+' #txt
+wr0 f102 actionCode 'import ch.ivyteam.ivy.addons.docfactory.BaseDocFactory;
+
+in.documentFactory= BaseDocFactory.getInstance();' #txt
+wr0 f102 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>make the documentFactory 
+Object</name>
+        <nameStyle>32,7
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
+wr0 f102 974 132 36 24 30 -16 #rect
+wr0 f102 @|StepIcon #fIcon
+wr0 f103 actionTable 'out=in;
+' #txt
+wr0 f103 actionCode '
+import ch.ivyteam.ivy.addons.docfactory.FileUtil;
+
+// if desired format not valid, we take the first supportedFormat
+if(in.#outputFormat == null || in.outputFormat.trim().equalsIgnoreCase("") 
+	|| !in.documentFactory.isFormatSupported(in.outputFormat)){
+	if(in.documentFactory.getSupportedFormats().size()>0){
+		out.outputFormat=in.documentFactory.getSupportedFormats().get(0);
+	}
+}
+
+//if desired letter name not valid, we take the name "letter_nanoTime()"
+if(in.#serialLetterName == null || in.serialLetterName.trim().equalsIgnoreCase("")
+	|| !ch.ivyteam.ivy.addons.docfactory.FileUtil.isFileNameValid(in.serialLetterName)){
+		out.serialLetterName = "letter_"+System.nanoTime();
+}
+
+//if desired outputPath is not valid, we take "ivy_RIA_Files"
+if(in.outputPath==null || in.outputPath.trim().equalsIgnoreCase("")){
+	out.outputPath="ivy_RIA_files";
+}
+
+' #txt
+wr0 f103 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>Check the outputFormat / 
+outputPath / outputLetterName
+</name>
+        <nameStyle>56,7,9
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
+wr0 f103 974 196 36 24 22 -18 #rect
+wr0 f103 @|StepIcon #fIcon
+wr0 f104 actionTable 'out=in;
+' #txt
+wr0 f104 actionCode out.fileOperationMessage=in.documentFactory.generateDocument(in.documentTemplate); #txt
+wr0 f104 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>write the serial letter</name>
+        <nameStyle>23,7
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
+wr0 f104 974 284 36 24 20 -2 #rect
+wr0 f104 @|StepIcon #fIcon
+wr0 f105 actionTable 'out=in;
+' #txt
+wr0 f105 actionCode 'import ch.ivyteam.ivy.addons.docfactory.DocumentTemplate;
+
+out.documentTemplate = new DocumentTemplate(in.templatePath,in.outputPath, in.serialLetterName,in.outputFormat,in.data);
+out.documentTemplate.putDataAsSourceForMailMerge(in.data);
+' #txt
+wr0 f105 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<elementInfo>
+    <language>
+        <name>build DocumentTemplate</name>
+        <nameStyle>22,7
+</nameStyle>
+    </language>
+</elementInfo>
+' #txt
+wr0 f105 974 236 36 24 20 -2 #rect
+wr0 f105 @|StepIcon #fIcon
+wr0 f106 expr out #txt
+wr0 f106 992 220 992 236 #arcP
+wr0 f107 expr out #txt
+wr0 f107 992 260 992 284 #arcP
+wr0 f108 expr out #txt
+wr0 f108 992 77 992 132 #arcP
+wr0 f109 expr out #txt
+wr0 f109 992 156 992 196 #arcP
+wr0 f110 expr out #txt
+wr0 f110 992 308 992 363 #arcP
 >Proto wr0 .xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -1787,3 +1943,13 @@ wr0 f90 mainOut f96 tail #connect
 wr0 f96 head f93 mainIn #connect
 wr0 f91 mainOut f98 tail #connect
 wr0 f98 head f97 mainIn #connect
+wr0 f100 mainOut f108 tail #connect
+wr0 f108 head f102 mainIn #connect
+wr0 f102 mainOut f109 tail #connect
+wr0 f109 head f103 mainIn #connect
+wr0 f103 mainOut f106 tail #connect
+wr0 f106 head f105 mainIn #connect
+wr0 f105 mainOut f107 tail #connect
+wr0 f107 head f104 mainIn #connect
+wr0 f104 mainOut f110 tail #connect
+wr0 f110 head f101 mainIn #connect
