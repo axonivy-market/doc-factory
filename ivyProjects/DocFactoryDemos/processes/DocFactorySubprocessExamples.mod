@@ -69,7 +69,6 @@ De0 @PushWFArc f55 '' #zField
 De0 @PushWFArc f56 '' #zField
 De0 @PushWFArc f57 '' #zField
 De0 @PushWFArc f54 '' #zField
-De0 @CallAndWait f58 '' #zField
 >Proto De0 De0 DocFactorySubprocessExamples #zField
 De0 f0 outLink start1.ivp #txt
 De0 f0 inParamDecl '<> param;' #txt
@@ -883,13 +882,6 @@ De0 f57 expr out #txt
 De0 f57 272 480 320 480 #arcP
 De0 f54 expr out #txt
 De0 f54 448 480 536 480 #arcP
-De0 f58 outerBean "" #txt
-De0 f58 timeout 0 #txt
-De0 f58 beanConfig "" #txt
-De0 f58 actionTable 'out=in;
-' #txt
-De0 f58 833 721 30 30 0 16 #rect
-De0 f58 @|CallAndWaitIcon #fIcon
 >Proto De0 .type doc.factory.demos.Data #txt
 >Proto De0 .processKind NORMAL #txt
 >Proto De0 .xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
