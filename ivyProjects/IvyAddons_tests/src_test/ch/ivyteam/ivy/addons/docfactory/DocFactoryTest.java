@@ -6,10 +6,12 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.Calendar;
 
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
@@ -35,7 +37,7 @@ import ch.ivyteam.log.Logger;
 @RunWith(PowerMockRunner.class)
 //tell powermock to ignore things different in java 11 
 //see https://github.com/mockito/mockito/issues/1562
-@PowerMockIgnore({"com.sun.org.apache.xerces.*", "com.aspose.pdf.*"}) 
+@PowerMockIgnore({"com.sun.org.apache.xerces.*", "com.aspose.pdf.*", "javax.xml.parsers.*", "org.w3c.dom.*"}) 
 @PrepareForTest({Ivy.class, ThirdPartyLicenses.class, File.class, LicenseLoader.class, IvyScriptObjectEnvironment.class})
 public abstract class DocFactoryTest {
 	
@@ -46,6 +48,25 @@ public abstract class DocFactoryTest {
 	protected static final String TEMPLATE_WITH_FIELDS_FORM_DOCX = "resources/template_with_field_form.docx";
 	protected static final String TEMPLATE_FOR_TESTING_NULL_VALUES_DOCX = "resources/template_for_testing_null_value.docx";
 	protected static final String TEMPLATE_FOR_TESTING_LONG_EDITABLE_FIELDS_DOCX = "resources/template_with_long_editable_fields.docx";
+	
+	private static com.aspose.pdf.License PDF_LICENSE;
+	private static com.aspose.words.License WORDS_LICENSE;
+	
+	@BeforeClass
+	public static void loadLicenses() {
+		try (InputStream licIn = DocFactoryTest.class.getResourceAsStream("aspose/resources/docfactory_2019_09_04.lic")) {
+			PDF_LICENSE = new com.aspose.pdf.License();
+			PDF_LICENSE.setLicense(licIn);
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+		} 
+		try (InputStream licIn = DocFactoryTest.class.getResourceAsStream("aspose/resources/docfactory_2019_09_04.lic")) {
+			WORDS_LICENSE = new com.aspose.words.License();
+			WORDS_LICENSE.setLicense(licIn);
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+		} 
+	}
 
 	@Before
 	public void setup() throws Exception {

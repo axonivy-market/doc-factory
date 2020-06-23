@@ -41,7 +41,7 @@ import ch.ivyteam.log.Logger;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({Ivy.class, ThirdPartyLicenses.class, File.class, LicenseLoader.class, IvyScriptObjectEnvironment.class, Document.class})
 @PowerMockIgnore({"com.sun.org.apache.xerces.*", "javax.management.*", "com.sun.org.apache.xerces.*", 
-	"javax.xml.parsers.*", "org.xml.*", "org.w3c.dom.*"}) 
+	"javax.xml.*", "org.xml.*", "org.w3c.dom.*"}) 
 public class PdfFactoryTest {
 	
 	@Mock
@@ -137,5 +137,4 @@ public class PdfFactoryTest {
 		
 		verify(pdfDocument).close();
 	}
-
 }

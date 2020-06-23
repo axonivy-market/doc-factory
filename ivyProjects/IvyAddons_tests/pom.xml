@@ -16,6 +16,7 @@
 
   <properties>
     <powermock2.version>2.0.2</powermock2.version>
+    <pdfbox.version>2.0.19</pdfbox.version>
   </properties>
 
   <dependencies>
@@ -55,6 +56,18 @@
       <version>${powermock2.version}</version>
       <scope>test</scope>
     </dependency>
+	<dependency>
+	  <groupId>org.apache.pdfbox</groupId>
+	  <artifactId>pdfbox</artifactId>
+	  <version>${pdfbox.version}</version>
+	  <scope>test</scope>
+	</dependency>
+	<dependency>
+	  <groupId>org.apache.pdfbox</groupId>
+	  <artifactId>preflight</artifactId>
+	  <version>${pdfbox.version}</version>
+	  <scope>test</scope>
+	</dependency>
   </dependencies>
 
   <build>
@@ -93,6 +106,27 @@
                 </resource>
               </resources>
               <outputDirectory>target/test-classes</outputDirectory>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      
+      <plugin>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>${maven-dependency-plugin-version}</version>
+        <executions>
+          <execution>
+            <id>copy-dependencies</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>lib</outputDirectory>
+              <includeArtifactIds>pdfbox,
+                preflight,
+                xmpbox,
+                fontbox</includeArtifactIds>
             </configuration>
           </execution>
         </executions>
