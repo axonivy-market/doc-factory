@@ -41,8 +41,13 @@
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11">
 		<attributes>
+			<attribute name="module" value="true"/>
 			<attribute name="owner.project.facets" value="java"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="lib/fontbox-2.0.19.jar"/>
+	<classpathentry kind="lib" path="lib/pdfbox-2.0.19.jar"/>
+	<classpathentry kind="lib" path="lib/preflight-2.0.19.jar"/>
+	<classpathentry kind="lib" path="lib/xmpbox-2.0.19.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
