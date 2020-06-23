@@ -15,7 +15,10 @@
   <packaging>iar</packaging>
 
   <properties>
-    <aspose.version>19.9</aspose.version>
+    <aspose.words.version>20.4</aspose.words.version>
+    <aspose.cells.version>20.4</aspose.cells.version>
+    <aspose.pdf.version>20.4</aspose.pdf.version>
+    <aspose.slides.version>20.2</aspose.slides.version>
   </properties>
  
   <repositories>
@@ -28,19 +31,20 @@
     <dependency>
       <groupId>com.aspose</groupId>
       <artifactId>aspose-cells</artifactId>
-      <version>${aspose.version}</version>
+      <version>${aspose.cells.version}</version>
       <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>com.aspose</groupId>
       <artifactId>aspose-pdf</artifactId>
-      <version>${aspose.version}</version>
+      <version>${aspose.pdf.version}</version>
+      <classifier>jdk17</classifier>
       <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>com.aspose</groupId>
       <artifactId>aspose-words</artifactId>
-      <version>${aspose.version}</version>
+      <version>${aspose.words.version}</version>
       <classifier>jdk17</classifier>
       <optional>true</optional>
       <exclusions>
@@ -53,7 +57,7 @@
     <dependency>
       <groupId>com.aspose</groupId>
       <artifactId>aspose-slides</artifactId>
-      <version>${aspose.version}</version>
+      <version>${aspose.slides.version}</version>
       <classifier>jdk16</classifier>
       <optional>true</optional>
     </dependency>

@@ -1,45 +1,60 @@
 package ch.ivyteam.ivy.addons.docfactory.options;
 
-public class DocumentCreationOptions {
+import ch.ivyteam.api.API;
+import ch.ivyteam.ivy.addons.docfactory.pdf.PdfOptions;
 
-	private boolean keepFormFieldsEditableInPdf;
-	private boolean removeWhiteSpaceInPdfEditableFields;
+public class DocumentCreationOptions {
+	
+	private PdfOptions pdfOptions = PdfOptions.getInstance();
 	private boolean displayBooleanValuesAsCheckBox;
 	private boolean removeBlankPages;
-
+	
 	private DocumentCreationOptions() {}
-
+	
 	public static DocumentCreationOptions getInstance() {
-		DocumentCreationOptions documentCreationOptions = new DocumentCreationOptions();
+		DocumentCreationOptions documentCreationOptions  = new DocumentCreationOptions();
 		return documentCreationOptions;
 	}
-
+	
+	/**
+	 * returns the DocumentCreationOptions which {@link PdfOptions} has been set.
+	 * @param pdfOptions the {@link PdfOptions} to set. Cannot be null.
+	 * @return
+	 */
+	public DocumentCreationOptions withPdfOptions(PdfOptions pdfOptions){
+		API.checkNotNull(pdfOptions, "the pdfOptions");
+		this.pdfOptions = pdfOptions;
+		return this;
+	}
+	
+	/**
+	 * @deprecated 
+	 * use {@link #withPdfOptions(PdfOptions)} instead. The {@link PdfOptions} contains this option now.
+	 */
+	@Deprecated 
 	public DocumentCreationOptions keepFormFieldsEditableInPdf(boolean keepFormFieldsEditable) {
-		this.keepFormFieldsEditableInPdf = keepFormFieldsEditable;
+		pdfOptions.setKeepFormFieldsEditableInPdf(keepFormFieldsEditable);
 		return this;
 	}
-
+	
+	/**
+	 * @deprecated 
+	 * use {@link #withPdfOptions(PdfOptions)} instead. The {@link PdfOptions} contains this option now.
+	 */
+	@Deprecated 
 	public DocumentCreationOptions removeWhiteSpaceInPdfEditableFields(boolean removeWhiteSpaceInPdfEditableFields) {
-		this.setRemoveWhiteSpaceInPdfEditableFields(removeWhiteSpaceInPdfEditableFields);
+		pdfOptions.setRemoveWhiteSpaceInPdfEditableFields(removeWhiteSpaceInPdfEditableFields);
 		return this;
 	}
-
+	
 	public DocumentCreationOptions displayBooleanValuesAsCheckBox(boolean displayBooleanValuesAsCheckBox) {
 		this.displayBooleanValuesAsCheckBox = displayBooleanValuesAsCheckBox;
 		return this;
 	}
-
+	
 	public DocumentCreationOptions removeBlankPages(boolean removeBlankPages) {
 		this.removeBlankPages = removeBlankPages;
 		return this;
-	}
-
-	public boolean isKeepFormFieldsEditableInPdf() {
-		return keepFormFieldsEditableInPdf;
-	}
-
-	public void setKeepFormFieldsEditableInPdf(boolean keepFormFieldsEditable) {
-		this.keepFormFieldsEditableInPdf = keepFormFieldsEditable;
 	}
 
 	public boolean isDisplayBooleanValuesAsCheckBox() {
@@ -59,14 +74,50 @@ public class DocumentCreationOptions {
 		this.removeBlankPages = removeBlankPages;
 	}
 
+	/**
+	 * @deprecated 
+	 * use {@link #withPdfOptions(PdfOptions)} instead. The {@link PdfOptions} contains this option now.
+	 */
 	public boolean isRemoveWhiteSpaceInPdfEditableFields() {
-		return removeWhiteSpaceInPdfEditableFields;
+		return pdfOptions.isRemoveWhiteSpaceInPdfEditableFields();
 	}
 
+	/**
+	 * @deprecated 
+	 * use {@link #withPdfOptions(PdfOptions)} instead. The {@link PdfOptions} contains this option now.
+	 */
 	public void setRemoveWhiteSpaceInPdfEditableFields(
 			boolean removeWhiteSpaceInPdfEditableFields) {
-		this.removeWhiteSpaceInPdfEditableFields = removeWhiteSpaceInPdfEditableFields;
+		this.pdfOptions.setRemoveWhiteSpaceInPdfEditableFields(removeWhiteSpaceInPdfEditableFields);
 	}
 
+	/**
+	 * @deprecated 
+	 * use {@link #withPdfOptions(PdfOptions)} instead. The {@link PdfOptions} contains this option now.
+	 */
+	public boolean isKeepFormFieldsEditableInPdf() {
+		return pdfOptions.isKeepFormFieldsEditableInPdf();
+	}
+
+	/**
+	 * @deprecated 
+	 * use {@link #withPdfOptions(PdfOptions)} instead. The {@link PdfOptions} contains this option now.
+	 */
+	public void setKeepFormFieldsEditableInPdf(boolean keepFormFieldsEditable) {
+		this.pdfOptions.setKeepFormFieldsEditableInPdf(keepFormFieldsEditable);
+	}
+
+	public PdfOptions getPdfOptions() {
+		return this.pdfOptions;
+	}
+
+	/**
+	 * @param pdfOptions the {@link PdfOptions} to set. Cannot be null.
+	 */
+	public void setPdfOptions(PdfOptions pdfOptions) {
+		API.checkNotNull(pdfOptions, "the pdfOptions");
+		this.pdfOptions = pdfOptions;
+	}
+	
 	
 }
