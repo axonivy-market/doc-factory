@@ -23,7 +23,7 @@
     <dependency>
       <groupId>ch.ivyteam.ivy.addons</groupId>
       <artifactId>ch.ivyteam.ivy.addons</artifactId>
-      <version>[${project.version},)</version>
+      <version>${project.version}</version>
       <type>iar</type>
     </dependency>
     <dependency>
