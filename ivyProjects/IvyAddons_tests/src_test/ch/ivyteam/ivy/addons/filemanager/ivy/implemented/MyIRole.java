@@ -235,4 +235,22 @@ public class MyIRole implements IRole {
 	public boolean isDynamic() {
 		return false;
 	}
+
+	@Override
+	public boolean isEnabled() {
+		return false;
+	}
+
+	@Override
+	public void enable() {
+	}
+
+	@Override
+	public void disable() {
+	}
+
+	@Override
+	public String getSecurityMemberId() {
+		return null;
+	}
 }
