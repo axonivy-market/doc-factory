@@ -1,10 +1,10 @@
 package ch.ivyteam.ivy.addons.filemanager.thumbnailer;
 
-import ch.ivyteam.ivy.scripting.objects.util.IvyScriptObjectEnvironment;
+import ch.ivyteam.ivy.scripting.objects.util.IvyScriptObjectEnvironmentContext;
 
 public class ThumbnailConstants {
 	public static final String DEFAULT_THUMB_FOLDER_NAME = "thumb/";
-	public static final String DEFAULT_THUMB_FOLDER = IvyScriptObjectEnvironment
+	public static final String DEFAULT_THUMB_FOLDER = IvyScriptObjectEnvironmentContext
 		    .getIvyScriptObjectEnvironment().getFileArea()
 		    .getAbsolutePath()
 		    + "/"+DEFAULT_THUMB_FOLDER_NAME;
