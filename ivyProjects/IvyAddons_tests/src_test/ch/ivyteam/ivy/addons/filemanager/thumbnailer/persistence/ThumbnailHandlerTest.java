@@ -23,10 +23,10 @@ import ch.ivyteam.ivy.addons.filemanager.thumbnailer.persistence.ThumbnailHandle
 import ch.ivyteam.ivy.addons.filemanager.thumbnailer.persistence.ThumbnailSQLPersistence;
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.scripting.objects.util.IIvyScriptObjectEnvironment;
-import ch.ivyteam.ivy.scripting.objects.util.IvyScriptObjectEnvironment;
+import ch.ivyteam.ivy.scripting.objects.util.IvyScriptObjectEnvironmentContext;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({IvyScriptObjectEnvironment.class,Ivy.class})
+@PrepareForTest({IvyScriptObjectEnvironmentContext.class,Ivy.class})
 public class ThumbnailHandlerTest {
 
 	@Test
@@ -203,8 +203,8 @@ public class ThumbnailHandlerTest {
 	@Test
 	public void testDeleteThumbnailSuccess() throws Exception {
 		IIvyScriptObjectEnvironment my = new MyIIvyScriptObjectEnvironment();
-		mockStatic(IvyScriptObjectEnvironment.class);
-		when(IvyScriptObjectEnvironment.getIvyScriptObjectEnvironment()).thenReturn(my);
+		mockStatic(IvyScriptObjectEnvironmentContext.class);
+		when(IvyScriptObjectEnvironmentContext.getIvyScriptObjectEnvironment()).thenReturn(my);
 		
 		ThumbnailSQLPersistence mockedThumbnailPersistence = mock(ThumbnailSQLPersistence.class);
 		when(mockedThumbnailPersistence.delete(any(ThumbnailData.class))).thenReturn(true);
@@ -216,8 +216,8 @@ public class ThumbnailHandlerTest {
 	@Test
 	public void testDeleteThumbnailFailCausePersistenceCannotDelete() throws Exception {
 		IIvyScriptObjectEnvironment my = new MyIIvyScriptObjectEnvironment();
-		mockStatic(IvyScriptObjectEnvironment.class);
-		when(IvyScriptObjectEnvironment.getIvyScriptObjectEnvironment()).thenReturn(my);
+		mockStatic(IvyScriptObjectEnvironmentContext.class);
+		when(IvyScriptObjectEnvironmentContext.getIvyScriptObjectEnvironment()).thenReturn(my);
 		
 		ThumbnailSQLPersistence mockedThumbnailPersistence = mock(ThumbnailSQLPersistence.class);
 		when(mockedThumbnailPersistence.delete(any(ThumbnailData.class))).thenReturn(false);
