@@ -21,8 +21,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -34,19 +32,15 @@ import ch.ivyteam.ivy.addons.docfactory.MyIvyScriptObjectEnvironment;
 import ch.ivyteam.ivy.addons.docfactory.PdfFactory;
 import ch.ivyteam.ivy.cm.IContentManagementSystem;
 import ch.ivyteam.ivy.environment.Ivy;
-import ch.ivyteam.ivy.scripting.objects.File;
-import ch.ivyteam.ivy.scripting.objects.util.IvyScriptObjectEnvironment;
+import ch.ivyteam.ivy.scripting.objects.util.IvyScriptObjectEnvironmentContext;
 import ch.ivyteam.log.Logger;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({Ivy.class, ThirdPartyLicenses.class, File.class, LicenseLoader.class, IvyScriptObjectEnvironment.class, Document.class})
+@PrepareForTest({Ivy.class, ThirdPartyLicenses.class, LicenseLoader.class, IvyScriptObjectEnvironmentContext.class, Document.class})
 @PowerMockIgnore({"com.sun.org.apache.xerces.*", "javax.management.*", "com.sun.org.apache.xerces.*", 
 	"javax.xml.*", "org.xml.*", "org.w3c.dom.*"}) 
 public class PdfFactoryTest {
-	
-	@Mock
-	File f;
-	
+		
 	private static java.io.File PDF1;
 	private static java.io.File PDF2;
 	
@@ -69,16 +63,12 @@ public class PdfFactoryTest {
 		mockStatic(ThirdPartyLicenses.class);
 		mockStatic(Ivy.class);
 		mockStatic(LicenseLoader.class);
-		mockStatic(IvyScriptObjectEnvironment.class);
+		mockStatic(IvyScriptObjectEnvironmentContext.class);
 		
 		when(Ivy.log()).thenReturn(mockLogger);
 		when(Ivy.cms()).thenReturn(mockedCms);
 		when(ThirdPartyLicenses.getDocumentFactoryLicense()).thenReturn(null);
-		when(IvyScriptObjectEnvironment.getIvyScriptObjectEnvironment()).thenReturn(new MyIvyScriptObjectEnvironment());
-		
-		f = mock(File.class);   
-		when(f.getAbsolutePath()).thenReturn("test/bigPdf.pdf");
-		PowerMockito.whenNew(File.class).withArguments("bigPdf.pdf", true).thenReturn(f);
+		when(IvyScriptObjectEnvironmentContext.getIvyScriptObjectEnvironment()).thenReturn(new MyIvyScriptObjectEnvironment());
 	}
 
 	@Test
@@ -92,12 +82,6 @@ public class PdfFactoryTest {
 		filesToAppend.add(PDF1);
 		filesToAppend.add(PDF2);
 		
-		java.io.File jf = new java.io.File(f.getAbsolutePath());
-		if(jf.isFile()) {
-			jf.delete();
-		}
-		jf.createNewFile();
-		
 		java.io.File result = PdfFactory.get().appendPdfFiles("appended_pdf_files.pdf", filesToAppend).getJavaFile();
 		assertTrue(result.isFile());
 	}
@@ -107,12 +91,6 @@ public class PdfFactoryTest {
 		List<java.io.File> filesToAppend = new ArrayList<>();
 		filesToAppend.add(PDF1);
 		filesToAppend.add(PDF2);
-		
-		java.io.File jf = new java.io.File(f.getAbsolutePath());
-		if(jf.isFile()) {
-			jf.delete();
-		}
-		jf.createNewFile();
 		
 		AsposePdfFactory factory = (AsposePdfFactory) PdfFactory.get();
 		Document leadingDocument = mock(Document.class);
