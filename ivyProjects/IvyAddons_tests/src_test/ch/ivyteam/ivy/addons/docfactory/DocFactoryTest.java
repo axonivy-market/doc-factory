@@ -31,14 +31,14 @@ import ch.ivyteam.ivy.addons.docfactory.test.data.Person;
 import ch.ivyteam.ivy.cm.IContentManagementSystem;
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.scripting.objects.File;
-import ch.ivyteam.ivy.scripting.objects.util.IvyScriptObjectEnvironment;
+import ch.ivyteam.ivy.scripting.objects.util.IvyScriptObjectEnvironmentContext;
 import ch.ivyteam.log.Logger;
 
 @RunWith(PowerMockRunner.class)
 //tell powermock to ignore things different in java 11 
 //see https://github.com/mockito/mockito/issues/1562
 @PowerMockIgnore({"com.sun.org.apache.xerces.*", "com.aspose.pdf.*", "javax.xml.parsers.*", "org.w3c.dom.*"}) 
-@PrepareForTest({Ivy.class, ThirdPartyLicenses.class, File.class, LicenseLoader.class, IvyScriptObjectEnvironment.class})
+@PrepareForTest({Ivy.class, ThirdPartyLicenses.class, File.class, LicenseLoader.class, IvyScriptObjectEnvironmentContext.class})
 public abstract class DocFactoryTest {
 	
 	@Rule
@@ -81,12 +81,12 @@ public abstract class DocFactoryTest {
 		mockStatic(ThirdPartyLicenses.class);
 		mockStatic(Ivy.class);
 		mockStatic(LicenseLoader.class);
-		mockStatic(IvyScriptObjectEnvironment.class);
+		mockStatic(IvyScriptObjectEnvironmentContext.class);
 		
 		when(Ivy.log()).thenReturn(mockLogger);
 		when(Ivy.cms()).thenReturn(mockedCms);
 		when(ThirdPartyLicenses.getDocumentFactoryLicense()).thenReturn(null);
-		when(IvyScriptObjectEnvironment.getIvyScriptObjectEnvironment()).thenReturn(new MyIvyScriptObjectEnvironment());
+		when(IvyScriptObjectEnvironmentContext.getIvyScriptObjectEnvironment()).thenReturn(new MyIvyScriptObjectEnvironment());
 	}
 	
 	protected java.io.File makeFile(String path) {
