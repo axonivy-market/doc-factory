@@ -39,7 +39,7 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/aspose-barcode-19.9.jar"/>
-	<classpathentry kind="lib" path="lib/aspose-email-19.9-jdk16.jar"/>
+	<classpathentry kind="lib" path="lib/aspose-barcode-20.8.jar"/>
+	<classpathentry kind="lib" path="lib/aspose-email-20.8-jdk16.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
