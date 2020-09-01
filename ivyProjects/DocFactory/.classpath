@@ -16,10 +16,10 @@
 			<attribute name="owner.project.facets" value="java"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry exported="true" kind="lib" path="lib/aspose-cells-20.4.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/aspose-pdf-20.4-jdk17.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/aspose-slides-20.2-jdk16.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/aspose-words-20.4-jdk17.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/aspose-cells-20.8.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/aspose-pdf-20.8-jdk17.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/aspose-slides-20.8-jdk16.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/aspose-words-20.8-jdk17.jar"/>
 	<classpathentry kind="con" path="IVY_CONTAINER"/>
 	<classpathentry kind="con" path="WEBAPP_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>

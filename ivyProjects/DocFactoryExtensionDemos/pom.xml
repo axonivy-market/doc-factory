@@ -13,19 +13,20 @@
   <version>1.0.0-SNAPSHOT</version>
   <packaging>iar</packaging>
   <properties>
-    <aspose.version>19.9</aspose.version>
+    <aspose.barcode.version>20.8</aspose.barcode.version>
+    <aspose.email.version>20.8</aspose.email.version>
   </properties>
   <dependencies>
     <dependency>
       <groupId>com.aspose</groupId>
       <artifactId>aspose-barcode</artifactId>
-      <version>${aspose.version}</version>
+      <version>${aspose.barcode.version}</version>
       <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>com.aspose</groupId>
       <artifactId>aspose-email</artifactId>
-      <version>${aspose.version}</version>
+      <version>${aspose.email.version}</version>
       <classifier>jdk16</classifier>
       <optional>true</optional>
     </dependency>    
