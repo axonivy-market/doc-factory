@@ -1,5 +1,5 @@
 [Ivy]
-1249FCC8592E4E39 7.5.0 #module
+1249FCC8592E4E39 9.2.0 #module
 >Proto >Proto Collection #zClass
 ws0 writeSerialLetterToManyCorrespondants Big #zClass
 ws0 B #cInfo
