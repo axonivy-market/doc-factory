@@ -19,7 +19,7 @@
         <maven-deploy-plugin-version>2.8.2</maven-deploy-plugin-version>
         <tycho-version>1.5.0</tycho-version>
 
-        <ivy.engine.directory>${java.io.tmpdir}/ivy-engine</ivy.engine.directory>
+        <engine.directory>${java.io.tmpdir}/ivy-engine</engine.directory>
         <ivy.engine.list.url>https://jenkins.ivyteam.io/job/ivy-core_product/job/master/lastSuccessfulBuild/</ivy.engine.list.url>
         <ivy.engine.version>[9.2.0,]</ivy.engine.version>
     </properties>
