@@ -24,7 +24,7 @@ II0 f3 inParamDecl '<> param;' #txt
 II0 f3 requestEnabled true #txt
 II0 f3 triggerEnabled false #txt
 II0 f3 callSignature start2() #txt
-II0 f3 persist true #txt
+II0 f3 persist false #txt
 II0 f3 startName '4.1 Create and Attach Document to Case' #txt
 II0 f3 caseData businessCase.attach=true #txt
 II0 f3 wfuser 1 #txt
