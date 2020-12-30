@@ -14,12 +14,10 @@ pipeline {
     stage('build') {
       steps {
         script {
-          docker.withRegistry('', 'docker.io') {
-            docker.image('axonivy/build-container:web-1.0').inside {
-              def phase = env.BRANCH_NAME == 'master' ? 'deploy' : 'verify'
-              maven cmd: "clean ${phase} -Dmaven.test.failure.ignore=true " +
-                "-Dproject-build-plugin-version=9.1.0 -Divy.compiler.warnings=false "
-            }
+          docker.image('axonivy/build-container:web-1.0').inside {
+            def phase = env.BRANCH_NAME == 'master' ? 'deploy' : 'verify'
+            maven cmd: "clean ${phase} -Dmaven.test.failure.ignore=true " +
+              "-Dproject-build-plugin-version=9.1.0 -Divy.compiler.warnings=false "
           }
           archiveArtifacts '**/target/*.iar'
           archiveArtifacts artifacts: '**/target/selenide/reports/**/*', allowEmptyArchive: true
@@ -30,22 +28,20 @@ pipeline {
     stage('doc') {
       steps {
         script {
-          docker.withRegistry('', 'docker.io') {
-            def currentVersion = 'dev';
-            currentVersion = getCurrentVersion();
-            docker.image('axonivy/build-container:read-the-docs-1.2').inside {
-              sh "make -C /doc-build html BASEDIR='${env.WORKSPACE}/doc-factory/doc' VERSION='${currentVersion}'"
-            }
-            archiveArtifacts 'doc-factory/doc/build/html/**/*'
-            recordIssues tools: [eclipse(), sphinxBuild()], unstableTotalAll: 1
-        
-            echo 'deploy doc'
-            docker.image('maven:3.6.3-jdk-11').inside {            
-              def phase = env.BRANCH_NAME == 'master' ? 'deploy' : 'verify'
-              maven cmd: "-f doc-factory/doc/pom.xml clean ${phase}"
-            }
-            archiveArtifacts 'doc-factory/doc/target/*.zip'
+          def currentVersion = 'dev';
+          currentVersion = getCurrentVersion();
+          docker.image('axonivy/build-container:read-the-docs-1.2').inside {
+            sh "make -C /doc-build html BASEDIR='${env.WORKSPACE}/doc-factory/doc' VERSION='${currentVersion}'"
           }
+          archiveArtifacts 'doc-factory/doc/build/html/**/*'
+          recordIssues tools: [eclipse(), sphinxBuild()], unstableTotalAll: 1
+        
+          echo 'deploy doc'
+          docker.image('maven:3.6.3-jdk-11').inside {            
+            def phase = env.BRANCH_NAME == 'master' ? 'deploy' : 'verify'
+            maven cmd: "-f doc-factory/doc/pom.xml clean ${phase}"
+          }
+          archiveArtifacts 'doc-factory/doc/target/*.zip'
         }
       }
     }
