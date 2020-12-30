@@ -16,33 +16,31 @@ pipeline {
     stage('build') {
       steps {
         script {
-          docker.withRegistry('', 'docker.io') {
-            def currentVersion = 'dev';
-            echo 'build projects'
-            docker.build('maven-build', '-f Dockerfile .').inside {
-              maven cmd: "clean deploy -Dmaven.test.failure.ignore=true " +
-                "-Dproject-build-plugin-version=8.0.1 "
-              currentVersion = getCurrentVersion();
-            }
-            archiveArtifacts '**/target/*.iar'
-            junit '**/target/surefire-reports/**/*.xml'
-
-            echo 'build doc'
-            docker.image('axonivy/build-container:read-the-docs-1.2').inside {
-              sh "make -C /doc-build html BASEDIR='${env.WORKSPACE}/doc-factory/doc' VERSION='${currentVersion}'"
-            }
-            archiveArtifacts 'doc-factory/doc/build/html/**/*'
-            recordIssues tools: [eclipse(), sphinxBuild()], unstableTotalAll: 1
-
-            echo 'deploy doc'
-            docker.build('maven-build', '-f Dockerfile .').inside {            
-              def phase = env.BRANCH_NAME == 'master' ? 'deploy' : 'verify'
-              maven cmd: "-f doc-factory/doc/pom.xml clean ${phase}"
-            }
-            archiveArtifacts 'doc-factory/doc/target/*.zip'
+          def currentVersion = 'dev';
+          echo 'build projects'
+          docker.build('maven-build', '-f Dockerfile .').inside {
+            maven cmd: "clean deploy -Dmaven.test.failure.ignore=true " +
+              "-Dproject-build-plugin-version=8.0.1 "
+            currentVersion = getCurrentVersion();
           }
+          archiveArtifacts '**/target/*.iar'
+          junit '**/target/surefire-reports/**/*.xml'
+
+          echo 'build doc'
+          docker.image('axonivy/build-container:read-the-docs-1.2').inside {
+            sh "make -C /doc-build html BASEDIR='${env.WORKSPACE}/doc-factory/doc' VERSION='${currentVersion}'"
+          }
+          archiveArtifacts 'doc-factory/doc/build/html/**/*'
+          recordIssues tools: [eclipse(), sphinxBuild()], unstableTotalAll: 1
+
+          echo 'deploy doc'
+          docker.build('maven-build', '-f Dockerfile .').inside {            
+            def phase = env.BRANCH_NAME == 'master' ? 'deploy' : 'verify'
+            maven cmd: "-f doc-factory/doc/pom.xml clean ${phase}"
+          }
+          archiveArtifacts 'doc-factory/doc/target/*.zip'
         }
-      }
+      }      
     }
   }
 }
