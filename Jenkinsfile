@@ -14,10 +14,20 @@ pipeline {
     stage('build') {
       steps {
         script {
-          docker.image('axonivy/build-container:web-1.0').inside {
-            def phase = env.BRANCH_NAME == 'master' ? 'deploy' : 'verify'
-            maven cmd: "clean ${phase} -Dmaven.test.failure.ignore=true " +
-              "-Dproject-build-plugin-version=9.1.0 -Divy.compiler.warnings=false "
+          def random = (new Random()).nextInt(10000000)
+          def networkName = "build-" + random
+          def seleniumName = "selenium-" + random
+          def ivyName = "ivy-" + random
+          sh "docker network create ${networkName}"
+          try {
+            docker.image("selenium/standalone-firefox:3").withRun("-e START_XVFB=false --shm-size=2g --name ${seleniumName} --network ${networkName}") {
+              docker.build('maven', ".").inside("--name ${ivyName} --network ${networkName}") {
+                def phase = env.BRANCH_NAME == 'master' ? 'deploy' : 'verify'
+                maven cmd: "clean ${phase} -Dmaven.test.failure.ignore=true -Dproject-build-plugin-version=9.1.0 -Divy.compiler.warnings=false -Dtest.engine.url=http://${ivyName}:8080 -Dselenide.remote=http://${seleniumName}:4444/wd/hub"
+              }
+            }
+          } finally {
+            sh "docker network rm ${networkName}"
           }
           archiveArtifacts '**/target/*.iar'
           archiveArtifacts artifacts: '**/target/selenide/reports/**/*', allowEmptyArchive: true
@@ -25,6 +35,7 @@ pipeline {
         }
       }
     }
+
     stage('doc') {
       steps {
         script {
