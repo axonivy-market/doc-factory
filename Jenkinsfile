@@ -41,7 +41,7 @@ pipeline {
         script {
           def currentVersion = 'dev';
           currentVersion = getCurrentVersion();
-          docker.image('axonivy/build-container:read-the-docs-1.2').inside {
+          docker.image('axonivy/build-container:read-the-docs-2').inside {
             sh "make -C /doc-build html BASEDIR='${env.WORKSPACE}/doc-factory/doc' VERSION='${currentVersion}'"
           }
           archiveArtifacts 'doc-factory/doc/build/html/**/*'
