@@ -3,6 +3,7 @@ package ch.ivyteam.ivy.addons.filemanager.ivy.implemented;
 import java.util.Set;
 
 import ch.ivyteam.ivy.globalvars.IGlobalVariableContext;
+import ch.ivyteam.ivy.vars.Variable;
 
 
 public class MyGlobalVariableContext implements IGlobalVariableContext {
@@ -45,6 +46,18 @@ public class MyGlobalVariableContext implements IGlobalVariableContext {
 
   @Override
   public String resetForEnvironment(String environment, String name)
+  {
+    return null;
+  }
+
+  @Override
+  public Set<String> names()
+  {
+    return null;
+  }
+
+  @Override
+  public Variable variable(String name)
   {
     return null;
   }
