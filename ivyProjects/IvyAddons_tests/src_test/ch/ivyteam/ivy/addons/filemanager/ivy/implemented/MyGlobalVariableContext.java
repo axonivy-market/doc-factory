@@ -33,19 +33,7 @@ public class MyGlobalVariableContext implements IGlobalVariableContext {
   }
 
   @Override
-  public String getForEnvironment(String environment, String name)
-  {
-    return null;
-  }
-
-  @Override
-  public String setForEnvironment(String environment, String name, String value)
-  {
-    return null;
-  }
-
-  @Override
-  public String resetForEnvironment(String environment, String name)
+  public IGlobalVariableContext forEnvironment(String environment)
   {
     return null;
   }
