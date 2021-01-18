@@ -1,7 +1,15 @@
 package ch.ivyteam.ivy.addons.filemanager.database.filetag;
 
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.when;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,6 +18,8 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import ch.ivyteam.ivy.addons.filemanager.MyResultSet;
 import ch.ivyteam.ivy.addons.filemanager.configuration.BasicConfigurationController;
@@ -18,19 +28,9 @@ import ch.ivyteam.ivy.addons.filemanager.database.PersistenceConnectionManagerFa
 import ch.ivyteam.ivy.addons.filemanager.database.persistence.IFileTagPersistence;
 import ch.ivyteam.ivy.addons.filemanager.database.persistence.IPersistenceConnectionManager;
 import ch.ivyteam.ivy.addons.filemanager.ivy.implemented.MyCMS;
-import ch.ivyteam.ivy.addons.filemanager.ivy.implemented.MyGlobalVariableContext;
 import ch.ivyteam.ivy.cm.IContentManagementSystem;
 import ch.ivyteam.ivy.environment.Ivy;
-
-
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.mock;
+import ch.ivyteam.ivy.globalvars.GlobalVariableContextAdapter;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({Ivy.class, IContentManagementSystem.class})
@@ -41,7 +41,7 @@ public class FileTagSearchFunctionTest {
 		java.util.List<String> tags = this.makeListTags();
 		String search = null;
 		
-		MyGlobalVariableContext var = mock(MyGlobalVariableContext.class);
+		var var = mock(GlobalVariableContextAdapter.class);
 		when(var.get(any(String.class))).thenReturn("");
 		MyCMS myCMS = mock(MyCMS.class);
 		when(myCMS.co(any(String.class))).thenReturn("");
@@ -80,7 +80,7 @@ public class FileTagSearchFunctionTest {
 		String search = "test";
 		java.util.List<String> tags = this.makeSearchedListTags(search);
 		
-		MyGlobalVariableContext var = mock(MyGlobalVariableContext.class);
+		var var = mock(GlobalVariableContextAdapter.class);
 		when(var.get(any(String.class))).thenReturn("");
 		MyCMS myCMS = mock(MyCMS.class);
 		when(myCMS.co(any(String.class))).thenReturn("");
@@ -117,7 +117,7 @@ public class FileTagSearchFunctionTest {
 	@Test
 	public void searchTagsWithSearchStringNoMatchingTagsReturnNull() throws Exception {
 		String search = "gfrefr";
-		MyGlobalVariableContext var = mock(MyGlobalVariableContext.class);
+		var var = mock(GlobalVariableContextAdapter.class);
 		when(var.get(any(String.class))).thenReturn("");
 		MyCMS myCMS = mock(MyCMS.class);
 		when(myCMS.co(any(String.class))).thenReturn("");
