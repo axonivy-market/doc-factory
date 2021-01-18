@@ -3,8 +3,9 @@
  */
 package ch.ivyteam.ivy.addons.filemanager.database.security;
 
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
@@ -17,10 +18,10 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import ch.ivyteam.ivy.addons.filemanager.FileManagementHandlersFactory;
 import ch.ivyteam.ivy.addons.filemanager.configuration.BasicConfigurationController;
 import ch.ivyteam.ivy.addons.filemanager.ivy.implemented.MyCMS;
-import ch.ivyteam.ivy.addons.filemanager.ivy.implemented.MyGlobalVariableContext;
 import ch.ivyteam.ivy.addons.filemanager.ivy.implemented.MyIRole;
 import ch.ivyteam.ivy.cm.IContentManagementSystem;
 import ch.ivyteam.ivy.environment.Ivy;
+import ch.ivyteam.ivy.globalvars.GlobalVariableContextAdapter;
 import ch.ivyteam.ivy.security.IRole;
 import ch.ivyteam.ivy.security.IUser;
 import ch.ivyteam.ivy.workflow.IWorkflowSession;
@@ -37,7 +38,7 @@ public class SecurityHandlerChainRolesTest {
 	public void testSecurityHandlerChainHas_IvySessionUserRolesAtTheBeginning_IfGivenUserisNull() throws Exception {
 		MyCMS myCMS = mock(MyCMS.class);
 		when(myCMS.co(any(String.class))).thenReturn("");
-		MyGlobalVariableContext var = mock(MyGlobalVariableContext.class);
+		var var = mock(GlobalVariableContextAdapter.class);
 		when(var.get(any(String.class))).thenReturn("");
 
 		mockStatic(Ivy.class);
@@ -64,7 +65,7 @@ public class SecurityHandlerChainRolesTest {
 	public void testSecurityHandlerChainHas_GivenUserRolesAtTheBeginning_AndNotIvySessionUserRoles_IfGivenUserNotNull() throws Exception {
 		MyCMS myCMS = mock(MyCMS.class);
 		when(myCMS.co(any(String.class))).thenReturn("");
-		MyGlobalVariableContext var = mock(MyGlobalVariableContext.class);
+		var var = mock(GlobalVariableContextAdapter.class);
 		when(var.get(any(String.class))).thenReturn("");
 
 		mockStatic(Ivy.class);
@@ -94,7 +95,7 @@ public class SecurityHandlerChainRolesTest {
 	public void testSecurityHandlerChainHas_IvySessionUserRolesAtTheBeginning_IfGivenUserisNull_AndAllTheDynamicallyPassedRoles() throws Exception {
 		MyCMS myCMS = mock(MyCMS.class);
 		when(myCMS.co(any(String.class))).thenReturn("");
-		MyGlobalVariableContext var = mock(MyGlobalVariableContext.class);
+		var var = mock(GlobalVariableContextAdapter.class);
 		when(var.get(any(String.class))).thenReturn("");
 
 		mockStatic(Ivy.class);
@@ -122,7 +123,7 @@ public class SecurityHandlerChainRolesTest {
 	public void testSecurityHandlerChainHas_GivenUserRolesAtTheBeginning_AndAllTheDynamicallyPassedRoles_IfGivenUserNotNull() throws Exception {
 		MyCMS myCMS = mock(MyCMS.class);
 		when(myCMS.co(any(String.class))).thenReturn("");
-		MyGlobalVariableContext var = mock(MyGlobalVariableContext.class);
+		var var = mock(GlobalVariableContextAdapter.class);
 		when(var.get(any(String.class))).thenReturn("");
 
 		mockStatic(Ivy.class);
