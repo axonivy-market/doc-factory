@@ -32,11 +32,11 @@ import ch.ivyteam.ivy.addons.docfactory.MyIvyScriptObjectEnvironment;
 import ch.ivyteam.ivy.addons.docfactory.PdfFactory;
 import ch.ivyteam.ivy.cm.IContentManagementSystem;
 import ch.ivyteam.ivy.environment.Ivy;
-import ch.ivyteam.ivy.scripting.objects.util.IvyScriptObjectEnvironmentContext;
+import ch.ivyteam.ivy.scripting.objects.util.IIvyScriptObjectEnvironment;
 import ch.ivyteam.log.Logger;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({Ivy.class, ThirdPartyLicenses.class, LicenseLoader.class, IvyScriptObjectEnvironmentContext.class, Document.class})
+@PrepareForTest({Ivy.class, ThirdPartyLicenses.class, LicenseLoader.class, IIvyScriptObjectEnvironment.class, Document.class})
 @PowerMockIgnore({"com.sun.org.apache.xerces.*", "javax.management.*", "com.sun.org.apache.xerces.*", 
 	"javax.xml.*", "org.xml.*", "org.w3c.dom.*"}) 
 public class PdfFactoryTest {
@@ -63,12 +63,12 @@ public class PdfFactoryTest {
 		mockStatic(ThirdPartyLicenses.class);
 		mockStatic(Ivy.class);
 		mockStatic(LicenseLoader.class);
-		mockStatic(IvyScriptObjectEnvironmentContext.class);
+		mockStatic(IIvyScriptObjectEnvironment.class);
 		
 		when(Ivy.log()).thenReturn(mockLogger);
 		when(Ivy.cms()).thenReturn(mockedCms);
 		when(ThirdPartyLicenses.getDocumentFactoryLicense()).thenReturn(null);
-		when(IvyScriptObjectEnvironmentContext.getIvyScriptObjectEnvironment()).thenReturn(new MyIvyScriptObjectEnvironment());
+		when(IIvyScriptObjectEnvironment.current()).thenReturn(new MyIvyScriptObjectEnvironment());
 	}
 
 	@Test
