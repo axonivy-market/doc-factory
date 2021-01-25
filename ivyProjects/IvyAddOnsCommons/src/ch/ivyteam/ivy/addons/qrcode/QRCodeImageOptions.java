@@ -8,7 +8,7 @@ import java.util.Date;
 import org.apache.commons.io.FilenameUtils;
 
 import ch.ivyteam.api.API;
-import ch.ivyteam.ivy.scripting.objects.util.IvyScriptObjectEnvironmentContext;
+import ch.ivyteam.ivy.scripting.objects.util.IIvyScriptObjectEnvironment;
 
 /**
  * Bean holding options for QRCode Images like the width and height, the image file export...
@@ -94,8 +94,8 @@ public class QRCodeImageOptions implements Serializable {
 
 	public java.io.File getExporFile() {
 		if(imageExportFile == null) {
-			imageExportFile = new java.io.File(IvyScriptObjectEnvironmentContext
-					.getIvyScriptObjectEnvironment().getTempFileArea(), makeDefaultFileName());
+			imageExportFile = new java.io.File(
+			        IIvyScriptObjectEnvironment.current().getTempFileArea(), makeDefaultFileName());
 		}
 		return imageExportFile;
 	}
