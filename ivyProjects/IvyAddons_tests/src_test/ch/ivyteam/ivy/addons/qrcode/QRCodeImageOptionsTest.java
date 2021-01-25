@@ -17,10 +17,9 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import ch.ivyteam.ivy.scripting.objects.util.IIvyScriptObjectEnvironment;
-import ch.ivyteam.ivy.scripting.objects.util.IvyScriptObjectEnvironmentContext;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({IvyScriptObjectEnvironmentContext.class})
+@PrepareForTest({IIvyScriptObjectEnvironment.class})
 public class QRCodeImageOptionsTest {
 	
 	private static java.io.File DEFAULT_TEMP_DIR = new java.io.File("temp");
@@ -36,8 +35,8 @@ public class QRCodeImageOptionsTest {
 		ivyScriptObjectEnvironment = mock(IIvyScriptObjectEnvironment.class);
 		when(ivyScriptObjectEnvironment.getTempFileArea()).thenReturn(DEFAULT_TEMP_DIR);
 		
-		mockStatic(IvyScriptObjectEnvironmentContext.class);
-		when(IvyScriptObjectEnvironmentContext.getIvyScriptObjectEnvironment()).thenReturn(ivyScriptObjectEnvironment);
+		mockStatic(IIvyScriptObjectEnvironment.class);
+		when(IIvyScriptObjectEnvironment.current()).thenReturn(ivyScriptObjectEnvironment);
 	}
 
 	@Test
