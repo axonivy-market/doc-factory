@@ -1,9 +1,12 @@
 package ch.ivyteam.ivy.addons.filemanager.thumbnailer.persistence;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 import java.io.File;
 
@@ -11,7 +14,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 import ch.ivyteam.ivy.addons.filemanager.DocumentOnServer;
 import ch.ivyteam.ivy.addons.filemanager.FileHandler;
@@ -19,14 +21,11 @@ import ch.ivyteam.ivy.addons.filemanager.ReturnedMessage;
 import ch.ivyteam.ivy.addons.filemanager.database.DocumentOnServerSQLPersistence;
 import ch.ivyteam.ivy.addons.filemanager.html.table.model.ThumbnailData;
 import ch.ivyteam.ivy.addons.filemanager.ivy.implemented.MyIIvyScriptObjectEnvironment;
-import ch.ivyteam.ivy.addons.filemanager.thumbnailer.persistence.ThumbnailHandler;
-import ch.ivyteam.ivy.addons.filemanager.thumbnailer.persistence.ThumbnailSQLPersistence;
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.scripting.objects.util.IIvyScriptObjectEnvironment;
-import ch.ivyteam.ivy.scripting.objects.util.IvyScriptObjectEnvironmentContext;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({IvyScriptObjectEnvironmentContext.class,Ivy.class})
+@PrepareForTest({IIvyScriptObjectEnvironment.class,Ivy.class})
 public class ThumbnailHandlerTest {
 
 	@Test
@@ -203,8 +202,8 @@ public class ThumbnailHandlerTest {
 	@Test
 	public void testDeleteThumbnailSuccess() throws Exception {
 		IIvyScriptObjectEnvironment my = new MyIIvyScriptObjectEnvironment();
-		mockStatic(IvyScriptObjectEnvironmentContext.class);
-		when(IvyScriptObjectEnvironmentContext.getIvyScriptObjectEnvironment()).thenReturn(my);
+		mockStatic(IIvyScriptObjectEnvironment.class);
+		when(IIvyScriptObjectEnvironment.current()).thenReturn(my);
 		
 		ThumbnailSQLPersistence mockedThumbnailPersistence = mock(ThumbnailSQLPersistence.class);
 		when(mockedThumbnailPersistence.delete(any(ThumbnailData.class))).thenReturn(true);
@@ -216,8 +215,8 @@ public class ThumbnailHandlerTest {
 	@Test
 	public void testDeleteThumbnailFailCausePersistenceCannotDelete() throws Exception {
 		IIvyScriptObjectEnvironment my = new MyIIvyScriptObjectEnvironment();
-		mockStatic(IvyScriptObjectEnvironmentContext.class);
-		when(IvyScriptObjectEnvironmentContext.getIvyScriptObjectEnvironment()).thenReturn(my);
+		mockStatic(IIvyScriptObjectEnvironment.class);
+		when(IIvyScriptObjectEnvironment.current()).thenReturn(my);
 		
 		ThumbnailSQLPersistence mockedThumbnailPersistence = mock(ThumbnailSQLPersistence.class);
 		when(mockedThumbnailPersistence.delete(any(ThumbnailData.class))).thenReturn(false);
