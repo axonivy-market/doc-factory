@@ -75,7 +75,7 @@
 				<plugin>
 					<groupId>com.axonivy.ivy.ci</groupId>
 					<artifactId>project-build-plugin</artifactId>
-					<version>[8.0.0,</version>
+					<version>${project-build-plugin-version}</version>
 					<configuration>
 						<!-- favour flattened pom.xml over default -->
 						<iarFileSets>
