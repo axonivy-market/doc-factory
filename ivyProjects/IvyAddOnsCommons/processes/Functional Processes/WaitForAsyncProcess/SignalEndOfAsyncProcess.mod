@@ -1,5 +1,5 @@
 [Ivy]
-1305425C2ECC621D 7.5.0 #module
+1305425C2ECC621D 9.2.0 #module
 >Proto >Proto Collection #zClass
 Ss0 SignalEndOfAsyncProcess Big #zClass
 Ss0 B #cInfo
@@ -34,9 +34,7 @@ Ss0 f0 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 </elementInfo>
 ' #txt
 Ss0 f0 99 35 26 26 14 0 #rect
-Ss0 f0 @|StartSubIcon #fIcon
 Ss0 f1 99 291 26 26 14 0 #rect
-Ss0 f1 @|EndSubIcon #fIcon
 Ss0 f4 actionTable 'out=in;
 ' #txt
 Ss0 f4 actionCode 'import java.util.*;
@@ -59,7 +57,6 @@ Ss0 f4 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 </elementInfo>
 ' #txt
 Ss0 f4 94 148 36 24 20 -2 #rect
-Ss0 f4 @|StepIcon #fIcon
 Ss0 f2 expr out #txt
 Ss0 f2 112 61 112 148 #arcP
 Ss0 f3 expr out #txt
@@ -80,7 +77,6 @@ Ss0 f5 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 </elementInfo>
 ' #txt
 Ss0 f5 419 35 26 26 14 0 #rect
-Ss0 f5 @|StartSubIcon #fIcon
 Ss0 f6 expr out #txt
 Ss0 f6 432 61 112 148 #arcP
 Ss0 f6 1 432 104 #addKink
@@ -112,7 +108,6 @@ signalEndNoParameter()</name>
 </elementInfo>
 ' #txt
 Ss0 f7 263 165 1058 246 -505 -95 #rect
-Ss0 f7 @|IBIcon #fIcon
 Ss0 f7 -5972572|-5972572|-16777216 #nodeStyle
 >Proto Ss0 .type ch.ivyteam.ivy.addons.process.parameter.Data #txt
 >Proto Ss0 .processKind CALLABLE_SUB #txt
