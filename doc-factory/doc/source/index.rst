@@ -5,12 +5,12 @@ A Document Factory is a system that allows generating automatically documents
 like serial letters with the help of Microsoft Office Templates (:file:`.dot` or :file:`.dotx` files).
 
 The Document Factory can be extended to cover your project requirements. At the moment it is implemented 
-with the commercial Java Library `Aspose <https://www.aspose.com>`_ that is included in Axon.ivy platform.
+with the commercial Java Library `Aspose <https://www.aspose.com>`_ that is included in Axon Ivy Platform.
 
 .. tip::
 
    The Document Factory currently bundles the modules: aspose-words, aspose-cells, aspose-pdf, aspose-slides.
-   However there are further aspose modules such as aspose-barcode, aspose-ocr, aspose-diagram and more, that you can use in Axon.ivy.
+   However there are further aspose modules such as aspose-barcode, aspose-ocr, aspose-diagram and more, that you can use in Axon Ivy.
    For that you have to add modules from the `Aspose repository <https://repository.aspose.com/repo/com/aspose/>`_ to your ivy project 
    and call the java API. You can find the complete documentation on the aspose web site at `Aspose <https://www.aspose.com>`_. 
 
