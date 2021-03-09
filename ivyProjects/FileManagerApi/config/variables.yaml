@@ -1,0 +1,112 @@
+Variables:
+
+  # You can store the files' content on the file system from the server or in the database.
+  # Value "1" means that the files' content will be stored in the database,
+  # other values mean that the files are going to be stored on the file system.
+  # This will be automatically set to "0" if the activateUseOfIvySystemDatabase variable is active. 
+  # The Ivy System database does not support the file content storing for the moment.
+  xivy_addons_fileManager_activateFileContentInDatabase: 1
+
+  # If set to 1 the file link feature will be activated.
+  # You have to create a new Table in the filemanager database: filelink.
+  # This feature allows creating links to existing documents.
+  xivy_addons_fileManager_activateFileLink: 0
+
+  # The fileManager allows creating files' versions if you use the file content storing in database functionality.
+  # Default value = "0" (deactivated)
+  # If the value is "1", then this functionality is active. All other values mean inactive.
+  # If th efiles are stored on the filesystem, then trhe versioning will not be activated on the filemanager.
+  # See the activateFileContentInDatabase global variable for that.
+  xivy_addons_fileManager_activateFileVersioning: 0
+
+  # You can activate the security on the fileManager.
+  # With this security, depending on the Ivy user roles, some actions are going to be granted or 
+  # denied on the directories.
+  # This only works if the activateFileContentInDatabase is activated.
+  # Default is "0" (deactivated).
+  # If value is "1" it means it is activated, all other values mean deactivated.
+  xivy_addons_fileManager_activateSecurity: 0
+
+  # Tells if the table that stores the files' information is located in the Ivy System Database or not.
+  # Default is "0". 
+  # Active is "1". All other values mean inactive, so the file's information will be stored in an external database.
+  # See "ivyDatabaseConnexionName".
+  # If this is active, you cannot store the files content in the DB. You cannot activate the security
+  # or the file versioning.
+  xivy_addons_fileManager_activateUseOfIvySystemDatabase: 0
+
+  # This the name of the Ivy Role that can manage the security on the fileManager.
+  xivy_addons_fileManager_admin_roleName: 'fileManagerAdmin'
+
+  # This is the name of the DB Schema where the file manager's table are located.
+  # Most of the DB Engines like PostgreSQL support this feature.
+  # Default is an empty String: no Schema will be predefined and the default one will be used if
+  # applicable.
+  xivy_addons_fileManager_databaseSchemaName: ''
+
+  # The name of the table containing the directories structure.
+  xivy_addons_fileManager_directoriesTableName: 'directories'
+
+  # The name of the table containing the directories translations,
+  # used for the directory translation feature.
+  xivy_addons_fileManager_directoriesTranslationTableName: 'dirtranslation'
+
+  # This is the name of the file action history table.
+  xivy_addons_fileManager_fileActionHistoryTableName: 'fileactionhistory'
+
+  # The file action types table name. 
+  xivy_addons_fileManager_fileActionTypeTableName: 'fileactiontype'
+
+  # The name of the table containing the files' content.
+  xivy_addons_fileManager_fileContentTableName: 'filecontent'
+
+  # This is the table name of the SQL Table that holds the file links information.
+  xivy_addons_fileManager_fileLinkTableName: 'file_links'
+
+  # The name of the table containing the files meta data like creation user, date of creation etc...
+  xivy_addons_fileManager_fileMetaDataTableName: 'uploadedfiles'
+
+  # This is the name of the table that stores all the file tags.
+  # To be able to use this feature you have to activate the file tag in the fileManager configuration.
+  # This feature only works with files stored as BLOB in the database.
+  xivy_addons_fileManager_fileTagsTableName: 'tags'
+
+  # This is the name of the table that stores all the file types.
+  # To be able to use this feature you have to activate the file type in the fileManager configuration.
+  # This feature only works with files stored as BLOB in the database.
+  xivy_addons_fileManager_fileTypesTableName: 'filetype'
+
+  # Name of the table that contains the filetypes translations.
+  # Used if the filetype and
+  #  filetype translation features are activated.
+  xivy_addons_fileManager_fileTypesTranslationTableName: 'fttranslation'
+
+  # This is the name of the table that stores the information 
+  # if a file version has been already archived in the file version system or not.
+  xivy_addons_fileManager_fileVersionArchiveTrackingTableName: 'file_archive_tracker'
+
+  # The name of the table that contains all the file versions ' content.
+  xivy_addons_fileManager_fileVersioningContentTableName: 'file_version_content'
+
+  # The name of the table that contains the informations about the different versions of the files.
+  xivy_addons_fileManager_fileVersioningMetaDataTableName: 'file_versions'
+
+  # This is the name of ivy database connection that is connected with the database containing the filemanager's tables.
+  xivy_addons_fileManager_ivyDatabaseConnectionName: 'filemanager'
+
+  # Used to store the ISO Language Code of the languages
+  # used in the different translations features (directories, fileypes)
+  xivy_addons_fileManager_languageTableName: 'fmlanguages'
+
+  # This value indicates the maximum file size in Kb a user can upload in the file manager.
+  # if this value is too high and the jnlp max heap size has not be increased, 
+  # then there are very high chance that the users get an OutOfMemory Exception by choosing to big files.
+  # This value has been tested with the default JNLP heap size configuration set to 128 mb.
+  # 25600 = 25 Mb.
+  xivy_addons_fileManager_max_upload_size: 25600
+
+  # This is the name of the table related to the Thumbnails data.
+  # The thumbnails are used within the HTML Filemanager to 
+  # display a preview image of the selected document.
+  xivy_addons_fileManager_thumbnailTableName: 'thumbnailcontent'
+
