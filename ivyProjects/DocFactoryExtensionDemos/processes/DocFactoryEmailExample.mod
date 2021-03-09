@@ -23,7 +23,7 @@ Ds0 f42 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
         <name>This example uses aspose.email library to create an email .msg file.&#13;
-Aspose.email.jar is not included in the Axon.Ivy DocFactory by default but can be added to the project classpath.&#13;
+Aspose.email.jar is not included in the Axon Ivy DocFactory by default but can be added to the project classpath.&#13;
 The generated .msg file is sent to the Web browser.</name>
         <nameStyle>183,5
 53,5

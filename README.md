@@ -1,11 +1,11 @@
 # IvyAddsOns #
 
-IvyAddOns is an Axon.ivy Project that provides common functionality to other Axon.ivy Projects. 
+IvyAddOns is an Axon Ivy Project that provides common functionality to other Axon Ivy Projects. 
 
-Until Axon.ivy 7.1 IvyAddOns was a single Axon.ivy Project and its source code was
+Until Axon Ivy 7.1 IvyAddOns was a single Axon Ivy Project and its source code was
 hosted in the subversion repository in Zug (https://zugprovcssvn/svn/Entwicklung/Projects/IvyAddOns/).
 
-With Axon.ivy 7.1 the code is now hosted on BitBucket. Moreover, the single project is now split into multiple projects:
+With Axon Ivy 7.1 the code is now hosted on BitBucket. Moreover, the single project is now split into multiple projects:
 
 * **IvyAddOnsCommons (ch.ivyteam.ivy.addons:commons)**
   
@@ -23,7 +23,7 @@ With Axon.ivy 7.1 the code is now hosted on BitBucket. Moreover, the single proj
 
   Facade that includes IvyAddOnsCommons, DocFactory and FileManagerApi. For backwards compatibility of old projects that depend on IvyAddOns.
 
-The idea behind this splitting is that Axon.ivy Projects can decide which functionality they need and depend on those projects they really need.
+The idea behind this splitting is that Axon Ivy Projects can decide which functionality they need and depend on those projects they really need.
 
 ## CI/CD Infrastruction ##
 
