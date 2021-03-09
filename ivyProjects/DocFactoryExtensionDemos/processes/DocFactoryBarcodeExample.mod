@@ -1,5 +1,5 @@
 [Ivy]
-16CD7829EF6B489B 7.5.0 #module
+16CD7829EF6B489B 9.2.0 #module
 >Proto >Proto Collection #zClass
 Ds0 DocFactoryBarcodeExample Big #zClass
 Ds0 B #cInfo
@@ -33,7 +33,6 @@ The generated documents are created in the ivy files directory and displayed in 
 </elementInfo>
 ' #txt
 Ds0 f42 32 66 752 60 -367 -24 #rect
-Ds0 f42 @|IBIcon #fIcon
 Ds0 f15 outLink start.ivp #txt
 Ds0 f15 inParamDecl '<> param;' #txt
 Ds0 f15 requestEnabled true #txt
@@ -50,7 +49,6 @@ Ds0 f15 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 ' #txt
 Ds0 f15 @C|.responsibility Everybody #txt
 Ds0 f15 49 273 30 30 -33 30 #rect
-Ds0 f15 @|StartRequestIcon #fIcon
 Ds0 f16 actionTable 'out=in;
 ' #txt
 Ds0 f16 actionCode 'import ch.ivyteam.ivy.docFactoryExamples.IvyAsposeBarcoder;
@@ -92,7 +90,6 @@ Ds0 f16 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 </elementInfo>
 ' #txt
 Ds0 f16 296 266 112 44 -40 -8 #rect
-Ds0 f16 @|StepIcon #fIcon
 Ds0 f17 dialogId doc.factory.demos.BarCode #txt
 Ds0 f17 startMethod start(String) #txt
 Ds0 f17 requestActionDecl '<String str> param;' #txt
@@ -109,10 +106,8 @@ Ds0 f17 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 </elementInfo>
 ' #txt
 Ds0 f17 136 266 112 44 -45 -8 #rect
-Ds0 f17 @|UserDialogIcon #fIcon
 Ds0 f18 template "/ProcessPages/BarcodeExample/Show.ivc" #txt
 Ds0 f18 465 273 30 30 0 15 #rect
-Ds0 f18 @|EndRequestIcon #fIcon
 Ds0 f19 79 288 136 288 #arcP
 Ds0 f20 248 288 296 288 #arcP
 Ds0 f21 408 288 465 288 #arcP
@@ -124,7 +119,6 @@ Ds0 f22 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 </elementInfo>
 ' #txt
 Ds0 f22 584 273 256 30 -125 -8 #rect
-Ds0 f22 @|IBIcon #fIcon
 >Proto Ds0 .type doc.factory.demos.Data #txt
 >Proto Ds0 .processKind NORMAL #txt
 >Proto Ds0 .xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>

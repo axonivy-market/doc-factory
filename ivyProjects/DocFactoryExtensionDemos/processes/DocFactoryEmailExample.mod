@@ -1,5 +1,5 @@
 [Ivy]
-1712BF5507F25F15 7.5.0 #module
+1712BF5507F25F15 9.2.0 #module
 >Proto >Proto Collection #zClass
 Ds0 DocFactoryEMailExample Big #zClass
 Ds0 B #cInfo
@@ -32,7 +32,6 @@ The generated .msg file is sent to the Web browser.</name>
 </elementInfo>
 ' #txt
 Ds0 f42 32 58 608 60 -301 -24 #rect
-Ds0 f42 @|IBIcon #fIcon
 Ds0 f0 outLink start.ivp #txt
 Ds0 f0 inParamDecl '<> param;' #txt
 Ds0 f0 requestEnabled true #txt
@@ -49,9 +48,7 @@ Ds0 f0 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 ' #txt
 Ds0 f0 @C|.responsibility Everybody #txt
 Ds0 f0 113 273 30 30 -40 27 #rect
-Ds0 f0 @|StartRequestIcon #fIcon
 Ds0 f2 401 273 30 30 0 15 #rect
-Ds0 f2 @|EndIcon #fIcon
 Ds0 f3 dialogId doc.factory.demos.Email #txt
 Ds0 f3 startMethod start() #txt
 Ds0 f3 requestActionDecl '<> param;' #txt
@@ -65,7 +62,6 @@ Ds0 f3 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 </elementInfo>
 ' #txt
 Ds0 f3 208 266 128 44 -59 -8 #rect
-Ds0 f3 @|UserDialogIcon #fIcon
 Ds0 f4 143 288 208 288 #arcP
 Ds0 f5 336 288 401 288 #arcP
 Ds0 f22 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -76,7 +72,6 @@ Ds0 f22 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 </elementInfo>
 ' #txt
 Ds0 f22 480 273 272 30 -127 -8 #rect
-Ds0 f22 @|IBIcon #fIcon
 >Proto Ds0 .type doc.factory.demos.Data #txt
 >Proto Ds0 .processKind NORMAL #txt
 >Proto Ds0 .xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
