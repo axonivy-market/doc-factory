@@ -14,7 +14,7 @@
     <properties>
         <revision>9.2.0-SNAPSHOT</revision>
 
-        <project-build-plugin-version>9.2.1</project-build-plugin-version>
+        <project-build-plugin-version>9.2.2</project-build-plugin-version>
         <maven-dependency-plugin-version>3.0.2</maven-dependency-plugin-version>
         <maven-deploy-plugin-version>2.8.2</maven-deploy-plugin-version>
         <tycho-version>1.5.0</tycho-version>
