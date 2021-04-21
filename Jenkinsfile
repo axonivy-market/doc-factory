@@ -30,7 +30,7 @@ pipeline {
           try {
             docker.image("selenium/standalone-firefox:3").withRun("-e START_XVFB=false --shm-size=2g --name ${seleniumName} --network ${networkName}") {
               docker.build('maven', ".").inside("--name ${ivyName} --network ${networkName}") {
-                def phase = env.BRANCH_NAME == 'master' ? 'deploy' : 'verify'
+                def phase = env.BRANCH_NAME == 'release/9.2' ? 'deploy' : 'verify'
                 maven cmd: "clean ${phase} -Dmaven.test.failure.ignore=true -Divy.compiler.warnings=false -Divy.engine.list.url=${params.engineListUrl} -Dtest.engine.url=http://${ivyName}:8080 -Dselenide.remote=http://${seleniumName}:4444/wd/hub"
               }
             }
