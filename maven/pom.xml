@@ -22,6 +22,7 @@
         <engine.directory>${java.io.tmpdir}/ivy-engine</engine.directory>
         <ivy.engine.list.url>https://jenkins.ivyteam.io/job/ivy-core_product/job/master/lastSuccessfulBuild/</ivy.engine.list.url>
         <ivy.engine.version>[9.2.0,]</ivy.engine.version>
+        <ivy.mvn.dep.skip>true</ivy.mvn.dep.skip>
     </properties>
 
     <distributionManagement>
