@@ -25,6 +25,12 @@ ws0 @PushWFArc f4 '' #zField
 ws0 @InfoButton f5 '' #zField
 >Proto ws0 ws0 writeSerialLetterToManyCorrespondants #zField
 ws0 f0 inParamDecl '<String optionalSingleDocumentOutputPath,List<ch.ivyteam.ivy.addons.docfactory.DocumentTemplate> documentTemplatesList,Boolean allInOneDocument,Boolean allInSeparatesDocuments,String optionalSingleDocumentFormat,String optionalSingleDocumentName> param;' #txt
+ws0 f0 inParamInfo 'allInOneDocument.description=If true, all the documents are appened into one file.
+allInSeparatesDocuments.description=If true, a file is produced for each DocumentTemplate.
+documentTemplatesList.description=The list of DocumentTemplate. Each template will produce a file.
+optionalSingleDocumentFormat.description=Format of the produced single file ("pdf", "doc", "docx", "txt", "html") for the case "allInOneDocument" is true. Default is "doc".
+optionalSingleDocumentName.description=Name of the produced file for the case "allInOneDocument" is true. Default is "letter" + nanotime.
+optionalSingleDocumentOutputPath.description=Parent directory path of the produced file for the case "allInOneDocument" is true. Default is "%IVY-ROOT-PATH%/ivy_RIA_files/".' #txt
 ws0 f0 inParamTable 'out.manyDocuments=param.allInSeparatesDocuments;
 out.oneDocument=param.allInOneDocument;
 out.oneDocumentFormat=param.optionalSingleDocumentFormat;
@@ -33,6 +39,8 @@ out.oneDocumentPath=param.optionalSingleDocumentOutputPath;
 out.templateDocumentsList=param.documentTemplatesList;
 ' #txt
 ws0 f0 outParamDecl '<ch.ivyteam.ivy.addons.docfactory.FileOperationMessage FileOperationMessage,List<ch.ivyteam.ivy.addons.docfactory.FileOperationMessage> listOfFileOperationMessages> result;' #txt
+ws0 f0 outParamInfo 'FileOperationMessage.description=Result containing a Type indicating if the operation was successfull, a message in the Session User language, a list of java.io.File that were created during the process.
+listOfFileOperationMessages.description=list of result, one for each produced file. Result containing a Type indicating if the operation was successfull, a message in the Session User language, a list of java.io.File that were created during the process.' #txt
 ws0 f0 outParamTable 'result.FileOperationMessage=in.fileOperationMessage;
 result.listOfFileOperationMessages=in.listofFileOperationMessages;
 ' #txt
@@ -43,6 +51,10 @@ ws0 f0 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
         <name>writeSerialLettersToManyCorrespondents</name>
         <nameStyle>38,9
 </nameStyle>
+        <desc>Produces documents corresponding to the given DocumentTemplate list.&#13;
+The documents can be appended together in one file or be stored in separated files.&#13;
+&#13;
+</desc>
     </language>
 </elementInfo>
 ' #txt
