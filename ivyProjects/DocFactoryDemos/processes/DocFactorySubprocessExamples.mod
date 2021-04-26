@@ -1,5 +1,5 @@
 [Ivy]
-160D67F5A5647B10 9.2.0 #module
+160D67F5A5647B10 9.3.0 #module
 >Proto >Proto Collection #zClass
 De0 DocFactorySubprocessExamples Big #zClass
 De0 B #cInfo
@@ -95,7 +95,6 @@ De0 f0 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 ' #txt
 De0 f0 @C|.responsibility Everybody #txt
 De0 f0 81 225 30 30 -30 35 #rect
-De0 f0 @|StartRequestIcon #fIcon
 De0 f3 actionTable 'out=in;
 ' #txt
 De0 f3 actionCode 'import ch.ivyteam.ivy.addons.docfactory.TemplateMergeField;
@@ -118,7 +117,6 @@ TemplateMergeFields</name>
 </elementInfo>
 ' #txt
 De0 f3 136 218 144 44 -54 -16 #rect
-De0 f3 @|StepIcon #fIcon
 De0 f4 expr out #txt
 De0 f4 111 240 136 240 #arcP
 De0 f5 processCall 'Functional Processes/writeSerialLetterToOneCorrespondent:writeDocumentWithMailMergeTable(List<ch.ivyteam.ivy.addons.docfactory.TemplateMergeField>,String,String,String,String,List<String>,List<Recordset>)' #txt
@@ -146,7 +144,6 @@ with TemplateMergeFields</name>
 </elementInfo>
 ' #txt
 De0 f5 512 218 160 44 -72 -20 #rect
-De0 f5 @|CallSubIcon #fIcon
 De0 f7 actionTable 'out=in;
 ' #txt
 De0 f7 actionCode 'import ch.ivyteam.ivy.cm.IContentObjectValue;
@@ -176,7 +173,6 @@ CMS</name>
 </elementInfo>
 ' #txt
 De0 f7 320 218 128 44 -45 -16 #rect
-De0 f7 @|StepIcon #fIcon
 De0 f8 expr out #txt
 De0 f8 280 240 320 240 #arcP
 De0 f6 expr out #txt
@@ -206,7 +202,6 @@ De0 f10 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 ' #txt
 De0 f10 @C|.responsibility Everybody #txt
 De0 f10 81 369 30 30 -42 29 #rect
-De0 f10 @|StartRequestIcon #fIcon
 De0 f11 actionTable 'out=in;
 out.mergeFields=[];
 out.positions=[];
@@ -236,7 +231,6 @@ De0 f11 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 </elementInfo>
 ' #txt
 De0 f11 152 362 112 44 -46 -8 #rect
-De0 f11 @|StepIcon #fIcon
 De0 f12 processCall 'Functional Processes/writeSerialLetterToOneCorrespondent:writeDocumentWithOneDataClass(ch.ivyteam.ivy.scripting.objects.CompositeObject,String,String,String,String)' #txt
 De0 f12 requestActionDecl '<CompositeObject data,String optionalOutputpath,String optionalLetterName,String optionalOutputFormat,String templatePath> param;' #txt
 De0 f12 requestMappingAction 'param.data=in.position;
@@ -264,7 +258,6 @@ with Object</name>
 </elementInfo>
 ' #txt
 De0 f12 536 362 112 44 -48 -20 #rect
-De0 f12 @|CallSubIcon #fIcon
 De0 f13 actionTable 'out=in;
 ' #txt
 De0 f13 actionCode 'import ch.ivyteam.ivy.cm.IContentObjectValue;
@@ -292,7 +285,6 @@ CMS</name>
 </elementInfo>
 ' #txt
 De0 f13 320 362 128 44 -45 -16 #rect
-De0 f13 @|StepIcon #fIcon
 De0 f14 expr out #txt
 De0 f14 111 384 152 384 #arcP
 De0 f16 expr out #txt
@@ -327,7 +319,6 @@ CMS</name>
 </elementInfo>
 ' #txt
 De0 f20 320 634 128 44 -45 -16 #rect
-De0 f20 @|StepIcon #fIcon
 De0 f22 processCall 'Functional Processes/writeSerialLetterToOneCorrespondent:writeDocumentWithMailMergeTable(List<ch.ivyteam.ivy.addons.docfactory.TemplateMergeField>,String,String,String,String,List<String>,List<Recordset>)' #txt
 De0 f22 requestActionDecl '<List<ch.ivyteam.ivy.addons.docfactory.TemplateMergeField> listOfTemplateMergeFields,String optionalOutputpath,String optionalLetterName,String optionalOutputFormat,String templatePath,List<String> tableNamesList,List<Recordset> recordsetsList> param;' #txt
 De0 f22 requestMappingAction 'param.listOfTemplateMergeFields=in.mergeFields;
@@ -357,7 +348,6 @@ with Table</name>
 </elementInfo>
 ' #txt
 De0 f22 536 634 112 44 -48 -20 #rect
-De0 f22 @|CallSubIcon #fIcon
 De0 f24 expr out #txt
 De0 f24 448 656 536 656 #arcP
 De0 f19 outLink start3.ivp #txt
@@ -386,7 +376,6 @@ De0 f19 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 ' #txt
 De0 f19 @C|.responsibility Everybody #txt
 De0 f19 81 641 30 30 -46 32 #rect
-De0 f19 @|StartRequestIcon #fIcon
 De0 f27 actionTable 'out=in;
 ' #txt
 De0 f27 actionCode 'import ch.ivyteam.ivy.cm.IContentObjectValue;
@@ -415,7 +404,6 @@ CMS</name>
 </elementInfo>
 ' #txt
 De0 f27 320 802 128 44 -45 -16 #rect
-De0 f27 @|StepIcon #fIcon
 De0 f29 processCall 'Functional Processes/writeSerialLetterToOneCorrespondent:writeSerialLetterToOneCorrespondant(List<ch.ivyteam.ivy.addons.docfactory.TemplateMergeField>,String,String,String,String)' #txt
 De0 f29 requestActionDecl '<List<ch.ivyteam.ivy.addons.docfactory.TemplateMergeField> listOfTemplateMergeFields,String optionalOutputpath,String optionalLetterName,String optionalOutputFormat,String templatePath> param;' #txt
 De0 f29 requestMappingAction 'param.listOfTemplateMergeFields=in.mergeFields;
@@ -443,7 +431,6 @@ with conditional Text</name>
 </elementInfo>
 ' #txt
 De0 f29 528 802 128 44 -55 -20 #rect
-De0 f29 @|CallSubIcon #fIcon
 De0 f30 outLink start4.ivp #txt
 De0 f30 inParamDecl '<> param;' #txt
 De0 f30 requestEnabled true #txt
@@ -470,7 +457,6 @@ De0 f30 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 ' #txt
 De0 f30 @C|.responsibility Everybody #txt
 De0 f30 81 809 30 30 -46 30 #rect
-De0 f30 @|StartRequestIcon #fIcon
 De0 f31 actionTable 'out=in;
 ' #txt
 De0 f31 actionCode 'import ch.ivyteam.ivy.addons.docfactory.TemplateMergeField;
@@ -491,7 +477,6 @@ Template MergeFields</name>
 </elementInfo>
 ' #txt
 De0 f31 136 802 144 44 -54 -16 #rect
-De0 f31 @|StepIcon #fIcon
 De0 f32 expr out #txt
 De0 f32 111 824 136 824 #arcP
 De0 f33 expr out #txt
@@ -526,7 +511,6 @@ with tables in tables</name>
 </elementInfo>
 ' #txt
 De0 f37 528 1010 128 44 -54 -20 #rect
-De0 f37 @|CallSubIcon #fIcon
 De0 f38 actionTable 'out=in;
 ' #txt
 De0 f38 actionCode 'import ch.ivyteam.ivy.cm.IContentObjectValue;
@@ -555,7 +539,6 @@ CMS</name>
 </elementInfo>
 ' #txt
 De0 f38 320 1010 128 44 -45 -16 #rect
-De0 f38 @|StepIcon #fIcon
 De0 f39 outLink start5.ivp #txt
 De0 f39 inParamDecl '<> param;' #txt
 De0 f39 requestEnabled true #txt
@@ -582,7 +565,6 @@ De0 f39 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 ' #txt
 De0 f39 @C|.responsibility Everybody #txt
 De0 f39 81 1017 30 30 -50 35 #rect
-De0 f39 @|StartRequestIcon #fIcon
 De0 f43 expr out #txt
 De0 f43 448 1032 528 1032 #arcP
 De0 f45 actionTable 'out=in;
@@ -615,7 +597,6 @@ De0 f45 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 </elementInfo>
 ' #txt
 De0 f45 136 634 144 44 -63 -8 #rect
-De0 f45 @|StepIcon #fIcon
 De0 f46 actionTable 'out=in;
 ' #txt
 De0 f46 actionCode 'import doc.factory.demos.Position;
@@ -679,7 +660,6 @@ De0 f46 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 </elementInfo>
 ' #txt
 De0 f46 144 1010 128 44 -57 -8 #rect
-De0 f46 @|StepIcon #fIcon
 De0 f21 expr out #txt
 De0 f21 111 656 136 656 #arcP
 De0 f25 expr out #txt
@@ -699,7 +679,6 @@ If you execute the samples, you will find the output documents in the folder "iv
 </elementInfo>
 ' #txt
 De0 f42 96 34 672 76 -326 -32 #rect
-De0 f42 @|IBIcon #fIcon
 De0 f44 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -710,7 +689,6 @@ Nested fields e.g. "unit.amount" is not expanded.</name>
 </elementInfo>
 ' #txt
 De0 f44 768 354 304 60 -148 -24 #rect
-De0 f44 @|IBIcon #fIcon
 De0 f47 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -721,24 +699,18 @@ e.g. "person.address" are not expanded.</name>
 </elementInfo>
 ' #txt
 De0 f47 800 1002 224 60 -109 -24 #rect
-De0 f47 @|IBIcon #fIcon
 De0 f48 template "/ProcessPages/DocFactoryAPIExamples/DonePage.ivc" #txt
 De0 f48 721 225 30 30 0 15 #rect
-De0 f48 @|EndRequestIcon #fIcon
 De0 f49 expr out #txt
 De0 f49 672 240 721 240 #arcP
 De0 f1 template "/ProcessPages/DocFactoryAPIExamples/DonePage.ivc" #txt
 De0 f1 721 369 30 30 0 15 #rect
-De0 f1 @|EndRequestIcon #fIcon
 De0 f2 template "/ProcessPages/DocFactoryAPIExamples/DonePage.ivc" #txt
 De0 f2 721 641 30 30 0 15 #rect
-De0 f2 @|EndRequestIcon #fIcon
 De0 f50 template "/ProcessPages/DocFactoryAPIExamples/DonePage.ivc" #txt
 De0 f50 721 809 30 30 0 15 #rect
-De0 f50 @|EndRequestIcon #fIcon
 De0 f51 template "/ProcessPages/DocFactoryAPIExamples/DonePage.ivc" #txt
 De0 f51 721 1017 30 30 0 15 #rect
-De0 f51 @|EndRequestIcon #fIcon
 De0 f52 expr out #txt
 De0 f52 656 1032 721 1032 #arcP
 De0 f41 expr out #txt
@@ -749,7 +721,6 @@ De0 f23 expr out #txt
 De0 f23 648 384 721 384 #arcP
 De0 f9 template "/ProcessPages/DocFactoryAPIExamples/DonePage.ivc" #txt
 De0 f9 721 465 30 30 0 15 #rect
-De0 f9 @|EndRequestIcon #fIcon
 De0 f15 outLink start6.ivp #txt
 De0 f15 inParamDecl '<> param;' #txt
 De0 f15 requestEnabled true #txt
@@ -775,7 +746,6 @@ De0 f15 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 ' #txt
 De0 f15 @C|.responsibility Everybody #txt
 De0 f15 81 465 30 30 -44 33 #rect
-De0 f15 @|StartRequestIcon #fIcon
 De0 f18 processCall 'Functional Processes/writeSerialLetterToOneCorrespondent:writeDocumentWithNestedDataClass(CompositeObject,String,String,String,String)' #txt
 De0 f18 requestActionDecl '<CompositeObject data,String optionalOutputpath,String optionalLetterName,String optionalOutputFormat,String templatePath> param;' #txt
 De0 f18 requestMappingAction 'param.data=in.position;
@@ -803,7 +773,6 @@ with nested Object </name>
 </elementInfo>
 ' #txt
 De0 f18 536 458 112 44 -52 -20 #rect
-De0 f18 @|CallSubIcon #fIcon
 De0 f28 actionTable 'out=in;
 out.mergeFields=[];
 out.positions=[];
@@ -833,7 +802,6 @@ De0 f28 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 </elementInfo>
 ' #txt
 De0 f28 144 458 128 44 -58 -8 #rect
-De0 f28 @|StepIcon #fIcon
 De0 f36 actionTable 'out=in;
 ' #txt
 De0 f36 actionCode 'import ch.ivyteam.ivy.cm.IContentObjectValue;
@@ -861,7 +829,6 @@ CMS</name>
 </elementInfo>
 ' #txt
 De0 f36 320 458 128 44 -45 -16 #rect
-De0 f36 @|StepIcon #fIcon
 De0 f53 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -873,7 +840,6 @@ Use full qualified names for merge fields.</name>
 </elementInfo>
 ' #txt
 De0 f53 768 450 320 76 -151 -32 #rect
-De0 f53 @|IBIcon #fIcon
 De0 f55 expr out #txt
 De0 f55 648 480 721 480 #arcP
 De0 f56 expr out #txt

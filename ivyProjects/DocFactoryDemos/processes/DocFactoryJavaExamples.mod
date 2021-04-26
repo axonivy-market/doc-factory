@@ -1,5 +1,5 @@
 [Ivy]
-16CD7829EF6B489B 9.2.0 #module
+16CD7829EF6B489B 9.3.0 #module
 >Proto >Proto Collection #zClass
 Ds0 DocFactoryJavaExamples Big #zClass
 Ds0 B #cInfo
@@ -33,9 +33,7 @@ Ds0 f3 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 </elementInfo>
 ' #txt
 Ds0 f3 152 266 176 44 -78 -8 #rect
-Ds0 f3 @|UserDialogIcon #fIcon
 Ds0 f4 385 273 30 30 0 15 #rect
-Ds0 f4 @|EndIcon #fIcon
 Ds0 f5 outLink start2.ivp #txt
 Ds0 f5 inParamDecl '<> param;' #txt
 Ds0 f5 requestEnabled true #txt
@@ -54,7 +52,6 @@ Ds0 f5 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 ' #txt
 Ds0 f5 @C|.responsibility Everybody #txt
 Ds0 f5 81 273 30 30 -26 30 #rect
-Ds0 f5 @|StartRequestIcon #fIcon
 Ds0 f6 expr out #txt
 Ds0 f6 111 288 152 288 #arcP
 Ds0 f7 expr out #txt
@@ -73,7 +70,6 @@ The generated documents are created in the ivy files directory and displayed in 
 </elementInfo>
 ' #txt
 Ds0 f42 24 66 528 60 -261 -24 #rect
-Ds0 f42 @|IBIcon #fIcon
 >Proto Ds0 .type doc.factory.demos.Data #txt
 >Proto Ds0 .processKind NORMAL #txt
 >Proto Ds0 .xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
