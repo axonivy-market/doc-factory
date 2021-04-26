@@ -1,5 +1,5 @@
 [Ivy]
-16DFD8AB2E4BFFF9 9.2.0 #module
+16DFD8AB2E4BFFF9 9.3.0 #module
 >Proto >Proto Collection #zClass
 II0 IvyDocumentAPI Big #zClass
 II0 B #cInfo
@@ -38,7 +38,6 @@ II0 f3 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 ' #txt
 II0 f3 @C|.responsibility Everybody #txt
 II0 f3 81 145 30 30 -23 31 #rect
-II0 f3 @|StartRequestIcon #fIcon
 II0 f8 dialogId doc.factory.demos.CreateSimpleDocument #txt
 II0 f8 startMethod start() #txt
 II0 f8 requestActionDecl '<> param;' #txt
@@ -58,9 +57,7 @@ Attach it to case documents</name>
 </elementInfo>
 ' #txt
 II0 f8 152 138 176 44 -69 -16 #rect
-II0 f8 @|UserDialogIcon #fIcon
 II0 f10 609 145 30 30 0 15 #rect
-II0 f10 @|EndIcon #fIcon
 II0 f4 dialogId doc.factory.demos.ViewSimpleDocument #txt
 II0 f4 startMethod start(java.lang.Long) #txt
 II0 f4 requestActionDecl '<Long documentId> param;' #txt
@@ -81,7 +78,6 @@ from case</name>
 </elementInfo>
 ' #txt
 II0 f4 432 138 128 44 -41 -16 #rect
-II0 f4 @|UserDialogIcon #fIcon
 II0 f12 actionTable 'out=in1;
 ' #txt
 II0 f12 taskData 'TaskA.NAM=Task\: View attached document
@@ -89,7 +85,6 @@ TaskA.ROL=Everybody
 TaskA.TYPE=0' #txt
 II0 f12 template "" #txt
 II0 f12 369 145 30 30 0 16 #rect
-II0 f12 @|TaskSwitchSimpleIcon #fIcon
 II0 f14 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -99,7 +94,6 @@ a generated document  with the case</name>
 </elementInfo>
 ' #txt
 II0 f14 88 42 224 44 -109 -16 #rect
-II0 f14 @|IBIcon #fIcon
 II0 f5 expr out #txt
 II0 f5 111 160 152 160 #arcP
 II0 f13 expr out #txt
