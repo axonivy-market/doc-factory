@@ -1,5 +1,5 @@
 [Ivy]
-1249FCC8592E4E39 9.2.0 #module
+1249FCC8592E4E39 9.3.0 #module
 >Proto >Proto Collection #zClass
 ws0 writeSerialLetterToManyCorrespondants Big #zClass
 ws0 B #cInfo
@@ -47,9 +47,7 @@ ws0 f0 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 </elementInfo>
 ' #txt
 ws0 f0 323 59 26 26 -104 -39 #rect
-ws0 f0 @|StartSubIcon #fIcon
 ws0 f1 323 395 26 26 14 0 #rect
-ws0 f1 @|EndSubIcon #fIcon
 ws0 f11 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -62,7 +60,6 @@ in one single document.</name>
 </elementInfo>
 ' #txt
 ws0 f11 35 171 234 58 -112 -24 #rect
-ws0 f11 @|IBIcon #fIcon
 ws0 f11 -993312|-1|-16777216 #nodeStyle
 ws0 f12 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
@@ -77,7 +74,6 @@ is going to generate one single letter.</name>
 </elementInfo>
 ' #txt
 ws0 f12 35 267 234 74 -112 -32 #rect
-ws0 f12 @|IBIcon #fIcon
 ws0 f12 -7484683|-1|-16777216 #nodeStyle
 ws0 f14 actionTable 'out=in;
 ' #txt
@@ -99,7 +95,6 @@ ws0 f14 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 </elementInfo>
 ' #txt
 ws0 f14 318 188 36 24 22 -9 #rect
-ws0 f14 @|StepIcon #fIcon
 ws0 f16 actionTable 'out=in;
 ' #txt
 ws0 f16 actionCode 'import ch.ivyteam.ivy.addons.docfactory.TemplateMergeField;
@@ -128,7 +123,6 @@ ws0 f16 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 </elementInfo>
 ' #txt
 ws0 f16 318 292 36 24 22 -8 #rect
-ws0 f16 @|StepIcon #fIcon
 ws0 f9 actionTable 'out=in;
 ' #txt
 ws0 f9 actionCode 'import ch.ivyteam.ivy.addons.docfactory.BaseDocFactory;
@@ -144,7 +138,6 @@ ws0 f9 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 </elementInfo>
 ' #txt
 ws0 f9 318 116 36 24 20 -2 #rect
-ws0 f9 @|StepIcon #fIcon
 ws0 f10 expr out #txt
 ws0 f10 336 85 336 116 #arcP
 ws0 f2 expr out #txt
@@ -230,7 +223,6 @@ It contains the list of java.io.File objects created during the mail merge opera
 </elementInfo>
 ' #txt
 ws0 f5 590 11 917 890 -453 -440 #rect
-ws0 f5 @|IBIcon #fIcon
 ws0 f5 -657956|-1|-16777216 #nodeStyle
 >Proto ws0 .xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>

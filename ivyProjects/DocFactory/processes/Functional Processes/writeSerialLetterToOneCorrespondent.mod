@@ -1,5 +1,5 @@
 [Ivy]
-124971223DD62955 9.2.0 #module
+124971223DD62955 9.3.0 #module
 >Proto >Proto Collection #zClass
 wr0 writeSerialLetter Big #zClass
 wr0 B #cInfo
@@ -166,9 +166,7 @@ In this callable, just one java.io.File should be created.</desc>
 </elementInfo>
 ' #txt
 wr0 f0 139 67 26 26 -98 -38 #rect
-wr0 f0 @|StartSubIcon #fIcon
 wr0 f1 139 363 26 26 14 0 #rect
-wr0 f1 @|EndSubIcon #fIcon
 wr0 f4 actionTable 'out=in;
 ' #txt
 wr0 f4 actionCode 'import ch.ivyteam.ivy.addons.docfactory.BaseDocFactory;
@@ -184,7 +182,6 @@ Object</name>
 </elementInfo>
 ' #txt
 wr0 f4 134 140 36 24 22 -15 #rect
-wr0 f4 @|StepIcon #fIcon
 wr0 f7 actionTable 'out=in;
 ' #txt
 wr0 f7 actionCode '
@@ -200,7 +197,6 @@ wr0 f7 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 </elementInfo>
 ' #txt
 wr0 f7 134 292 36 24 22 -9 #rect
-wr0 f7 @|StepIcon #fIcon
 wr0 f6 expr out #txt
 wr0 f6 152 316 152 363 #arcP
 wr0 f2 expr out #txt
@@ -238,7 +234,6 @@ outputPath / outputLetterName</name>
 </elementInfo>
 ' #txt
 wr0 f3 134 212 36 24 22 -18 #rect
-wr0 f3 @|StepIcon #fIcon
 wr0 f5 expr out #txt
 wr0 f5 152 164 152 212 #arcP
 wr0 f8 expr out #txt
@@ -282,7 +277,6 @@ In this callable, just one java.io.File should be created.</name>
 </elementInfo>
 ' #txt
 wr0 f9 44 427 521 362 -255 -176 #rect
-wr0 f9 @|IBIcon #fIcon
 wr0 f9 -657956|-1|-16777216 #nodeStyle
 wr0 f10 inParamDecl '<CompositeObject data,String optionalOutputpath,String optionalLetterName,String optionalOutputFormat,String templatePath> param;' #txt
 wr0 f10 inParamTable 'out.data=param.data;
@@ -329,7 +323,6 @@ In this callable, just one java.io.File should be created.</desc>
 </elementInfo>
 ' #txt
 wr0 f10 643 51 26 26 -173 -36 #rect
-wr0 f10 @|StartSubIcon #fIcon
 wr0 f11 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -372,7 +365,6 @@ In this callable, just one java.io.File should be created.</name>
 </elementInfo>
 ' #txt
 wr0 f11 593 411 654 410 -322 -200 #rect
-wr0 f11 @|IBIcon #fIcon
 wr0 f11 -657956|-1|-16777216 #nodeStyle
 wr0 f12 actionTable 'out=in;
 ' #txt
@@ -390,7 +382,6 @@ Object</name>
 </elementInfo>
 ' #txt
 wr0 f12 638 132 36 24 30 -16 #rect
-wr0 f12 @|StepIcon #fIcon
 wr0 f13 expr out #txt
 wr0 f13 656 77 656 132 #arcP
 wr0 f14 actionTable 'out=in;
@@ -430,7 +421,6 @@ outputPath / outputLetterName
 </elementInfo>
 ' #txt
 wr0 f14 638 196 36 24 22 -18 #rect
-wr0 f14 @|StepIcon #fIcon
 wr0 f15 expr out #txt
 wr0 f15 656 156 656 196 #arcP
 wr0 f16 actionTable 'out=in;
@@ -448,7 +438,6 @@ wr0 f16 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 </elementInfo>
 ' #txt
 wr0 f16 638 236 36 24 20 -2 #rect
-wr0 f16 @|StepIcon #fIcon
 wr0 f17 expr out #txt
 wr0 f17 656 220 656 236 #arcP
 wr0 f18 actionTable 'out=in;
@@ -464,11 +453,9 @@ wr0 f18 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 </elementInfo>
 ' #txt
 wr0 f18 638 284 36 24 20 -2 #rect
-wr0 f18 @|StepIcon #fIcon
 wr0 f19 expr out #txt
 wr0 f19 656 260 656 284 #arcP
 wr0 f20 643 363 26 26 14 0 #rect
-wr0 f20 @|EndSubIcon #fIcon
 wr0 f21 expr out #txt
 wr0 f21 656 308 656 363 #arcP
 wr0 f22 inParamDecl '<List<ch.ivyteam.ivy.addons.docfactory.TemplateMergeField> listOfTemplateMergeFields,String optionalOutputpath,String optionalLetterName,String optionalOutputFormat,String templatePath,List<String> tableNamesList,List<List<CompositeObject>> datasForTables> param;' #txt
@@ -530,7 +517,6 @@ In these callables, just one java.io.File should be created.</desc>
 </elementInfo>
 ' #txt
 wr0 f22 1459 59 26 26 16 -36 #rect
-wr0 f22 @|StartSubIcon #fIcon
 wr0 f23 actionTable 'out=in;
 ' #txt
 wr0 f23 actionCode 'import java.util.HashMap;
@@ -567,7 +553,6 @@ and write the serialLetter</name>
 </elementInfo>
 ' #txt
 wr0 f23 1454 292 36 24 22 -9 #rect
-wr0 f23 @|StepIcon #fIcon
 wr0 f24 actionTable 'out=in;
 ' #txt
 wr0 f24 actionCode 'import ch.ivyteam.ivy.addons.docfactory.FileUtil;
@@ -603,7 +588,6 @@ outputPath / outputLetterName </name>
 </elementInfo>
 ' #txt
 wr0 f24 1454 212 36 24 22 -18 #rect
-wr0 f24 @|StepIcon #fIcon
 wr0 f25 actionTable 'out=in;
 ' #txt
 wr0 f25 actionCode 'import ch.ivyteam.ivy.addons.docfactory.BaseDocFactory;
@@ -619,7 +603,6 @@ Object</name>
 </elementInfo>
 ' #txt
 wr0 f25 1454 140 36 24 22 -15 #rect
-wr0 f25 @|StepIcon #fIcon
 wr0 f26 expr out #txt
 wr0 f26 1472 164 1472 212 #arcP
 wr0 f27 expr out #txt
@@ -627,7 +610,6 @@ wr0 f27 1472 236 1472 292 #arcP
 wr0 f28 expr out #txt
 wr0 f28 1472 85 1472 140 #arcP
 wr0 f29 1459 363 26 26 14 0 #rect
-wr0 f29 @|EndSubIcon #fIcon
 wr0 f30 expr out #txt
 wr0 f30 1472 316 1472 363 #arcP
 wr0 f31 inParamDecl '<List<ch.ivyteam.ivy.addons.docfactory.TemplateMergeField> listOfTemplateMergeFields,String optionalOutputpath,String optionalLetterName,String optionalOutputFormat,String templatePath,List<String> tableNamesList,List<Recordset> recordsetsList> param;' #txt
@@ -689,7 +671,6 @@ In these callables, just one java.io.File should be created.</desc>
 </elementInfo>
 ' #txt
 wr0 f31 2051 51 26 26 17 -31 #rect
-wr0 f31 @|StartSubIcon #fIcon
 wr0 f32 actionTable 'out=in;
 ' #txt
 wr0 f32 actionCode 'import ch.ivyteam.ivy.addons.docfactory.BaseDocFactory;
@@ -705,7 +686,6 @@ Object</name>
 </elementInfo>
 ' #txt
 wr0 f32 2046 132 36 24 22 -15 #rect
-wr0 f32 @|StepIcon #fIcon
 wr0 f33 actionTable 'out=in;
 ' #txt
 wr0 f33 actionCode 'import java.util.Hashtable;
@@ -741,7 +721,6 @@ and write the serialLetter</name>
 </elementInfo>
 ' #txt
 wr0 f33 2046 284 36 24 22 -9 #rect
-wr0 f33 @|StepIcon #fIcon
 wr0 f34 actionTable 'out=in;
 ' #txt
 wr0 f34 actionCode 'import ch.ivyteam.ivy.addons.docfactory.FileUtil;
@@ -777,7 +756,6 @@ outputPath / outputLetterName </name>
 </elementInfo>
 ' #txt
 wr0 f34 2046 204 36 24 22 -18 #rect
-wr0 f34 @|StepIcon #fIcon
 wr0 f35 expr out #txt
 wr0 f35 2064 156 2064 204 #arcP
 wr0 f36 expr out #txt
@@ -785,7 +763,6 @@ wr0 f36 2064 228 2064 284 #arcP
 wr0 f37 expr out #txt
 wr0 f37 2064 77 2064 132 #arcP
 wr0 f38 2051 363 26 26 14 0 #rect
-wr0 f38 @|EndSubIcon #fIcon
 wr0 f39 expr out #txt
 wr0 f39 2064 308 2064 363 #arcP
 wr0 f40 inParamDecl '<List<ch.ivyteam.ivy.addons.docfactory.TemplateMergeField> listOfTemplateMergeFields,String optionalOutputpath,String optionalLetterName,String optionalOutputFormat,String templatePath,List<String> tableNamesList,List<List<String>> tablesFieldsNames,List<List<List<Object>>> tablesRowsValues> param;' #txt
@@ -849,7 +826,6 @@ In these callables, just one java.io.File should be created.</desc>
 </elementInfo>
 ' #txt
 wr0 f40 2427 51 26 26 19 -35 #rect
-wr0 f40 @|StartSubIcon #fIcon
 wr0 f41 actionTable 'out=in;
 ' #txt
 wr0 f41 actionCode 'import ch.ivyteam.ivy.addons.docfactory.FileUtil;
@@ -885,7 +861,6 @@ outputPath / outputLetterName </name>
 </elementInfo>
 ' #txt
 wr0 f41 2422 212 36 24 22 -18 #rect
-wr0 f41 @|StepIcon #fIcon
 wr0 f42 actionTable 'out=in;
 ' #txt
 wr0 f42 actionCode 'import ch.ivyteam.ivy.addons.docfactory.BaseDocFactory;
@@ -901,7 +876,6 @@ Object</name>
 </elementInfo>
 ' #txt
 wr0 f42 2422 140 36 24 22 -15 #rect
-wr0 f42 @|StepIcon #fIcon
 wr0 f43 actionTable 'out=in;
 ' #txt
 wr0 f43 actionCode '
@@ -923,7 +897,6 @@ wr0 f43 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 </elementInfo>
 ' #txt
 wr0 f43 2422 292 36 24 22 -9 #rect
-wr0 f43 @|StepIcon #fIcon
 wr0 f44 expr out #txt
 wr0 f44 2440 164 2440 212 #arcP
 wr0 f45 expr out #txt
@@ -931,7 +904,6 @@ wr0 f45 2440 236 2440 292 #arcP
 wr0 f46 expr out #txt
 wr0 f46 2440 77 2440 140 #arcP
 wr0 f47 2427 363 26 26 14 0 #rect
-wr0 f47 @|EndSubIcon #fIcon
 wr0 f48 expr out #txt
 wr0 f48 2440 316 2440 363 #arcP
 wr0 f49 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -993,7 +965,6 @@ In these callables, just one java.io.File should be created.</name>
 </elementInfo>
 ' #txt
 wr0 f49 1350 412 1188 585 -417 -288 #rect
-wr0 f49 @|IBIcon #fIcon
 wr0 f49 -657956|-1|-16777216 #nodeStyle
 wr0 f50 inParamDecl '<CompositeObject data,String optionalOutputpath,String optionalLetterName,String optionalOutputFormat,String templatePath,List<String> tableNamesList,List<List<CompositeObject>> datasForTables> param;' #txt
 wr0 f50 inParamTable 'out.data=param.data;
@@ -1021,7 +992,6 @@ List&lt;String&gt;,List&lt;List&lt;CompositeObject&gt;&gt;)</name>
 </elementInfo>
 ' #txt
 wr0 f50 1347 59 26 26 -246 -48 #rect
-wr0 f50 @|StartSubIcon #fIcon
 wr0 f51 actionTable 'out=in;
 ' #txt
 wr0 f51 actionCode 'import ch.ivyteam.ivy.addons.docfactory.DocumentTemplate;
@@ -1049,7 +1019,6 @@ wr0 f51 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 </elementInfo>
 ' #txt
 wr0 f51 1342 236 36 24 -163 -11 #rect
-wr0 f51 @|StepIcon #fIcon
 wr0 f52 actionTable 'out=in;
 ' #txt
 wr0 f52 actionCode '
@@ -1087,7 +1056,6 @@ outputPath / outputLetterName
 </elementInfo>
 ' #txt
 wr0 f52 1342 196 36 24 -187 -26 #rect
-wr0 f52 @|StepIcon #fIcon
 wr0 f53 actionTable 'out=in;
 ' #txt
 wr0 f53 actionCode 'import ch.ivyteam.ivy.addons.docfactory.BaseDocFactory;
@@ -1104,7 +1072,6 @@ Object</name>
 </elementInfo>
 ' #txt
 wr0 f53 1342 148 36 24 -175 -18 #rect
-wr0 f53 @|StepIcon #fIcon
 wr0 f54 actionTable 'out=in;
 ' #txt
 wr0 f54 actionCode out.fileOperationMessage=in.documentFactory.generateDocument(in.documentTemplate); #txt
@@ -1118,7 +1085,6 @@ wr0 f54 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 </elementInfo>
 ' #txt
 wr0 f54 1342 300 36 24 -139 -9 #rect
-wr0 f54 @|StepIcon #fIcon
 wr0 f55 expr out #txt
 wr0 f55 1360 172 1360 196 #arcP
 wr0 f56 expr out #txt
@@ -1128,7 +1094,6 @@ wr0 f57 1360 260 1360 300 #arcP
 wr0 f58 expr out #txt
 wr0 f58 1360 85 1360 148 #arcP
 wr0 f59 1347 363 26 26 14 0 #rect
-wr0 f59 @|EndSubIcon #fIcon
 wr0 f60 expr out #txt
 wr0 f60 1360 324 1360 363 #arcP
 wr0 f61 inParamDecl '<CompositeObject data,String optionalOutputpath,String optionalLetterName,String optionalOutputFormat,String templatePath,List<String> tableNamesList,List<Recordset> recordsetsList> param;' #txt
@@ -1155,7 +1120,6 @@ List&lt;String&gt;,List&lt;Recordset&gt;)</name>
 </elementInfo>
 ' #txt
 wr0 f61 1931 51 26 26 -171 -37 #rect
-wr0 f61 @|StartSubIcon #fIcon
 wr0 f62 actionTable 'out=in;
 ' #txt
 wr0 f62 actionCode '
@@ -1193,7 +1157,6 @@ outputPath / outputLetterName
 </elementInfo>
 ' #txt
 wr0 f62 1926 188 36 24 -183 -18 #rect
-wr0 f62 @|StepIcon #fIcon
 wr0 f63 actionTable 'out=in;
 ' #txt
 wr0 f63 actionCode 'import ch.ivyteam.ivy.addons.docfactory.DocumentTemplate;
@@ -1220,7 +1183,6 @@ wr0 f63 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 </elementInfo>
 ' #txt
 wr0 f63 1926 228 36 24 -160 -9 #rect
-wr0 f63 @|StepIcon #fIcon
 wr0 f64 actionTable 'out=in;
 ' #txt
 wr0 f64 actionCode 'import ch.ivyteam.ivy.addons.docfactory.BaseDocFactory;
@@ -1237,7 +1199,6 @@ Object</name>
 </elementInfo>
 ' #txt
 wr0 f64 1926 140 36 24 -168 -23 #rect
-wr0 f64 @|StepIcon #fIcon
 wr0 f65 actionTable 'out=in;
 ' #txt
 wr0 f65 actionCode out.fileOperationMessage=in.documentFactory.generateDocument(in.documentTemplate); #txt
@@ -1251,7 +1212,6 @@ wr0 f65 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 </elementInfo>
 ' #txt
 wr0 f65 1926 292 36 24 -139 -9 #rect
-wr0 f65 @|StepIcon #fIcon
 wr0 f66 expr out #txt
 wr0 f66 1944 164 1944 188 #arcP
 wr0 f67 expr out #txt
@@ -1261,7 +1221,6 @@ wr0 f68 1944 252 1944 292 #arcP
 wr0 f69 expr out #txt
 wr0 f69 1944 77 1944 140 #arcP
 wr0 f70 1931 363 26 26 14 0 #rect
-wr0 f70 @|EndSubIcon #fIcon
 wr0 f71 expr out #txt
 wr0 f71 1944 316 1944 363 #arcP
 wr0 f72 inParamDecl '<String optionalOutputpath,String optionalLetterName,String optionalOutputFormat,String templatePath,CompositeObject DataForMailMergeOutOfTables,List<CompositeObject> parentTableDatas,List<List<CompositeObject>> nestedChildrenTableDatas> param;' #txt
@@ -1304,7 +1263,6 @@ In these callables, just one java.io.File should be created.</desc>
 </elementInfo>
 ' #txt
 wr0 f72 2779 43 26 26 26 -24 #rect
-wr0 f72 @|StartSubIcon #fIcon
 wr0 f73 actionTable 'out=in;
 ' #txt
 wr0 f73 actionCode 'import ch.ivyteam.ivy.addons.docfactory.BaseDocFactory;
@@ -1320,7 +1278,6 @@ Object</name>
 </elementInfo>
 ' #txt
 wr0 f73 2774 132 36 24 22 -15 #rect
-wr0 f73 @|StepIcon #fIcon
 wr0 f74 actionTable 'out=in;
 ' #txt
 wr0 f74 actionCode '
@@ -1344,7 +1301,6 @@ wr0 f74 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 </elementInfo>
 ' #txt
 wr0 f74 2774 284 36 24 22 -9 #rect
-wr0 f74 @|StepIcon #fIcon
 wr0 f75 actionTable 'out=in;
 ' #txt
 wr0 f75 actionCode 'import ch.ivyteam.ivy.addons.docfactory.FileUtil;
@@ -1380,7 +1336,6 @@ outputPath / outputLetterName </name>
 </elementInfo>
 ' #txt
 wr0 f75 2774 204 36 24 22 -18 #rect
-wr0 f75 @|StepIcon #fIcon
 wr0 f76 expr out #txt
 wr0 f76 2792 156 2792 204 #arcP
 wr0 f77 expr out #txt
@@ -1388,7 +1343,6 @@ wr0 f77 2792 228 2792 284 #arcP
 wr0 f78 expr out #txt
 wr0 f78 2792 69 2792 132 #arcP
 wr0 f79 2779 363 26 26 14 0 #rect
-wr0 f79 @|EndSubIcon #fIcon
 wr0 f80 expr out #txt
 wr0 f80 2792 308 2792 363 #arcP
 wr0 f81 actionTable 'out=in;
@@ -1406,7 +1360,6 @@ Object</name>
 </elementInfo>
 ' #txt
 wr0 f81 3174 132 36 24 22 -15 #rect
-wr0 f81 @|StepIcon #fIcon
 wr0 f82 actionTable 'out=in;
 ' #txt
 wr0 f82 actionCode 'import ch.ivyteam.ivy.addons.docfactory.FileUtil;
@@ -1442,7 +1395,6 @@ outputPath / outputLetterName </name>
 </elementInfo>
 ' #txt
 wr0 f82 3174 204 36 24 22 -18 #rect
-wr0 f82 @|StepIcon #fIcon
 wr0 f83 actionTable 'out=in;
 ' #txt
 wr0 f83 actionCode '
@@ -1466,7 +1418,6 @@ wr0 f83 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 </elementInfo>
 ' #txt
 wr0 f83 3174 284 36 24 22 -9 #rect
-wr0 f83 @|StepIcon #fIcon
 wr0 f84 inParamDecl '<String optionalOutputpath,String optionalLetterName,String optionalOutputFormat,String templatePath,Tree treeData> param;' #txt
 wr0 f84 inParamTable 'out.outputFormat=param.optionalOutputFormat;
 out.outputPath=param.optionalOutputpath;
@@ -1505,7 +1456,6 @@ In these callables, just one java.io.File should be created.</desc>
 </elementInfo>
 ' #txt
 wr0 f84 3179 43 26 26 26 -24 #rect
-wr0 f84 @|StartSubIcon #fIcon
 wr0 f85 expr out #txt
 wr0 f85 3192 156 3192 204 #arcP
 wr0 f86 expr out #txt
@@ -1513,7 +1463,6 @@ wr0 f86 3192 228 3192 284 #arcP
 wr0 f87 expr out #txt
 wr0 f87 3192 69 3192 132 #arcP
 wr0 f88 3179 371 26 26 14 0 #rect
-wr0 f88 @|EndSubIcon #fIcon
 wr0 f89 expr out #txt
 wr0 f89 3192 308 3192 371 #arcP
 wr0 f90 inParamDecl '<String optionalOutputpath,String optionalLetterName,String optionalOutputFormat,String templatePath,CompositeObject aData,List<CompositeObject> nestedListOfDatas> param;' #txt
@@ -1553,7 +1502,6 @@ In these callables, just one java.io.File should be created.</desc>
 </elementInfo>
 ' #txt
 wr0 f90 3611 43 26 26 26 -24 #rect
-wr0 f90 @|StartSubIcon #fIcon
 wr0 f91 actionTable 'out=in;
 ' #txt
 wr0 f91 actionCode '
@@ -1577,7 +1525,6 @@ wr0 f91 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 </elementInfo>
 ' #txt
 wr0 f91 3606 284 36 24 22 -9 #rect
-wr0 f91 @|StepIcon #fIcon
 wr0 f92 actionTable 'out=in;
 ' #txt
 wr0 f92 actionCode 'import ch.ivyteam.ivy.addons.docfactory.FileUtil;
@@ -1613,7 +1560,6 @@ outputPath / outputLetterName </name>
 </elementInfo>
 ' #txt
 wr0 f92 3606 204 36 24 22 -18 #rect
-wr0 f92 @|StepIcon #fIcon
 wr0 f93 actionTable 'out=in;
 ' #txt
 wr0 f93 actionCode 'import ch.ivyteam.ivy.addons.docfactory.BaseDocFactory;
@@ -1629,7 +1575,6 @@ Object</name>
 </elementInfo>
 ' #txt
 wr0 f93 3606 132 36 24 22 -15 #rect
-wr0 f93 @|StepIcon #fIcon
 wr0 f94 expr out #txt
 wr0 f94 3624 156 3624 204 #arcP
 wr0 f95 expr out #txt
@@ -1637,7 +1582,6 @@ wr0 f95 3624 228 3624 284 #arcP
 wr0 f96 expr out #txt
 wr0 f96 3624 69 3624 132 #arcP
 wr0 f97 3611 371 26 26 14 0 #rect
-wr0 f97 @|EndSubIcon #fIcon
 wr0 f98 expr out #txt
 wr0 f98 3624 308 3624 371 #arcP
 wr0 f99 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -1688,7 +1632,6 @@ In these callables, just one java.io.File should be created.</name>
 </elementInfo>
 ' #txt
 wr0 f99 2771 427 1002 410 -371 -200 #rect
-wr0 f99 @|IBIcon #fIcon
 wr0 f99 -657956|-1|-16777216 #nodeStyle
 wr0 f100 inParamDecl '<CompositeObject data,String optionalOutputpath,String optionalLetterName,String optionalOutputFormat,String templatePath> param;' #txt
 wr0 f100 inParamTable 'out.data=param.data;
@@ -1733,9 +1676,7 @@ In this callable, just one java.io.File should be created.</desc>
 </elementInfo>
 ' #txt
 wr0 f100 979 51 26 26 -161 -38 #rect
-wr0 f100 @|StartSubIcon #fIcon
 wr0 f101 979 363 26 26 14 0 #rect
-wr0 f101 @|EndSubIcon #fIcon
 wr0 f102 actionTable 'out=in;
 ' #txt
 wr0 f102 actionCode 'import ch.ivyteam.ivy.addons.docfactory.BaseDocFactory;
@@ -1752,7 +1693,6 @@ Object</name>
 </elementInfo>
 ' #txt
 wr0 f102 974 132 36 24 30 -16 #rect
-wr0 f102 @|StepIcon #fIcon
 wr0 f103 actionTable 'out=in;
 ' #txt
 wr0 f103 actionCode '
@@ -1790,7 +1730,6 @@ outputPath / outputLetterName
 </elementInfo>
 ' #txt
 wr0 f103 974 196 36 24 22 -18 #rect
-wr0 f103 @|StepIcon #fIcon
 wr0 f104 actionTable 'out=in;
 ' #txt
 wr0 f104 actionCode out.fileOperationMessage=in.documentFactory.generateDocument(in.documentTemplate); #txt
@@ -1804,7 +1743,6 @@ wr0 f104 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 </elementInfo>
 ' #txt
 wr0 f104 974 284 36 24 20 -2 #rect
-wr0 f104 @|StepIcon #fIcon
 wr0 f105 actionTable 'out=in;
 ' #txt
 wr0 f105 actionCode 'import ch.ivyteam.ivy.addons.docfactory.DocumentTemplate;
@@ -1822,7 +1760,6 @@ wr0 f105 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 </elementInfo>
 ' #txt
 wr0 f105 974 236 36 24 20 -2 #rect
-wr0 f105 @|StepIcon #fIcon
 wr0 f106 expr out #txt
 wr0 f106 992 220 992 236 #arcP
 wr0 f107 expr out #txt
