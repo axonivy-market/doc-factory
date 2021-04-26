@@ -1,5 +1,5 @@
 [Ivy]
-16B45CBCE0D2056C 9.2.0 #module
+16B45CBCE0D2056C 9.3.0 #module
 >Proto >Proto Collection #zClass
 Ds0 DocFactoryAPIExamples Big #zClass
 Ds0 B #cInfo
@@ -82,7 +82,6 @@ Ds0 f19 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 ' #txt
 Ds0 f19 @C|.responsibility Everybody #txt
 Ds0 f19 65 409 30 30 -30 36 #rect
-Ds0 f19 @|StartRequestIcon #fIcon
 Ds0 f21 actionTable 'out=in;
 ' #txt
 Ds0 f21 actionCode 'import doc.factory.demos.Position;
@@ -147,7 +146,6 @@ Ds0 f21 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 </elementInfo>
 ' #txt
 Ds0 f21 144 402 128 44 -57 -8 #rect
-Ds0 f21 @|StepIcon #fIcon
 Ds0 f26 expr out #txt
 Ds0 f26 95 424 144 424 #arcP
 Ds0 f0 actionTable 'out=in;
@@ -176,7 +174,6 @@ produce PDF document</name>
 </elementInfo>
 ' #txt
 Ds0 f0 512 402 160 44 -60 -16 #rect
-Ds0 f0 @|StepIcon #fIcon
 Ds0 f4 actionTable 'out=in;
 ' #txt
 Ds0 f4 actionCode 'import ch.ivyteam.ivy.docFactoryExamples.LocalResource;
@@ -196,7 +193,6 @@ resources folder</name>
 </elementInfo>
 ' #txt
 Ds0 f4 312 402 160 44 -61 -16 #rect
-Ds0 f4 @|StepIcon #fIcon
 Ds0 f11 expr out #txt
 Ds0 f11 272 424 312 424 #arcP
 Ds0 f1 expr out #txt
@@ -211,7 +207,6 @@ If you execute the samples, you will find the output documents in the folder "iv
 </elementInfo>
 ' #txt
 Ds0 f42 64 42 672 60 -326 -24 #rect
-Ds0 f42 @|IBIcon #fIcon
 Ds0 f6 actionTable 'out=in;
 ' #txt
 Ds0 f6 actionCode 'import doc.factory.demos.Position;
@@ -278,7 +273,6 @@ Ds0 f6 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 </elementInfo>
 ' #txt
 Ds0 f6 144 530 128 44 -57 -8 #rect
-Ds0 f6 @|StepIcon #fIcon
 Ds0 f7 actionTable 'out=in;
 ' #txt
 Ds0 f7 actionCode 'import ch.ivyteam.ivy.docFactoryExamples.LocalResource;
@@ -298,7 +292,6 @@ resources folder</name>
 </elementInfo>
 ' #txt
 Ds0 f7 312 530 160 44 -61 -16 #rect
-Ds0 f7 @|StepIcon #fIcon
 Ds0 f8 outLink start4.ivp #txt
 Ds0 f8 inParamDecl '<> param;' #txt
 Ds0 f8 requestEnabled true #txt
@@ -325,7 +318,6 @@ Ds0 f8 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 ' #txt
 Ds0 f8 @C|.responsibility Everybody #txt
 Ds0 f8 65 537 30 30 -18 31 #rect
-Ds0 f8 @|StartRequestIcon #fIcon
 Ds0 f12 actionTable 'out=in;
 ' #txt
 Ds0 f12 actionCode 'import ch.ivyteam.ivy.docFactoryExamples.Util.FilesUtil;
@@ -349,7 +341,6 @@ produce DOCX document</name>
 </elementInfo>
 ' #txt
 Ds0 f12 512 530 160 44 -62 -16 #rect
-Ds0 f12 @|StepIcon #fIcon
 Ds0 f13 expr out #txt
 Ds0 f13 95 552 144 552 #arcP
 Ds0 f16 expr out #txt
@@ -420,7 +411,6 @@ Ds0 f5 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 </elementInfo>
 ' #txt
 Ds0 f5 144 674 128 44 -57 -8 #rect
-Ds0 f5 @|StepIcon #fIcon
 Ds0 f9 actionTable 'out=in;
 ' #txt
 Ds0 f9 actionCode 'import ch.ivyteam.ivy.docFactoryExamples.LocalResource;
@@ -440,7 +430,6 @@ resources folder</name>
 </elementInfo>
 ' #txt
 Ds0 f9 312 674 160 44 -61 -16 #rect
-Ds0 f9 @|StepIcon #fIcon
 Ds0 f14 actionTable 'out=in;
 ' #txt
 Ds0 f14 actionCode 'import ch.ivyteam.ivy.docFactoryExamples.Util.FilesUtil;
@@ -464,7 +453,6 @@ produce HTML document</name>
 </elementInfo>
 ' #txt
 Ds0 f14 512 674 160 44 -62 -16 #rect
-Ds0 f14 @|StepIcon #fIcon
 Ds0 f20 outLink start5.ivp #txt
 Ds0 f20 inParamDecl '<> param;' #txt
 Ds0 f20 requestEnabled true #txt
@@ -491,7 +479,6 @@ Ds0 f20 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 ' #txt
 Ds0 f20 @C|.responsibility Everybody #txt
 Ds0 f20 65 681 30 30 -25 31 #rect
-Ds0 f20 @|StartRequestIcon #fIcon
 Ds0 f22 expr out #txt
 Ds0 f22 272 696 312 696 #arcP
 Ds0 f23 expr out #txt
@@ -517,7 +504,6 @@ resources folder</name>
 </elementInfo>
 ' #txt
 Ds0 f28 312 234 160 44 -61 -16 #rect
-Ds0 f28 @|StepIcon #fIcon
 Ds0 f29 outLink start6.ivp #txt
 Ds0 f29 inParamDecl '<> param;' #txt
 Ds0 f29 requestEnabled true #txt
@@ -544,7 +530,6 @@ Ds0 f29 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 ' #txt
 Ds0 f29 @C|.responsibility Everybody #txt
 Ds0 f29 65 241 30 30 -19 35 #rect
-Ds0 f29 @|StartRequestIcon #fIcon
 Ds0 f31 actionTable 'out=in;
 ' #txt
 Ds0 f31 actionCode 'import ch.ivyteam.ivy.docFactoryExamples.Util.FilesUtil;
@@ -569,7 +554,6 @@ produce PDF document</name>
 </elementInfo>
 ' #txt
 Ds0 f31 512 234 160 44 -60 -16 #rect
-Ds0 f31 @|StepIcon #fIcon
 Ds0 f34 expr out #txt
 Ds0 f34 472 256 512 256 #arcP
 Ds0 f36 actionTable 'out=in;
@@ -598,25 +582,20 @@ Ds0 f36 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 </elementInfo>
 ' #txt
 Ds0 f36 144 234 112 44 -46 -8 #rect
-Ds0 f36 @|StepIcon #fIcon
 Ds0 f27 expr out #txt
 Ds0 f27 95 256 144 256 #arcP
 Ds0 f32 expr out #txt
 Ds0 f32 256 256 312 256 #arcP
 Ds0 f35 template "/ProcessPages/DocFactoryAPIExamples/DonePage.ivc" #txt
 Ds0 f35 721 241 30 30 0 15 #rect
-Ds0 f35 @|EndRequestIcon #fIcon
 Ds0 f37 expr out #txt
 Ds0 f37 672 256 721 256 #arcP
 Ds0 f2 template "/ProcessPages/DocFactoryAPIExamples/DonePage.ivc" #txt
 Ds0 f2 721 409 30 30 0 15 #rect
-Ds0 f2 @|EndRequestIcon #fIcon
 Ds0 f3 template "/ProcessPages/DocFactoryAPIExamples/DonePage.ivc" #txt
 Ds0 f3 721 537 30 30 0 15 #rect
-Ds0 f3 @|EndRequestIcon #fIcon
 Ds0 f10 template "/ProcessPages/DocFactoryAPIExamples/DonePage.ivc" #txt
 Ds0 f10 721 681 30 30 0 15 #rect
-Ds0 f10 @|EndRequestIcon #fIcon
 Ds0 f15 expr out #txt
 Ds0 f15 672 424 721 424 #arcP
 Ds0 f18 expr out #txt
@@ -647,7 +626,6 @@ Ds0 f30 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 ' #txt
 Ds0 f30 @C|.responsibility Everybody #txt
 Ds0 f30 65 865 30 30 -25 31 #rect
-Ds0 f30 @|StartRequestIcon #fIcon
 Ds0 f33 dialogId doc.factory.demos.SelectSomeFiles #txt
 Ds0 f33 startMethod start() #txt
 Ds0 f33 requestActionDecl '<> param;' #txt
@@ -664,7 +642,6 @@ Ds0 f33 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 </elementInfo>
 ' #txt
 Ds0 f33 144 858 112 44 -51 -8 #rect
-Ds0 f33 @|UserDialogIcon #fIcon
 Ds0 f38 expr out #txt
 Ds0 f38 95 880 144 880 #arcP
 Ds0 f39 actionTable 'out=in;
@@ -694,12 +671,10 @@ Ds0 f39 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 </elementInfo>
 ' #txt
 Ds0 f39 320 858 128 44 -59 -8 #rect
-Ds0 f39 @|StepIcon #fIcon
 Ds0 f40 expr out #txt
 Ds0 f40 256 880 320 880 #arcP
 Ds0 f41 template "/ProcessPages/DocFactoryAPIExamples/DonePage.ivc" #txt
 Ds0 f41 513 865 30 30 0 15 #rect
-Ds0 f41 @|EndRequestIcon #fIcon
 Ds0 f43 expr out #txt
 Ds0 f43 448 880 513 880 #arcP
 >Proto Ds0 .type doc.factory.demos.Data #txt
