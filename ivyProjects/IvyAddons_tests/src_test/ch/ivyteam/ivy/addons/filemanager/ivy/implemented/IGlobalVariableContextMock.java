@@ -3,7 +3,7 @@ package ch.ivyteam.ivy.addons.filemanager.ivy.implemented;
 
 
 
-public class IGlobalVariableContextMock extends ch.ivyteam.ivy.globalvars.GlobalVariableManager {
+public class IGlobalVariableContextMock extends ch.ivyteam.ivy.vars.VariableManager {
 
 	
 	
