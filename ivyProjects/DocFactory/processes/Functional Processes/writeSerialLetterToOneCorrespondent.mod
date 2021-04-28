@@ -136,6 +136,7 @@ out.serialLetterName=param.optionalLetterName;
 out.templatePath=param.templatePath;
 ' #txt
 wr0 f0 outParamDecl '<ch.ivyteam.ivy.addons.docfactory.FileOperationMessage fileOperationMessage> result;' #txt
+wr0 f0 outParamInfo 'fileOperationMessage.description=Result containing a Type indicating if the operation was successfull, a message in the Session User language, a list of java.io.File that were created during the process.' #txt
 wr0 f0 outParamTable 'result.fileOperationMessage=in.fileOperationMessage;
 ' #txt
 wr0 f0 callSignature writeSerialLetterToOneCorrespondant(List<ch.ivyteam.ivy.addons.docfactory.TemplateMergeField>,String,String,String,String) #txt
@@ -171,7 +172,9 @@ In this callable, just one java.io.File should be created.</desc>
 </elementInfo>
 ' #txt
 wr0 f0 139 67 26 26 -98 -38 #rect
+wr0 f0 res:/cms/Project/doc-factory-logo/1791771A3F8BB7A4.png?small #fDecoratorIcon
 wr0 f1 139 363 26 26 14 0 #rect
+wr0 f1 res:/cms/Project/doc-factory-logo/1791771A3F8BB7A4.png?small #fDecoratorIcon
 wr0 f4 actionTable 'out=in;
 ' #txt
 wr0 f4 actionCode 'import ch.ivyteam.ivy.addons.docfactory.BaseDocFactory;
@@ -334,6 +337,7 @@ In this callable, just one java.io.File should be created.</desc>
 </elementInfo>
 ' #txt
 wr0 f10 643 51 26 26 -173 -36 #rect
+wr0 f10 res:/cms/Project/doc-factory-logo/1791771A3F8BB7A4.png?small #fDecoratorIcon
 wr0 f11 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -467,6 +471,7 @@ wr0 f18 638 284 36 24 20 -2 #rect
 wr0 f19 expr out #txt
 wr0 f19 656 260 656 284 #arcP
 wr0 f20 643 363 26 26 14 0 #rect
+wr0 f20 res:/cms/Project/doc-factory-logo/1791771A3F8BB7A4.png?small #fDecoratorIcon
 wr0 f21 expr out #txt
 wr0 f21 656 308 656 363 #arcP
 wr0 f22 inParamDecl '<List<ch.ivyteam.ivy.addons.docfactory.TemplateMergeField> listOfTemplateMergeFields,String optionalOutputpath,String optionalLetterName,String optionalOutputFormat,String templatePath,List<String> tableNamesList,List<List<CompositeObject>> datasForTables> param;' #txt
@@ -533,6 +538,7 @@ In this callable just one java.io.File is created. So the list of created File c
 </elementInfo>
 ' #txt
 wr0 f22 1459 59 26 26 16 -36 #rect
+wr0 f22 res:/cms/Project/doc-factory-logo/1791771A3F8BB7A4.png?small #fDecoratorIcon
 wr0 f23 actionTable 'out=in;
 ' #txt
 wr0 f23 actionCode 'import java.util.HashMap;
@@ -626,6 +632,7 @@ wr0 f27 1472 236 1472 292 #arcP
 wr0 f28 expr out #txt
 wr0 f28 1472 85 1472 140 #arcP
 wr0 f29 1459 363 26 26 14 0 #rect
+wr0 f29 res:/cms/Project/doc-factory-logo/1791771A3F8BB7A4.png?small #fDecoratorIcon
 wr0 f30 expr out #txt
 wr0 f30 1472 316 1472 363 #arcP
 wr0 f31 inParamDecl '<List<ch.ivyteam.ivy.addons.docfactory.TemplateMergeField> listOfTemplateMergeFields,String optionalOutputpath,String optionalLetterName,String optionalOutputFormat,String templatePath,List<String> tableNamesList,List<Recordset> recordsetsList> param;' #txt
@@ -692,6 +699,7 @@ In this callable just one java.io.File is created. So the list of created File c
 </elementInfo>
 ' #txt
 wr0 f31 2051 51 26 26 17 -31 #rect
+wr0 f31 res:/cms/Project/doc-factory-logo/1791771A3F8BB7A4.png?small #fDecoratorIcon
 wr0 f32 actionTable 'out=in;
 ' #txt
 wr0 f32 actionCode 'import ch.ivyteam.ivy.addons.docfactory.BaseDocFactory;
@@ -784,6 +792,7 @@ wr0 f36 2064 228 2064 284 #arcP
 wr0 f37 expr out #txt
 wr0 f37 2064 77 2064 132 #arcP
 wr0 f38 2051 363 26 26 14 0 #rect
+wr0 f38 res:/cms/Project/doc-factory-logo/1791771A3F8BB7A4.png?small #fDecoratorIcon
 wr0 f39 expr out #txt
 wr0 f39 2064 308 2064 363 #arcP
 wr0 f40 inParamDecl '<List<ch.ivyteam.ivy.addons.docfactory.TemplateMergeField> listOfTemplateMergeFields,String optionalOutputpath,String optionalLetterName,String optionalOutputFormat,String templatePath,List<String> tableNamesList,List<List<String>> tablesFieldsNames,List<List<List<Object>>> tablesRowsValues> param;' #txt
@@ -819,7 +828,7 @@ List&lt;String&gt;,List&lt;List&lt;String&gt;&gt;,
 List&lt;List&lt;List&gt;&gt;)</name>
         <nameStyle>138,5,7
 </nameStyle>
-        <desc>Produce a document with a list of merge fields and &#13;
+        <desc>Produces a document with a list of merge fields and &#13;
 with the help of a document factory Object. The Merge Mail With Regions is supported.&#13;
 The Document Factory Object is a Java Object that can parse a document model&#13;
 that contains mergefields and replace those mergefields by some String Data.&#13;
@@ -854,6 +863,7 @@ a list of java.io.File that were created during the process. Just one java.io.Fi
 </elementInfo>
 ' #txt
 wr0 f40 2427 51 26 26 19 -35 #rect
+wr0 f40 res:/cms/Project/doc-factory-logo/1791771A3F8BB7A4.png?small #fDecoratorIcon
 wr0 f41 actionTable 'out=in;
 ' #txt
 wr0 f41 actionCode 'import ch.ivyteam.ivy.addons.docfactory.FileUtil;
@@ -932,6 +942,7 @@ wr0 f45 2440 236 2440 292 #arcP
 wr0 f46 expr out #txt
 wr0 f46 2440 77 2440 140 #arcP
 wr0 f47 2427 363 26 26 14 0 #rect
+wr0 f47 res:/cms/Project/doc-factory-logo/1791771A3F8BB7A4.png?small #fDecoratorIcon
 wr0 f48 expr out #txt
 wr0 f48 2440 316 2440 363 #arcP
 wr0 f49 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -1057,6 +1068,7 @@ In this callable just one java.io.File is created. So the list of created File c
 </elementInfo>
 ' #txt
 wr0 f50 1347 59 26 26 -246 -48 #rect
+wr0 f50 res:/cms/Project/doc-factory-logo/1791771A3F8BB7A4.png?small #fDecoratorIcon
 wr0 f51 actionTable 'out=in;
 ' #txt
 wr0 f51 actionCode 'import ch.ivyteam.ivy.addons.docfactory.DocumentTemplate;
@@ -1159,6 +1171,7 @@ wr0 f57 1360 260 1360 300 #arcP
 wr0 f58 expr out #txt
 wr0 f58 1360 85 1360 148 #arcP
 wr0 f59 1347 363 26 26 14 0 #rect
+wr0 f59 res:/cms/Project/doc-factory-logo/1791771A3F8BB7A4.png?small #fDecoratorIcon
 wr0 f60 expr out #txt
 wr0 f60 1360 324 1360 363 #arcP
 wr0 f61 inParamDecl '<CompositeObject data,String optionalOutputpath,String optionalLetterName,String optionalOutputFormat,String templatePath,List<String> tableNamesList,List<Recordset> recordsetsList> param;' #txt
@@ -1223,6 +1236,7 @@ In this callable just one java.io.File is created. So the list of created File c
 </elementInfo>
 ' #txt
 wr0 f61 1931 51 26 26 -171 -37 #rect
+wr0 f61 res:/cms/Project/doc-factory-logo/1791771A3F8BB7A4.png?small #fDecoratorIcon
 wr0 f62 actionTable 'out=in;
 ' #txt
 wr0 f62 actionCode '
@@ -1324,6 +1338,7 @@ wr0 f68 1944 252 1944 292 #arcP
 wr0 f69 expr out #txt
 wr0 f69 1944 77 1944 140 #arcP
 wr0 f70 1931 363 26 26 14 0 #rect
+wr0 f70 res:/cms/Project/doc-factory-logo/1791771A3F8BB7A4.png?small #fDecoratorIcon
 wr0 f71 expr out #txt
 wr0 f71 1944 316 1944 363 #arcP
 wr0 f72 inParamDecl '<String optionalOutputpath,String optionalLetterName,String optionalOutputFormat,String templatePath,CompositeObject DataForMailMergeOutOfTables,List<CompositeObject> parentTableDatas,List<List<CompositeObject>> nestedChildrenTableDatas> param;' #txt
@@ -1372,6 +1387,7 @@ a list of java.io.File that were created during the process, just one java.io.Fi
 </elementInfo>
 ' #txt
 wr0 f72 2779 43 26 26 26 -24 #rect
+wr0 f72 res:/cms/Project/doc-factory-logo/1791771A3F8BB7A4.png?small #fDecoratorIcon
 wr0 f73 actionTable 'out=in;
 ' #txt
 wr0 f73 actionCode 'import ch.ivyteam.ivy.addons.docfactory.BaseDocFactory;
@@ -1452,6 +1468,7 @@ wr0 f77 2792 228 2792 284 #arcP
 wr0 f78 expr out #txt
 wr0 f78 2792 69 2792 132 #arcP
 wr0 f79 2779 363 26 26 14 0 #rect
+wr0 f79 res:/cms/Project/doc-factory-logo/1791771A3F8BB7A4.png?small #fDecoratorIcon
 wr0 f80 expr out #txt
 wr0 f80 2792 308 2792 363 #arcP
 wr0 f81 actionTable 'out=in;
@@ -1552,25 +1569,24 @@ String,String,String,String,
 Tree)</name>
         <nameStyle>81,5,7
 </nameStyle>
-        <desc>These callables produce a document with the data included in 
-a Tree Object. The Merge Mail With Nested Regions is supported.
-Just One Level of Nested Regions is supported in this sub Process.
-The Tree is used to generate the Mail Merge with Nested Regions.
-The Object Value of the Node should be a DataClass (CompositeObject) and is used 
-to provide the merge fields data outside of the Nested Tables.
-The Document Factory Object is a Java Object that can parse a document model
-that contains mergefields and replace those mergefields by some String Data.
-
-It returns a FileOperationMessage Object that contains:
-a Type indicating if the operation was successfull,
-a message in the Session User language,
-a list of java.io.File that were created during the process.
-
-In these callables, just one java.io.File should be created.</desc>
+        <desc>Produces a document with the data included in &#13;
+a Tree Object. The Merge Mail With Nested Regions is supported.&#13;
+Just One Level of Nested Regions is supported in this sub Process.&#13;
+The Tree is used to generate the Mail Merge with Nested Regions.&#13;
+The Object Value of the Node should be a DataClass (CompositeObject) and is used &#13;
+to provide the merge fields data outside of the Nested Tables.&#13;
+The Document Factory Object is a Java Object that can parse a document model&#13;
+that contains mergefields and replace those mergefields by some String Data.&#13;
+&#13;
+It returns a FileOperationMessage Object that contains:&#13;
+a Type indicating if the operation was successfull,&#13;
+a message in the Session User language,&#13;
+a list of java.io.File that were created during the process, just one java.io.File is created.</desc>
     </language>
 </elementInfo>
 ' #txt
 wr0 f84 3179 43 26 26 26 -24 #rect
+wr0 f84 res:/cms/Project/doc-factory-logo/1791771A3F8BB7A4.png?small #fDecoratorIcon
 wr0 f85 expr out #txt
 wr0 f85 3192 156 3192 204 #arcP
 wr0 f86 expr out #txt
@@ -1578,6 +1594,7 @@ wr0 f86 3192 228 3192 284 #arcP
 wr0 f87 expr out #txt
 wr0 f87 3192 69 3192 132 #arcP
 wr0 f88 3179 371 26 26 14 0 #rect
+wr0 f88 res:/cms/Project/doc-factory-logo/1791771A3F8BB7A4.png?small #fDecoratorIcon
 wr0 f89 expr out #txt
 wr0 f89 3192 308 3192 371 #arcP
 wr0 f90 inParamDecl '<String optionalOutputpath,String optionalLetterName,String optionalOutputFormat,String templatePath,CompositeObject aData,List<CompositeObject> nestedListOfDatas> param;' #txt
@@ -1617,11 +1634,12 @@ Each dataclass may contain lists of other nested dataclasses and so on... .There
 It returns a FileOperationMessage Object that contains:&#13;
 a Type indicating if the operation was successfull,&#13;
 a message in the Session User language,&#13;
-a list of java.io.File that were created during the process, just one java.io.File should be created.</desc>
+a list of java.io.File that were created during the process, just one java.io.File is created.</desc>
     </language>
 </elementInfo>
 ' #txt
 wr0 f90 3611 43 26 26 26 -24 #rect
+wr0 f90 res:/cms/Project/doc-factory-logo/1791771A3F8BB7A4.png?small #fDecoratorIcon
 wr0 f91 actionTable 'out=in;
 ' #txt
 wr0 f91 actionCode '
@@ -1702,6 +1720,7 @@ wr0 f95 3624 228 3624 284 #arcP
 wr0 f96 expr out #txt
 wr0 f96 3624 69 3624 132 #arcP
 wr0 f97 3611 371 26 26 14 0 #rect
+wr0 f97 res:/cms/Project/doc-factory-logo/1791771A3F8BB7A4.png?small #fDecoratorIcon
 wr0 f98 expr out #txt
 wr0 f98 3624 308 3624 371 #arcP
 wr0 f99 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -1806,7 +1825,9 @@ In this callable, just one java.io.File should be created.</desc>
 </elementInfo>
 ' #txt
 wr0 f100 979 51 26 26 -161 -38 #rect
+wr0 f100 res:/cms/Project/doc-factory-logo/1791771A3F8BB7A4.png?small #fDecoratorIcon
 wr0 f101 979 363 26 26 14 0 #rect
+wr0 f101 res:/cms/Project/doc-factory-logo/1791771A3F8BB7A4.png?small #fDecoratorIcon
 wr0 f102 actionTable 'out=in;
 ' #txt
 wr0 f102 actionCode 'import ch.ivyteam.ivy.addons.docfactory.BaseDocFactory;
