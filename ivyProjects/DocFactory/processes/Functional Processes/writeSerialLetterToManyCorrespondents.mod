@@ -59,9 +59,9 @@ The documents can be appended together in one file or be stored in separated fil
 </elementInfo>
 ' #txt
 ws0 f0 323 59 26 26 -104 -39 #rect
-ws0 f0 res:/cms/Project/doc-factory-logo/1791771A3F8BB7A4.png?small #fDecoratorIcon
+ws0 f0 res:/webContent/icons/doc-factory-logo.png?small #fDecoratorIcon
 ws0 f1 323 395 26 26 14 0 #rect
-ws0 f1 res:/cms/Project/doc-factory-logo/1791771A3F8BB7A4.png?small #fDecoratorIcon
+ws0 f1 res:/webContent/icons/doc-factory-logo.png?small #fDecoratorIcon
 ws0 f11 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
