@@ -25,6 +25,12 @@ ws0 @PushWFArc f4 '' #zField
 ws0 @InfoButton f5 '' #zField
 >Proto ws0 ws0 writeSerialLetterToManyCorrespondants #zField
 ws0 f0 inParamDecl '<String optionalSingleDocumentOutputPath,List<ch.ivyteam.ivy.addons.docfactory.DocumentTemplate> documentTemplatesList,Boolean allInOneDocument,Boolean allInSeparatesDocuments,String optionalSingleDocumentFormat,String optionalSingleDocumentName> param;' #txt
+ws0 f0 inParamInfo 'allInOneDocument.description=If true, all the documents are appened into one file.
+allInSeparatesDocuments.description=If true, a file is produced for each DocumentTemplate.
+documentTemplatesList.description=The list of DocumentTemplate. Each template will produce a file.
+optionalSingleDocumentFormat.description=Format of the produced single file ("pdf", "doc", "docx", "txt", "html") for the case "allInOneDocument" is true. Default is "doc".
+optionalSingleDocumentName.description=Name of the produced file for the case "allInOneDocument" is true. Default is "letter" + nanotime.
+optionalSingleDocumentOutputPath.description=Parent directory path of the produced file for the case "allInOneDocument" is true. Default is "%IVY-ROOT-PATH%/ivy_RIA_files/".' #txt
 ws0 f0 inParamTable 'out.manyDocuments=param.allInSeparatesDocuments;
 out.oneDocument=param.allInOneDocument;
 out.oneDocumentFormat=param.optionalSingleDocumentFormat;
@@ -33,6 +39,8 @@ out.oneDocumentPath=param.optionalSingleDocumentOutputPath;
 out.templateDocumentsList=param.documentTemplatesList;
 ' #txt
 ws0 f0 outParamDecl '<ch.ivyteam.ivy.addons.docfactory.FileOperationMessage FileOperationMessage,List<ch.ivyteam.ivy.addons.docfactory.FileOperationMessage> listOfFileOperationMessages> result;' #txt
+ws0 f0 outParamInfo 'FileOperationMessage.description=Result containing a Type indicating if the operation was successfull, a message in the Session User language, a list of java.io.File that were created during the process.
+listOfFileOperationMessages.description=list of result, one for each produced file. Result containing a Type indicating if the operation was successfull, a message in the Session User language, a list of java.io.File that were created during the process.' #txt
 ws0 f0 outParamTable 'result.FileOperationMessage=in.fileOperationMessage;
 result.listOfFileOperationMessages=in.listofFileOperationMessages;
 ' #txt
@@ -43,13 +51,17 @@ ws0 f0 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
         <name>writeSerialLettersToManyCorrespondents</name>
         <nameStyle>38,9
 </nameStyle>
+        <desc>Produces documents corresponding to the given DocumentTemplate list.&#13;
+The documents can be appended together in one file or be stored in separated files.&#13;
+&#13;
+</desc>
     </language>
 </elementInfo>
 ' #txt
 ws0 f0 323 59 26 26 -104 -39 #rect
-ws0 f0 @|StartSubIcon #fIcon
+ws0 f0 res:/webContent/icons/doc-factory-logo.png?small #fDecoratorIcon
 ws0 f1 323 395 26 26 14 0 #rect
-ws0 f1 @|EndSubIcon #fIcon
+ws0 f1 res:/webContent/icons/doc-factory-logo.png?small #fDecoratorIcon
 ws0 f11 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -62,7 +74,6 @@ in one single document.</name>
 </elementInfo>
 ' #txt
 ws0 f11 35 171 234 58 -112 -24 #rect
-ws0 f11 @|IBIcon #fIcon
 ws0 f11 -993312|-1|-16777216 #nodeStyle
 ws0 f12 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
@@ -77,7 +88,6 @@ is going to generate one single letter.</name>
 </elementInfo>
 ' #txt
 ws0 f12 35 267 234 74 -112 -32 #rect
-ws0 f12 @|IBIcon #fIcon
 ws0 f12 -7484683|-1|-16777216 #nodeStyle
 ws0 f14 actionTable 'out=in;
 ' #txt
@@ -99,7 +109,6 @@ ws0 f14 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 </elementInfo>
 ' #txt
 ws0 f14 318 188 36 24 22 -9 #rect
-ws0 f14 @|StepIcon #fIcon
 ws0 f16 actionTable 'out=in;
 ' #txt
 ws0 f16 actionCode 'import ch.ivyteam.ivy.addons.docfactory.TemplateMergeField;
@@ -128,7 +137,6 @@ ws0 f16 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 </elementInfo>
 ' #txt
 ws0 f16 318 292 36 24 22 -8 #rect
-ws0 f16 @|StepIcon #fIcon
 ws0 f9 actionTable 'out=in;
 ' #txt
 ws0 f9 actionCode 'import ch.ivyteam.ivy.addons.docfactory.BaseDocFactory;
@@ -144,7 +152,6 @@ ws0 f9 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 </elementInfo>
 ' #txt
 ws0 f9 318 116 36 24 20 -2 #rect
-ws0 f9 @|StepIcon #fIcon
 ws0 f10 expr out #txt
 ws0 f10 336 85 336 116 #arcP
 ws0 f2 expr out #txt
@@ -230,7 +237,6 @@ It contains the list of java.io.File objects created during the mail merge opera
 </elementInfo>
 ' #txt
 ws0 f5 590 11 917 890 -453 -440 #rect
-ws0 f5 @|IBIcon #fIcon
 ws0 f5 -657956|-1|-16777216 #nodeStyle
 >Proto ws0 .xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
