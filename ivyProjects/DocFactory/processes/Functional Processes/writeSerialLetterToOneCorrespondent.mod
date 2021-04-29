@@ -124,6 +124,11 @@ wr0 @PushWFArc f109 '' #zField
 wr0 @PushWFArc f110 '' #zField
 >Proto wr0 wr0 writeSerialLetter #zField
 wr0 f0 inParamDecl '<List<ch.ivyteam.ivy.addons.docfactory.TemplateMergeField> listOfTemplateMergeFields,String optionalOutputpath,String optionalLetterName,String optionalOutputFormat,String templatePath> param;' #txt
+wr0 f0 inParamInfo 'listOfTemplateMergeFields.description=Each TemplateMergeField holds a key which is the mergefield name and the value which will be written in the document at the place of the corresponding mergefield.
+optionalLetterName.description=Produced document name (default is "letter" + nanotime)
+optionalOutputFormat.description=Output format among "doc", "docx", "pdf", "txt", "html". Default is "doc".
+optionalOutputpath.description=Output directory path (default is ''%IVY-ROOT-PATH%/ivy_RIA_files/)
+templatePath.description=The template path. ' #txt
 wr0 f0 inParamTable 'out.mergeFieldsList=param.listOfTemplateMergeFields;
 out.outputFormat=param.optionalOutputFormat;
 out.outputPath=param.optionalOutputpath;
@@ -131,6 +136,7 @@ out.serialLetterName=param.optionalLetterName;
 out.templatePath=param.templatePath;
 ' #txt
 wr0 f0 outParamDecl '<ch.ivyteam.ivy.addons.docfactory.FileOperationMessage fileOperationMessage> result;' #txt
+wr0 f0 outParamInfo 'fileOperationMessage.description=Result containing a Type indicating if the operation was successfull, a message in the Session User language, a list of java.io.File that were created during the process.' #txt
 wr0 f0 outParamTable 'result.fileOperationMessage=in.fileOperationMessage;
 ' #txt
 wr0 f0 callSignature writeSerialLetterToOneCorrespondant(List<ch.ivyteam.ivy.addons.docfactory.TemplateMergeField>,String,String,String,String) #txt
@@ -166,7 +172,9 @@ In this callable, just one java.io.File should be created.</desc>
 </elementInfo>
 ' #txt
 wr0 f0 139 67 26 26 -98 -38 #rect
+wr0 f0 res:/webContent/icons/doc-factory-logo.png?small #fDecoratorIcon
 wr0 f1 139 363 26 26 14 0 #rect
+wr0 f1 res:/webContent/icons/doc-factory-logo.png?small #fDecoratorIcon
 wr0 f4 actionTable 'out=in;
 ' #txt
 wr0 f4 actionCode 'import ch.ivyteam.ivy.addons.docfactory.BaseDocFactory;
@@ -279,6 +287,11 @@ In this callable, just one java.io.File should be created.</name>
 wr0 f9 44 427 521 362 -255 -176 #rect
 wr0 f9 -657956|-1|-16777216 #nodeStyle
 wr0 f10 inParamDecl '<CompositeObject data,String optionalOutputpath,String optionalLetterName,String optionalOutputFormat,String templatePath> param;' #txt
+wr0 f10 inParamInfo 'data.description=Ivy data class object\: the properties names of the object are the mergefields names. The values of these properties will be written in the document at the place of the corresponding mergefields. 
+optionalLetterName.description=Produced document name (default is "letter" + nanotime)
+optionalOutputFormat.description=Output format among "doc", "docx", "pdf", "txt", "html". Default is "doc".
+optionalOutputpath.description=Output directory path (default is ''%IVY-ROOT-PATH%/ivy_RIA_files/)
+templatePath.description=The template path. ' #txt
 wr0 f10 inParamTable 'out.data=param.data;
 out.outputFormat=param.optionalOutputFormat;
 out.outputPath=param.optionalOutputpath;
@@ -286,9 +299,10 @@ out.serialLetterName=param.optionalLetterName;
 out.templatePath=param.templatePath;
 ' #txt
 wr0 f10 outParamDecl '<ch.ivyteam.ivy.addons.docfactory.FileOperationMessage fileOperationMessage> result;' #txt
+wr0 f10 outParamInfo 'fileOperationMessage.description=Result containing a Type indicating if the operation was successfull, a message in the Session User language, a list of java.io.File that were created during the process.' #txt
 wr0 f10 outParamTable 'result.fileOperationMessage=in.fileOperationMessage;
 ' #txt
-wr0 f10 callSignature writeDocumentWithOneDataClass(ch.ivyteam.ivy.scripting.objects.CompositeObject,String,String,String,String) #txt
+wr0 f10 callSignature writeDocumentWithOneDataClass(CompositeObject,String,String,String,String) #txt
 wr0 f10 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -297,32 +311,33 @@ CompositeObject,&#13;
 String,String,String,String)</name>
         <nameStyle>78,5
 </nameStyle>
-        <desc>This callable produces a document with a data (DataClass) and 
-with the help of a document factory Object.
-The Document Factory Object is a Java Object that can parse a document model
-that contains mergefields and replace those mergefields by some String Data.
-
-This callable takes some mandatory and some optional input parameters.
-Mandatory input Parameters:
--&gt; TemplatePath: this is the path of the template (document model)
--&gt; data . The values of the DataClass fields are going to be used to fill the template and to produce the document.
-The fields of the data have to be named like the fields of the template.
-Optional input parameters:
--&gt; optionalOutputPath: where to store the created java.io.File. By default "ivy_RIA_files"
--&gt; optionalOutputFormat: by default the first supported one (in general it will be "doc"
--&gt; optionalLetterName: the file name of the letter. By default "letter"+ the nanoTime, 
-to be sure the file doesn''t overwrite any other.
-
-It returns a FileOperationMessage Object that contains:
-a Type indicating if the operation was successfull,
-a message in the Session User language,
-a list of java.io.File that were created during the porcess.
-
+        <desc>This callable produces a document with a data (DataClass) and &#13;
+with the help of a document factory Object.&#13;
+The Document Factory Object is a Java Object that can parse a document model&#13;
+that contains mergefields and replace those mergefields by some String Data.&#13;
+&#13;
+This callable takes some mandatory and some optional input parameters.&#13;
+Mandatory input Parameters:&#13;
+-&gt; TemplatePath: this is the path of the template (document model)&#13;
+-&gt; data . The values of the DataClass fields are going to be used to fill the template and to produce the document.&#13;
+The fields of the data have to be named like the fields of the template.&#13;
+Optional input parameters:&#13;
+-&gt; optionalOutputPath: where to store the created java.io.File. By default "ivy_RIA_files"&#13;
+-&gt; optionalOutputFormat: by default the first supported one (in general it will be "doc"&#13;
+-&gt; optionalLetterName: the file name of the letter. By default "letter"+ the nanoTime, &#13;
+to be sure the file doesn''t overwrite any other.&#13;
+&#13;
+It returns a FileOperationMessage Object that contains:&#13;
+a Type indicating if the operation was successfull,&#13;
+a message in the Session User language,&#13;
+a list of java.io.File that were created during the process.&#13;
+&#13;
 In this callable, just one java.io.File should be created.</desc>
     </language>
 </elementInfo>
 ' #txt
 wr0 f10 643 51 26 26 -173 -36 #rect
+wr0 f10 res:/webContent/icons/doc-factory-logo.png?small #fDecoratorIcon
 wr0 f11 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -456,9 +471,17 @@ wr0 f18 638 284 36 24 20 -2 #rect
 wr0 f19 expr out #txt
 wr0 f19 656 260 656 284 #arcP
 wr0 f20 643 363 26 26 14 0 #rect
+wr0 f20 res:/webContent/icons/doc-factory-logo.png?small #fDecoratorIcon
 wr0 f21 expr out #txt
 wr0 f21 656 308 656 363 #arcP
 wr0 f22 inParamDecl '<List<ch.ivyteam.ivy.addons.docfactory.TemplateMergeField> listOfTemplateMergeFields,String optionalOutputpath,String optionalLetterName,String optionalOutputFormat,String templatePath,List<String> tableNamesList,List<List<CompositeObject>> datasForTables> param;' #txt
+wr0 f22 inParamInfo 'datasForTables.description=Data for filling the tables. Each list of composite object is used in the corresponding (by the index) table name.
+listOfTemplateMergeFields.description=List of template mergefields (key/values) for the simple merge fields.
+optionalLetterName.description=Produced document name (default is "letter" + nanotime)
+optionalOutputFormat.description=Output format among "doc", "docx", "pdf", "txt", "html". Default is "doc".
+optionalOutputpath.description=Output directory path (default is ''%IVY-ROOT-PATH%/ivy_RIA_files/)
+tableNamesList.description=The list of the tables names (mail merge regions) present in the template
+templatePath.description=The template path. ' #txt
 wr0 f22 inParamTable 'out.ListOfCompositeObjectsToFillTheTables=param.datasForTables;
 out.mergeFieldsList=param.listOfTemplateMergeFields;
 out.outputFormat=param.optionalOutputFormat;
@@ -468,9 +491,10 @@ out.tablesNamesList=param.tableNamesList;
 out.templatePath=param.templatePath;
 ' #txt
 wr0 f22 outParamDecl '<ch.ivyteam.ivy.addons.docfactory.FileOperationMessage fileOperationMessage> result;' #txt
+wr0 f22 outParamInfo 'fileOperationMessage.description=Result containing a Type indicating if the operation was successfull, a message in the Session User language, a list of java.io.File that were created during the process.' #txt
 wr0 f22 outParamTable 'result.fileOperationMessage=in.fileOperationMessage;
 ' #txt
-wr0 f22 callSignature writeDocumentWithMailMergeTable(List<ch.ivyteam.ivy.addons.docfactory.TemplateMergeField>,String,String,String,String,List<String>,List<List<ch.ivyteam.ivy.scripting.objects.CompositeObject>>) #txt
+wr0 f22 callSignature writeDocumentWithMailMergeTable(List<ch.ivyteam.ivy.addons.docfactory.TemplateMergeField>,String,String,String,String,List<String>,List<List<CompositeObject>>) #txt
 wr0 f22 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -480,43 +504,41 @@ String,String,String,String,
 List&lt;String&gt;,List&lt;List&lt;CompositeObject&gt;&gt;)</name>
         <nameStyle>129,5,7
 </nameStyle>
-        <desc>These callables produce a document with a list of merge fields and 
-with the help of a document factory Object. The Merge Mail With Regions is supported.
-The Document Factory Object is a Java Object that can parse a document model
-that contains mergefields and replace those mergefields by some String Data.
-
-A Mail Merge Region is a Table in the template whose rows are going to be automatically filled with some data.
-To be able to perform this operation, one may provide the list of the tables names, the merge fields names for each table and the data (rows).
-If you want to fill some tables, the list of the tables names have to be provided in all the callables Starts. The tables are named in the template.
-Then the fields names and the data can be provided in several ways:
-	. Lists of DataClasses objects (CompositeObjects): each attribute name will be seen as a mergeField name, each object is a row in a table.
-	. List of Recordsets: each field of the recordset is seen as a mergefield, and each record is a row of data.
-	. For each table you provide a list of fields'' names and the rows are encapsulated into list of Objects.
-If there is no table in the given template, or no match between your data and the tables names/fieldsnames, these callables just ignore the tables
-and perform normal mail merge.
-
-This callable takes some mandatory and some optional input parameters.
-Mandatory input Parameters:
--&gt; TemplatePath: this is the path of the template (document model)
--&gt; list of TemplateMergeFields. Each mergefield corresponds to a mergeField in the template.
-If no correspondance for a MergeField was found, it will be simply ignored.
-Optional input parameters:
--&gt; optionalOutputPath: where to store the created java.io.File. By default &quot;ivy_RIA_files&quot;
--&gt; optionalOutputFormat: by default the first supported one (in general it will be &quot;doc&quot;
--&gt; optionalLetterName: the file name of the letter. By default &quot;letter&quot;+ the nanoTime, 
-to be sure the file doesn''t overwrite any other.
--&gt; Data for filling some tables (see description above about Mail Merge Regions) -&gt; HERE Lists of DataClasses objects (CompositeObjects)
-
-It returns a FileOperationMessage Object that contains:
-a Type indicating if the operation was successfull,
-a message in the Session User language,
-a list of java.io.File that were created during the process.
-
-In these callables, just one java.io.File should be created.</desc>
+        <desc>Produces a document with a list of merge fields and &#13;
+with the help of a document factory Object. The Merge Mail With Regions is supported.&#13;
+The Document Factory Object is a Java Object that can parse a document model&#13;
+that contains mergefields and replace those mergefields by some String Data.&#13;
+&#13;
+A Mail Merge Region is a Table in the template which rows are going to be automatically filled with some data.&#13;
+Each table in the template has a name and is set by a Start Mergefield(TableStart:nameOfTheTable).&#13;
+To be able to perform this operation, one may provide the list of the tables names, the merge fields names for each table and the data (rows).&#13;
+If there is no table in the given template, or no match between your data and the tables names/fieldsnames, these callables just ignore the tables&#13;
+and perform normal mail merge.&#13;
+&#13;
+This callable takes some mandatory and some optional input parameters.&#13;
+Mandatory input Parameters:&#13;
+-&gt; TemplatePath: this is the path of the template (document model)&#13;
+-&gt; list of TemplateMergeFields. Each mergefield corresponds to a mergeField in the template.&#13;
+If no correspondance for a MergeField was found, it will be simply ignored.&#13;
+&#13;
+Optional input parameters:&#13;
+-&gt; optionalOutputPath: where to store the created java.io.File. By default "ivy_RIA_files"&#13;
+-&gt; optionalOutputFormat: by default the first supported one (in general it will be "doc"&#13;
+-&gt; optionalLetterName: the file name of the letter. By default "letter"+ the nanoTime, &#13;
+to be sure the file doesn''t overwrite any other.&#13;
+-&gt; Data for filling some tables: list of table names and a List of List of Composite Objects. &#13;
+Each list of table names is filled with the corresponding index of the List of Composite objects.&#13;
+&#13;
+It returns a FileOperationMessage Object that contains:&#13;
+a Type indicating if the operation was successfull,&#13;
+a message in the Session User language,&#13;
+a list of java.io.File that were created during the process.&#13;
+In this callable just one java.io.File is created. So the list of created File contains only one File in case of success.</desc>
     </language>
 </elementInfo>
 ' #txt
 wr0 f22 1459 59 26 26 16 -36 #rect
+wr0 f22 res:/webContent/icons/doc-factory-logo.png?small #fDecoratorIcon
 wr0 f23 actionTable 'out=in;
 ' #txt
 wr0 f23 actionCode 'import java.util.HashMap;
@@ -610,9 +632,17 @@ wr0 f27 1472 236 1472 292 #arcP
 wr0 f28 expr out #txt
 wr0 f28 1472 85 1472 140 #arcP
 wr0 f29 1459 363 26 26 14 0 #rect
+wr0 f29 res:/webContent/icons/doc-factory-logo.png?small #fDecoratorIcon
 wr0 f30 expr out #txt
 wr0 f30 1472 316 1472 363 #arcP
 wr0 f31 inParamDecl '<List<ch.ivyteam.ivy.addons.docfactory.TemplateMergeField> listOfTemplateMergeFields,String optionalOutputpath,String optionalLetterName,String optionalOutputFormat,String templatePath,List<String> tableNamesList,List<Recordset> recordsetsList> param;' #txt
+wr0 f31 inParamInfo 'listOfTemplateMergeFields.description=List of template mergefields (key/values) for the simple merge fields.
+optionalLetterName.description=Produced document name (default is "letter" + nanotime)
+optionalOutputFormat.description=Output format among "doc", "docx", "pdf", "txt", "html". Default is "doc".
+optionalOutputpath.description=Output directory path (default is ''%IVY-ROOT-PATH%/ivy_RIA_files/)
+recordsetsList.description=Data for filling some tables (merge region). Each field of the recordset is seen as a mergefield, and each record is a row of data.
+tableNamesList.description=The list of the tables names (mail merge regions) present in the template
+templatePath.description=The template path. ' #txt
 wr0 f31 inParamTable 'out.ListOfRecordsets=param.recordsetsList;
 out.mergeFieldsList=param.listOfTemplateMergeFields;
 out.outputFormat=param.optionalOutputFormat;
@@ -622,6 +652,7 @@ out.tablesNamesList=param.tableNamesList;
 out.templatePath=param.templatePath;
 ' #txt
 wr0 f31 outParamDecl '<ch.ivyteam.ivy.addons.docfactory.FileOperationMessage fileOperationMessage> result;' #txt
+wr0 f31 outParamInfo 'fileOperationMessage.description=Result containing a Type indicating if the operation was successfull, a message in the Session User language, a list of java.io.File that were created during the process.' #txt
 wr0 f31 outParamTable 'result.fileOperationMessage=in.fileOperationMessage;
 ' #txt
 wr0 f31 callSignature writeDocumentWithMailMergeTable(List<ch.ivyteam.ivy.addons.docfactory.TemplateMergeField>,String,String,String,String,List<String>,List<Recordset>) #txt
@@ -634,43 +665,41 @@ String,String,String,String,
 List&lt;String&gt;,List&lt;Recordset&gt;)</name>
         <nameStyle>117,5,7
 </nameStyle>
-        <desc>These callables produce a document with a list of merge fields and 
-with the help of a document factory Object. The Merge Mail With Regions is supported.
-The Document Factory Object is a Java Object that can parse a document model
-that contains mergefields and replace those mergefields by some String Data.
-
-A Mail Merge Region is a Table in the template whose rows are going to be automatically filled with some data.
-To be able to perform this operation, one may provide the list of the tables names, the merge fields names for each table and the data (rows).
-If you want to fill some tables, the list of the tables names have to be provided in all the callables Starts. The tables are named in the template.
-Then the fields names and the data can be provided in several ways:
-	. Lists of DataClasses objects (CompositeObjects): each attribute name will be seen as a mergeField name, each object is a row in a table.
-	. List of Recordsets: each field of the recordset is seen as a mergefield, and each record is a row of data.
-	. For each table you provide a list of fields'' names and the rows are encapsulated into list of Objects.
-If there is no table in the given template, or no match between your data and the tables names/fieldsnames, these callables just ignore the tables
-and perform normal mail merge.
-
-This callable takes some mandatory and some optional input parameters.
-Mandatory input Parameters:
--&gt; TemplatePath: this is the path of the template (document model)
--&gt; list of TemplateMergeFields. Each mergefield corresponds to a mergeField in the template.
-If no correspondance for a MergeField was found, it will be simply ignored.
-Optional input parameters:
--&gt; optionalOutputPath: where to store the created java.io.File. By default &quot;ivy_RIA_files&quot;
--&gt; optionalOutputFormat: by default the first supported one (in general it will be &quot;doc&quot;
--&gt; optionalLetterName: the file name of the letter. By default &quot;letter&quot;+ the nanoTime, 
-to be sure the file doesn''t overwrite any other.
--&gt; Data for filling some tables (see description above about Mail Merge Regions) -&gt; HERE List of Recordsets
-
-It returns a FileOperationMessage Object that contains:
-a Type indicating if the operation was successfull,
-a message in the Session User language,
-a list of java.io.File that were created during the process.
-
-In these callables, just one java.io.File should be created.</desc>
+        <desc>Produces a document with a list of merge fields and &#13;
+with the help of a document factory Object. The Merge Mail With Regions is supported.&#13;
+The Document Factory Object is a Java Object that can parse a document model&#13;
+that contains mergefields and replace those mergefields by some String Data.&#13;
+&#13;
+A Mail Merge Region is a Table in the template which rows are going to be automatically filled with some data.&#13;
+Each table in the template has a name and is set by a Start Mergefield(TableStart:nameOfTheTable).&#13;
+To be able to perform this operation, one may provide the list of the tables names, the merge fields names for each table and the data (rows).&#13;
+If there is no table in the given template, or no match between your data and the tables names/fieldsnames, these callables just ignore the tables&#13;
+and perform normal mail merge.&#13;
+&#13;
+This callable takes some mandatory and some optional input parameters.&#13;
+Mandatory input Parameters:&#13;
+-&gt; TemplatePath: this is the path of the template (document model)&#13;
+-&gt; list of TemplateMergeFields. Each mergefield corresponds to a mergeField in the template.&#13;
+If no correspondance for a MergeField was found, it will be simply ignored.&#13;
+&#13;
+Optional input parameters:&#13;
+-&gt; optionalOutputPath: where to store the created java.io.File. By default "ivy_RIA_files"&#13;
+-&gt; optionalOutputFormat: by default the first supported one (in general it will be "doc"&#13;
+-&gt; optionalLetterName: the file name of the letter. By default "letter"+ the nanoTime, &#13;
+to be sure the file doesn''t overwrite any other.&#13;
+-&gt; Data for filling some tables: list of table names and a List of Recordsets. &#13;
+Each list of table names is filled with the corresponding RecordSet (table name at index x corresponds to the recordset at the same index in the list).&#13;
+&#13;
+It returns a FileOperationMessage Object that contains:&#13;
+a Type indicating if the operation was successfull,&#13;
+a message in the Session User language,&#13;
+a list of java.io.File that were created during the process.&#13;
+In this callable just one java.io.File is created. So the list of created File contains only one File in case of success.</desc>
     </language>
 </elementInfo>
 ' #txt
 wr0 f31 2051 51 26 26 17 -31 #rect
+wr0 f31 res:/webContent/icons/doc-factory-logo.png?small #fDecoratorIcon
 wr0 f32 actionTable 'out=in;
 ' #txt
 wr0 f32 actionCode 'import ch.ivyteam.ivy.addons.docfactory.BaseDocFactory;
@@ -763,9 +792,18 @@ wr0 f36 2064 228 2064 284 #arcP
 wr0 f37 expr out #txt
 wr0 f37 2064 77 2064 132 #arcP
 wr0 f38 2051 363 26 26 14 0 #rect
+wr0 f38 res:/webContent/icons/doc-factory-logo.png?small #fDecoratorIcon
 wr0 f39 expr out #txt
 wr0 f39 2064 308 2064 363 #arcP
 wr0 f40 inParamDecl '<List<ch.ivyteam.ivy.addons.docfactory.TemplateMergeField> listOfTemplateMergeFields,String optionalOutputpath,String optionalLetterName,String optionalOutputFormat,String templatePath,List<String> tableNamesList,List<List<String>> tablesFieldsNames,List<List<List<Object>>> tablesRowsValues> param;' #txt
+wr0 f40 inParamInfo 'listOfTemplateMergeFields.description=List of template mergefields (key/values) for the simple merge fields.
+optionalLetterName.description=Produced document name (default is "letter" + nanotime)
+optionalOutputFormat.description=Output format among "doc", "docx", "pdf", "txt", "html". Default is "doc".
+optionalOutputpath.description=Output directory path (default is ''%IVY-ROOT-PATH%/ivy_RIA_files/)
+tableNamesList.description=The list of the tables names (mail merge regions) present in the template
+tablesFieldsNames.description=The list of the tables names merge fields names. Each table having a corresponding (same index) List of mergefields.
+tablesRowsValues.description=Data for filling the tables (merge regions)\: each table mergefield has a corresponding List<List of values>>
+templatePath.description=The template path. ' #txt
 wr0 f40 inParamTable 'out.ListOfTableFieldsNames=param.tablesFieldsNames;
 out.ListOfTablesRows=param.tablesRowsValues;
 out.mergeFieldsList=param.listOfTemplateMergeFields;
@@ -776,9 +814,10 @@ out.tablesNamesList=param.tableNamesList;
 out.templatePath=param.templatePath;
 ' #txt
 wr0 f40 outParamDecl '<ch.ivyteam.ivy.addons.docfactory.FileOperationMessage fileOperationMessage> result;' #txt
+wr0 f40 outParamInfo 'fileOperationMessage.description=Result containing a Type indicating if the operation was successfull, a message in the Session User language, a list of java.io.File that were created during the process.' #txt
 wr0 f40 outParamTable 'result.fileOperationMessage=in.fileOperationMessage;
 ' #txt
-wr0 f40 callSignature writeDocumentWithMailMergeTable(List<ch.ivyteam.ivy.addons.docfactory.TemplateMergeField>,String,String,String,String,List<String>,List<List<String>>,List<List<List>>) #txt
+wr0 f40 callSignature writeDocumentWithMailMergeTable(List<ch.ivyteam.ivy.addons.docfactory.TemplateMergeField>,String,String,String,String,List<String>,List<List<String>>,List<List<List<Object>>>) #txt
 wr0 f40 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -789,43 +828,42 @@ List&lt;String&gt;,List&lt;List&lt;String&gt;&gt;,
 List&lt;List&lt;List&gt;&gt;)</name>
         <nameStyle>138,5,7
 </nameStyle>
-        <desc>These callables produce a document with a list of merge fields and 
-with the help of a document factory Object. The Merge Mail With Regions is supported.
-The Document Factory Object is a Java Object that can parse a document model
-that contains mergefields and replace those mergefields by some String Data.
-
-A Mail Merge Region is a Table in the template whose rows are going to be automatically filled with some data.
-To be able to perform this operation, one may provide the list of the tables names, the merge fields names for each table and the data (rows).
-If you want to fill some tables, the list of the tables names have to be provided in all the callables Starts. The tables are named in the template.
-Then the fields names and the data can be provided in several ways:
-	. Lists of DataClasses objects (CompositeObjects): each attribute name will be seen as a mergeField name, each object is a row in a table.
-	. List of Recordsets: each field of the recordset is seen as a mergefield, and each record is a row of data.
-	. For each table you provide a list of fields'' names and the rows are encapsulated into list of Objects.
-If there is no table in the given template, or no match between your data and the tables names/fieldsnames, these callables just ignore the tables
-and perform normal mail merge.
-
-This callable takes some mandatory and some optional input parameters.
-Mandatory input Parameters:
--&gt; TemplatePath: this is the path of the template (document model)
--&gt; list of TemplateMergeFields. Each mergefield corresponds to a mergeField in the template.
-If no correspondance for a MergeField was found, it will be simply ignored.
-Optional input parameters:
--&gt; optionalOutputPath: where to store the created java.io.File. By default &quot;ivy_RIA_files&quot;
--&gt; optionalOutputFormat: by default the first supported one (in general it will be &quot;doc&quot;
--&gt; optionalLetterName: the file name of the letter. By default &quot;letter&quot;+ the nanoTime, 
-to be sure the file doesn''t overwrite any other.
--&gt; Data for filling some tables (see description above about Mail Merge Regions) -&gt; HERE For each table you provide a list of fields'' names and the rows are encapsulated into list of Objects.
-
-It returns a FileOperationMessage Object that contains:
-a Type indicating if the operation was successfull,
-a message in the Session User language,
-a list of java.io.File that were created during the process.
-
-In these callables, just one java.io.File should be created.</desc>
+        <desc>Produces a document with a list of merge fields and &#13;
+with the help of a document factory Object. The Merge Mail With Regions is supported.&#13;
+The Document Factory Object is a Java Object that can parse a document model&#13;
+that contains mergefields and replace those mergefields by some String Data.&#13;
+&#13;
+A Mail Merge Region is a Table in the template whose rows are going to be automatically filled with some data.&#13;
+To be able to perform this operation, one may provide the list of the tables names, the merge fields names for each table and the data (rows).&#13;
+If you want to fill some tables, the list of the tables names have to be provided in all the callables Starts. The tables are named in the template.&#13;
+Then the fields names and the data can be provided in several ways:&#13;
+	. Lists of DataClasses objects (CompositeObjects): each attribute name will be seen as a mergeField name, each object is a row in a table.&#13;
+	. List of Recordsets: each field of the recordset is seen as a mergefield, and each record is a row of data.&#13;
+	. For each table you provide a list of fields'' names and the rows are encapsulated into list of Objects.&#13;
+If there is no table in the given template, or no match between your data and the tables names/fieldsnames, these callables just ignore the tables&#13;
+and perform normal mail merge.&#13;
+&#13;
+This callable takes some mandatory and some optional input parameters.&#13;
+Mandatory input Parameters:&#13;
+-&gt; TemplatePath: this is the path of the template (document model)&#13;
+-&gt; list of TemplateMergeFields. Each mergefield corresponds to a mergeField in the template.&#13;
+If no correspondance for a MergeField was found, it will be simply ignored.&#13;
+Optional input parameters:&#13;
+-&gt; optionalOutputPath: where to store the created java.io.File. By default "ivy_RIA_files"&#13;
+-&gt; optionalOutputFormat: by default the first supported one (in general it will be "doc"&#13;
+-&gt; optionalLetterName: the file name of the letter. By default "letter"+ the nanoTime, &#13;
+to be sure the file doesn''t overwrite any other.&#13;
+-&gt; Data for filling some tables (see description above about Mail Merge Regions) -&gt; HERE For each table you provide a list of fields'' names and the rows are encapsulated into list of Objects.&#13;
+&#13;
+It returns a FileOperationMessage Object that contains:&#13;
+a Type indicating if the operation was successfull,&#13;
+a message in the Session User language,&#13;
+a list of java.io.File that were created during the process. Just one java.io.File should be created.</desc>
     </language>
 </elementInfo>
 ' #txt
 wr0 f40 2427 51 26 26 19 -35 #rect
+wr0 f40 res:/webContent/icons/doc-factory-logo.png?small #fDecoratorIcon
 wr0 f41 actionTable 'out=in;
 ' #txt
 wr0 f41 actionCode 'import ch.ivyteam.ivy.addons.docfactory.FileUtil;
@@ -904,6 +942,7 @@ wr0 f45 2440 236 2440 292 #arcP
 wr0 f46 expr out #txt
 wr0 f46 2440 77 2440 140 #arcP
 wr0 f47 2427 363 26 26 14 0 #rect
+wr0 f47 res:/webContent/icons/doc-factory-logo.png?small #fDecoratorIcon
 wr0 f48 expr out #txt
 wr0 f48 2440 316 2440 363 #arcP
 wr0 f49 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -967,6 +1006,13 @@ In these callables, just one java.io.File should be created.</name>
 wr0 f49 1350 412 1188 585 -417 -288 #rect
 wr0 f49 -657956|-1|-16777216 #nodeStyle
 wr0 f50 inParamDecl '<CompositeObject data,String optionalOutputpath,String optionalLetterName,String optionalOutputFormat,String templatePath,List<String> tableNamesList,List<List<CompositeObject>> datasForTables> param;' #txt
+wr0 f50 inParamInfo 'data.description=Ivy data class object used for the normal merge fields\: the properties names of the object are the mergefields names. The values of these properties will be written in the document at the place of the corresponding mergefields. 
+datasForTables.description=Data for filling the tables. Each list of composite object is used in the corresponding (by the index) table name.
+optionalLetterName.description=Produced document name (default is "letter" + nanotime)
+optionalOutputFormat.description=Output format among "doc", "docx", "pdf", "txt", "html". Default is "doc".
+optionalOutputpath.description=Output directory path (default is ''%IVY-ROOT-PATH%/ivy_RIA_files/)
+tableNamesList.description=The list of the tables names (mail merge regions) present in the template
+templatePath.description=The template path. ' #txt
 wr0 f50 inParamTable 'out.data=param.data;
 out.ListOfCompositeObjectsToFillTheTables=param.datasForTables;
 out.outputFormat=param.optionalOutputFormat;
@@ -976,9 +1022,10 @@ out.tablesNamesList=param.tableNamesList;
 out.templatePath=param.templatePath;
 ' #txt
 wr0 f50 outParamDecl '<ch.ivyteam.ivy.addons.docfactory.FileOperationMessage fileOperationMessage> result;' #txt
+wr0 f50 outParamInfo 'fileOperationMessage.description=Result containing a Type indicating if the operation was successfull, a message in the Session User language, a list of java.io.File that were created during the process.' #txt
 wr0 f50 outParamTable 'result.fileOperationMessage=in.fileOperationMessage;
 ' #txt
-wr0 f50 callSignature writeDocumentWithMailMergeTable(ch.ivyteam.ivy.scripting.objects.CompositeObject,String,String,String,String,List<String>,List<List<ch.ivyteam.ivy.scripting.objects.CompositeObject>>) #txt
+wr0 f50 callSignature writeDocumentWithMailMergeTable(CompositeObject,String,String,String,String,List<String>,List<List<CompositeObject>>) #txt
 wr0 f50 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -988,10 +1035,40 @@ String,String,String,String,
 List&lt;String&gt;,List&lt;List&lt;CompositeObject&gt;&gt;)</name>
         <nameStyle>120,5,7
 </nameStyle>
+        <desc>Produces a document with a list of merge fields and &#13;
+with the help of a document factory Object. The Merge Mail With Regions is supported.&#13;
+The Document Factory Object is a Java Object that can parse a document model&#13;
+that contains mergefields and replace those mergefields by some String Data.&#13;
+&#13;
+A Mail Merge Region is a Table in the template which rows are going to be automatically filled with some data.&#13;
+Each table in the template has a name and is set by a Start Mergefield(TableStart:nameOfTheTable).&#13;
+To be able to perform this operation, one may provide the list of the tables names, the merge fields names for each table and the data (rows).&#13;
+If there is no table in the given template, or no match between your data and the tables names/fieldsnames, these callables just ignore the tables&#13;
+and perform normal mail merge.&#13;
+&#13;
+This callable takes some mandatory and some optional input parameters.&#13;
+Mandatory input Parameters:&#13;
+-&gt; TemplatePath: this is the path of the template (document model)&#13;
+-&gt; Composite Object whose attributes are going to be mapped with the template''s simple mergefields.&#13;
+&#13;
+Optional input parameters:&#13;
+-&gt; optionalOutputPath: where to store the created java.io.File. By default "ivy_RIA_files"&#13;
+-&gt; optionalOutputFormat: by default the first supported one (in general it will be "doc"&#13;
+-&gt; optionalLetterName: the file name of the letter. By default "letter"+ the nanoTime, &#13;
+to be sure the file doesn''t overwrite any other.&#13;
+-&gt; Data for filling some tables: list of table names and a List of List of Composite Objects. &#13;
+Each list of table names is filled with the corresponding index of the List of Composite objects.&#13;
+&#13;
+It returns a FileOperationMessage Object that contains:&#13;
+a Type indicating if the operation was successfull,&#13;
+a message in the Session User language,&#13;
+a list of java.io.File that were created during the process.&#13;
+In this callable just one java.io.File is created. So the list of created File contains only one File in case of success.</desc>
     </language>
 </elementInfo>
 ' #txt
 wr0 f50 1347 59 26 26 -246 -48 #rect
+wr0 f50 res:/webContent/icons/doc-factory-logo.png?small #fDecoratorIcon
 wr0 f51 actionTable 'out=in;
 ' #txt
 wr0 f51 actionCode 'import ch.ivyteam.ivy.addons.docfactory.DocumentTemplate;
@@ -1094,9 +1171,17 @@ wr0 f57 1360 260 1360 300 #arcP
 wr0 f58 expr out #txt
 wr0 f58 1360 85 1360 148 #arcP
 wr0 f59 1347 363 26 26 14 0 #rect
+wr0 f59 res:/webContent/icons/doc-factory-logo.png?small #fDecoratorIcon
 wr0 f60 expr out #txt
 wr0 f60 1360 324 1360 363 #arcP
 wr0 f61 inParamDecl '<CompositeObject data,String optionalOutputpath,String optionalLetterName,String optionalOutputFormat,String templatePath,List<String> tableNamesList,List<Recordset> recordsetsList> param;' #txt
+wr0 f61 inParamInfo 'data.description=Ivy data class object used for the normal merge fields\: the properties names of the object are the mergefields names. The values of these properties will be written in the document at the place of the corresponding mergefields. 
+optionalLetterName.description=Produced document name (default is "letter" + nanotime)
+optionalOutputFormat.description=Output format among "doc", "docx", "pdf", "txt", "html". Default is "doc".
+optionalOutputpath.description=Output directory path (default is ''%IVY-ROOT-PATH%/ivy_RIA_files/)
+recordsetsList.description=Data for filling some tables (merge region). Each field of the recordset is seen as a mergefield, and each record is a row of data.
+tableNamesList.description=The list of the tables names (mail merge regions) present in the template
+templatePath.description=The template path. ' #txt
 wr0 f61 inParamTable 'out.data=param.data;
 out.ListOfRecordsets=param.recordsetsList;
 out.outputFormat=param.optionalOutputFormat;
@@ -1106,7 +1191,8 @@ out.tablesNamesList=param.tableNamesList;
 out.templatePath=param.templatePath;
 ' #txt
 wr0 f61 outParamDecl '<ch.ivyteam.ivy.addons.docfactory.FileOperationMessage fileOperationMessage> result;' #txt
-wr0 f61 callSignature writeDocumentWithMailMergeTable(ch.ivyteam.ivy.scripting.objects.CompositeObject,String,String,String,String,List<String>,List<Recordset>) #txt
+wr0 f61 outParamInfo 'fileOperationMessage.description=Result containing a Type indicating if the operation was successfull, a message in the Session User language, a list of java.io.File that were created during the process.' #txt
+wr0 f61 callSignature writeDocumentWithMailMergeTable(CompositeObject,String,String,String,String,List<String>,List<Recordset>) #txt
 wr0 f61 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -1116,10 +1202,41 @@ String,String,String,
 List&lt;String&gt;,List&lt;Recordset&gt;)</name>
         <nameStyle>108,5,7
 </nameStyle>
+        <desc>Produces a document with a list of merge fields and &#13;
+with the help of a document factory Object. The Merge Mail With Regions is supported.&#13;
+The Document Factory Object is a Java Object that can parse a document model&#13;
+that contains mergefields and replace those mergefields by some String Data.&#13;
+&#13;
+A Mail Merge Region is a Table in the template which rows are going to be automatically filled with some data.&#13;
+Each table in the template has a name and is set by a Start Mergefield(TableStart:nameOfTheTable).&#13;
+To be able to perform this operation, one may provide the list of the tables names, the merge fields names for each table and the data (rows).&#13;
+If there is no table in the given template, or no match between your data and the tables names/fieldsnames, these callables just ignore the tables&#13;
+and perform normal mail merge.&#13;
+&#13;
+This callable takes some mandatory and some optional input parameters.&#13;
+Mandatory input Parameters:&#13;
+-&gt; TemplatePath: this is the path of the template (document model)&#13;
+-&gt; data: A CompositeObject (DataClass). &#13;
+The values of the DataClass fields are going to be used to fill corresponding simple merge fields.&#13;
+&#13;
+Optional input parameters:&#13;
+-&gt; optionalOutputPath: where to store the created java.io.File. By default "ivy_RIA_files"&#13;
+-&gt; optionalOutputFormat: by default the first supported one (in general it will be "doc"&#13;
+-&gt; optionalLetterName: the file name of the letter. By default "letter"+ the nanoTime, &#13;
+to be sure the file doesn''t overwrite any other.&#13;
+-&gt; Data for filling some tables: list of table names and a List of Recordsets. &#13;
+Each list of table names is filled with the corresponding RecordSet (table name at index x corresponds to the recordset at the same index in the list).&#13;
+&#13;
+It returns a FileOperationMessage Object that contains:&#13;
+a Type indicating if the operation was successfull,&#13;
+a message in the Session User language,&#13;
+a list of java.io.File that were created during the process.&#13;
+In this callable just one java.io.File is created. So the list of created File contains only one File in case of success.</desc>
     </language>
 </elementInfo>
 ' #txt
 wr0 f61 1931 51 26 26 -171 -37 #rect
+wr0 f61 res:/webContent/icons/doc-factory-logo.png?small #fDecoratorIcon
 wr0 f62 actionTable 'out=in;
 ' #txt
 wr0 f62 actionCode '
@@ -1221,9 +1338,17 @@ wr0 f68 1944 252 1944 292 #arcP
 wr0 f69 expr out #txt
 wr0 f69 1944 77 1944 140 #arcP
 wr0 f70 1931 363 26 26 14 0 #rect
+wr0 f70 res:/webContent/icons/doc-factory-logo.png?small #fDecoratorIcon
 wr0 f71 expr out #txt
 wr0 f71 1944 316 1944 363 #arcP
 wr0 f72 inParamDecl '<String optionalOutputpath,String optionalLetterName,String optionalOutputFormat,String templatePath,CompositeObject DataForMailMergeOutOfTables,List<CompositeObject> parentTableDatas,List<List<CompositeObject>> nestedChildrenTableDatas> param;' #txt
+wr0 f72 inParamInfo 'DataForMailMergeOutOfTables.description=Ivy data class object used for the normal merge fields\: the properties names of the object are the mergefields names. The values of these properties will be written in the document at the place of the corresponding mergefields. 
+nestedChildrenTableDatas.description=Second level tables (tables inside the first level tables) data.
+optionalLetterName.description=Produced document name (default is "letter" + nanotime)
+optionalOutputFormat.description=Output format among "doc", "docx", "pdf", "txt", "html". Default is "doc".
+optionalOutputpath.description=Output directory path (default is ''%IVY-ROOT-PATH%/ivy_RIA_files/)
+parentTableDatas.description=First level tables data.
+templatePath.description=The template path. ' #txt
 wr0 f72 inParamTable 'out.data=param.DataForMailMergeOutOfTables;
 out.ListOfCompositeObjectsToFillTheTables=param.nestedChildrenTableDatas;
 out.ListOfParentCompositeObjects=param.parentTableDatas;
@@ -1233,9 +1358,10 @@ out.serialLetterName=param.optionalLetterName;
 out.templatePath=param.templatePath;
 ' #txt
 wr0 f72 outParamDecl '<ch.ivyteam.ivy.addons.docfactory.FileOperationMessage fileOperationMessage> result;' #txt
+wr0 f72 outParamInfo 'fileOperationMessage.description=Result containing a Type indicating if the operation was successfull, a message in the Session User language, a list of java.io.File that were created during the process.' #txt
 wr0 f72 outParamTable 'result.fileOperationMessage=in.fileOperationMessage;
 ' #txt
-wr0 f72 callSignature writeDocumentWithMailMergeNestedTable(String,String,String,String,ch.ivyteam.ivy.scripting.objects.CompositeObject,List<ch.ivyteam.ivy.scripting.objects.CompositeObject>,List<List<ch.ivyteam.ivy.scripting.objects.CompositeObject>>) #txt
+wr0 f72 callSignature writeDocumentWithMailMergeNestedTable(String,String,String,String,CompositeObject,List<CompositeObject>,List<List<CompositeObject>>) #txt
 wr0 f72 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -1244,25 +1370,24 @@ String,String,String,String,
 List&lt;CompositeObject&gt;,List&lt;List&lt;CompositeObject&gt;&gt;)</name>
         <nameStyle>118,5,7
 </nameStyle>
-        <desc>These callables produce a document with the data included in 
-a DataClass Object. The Merge Mail With Nested Regions is supported.
-Just One Level of Nested Regions is supported in this sub Process.
-The List&lt;CompositeObject&gt;  (List of Ivy DataClasses) parameter is used as parent Table.
-The  List&lt;List&lt;CompositeObject&gt;&gt;  (List of List of Ivy DataClasses) parameter is used as child Table.
-
-The Document Factory Object is a Java Object that can parse a document model
-that contains mergefields and replace those mergefields by some String Data.
-
-It returns a FileOperationMessage Object that contains:
-a Type indicating if the operation was successfull,
-a message in the Session User language,
-a list of java.io.File that were created during the process.
-
-In these callables, just one java.io.File should be created.</desc>
+        <desc>Produces a document with the data included in  a DataClass Object. &#13;
+The Merge Mail With Nested Regions is supported.&#13;
+Just One Level of Nested Regions is supported in this sub Process.&#13;
+The List&lt;CompositeObject&gt;  (List of Ivy DataClasses) parameter is used as parent Table.&#13;
+The  List&lt;List&lt;CompositeObject&gt;&gt;  (List of List of Ivy DataClasses) parameter is used as child Table.&#13;
+&#13;
+The Document Factory Object is a Java Object that can parse a document model&#13;
+that contains mergefields and replace those mergefields by some String Data.&#13;
+&#13;
+It returns a FileOperationMessage Object that contains:&#13;
+a Type indicating if the operation was successfull,&#13;
+a message in the Session User language,&#13;
+a list of java.io.File that were created during the process, just one java.io.File should be created.</desc>
     </language>
 </elementInfo>
 ' #txt
 wr0 f72 2779 43 26 26 26 -24 #rect
+wr0 f72 res:/webContent/icons/doc-factory-logo.png?small #fDecoratorIcon
 wr0 f73 actionTable 'out=in;
 ' #txt
 wr0 f73 actionCode 'import ch.ivyteam.ivy.addons.docfactory.BaseDocFactory;
@@ -1343,6 +1468,7 @@ wr0 f77 2792 228 2792 284 #arcP
 wr0 f78 expr out #txt
 wr0 f78 2792 69 2792 132 #arcP
 wr0 f79 2779 363 26 26 14 0 #rect
+wr0 f79 res:/webContent/icons/doc-factory-logo.png?small #fDecoratorIcon
 wr0 f80 expr out #txt
 wr0 f80 2792 308 2792 363 #arcP
 wr0 f81 actionTable 'out=in;
@@ -1419,6 +1545,11 @@ wr0 f83 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 ' #txt
 wr0 f83 3174 284 36 24 22 -9 #rect
 wr0 f84 inParamDecl '<String optionalOutputpath,String optionalLetterName,String optionalOutputFormat,String templatePath,Tree treeData> param;' #txt
+wr0 f84 inParamInfo 'optionalLetterName.description=Produced document name (default is "letter" + nanotime)
+optionalOutputFormat.description=Output format among "doc", "docx", "pdf", "txt", "html". Default is "doc".
+optionalOutputpath.description=Output directory path (default is ''%IVY-ROOT-PATH%/ivy_RIA_files/)
+templatePath.description=The template path. 
+treeData.description=Tree data for the tables and nested tables. Just One Level of Nested Regions is supported in this sub Process.' #txt
 wr0 f84 inParamTable 'out.outputFormat=param.optionalOutputFormat;
 out.outputPath=param.optionalOutputpath;
 out.serialLetterName=param.optionalLetterName;
@@ -1426,6 +1557,7 @@ out.templatePath=param.templatePath;
 out.TreeDataForNestedMailMerge=param.treeData;
 ' #txt
 wr0 f84 outParamDecl '<ch.ivyteam.ivy.addons.docfactory.FileOperationMessage fileOperationMessage> result;' #txt
+wr0 f84 outParamInfo 'fileOperationMessage.description=Result containing a Type indicating if the operation was successfull, a message in the Session User language, a list of java.io.File that were created during the process.' #txt
 wr0 f84 outParamTable 'result.fileOperationMessage=in.fileOperationMessage;
 ' #txt
 wr0 f84 callSignature writeDocumentWithMailMergeNestedTableWithTree(String,String,String,String,Tree) #txt
@@ -1437,25 +1569,24 @@ String,String,String,String,
 Tree)</name>
         <nameStyle>81,5,7
 </nameStyle>
-        <desc>These callables produce a document with the data included in 
-a Tree Object. The Merge Mail With Nested Regions is supported.
-Just One Level of Nested Regions is supported in this sub Process.
-The Tree is used to generate the Mail Merge with Nested Regions.
-The Object Value of the Node should be a DataClass (CompositeObject) and is used 
-to provide the merge fields data outside of the Nested Tables.
-The Document Factory Object is a Java Object that can parse a document model
-that contains mergefields and replace those mergefields by some String Data.
-
-It returns a FileOperationMessage Object that contains:
-a Type indicating if the operation was successfull,
-a message in the Session User language,
-a list of java.io.File that were created during the process.
-
-In these callables, just one java.io.File should be created.</desc>
+        <desc>Produces a document with the data included in &#13;
+a Tree Object. The Merge Mail With Nested Regions is supported.&#13;
+Just One Level of Nested Regions is supported in this sub Process.&#13;
+The Tree is used to generate the Mail Merge with Nested Regions.&#13;
+The Object Value of the Node should be a DataClass (CompositeObject) and is used &#13;
+to provide the merge fields data outside of the Nested Tables.&#13;
+The Document Factory Object is a Java Object that can parse a document model&#13;
+that contains mergefields and replace those mergefields by some String Data.&#13;
+&#13;
+It returns a FileOperationMessage Object that contains:&#13;
+a Type indicating if the operation was successfull,&#13;
+a message in the Session User language,&#13;
+a list of java.io.File that were created during the process, just one java.io.File is created.</desc>
     </language>
 </elementInfo>
 ' #txt
 wr0 f84 3179 43 26 26 26 -24 #rect
+wr0 f84 res:/webContent/icons/doc-factory-logo.png?small #fDecoratorIcon
 wr0 f85 expr out #txt
 wr0 f85 3192 156 3192 204 #arcP
 wr0 f86 expr out #txt
@@ -1463,9 +1594,16 @@ wr0 f86 3192 228 3192 284 #arcP
 wr0 f87 expr out #txt
 wr0 f87 3192 69 3192 132 #arcP
 wr0 f88 3179 371 26 26 14 0 #rect
+wr0 f88 res:/webContent/icons/doc-factory-logo.png?small #fDecoratorIcon
 wr0 f89 expr out #txt
 wr0 f89 3192 308 3192 371 #arcP
 wr0 f90 inParamDecl '<String optionalOutputpath,String optionalLetterName,String optionalOutputFormat,String templatePath,CompositeObject aData,List<CompositeObject> nestedListOfDatas> param;' #txt
+wr0 f90 inParamInfo 'aData.description=Data (CompositeObject) used to provide the merge fields data outside of the Nested Tables.
+nestedListOfDatas.description=A List of Dataclasses used for the mail Merge with nested tables. Each dataclass may contain lists of other nested dataclasses and so on... .There is no limit in nesting regions.
+optionalLetterName.description=Produced document name (default is "letter" + nanotime)
+optionalOutputFormat.description=Output format among "doc", "docx", "pdf", "txt", "html". Default is "doc".
+optionalOutputpath.description=Output directory path (default is ''%IVY-ROOT-PATH%/ivy_RIA_files/)
+templatePath.description=The template path. ' #txt
 wr0 f90 inParamTable 'out.data=param.aData;
 out.ListOfParentCompositeObjects=param.nestedListOfDatas;
 out.outputFormat=param.optionalOutputFormat;
@@ -1474,9 +1612,10 @@ out.serialLetterName=param.optionalLetterName;
 out.templatePath=param.templatePath;
 ' #txt
 wr0 f90 outParamDecl '<ch.ivyteam.ivy.addons.docfactory.FileOperationMessage fileOperationMessage> result;' #txt
+wr0 f90 outParamInfo 'fileOperationMessage.description=Result containing a Type indicating if the operation was successfull, a message in the Session User language, a list of java.io.File that were created during the process.' #txt
 wr0 f90 outParamTable 'result.fileOperationMessage=in.fileOperationMessage;
 ' #txt
-wr0 f90 callSignature writeDocumentWithMailMergeNestedTableWithListOfDatas(String,String,String,String,ch.ivyteam.ivy.scripting.objects.CompositeObject,List<ch.ivyteam.ivy.scripting.objects.CompositeObject>) #txt
+wr0 f90 callSignature writeDocumentWithMailMergeNestedTableWithListOfDatas(String,String,String,String,CompositeObject,List<CompositeObject>) #txt
 wr0 f90 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -1485,23 +1624,22 @@ String,String,String,String,
 CompositeObject, List&lt;CompositeObject&gt;)</name>
         <nameStyle>122,5,7
 </nameStyle>
-        <desc>These callables produce a document with the data included in 
-a Tree Object. The Merge Mail With Nested Regions is supported.
-
-The DataClass (CompositeObject) is used 
-to provide the merge fields data outside of the Nested Tables.
-A List of Dataclasses containing other List of DataClasses... will be used to do the mail Merge with nested tables.
-
-It returns a FileOperationMessage Object that contains:
-a Type indicating if the operation was successfull,
-a message in the Session User language,
-a list of java.io.File that were created during the process.
-
-In these callables, just one java.io.File should be created.</desc>
+        <desc>Produces a document with the data from the given Data object. &#13;
+The Merge Mail With Nested Regions is supported and the each data in the List&lt;CompositeObject&gt; represents a table.&#13;
+&#13;
+The DataClass (CompositeObject) is used to provide the merge fields data outside of the Nested Tables.&#13;
+A List of Dataclasses is be used to do the mail Merge with nested tables.&#13;
+Each dataclass may contain lists of other nested dataclasses and so on... .There is no limit in nesting regions.&#13;
+&#13;
+It returns a FileOperationMessage Object that contains:&#13;
+a Type indicating if the operation was successfull,&#13;
+a message in the Session User language,&#13;
+a list of java.io.File that were created during the process, just one java.io.File is created.</desc>
     </language>
 </elementInfo>
 ' #txt
 wr0 f90 3611 43 26 26 26 -24 #rect
+wr0 f90 res:/webContent/icons/doc-factory-logo.png?small #fDecoratorIcon
 wr0 f91 actionTable 'out=in;
 ' #txt
 wr0 f91 actionCode '
@@ -1582,6 +1720,7 @@ wr0 f95 3624 228 3624 284 #arcP
 wr0 f96 expr out #txt
 wr0 f96 3624 69 3624 132 #arcP
 wr0 f97 3611 371 26 26 14 0 #rect
+wr0 f97 res:/webContent/icons/doc-factory-logo.png?small #fDecoratorIcon
 wr0 f98 expr out #txt
 wr0 f98 3624 308 3624 371 #arcP
 wr0 f99 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -1634,6 +1773,11 @@ In these callables, just one java.io.File should be created.</name>
 wr0 f99 2771 427 1002 410 -371 -200 #rect
 wr0 f99 -657956|-1|-16777216 #nodeStyle
 wr0 f100 inParamDecl '<CompositeObject data,String optionalOutputpath,String optionalLetterName,String optionalOutputFormat,String templatePath> param;' #txt
+wr0 f100 inParamInfo 'data.description=Ivy data class object\: the properties names of the object are the mergefields names. The values of these properties will be written in the document at the place of the corresponding mergefields. The collections of Serializables inside this bean are used for supporting the mail merge with region.
+optionalLetterName.description=Produced document name (default is "letter" + nanotime)
+optionalOutputFormat.description=Output format among "doc", "docx", "pdf", "txt", "html". Default is "doc".
+optionalOutputpath.description=Output directory path (default is ''%IVY-ROOT-PATH%/ivy_RIA_files/)
+templatePath.description=The template path. ' #txt
 wr0 f100 inParamTable 'out.data=param.data;
 out.outputFormat=param.optionalOutputFormat;
 out.outputPath=param.optionalOutputpath;
@@ -1641,6 +1785,7 @@ out.serialLetterName=param.optionalLetterName;
 out.templatePath=param.templatePath;
 ' #txt
 wr0 f100 outParamDecl '<ch.ivyteam.ivy.addons.docfactory.FileOperationMessage fileOperationMessage> result;' #txt
+wr0 f100 outParamInfo 'fileOperationMessage.description=Result containing a Type indicating if the operation was successfull, a message in the Session User language, a list of java.io.File that were created during the process.' #txt
 wr0 f100 outParamTable 'result.fileOperationMessage=in.fileOperationMessage;
 ' #txt
 wr0 f100 callSignature writeDocumentWithNestedDataClass(CompositeObject,String,String,String,String) #txt
@@ -1650,33 +1795,39 @@ wr0 f100 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
         <name>writeDocumentWithNestedDataClass(&#13;
 CompositeObject, &#13;
 String,String,String,String)</name>
-        <desc>This callable produces a document with a data (DataClass) and 
-with the help of a document factory Object.
-The Document Factory Object is a Java Object that can parse a document model
-that contains mergefields and replace those mergefields by some String Data.
-
-This callable takes some mandatory and some optional input parameters.
-Mandatory input Parameters:
--&gt; TemplatePath: this is the path of the template (document model)
--&gt; data . The values of the DataClass fields are going to be used to fill the template and to produce the document.
-The fields of the data have to be named like the fields of the template.
-Optional input parameters:
--&gt; optionalOutputPath: where to store the created java.io.File. By default "ivy_RIA_files"
--&gt; optionalOutputFormat: by default the first supported one (in general it will be "doc"
--&gt; optionalLetterName: the file name of the letter. By default "letter"+ the nanoTime, 
-to be sure the file doesn''t overwrite any other.
-
-It returns a FileOperationMessage Object that contains:
-a Type indicating if the operation was successfull,
-a message in the Session User language,
-a list of java.io.File that were created during the porcess.
-
+        <desc>This callable produces a document with a data (DataClass) and &#13;
+with the help of a document factory Object. &#13;
+&#13;
+The Document Factory Object is a Java Object that can parse a document model&#13;
+that contains mergefields and replace those mergefields by some String Data.&#13;
+&#13;
+This callable takes some mandatory and some optional input parameters.&#13;
+Mandatory input Parameters:&#13;
+-&gt; TemplatePath: this is the path of the template (document model)&#13;
+-&gt; data: A CompositeObject (DataClass). &#13;
+The values of the DataClass fields are going to be used to fill the template and to produce the document.&#13;
+The fields of the data have to be named like the fields of the template. &#13;
+If the DataClass Object contains some List of other DataClasses, they will be used in mail merge with nested regions.&#13;
+&#13;
+Optional input parameters:&#13;
+-&gt; optionalOutputPath: where to store the created java.io.File. By default "ivy_RIA_files"&#13;
+-&gt; optionalOutputFormat: by default the first supported one (in general it will be "doc"&#13;
+-&gt; optionalLetterName: the file name of the letter. By default "letter"+ the nanoTime, &#13;
+to be sure the file doesn''t overwrite any other.&#13;
+&#13;
+It returns a FileOperationMessage Object that contains:&#13;
+a Type indicating if the operation was successfull,&#13;
+a message in the Session User language,&#13;
+a list of java.io.File that were created during the process.&#13;
+&#13;
 In this callable, just one java.io.File should be created.</desc>
     </language>
 </elementInfo>
 ' #txt
 wr0 f100 979 51 26 26 -161 -38 #rect
+wr0 f100 res:/webContent/icons/doc-factory-logo.png?small #fDecoratorIcon
 wr0 f101 979 363 26 26 14 0 #rect
+wr0 f101 res:/webContent/icons/doc-factory-logo.png?small #fDecoratorIcon
 wr0 f102 actionTable 'out=in;
 ' #txt
 wr0 f102 actionCode 'import ch.ivyteam.ivy.addons.docfactory.BaseDocFactory;
