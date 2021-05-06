@@ -242,6 +242,9 @@ ws0 f5 -657956|-1|-16777216 #nodeStyle
 >Proto ws0 .xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
+        <desc>parses a document that contains mergefields 
+and replaces those mergefields with real data
+into multiple letters.</desc>
         <swimlaneLabel></swimlaneLabel>
         <swimlaneLabel></swimlaneLabel>
         <swimlaneLabel></swimlaneLabel>
