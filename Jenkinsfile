@@ -57,7 +57,7 @@ pipeline {
         
           echo 'deploy doc'
           docker.image('maven:3.6.3-jdk-11').inside {            
-            def phase = env.BRANCH_NAME == 'master' ? 'deploy' : 'verify'
+            def phase = env.BRANCH_NAME == 'release/9.2' ? 'deploy' : 'verify'
             maven cmd: "-f doc-factory/doc/pom.xml clean ${phase}"
           }
           archiveArtifacts 'doc-factory/doc/target/*.zip'
