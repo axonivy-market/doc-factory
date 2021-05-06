@@ -140,6 +140,7 @@ wr0 f0 outParamInfo 'fileOperationMessage.description=Result containing a Type i
 wr0 f0 outParamTable 'result.fileOperationMessage=in.fileOperationMessage;
 ' #txt
 wr0 f0 callSignature writeSerialLetterToOneCorrespondant(List<ch.ivyteam.ivy.addons.docfactory.TemplateMergeField>,String,String,String,String) #txt
+wr0 f0 tags CONNECTOR #txt
 wr0 f0 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -303,6 +304,7 @@ wr0 f10 outParamInfo 'fileOperationMessage.description=Result containing a Type 
 wr0 f10 outParamTable 'result.fileOperationMessage=in.fileOperationMessage;
 ' #txt
 wr0 f10 callSignature writeDocumentWithOneDataClass(CompositeObject,String,String,String,String) #txt
+wr0 f10 tags CONNECTOR #txt
 wr0 f10 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -495,6 +497,7 @@ wr0 f22 outParamInfo 'fileOperationMessage.description=Result containing a Type 
 wr0 f22 outParamTable 'result.fileOperationMessage=in.fileOperationMessage;
 ' #txt
 wr0 f22 callSignature writeDocumentWithMailMergeTable(List<ch.ivyteam.ivy.addons.docfactory.TemplateMergeField>,String,String,String,String,List<String>,List<List<CompositeObject>>) #txt
+wr0 f22 tags CONNECTOR #txt
 wr0 f22 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -656,6 +659,7 @@ wr0 f31 outParamInfo 'fileOperationMessage.description=Result containing a Type 
 wr0 f31 outParamTable 'result.fileOperationMessage=in.fileOperationMessage;
 ' #txt
 wr0 f31 callSignature writeDocumentWithMailMergeTable(List<ch.ivyteam.ivy.addons.docfactory.TemplateMergeField>,String,String,String,String,List<String>,List<Recordset>) #txt
+wr0 f31 tags CONNECTOR #txt
 wr0 f31 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -818,6 +822,7 @@ wr0 f40 outParamInfo 'fileOperationMessage.description=Result containing a Type 
 wr0 f40 outParamTable 'result.fileOperationMessage=in.fileOperationMessage;
 ' #txt
 wr0 f40 callSignature writeDocumentWithMailMergeTable(List<ch.ivyteam.ivy.addons.docfactory.TemplateMergeField>,String,String,String,String,List<String>,List<List<String>>,List<List<List<Object>>>) #txt
+wr0 f40 tags CONNECTOR #txt
 wr0 f40 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -1026,6 +1031,7 @@ wr0 f50 outParamInfo 'fileOperationMessage.description=Result containing a Type 
 wr0 f50 outParamTable 'result.fileOperationMessage=in.fileOperationMessage;
 ' #txt
 wr0 f50 callSignature writeDocumentWithMailMergeTable(CompositeObject,String,String,String,String,List<String>,List<List<CompositeObject>>) #txt
+wr0 f50 tags CONNECTOR #txt
 wr0 f50 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -1193,6 +1199,7 @@ out.templatePath=param.templatePath;
 wr0 f61 outParamDecl '<ch.ivyteam.ivy.addons.docfactory.FileOperationMessage fileOperationMessage> result;' #txt
 wr0 f61 outParamInfo 'fileOperationMessage.description=Result containing a Type indicating if the operation was successfull, a message in the Session User language, a list of java.io.File that were created during the process.' #txt
 wr0 f61 callSignature writeDocumentWithMailMergeTable(CompositeObject,String,String,String,String,List<String>,List<Recordset>) #txt
+wr0 f61 tags CONNECTOR #txt
 wr0 f61 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -1362,6 +1369,7 @@ wr0 f72 outParamInfo 'fileOperationMessage.description=Result containing a Type 
 wr0 f72 outParamTable 'result.fileOperationMessage=in.fileOperationMessage;
 ' #txt
 wr0 f72 callSignature writeDocumentWithMailMergeNestedTable(String,String,String,String,CompositeObject,List<CompositeObject>,List<List<CompositeObject>>) #txt
+wr0 f72 tags CONNECTOR #txt
 wr0 f72 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -1561,6 +1569,7 @@ wr0 f84 outParamInfo 'fileOperationMessage.description=Result containing a Type 
 wr0 f84 outParamTable 'result.fileOperationMessage=in.fileOperationMessage;
 ' #txt
 wr0 f84 callSignature writeDocumentWithMailMergeNestedTableWithTree(String,String,String,String,Tree) #txt
+wr0 f84 tags CONNECTOR #txt
 wr0 f84 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -1616,6 +1625,7 @@ wr0 f90 outParamInfo 'fileOperationMessage.description=Result containing a Type 
 wr0 f90 outParamTable 'result.fileOperationMessage=in.fileOperationMessage;
 ' #txt
 wr0 f90 callSignature writeDocumentWithMailMergeNestedTableWithListOfDatas(String,String,String,String,CompositeObject,List<CompositeObject>) #txt
+wr0 f90 tags CONNECTOR #txt
 wr0 f90 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -1789,6 +1799,7 @@ wr0 f100 outParamInfo 'fileOperationMessage.description=Result containing a Type
 wr0 f100 outParamTable 'result.fileOperationMessage=in.fileOperationMessage;
 ' #txt
 wr0 f100 callSignature writeDocumentWithNestedDataClass(CompositeObject,String,String,String,String) #txt
+wr0 f100 tags CONNECTOR #txt
 wr0 f100 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
