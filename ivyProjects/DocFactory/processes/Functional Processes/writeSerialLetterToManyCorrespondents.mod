@@ -45,6 +45,7 @@ ws0 f0 outParamTable 'result.FileOperationMessage=in.fileOperationMessage;
 result.listOfFileOperationMessages=in.listofFileOperationMessages;
 ' #txt
 ws0 f0 callSignature writeSerialLettersToManyCorrespondents(String,List<ch.ivyteam.ivy.addons.docfactory.DocumentTemplate>,Boolean,Boolean,String,String) #txt
+ws0 f0 tags CONNECTOR #txt
 ws0 f0 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
