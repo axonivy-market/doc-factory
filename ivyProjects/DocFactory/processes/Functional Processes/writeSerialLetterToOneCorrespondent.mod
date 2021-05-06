@@ -1935,6 +1935,8 @@ wr0 f110 992 308 992 363 #arcP
 >Proto wr0 .xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
+        <desc>parses a document model that contains mergefields 
+and replaces those mergefields with real data.</desc>
         <swimlaneLabel></swimlaneLabel>
         <swimlaneLabel></swimlaneLabel>
         <swimlaneLabel></swimlaneLabel>
