@@ -1,7 +1,7 @@
 [Ivy]
 1249FCC8592E4E39 9.2.0 #module
 >Proto >Proto Collection #zClass
-ws0 writeSerialLetterToManyCorrespondants Big #zClass
+ws0 writeSerialLetterToManyCorrespondents Big #zClass
 ws0 B #cInfo
 ws0 #process
 ws0 @TextInP .xml .xml #zField
