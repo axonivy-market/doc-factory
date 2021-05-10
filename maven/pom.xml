@@ -12,7 +12,7 @@
     </organization>
 
     <properties>
-        <revision>9.2.2-SNAPSHOT</revision>
+        <revision>9.2.2</revision>
 
         <project-build-plugin-version>9.2.2</project-build-plugin-version>
         <maven-dependency-plugin-version>3.0.2</maven-dependency-plugin-version>
