@@ -112,27 +112,6 @@
       </plugin>
       
       <plugin>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <version>${maven-dependency-plugin-version}</version>
-        <executions>
-          <execution>
-            <id>copy-dependencies</id>
-            <phase>process-resources</phase>
-            <goals>
-              <goal>copy-dependencies</goal>
-            </goals>
-            <configuration>
-              <outputDirectory>lib</outputDirectory>
-              <includeArtifactIds>pdfbox,
-                preflight,
-                xmpbox,
-                fontbox</includeArtifactIds>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      
-      <plugin>
         <groupId>com.axonivy.ivy.ci</groupId>
         <artifactId>project-build-plugin</artifactId>
         <version>${project-build-plugin-version}</version>
