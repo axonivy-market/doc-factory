@@ -2,6 +2,7 @@ package com.axon.docfactory.demos;
 
 import static com.codeborne.selenide.Condition.exactText;
 import static com.codeborne.selenide.Condition.visible;
+import static com.codeborne.selenide.Selectors.withText;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -81,12 +82,10 @@ public class WebTestApiExamplesIT
     open(EngineUrl.createProcessUrl("/DocFactoryDemos/16DFD8AB2E4BFFF9/start2.ivp"));
     $(By.id("form:name")).shouldBe(visible).sendKeys("Batman");
     $("button").click();
-    if (!EngineUrl.isDesigner())
-    {
-      $("h3").shouldHave(exactText("Task End"));
-      open(EngineUrl.create().path("tasks").toUrl());
-    }
+    $(withText("Task End")).shouldBe(visible);
+    open(EngineUrl.create().path("tasks").toUrl());
     $(By.linkText("Task: View attached document")).shouldBe(visible).click();
+    Selenide.switchTo().frame("iFrame");
     $("h3").shouldHave(exactText("DocFactoryDemos: Attached Document"));
     $("iframe").shouldBe(visible);
   }
