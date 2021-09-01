@@ -10,8 +10,6 @@ import ch.ivyteam.ivy.PersistencyService;
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.persistence.IPersistencyManager;
 import ch.ivyteam.ivy.persistence.IPersistencyService;
-import ch.ivyteam.ivy.persistence.IPersistentTransaction;
-import ch.ivyteam.ivy.persistence.ITransactionExecutable;
 import ch.ivyteam.ivy.persistence.PersistencyException;
 import ch.ivyteam.ivy.persistence.db.DatabasePersistencyService;
 import ch.ivyteam.ivy.persistence.db.DatabaseTransaction;
@@ -24,7 +22,7 @@ import ch.ivyteam.ivy.server.ServerFactory;
 /**
  * @author ec, Soreco AG
  * @since 28.01.2010
- * This class is used to connect the FileManager to the 
+ * This class is used to connect the FileManager to the
  * Ivy System DB.
  */
 public class IvySystemDBReuser {
@@ -48,13 +46,11 @@ public class IvySystemDBReuser {
 	 * creates a Table for the FileManager in the Ivy System Db if it doesn't exists.
 	 * @param the table name to create if not exists
 	 * @throws PersistencyException
-	 * @throws SQLException 
+	 * @throws SQLException
 	 *
 	 */
 	public static void createFileManagerTableIfNotExist(final String _tableName) throws PersistencyException, SQLException{
-		getPersistencyService().execute(new ITransactionExecutable<Void>(){
-
-			public Void execute(IPersistentTransaction transaction) throws PersistencyException {
+		getPersistencyService().transaction().execute(transaction -> {
 				DatabaseTransaction dt = (DatabaseTransaction)transaction;
 				PreparedStatement stmt;
 				String createFileManagerTable = "CREATE TABLE IWA_UPLOADEDFILE (" +
@@ -90,17 +86,16 @@ public class IvySystemDBReuser {
 						{
 							// give back statement
 							dt.getDbConnection().giveBackPreparedStatement(stmt);
-						}						
+						}
 					}
-					return null;
 				}
 				catch(SQLException ex)
 				{
 					throw new PersistencyException(ex);
 				}
-			}});
+			});
 	}
-	
+
 	/**
 	 * returns the next File ID in the UPLOADEDFILE table
 	 * @return
@@ -112,18 +107,18 @@ public class IvySystemDBReuser {
 		return dbp.getNextLongIdentifier("IWA_UploadedFile");
 		}catch(Exception _ex){
 			throw new PersistencyException("getNextFileID() "+_ex.getMessage());
-		
+
 		}
 	}
-	
+
 	public static List<Record> executeStmt(PreparedStatement _stmt) throws PersistencyException{
 
 		if(_stmt == null){
 			throw(new PersistencyException("Invalid PreparedStatement"));
 		}
 
-		
-		List<Record> recordList= (List<Record>) List.create(Record.class);
+
+		List<Record> recordList= List.create(Record.class);
 		try (ResultSet rst=_stmt.executeQuery())
 		{
 			ResultSetMetaData rsmd = rst.getMetaData();
@@ -149,15 +144,15 @@ public class IvySystemDBReuser {
 		}
 		return recordList;
 	}
-	
+
 	/**
 	 * executes a PreparedStatement with the assurance to close and give back the used DB Connection.
 	 */
 	public static <T> T executePreparedStatement(final String _sql, final IPreparedStatementExecutable<T> _executor) throws PersistencyException
 	{
-		return ((DatabasePersistencyService)getPersistencyService()).execute(_sql, _executor);	
+		return ((DatabasePersistencyService)getPersistencyService()).execute(_sql, _executor);
 	}
-	
+
 	/**
 	 * gives the database product name of the Ivy System Database.
 	 * @return
