@@ -113,10 +113,7 @@ public abstract class AbstractProcessDataDbAction<T> {
 	 */
 	private T runQuerey(final boolean doReturnValue) throws PersistencyException {
 		final String sqlQuery = getSqlQuery();
-		T value = getPersistencyService().execute(new ITransactionExecutable<T>(){
-
-			@Override
-			public T execute(IPersistentTransaction transaction) throws PersistencyException {
+		T value = getPersistencyService().transaction().executeAndGet(transaction ->  {
 				final ch.ivyteam.ivy.persistence.db.DatabaseTransaction dt = (ch.ivyteam.ivy.persistence.db.DatabaseTransaction) transaction;
 				final Connection connection = dt.getDbConnection().getConnection();
 				try {
@@ -139,8 +136,7 @@ public abstract class AbstractProcessDataDbAction<T> {
 					//
 				}
 				return null;
-			}
-		});
+			});
 		
 		if(doReturnValue) {
 			return value;
