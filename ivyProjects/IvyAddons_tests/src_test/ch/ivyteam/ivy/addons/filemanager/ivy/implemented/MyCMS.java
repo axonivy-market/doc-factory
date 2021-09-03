@@ -268,7 +268,7 @@ public class MyCMS implements IContentManagementSystem
   }
 	
   @Override
-  public IContentObject getContentObjectForKey(CmKey key) {
+  public IContentObject getContentObject(CmKey key) {
     return null;
   }
 }
