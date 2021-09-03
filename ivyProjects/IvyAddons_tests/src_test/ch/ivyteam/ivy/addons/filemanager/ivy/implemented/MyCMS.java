@@ -14,6 +14,7 @@ import ch.ivyteam.ivy.cm.IContentManagementSystem;
 import ch.ivyteam.ivy.cm.IContentObject;
 import ch.ivyteam.ivy.cm.IContentObjectValue;
 import ch.ivyteam.ivy.cm.impl.ContentManagementEvent;
+import ch.ivyteam.ivy.cm.internal.eclipse.CmKey;
 import ch.ivyteam.ivy.search.internal.IndexedObject;
 import ch.ivyteam.ivy.search.restricted.exceptions.IndexException;
 import ch.ivyteam.ivy.search.restricted.indexed.IIndexedSearchQuery;
@@ -146,12 +147,6 @@ public class MyCMS implements IContentManagementSystem
   }
 
   @Override
-  public IContentObject getContentObjectForKey(Object key)
-  {
-    return null;
-  }
-
-  @Override
   public IContentObjectValue getContentObjectValue(String uri, Locale language)
   {
     return null;
@@ -184,12 +179,6 @@ public class MyCMS implements IContentManagementSystem
 
   @Override
   public String getDescription()
-  {
-    return null;
-  }
-
-  @Override
-  public Object getIdentifier()
   {
     return null;
   }
@@ -270,6 +259,16 @@ public class MyCMS implements IContentManagementSystem
   @Override
   public String coLocale(String uri, String locale)
   {
+    return null;
+  }
+
+  @Override
+  public CmKey getKey() {
+    return null;
+  }
+	
+  @Override
+  public IContentObject getContentObjectForKey(CmKey key) {
     return null;
   }
 }
