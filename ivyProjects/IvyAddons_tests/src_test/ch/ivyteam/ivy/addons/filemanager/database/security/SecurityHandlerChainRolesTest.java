@@ -17,7 +17,6 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import ch.ivyteam.ivy.addons.filemanager.FileManagementHandlersFactory;
 import ch.ivyteam.ivy.addons.filemanager.configuration.BasicConfigurationController;
-import ch.ivyteam.ivy.addons.filemanager.ivy.implemented.MyCMS;
 import ch.ivyteam.ivy.addons.filemanager.ivy.implemented.MyIRole;
 import ch.ivyteam.ivy.cm.IContentManagementSystem;
 import ch.ivyteam.ivy.environment.Ivy;
@@ -26,17 +25,13 @@ import ch.ivyteam.ivy.security.IRole;
 import ch.ivyteam.ivy.security.IUser;
 import ch.ivyteam.ivy.workflow.IWorkflowSession;
 
-/**
- * @author ec
- *
- */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({Ivy.class, IContentManagementSystem.class,FileManagementHandlersFactory.class})
 public class SecurityHandlerChainRolesTest {
 
 	@Test
 	public void testSecurityHandlerChainHas_IvySessionUserRolesAtTheBeginning_IfGivenUserisNull() throws Exception {
-		MyCMS myCMS = mock(MyCMS.class);
+		var myCMS = mock(IContentManagementSystem.class);
 		when(myCMS.co(any(String.class))).thenReturn("");
 		var var = mock(GlobalVariableContextAdapter.class);
 		when(var.get(any(String.class))).thenReturn("");
@@ -63,7 +58,7 @@ public class SecurityHandlerChainRolesTest {
 	
 	@Test
 	public void testSecurityHandlerChainHas_GivenUserRolesAtTheBeginning_AndNotIvySessionUserRoles_IfGivenUserNotNull() throws Exception {
-		MyCMS myCMS = mock(MyCMS.class);
+		var myCMS = mock(IContentManagementSystem.class);
 		when(myCMS.co(any(String.class))).thenReturn("");
 		var var = mock(GlobalVariableContextAdapter.class);
 		when(var.get(any(String.class))).thenReturn("");
@@ -93,7 +88,7 @@ public class SecurityHandlerChainRolesTest {
 	
 	@Test
 	public void testSecurityHandlerChainHas_IvySessionUserRolesAtTheBeginning_IfGivenUserisNull_AndAllTheDynamicallyPassedRoles() throws Exception {
-		MyCMS myCMS = mock(MyCMS.class);
+		var myCMS = mock(IContentManagementSystem.class);
 		when(myCMS.co(any(String.class))).thenReturn("");
 		var var = mock(GlobalVariableContextAdapter.class);
 		when(var.get(any(String.class))).thenReturn("");
@@ -121,7 +116,7 @@ public class SecurityHandlerChainRolesTest {
 	
 	@Test
 	public void testSecurityHandlerChainHas_GivenUserRolesAtTheBeginning_AndAllTheDynamicallyPassedRoles_IfGivenUserNotNull() throws Exception {
-		MyCMS myCMS = mock(MyCMS.class);
+		var myCMS = mock(IContentManagementSystem.class);
 		when(myCMS.co(any(String.class))).thenReturn("");
 		var var = mock(GlobalVariableContextAdapter.class);
 		when(var.get(any(String.class))).thenReturn("");
