@@ -27,7 +27,6 @@ import ch.ivyteam.ivy.addons.filemanager.database.IvyExternalDatabaseConnectionM
 import ch.ivyteam.ivy.addons.filemanager.database.PersistenceConnectionManagerFactory;
 import ch.ivyteam.ivy.addons.filemanager.database.persistence.IFileTagPersistence;
 import ch.ivyteam.ivy.addons.filemanager.database.persistence.IPersistenceConnectionManager;
-import ch.ivyteam.ivy.addons.filemanager.ivy.implemented.MyCMS;
 import ch.ivyteam.ivy.cm.IContentManagementSystem;
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.globalvars.GlobalVariableContextAdapter;
@@ -43,7 +42,7 @@ public class FileTagSearchFunctionTest {
 		
 		var var = mock(GlobalVariableContextAdapter.class);
 		when(var.get(any(String.class))).thenReturn("");
-		MyCMS myCMS = mock(MyCMS.class);
+		var myCMS = mock(IContentManagementSystem.class);
 		when(myCMS.co(any(String.class))).thenReturn("");
 		
 		mockStatic(Ivy.class);
@@ -82,7 +81,7 @@ public class FileTagSearchFunctionTest {
 		
 		var var = mock(GlobalVariableContextAdapter.class);
 		when(var.get(any(String.class))).thenReturn("");
-		MyCMS myCMS = mock(MyCMS.class);
+		var myCMS = mock(IContentManagementSystem.class);
 		when(myCMS.co(any(String.class))).thenReturn("");
 		
 		mockStatic(Ivy.class);
@@ -119,7 +118,7 @@ public class FileTagSearchFunctionTest {
 		String search = "gfrefr";
 		var var = mock(GlobalVariableContextAdapter.class);
 		when(var.get(any(String.class))).thenReturn("");
-		MyCMS myCMS = mock(MyCMS.class);
+		var myCMS = mock(IContentManagementSystem.class);
 		when(myCMS.co(any(String.class))).thenReturn("");
 		
 		mockStatic(Ivy.class);

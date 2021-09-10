@@ -23,11 +23,12 @@ import ch.ivyteam.ivy.addons.filemanager.configuration.BasicConfigurationControl
 import ch.ivyteam.ivy.addons.filemanager.database.security.SecurityHandler;
 import ch.ivyteam.ivy.addons.filemanager.database.security.SecurityResponse;
 import ch.ivyteam.ivy.addons.filemanager.database.security.SecurityRightsEnum;
-import ch.ivyteam.ivy.addons.filemanager.ivy.implemented.MyCMS;
+import ch.ivyteam.ivy.cm.IContentManagementSystem;
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.security.ISecurityContext;
 import ch.ivyteam.ivy.security.IUser;
 import ch.ivyteam.ivy.workflow.IWorkflowSession;
+
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(Ivy.class)
 public class FileStoreDbHandlerRenameDirectory {
@@ -52,7 +53,7 @@ public class FileStoreDbHandlerRenameDirectory {
 	
 	@Test
 	public void testRenameDirectory_goalDirectoryExists_ErrorMessageReturned() throws Exception {
-		MyCMS myCMS = mock(MyCMS.class);
+		var myCMS = mock(IContentManagementSystem.class);
 		when(myCMS.co(any(String.class))).thenReturn("");
 		mockStatic(Ivy.class);
 		when(Ivy.cms()).thenReturn(myCMS);
@@ -72,7 +73,7 @@ public class FileStoreDbHandlerRenameDirectory {
 	
 	@Test
 	public void testRenameDirectory_DirectoryToRenameDoesNotExists_ErrorMessageReturned() throws Exception {
-		MyCMS myCMS = mock(MyCMS.class);
+		var myCMS = mock(IContentManagementSystem.class);
 		when(myCMS.co(any(String.class))).thenReturn("");
 		mockStatic(Ivy.class);
 		when(Ivy.cms()).thenReturn(myCMS);
@@ -92,7 +93,7 @@ public class FileStoreDbHandlerRenameDirectory {
 	
 	@Test
 	public void testRenameDirectory_SecurityActivated_RenameNotAllowed_ErrorMessageReturned() throws Exception {
-		MyCMS myCMS = mock(MyCMS.class);
+		var myCMS = mock(IContentManagementSystem.class);
 		when(myCMS.co(any(String.class))).thenReturn("");
 		mockStatic(Ivy.class);
 		when(Ivy.cms()).thenReturn(myCMS);
@@ -121,7 +122,7 @@ public class FileStoreDbHandlerRenameDirectory {
 	@SuppressWarnings("unchecked")
 	@Test
 	public void testRenameDirectory_SecurityActivated_RenameAllowed_SuccessMessageReturned() throws Exception {
-		MyCMS myCMS = mock(MyCMS.class);
+		var myCMS = mock(IContentManagementSystem.class);
 		when(myCMS.co(any(String.class))).thenReturn("");
 		mockStatic(Ivy.class);
 		when(Ivy.cms()).thenReturn(myCMS);
@@ -157,7 +158,7 @@ public class FileStoreDbHandlerRenameDirectory {
 	
 	@Test
 	public void testRenameDirectory_SecurityNotActivated_SuccessMessageReturned() throws Exception {
-		MyCMS myCMS = mock(MyCMS.class);
+		var myCMS = mock(IContentManagementSystem.class);
 		when(myCMS.co(any(String.class))).thenReturn("");
 		mockStatic(Ivy.class);
 		when(Ivy.cms()).thenReturn(myCMS);
