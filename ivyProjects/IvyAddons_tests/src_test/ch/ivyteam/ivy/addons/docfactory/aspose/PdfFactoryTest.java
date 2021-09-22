@@ -85,45 +85,6 @@ public class PdfFactoryTest {
 	public void get() {
 		assertThat(PdfFactory.get(), instanceOf(PdfFactory.class));
 	}
-
-	@Test
-	public void appendPdfFiles() throws Exception {
-		List<java.io.File> filesToAppend = new ArrayList<>();
-		filesToAppend.add(PDF1);
-		filesToAppend.add(PDF2);
-		
-		java.io.File jf = new java.io.File(f.getAbsolutePath());
-		if(jf.isFile()) {
-			jf.delete();
-		}
-		jf.createNewFile();
-		
-		java.io.File result = PdfFactory.get().appendPdfFiles("appended_pdf_files.pdf", filesToAppend).getJavaFile();
-		assertTrue(result.isFile());
-	}
-	
-	@Test
-	public void close_is_called_on_leadingDocument() throws URISyntaxException, IOException{
-		List<java.io.File> filesToAppend = new ArrayList<>();
-		filesToAppend.add(PDF1);
-		filesToAppend.add(PDF2);
-		
-		java.io.File jf = new java.io.File(f.getAbsolutePath());
-		if(jf.isFile()) {
-			jf.delete();
-		}
-		jf.createNewFile();
-		
-		AsposePdfFactory factory = (AsposePdfFactory) PdfFactory.get();
-		Document leadingDocument = mock(Document.class);
-		
-		Document baseDocument = new Document(new FileInputStream(PDF2));
-		when(leadingDocument.getPages()).thenReturn(baseDocument.getPages());
-		
-		factory.appendFilesToDocument(leadingDocument, filesToAppend, "appended_pdf_files.pdf");
-		
-		verify(leadingDocument).close();
-	}
 	
 	@Test
 	public void close_is_called_on_appendedDocument() throws FileNotFoundException, URISyntaxException{
