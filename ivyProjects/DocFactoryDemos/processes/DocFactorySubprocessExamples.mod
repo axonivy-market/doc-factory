@@ -699,17 +699,17 @@ e.g. "person.address" are not expanded.</name>
 </elementInfo>
 ' #txt
 De0 f47 800 1002 224 60 -109 -24 #rect
-De0 f48 template "/ProcessPages/DocFactoryAPIExamples/DonePage.ivc" #txt
+De0 f48 template "view/done.xhtml" #txt
 De0 f48 721 225 30 30 0 15 #rect
 De0 f49 expr out #txt
 De0 f49 672 240 721 240 #arcP
-De0 f1 template "/ProcessPages/DocFactoryAPIExamples/DonePage.ivc" #txt
+De0 f1 template "view/done.xhtml" #txt
 De0 f1 721 369 30 30 0 15 #rect
-De0 f2 template "/ProcessPages/DocFactoryAPIExamples/DonePage.ivc" #txt
+De0 f2 template "view/done.xhtml" #txt
 De0 f2 721 641 30 30 0 15 #rect
-De0 f50 template "/ProcessPages/DocFactoryAPIExamples/DonePage.ivc" #txt
+De0 f50 template "view/done.xhtml" #txt
 De0 f50 721 809 30 30 0 15 #rect
-De0 f51 template "/ProcessPages/DocFactoryAPIExamples/DonePage.ivc" #txt
+De0 f51 template "view/done.xhtml" #txt
 De0 f51 721 1017 30 30 0 15 #rect
 De0 f52 expr out #txt
 De0 f52 656 1032 721 1032 #arcP
@@ -719,7 +719,7 @@ De0 f35 expr out #txt
 De0 f35 648 656 721 656 #arcP
 De0 f23 expr out #txt
 De0 f23 648 384 721 384 #arcP
-De0 f9 template "/ProcessPages/DocFactoryAPIExamples/DonePage.ivc" #txt
+De0 f9 template "view/done.xhtml" #txt
 De0 f9 721 465 30 30 0 15 #rect
 De0 f15 outLink start6.ivp #txt
 De0 f15 inParamDecl '<> param;' #txt
