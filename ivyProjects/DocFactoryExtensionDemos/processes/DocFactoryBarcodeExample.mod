@@ -106,7 +106,7 @@ Ds0 f17 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 </elementInfo>
 ' #txt
 Ds0 f17 136 266 112 44 -45 -8 #rect
-Ds0 f18 template "/ProcessPages/BarcodeExample/Show.ivc" #txt
+Ds0 f18 template "view/barcode.xhtml" #txt
 Ds0 f18 465 273 30 30 0 15 #rect
 Ds0 f19 79 288 136 288 #arcP
 Ds0 f20 248 288 296 288 #arcP

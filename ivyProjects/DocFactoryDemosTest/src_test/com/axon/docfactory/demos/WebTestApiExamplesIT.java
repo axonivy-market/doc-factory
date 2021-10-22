@@ -22,7 +22,7 @@ import com.codeborne.selenide.FileDownloadMode;
 import com.codeborne.selenide.Selenide;
 
 @IvyWebTest
-public class WebTestApiExamplesIT
+class WebTestApiExamplesIT
 {
   private final String DOC_DEMOS_BASE = "/DocFactoryDemos/16B45CBCE0D2056C/";
 
@@ -36,31 +36,31 @@ public class WebTestApiExamplesIT
   }
   
   @Test
-  public void docWithCompositeObj() throws Exception
+  void docWithCompositeObj() throws Exception
   {
     assertDownload("start6.ivp", "DocWithCompositeObject.pdf");
   }
   
   @Test
-  public void docWithNestedTablesPDF() throws Exception
+  void docWithNestedTablesPDF() throws Exception
   {
     assertDownload("start3.ivp", "DocWithFullNestedTables.pdf");
   }
   
   @Test
-  public void docWithNestedTablesDOCX() throws Exception
+  void docWithNestedTablesDOCX() throws Exception
   {
     assertDownload("start4.ivp", "DocWithFullNestedTables.docx");
   }
   
   @Test
-  public void docWithNestedTablesHTML() throws Exception
+  void docWithNestedTablesHTML() throws Exception
   {
     assertDownload("start5.ivp", "DocWithFullNestedTables.html");
   }
   
   @Test
-  public void zipMultipleDocuments() throws FileNotFoundException
+  void zipMultipleDocuments() throws FileNotFoundException
   {
     open(EngineUrl.createProcessUrl("/DocFactoryDemos/16CD7829EF6B489B/start2.ivp"));
     var doc = Selenide.$$("button").find(exactText("Create Multiple Formats")).shouldBe(visible).download();
@@ -69,7 +69,7 @@ public class WebTestApiExamplesIT
   }
   
   @Test
-  public void ivyDocApi()
+  void ivyDocApi()
   {
     if (!EngineUrl.isDesigner())
     {
@@ -93,7 +93,7 @@ public class WebTestApiExamplesIT
   private void assertDownload(String process, String expectedFileName) throws FileNotFoundException
   {
     open(EngineUrl.createProcessUrl(DOC_DEMOS_BASE + process));
-    var doc = $("#docLink a").shouldBe(visible).download();
+    var doc = $("#docLink").shouldBe(visible).download();
     assertThat(doc).hasName(expectedFileName);
     assertThat(doc.length() / 1024).isGreaterThan(8);
   }
