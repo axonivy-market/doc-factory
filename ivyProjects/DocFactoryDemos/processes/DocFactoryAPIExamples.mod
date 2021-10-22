@@ -586,15 +586,15 @@ Ds0 f27 expr out #txt
 Ds0 f27 95 256 144 256 #arcP
 Ds0 f32 expr out #txt
 Ds0 f32 256 256 312 256 #arcP
-Ds0 f35 template "/ProcessPages/DocFactoryAPIExamples/DonePage.ivc" #txt
+Ds0 f35 template "view/done.xhtml" #txt
 Ds0 f35 721 241 30 30 0 15 #rect
 Ds0 f37 expr out #txt
 Ds0 f37 672 256 721 256 #arcP
-Ds0 f2 template "/ProcessPages/DocFactoryAPIExamples/DonePage.ivc" #txt
+Ds0 f2 template "view/done.xhtml" #txt
 Ds0 f2 721 409 30 30 0 15 #rect
-Ds0 f3 template "/ProcessPages/DocFactoryAPIExamples/DonePage.ivc" #txt
+Ds0 f3 template "view/done.xhtml" #txt
 Ds0 f3 721 537 30 30 0 15 #rect
-Ds0 f10 template "/ProcessPages/DocFactoryAPIExamples/DonePage.ivc" #txt
+Ds0 f10 template "view/done.xhtml" #txt
 Ds0 f10 721 681 30 30 0 15 #rect
 Ds0 f15 expr out #txt
 Ds0 f15 672 424 721 424 #arcP
