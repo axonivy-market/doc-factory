@@ -21,14 +21,13 @@
       <groupId>com.aspose</groupId>
       <artifactId>aspose-barcode</artifactId>
       <version>${aspose.barcode.version}</version>
-      <optional>true</optional>
+      <classifier>jdk17</classifier>
     </dependency>
     <dependency>
       <groupId>com.aspose</groupId>
       <artifactId>aspose-email</artifactId>
       <version>${aspose.email.version}</version>
       <classifier>jdk16</classifier>
-      <optional>true</optional>
     </dependency>    
   </dependencies>
   <repositories>
@@ -48,24 +47,6 @@
         <artifactId>project-build-plugin</artifactId>
         <version>${project-build-plugin-version}</version>
         <extensions>true</extensions>
-      </plugin>
-      <plugin>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <version>${maven-dependency-plugin-version}</version>
-        <executions>
-          <execution>
-            <id>copy-dependencies</id>
-            <phase>process-resources</phase>
-            <goals>
-              <goal>copy-dependencies</goal>
-            </goals>
-            <configuration>
-              <outputDirectory>lib</outputDirectory>
-              <includeArtifactIds>aspose-barcode</includeArtifactIds>
-              <includeArtifactIds>aspose-email</includeArtifactIds>
-            </configuration>
-          </execution>
-        </executions>
       </plugin>
     </plugins>
   </build>
