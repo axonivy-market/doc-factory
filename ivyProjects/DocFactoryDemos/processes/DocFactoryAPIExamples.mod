@@ -673,7 +673,7 @@ Ds0 f39 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 Ds0 f39 320 858 128 44 -59 -8 #rect
 Ds0 f40 expr out #txt
 Ds0 f40 256 880 320 880 #arcP
-Ds0 f41 template "/ProcessPages/DocFactoryAPIExamples/DonePage.ivc" #txt
+Ds0 f41 template "view/done.xhtml" #txt
 Ds0 f41 513 865 30 30 0 15 #rect
 Ds0 f43 expr out #txt
 Ds0 f43 448 880 513 880 #arcP
