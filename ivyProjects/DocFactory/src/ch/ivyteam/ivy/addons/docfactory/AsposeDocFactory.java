@@ -947,7 +947,7 @@ public class AsposeDocFactory extends BaseDocFactory {
 		}
 		
 		if (format.startsWith(".")) {
-			Arrays.asList(SUPPORTED_OUTPUT_FORMATS).contains(format.substring(1).toLowerCase());
+			return Arrays.asList(SUPPORTED_OUTPUT_FORMATS).contains(format.substring(1).toLowerCase());
 		}
 		return Arrays.asList(SUPPORTED_OUTPUT_FORMATS).contains(format.toLowerCase());
 
