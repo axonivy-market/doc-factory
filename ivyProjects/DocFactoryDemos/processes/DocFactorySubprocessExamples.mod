@@ -84,6 +84,7 @@ TaskTriggered.PRI=2
 TaskTriggered.ROL=Everybody
 TaskTriggered.TYPE=0' #txt
 De0 f0 showInStartList 1 #txt
+De0 f0 @CG|tags demo #txt 
 De0 f0 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
