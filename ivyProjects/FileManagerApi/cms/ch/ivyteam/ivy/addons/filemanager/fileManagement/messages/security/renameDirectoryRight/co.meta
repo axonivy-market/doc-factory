@@ -1,4 +1,0 @@
-co: name={renameDirectoryRight} description={} changed={2013-06-06 20:40:34 CEST} changedby={ec} visualorder={0} guid={13F1ACA02ECB5D43} parentguid={} typeguid={E6AFEA2034301F66} id={} parentid={} typeid={}
-val: guid={13F1ACA02FF83742} datatype={} isdefault={false} langid={de} description={} validfrom={2011-10-05 12:41:07 CEST} validto={} changed={2013-06-06 20:40:34 CEST} changedby={ec} properties={} id={}
-val: guid={13F1ACA030ACF41B} datatype={} isdefault={false} langid={fr} description={} validfrom={2011-10-05 12:41:05 CEST} validto={} changed={2013-06-06 20:40:34 CEST} changedby={ec} properties={} id={}
-val: guid={13F1ACA02F5402B6} datatype={} isdefault={true} langid={en} description={} validfrom={2011-10-05 12:40:52 CEST} validto={} changed={2013-06-06 20:40:34 CEST} changedby={ec} properties={} id={}
