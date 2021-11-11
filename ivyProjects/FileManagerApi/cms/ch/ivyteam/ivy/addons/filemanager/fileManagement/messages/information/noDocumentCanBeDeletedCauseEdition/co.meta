@@ -1,4 +1,0 @@
-co: name={noDocumentCanBeDeletedCauseEdition} description={} changed={2014-11-25 23:07:36 CET} changedby={ec} visualorder={0} guid={149E8FC34FD7638A} parentguid={} typeguid={E6AFEA202AFB4911} id={} parentid={} typeid={}
-val: guid={149E8FC34FD1E3D8} datatype={} isdefault={false} langid={de} description={} validfrom={2009-08-31 16:11:20 CEST} validto={} changed={2014-11-25 23:07:35 CET} changedby={ec} properties={} id={}
-val: guid={149E8FC3525C52F4} datatype={} isdefault={true} langid={en} description={} validfrom={2009-08-31 16:08:39 CEST} validto={} changed={2014-11-25 23:07:35 CET} changedby={ec} properties={} id={}
-val: guid={149E8FC3511B3AFC} datatype={} isdefault={false} langid={fr} description={} validfrom={2009-08-31 16:10:05 CEST} validto={} changed={2014-11-25 23:07:35 CET} changedby={ec} properties={} id={}

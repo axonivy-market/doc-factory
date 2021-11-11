@@ -1,9 +1,0 @@
-<P>Les Fichiers sélectionnés vont être effacés et leurs données seront perdues. <BR />
-%s
-Cliquez sur "Effacer les données" si vous êtes certains de vouloir détruire ces données. <BR />
-Sinon veuillez cliquer sur "Annuler".
-</P>
-<P><BR />
-Note: les fichiers suivants ne seront pas effacés car ils sont actuellement édités :<BR />
-EDITEDFILES
-</P>
