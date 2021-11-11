@@ -1,4 +1,0 @@
-co: name={userHasNoRightToUploadFiles} description={} changed={2012-11-14 20:41:28 CET} changedby={ec} visualorder={0} guid={135EB31610128421} parentguid={} typeguid={E6AFEA202AFB4911} id={} parentid={} typeid={}
-val: guid={135EB316110E8D3A} datatype={} isdefault={false} langid={fr} description={} validfrom={2009-08-31 16:10:05 CEST} validto={} changed={2012-11-14 20:41:21 CET} changedby={ec} properties={} id={}
-val: guid={135EB316125E00CC} datatype={} isdefault={true} langid={en} description={} validfrom={2009-08-31 16:08:39 CEST} validto={} changed={2012-11-14 20:41:21 CET} changedby={ec} properties={} id={}
-val: guid={135EB31611C2F19F} datatype={} isdefault={false} langid={de} description={} validfrom={2009-08-31 16:11:20 CEST} validto={} changed={2012-11-14 20:41:28 CET} changedby={ec} properties={} id={}
