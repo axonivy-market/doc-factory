@@ -1,4 +1,0 @@
-co: name={copyActionNotAllowForTheseFiles} description={} changed={2013-08-27 12:33:40 CEST} changedby={ec} visualorder={0} guid={140BF535C5EA9A38} parentguid={} typeguid={E6AFEA2034301F66} id={} parentid={} typeid={}
-val: guid={140BF535C6D50587} datatype={} isdefault={false} langid={de} description={} validfrom={2013-08-24 14:27:03 CEST} validto={} changed={2013-08-27 12:33:40 CEST} changedby={ec} properties={} id={}
-val: guid={140BF535C63303F8} datatype={} isdefault={false} langid={fr} description={} validfrom={2013-08-24 14:27:01 CEST} validto={} changed={2013-08-27 12:33:40 CEST} changedby={ec} properties={} id={}
-val: guid={140BF535C7CCC0A4} datatype={} isdefault={true} langid={en} description={} validfrom={2013-08-24 14:25:09 CEST} validto={} changed={2013-08-27 12:33:40 CEST} changedby={ec} properties={} id={}
