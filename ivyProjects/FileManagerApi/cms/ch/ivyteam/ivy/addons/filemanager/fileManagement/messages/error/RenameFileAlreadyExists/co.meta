@@ -1,4 +1,0 @@
-co: name={RenameFileAlreadyExists} description={} changed={2013-02-14 02:25:44 CET} changedby={ec} visualorder={0} guid={13C3A1786733956F} parentguid={} typeguid={E6AFEA2034301F66} id={} parentid={} typeid={}
-val: guid={13C3A17867BB96EA} datatype={} isdefault={false} langid={fr} description={} validfrom={2009-08-31 16:48:39 CEST} validto={} changed={2013-01-14 18:31:19 CET} changedby={ec} properties={} id={}
-val: guid={13C3A178685AF84C} datatype={} isdefault={true} langid={en} description={} validfrom={2009-08-31 16:47:37 CEST} validto={} changed={2013-01-14 18:31:19 CET} changedby={ec} properties={} id={}
-val: guid={13C3A178690C613B} datatype={} isdefault={false} langid={de} description={} validfrom={2009-08-31 16:48:03 CEST} validto={} changed={2013-02-14 02:25:44 CET} changedby={ec} properties={} id={}
