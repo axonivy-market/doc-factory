@@ -1,1 +1,0 @@
-{/value "fttranslation"/description "Name of the table that contains the filetypes translations.\nUsed if the filetype and\n filetype translation features are activated."/environments * }
