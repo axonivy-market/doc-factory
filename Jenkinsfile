@@ -50,17 +50,17 @@ pipeline {
           def currentVersion = 'dev';
           currentVersion = getCurrentVersion();
           docker.image('axonivy/build-container:read-the-docs-2').inside {
-            sh "make -C /doc-build html BASEDIR='${env.WORKSPACE}/doc-factory/doc' VERSION='${currentVersion}'"
+            sh "make -C /doc-build html BASEDIR='${env.WORKSPACE}/doc' VERSION='${currentVersion}'"
           }
-          archiveArtifacts 'doc-factory/doc/build/html/**/*'
+          archiveArtifacts 'doc/build/html/**/*'
           recordIssues tools: [eclipse(), sphinxBuild()], unstableTotalAll: 1
         
           echo 'deploy doc'
           docker.image('maven:3.6.3-jdk-11').inside {            
             def phase = env.BRANCH_NAME == 'master' ? 'deploy' : 'verify'
-            maven cmd: "-f doc-factory/doc/pom.xml clean ${phase}"
+            maven cmd: "-f doc/pom.xml clean ${phase}"
           }
-          archiveArtifacts 'doc-factory/doc/target/*.zip'
+          archiveArtifacts 'doc/target/*.zip'
         }
       }
     }
