@@ -7,7 +7,7 @@
 		<groupId>ch.ivyteam.ivy.addons</groupId>
 		<artifactId>config</artifactId>
 		<version>${revision}</version>
-		<relativePath>../../maven</relativePath>
+		<relativePath>../maven</relativePath>
 	</parent>
 	
 	<packaging>pom</packaging>
