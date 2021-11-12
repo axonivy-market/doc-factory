@@ -7,10 +7,10 @@
 	<packaging>pom</packaging>
 	
 	<modules>
-		<module>ivyProjects/DocFactory</module>
-		<module>ivyProjects/DocFactoryDemos</module>
-		<module>ivyProjects/DocFactoryDemosTest</module>
-		<module>ivyProjects/DocFactoryTest</module>
+		<module>DocFactory</module>
+		<module>DocFactoryTest</module>
+		<module>DocFactoryDemos</module>
+		<module>DocFactoryDemosTest</module>
 	</modules>
 	
 	<build>
