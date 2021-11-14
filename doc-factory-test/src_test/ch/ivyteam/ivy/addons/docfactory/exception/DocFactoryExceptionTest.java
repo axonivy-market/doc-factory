@@ -15,7 +15,6 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import ch.ivyteam.ivy.ThirdPartyLicenses;
-import ch.ivyteam.ivy.addons.docfactory.exception.DocFactoryException;
 import ch.ivyteam.ivy.addons.docfactory.aspose.LicenseLoader;
 import ch.ivyteam.ivy.cm.IContentManagementSystem;
 import ch.ivyteam.ivy.environment.Ivy;

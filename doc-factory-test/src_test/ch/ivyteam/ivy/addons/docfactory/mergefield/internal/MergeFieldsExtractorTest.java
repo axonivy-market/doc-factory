@@ -20,7 +20,6 @@ import com.aspose.words.Document;
 
 import ch.ivyteam.ivy.addons.docfactory.TemplateMergeField;
 import ch.ivyteam.ivy.addons.docfactory.aspose.MailMergeDataSourceGenerator;
-import ch.ivyteam.ivy.addons.docfactory.mergefield.internal.MergeFieldsExtractor;
 
 public class MergeFieldsExtractorTest {
 
