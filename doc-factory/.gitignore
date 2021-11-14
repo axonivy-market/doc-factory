@@ -11,11 +11,11 @@ hs_err_pid*
 # maven
 target/
 lib/mvn-deps/
+lib/
 
 # ivy
 classes/
 src_dataClasses/
 src_wsproc/
 logs/
-test/
 
