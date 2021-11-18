@@ -44,3 +44,4 @@ Read more about the Document Factory API and the merging of fields in microsoftt
    doc-factory/callable-processes
    doc-factory/demos
    doc-factory/doc-factory-object
+   doc-factory/complex-mergefields
