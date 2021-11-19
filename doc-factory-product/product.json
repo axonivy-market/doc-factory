@@ -1,0 +1,54 @@
+{
+    "installers": [
+        {
+            "id": "maven-dependency",
+            "data": {
+                "dependencies": [
+                    {
+                        "groupId": "ch.ivyteam.ivy.addons",
+                        "artifactId": "doc-factory",
+                        "version": "${version}",
+                        "type": "iar"
+                    }
+                ],
+                "repositories": [
+                    {
+                        "id": "axonivy.public",
+                        "url": "https://repo.axonivy.rocks",
+                        "snapshots": {
+                            "enabled": "true"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "id": "maven-import",
+            "data": {
+                "projects": [
+                    {
+                        "groupId": "ch.ivyteam.ivy.addons",
+                        "artifactId": "doc-factory-demos",
+                        "version": "${version}",
+                        "type": "iar"
+                    }
+                ],
+                "repositories": [
+                    {
+                        "id": "axonivy.public",
+                        "url": "https://repo.axonivy.rocks"
+                    }
+                ]
+            }
+        },
+        {
+            "id": "open-resource",
+            "data": {
+                "project": "DocFactoryDemos",
+                "resources": [
+                    "processes/DocFactorySubprocessExamples.mod"
+                ]
+            }
+        }
+    ]
+}
