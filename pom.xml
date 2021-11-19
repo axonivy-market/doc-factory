@@ -11,6 +11,7 @@
 		<module>ivyProjects/DocFactoryDemos</module>
 		<module>ivyProjects/DocFactoryDemosTest</module>
 		<module>ivyProjects/DocFactoryTest</module>
+		<module>doc-factory-product</module>
 	</modules>
 	
 	<build>
