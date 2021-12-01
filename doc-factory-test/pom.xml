@@ -12,7 +12,7 @@
   <artifactId>doc-factory-test</artifactId>
   <packaging>iar</packaging>
   <properties>
-    <pdfbox.version>2.0.19</pdfbox.version>
+    <pdfbox.version>2.0.24</pdfbox.version>
     <powermock2.version>2.0.2</powermock2.version>
   </properties>
   <dependencies>
