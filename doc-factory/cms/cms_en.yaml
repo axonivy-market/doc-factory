@@ -1,0 +1,16 @@
+ch:
+  ivyteam:
+    ivy:
+      addons:
+        docfactory:
+          messages:
+            EmptyMergeFields: "The creation from the letter(s) couldn't be performed.\r\nCause: the Merge Fields list is empty."
+            fileNameInvalid: "The entered filename is invalid. The following characters are not accepted: \r\n\\/:<>{}*?|\", tab, backspace and line-feed."
+            fillTheMergeFields: "Please fill in each of the shown fields. Each of them represent \r\nan information that is going to be inserted into the final document.\r\nThe empty fields are going to be ignored."
+            formatNotSupported: "The creation from the letter(s) couldn't be performed.\r\nCause: the output format is not supported."
+            invalidFileName: "The creation from the letter(s) couldn't be performed.\r\nCause: the desired filename is invalid.\r\nIt cannot contain one of this characters: /\\*?|<>:\" the tabspace, return or backspace."
+            mergeFieldListEmpty: The list of mergeFields is empty. No data found.
+            serialLetterSuccess: The Serial letter has been successfuly generated.
+            templateCannotBefFound: "The creation from the letter(s) couldn't be performed.\r\nCause: the Template doesn't exist."
+            templateIndicatedNotExist: The template indicated doesn't exist.
+            templateNotCorrespondingWithMergeFields: "The Template you have used to build the mergefields list \r\nis not the same as the one used to generate the document."

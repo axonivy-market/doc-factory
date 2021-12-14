@@ -1,0 +1,16 @@
+ch:
+  ivyteam:
+    ivy:
+      addons:
+        docfactory:
+          messages:
+            EmptyMergeFields: "Die Briefe konnten nicht erstellt worden.\r\nUrsache: die Liste von Mischfeldern ist leer."
+            fileNameInvalid: "Der Name ist nicht valid. Werden nicht akzeptiert: \r\n\\/:<>{}*?|\", Tabulator, Rückwärtsschritt und Zeilenvorschubzeichen."
+            fillTheMergeFields: "Füllen Sie bitte die Feldern aus. Jede Feld stellt eine Information dar,\r\ndie in dem endgültigen Dokument eingetragen wird. Die leeren Felder \r\nwerden ignoriert."
+            formatNotSupported: "Die Briefe konnten nicht erstellt worden.\r\nUrsache: der Breifsformat ist nicht unterstützt."
+            invalidFileName: "Die Briefe konnten nicht erstellt worden.\r\nUrsache: die Dateiname ist nicht valid.\r\nDie folgenden Zeichnen sind nicht erlaubt: /\\*?|<>:\" the tabspace, return or backspace."
+            mergeFieldListEmpty: Die Liste der Mischfeldern ist leer.
+            serialLetterSuccess: Die Serienbriefe wurde erfolgreich kreiert.
+            templateCannotBefFound: "Die Briefe konnten nicht erstellt worden.\r\nUrsache: das Office Dokumentsmodell ist nicht vorhanden."
+            templateIndicatedNotExist: Das Dokumentsmodel ist nicht vorhanden.
+            templateNotCorrespondingWithMergeFields: "Das Mischdokument benutzt, um die Feldsliste zu erstellen, \r\nist nicht das selbe als welches benutzt, um die Briefe zu schreiben."
