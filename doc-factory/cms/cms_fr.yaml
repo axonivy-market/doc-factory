@@ -1,0 +1,16 @@
+ch:
+  ivyteam:
+    ivy:
+      addons:
+        docfactory:
+          messages:
+            EmptyMergeFields: "Les lettres ne peuvent être générées.\r\nCause: la liste de des champs à remplir est vide."
+            fileNameInvalid: "Le nom de la lettre n'est pas valide. Les charactères suivants ne sont pas acceptés: \r\n\\/:<>{}*?|\", tabulation, retour en arrière et retour à la ligne."
+            fillTheMergeFields: "Veuillez remplir les champs. Chaque champ représente une information\r\nqui sera utilisée pour créer le document final. Les champs vides seront ignorés."
+            formatNotSupported: "Les lettres ne peuvent être générées.\r\nCause: le format demandé n'est pas supporté."
+            invalidFileName: "Les lettres ne peuvent être générées.\r\nCause: le nom de la lettre n'est pas valide\r\nLes charactères suivants ne sont pas acceptés: /\\*?|<>:\" tab, retour à la ligne ou retour."
+            mergeFieldListEmpty: La liste des champs de fusion du modèle de document est vide.
+            serialLetterSuccess: La lettre a été générée avec succès.
+            templateCannotBefFound: "Les lettres ne peuvent être générées.\r\nCause: le modèle de document n'a pu être trouvé."
+            templateIndicatedNotExist: Le modèle de document indiqué n'existe pas.
+            templateNotCorrespondingWithMergeFields: "Le modèle de document utilisé pour la liste des champs de fusion \r\nn'est pas le même que celui utilisé pour la création de la lettre."
