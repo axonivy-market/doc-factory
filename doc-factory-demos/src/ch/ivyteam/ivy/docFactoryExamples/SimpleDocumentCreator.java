@@ -39,7 +39,7 @@ public class SimpleDocumentCreator
     Document doc = new Document();
     DocumentBuilder builder = new DocumentBuilder(doc);
     // Write logo and some text
-    builder.insertImage("webapps/ivy/resources/images/logo_mail.png", 212, 46);
+    builder.insertImage("webapps/ivy/resources/branding/logo_mail.png", 212, 46);
     builder.insertParagraph();
     builder.insertHorizontalRule();
     builder.insertParagraph();
