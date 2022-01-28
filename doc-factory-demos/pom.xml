@@ -1,22 +1,13 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
-	xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"> 
 	<modelVersion>4.0.0</modelVersion>
-
-	<parent>
-		<groupId>ch.ivyteam.ivy.addons</groupId>
-		<artifactId>config</artifactId>
-		<version>${revision}</version>
-		<relativePath>../maven</relativePath>
-	</parent>
 
 	<groupId>ch.ivyteam.ivy.addons</groupId>
 	<artifactId>doc-factory-demos</artifactId>
+	<version>9.4.0-SNAPSHOT</version>
 	<packaging>iar</packaging>
 
 	<properties>
+		<project-build-plugin-version>9.3.1</project-build-plugin-version>
 		<aspose.version>19.9</aspose.version>
 	</properties>
 
@@ -47,23 +38,6 @@
 				<artifactId>project-build-plugin</artifactId>
 				<version>${project-build-plugin-version}</version>
 				<extensions>true</extensions>
-			</plugin>
-			<plugin>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<version>${maven-dependency-plugin-version}</version>
-				<executions>
-					<execution>
-						<id>copy-dependencies</id>
-						<phase>process-resources</phase>
-						<goals>
-							<goal>copy-dependencies</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>lib</outputDirectory>
-							<includeArtifactIds>aspose-barcode</includeArtifactIds>
-						</configuration>
-					</execution>
-				</executions>
 			</plugin>
 		</plugins>
 	</build>

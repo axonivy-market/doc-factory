@@ -1,20 +1,14 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   
-  <parent>
-    <groupId>ch.ivyteam.ivy.addons</groupId>
-    <artifactId>config</artifactId>
-    <version>${revision}</version>
-    <relativePath>../maven</relativePath>
-  </parent>
-
   <groupId>ch.ivyteam.ivy.addons</groupId>
   <artifactId>doc-factory</artifactId>
+  <version>9.4.0-SNAPSHOT</version>
   <packaging>iar</packaging>
 
   <properties>
+    <project-build-plugin-version>9.3.1</project-build-plugin-version>
+
     <aspose.words.version>20.8</aspose.words.version>
     <aspose.cells.version>20.8</aspose.cells.version>
     <aspose.pdf.version>20.8</aspose.pdf.version>
@@ -32,21 +26,18 @@
       <groupId>com.aspose</groupId>
       <artifactId>aspose-cells</artifactId>
       <version>${aspose.cells.version}</version>
-      <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>com.aspose</groupId>
       <artifactId>aspose-pdf</artifactId>
       <version>${aspose.pdf.version}</version>
       <classifier>jdk17</classifier>
-      <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>com.aspose</groupId>
       <artifactId>aspose-words</artifactId>
       <version>${aspose.words.version}</version>
       <classifier>jdk17</classifier>
-      <optional>true</optional>
       <exclusions>
         <exclusion>
           <groupId>*</groupId>
@@ -59,71 +50,17 @@
       <artifactId>aspose-slides</artifactId>
       <version>${aspose.slides.version}</version>
       <classifier>jdk16</classifier>
-      <optional>true</optional>
     </dependency>
   </dependencies>
+
   <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-enforcer-plugin</artifactId>
-        <version>3.0.0-M3</version>
-        <executions>
-          <execution>
-            <id>enforce-no-snapshots</id>
-            <goals>
-              <goal>enforce</goal>
-            </goals>
-            <configuration>
-              <rules>
-                <requirePluginVersions>
-                  <message>Don't use project-build-plugin SNAPSHOT version</message>
-                  <banLatest>false</banLatest>
-                  <banRelease>false</banRelease>
-                  <banSnapshots>true</banSnapshots>
-                  <unCheckedPluginList>
-                    <!--Remove again if the project-build-plugin 9.1.0 is released-->
-                    com.axonivy.ivy.ci:project-build-plugin,
-                    org.apache.maven.plugins:maven-surefire-plugin,
-                    org.apache.maven.plugins:maven-clean-plugin,
-                    org.apache.maven.plugins:maven-install-plugin,
-                    org.apache.maven.plugins:maven-site-plugin,
-                    org.apache.maven.plugins:maven-deploy-plugin
-                  </unCheckedPluginList>
-                </requirePluginVersions>
-              </rules>
-              <fail>true</fail>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
+    <plugins>      
       <plugin>
         <groupId>com.axonivy.ivy.ci</groupId>
         <artifactId>project-build-plugin</artifactId>
         <version>${project-build-plugin-version}</version>
         <extensions>true</extensions>
       </plugin>
-      <plugin>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <version>${maven-dependency-plugin-version}</version>
-        <executions>
-          <execution>
-            <id>copy-dependencies</id>
-            <phase>process-resources</phase>
-            <goals>
-              <goal>copy-dependencies</goal>
-            </goals>
-            <configuration>
-              <outputDirectory>lib</outputDirectory>
-              <includeArtifactIds>aspose-cells,
-                aspose-pdf,
-                aspose-words,
-                aspose-slides</includeArtifactIds>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
     </plugins>
-    
   </build>
 </project>
