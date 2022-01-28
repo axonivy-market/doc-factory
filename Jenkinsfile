@@ -30,8 +30,8 @@ pipeline {
           try {
             docker.image("selenium/standalone-firefox:3").withRun("-e START_XVFB=false --shm-size=2g --name ${seleniumName} --network ${networkName}") {
               docker.build('maven', ".").inside("--name ${ivyName} --network ${networkName}") {
-                def phase = env.BRANCH_NAME == 'master' ? 'deploy' : 'verify'
-                maven cmd: "clean ${phase} -Dmaven.test.failure.ignore=true -Divy.compiler.warnings=false -Divy.engine.list.url=${params.engineListUrl} -Dtest.engine.url=http://${ivyName}:8080 -Dselenide.remote=http://${seleniumName}:4444/wd/hub"
+                def phase = env.BRANCH_NAME == 'master' ? 'deploy -DaltDeploymentRepository=repo.axonivy.io::https://repo.axonivy.io/artifactory/ext-release-local -DaltSnapshotDeploymentRepository=repo.axonivy.io::https://repo.axonivy.io/artifactory/ext-snapshot-local' : 'verify'
+                maven cmd: "clean ${phase} -Divy.engine.version=[9.2.0,] -Dmaven.test.failure.ignore=true -Divy.compiler.warnings=false -Divy.engine.list.url=${params.engineListUrl} -Dtest.engine.url=http://${ivyName}:8080 -Dselenide.remote=http://${seleniumName}:4444/wd/hub"
               }
             }
           } finally {
@@ -50,17 +50,17 @@ pipeline {
           def currentVersion = 'dev';
           currentVersion = getCurrentVersion();
           docker.image('axonivy/build-container:read-the-docs-2').inside {
-            sh "make -C /doc-build html BASEDIR='${env.WORKSPACE}/doc' VERSION='${currentVersion}'"
+            sh "make -C /doc-build html BASEDIR='${env.WORKSPACE}/doc-factory-doc' VERSION='${currentVersion}'"
           }
-          archiveArtifacts 'doc/build/html/**/*'
+          archiveArtifacts 'doc-factory-doc/build/html/**/*'
           recordIssues tools: [eclipse(), sphinxBuild()], unstableTotalAll: 1
         
           echo 'deploy doc'
           docker.image('maven:3.6.3-jdk-11').inside {            
-            def phase = env.BRANCH_NAME == 'master' ? 'deploy' : 'verify'
-            maven cmd: "-f doc/pom.xml clean ${phase}"
+            def phase = env.BRANCH_NAME == 'master' ? 'deploy -DaltDeploymentRepository=repo.axonivy.io::https://repo.axonivy.io/artifactory/ext-release-local -DaltSnapshotDeploymentRepository=repo.axonivy.io::https://repo.axonivy.io/artifactory/ext-snapshot-local' : 'verify'
+            maven cmd: "-f doc-factory-doc/pom.xml clean ${phase}"
           }
-          archiveArtifacts 'doc/target/*.zip'
+          archiveArtifacts 'doc-factory-doc/target/*.zip'
         }
       }
     }
@@ -69,11 +69,11 @@ pipeline {
 
 def getCurrentVersion() {
   docker.image('maven:3.6.3-jdk-11').inside { 
-    def cmd = "mvn -f maven/pom.xml  help:evaluate -Dexpression=revision -q -DforceStdout"
+    def cmd = "mvn -f pom.xml help:evaluate -Dexpression=project.version -q -DforceStdout"
     def value = sh (script: cmd, returnStdout: true)
     echo "version is $value"
     if (value == "null object or invalid expression") {
-      throw new Exception("could not evaluate maven revision property");
+      throw new Exception("could not evaluate maven project.version property");
     }
     return value
   }
