@@ -147,21 +147,10 @@ with TemplateMergeFields</name>
 De0 f5 512 218 160 44 -72 -20 #rect
 De0 f7 actionTable 'out=in;
 ' #txt
-De0 f7 actionCode 'import ch.ivyteam.ivy.cm.IContentObjectValue;
+De0 f7 actionCode 'import ch.ivyteam.ivy.docFactoryExamples.ExportFromCms;
 
-File tempFile = new File("Templates/myTemplateWithMergeFields.doc", true);
-    ivy.log.debug("javafile "+tempFile);  
-if (!tempFile.exists())
-{
-    //create the template file
-    tempFile.createNewFile();
- 
- 		// export content from cms into the template file
-    IContentObjectValue cov = ivy.cms.getContentObjectValue("/Templates/myTemplateWithMergeFields", null, true);
-    cov.exportContentToFile(tempFile.getJavaFile(), null);
-}
-
-out.templateFile = tempFile.getJavaFile();' #txt
+out.templateFile = ExportFromCms.export("/Templates/myTemplateWithMergeFields", "doc");
+' #txt
 De0 f7 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -261,19 +250,10 @@ with Object</name>
 De0 f12 536 362 112 44 -48 -20 #rect
 De0 f13 actionTable 'out=in;
 ' #txt
-De0 f13 actionCode 'import ch.ivyteam.ivy.cm.IContentObjectValue;
+De0 f13 actionCode 'import ch.ivyteam.ivy.docFactoryExamples.ExportFromCms;
 
-File tempFile = new File("Templates/myTemplateWithObjectData.doc", true);
-if (!tempFile.exists())
-{
-    //legt leeres file an (muss vorhanden sein für export)
-    tempFile.createNewFile();          
- 		// export content from cms
-    IContentObjectValue cov = ivy.cms.getContentObjectValue("/Templates/myTemplateWithObjectData", null,true);
-    cov.exportContentToFile(tempFile.getJavaFile(), null);
-}
-
-out.templateFile = tempFile.getJavaFile();' #txt
+out.templateFile = ExportFromCms.export("/Templates/myTemplateWithObjectData", "doc");
+' #txt
 De0 f13 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -294,20 +274,10 @@ De0 f17 expr out #txt
 De0 f17 448 384 536 384 #arcP
 De0 f20 actionTable 'out=in;
 ' #txt
-De0 f20 actionCode 'import ch.ivyteam.ivy.cm.IContentObjectValue;
+De0 f20 actionCode 'import ch.ivyteam.ivy.docFactoryExamples.ExportFromCms;
 
-File tempFile = new File("Templates/myTemplateWithTable.doc", true);
-
-if (!tempFile.exists())
-{
-    //legt leeres file an (muss vorhanden sein für export)
-    tempFile.createNewFile();          
- 		// export content from cms
-    IContentObjectValue cov = ivy.cms.getContentObjectValue("/Templates/myTemplateWithTable", null,true);
-    cov.exportContentToFile(tempFile.getJavaFile(), null);
-}
-
-out.templateFile = tempFile.getJavaFile();' #txt
+out.templateFile = ExportFromCms.export("/Templates/myTemplateWithTable", "doc");
+' #txt
 De0 f20 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -379,20 +349,10 @@ De0 f19 @C|.responsibility Everybody #txt
 De0 f19 81 641 30 30 -46 32 #rect
 De0 f27 actionTable 'out=in;
 ' #txt
-De0 f27 actionCode 'import ch.ivyteam.ivy.cm.IContentObjectValue;
+De0 f27 actionCode 'import ch.ivyteam.ivy.docFactoryExamples.ExportFromCms;
 
-File tempFile = new File("Templates/myTemplateWithConditionalText.doc", true);
-
-if (!tempFile.exists())
-{
-    //legt leeres file an (muss vorhanden sein für export)
-    tempFile.createNewFile();          
- 		// export content from cms
-    IContentObjectValue cov = ivy.cms.getContentObjectValue("/Templates/myTemplateWithConditionalText", null,true);
-    cov.exportContentToFile(tempFile.getJavaFile(), null);
-}
-
-out.templateFile = tempFile.getJavaFile();' #txt
+out.templateFile = ExportFromCms.export("/Templates/myTemplateWithConditionalText", "doc");
+' #txt
 De0 f27 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -514,20 +474,10 @@ with tables in tables</name>
 De0 f37 528 1010 128 44 -54 -20 #rect
 De0 f38 actionTable 'out=in;
 ' #txt
-De0 f38 actionCode 'import ch.ivyteam.ivy.cm.IContentObjectValue;
+De0 f38 actionCode 'import ch.ivyteam.ivy.docFactoryExamples.ExportFromCms;
 
-File tempFile = new File("Templates/myTemplateWithNestedTables.doc", true);
-
-if (!tempFile.exists())
-{
-    //legt leeres file an (muss vorhanden sein für export)
-    tempFile.createNewFile();          
- 		// export content from cms
-    IContentObjectValue cov = ivy.cms.getContentObjectValue("/Templates/myTemplateWithNestedTables", null,true);
-    cov.exportContentToFile(tempFile.getJavaFile(), null);
-}
-
-out.templateFile = tempFile.getJavaFile();' #txt
+out.templateFile = ExportFromCms.export("/Templates/myTemplateWithNestedTables", "doc");
+' #txt
 De0 f38 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -805,19 +755,10 @@ De0 f28 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 De0 f28 144 458 128 44 -58 -8 #rect
 De0 f36 actionTable 'out=in;
 ' #txt
-De0 f36 actionCode 'import ch.ivyteam.ivy.cm.IContentObjectValue;
+De0 f36 actionCode 'import ch.ivyteam.ivy.docFactoryExamples.ExportFromCms;
 
-File tempFile = new File("Templates/myTemplateWithNestedObject.doc", true);
-if (!tempFile.exists())
-{
-    //legt leeres file an (muss vorhanden sein für export)
-    tempFile.createNewFile();          
- 		// export content from cms
-    IContentObjectValue cov = ivy.cms.getContentObjectValue("/Templates/myTemplateWithNestedObject", null,true);
-    cov.exportContentToFile(tempFile.getJavaFile(), null);
-}
-
-out.templateFile = tempFile.getJavaFile();' #txt
+out.templateFile = ExportFromCms.export("/Templates/myTemplateWithNestedObject", "doc");
+' #txt
 De0 f36 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
