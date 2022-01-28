@@ -8,7 +8,6 @@
 
 	<properties>
 		<project-build-plugin-version>9.3.1</project-build-plugin-version>
-		<test.app>docFactoryTest</test.app>
 	</properties>
 
 	<dependencies>
@@ -48,5 +47,16 @@
 				</configuration>
 			</plugin>
 		</plugins>
+
+		<pluginManagement>
+		<plugins>
+			<plugin>
+			<artifactId>maven-deploy-plugin</artifactId>
+			<configuration>
+				<skip>true</skip>
+			</configuration>
+			</plugin>
+		</plugins>
+		</pluginManagement>
 	</build>
 </project>
