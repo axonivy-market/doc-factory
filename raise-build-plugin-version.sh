@@ -1,3 +1,3 @@
 #!/bin/bash
 
-mvn --batch-mode versions:set-property versions:commit -f maven/pom.xml -Dproperty=project-build-plugin-version -DnewVersion=${1}
+mvn --batch-mode versions:set-property versions:commit -Dproperty=project-build-plugin-version -DnewVersion=${1}
