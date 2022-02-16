@@ -1,5 +1,5 @@
 [Ivy]
-16CD86F955A91647 9.3.1 #module
+16CD86F955A91647 9.4.0 #module
 >Proto >Proto Collection #zClass
 Vs0 ViewSimpleDocumentProcess Big #zClass
 Vs0 RD #cInfo
@@ -30,8 +30,6 @@ Vs0 f0 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
         <name>start()</name>
-        <nameStyle>7,5,7
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt

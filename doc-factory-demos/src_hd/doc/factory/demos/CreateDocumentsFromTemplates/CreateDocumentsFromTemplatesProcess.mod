@@ -1,5 +1,5 @@
 [Ivy]
-16CD874DD7DD365F 9.3.1 #module
+16CD874DD7DD365F 9.4.0 #module
 >Proto >Proto Collection #zClass
 Cs0 CreateDocumentsFromTemplatesProcess Big #zClass
 Cs0 RD #cInfo
@@ -68,8 +68,6 @@ Cs0 f8 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
         <name>download()</name>
-        <nameStyle>10,5,7
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -195,8 +193,6 @@ Cs0 f22 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
         <name>fileUpload</name>
-        <nameStyle>10,5,7
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
