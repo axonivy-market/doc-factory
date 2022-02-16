@@ -1,5 +1,5 @@
 [Ivy]
-16B45CBCE0D2056C 9.3.1 #module
+16B45CBCE0D2056C 9.4.0 #module
 >Proto >Proto Collection #zClass
 Ds0 DocFactoryAPIExamples Big #zClass
 Ds0 B #cInfo
@@ -75,8 +75,6 @@ Ds0 f19 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
         <name>Document with nested Tables PDF</name>
-        <nameStyle>31,5
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -140,8 +138,6 @@ Ds0 f21 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
         <name>Create complex Data</name>
-        <nameStyle>19,5
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -182,13 +178,8 @@ out.templateFile = new LocalResource("resources/myAPITemplateWithNestedTables.do
 Ds0 f4 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
-        <name>get Template.docx from&#xD;
-resources folder</name>
-        <nameStyle>4,5
-13,5,0
-7,5
-16,5,0
-</nameStyle>
+        <name>get **Template.docx** from&#13;
+**resources folder**</name>
     </language>
 </elementInfo>
 ' #txt
@@ -267,8 +258,6 @@ Ds0 f6 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
         <name>Create complex Data</name>
-        <nameStyle>19,5
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -281,13 +270,8 @@ out.templateFile = new LocalResource("resources/myAPITemplateWithNestedTables.do
 Ds0 f7 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
-        <name>get Template.docx from&#xD;
-resources folder</name>
-        <nameStyle>4,5
-13,5,0
-7,5
-16,5,0
-</nameStyle>
+        <name>get **Template.docx** from&#13;
+**resources folder**</name>
     </language>
 </elementInfo>
 ' #txt
@@ -311,8 +295,6 @@ Ds0 f8 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
         <name>Document with nested Tables DOCX</name>
-        <nameStyle>32,5
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -405,8 +387,6 @@ Ds0 f5 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
         <name>Create complex Data</name>
-        <nameStyle>19,5
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -419,13 +399,8 @@ out.templateFile = new LocalResource("resources/myAPITemplateWithNestedTables.do
 Ds0 f9 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
-        <name>get Template.docx from&#xD;
-resources folder</name>
-        <nameStyle>4,5
-13,5,0
-7,5
-16,5,0
-</nameStyle>
+        <name>get **Template.docx** from&#13;
+**resources folder**</name>
     </language>
 </elementInfo>
 ' #txt
@@ -472,8 +447,6 @@ Ds0 f20 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
         <name>Document with nested Tables HTML</name>
-        <nameStyle>32,5
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -493,13 +466,8 @@ out.templateFile = new LocalResource("resources/myAPITemplateWithCompositeObject
 Ds0 f28 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
-        <name>get Template.docx from&#xD;
-resources folder</name>
-        <nameStyle>4,5
-13,5,0
-7,5
-16,5,0
-</nameStyle>
+        <name>get **Template.docx** from&#13;
+**resources folder**</name>
     </language>
 </elementInfo>
 ' #txt
@@ -523,8 +491,6 @@ Ds0 f29 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
         <name>Document with CompositeObject</name>
-        <nameStyle>29,5
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -576,8 +542,6 @@ Ds0 f36 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
         <name>Create an Object</name>
-        <nameStyle>16,5
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt

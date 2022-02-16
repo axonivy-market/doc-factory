@@ -1,5 +1,5 @@
 [Ivy]
-16CD7829EF6B489B 9.3.1 #module
+16CD7829EF6B489B 9.4.0 #module
 >Proto >Proto Collection #zClass
 Ds0 DocFactoryBarcodeExample Big #zClass
 Ds0 B #cInfo
@@ -27,8 +27,6 @@ Ds0 f42 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
         <name>Uses additional aspose-barcode.jar, that is not included in the Axon Ivy DocFactory by default but can be added to the project classpath.&#13;
 The document templates (.docx) used here are loaded from the /src/resources Folder.&#13;
 The generated documents are created in the ivy files directory and displayed in the Webbrowser.</name>
-        <nameStyle>319,5
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt

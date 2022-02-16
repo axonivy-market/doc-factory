@@ -1,5 +1,5 @@
 [Ivy]
-16DFD8F971C80EE7 9.3.1 #module
+16DFD8F971C80EE7 9.4.0 #module
 >Proto >Proto Collection #zClass
 Bs0 BarCodeProcess Big #zClass
 Bs0 RD #cInfo
