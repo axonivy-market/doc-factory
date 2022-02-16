@@ -1,5 +1,5 @@
 [Ivy]
-16CD7829EF6B489B 9.3.1 #module
+16CD7829EF6B489B 9.4.0 #module
 >Proto >Proto Collection #zClass
 Ds0 DocFactoryJavaExamples Big #zClass
 Ds0 B #cInfo
@@ -59,13 +59,9 @@ Ds0 f7 328 288 385 288 #arcP
 Ds0 f42 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
-        <name>This examples are using java to call DocFactory/Aspose API.&#13;
+        <name>This examples are using **java** to call DocFactory/Aspose API.&#13;
 The document templates (.docx) used here are loaded from the /src/resources Folder.&#13;
 The generated documents are created in the ivy files directory and displayed in the Webbrowser.</name>
-        <nameStyle>24,5
-4,5,0
-213,5
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt

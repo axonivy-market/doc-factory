@@ -1,5 +1,5 @@
 [Ivy]
-1712BF5507F25F15 9.3.1 #module
+1712BF5507F25F15 9.4.0 #module
 >Proto >Proto Collection #zClass
 Ds0 DocFactoryEMailExample Big #zClass
 Ds0 B #cInfo
@@ -25,9 +25,6 @@ Ds0 f42 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
         <name>This example uses aspose.email library to create an email .msg file.&#13;
 Aspose.email.jar is not included in the Axon Ivy DocFactory by default but can be added to the project classpath.&#13;
 The generated .msg file is sent to the Web browser.</name>
-        <nameStyle>183,5
-53,5
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
