@@ -1,5 +1,5 @@
 [Ivy]
-124971223DD62955 9.3.1 #module
+124971223DD62955 9.4.0 #module
 >Proto >Proto Collection #zClass
 wr0 writeSerialLetterToOneCorrespondent Big #zClass
 wr0 B #cInfo
@@ -145,8 +145,6 @@ wr0 f0 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
         <name>writeSerialLetterToOneCorrespondant</name>
-        <nameStyle>35,7,9
-</nameStyle>
         <desc>This callable writes a letter to one Correspondant
 with the help of a document factory Object.
 The Document Factory Object is a Java Object that can parse a document model
@@ -174,8 +172,6 @@ wr0 f4 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <language>
         <name>make the documentFactory 
 Object</name>
-        <nameStyle>32,7,9
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -189,8 +185,6 @@ wr0 f7 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
         <name>write the serialLetter</name>
-        <nameStyle>22,9
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -226,8 +220,6 @@ wr0 f3 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <language>
         <name>Check the outputFormat / 
 outputPath / outputLetterName</name>
-        <nameStyle>55,9
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -239,42 +231,33 @@ wr0 f8 152 236 152 292 #arcP
 wr0 f9 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
-        <name>This callable produces a document with a list of merge fields and 
-with the help of a document factory Object.
+        <name>**This callable produces a document with a list of merge fields and 
+with the help of a document factory Object.**
+
 The Document Factory Object is a Java Object that can parse a document model
 that contains mergefields and replace those mergefields by some String Data.
 
 This callable takes some mandatory and some optional input parameters.
-Mandatory input Parameters:
+**Mandatory input Parameters:**
 -&gt; TemplatePath: this is the path of the template (document model)
 -&gt; list of TemplateMergeFields. Each mergefield corresponds to a mergeField in the template.
 If no correspondance for a MergeField was found, it will be simply ignored.
-Optional input parameters:
--&gt; optionalOutputPath: where to store the created java.io.File. By default &quot;ivy_RIA_files&quot;
--&gt; optionalOutputFormat: by default the first supported one (in general it will be &quot;doc&quot;
--&gt; optionalLetterName: the file name of the letter. By default &quot;letter&quot;+ the nanoTime, 
+**Optional input parameters:**
+-&gt; optionalOutputPath: where to store the created java.io.File. By default "ivy_RIA_files"
+-&gt; optionalOutputFormat: by default the first supported one (in general it will be "doc"
+-&gt; optionalLetterName: the file name of the letter. By default "letter"+ the nanoTime, 
 to be sure the file doesn''t overwrite any other.
 
-It returns a FileOperationMessage Object that contains:
-a Type indicating if the operation was successfull,
-a message in the Session User language,
-a list of java.io.File that were created during the process.
+**It returns a FileOperationMessage Object that contains:**
+- a Type indicating if the operation was successfull,
+- a message in the Session User language,
+- a list of java.io.File that were created during the process.
 
-In this callable, just one java.io.File should be created.</name>
-        <nameStyle>110,0,7,23
-227,7,9
-27,0,7,23
-237,7,9
-26,0,7,23
-319,7,9
-55,0,7,23
-154,7,9
-59,0,7,23
-</nameStyle>
+**In this callable, just one java.io.File should be created.**</name>
     </language>
 </elementInfo>
 ' #txt
-wr0 f9 44 427 521 362 -255 -176 #rect
+wr0 f9 8 434 592 348 -293 -172 #rect
 wr0 f9 -657956|-1|-16777216 #nodeStyle
 wr0 f10 inParamDecl '<CompositeObject data,String optionalOutputpath,String optionalLetterName,String optionalOutputFormat,String templatePath> param;' #txt
 wr0 f10 inParamInfo 'data.description=Ivy data class object\: the properties names of the object are the mergefields names. The values of these properties will be written in the document at the place of the corresponding mergefields. 
@@ -300,8 +283,6 @@ wr0 f10 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
         <name>writeDocumentWithOneDataClass(&#13;
 CompositeObject,&#13;
 String,String,String,String)</name>
-        <nameStyle>78,5
-</nameStyle>
         <desc>This callable produces a document with a data (DataClass) and &#13;
 with the help of a document factory Object.&#13;
 The Document Factory Object is a Java Object that can parse a document model&#13;
@@ -321,45 +302,35 @@ wr0 f10 res:/webContent/icons/doc-factory-logo.png?small #fDecoratorIcon
 wr0 f11 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
-        <name>This callable produces a document with a data (DataClass) and 
-with the help of a document factory Object. 
+        <name>**This callable produces a document with a data (DataClass) and 
+with the help of a document factory Object. **
 
 The Document Factory Object is a Java Object that can parse a document model
 that contains mergefields and replace those mergefields by some String Data.
 
 This callable takes some mandatory and some optional input parameters.
-Mandatory input Parameters:
+**Mandatory input Parameters:**
 -&gt; TemplatePath: this is the path of the template (document model)
 -&gt; data: A CompositeObject (DataClass). 
 The values of the DataClass fields are going to be used to fill the template and to produce the document.
 The fields of the data have to be named like the fields of the template. 
 If the DataClass Object contains some List of other DataClasses, they will be used in mail merge with nested regions.
-Optional input parameters:
--&gt; optionalOutputPath: where to store the created java.io.File. By default &quot;ivy_RIA_files&quot;
--&gt; optionalOutputFormat: by default the first supported one (in general it will be &quot;doc&quot;
--&gt; optionalLetterName: the file name of the letter. By default &quot;letter&quot;+ the nanoTime, 
+**Optional input parameters:**
+-&gt; optionalOutputPath: where to store the created java.io.File. By default "ivy_RIA_files"
+-&gt; optionalOutputFormat: by default the first supported one (in general it will be "doc"
+-&gt; optionalLetterName: the file name of the letter. By default "letter"+ the nanoTime, 
 to be sure the file doesn''t overwrite any other.
 
-It returns a FileOperationMessage Object that contains:
-a Type indicating if the operation was successfull,
-a message in the Session User language,
-a list of java.io.File that were created during the process.
+**It returns a FileOperationMessage Object that contains:**
+- a Type indicating if the operation was successfull,
+- a message in the Session User language,
+- a list of java.io.File that were created during the process.
 
-In this callable, just one java.io.File should be created.</name>
-        <nameStyle>108,0,7,23
-227,7,9
-27,0,7,23
-407,7,9
-26,0,7,23
-319,7,9
-55,0,7,23
-154,7,9
-59,0,7,23
-</nameStyle>
+**In this callable, just one java.io.File should be created.**</name>
     </language>
 </elementInfo>
 ' #txt
-wr0 f11 593 411 654 410 -322 -200 #rect
+wr0 f11 632 434 736 380 -365 -187 #rect
 wr0 f11 -657956|-1|-16777216 #nodeStyle
 wr0 f12 actionTable 'out=in;
 ' #txt
@@ -371,8 +342,6 @@ wr0 f12 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <language>
         <name>make the documentFactory 
 Object</name>
-        <nameStyle>32,7
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -410,8 +379,6 @@ wr0 f14 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
         <name>Check the outputFormat / 
 outputPath / outputLetterName
 </name>
-        <nameStyle>56,7,9
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -427,8 +394,6 @@ wr0 f16 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
         <name>build DocumentTemplate</name>
-        <nameStyle>22,7
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -442,8 +407,6 @@ wr0 f18 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
         <name>write the serial letter</name>
-        <nameStyle>23,7
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -483,8 +446,6 @@ wr0 f22 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 List&lt;TemplateMergeField&gt;,
 String,String,String,String,
 List&lt;String&gt;,List&lt;List&lt;CompositeObject&gt;&gt;)</name>
-        <nameStyle>129,5,7
-</nameStyle>
         <desc>Produces a document with a list of merge fields and &#13;
 with the help of a document factory Object. The Merge Mail With Regions is supported.&#13;
 The Document Factory Object is a Java Object that can parse a document model&#13;
@@ -534,10 +495,6 @@ wr0 f23 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <language>
         <name>make the hash map for the merge mail with regions
 and write the serialLetter</name>
-        <nameStyle>50,7,9
-4,7,9
-22,7,9
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -571,8 +528,6 @@ wr0 f24 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <language>
         <name>Check the outputFormat / 
 outputPath / outputLetterName </name>
-        <nameStyle>56,7,9
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -586,8 +541,6 @@ wr0 f25 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <language>
         <name>make the documentFactory 
 Object</name>
-        <nameStyle>32,7,9
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -631,8 +584,6 @@ wr0 f31 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 List&lt;TemplateMergeField&gt;,
 String,String,String,String,
 List&lt;String&gt;,List&lt;Recordset&gt;)</name>
-        <nameStyle>117,5,7
-</nameStyle>
         <desc>Produces a document with a list of merge fields and &#13;
 with the help of a document factory Object. The Merge Mail With Regions is supported.&#13;
 The Document Factory Object is a Java Object that can parse a document model&#13;
@@ -663,8 +614,6 @@ wr0 f32 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <language>
         <name>make the documentFactory 
 Object</name>
-        <nameStyle>32,7,9
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -696,10 +645,6 @@ wr0 f33 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <language>
         <name>make the hash table for the merge mail with regions
 and write the serialLetter</name>
-        <nameStyle>52,7,9
-4,7,9
-22,7,9
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -733,8 +678,6 @@ wr0 f34 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <language>
         <name>Check the outputFormat / 
 outputPath / outputLetterName </name>
-        <nameStyle>56,7,9
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -781,8 +724,6 @@ List&lt;TemplateMergeField&gt;,
 String,String,String,String,
 List&lt;String&gt;,List&lt;List&lt;String&gt;&gt;,
 List&lt;List&lt;List&gt;&gt;)</name>
-        <nameStyle>138,5,7
-</nameStyle>
         <desc>Produces a document with a list of merge fields and &#13;
 with the help of a document factory Object. The Merge Mail With Regions is supported.&#13;
 The Document Factory Object is a Java Object that can parse a document model&#13;
@@ -836,8 +777,6 @@ wr0 f41 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <language>
         <name>Check the outputFormat / 
 outputPath / outputLetterName </name>
-        <nameStyle>56,7,9
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -851,8 +790,6 @@ wr0 f42 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <language>
         <name>make the documentFactory 
 Object</name>
-        <nameStyle>32,7,9
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -872,8 +809,6 @@ wr0 f43 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
         <name>write the serialLetter</name>
-        <nameStyle>22,7,9
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -891,14 +826,14 @@ wr0 f48 2440 316 2440 363 #arcP
 wr0 f49 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
-        <name>These callables produce a document with a list of merge fields and 
-with the help of a document factory Object. The Merge Mail With Regions is supported.
+        <name>**These callables produce a document with a list of merge fields and 
+with the help of a document factory Object. The Merge Mail With Regions is supported.**
 The Document Factory Object is a Java Object that can parse a document model
 that contains mergefields and replace those mergefields by some String Data.
 
 A Mail Merge Region is a Table in the template whose rows are going to be automatically filled with some data.
 To be able to perform this operation, one may provide the list of the tables names, the merge fields names for each table and the data (rows).
-The Names of the tables in the template are given by a Start Mergefield(TableStart:nameOfTheTable).
+The Names of the tables in the template are given by a Start Mergefield(TableStart:*++nameOfTheTable*++).
 If you want to fill some tables, the list of the tables names have to be provided in all the callables Starts. 
 The fields names and the data can be provided in several ways:
 	. Lists of DataClasses objects (CompositeObjects): each attribute name will be seen as a mergeField name, each object is a row in a table.
@@ -908,45 +843,29 @@ If there is no table in the given template, or no match between your data and th
 and perform normal mail merge.
 
 This callable takes some mandatory and some optional input parameters.
-Mandatory input Parameters:
+**Mandatory input Parameters:**
 -&gt; TemplatePath: this is the path of the template (document model)
 -&gt; list of TemplateMergeFields. Each mergefield corresponds to a mergeField in the template.
 If no correspondance for a MergeField was found, it will be simply ignored.
 -&gt; Or Composite Object whose attributes are going to be mapped with the template''s mergefields.
 
-Optional input parameters:
--&gt; optionalOutputPath: where to store the created java.io.File. By default &quot;ivy_RIA_files&quot;
--&gt; optionalOutputFormat: by default the first supported one (in general it will be &quot;doc&quot;
--&gt; optionalLetterName: the file name of the letter. By default &quot;letter&quot;+ the nanoTime, 
+**Optional input parameters:**
+-&gt; optionalOutputPath: where to store the created java.io.File. By default "ivy_RIA_files"
+-&gt; optionalOutputFormat: by default the first supported one (in general it will be "doc"
+-&gt; optionalLetterName: the file name of the letter. By default "letter"+ the nanoTime, 
 to be sure the file doesn''t overwrite any other.
 -&gt; Data for filling some tables (see description above about Mail Merge Regions)
 
-It returns a FileOperationMessage Object that contains:
-a Type indicating if the operation was successfull,
-a message in the Session User language,
-a list of java.io.File that were created during the process.
+**It returns a FileOperationMessage Object that contains:**
+- a Type indicating if the operation was successfull,
+- a message in the Session User language,
+- a list of java.io.File that were created during the process.
 
-In these callables, just one java.io.File should be created.</name>
-        <nameStyle>153,0,7,23
-156,7,9
-337,7,21
-14,1,2,7,21
-712,7,21
-72,7,9
-27,0,7,23
-68,7,9
-265,7,15
-1,7,9
-26,0,7,23
-400,7,9
-55,0,7,23
-154,7,9
-61,0,7,23
-</nameStyle>
+**In these callables, just one java.io.File should be created.**</name>
     </language>
 </elementInfo>
 ' #txt
-wr0 f49 1350 412 1188 585 -417 -288 #rect
+wr0 f49 1464 434 960 556 -470 -277 #rect
 wr0 f49 -657956|-1|-16777216 #nodeStyle
 wr0 f50 inParamDecl '<CompositeObject data,String optionalOutputpath,String optionalLetterName,String optionalOutputFormat,String templatePath,List<String> tableNamesList,List<List<CompositeObject>> datasForTables> param;' #txt
 wr0 f50 inParamInfo 'data.description=Ivy data class object used for the normal merge fields\: the properties names of the object are the mergefields names. The values of these properties will be written in the document at the place of the corresponding mergefields. 
@@ -977,8 +896,6 @@ wr0 f50 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 CompositeObject,
 String,String,String,String,
 List&lt;String&gt;,List&lt;List&lt;CompositeObject&gt;&gt;)</name>
-        <nameStyle>120,5,7
-</nameStyle>
         <desc>Produces a document with a list of merge fields and &#13;
 with the help of a document factory Object. The Merge Mail With Regions is supported.&#13;
 The Document Factory Object is a Java Object that can parse a document model&#13;
@@ -1021,8 +938,6 @@ wr0 f51 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
         <name>build DocumentTemplate</name>
-        <nameStyle>22,7
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -1058,8 +973,6 @@ wr0 f52 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
         <name>Check the outputFormat / 
 outputPath / outputLetterName
 </name>
-        <nameStyle>56,7,9
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -1074,8 +987,6 @@ wr0 f53 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <language>
         <name>make the documentFactory 
 Object</name>
-        <nameStyle>32,7
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -1087,8 +998,6 @@ wr0 f54 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
         <name>write the serial letter</name>
-        <nameStyle>23,7
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -1132,8 +1041,6 @@ wr0 f61 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 CompositeObject,String,
 String,String,String,
 List&lt;String&gt;,List&lt;Recordset&gt;)</name>
-        <nameStyle>108,5,7
-</nameStyle>
         <desc>Produces a document with a list of merge fields and &#13;
 with the help of a document factory Object. The Merge Mail With Regions is supported.&#13;
 The Document Factory Object is a Java Object that can parse a document model&#13;
@@ -1186,8 +1093,6 @@ wr0 f62 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
         <name>Check the outputFormat / 
 outputPath / outputLetterName
 </name>
-        <nameStyle>56,7,9
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -1212,8 +1117,6 @@ wr0 f63 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
         <name>build DocumentTemplate</name>
-        <nameStyle>22,7
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -1228,8 +1131,6 @@ wr0 f64 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <language>
         <name>make the documentFactory 
 Object</name>
-        <nameStyle>32,7
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -1241,8 +1142,6 @@ wr0 f65 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
         <name>write the serial letter</name>
-        <nameStyle>23,7
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -1287,8 +1186,6 @@ wr0 f72 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
         <name>writeDocumentWithMailMergeNestedTable(
 String,String,String,String,
 List&lt;CompositeObject&gt;,List&lt;List&lt;CompositeObject&gt;&gt;)</name>
-        <nameStyle>118,5,7
-</nameStyle>
         <desc>Produces a document with the data included in  a DataClass Object. &#13;
 The Merge Mail With Nested Regions is supported.&#13;
 Just One Level of Nested Regions is supported in this sub Process.&#13;
@@ -1316,8 +1213,6 @@ wr0 f73 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <language>
         <name>make the documentFactory 
 Object</name>
-        <nameStyle>32,7,9
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -1339,8 +1234,6 @@ wr0 f74 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
         <name>write the serialLetter</name>
-        <nameStyle>22,7,9
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -1374,8 +1267,6 @@ wr0 f75 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <language>
         <name>Check the outputFormat / 
 outputPath / outputLetterName </name>
-        <nameStyle>56,7,9
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -1399,8 +1290,6 @@ wr0 f81 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <language>
         <name>make the documentFactory 
 Object</name>
-        <nameStyle>32,7,9
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -1434,8 +1323,6 @@ wr0 f82 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <language>
         <name>Check the outputFormat / 
 outputPath / outputLetterName </name>
-        <nameStyle>56,7,9
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -1457,8 +1344,6 @@ wr0 f83 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
         <name>write the serialLetter</name>
-        <nameStyle>22,7,9
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -1487,8 +1372,6 @@ wr0 f84 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
         <name>writeDocumentWithMailMergeNestedTableWithTree(
 String,String,String,String,
 Tree)</name>
-        <nameStyle>81,5,7
-</nameStyle>
         <desc>Produces a document with the data included in &#13;
 a Tree Object. The Merge Mail With Nested Regions is supported.&#13;
 Just One Level of Nested Regions is supported in this sub Process.&#13;
@@ -1543,8 +1426,6 @@ wr0 f90 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
         <name>writeDocumentWithMailMergeNestedTableWithListOfDatas(
 String,String,String,String,
 CompositeObject, List&lt;CompositeObject&gt;)</name>
-        <nameStyle>122,5,7
-</nameStyle>
         <desc>Produces a document with the data from the given Data object. &#13;
 The Merge Mail With Nested Regions is supported and the each data in the List&lt;CompositeObject&gt; represents a table.&#13;
 &#13;
@@ -1578,8 +1459,6 @@ wr0 f91 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
         <name>write the serialLetter</name>
-        <nameStyle>22,7,9
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -1613,8 +1492,6 @@ wr0 f92 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <language>
         <name>Check the outputFormat / 
 outputPath / outputLetterName </name>
-        <nameStyle>56,7,9
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -1628,8 +1505,6 @@ wr0 f93 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <language>
         <name>make the documentFactory 
 Object</name>
-        <nameStyle>32,7,9
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -1647,51 +1522,36 @@ wr0 f98 3624 308 3624 371 #arcP
 wr0 f99 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
-        <name>These callables produce a document with a list of merge fields and 
-with the help of a document factory Object. The Merge Mail With Nested Regions is supported.
+        <name>**These callables produce a document with a list of merge fields and 
+with the help of a document factory Object. The Merge Mail With Nested Regions is supported.**
+
 The Document Factory Object is a Java Object that can parse a document model
 that contains mergefields and replace those mergefields by some String Data.
 
 Nested mail merge regions are at least two regions in which one is defined entirely inside the other, so they are “nested” in one another.
-The Names of the tables or regions in the template are given by a Start Mergefield(TableStart:nameOfTheTable).
+The Names of the tables or regions in the template are given by a Start Mergefield(TableStart:*++nameOfTheTable*++).
 
 This callable takes some mandatory and some optional input parameters.
-Mandatory input Parameters:
+**Mandatory input Parameters:**
 -&gt; TemplatePath: this is the path of the template (document model)
 -&gt; Other Input parameters containing the data (Tree, List&lt;CompositeObject&gt; etc...)
 
-Optional input parameters:
--&gt; optionalOutputPath: where to store the created java.io.File. By default &quot;ivy_RIA_files&quot;
--&gt; optionalOutputFormat: by default the first supported one (in general it will be &quot;doc&quot;
--&gt; optionalLetterName: the file name of the letter. By default &quot;letter&quot;+ the nanoTime, 
+**Optional input parameters:**
+-&gt; optionalOutputPath: where to store the created java.io.File. By default "ivy_RIA_files"
+-&gt; optionalOutputFormat: by default the first supported one (in general it will be "doc"
+-&gt; optionalLetterName: the file name of the letter. By default "letter"+ the nanoTime, 
 to be sure the file doesn''t overwrite any other.
 
-It returns a FileOperationMessage Object that contains:
-a Type indicating if the operation was successfull,
-a message in the Session User language,
-a list of java.io.File that were created during the process.
+**It returns a FileOperationMessage Object that contains:**
+- a Type indicating if the operation was successfull,
+- a message in the Session User language,
+- a list of java.io.File that were created during the process.
 
-In these callables, just one java.io.File should be created.</name>
-        <nameStyle>160,0,7,23
-156,7,9
-233,7,21
-14,1,2,7,21
-3,7,21
-72,7,9
-27,0,7,23
-68,7,9
-83,7,15
-1,7,9
-26,0,7,23
-319,7,9
-55,0,7,23
-154,7,9
-61,0,7,23
-</nameStyle>
+**In these callables, just one java.io.File should be created.**</name>
     </language>
 </elementInfo>
 ' #txt
-wr0 f99 2771 427 1002 410 -371 -200 #rect
+wr0 f99 2832 434 880 396 -432 -195 #rect
 wr0 f99 -657956|-1|-16777216 #nodeStyle
 wr0 f100 inParamDecl '<CompositeObject data,String optionalOutputpath,String optionalLetterName,String optionalOutputFormat,String templatePath> param;' #txt
 wr0 f100 inParamInfo 'data.description=Ivy data class object\: the properties names of the object are the mergefields names. The values of these properties will be written in the document at the place of the corresponding mergefields. The collections of Serializables inside this bean are used for supporting the mail merge with region.
@@ -1746,8 +1606,6 @@ wr0 f102 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <language>
         <name>make the documentFactory 
 Object</name>
-        <nameStyle>32,7
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -1783,8 +1641,6 @@ wr0 f103 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
         <name>Check the outputFormat / 
 outputPath / outputLetterName
 </name>
-        <nameStyle>56,7,9
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -1796,8 +1652,6 @@ wr0 f104 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
         <name>write the serial letter</name>
-        <nameStyle>23,7
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -1813,8 +1667,6 @@ wr0 f105 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
         <name>build DocumentTemplate</name>
-        <nameStyle>22,7
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
