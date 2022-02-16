@@ -1,5 +1,5 @@
 [Ivy]
-16DFD8AB2E4BFFF9 9.3.1 #module
+16DFD8AB2E4BFFF9 9.4.0 #module
 >Proto >Proto Collection #zClass
 II0 IvyDocumentAPI Big #zClass
 II0 B #cInfo
@@ -51,8 +51,6 @@ II0 f8 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <language>
         <name>Create document&#13;
 Attach it to case documents</name>
-        <nameStyle>44,5
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -72,8 +70,6 @@ II0 f4 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <language>
         <name>View document&#13;
 from case</name>
-        <nameStyle>24,5
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt

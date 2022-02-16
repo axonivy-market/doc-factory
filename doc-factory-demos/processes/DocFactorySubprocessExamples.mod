@@ -1,5 +1,5 @@
 [Ivy]
-160D67F5A5647B10 9.3.1 #module
+160D67F5A5647B10 9.4.0 #module
 >Proto >Proto Collection #zClass
 De0 DocFactorySubprocessExamples Big #zClass
 De0 B #cInfo
@@ -89,8 +89,6 @@ De0 f0 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
         <name>Document with TemplateMergeFields</name>
-        <nameStyle>33,5
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -109,11 +107,8 @@ in.mergeFields.add(new TemplateMergeField("address.city", "CH-6300 Zug"));
 De0 f3 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
-        <name>Create some &#xD;
+        <name>Create some &#13;
 TemplateMergeFields</name>
-        <nameStyle>14,5
-19,5
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -156,9 +151,6 @@ De0 f7 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <language>
         <name>Get Template from
 CMS</name>
-        <nameStyle>3,5
-18,5
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -185,8 +177,6 @@ De0 f10 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
         <name>Document with Object</name>
-        <nameStyle>20,5
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -215,8 +205,6 @@ De0 f11 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
         <name>Create an Object</name>
-        <nameStyle>16,5
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -242,8 +230,6 @@ De0 f12 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <language>
         <name>Create Document
 with Object</name>
-        <nameStyle>27,5
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -259,9 +245,6 @@ De0 f13 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <language>
         <name>Get Template from
 CMS</name>
-        <nameStyle>3,5
-18,5
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -283,9 +266,6 @@ De0 f20 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <language>
         <name>Get Template from
 CMS</name>
-        <nameStyle>3,5
-18,5
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -313,8 +293,6 @@ De0 f22 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <language>
         <name>Create Document
 with Table</name>
-        <nameStyle>26,5
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -340,8 +318,6 @@ De0 f19 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
         <name>Document with Table</name>
-        <nameStyle>19,5
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -358,9 +334,6 @@ De0 f27 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <language>
         <name>Get Template from
 CMS</name>
-        <nameStyle>3,5
-18,5
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -386,8 +359,6 @@ De0 f29 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <language>
         <name>Create Document
 with conditional Text</name>
-        <nameStyle>37,5
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -411,8 +382,6 @@ De0 f30 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
         <name>Document with Conditional Text</name>
-        <nameStyle>30,5
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -430,10 +399,8 @@ in.mergeFields.add(new TemplateMergeField("country", "Switzerland"));
 De0 f31 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
-        <name>Create some &#xD;
+        <name>Create some &#13;
 Template MergeFields</name>
-        <nameStyle>34,5
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -466,8 +433,6 @@ De0 f37 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <language>
         <name>Create Document
 with tables in tables</name>
-        <nameStyle>37
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -483,9 +448,6 @@ De0 f38 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <language>
         <name>Get Template from
 CMS</name>
-        <nameStyle>3,5
-18,5
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -509,8 +471,6 @@ De0 f39 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
         <name>Document with nested Tables</name>
-        <nameStyle>27,5
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -542,8 +502,6 @@ De0 f45 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
         <name>Create Recordset Data</name>
-        <nameStyle>21,5
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -605,8 +563,6 @@ De0 f46 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
         <name>Create complex Data</name>
-        <nameStyle>19,5
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -690,8 +646,6 @@ De0 f15 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
         <name>Document with nested Object</name>
-        <nameStyle>27,5
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -718,8 +672,6 @@ De0 f18 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <language>
         <name>Create Document
 with nested Object </name>
-        <nameStyle>35,5
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -747,8 +699,6 @@ De0 f28 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
         <name>Create nested Object</name>
-        <nameStyle>20,5
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
@@ -764,9 +714,6 @@ De0 f36 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <language>
         <name>Get Template from
 CMS</name>
-        <nameStyle>3,5
-18,5
-</nameStyle>
     </language>
 </elementInfo>
 ' #txt
