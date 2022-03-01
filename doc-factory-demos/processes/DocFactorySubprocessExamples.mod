@@ -1,9 +1,11 @@
 [Ivy]
-160D67F5A5647B10 9.4.0 #module
+160D67F5A5647B10 9.4.1 #module
 >Proto >Proto Collection #zClass
 De0 DocFactorySubprocessExamples Big #zClass
 De0 B #cInfo
 De0 #process
+De0 @TextInP .colors .colors #zField
+De0 @TextInP color color #zField
 De0 @TextInP .type .type #zField
 De0 @TextInP .processKind .processKind #zField
 De0 @AnnotationInP-0n ai ai #zField
