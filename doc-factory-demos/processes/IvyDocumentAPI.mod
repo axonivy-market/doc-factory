@@ -1,9 +1,11 @@
 [Ivy]
-16DFD8AB2E4BFFF9 9.4.0 #module
+16DFD8AB2E4BFFF9 9.4.1 #module
 >Proto >Proto Collection #zClass
 II0 IvyDocumentAPI Big #zClass
 II0 B #cInfo
 II0 #process
+II0 @TextInP .colors .colors #zField
+II0 @TextInP color color #zField
 II0 @TextInP .type .type #zField
 II0 @TextInP .processKind .processKind #zField
 II0 @TextInP .xml .xml #zField

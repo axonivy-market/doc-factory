@@ -1,9 +1,11 @@
 [Ivy]
-16DFD8F971C80EE7 9.4.0 #module
+16DFD8F971C80EE7 9.4.1 #module
 >Proto >Proto Collection #zClass
 Bs0 BarCodeProcess Big #zClass
 Bs0 RD #cInfo
 Bs0 #process
+Bs0 @TextInP .colors .colors #zField
+Bs0 @TextInP color color #zField
 Bs0 @TextInP .type .type #zField
 Bs0 @TextInP .processKind .processKind #zField
 Bs0 @TextInP .xml .xml #zField
