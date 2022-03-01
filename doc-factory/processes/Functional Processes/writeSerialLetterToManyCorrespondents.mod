@@ -1,9 +1,11 @@
 [Ivy]
-1249FCC8592E4E39 9.4.0 #module
+1249FCC8592E4E39 9.4.1 #module
 >Proto >Proto Collection #zClass
 ws0 writeSerialLetterToManyCorrespondents Big #zClass
 ws0 B #cInfo
 ws0 #process
+ws0 @TextInP .colors .colors #zField
+ws0 @TextInP color color #zField
 ws0 @TextInP .xml .xml #zField
 ws0 @TextInP .responsibility .responsibility #zField
 ws0 @AnnotationInP-0n ai ai #zField
@@ -70,8 +72,8 @@ in one single document.</name>
     </language>
 </elementInfo>
 ' #txt
+ws0 f11 @C|color NodeStyle16 #txt
 ws0 f11 35 171 234 58 -112 -24 #rect
-ws0 f11 -993312|-1|-16777216 #nodeStyle
 ws0 f12 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
@@ -82,8 +84,8 @@ is going to generate one single letter.</name>
     </language>
 </elementInfo>
 ' #txt
+ws0 f12 @C|color NodeStyle8 #txt
 ws0 f12 35 267 234 74 -112 -32 #rect
-ws0 f12 -7484683|-1|-16777216 #nodeStyle
 ws0 f14 actionTable 'out=in;
 ' #txt
 ws0 f14 actionCode 'import ch.ivyteam.ivy.addons.docfactory.BaseDocFactory;
@@ -210,8 +212,12 @@ It contains the list of java.io.File objects created during the mail merge opera
     </language>
 </elementInfo>
 ' #txt
+ws0 f5 @C|color NodeStyle12 #txt
 ws0 f5 590 11 917 890 -453 -440 #rect
-ws0 f5 -657956|-1|-16777216 #nodeStyle
+>Proto ws0 .colors 'NodeStyle12=rgb(245, 245, 220);
+NodeStyle16=rgb(240, 215, 224);
+NodeStyle8=rgb(141, 202, 245);
+' #txt
 >Proto ws0 .xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>

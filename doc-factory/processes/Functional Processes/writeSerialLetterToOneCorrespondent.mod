@@ -1,9 +1,11 @@
 [Ivy]
-124971223DD62955 9.4.0 #module
+124971223DD62955 9.4.1 #module
 >Proto >Proto Collection #zClass
 wr0 writeSerialLetterToOneCorrespondent Big #zClass
 wr0 B #cInfo
 wr0 #process
+wr0 @TextInP .colors .colors #zField
+wr0 @TextInP color color #zField
 wr0 @TextInP .xml .xml #zField
 wr0 @TextInP .responsibility .responsibility #zField
 wr0 @AnnotationInP-0n ai ai #zField
@@ -257,8 +259,8 @@ to be sure the file doesn''t overwrite any other.
     </language>
 </elementInfo>
 ' #txt
+wr0 f9 @C|color NodeStyle12 #txt
 wr0 f9 8 434 592 348 -293 -172 #rect
-wr0 f9 -657956|-1|-16777216 #nodeStyle
 wr0 f10 inParamDecl '<CompositeObject data,String optionalOutputpath,String optionalLetterName,String optionalOutputFormat,String templatePath> param;' #txt
 wr0 f10 inParamInfo 'data.description=Ivy data class object\: the properties names of the object are the mergefields names. The values of these properties will be written in the document at the place of the corresponding mergefields. 
 optionalLetterName.description=Produced document name (default is "letter" + nanotime)
@@ -331,7 +333,6 @@ to be sure the file doesn''t overwrite any other.
 </elementInfo>
 ' #txt
 wr0 f11 632 434 736 380 -365 -187 #rect
-wr0 f11 -657956|-1|-16777216 #nodeStyle
 wr0 f12 actionTable 'out=in;
 ' #txt
 wr0 f12 actionCode 'import ch.ivyteam.ivy.addons.docfactory.BaseDocFactory;
@@ -866,7 +867,6 @@ to be sure the file doesn''t overwrite any other.
 </elementInfo>
 ' #txt
 wr0 f49 1464 434 960 556 -470 -277 #rect
-wr0 f49 -657956|-1|-16777216 #nodeStyle
 wr0 f50 inParamDecl '<CompositeObject data,String optionalOutputpath,String optionalLetterName,String optionalOutputFormat,String templatePath,List<String> tableNamesList,List<List<CompositeObject>> datasForTables> param;' #txt
 wr0 f50 inParamInfo 'data.description=Ivy data class object used for the normal merge fields\: the properties names of the object are the mergefields names. The values of these properties will be written in the document at the place of the corresponding mergefields. 
 datasForTables.description=Data for filling the tables. Each list of composite object is used in the corresponding (by the index) table name.
@@ -1552,7 +1552,6 @@ to be sure the file doesn''t overwrite any other.
 </elementInfo>
 ' #txt
 wr0 f99 2832 434 880 396 -432 -195 #rect
-wr0 f99 -657956|-1|-16777216 #nodeStyle
 wr0 f100 inParamDecl '<CompositeObject data,String optionalOutputpath,String optionalLetterName,String optionalOutputFormat,String templatePath> param;' #txt
 wr0 f100 inParamInfo 'data.description=Ivy data class object\: the properties names of the object are the mergefields names. The values of these properties will be written in the document at the place of the corresponding mergefields. The collections of Serializables inside this bean are used for supporting the mail merge with region.
 optionalLetterName.description=Produced document name (default is "letter" + nanotime)
@@ -1681,6 +1680,8 @@ wr0 f109 expr out #txt
 wr0 f109 992 156 992 196 #arcP
 wr0 f110 expr out #txt
 wr0 f110 992 308 992 363 #arcP
+>Proto wr0 .colors 'NodeStyle12=rgb(245, 245, 220);
+' #txt
 >Proto wr0 .xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>

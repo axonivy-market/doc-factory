@@ -1,9 +1,11 @@
 [Ivy]
-16CD86F955A91647 9.4.0 #module
+16CD86F955A91647 9.4.1 #module
 >Proto >Proto Collection #zClass
 Vs0 ViewSimpleDocumentProcess Big #zClass
 Vs0 RD #cInfo
 Vs0 #process
+Vs0 @TextInP .colors .colors #zField
+Vs0 @TextInP color color #zField
 Vs0 @TextInP .type .type #zField
 Vs0 @TextInP .processKind .processKind #zField
 Vs0 @AnnotationInP-0n ai ai #zField
