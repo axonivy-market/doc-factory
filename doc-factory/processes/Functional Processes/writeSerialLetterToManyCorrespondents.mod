@@ -154,66 +154,40 @@ ws0 f4 336 316 336 395 #arcP
 ws0 f5 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
-        <name>**This callable produces documents with a List of DocumentTemplate objects and 
+        <name>This callable produces documents with a List of DocumentTemplate objects and 
 with the help of a document factory Object. Each DocumentTemplate will be 
-turned into a document. 
-The Document Factory Object is a Java Object that can parse a document model
+turned into a document.</name>
+        <desc>The Document Factory Object is a Java Object that can parse a document model
 that contains mergefields and replace those mergefields by some String Data.
 
 1. The Merge Mail With Regions is supported.
-**A Mail Merge Region is a Table in the template whose rows are going to be automatically filled with some data.
+A Mail Merge Region is a Table in the template whose rows are going to be automatically filled with some data.
 If your template contains such regions, you have to provide to the DocumentTemplates Objects the datas that should be inserted.
 The DocumentTemplates objects have two fields that can be used for that purpose:
-    . HashMap&lt;String, java.util.List&lt;CompositeObject&gt;&gt; tablesNamesAndFieldsmap: the datas are List of CompositeObjects (dataClass), each one represents a Row. 
+    - ```HashMap&lt;String, java.util.List&lt;CompositeObject&gt;&gt; tablesNamesAndFieldsmap```  : the datas are List of CompositeObjects (dataClass), each one represents a Row. 
       The name of each DataClass Attribut corresponds to a MergeFields in the Table.
-    . Hashtable&lt;String, Recordset&gt; tablesNamesAndFieldsHashtable: the datas are Recordset, each Record represents a Row. 
+    - ```Hashtable&lt;String, Recordset&gt; tablesNamesAndFieldsHashtable```: the datas are Recordset, each Record represents a Row. 
       The name of each Record Field corresponds to a MergeFields in the Table.
 The keys (String) of the Maps are the tables'' names contained in the template. 
-The Names of the tables in the template are given by a Start Mergefield(TableStart:nameOfTheTable).**
+The Names of the tables in the template are given by a Start Mergefield(TableStart:nameOfTheTable).
+
 2. The Merge Mail With Nested Regions is supported.
-**Nested mail merge regions are at least two regions in which one is defined entirely inside the other, so they are �nested� in one another.
+Nested mail merge regions are at least two regions in which one is defined entirely inside the other, so they are "nested" in one another.
 The DocumentTemplates objects have fields/attributes that can be used for that purpose:
-    . List&lt;CompositeObject&gt; parentDataSourceForNestedMailMerge and List&lt;List&lt;CompositeObject&gt;&gt; childrenDataSourcesForNestedMailMerge.
+    - ```List&lt;CompositeObject&gt; parentDataSourceForNestedMailMerge``` and ```List&lt;List&lt;CompositeObject&gt;&gt; childrenDataSourcesForNestedMailMerge```.
       With these attributes set, only one nested level is supported: the parent list contains the information for the parent table/region,
-      each child List&lt;CompositeObject&gt; contains the information for one parent data object and is nested in this parent.
-    . List&lt;CompositeObject&gt; nestedDataSourceForNestedMailMerge: In this case each dataclass may contain lists of other nested dataclasses and so on... .
+      each child ```List&lt;CompositeObject&gt;``` contains the information for one parent data object and is nested in this parent.
+    - ```List&lt;CompositeObject&gt; nestedDataSourceForNestedMailMerge```: In this case each dataclass may contain lists of other nested dataclasses and so on... .
       There is no limit in nesting regions.
-    . Tree treeData: The first root node of the Tree contains a dataclass as value object. The attributes of this dataclass are used 
+    - ```Tree treeData```: The first root node of the Tree contains a dataclass as value object. The attributes of this dataclass are used 
       to fill merge fields outside of the nested regions area.
       All the children nodes at each level of the Tree contain dataclasses as value that are used to fill the corresponding nested region.
-
-This callable takes some mandatory and some optional input parameters.
-**Mandatory input Parameters:**
--&gt; list of DocumentTemplate. Each DocumentTemplate contains the path to the template it refers to,
-and a list of mergeFields. Each mergefield corresponds to a mergeField in the template.
-If no correspondance for a MergeField was found, it will be simply ignored.
--&gt; boolean allInOneDocument: if true all the produced documents are going to be appended in one Serial letter.
--&gt; boolean allInSeparatesDocuments: if true each DocumentTemplate will be turned into a single file. 
-Each DocumentTemplate contains its outputPath (default "ivy_RIA_files") , 
-format(default "doc") and name (default  "letter"+ the nanoTime).
-If the two boolean are false, nothing will occur, if they are both true, both operations are going to be performed.
-
-**Optional input parameters:**
--&gt; optionalSingleDocumentOutputPath: if allInOneDocument is true, used to store the created java.io.File serial letter.
-By default "ivy_RIA_files"
--&gt; optionalSingleDocumentFormat: if allInOneDocument is true, the desired serial letterformat.
-by default the first supported one (in general it will be "doc")
--&gt; optionalSingleDocumentName: if allInOneDocument is true, the file name of the serial letter.
-By default "letter"+ the nanoTime, to be sure the file doesn''t overwrite any other.
-
-**It returns:**
--&gt; A FileOperationMessage Object reflecting the result of the serial Document production 
-if the  boolean allInOneDocument was true. It contains the single File corresponding to the serial document.
--&gt; A List&lt;FileOperationMessage&gt;: if the boolean allInSeparatesDocuments was true 
-each FileOperationMessage Object reflects the result of the production of one document.
-It contains the list of java.io.File objects created during the mail merge operation.
-**
-**</name>
+</desc>
     </language>
 </elementInfo>
 ' #txt
 ws0 f5 @C|color NodeStyle12 #txt
-ws0 f5 590 11 917 890 -453 -440 #rect
+ws0 f5 576 34 512 60 -252 -22 #rect
 >Proto ws0 .colors 'NodeStyle12=rgb(245, 245, 220);
 NodeStyle16=rgb(240, 215, 224);
 NodeStyle8=rgb(141, 202, 245);
