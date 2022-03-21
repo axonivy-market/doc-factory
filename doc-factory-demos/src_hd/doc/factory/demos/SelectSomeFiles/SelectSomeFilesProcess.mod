@@ -50,7 +50,7 @@ Cs0 f8 actionTable 'out=in;
 ' #txt
 Cs0 f8 actionCode '// temporary ivy files
 File ivyfile = new File(in.uploadEvent.getFile().getFileName(), true);
-ivyfile.writeBinary(in.uploadEvent.getFile().getContents());
+ivyfile.writeBinary(in.uploadEvent.getFile().getContent());
 
 out.files.add(ivyfile.getJavaFile());
 

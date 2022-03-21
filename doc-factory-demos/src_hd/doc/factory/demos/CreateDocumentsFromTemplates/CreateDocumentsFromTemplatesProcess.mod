@@ -175,7 +175,7 @@ Cs0 f17 280 160 339 160 #arcP
 Cs0 f20 actionTable 'out=in;
 ' #txt
 Cs0 f20 actionCode 'import ch.ivyteam.ivy.docFactoryExamples.Util.FilesUtil;
-in.service.image = in.uploadEvent.getFile().getContents();
+in.service.image = in.uploadEvent.getFile().getContent();
 in.service.imageName = in.uploadEvent.getFile().getFileName();
 in.service.ivyFile = FilesUtil.primeToIvyFile(in.uploadEvent.getFile());' #txt
 Cs0 f20 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
