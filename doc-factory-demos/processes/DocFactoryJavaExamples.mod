@@ -1,5 +1,5 @@
 [Ivy]
-16CD7829EF6B489B 9.4.1 #module
+16CD7829EF6B489B 9.4.3 #module
 >Proto >Proto Collection #zClass
 Ds0 DocFactoryJavaExamples Big #zClass
 Ds0 B #cInfo
@@ -44,7 +44,7 @@ Ds0 f5 callSignature start2() #txt
 Ds0 f5 persist false #txt
 Ds0 f5 startName '3.1 Document Creation Capabilities' #txt
 Ds0 f5 caseData businessCase.attach=true #txt
-Ds0 f5 showInStartList 1 #txt
+Ds0 f5 showInStartList true #txt
 Ds0 f5 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>

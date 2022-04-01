@@ -1,5 +1,5 @@
 [Ivy]
-16DFD8AB2E4BFFF9 9.4.1 #module
+16DFD8AB2E4BFFF9 9.4.3 #module
 >Proto >Proto Collection #zClass
 II0 IvyDocumentAPI Big #zClass
 II0 B #cInfo
@@ -30,7 +30,7 @@ II0 f3 persist false #txt
 II0 f3 startName '4.1 Create and Attach Document to Case' #txt
 II0 f3 caseData businessCase.attach=true #txt
 II0 f3 wfuser 1 #txt
-II0 f3 showInStartList 1 #txt
+II0 f3 showInStartList true #txt
 II0 f3 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <elementInfo>
     <language>
