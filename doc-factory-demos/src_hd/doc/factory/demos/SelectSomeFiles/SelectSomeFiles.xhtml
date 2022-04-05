@@ -37,7 +37,7 @@ table tr > td{
 			</f:facet>
 			
 			<p:outputLabel value="Upload some PDF documents"/>
-			<p:fileUpload mode="advanced" multiple="true" allowTypes=" /(\.|\/)(pdf)$/" value="#{data.files}" fileUploadListener="#{logic.uploadFile}" update="@form"></p:fileUpload>
+			<p:fileUpload mode="advanced" multiple="true" allowTypes=" /(\.|\/)(pdf)$/" value="#{data.files}" listener="#{logic.uploadFile}" update="@form"></p:fileUpload>
 			<p:commandButton styleClass="btn btn-success" actionListener="#{logic.createDocument}" value="Create Document" ajax="false" disabled="#{data.files eq null}"/>
 		</h:panelGrid>
 	</h:form>
