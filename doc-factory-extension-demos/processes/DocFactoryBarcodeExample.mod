@@ -1,5 +1,5 @@
 [Ivy]
-16CD7829EF6B489B 9.4.3 #module
+16CD7829EF6B489B 9.4.7 #module
 >Proto >Proto Collection #zClass
 Ds0 DocFactoryBarcodeExample Big #zClass
 Ds0 B #cInfo
