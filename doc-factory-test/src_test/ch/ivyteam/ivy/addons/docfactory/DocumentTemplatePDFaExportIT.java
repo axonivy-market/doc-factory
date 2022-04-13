@@ -18,8 +18,8 @@ import ch.ivyteam.ivy.addons.docfactory.pdf.PdfAType;
 import ch.ivyteam.ivy.addons.docfactory.pdf.PdfOptions;
 import ch.ivyteam.ivy.addons.docfactory.pdfbox.PdfAValidator;
 
-@PowerMockIgnore({"com.sun.org.apache.xerces.*", "javax.management.*", "com.sun.org.apache.xerces.*", 
-	"javax.xml.*", "org.xml.*", "org.w3c.dom.*"}) 
+@PowerMockIgnore({"com.sun.org.apache.xerces.*", "javax.management.*", "com.sun.org.apache.xerces.*",
+	"javax.xml.*", "org.xml.*", "org.w3c.dom.*"})
 public class DocumentTemplatePDFaExportIT extends DocFactoryTest {
 
 	private static File TEMPLATE;
@@ -33,7 +33,7 @@ public class DocumentTemplatePDFaExportIT extends DocFactoryTest {
 	}
 
 	@Test
-	public void produce_pdfA_1A() throws URISyntaxException, IOException {
+	public void produce_pdfA_1A() throws IOException {
 		// we instantiate the DocumentCreationOptions with the PdfOptions in it
 		PdfOptions pdfOptions = PdfOptions.getInstance().withPdfAType(PdfAType.PDF_A_1A);
 		DocumentCreationOptions options = DocumentCreationOptions.getInstance().withPdfOptions(pdfOptions);
@@ -59,7 +59,7 @@ public class DocumentTemplatePDFaExportIT extends DocFactoryTest {
 	}
 
 	@Test
-	public void produce_pdfA_1B() throws URISyntaxException, IOException {
+	public void produce_pdfA_1B() throws IOException {
 		// we instantiate the DocumentCreationOptions with the PdfOptions in it
 		PdfOptions pdfOptions = PdfOptions.getInstance().withPdfAType(PdfAType.PDF_A_1B);
 		DocumentCreationOptions options = DocumentCreationOptions.getInstance().withPdfOptions(pdfOptions);
@@ -83,9 +83,9 @@ public class DocumentTemplatePDFaExportIT extends DocFactoryTest {
 		// We should in general be careful with PDF/A validation as it does not seem to be consistent across different tools.
 		assertTrue(PdfAValidator.isPDFACompliant(result.getFiles().get(0)));
 	}
-	
+
 	@Test
-	public void produce_pdfA_2A() throws URISyntaxException, IOException {
+	public void produce_pdfA_2A() throws IOException {
 		// we instantiate the DocumentCreationOptions with the PdfOptions in it
 		PdfOptions pdfOptions = PdfOptions.getInstance().withPdfAType(PdfAType.PDF_A_2A);
 		DocumentCreationOptions options = DocumentCreationOptions.getInstance().withPdfOptions(pdfOptions);
@@ -104,7 +104,7 @@ public class DocumentTemplatePDFaExportIT extends DocFactoryTest {
 		assertTrue(result.isSuccess());
 		assertThat(result.getFiles(), org.hamcrest.core.IsCollectionContaining.hasItem(resultFile));
 		assertThat(result.getFiles().get(0).getName(), Is.is("test_pdfA_2A.pdf"));
-		// PDFBox cannot validate the PdfAType.PDF_A_2A result. 
+		// PDFBox cannot validate the PdfAType.PDF_A_2A result.
 		// it seems there is a bug with aspose with PdfAType.PDF_A_2A, PdfAType.PDF_A_3A see
 		// https://forum.aspose.com/t/aspose-pdf-java-pdf-to-pdf-a-convertion-does-not-produce-valid-pdf-a-1a-pdf-a-2a-pdf-a-3a/212847
 		// We should in general be careful with PDF/A validation as it does not seem to be consistent across different tools.
@@ -112,7 +112,7 @@ public class DocumentTemplatePDFaExportIT extends DocFactoryTest {
 	}
 
 	@Test
-	public void produce_pdfA_2B() throws URISyntaxException, IOException {
+	public void produce_pdfA_2B() throws IOException {
 		// we instantiate the DocumentCreationOptions with the PdfOptions in it
 		PdfOptions pdfOptions = PdfOptions.getInstance().withPdfAType(PdfAType.PDF_A_2B);
 		DocumentCreationOptions options = DocumentCreationOptions.getInstance().withPdfOptions(pdfOptions);
@@ -136,9 +136,9 @@ public class DocumentTemplatePDFaExportIT extends DocFactoryTest {
 		// We should in general be careful with PDF/A validation as it does not seem to be consistent across different tools.
 		assertFalse(PdfAValidator.isPDFACompliant(result.getFiles().get(0)));
 	}
-	
+
 	@Test
-	public void produce_pdfA_3A() throws URISyntaxException, IOException {
+	public void produce_pdfA_3A() throws IOException {
 		// we instantiate the DocumentCreationOptions with the PdfOptions in it
 		PdfOptions pdfOptions = PdfOptions.getInstance().withPdfAType(PdfAType.PDF_A_3A);
 		DocumentCreationOptions options = DocumentCreationOptions.getInstance().withPdfOptions(pdfOptions);
@@ -157,7 +157,7 @@ public class DocumentTemplatePDFaExportIT extends DocFactoryTest {
 		assertTrue(result.isSuccess());
 		assertThat(result.getFiles(), org.hamcrest.core.IsCollectionContaining.hasItem(resultFile));
 		assertThat(result.getFiles().get(0).getName(), Is.is("test_pdfA_3A.pdf"));
-		// PDFBox cannot validate the PdfAType.PDF_A_3A result. 
+		// PDFBox cannot validate the PdfAType.PDF_A_3A result.
 		// it seems there is a bug with aspose with PdfAType.PDF_A_2A, PdfAType.PDF_A_3A see
 		// https://forum.aspose.com/t/aspose-pdf-java-pdf-to-pdf-a-convertion-does-not-produce-valid-pdf-a-1a-pdf-a-2a-pdf-a-3a/212847
 		// We should in general be careful with PDF/A validation as it does not seem to be consistent across different tools.
@@ -165,7 +165,7 @@ public class DocumentTemplatePDFaExportIT extends DocFactoryTest {
 	}
 
 	@Test
-	public void produce_pdfA_3B() throws URISyntaxException, IOException {
+	public void produce_pdfA_3B() throws IOException {
 		// we instantiate the DocumentCreationOptions with the PdfOptions in it
 		PdfOptions pdfOptions = PdfOptions.getInstance().withPdfAType(PdfAType.PDF_A_3B);
 		DocumentCreationOptions options = DocumentCreationOptions.getInstance().withPdfOptions(pdfOptions);
@@ -189,9 +189,9 @@ public class DocumentTemplatePDFaExportIT extends DocFactoryTest {
 		// We should in general be careful with PDF/A validation as it does not seem to be consistent across different tools.
 		assertFalse(PdfAValidator.isPDFACompliant(result.getFiles().get(0)));
 	}
-	
+
 	@Test
-	public void produce_pdfA_2U() throws URISyntaxException, IOException {
+	public void produce_pdfA_2U() throws IOException {
 		// we instantiate the DocumentCreationOptions with the PdfOptions in it
 		PdfOptions pdfOptions = PdfOptions.getInstance().withPdfAType(PdfAType.PDF_A_2U);
 		DocumentCreationOptions options = DocumentCreationOptions.getInstance().withPdfOptions(pdfOptions);
@@ -216,7 +216,7 @@ public class DocumentTemplatePDFaExportIT extends DocFactoryTest {
 	}
 
 	@Test
-	public void produce_pdfA_3U() throws URISyntaxException, IOException {
+	public void produce_pdfA_3U() throws IOException {
 		// we instantiate the DocumentCreationOptions with the PdfOptions in it
 		PdfOptions pdfOptions = PdfOptions.getInstance().withPdfAType(PdfAType.PDF_A_3U);
 		DocumentCreationOptions options = DocumentCreationOptions.getInstance().withPdfOptions(pdfOptions);

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package ch.ivyteam.ivy.addons.docfactory.aspose;
 
@@ -18,14 +18,6 @@ import java.nio.file.Paths;
 
 import org.apache.commons.lang3.StringUtils;
 
-import ch.ivyteam.api.API;
-import ch.ivyteam.ivy.addons.docfactory.DocFactoryConstants;
-import ch.ivyteam.ivy.addons.docfactory.aspose.mergefield.BooleanToCheckBoxTransformer;
-import ch.ivyteam.ivy.addons.docfactory.image.ImageDimensionCalculatorFactory;
-import ch.ivyteam.ivy.addons.docfactory.options.DocumentCreationOptions;
-import ch.ivyteam.ivy.addons.docfactory.restricted.parser.HTMLParser;
-import ch.ivyteam.ivy.environment.Ivy;
-
 import com.aspose.words.CompositeNode;
 import com.aspose.words.Document;
 import com.aspose.words.DocumentBuilder;
@@ -40,28 +32,36 @@ import com.aspose.words.NodeType;
 import com.aspose.words.Paragraph;
 import com.aspose.words.Section;
 
+import ch.ivyteam.api.API;
+import ch.ivyteam.ivy.addons.docfactory.DocFactoryConstants;
+import ch.ivyteam.ivy.addons.docfactory.aspose.mergefield.BooleanToCheckBoxTransformer;
+import ch.ivyteam.ivy.addons.docfactory.image.ImageDimensionCalculatorFactory;
+import ch.ivyteam.ivy.addons.docfactory.options.DocumentCreationOptions;
+import ch.ivyteam.ivy.addons.docfactory.restricted.parser.HTMLParser;
+import ch.ivyteam.ivy.environment.Ivy;
+
 /**
- * This class was developed to be able to handle merge fields that should be filled up with images.<br> 
+ * This class was developed to be able to handle merge fields that should be filled up with images.<br>
  * This is used in the AsposeDocFactory class to insert the image when the mail merge engine encounters some fields named as "Image: + name of
  * imageMailField".<br>
  * In such a case the merge-field-value corresponding to this field can be a String (path of the image file) or the image content as ByteArray.<br><br>
- * 
+ *
  * You can extend this class and provide your own implementation if your mail
  * merging has to behave dependently of the merge field's name or value.<br>
- * An example can be found at {@link http://www.aspose.com/community/forums/thread/380671/html-text-with-merge-field.aspx} <br><br>
+ * An example can be found at http://www.aspose.com/community/forums/thread/380671/html-text-with-merge-field.aspx <br><br>
  * Two methods can be overwritten:<br>
  * {@code public void fieldMerging(FieldMergingArgs arg0) throws Exception }, see the example linked above, the AsposeFieldMergingCallback class provides an empty implementation for this method,<br>
  * {@code public void imageFieldMerging(ImageFieldMergingArgs e) throws Exception }, overwrites it only in the case you need some adaptation in the way the images fields are handled. <br><br>
  * Use the {@code AsposeDocFactory.setAsposeFieldMergingCallback(AsposeFieldMergingCallback fieldMergingCallback)} method to pass your own AsposeFieldMergingCallback to the docFactory.
  */
 public class AsposeFieldMergingCallback implements IFieldMergingCallback {
-	
+
 	private static final String TXT_FORMAT = "txt";
-	
+
 	private boolean removeBlankValuesLines = true;
-	
+
 	private DocumentCreationOptions documentCreationOptions = DocumentCreationOptions.getInstance();
-	
+
 	private String outputFormat;
 
 	/**
@@ -74,7 +74,7 @@ public class AsposeFieldMergingCallback implements IFieldMergingCallback {
 		this.removeBlankValuesLines = removeNullValuesLines;
 		return this;
 	}
-	
+
 	/**
 	 * set the document creation options. Only the properties relevant for the field merging are considered.
 	 * For the moment:<ul>
@@ -83,24 +83,25 @@ public class AsposeFieldMergingCallback implements IFieldMergingCallback {
 	 * @param documentCreationOptions the DocumentCreationOptions object. If null throws an IllegalArgumentException
 	 * @return the current AsposeFieldMergingCallback object
 	 */
-	public AsposeFieldMergingCallback withDocumentCreationOptions(DocumentCreationOptions documentCreationOptions) {
+	@SuppressWarnings("hiding")
+  public AsposeFieldMergingCallback withDocumentCreationOptions(DocumentCreationOptions documentCreationOptions) {
 		API.checkNotNull(documentCreationOptions, "documentCreationOptions");
 		this.documentCreationOptions = documentCreationOptions;
 		return this;
 	}
-	
+
 	@Override
-	public void fieldMerging(FieldMergingArgs fieldMergingArgs) throws Exception { 
+	public void fieldMerging(FieldMergingArgs fieldMergingArgs) throws Exception {
 		if(fieldMergingArgs.getFieldValue() == null && removeBlankValuesLines) {
 			removeBlankLine(fieldMergingArgs);
 			return;
 		}
-		if(fieldMergingArgs.getFieldValue() != null && 
+		if(fieldMergingArgs.getFieldValue() != null &&
 				fieldMergingArgs.getFieldName().toLowerCase().startsWith(DocFactoryConstants.EMBEDDED_DOCUMENT_MERGEFIELD_NAME_START)) {
 			handleDocumentInsertion(fieldMergingArgs);
 			return;
 		}
-		if(!TXT_FORMAT.equalsIgnoreCase(outputFormat) && 
+		if(!TXT_FORMAT.equalsIgnoreCase(outputFormat) &&
 				fieldMergingArgs.getFieldValue() instanceof Boolean && documentCreationOptions.isDisplayBooleanValuesAsCheckBox()) {
 			BooleanToCheckBoxTransformer.displayFieldAsCheckBox(fieldMergingArgs);
 			return;
@@ -118,7 +119,7 @@ public class AsposeFieldMergingCallback implements IFieldMergingCallback {
 		//e.getDocument().getMailMerge().getFieldNames()
 		if(e.getFieldValue() != null) {
 			// The field value is a byte array, just cast it and create a stream on it.
-			if(e.getFieldValue().getClass().getComponentType()!= null && 
+			if(e.getFieldValue().getClass().getComponentType()!= null &&
 					e.getClass().getComponentType().getName().equalsIgnoreCase("java.lang.Byte")) {
 				imageStream = new ByteArrayInputStream((byte[]) e.getFieldValue());
 				imageStream_dimension = new ByteArrayInputStream((byte[]) e.getFieldValue());
@@ -151,7 +152,7 @@ public class AsposeFieldMergingCallback implements IFieldMergingCallback {
 			e.setImageStream(imageStream);
 		}
 	}
-	
+
 	public void setoutputFormat(String outputFormat) {
 		this.outputFormat = outputFormat;
 	}
@@ -202,7 +203,7 @@ public class AsposeFieldMergingCallback implements IFieldMergingCallback {
 		// Indicate to the mail merge engine that we have inserted what we wanted.
 		e.setText(null);
 	}
-	
+
 	private void handleHTMLInsertion(FieldMergingArgs e) throws Exception {
 		DocumentBuilder builder = new DocumentBuilder(e.getDocument());
 		builder.moveToMergeField(e.getFieldName());
@@ -226,7 +227,7 @@ public class AsposeFieldMergingCallback implements IFieldMergingCallback {
 		for (Section srcSection : documentToInsert.getSections())
 		{
 			// Loop through all block level nodes (paragraphs and tables) in the body of the section.
-			for (Node srcNode : (Iterable<Node>) srcSection.getBody())
+			for (Node srcNode : srcSection.getBody())
 			{
 				// Let's skip the node if it is a last empty paragraph in a section.
 				if (srcNode.getNodeType() == (NodeType.PARAGRAPH))
@@ -245,11 +246,11 @@ public class AsposeFieldMergingCallback implements IFieldMergingCallback {
 			}
 		}
 	}
-	
+
 	private boolean isHTML(String fieldValue) {
 		return HTMLParser.isHTML(fieldValue);
 	}
-	
+
 	private void removeBlankLine(FieldMergingArgs fieldMergingArgs) throws Exception {
 		DocumentBuilder builder = new DocumentBuilder(fieldMergingArgs.getDocument());
 		builder.moveToMergeField(fieldMergingArgs.getFieldName());

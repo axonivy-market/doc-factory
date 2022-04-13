@@ -2,8 +2,6 @@ package ch.ivyteam.ivy.addons.docfactory;
 
 import java.awt.Color;
 
-import ch.ivyteam.ivy.addons.docfactory.aspose.DocumentWorker;
-
 import com.aspose.words.Document;
 import com.aspose.words.HeaderFooter;
 import com.aspose.words.HeaderFooterType;
@@ -17,6 +15,8 @@ import com.aspose.words.ShapeType;
 import com.aspose.words.VerticalAlignment;
 import com.aspose.words.WrapType;
 
+import ch.ivyteam.ivy.addons.docfactory.aspose.DocumentWorker;
+
 public class WatermarkTextDocumentWorker implements DocumentWorker {
 
 	private String watermarkText;
@@ -24,7 +24,7 @@ public class WatermarkTextDocumentWorker implements DocumentWorker {
 	public WatermarkTextDocumentWorker(String text) {
 		this.watermarkText = text;
 	}
-	
+
 	@Override
 	public void prepare(Document document) {
 		document.setPageColor(Color.green);
@@ -39,7 +39,7 @@ public class WatermarkTextDocumentWorker implements DocumentWorker {
 		}
 	}
 
-	private void makeWatermarkText(Document doc, String watermarkText) throws Exception
+	private void makeWatermarkText(Document doc, @SuppressWarnings("hiding") String watermarkText) throws Exception
 	{
 		// Create a watermark shape. This will be a WordArt shape.
 		// You are free to try other shape types as watermarks.
