@@ -12,17 +12,12 @@ public final class LicenseLoader {
 
 	private LicenseLoader() {}
 
-	/**
-	 * Loads the Aspose License for the given AsposeProduct.
-	 * @param product the AsposeProduct. see {@link #AsposeProduct}
-	 * @throws Exception
-	 */
 	public static void loadLicenseforProduct(AsposeProduct product) throws Exception {
 		if(isLicenseForProductAlreadyLoaded(product)) {
 			return;
 		}
 		InputStream in = ThirdPartyLicenses.getDocumentFactoryLicense();
-		
+
 		switch (product) {
 		case WORDS:
 			LOADED_ASPOSE_LICENSES.put(product, loadAsposeWordsLicense(in));
@@ -35,33 +30,24 @@ public final class LicenseLoader {
 			break;
 		case SLIDES:
 			LOADED_ASPOSE_LICENSES.put(product, loadAsposeSlidesLicense(in));
-			break;	
+			break;
 		default:
 			break;
 		}
 	}
 
-	/**
-	 * Loads the Aspose License for the all the {@link #AsposeProduct}.
-	 * @throws Exception
-	 */
 	public static void loadLicenseForAllProducts() throws Exception {
 		for (AsposeProduct product : AsposeProduct.values()) {
 			loadLicenseforProduct(product);
 		}
 	}
 
-	/**
-	 * returns true if the given license product has already been loaded, else false.
-	 * @param product the AsposeProduct which license load status should be checked
-	 * @return
-	 */
 	public static boolean isLicenseForProductAlreadyLoaded(AsposeProduct product) {
 		return LOADED_ASPOSE_LICENSES.containsKey(product);
 	}
 
 	/**
-	 * Clears the internal loaded licenses store. 
+	 * Clears the internal loaded licenses store.
 	 */
 	public static void clearLoadedLicenses() {
 		LOADED_ASPOSE_LICENSES.clear();

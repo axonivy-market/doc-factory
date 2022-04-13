@@ -37,19 +37,19 @@ import ch.ivyteam.log.Logger;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({Ivy.class, ThirdPartyLicenses.class, LicenseLoader.class, IIvyScriptObjectEnvironment.class, Document.class})
-@PowerMockIgnore({"com.sun.org.apache.xerces.*", "javax.management.*", "com.sun.org.apache.xerces.*", 
-	"javax.xml.*", "org.xml.*", "org.w3c.dom.*"}) 
+@PowerMockIgnore({"com.sun.org.apache.xerces.*", "javax.management.*", "com.sun.org.apache.xerces.*",
+	"javax.xml.*", "org.xml.*", "org.w3c.dom.*"})
 public class PdfFactoryTest {
-		
+
 	private static java.io.File PDF1;
 	private static java.io.File PDF2;
-	
+
 	@BeforeClass
 	public static void setupClass() throws URISyntaxException {
 		PDF1 = new java.io.File(PdfFactoryTest.class.getResource("../resources/files/pdf1.pdf").toURI().getPath());
 		PDF2 = new java.io.File(PdfFactoryTest.class.getResource("../resources/files/pdf2.pdf").toURI().getPath());
 	}
-	
+
 	@Before
 	public void setup() throws Exception {
 		Logger mockLogger = mock(Logger.class);
@@ -64,7 +64,7 @@ public class PdfFactoryTest {
 		mockStatic(Ivy.class);
 		mockStatic(LicenseLoader.class);
 		mockStatic(IIvyScriptObjectEnvironment.class);
-		
+
 		when(Ivy.log()).thenReturn(mockLogger);
 		when(Ivy.cms()).thenReturn(mockedCms);
 		when(ThirdPartyLicenses.getDocumentFactoryLicense()).thenReturn(null);
@@ -81,38 +81,38 @@ public class PdfFactoryTest {
 		List<java.io.File> filesToAppend = new ArrayList<>();
 		filesToAppend.add(PDF1);
 		filesToAppend.add(PDF2);
-		
+
 		java.io.File result = PdfFactory.get().appendPdfFiles("appended_pdf_files.pdf", filesToAppend).getJavaFile();
 		assertTrue(result.isFile());
 	}
-	
+
 	@Test
-	public void close_is_called_on_leadingDocument() throws URISyntaxException, IOException{
+	public void close_is_called_on_leadingDocument() throws IOException{
 		List<java.io.File> filesToAppend = new ArrayList<>();
 		filesToAppend.add(PDF1);
 		filesToAppend.add(PDF2);
-		
+
 		AsposePdfFactory factory = (AsposePdfFactory) PdfFactory.get();
 		Document leadingDocument = mock(Document.class);
-		
+
 		Document baseDocument = new Document(new FileInputStream(PDF2));
 		when(leadingDocument.getPages()).thenReturn(baseDocument.getPages());
-		
+
 		factory.appendFilesToDocument(leadingDocument, filesToAppend, "appended_pdf_files.pdf");
-		
+
 		verify(leadingDocument).close();
 	}
-	
+
 	@Test
-	public void close_is_called_on_appendedDocument() throws FileNotFoundException, URISyntaxException{
+	public void close_is_called_on_appendedDocument() throws FileNotFoundException {
 		AsposePdfFactory factory = (AsposePdfFactory) PdfFactory.get();
 		Document pdfDocument = mock(Document.class);
-		
+
 		Document baseDocument = new Document(new FileInputStream(PDF2));
 		when(pdfDocument.getPages()).thenReturn(baseDocument.getPages());
-		
+
 		factory.appendPdfDocuments(new Document(new FileInputStream(PDF2)), pdfDocument);
-		
+
 		verify(pdfDocument).close();
 	}
 }

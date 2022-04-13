@@ -1,6 +1,7 @@
 package ch.ivyteam.ivy.addons.docfactory;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.net.URISyntaxException;
@@ -9,22 +10,22 @@ import java.util.Locale;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.aspose.words.Document;
 import com.aspose.words.net.System.Data.DataRow;
 import com.aspose.words.net.System.Data.DataSet;
 import com.aspose.words.net.System.Data.DataTable;
-import com.aspose.words.Document;
 
 import ch.ivyteam.ivy.addons.docfactory.aspose.DocumentWorker;
 
 public class DocumentWorkerInjectingDataSetIT extends DocFactoryTest {
-	
+
 	File template;
-	
+
 	@Before
 	public void setUp() throws URISyntaxException {
 		template = new File(this.getClass().getResource(TEMPLATE_PERSON_DOCX).toURI().getPath());
 	}
-	
+
 	@Test
     public void produceDocument_with_DataSet_in_DocumentWorker() throws Exception {
         DocumentTemplate documentTemplate = DocumentTemplate.
@@ -42,10 +43,13 @@ public class DocumentWorkerInjectingDataSetIT extends DocFactoryTest {
         } catch (Exception ex) {
             System.out.println("Exception : " + ex.toString());
         }
+        if (result == null) {
+          throw new IllegalStateException();
+        }
         assertTrue(result.isSuccess());
         assertThat(result.getFiles(), org.hamcrest.core.IsCollectionContaining.hasItem(resultFile));
     }
-	
+
 	class dataInjector implements DocumentWorker {
 
 		@Override
@@ -58,7 +62,7 @@ public class DocumentWorkerInjectingDataSetIT extends DocFactoryTest {
 				throw new RuntimeException(e);
 			}
 		}
-		
+
 		private DataTable makeDataTable() {
 			//The name of the DataTable must be the same as the name of the merge field region (TableStart:itemPrices)
 			com.aspose.words.net.System.Data.DataTable data = new DataTable("itemPrices");
@@ -90,7 +94,7 @@ public class DocumentWorkerInjectingDataSetIT extends DocFactoryTest {
 
 			return data;
 	    }
-		
+
 	}
 
 }

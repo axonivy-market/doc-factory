@@ -51,10 +51,11 @@ import ch.ivyteam.ivy.scripting.objects.Tree;
  * to the calling Parent Ivy Rich Dialog through CallBack Methods.<br>
  * Those methods are indicated in the xxxMethodName variables. Those methods have to be published into
  * the Ivy RD Interface.
- * @see ch.ivyteam.ivy.addons.docfactory.BaseDocFactory#errorMethodName
- * @see ch.ivyteam.ivy.addons.docfactory.BaseDocFactory#successMethodName
+ * ch.ivyteam.ivy.addons.docfactory.BaseDocFactory#errorMethodName
+ * ch.ivyteam.ivy.addons.docfactory.BaseDocFactory#successMethodName
  *
  */
+@SuppressWarnings("hiding")
 public class AsposeDocFactory extends BaseDocFactory {
 
 	private static final String EMPTY_MERGE_FIELDS_MESSAGE_CMS_PATH = "/ch/ivyteam/ivy/addons/docfactory/messages/EmptyMergeFields";
@@ -86,7 +87,7 @@ public class AsposeDocFactory extends BaseDocFactory {
 
 	/**
 	 * Set a DocumentWorker for applying one's own logic on the produced com.aspose.words.Document.
-	 * @see {@link DocumentWorker}
+	 * {@link DocumentWorker}
 	 * @param documentWorker
 	 * @return the AsposeDocFactory containing the given DocumentWorker.
 	 */
@@ -124,7 +125,6 @@ public class AsposeDocFactory extends BaseDocFactory {
 	 * The generated document will be empty, will have the given String name, will be created in the
 	 * given String path and in the given format.
 	 * @return a fileOperationMessage Object
-	 * @see ch.ivyteam.ivy.addons.util.FileOperationMessage
 	 * @see ch.ivyteam.ivy.addons.docfactory.BaseDocFactory#generateBlankDocument(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -188,7 +188,6 @@ public class AsposeDocFactory extends BaseDocFactory {
 	 *  If the filename is null or an empty String we look if the first mergeField contains the filename, <br>
 	 *  if not by default the filename will be "serialLetter_System.nanoTime()".<br>
 	 *  @return the fileOperationMessage resulting of this operation. If its type is SUCCESS_MESSAGE, than the File was generated.<br>
-	 * @see ch.ivyteam.ivy.addons.util.FileOperationMessage
 	 * @see ch.ivyteam.ivy.addons.docfactory.BaseDocFactory#setTemplate(File)
 	 * @see ch.ivyteam.ivy.addons.docfactory.BaseDocFactory#generateDocument(String, String, String, String, List)
 	 */
@@ -424,7 +423,6 @@ public class AsposeDocFactory extends BaseDocFactory {
 	 * @return The fileOperationMessage object containing the Type of the message (FileHandler.SUCCESS, ERROR, INFORMATION_MESSAGE),<br>
 	 *  the text of the message and null File Object<br>
 	 * @see ch.ivyteam.ivy.addons.docfactory.BaseDocFactory#generateDocuments(String, String, String, List)
-	 * @see ch.ivyteam.ivy.addons.util.FileOperationMessage
 	 */
 	@Override
 	public FileOperationMessage generateDocuments(String templatePath, String outputPath,
@@ -483,12 +481,10 @@ public class AsposeDocFactory extends BaseDocFactory {
 	 * By convention, the name of each destination folder is given by the second TemplateMergeField, which key name must be "destinationPath".<br>
 	 * @param templatePath : where to find the template for the Merging operation
 	 * @param outputFormat : format ".doc", ".docx", or ".html"
-	 * @param documentsTemplateMergeFieldsList : List of List of parameters (TemplateMergeField objects). <br>
 	 * Each List of TemplateMergeField objects in the primary List will be turned into a new document.
 	 * @return The fileOperationMessage object containing the Type of the message (FileHandler.SUCCESS, ERROR, INFORMATION_MESSAGE),<br>
 	 *  the text of the message and null File Object<br>
 	 * @see ch.ivyteam.ivy.addons.docfactory.BaseDocFactory#generateDocumentsWithDifferentDestination(String, String, List)
-	 * @see ch.ivyteam.ivy.addons.util.FileOperationMessage
 	 */
 	@Override
 	public FileOperationMessage generateDocumentsWithDifferentDestination(String templatePath, final String outputFormat,
@@ -569,7 +565,6 @@ public class AsposeDocFactory extends BaseDocFactory {
 	 *  the text of the message and <br>
 	 *  the java.io.File generated in case of success, else empty List<java.io.File>.<br>
 	 * @see ch.ivyteam.ivy.addons.docfactory.BaseDocFactory#generateMultipleDocumentsInOne(java.lang.String, java.lang.String, java.lang.String, java.util.List)
-	 * @see ch.ivyteam.ivy.addons.util.FileOperationMessage
 	 */
 	@Override
 	public FileOperationMessage generateMultipleDocumentsInOne(String templatePath,
@@ -979,11 +974,11 @@ public class AsposeDocFactory extends BaseDocFactory {
 	/**
 	 * Utility private method to make all checks before beginning to produce documents.<br>
 	 * During the check some empty or null parameters are going to be set with default values.
-	 * @param _templatePath: the template path to check, this path cannot be null or empty and must drives to a valid java.io.File.
-	 * @param outputName: the outputName to check, if empty or null will be set with a random generated name.
-	 * @param outputPath: the output path to check, if empty or null will be set to "ivy_RIA_files".
-	 * @param outputFormat: the output format to check, if empty or null will be set with "doc"
-	 * @param _fields: the templateMergeFields parameter to check cannot be null, may be an empty list.
+	 * @param templatePath the template path to check, this path cannot be null or empty and must drives to a valid java.io.File.
+	 * @param outputName the outputName to check, if empty or null will be set with a random generated name.
+	 * @param outputPath the output path to check, if empty or null will be set to "ivy_RIA_files".
+	 * @param outputFormat the output format to check, if empty or null will be set with "doc"
+	 * @param mergefields the templateMergeFields parameter to check cannot be null, may be an empty list.
 	 * @return fileOperationMessage with ch.ivyteam.ivy.addons.docfactory.FileOperationMessage.ERROR_MESSAGE as Type if one of the parameter is invalid,<br>
 	 * else the type will be ch.ivyteam.ivy.addons.docfactory.FileOperationMessage.SUCCESS_MESSAGE.
 	 */
@@ -1300,7 +1295,7 @@ public class AsposeDocFactory extends BaseDocFactory {
 	 * You can provide your own AsposeFieldMergingCallback object that covers your special needs.
 	 * For example, you should override the <br>
 	 * {@code public void fieldMerging(FieldMergingArgs arg0)}<br>
-	 * method to apply special rules to HTML merge fields. See {@link www.aspose.com/community/forums/thread/380671/html-text-with-merge-field.aspx}
+	 * method to apply special rules to HTML merge fields. See www.aspose.com/community/forums/thread/380671/html-text-with-merge-field.aspx
 	 * @param fieldMergingCallback
 	 * @throws IllegalArgumentException if the parameter is null.
 	 * @deprecated use the {@link BaseDocFactory#getInstance()} for instantiating the DocFactory

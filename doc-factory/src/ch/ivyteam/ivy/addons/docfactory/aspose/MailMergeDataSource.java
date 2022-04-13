@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package ch.ivyteam.ivy.addons.docfactory.aspose;
 
@@ -10,15 +10,15 @@ import java.util.LinkedList;
 
 import org.apache.commons.lang.WordUtils;
 
+import com.aspose.words.IMailMergeDataSource;
+import com.aspose.words.ref.Ref;
+
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.scripting.objects.CompositeObject;
 import ch.ivyteam.ivy.scripting.objects.List;
 import ch.ivyteam.ivy.scripting.objects.Recordset;
 import ch.ivyteam.ivy.scripting.objects.Tree;
-import ch.ivyteam.ivy.scripting.objects.util.MetaType.MetaTypeList;
-
-import com.aspose.words.IMailMergeDataSource;
-import com.aspose.words.ref.Ref;
+import ch.ivyteam.ivy.scripting.objects.util.MetaType;
 
 /**
  * @author lt
@@ -69,8 +69,8 @@ public class MailMergeDataSource implements IMailMergeDataSource {
 
 	/**
 	 * Instantiates the MailMergeDataSource object for Aspose MailMerge WithNestedRegions
-	 * @param parentDataSourceObjects: List of CompositeObjects (DataClasses) corresponding to the parent Table data
-	 * @param _childrenDatasources: List of List of CompositeObjects (DataClasses) corresponding to the children Table data
+	 * @param parentDataSourceObjects List of CompositeObjects (DataClasses) corresponding to the parent Table data
+	 * @param _childrenDatasources List of List of CompositeObjects (DataClasses) corresponding to the children Table data
 	 * @throws Exception
 	 */
 	public MailMergeDataSource(List<CompositeObject> parentDataSourceObjects, List<List<CompositeObject>> _childrenDatasources) throws Exception {
@@ -81,7 +81,7 @@ public class MailMergeDataSource implements IMailMergeDataSource {
 		for (int i = 1; i < parentDataSourceObjects.size(); i++) {
 			//Check List consistency: all the compositeObjects have to have the same type
 			if (parentDataSourceObjects.get(i).getClass().getName() != parentDataSourceObjects.get(i-1).getClass().getName()) {
-				throw new IllegalArgumentException(Ivy.cms().co("/ch/ivyteam/ivy/addons/docfactory/messages/mailMergeWithRegionsNeedsListOfSameDataClassTypes"));	
+				throw new IllegalArgumentException(Ivy.cms().co("/ch/ivyteam/ivy/addons/docfactory/messages/mailMergeWithRegionsNeedsListOfSameDataClassTypes"));
 			}
 			this.tableValues.add(parentDataSourceObjects.get(i));
 		}
@@ -108,14 +108,14 @@ public class MailMergeDataSource implements IMailMergeDataSource {
 		for (int i = 1; i < dataSourceObjects.size(); i++) {
 			//Check List consistency: all the compositeObjects have to have the same type
 			if (dataSourceObjects.get(i).getClass().getName() != dataSourceObjects.get(i-1).getClass().getName()) {
-				throw new IllegalArgumentException(Ivy.cms().co("/ch/ivyteam/ivy/addons/docfactory/messages/mailMergeWithRegionsNeedsListOfSameDataClassTypes"));	
+				throw new IllegalArgumentException(Ivy.cms().co("/ch/ivyteam/ivy/addons/docfactory/messages/mailMergeWithRegionsNeedsListOfSameDataClassTypes"));
 			}
 			this.tableValues.add(dataSourceObjects.get(i));
 		}
 		this.rowIndex = -1;
 		makeListOfChildrenDataSourceInComposite(dataSourceObjects);
 	}
-	
+
 	public <T> MailMergeDataSource(java.util.Collection<T> dataSourceObjects) {
 		if(dataSourceObjects == null || dataSourceObjects.isEmpty()) {
 			return;
@@ -124,12 +124,12 @@ public class MailMergeDataSource implements IMailMergeDataSource {
 		dataList.addAll(dataSourceObjects);
 		this.tableName = dataList.get(0).getClass().getName().substring(dataList.get(0).getClass().getName().lastIndexOf(".")+1);
 		this.tableValues = new Recordset();
-		
+
 		//this.tableValues.add(dataList.get(0));
 		for (int i = 1; i < dataList.size(); i++) {
 			//Check List consistency: all the compositeObjects have to have the same type
 			if (dataList.get(i).getClass().getName() != dataList.get(i-1).getClass().getName()) {
-				throw new IllegalArgumentException(Ivy.cms().co("/ch/ivyteam/ivy/addons/docfactory/messages/mailMergeWithRegionsNeedsListOfSameDataClassTypes"));	
+				throw new IllegalArgumentException(Ivy.cms().co("/ch/ivyteam/ivy/addons/docfactory/messages/mailMergeWithRegionsNeedsListOfSameDataClassTypes"));
 			}
 			//this.tableValues.add(dataList.get(i));
 		}
@@ -137,20 +137,16 @@ public class MailMergeDataSource implements IMailMergeDataSource {
 		//makeListOfChildrenDataSourceInComposite(dataSourceObjects);
 	}
 
-	/**
-	 * 
-	 * @param dataSourceObjects
-	 */
 	@SuppressWarnings("unchecked")
 	private void makeListOfChildrenDataSourceInComposite(List<CompositeObject> dataSourceObjects) {
-		this.nestedChildrenDatasources= List.create(MetaTypeList.listOf(MetaTypeList.listOf(CompositeObject.class)));
+		this.nestedChildrenDatasources= List.create(MetaType.listOf(MetaType.listOf(CompositeObject.class)));
 		for(int j=0; j<dataSourceObjects.size();j++){
 			CompositeObject co = dataSourceObjects.get(j);
 			Field[] fields = co.getClass().getDeclaredFields();
-			List<List<CompositeObject>> tempList = List.create(MetaTypeList.listOf(CompositeObject.class));
+			List<List<CompositeObject>> tempList = List.create(MetaType.listOf(CompositeObject.class));
 			for(int i =0; i<fields.length; i++) {
 				try {
-					if(fields[i].toString().contains("ch.ivyteam.ivy.scripting.objects.List")) {				
+					if(fields[i].toString().contains("ch.ivyteam.ivy.scripting.objects.List")) {
 						Method m = co.getClass().getMethod("get"+WordUtils.capitalize(fields[i].getName()), new Class[] {});
 						Object o = m.invoke(co,  new Object[] {});
 						List<?> test = (List<?>) o;
@@ -166,16 +162,12 @@ public class MailMergeDataSource implements IMailMergeDataSource {
 		}
 	}
 
-	/**
-	 * 
-	 * @param _tree
-	 */
 	public MailMergeDataSource(Tree _tree) {
 		this.rowIndex = -1;
 		if(_tree==null) {
 			return;
 		}
-		this.treeChildrenDS = List.create(MetaTypeList.listOf(Tree.class));
+		this.treeChildrenDS = List.create(MetaType.listOf(Tree.class));
 		List<Tree> children = _tree.getChildren();
 		if(!children.isEmpty() && children.get(0).getValue() instanceof CompositeObject) {
 			this.tableName = children.get(0).getValue().getClass().getName().substring(children.get(0).getValue().getClass().getName().lastIndexOf(".")+1);
@@ -189,18 +181,13 @@ public class MailMergeDataSource implements IMailMergeDataSource {
 		}
 	}
 
-	/**
-	 * 
-	 * @param _trees
-	 * @param _tablename
-	 */
 	public MailMergeDataSource(List<Tree> _trees, String _tablename) {
 		this.rowIndex = -1;
 		if(_trees==null || _trees.isEmpty() || _tablename==null || _tablename.trim().length()==0) {
 			return;
 		}
 		this.tableName=_tablename;
-		this.treeChildrenDS = List.create(MetaTypeList.listOf(Tree.class));
+		this.treeChildrenDS = List.create(MetaType.listOf(Tree.class));
 
 		this.tableValues = new Recordset();
 		for(Tree t: _trees) {
@@ -241,7 +228,7 @@ public class MailMergeDataSource implements IMailMergeDataSource {
 	public boolean getValue(String fieldName, Object[] fieldValue) throws Exception {
 		return getValue(fieldName, new Ref<Object>(fieldValue[0]));
 	}
-	
+
 	@Override
 	public boolean getValue(String fieldName, Ref<Object> fieldValue) throws Exception {
 		try {
@@ -298,17 +285,17 @@ public class MailMergeDataSource implements IMailMergeDataSource {
 		}
 		return null;
 	}
-	
-	void putChildMailMergeDataSource(IMailMergeDataSource mmds, String tableName) {
+
+	void putChildMailMergeDataSource(IMailMergeDataSource mmds, @SuppressWarnings("unused") String tblName) {
 		if(mmds == null) {
 			return;
 		}
 		if(this.childrenMailMergeDataSource == null) {
 			this.childrenMailMergeDataSource = new LinkedList<>();
-		} 
+		}
 		this.childrenMailMergeDataSource.add(mmds);
 	}
-	
+
 	protected Recordset getTableValues() {
 		return this.tableValues;
 	}

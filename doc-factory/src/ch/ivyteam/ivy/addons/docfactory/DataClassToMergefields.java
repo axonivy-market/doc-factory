@@ -22,7 +22,7 @@ public class DataClassToMergefields {
 	 * Takes a CompositeObject (dataClass) returns a list of TemplateMergeField<br>
 	 * that can be used to write a serial letter with a Template document.<br>
 	 * The names of the template Document should be the same as the fields of the dataClass.
-	 * @param _data: CompositeObject (dataClass)
+	 * @param _data CompositeObject (dataClass)
 	 * @return list of TemplateMergeField that can be used to write a serial letter with a Template document.
 	 */
 	public static List<TemplateMergeField> transformDataClassInMergeField(CompositeObject _data)
@@ -45,11 +45,6 @@ public class DataClassToMergefields {
 		return tmps;
 	}
 
-	/**
-	 * Added by Christian Strebel
-	 * @param _data
-	 * @return
-	 */
 	public static Hashtable<String, Recordset> transformDataClassInTablesNamesAndFields(CompositeObject _data) {
 		if(_data==null) {
 			return null;
@@ -71,13 +66,6 @@ public class DataClassToMergefields {
 		return tablesNamesAndFieldsHashtable;
 	}
 
-	/**
-	 * 
-	 * @param compositeObjectsList
-	 * @param _tableName
-	 * @return
-	 * @throws Exception
-	 */
 	public static IMailMergeDataSource transfomDataClassInMergeDataSource(java.util.List<CompositeObject> compositeObjectsList, String _tableName) throws Exception {
 		MailMergeDataSource mmds=null;
 		//We check if incoming parameter is null or empty
@@ -90,7 +78,7 @@ public class DataClassToMergefields {
 		for (int i = 1; i < compositeObjectsList.size(); i++) {
 			//Check List consistency: all the compositeObjects have to have the same type
 			if (compositeObjectsList.get(i).getClass().getName() != compositeObjectsList.get(i-1).getClass().getName()) {
-				throw new IllegalArgumentException(Ivy.cms().co("/ch/ivyteam/ivy/addons/docfactory/messages/mailMergeWithRegionsNeedsListOfSameDataClassTypes"));	
+				throw new IllegalArgumentException(Ivy.cms().co("/ch/ivyteam/ivy/addons/docfactory/messages/mailMergeWithRegionsNeedsListOfSameDataClassTypes"));
 			}
 			rs.add(compositeObjectsList.get(i));
 		}
