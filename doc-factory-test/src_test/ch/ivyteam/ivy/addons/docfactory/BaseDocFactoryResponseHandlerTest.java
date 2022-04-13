@@ -18,80 +18,80 @@ import ch.ivyteam.ivy.addons.docfactory.response.ResponseHandler;
 
 public class BaseDocFactoryResponseHandlerTest extends DocFactoryTest {
 
+  @Test
+  public void withResponseHandler_set_responseHandler() {
+    ResponseHandler responseHandler = new MyResponseHandler();
+    BaseDocFactory docFactory = BaseDocFactory.getInstance().withResponseHandler(responseHandler);
 
-	@Test
-	public void withResponseHandler_set_responseHandler() {
-		ResponseHandler responseHandler = new MyResponseHandler();
-		BaseDocFactory docFactory = BaseDocFactory.getInstance().withResponseHandler(responseHandler);
+    assertEquals(responseHandler, docFactory.getResponsHandler());
+  }
 
-		assertEquals(responseHandler, docFactory.getResponsHandler());
-	}
+  @Test
+  public void ifResponseHandler_notSet_then_docFactory_ResponseHandler_is_null() {
+    BaseDocFactory docFactory = BaseDocFactory.getInstance();
 
-	@Test
-	public void ifResponseHandler_notSet_then_docFactory_ResponseHandler_is_null() {
-		BaseDocFactory docFactory = BaseDocFactory.getInstance();
+    assertNull(docFactory.getResponsHandler());
+  }
 
-		assertNull(docFactory.getResponsHandler());
-	}
+  @Test
+  public void if_responseHandler_set_it_is_called_by_generating_a_blank_document() {
+    ResponseHandler responseHandler = mock(MyResponseHandler.class);
+    Mockito.doNothing().when(responseHandler).handleDocFactoryResponse(any(FileOperationMessage.class));
 
-	@Test
-	public void if_responseHandler_set_it_is_called_by_generating_a_blank_document() {
-		ResponseHandler responseHandler = mock(MyResponseHandler.class);
-		Mockito.doNothing().when(responseHandler).handleDocFactoryResponse(any(FileOperationMessage.class));
+    BaseDocFactory docFactory = BaseDocFactory.getInstance().withResponseHandler(responseHandler); // Inject
+                                                                                                   // the
+                                                                                                   // ResponseHandler
 
-		BaseDocFactory docFactory = BaseDocFactory.getInstance().
-				withResponseHandler(responseHandler); // Inject the ResponseHandler
+    docFactory.generateBlankDocument("blank_test", "test", "pdf");
 
-		docFactory.generateBlankDocument("blank_test", "test", "pdf");
+    verify(responseHandler, times(1)).handleDocFactoryResponse(any(FileOperationMessage.class));
+  }
 
-		verify(responseHandler, times(1)).handleDocFactoryResponse(any(FileOperationMessage.class));
-	}
+  @Test
+  public void if_responseHandler_set_it_is_called_by_generating_a_document_with_mail_merge()
+          throws URISyntaxException {
 
-	@Test
-	public void if_responseHandler_set_it_is_called_by_generating_a_document_with_mail_merge() throws URISyntaxException {
+    ResponseHandler responseHandler = mock(MyResponseHandler.class);
+    Mockito.doNothing().when(responseHandler).handleDocFactoryResponse(any(FileOperationMessage.class));
 
-		ResponseHandler responseHandler = mock(MyResponseHandler.class);
-		Mockito.doNothing().when(responseHandler).handleDocFactoryResponse(any(FileOperationMessage.class));
+    File template = new File(this.getClass().getResource(TEMPLATE_PERSON_DOCX).toURI().getPath());
 
-		File template = new File(this.getClass().getResource(TEMPLATE_PERSON_DOCX).toURI().getPath());
+    DocumentTemplate documentTemplate = DocumentTemplate.withTemplate(template)
+            .addMergeField("person.name", "Gauch").addMergeField("person.firstname", "Daniel")
+            .withResponseHandler(responseHandler); // Inject the ResponseHandler
 
-		DocumentTemplate documentTemplate = DocumentTemplate.
-				withTemplate(template).
-				addMergeField("person.name", "Gauch").
-				addMergeField("person.firstname", "Daniel").
-				withResponseHandler(responseHandler); // Inject the ResponseHandler
+    FileOperationMessage result = null;
+    File resultFile = new File("test/test5.pdf");
+    try {
+      if (resultFile.isFile()) {
+        resultFile.delete();
+      }
+      result = documentTemplate.produceDocument(resultFile);
+    } catch (Exception ex) {
+      System.out.println("Exception : " + ex.toString());
+    }
+    if (result == null) {
+      throw new IllegalStateException();
+    }
+    assertTrue(result.isSuccess());
 
-		FileOperationMessage result = null;
-		File resultFile = new File("test/test5.pdf");
-		try {
-			if(resultFile.isFile()) {
-				resultFile.delete();
-			}
-			result = documentTemplate.produceDocument(resultFile);
-		} catch (Exception ex) {
-			System.out.println("Exception : " + ex.toString());
-		}
-		if (result == null) {
-		  throw new IllegalStateException();
-		}
-		assertTrue(result.isSuccess());
+    verify(responseHandler, times(1)).handleDocFactoryResponse(result);
+  }
 
-		verify(responseHandler, times(1)).handleDocFactoryResponse(result);
-	}
+  public class MyResponseHandler implements ResponseHandler {
 
-	public class MyResponseHandler implements ResponseHandler {
-
-		@Override
-		public void handleDocFactoryResponse(
-				FileOperationMessage fileOperationMessage) {
-			if(fileOperationMessage.isError()) {
-				// Oh my God ! An error !
-			}
-			if(fileOperationMessage.isSuccess()) {
-				// I am the king of the world !
-				// do whatever you want with the generated file(s) fileOperationMessage.getFiles();
-			}
-		}
-	}
+    @Override
+    public void handleDocFactoryResponse(
+            FileOperationMessage fileOperationMessage) {
+      if (fileOperationMessage.isError()) {
+        // Oh my God ! An error !
+      }
+      if (fileOperationMessage.isSuccess()) {
+        // I am the king of the world !
+        // do whatever you want with the generated file(s)
+        // fileOperationMessage.getFiles();
+      }
+    }
+  }
 
 }

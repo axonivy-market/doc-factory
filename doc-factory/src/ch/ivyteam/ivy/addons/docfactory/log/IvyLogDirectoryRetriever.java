@@ -14,28 +14,28 @@ import ch.ivyteam.ivy.environment.Ivy;
 @ApplicationScoped
 public class IvyLogDirectoryRetriever implements DocFactoryLogDirectoryRetriever {
 
-	private static File ivyLogDirectory;
+  private static File ivyLogDirectory;
 
-	/**
-	 * Gets the directory where the Ivy log files are stored. 
-	 * @return The directory of the ivy log files. May be null.
-	 */
-	@Override
-	public File getLogDirectory() {
-		if(ivyLogDirectory != null) {
-			return ivyLogDirectory;
-		}
-		try {
-			IOFileFilter filter = new SuffixFileFilter(".log");
-			Collection<File> logs = DiCore.getGlobalInjector().getInstance(IFileAccess.class).getLogFiles(filter);
-			File log = logs.stream().findFirst().orElse(null);
-			if(log != null) {
-				ivyLogDirectory = log.getParentFile();
-			}
-		} catch(Exception ex) {
-			Ivy.log().error("An exception occured while getting the Ivy log directory", ex);
-		}
-		return ivyLogDirectory;
-	}
+  /**
+   * Gets the directory where the Ivy log files are stored.
+   * @return The directory of the ivy log files. May be null.
+   */
+  @Override
+  public File getLogDirectory() {
+    if (ivyLogDirectory != null) {
+      return ivyLogDirectory;
+    }
+    try {
+      IOFileFilter filter = new SuffixFileFilter(".log");
+      Collection<File> logs = DiCore.getGlobalInjector().getInstance(IFileAccess.class).getLogFiles(filter);
+      File log = logs.stream().findFirst().orElse(null);
+      if (log != null) {
+        ivyLogDirectory = log.getParentFile();
+      }
+    } catch (Exception ex) {
+      Ivy.log().error("An exception occured while getting the Ivy log directory", ex);
+    }
+    return ivyLogDirectory;
+  }
 
 }

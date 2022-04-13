@@ -19,42 +19,40 @@ import org.powermock.modules.junit4.PowerMockRunner;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(BaseDocFactory.class)
 public class DocumentTemplateProduceFileOutputPathTest {
-	
-	@Mock
-	BaseDocFactory docfactory;
-	
-	
-	
-	@Before
-	public void setup() {
-		docfactory = mock(BaseDocFactory.class);
-		when(docfactory.generateDocument(any(DocumentTemplate.class))).thenReturn(new FileOperationMessage());
-		
-		mockStatic(BaseDocFactory.class);
-		when(BaseDocFactory.getInstance()).thenReturn(docfactory);
-	}
 
-	@Test
-	public void produceDocument_OnWindowsPath_correct_outputPath() {
-		File resultFile = new File("C:/designer/ivy/files/application/letters/letter.pdf");
-		DocumentTemplate documentTemplate = new DocumentTemplate();
-		
-		documentTemplate.produceDocument(resultFile);
-		
-		String expectedOuputPath = "C:/designer/ivy/files/application/letters".replace('/', File.separatorChar);
-		
-		assertThat(documentTemplate.getOutputPath(), is(expectedOuputPath));
-	}
-	
-	@Test
-	public void produceDocument_OnUnixPath_correct_outputPath() {
-		File resultFile = new File("tmp/ivy/files/application/letters/letter.pdf");
-		DocumentTemplate documentTemplate = new DocumentTemplate();
-		
-		documentTemplate.produceDocument(resultFile);
-		
-		String expectedOuptPath = "tmp/ivy/files/application/letters".replace('/', File.separatorChar);
-		assertThat(documentTemplate.getOutputPath(), is(expectedOuptPath));
-	}
+  @Mock
+  BaseDocFactory docfactory;
+
+  @Before
+  public void setup() {
+    docfactory = mock(BaseDocFactory.class);
+    when(docfactory.generateDocument(any(DocumentTemplate.class))).thenReturn(new FileOperationMessage());
+
+    mockStatic(BaseDocFactory.class);
+    when(BaseDocFactory.getInstance()).thenReturn(docfactory);
+  }
+
+  @Test
+  public void produceDocument_OnWindowsPath_correct_outputPath() {
+    File resultFile = new File("C:/designer/ivy/files/application/letters/letter.pdf");
+    DocumentTemplate documentTemplate = new DocumentTemplate();
+
+    documentTemplate.produceDocument(resultFile);
+
+    String expectedOuputPath = "C:/designer/ivy/files/application/letters".replace('/', File.separatorChar);
+
+    assertThat(documentTemplate.getOutputPath(), is(expectedOuputPath));
+  }
+
+  @Test
+  public void produceDocument_OnUnixPath_correct_outputPath() {
+    File resultFile = new File("tmp/ivy/files/application/letters/letter.pdf");
+    DocumentTemplate documentTemplate = new DocumentTemplate();
+
+    documentTemplate.produceDocument(resultFile);
+
+    String expectedOuptPath = "tmp/ivy/files/application/letters".replace('/', File.separatorChar);
+    assertThat(documentTemplate.getOutputPath(), is(expectedOuptPath));
+  }
 
 }

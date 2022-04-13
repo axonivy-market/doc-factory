@@ -17,7 +17,7 @@ public class ExportFromCms {
     tempFile.getParentFile().mkdirs();
     var cov = Ivy.cms().root().child().file(cmsUri, ext).value().get();
     try (var in = cov.read().inputStream();
-      var fos = new FileOutputStream(tempFile)) {
+            var fos = new FileOutputStream(tempFile)) {
       IOUtils.copy(in, fos);
     }
     return tempFile;

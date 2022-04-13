@@ -5,7 +5,8 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public interface ImageDimensionCalculator {
-	
-	Dimension calculateImageDimensionForMergingInTemplate(InputStream imageStream, String fieldname, Object ... objects ) throws IOException;
+
+  Dimension calculateImageDimensionForMergingInTemplate(InputStream imageStream, String fieldname,
+          Object... objects) throws IOException;
 
 }
