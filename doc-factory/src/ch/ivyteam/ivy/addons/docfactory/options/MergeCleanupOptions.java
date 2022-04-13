@@ -1,5 +1,7 @@
 package ch.ivyteam.ivy.addons.docfactory.options;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 @SuppressWarnings("hiding")
 public class MergeCleanupOptions extends SimpleMergeCleanupOptions {
 
@@ -52,6 +54,16 @@ public class MergeCleanupOptions extends SimpleMergeCleanupOptions {
 
 	public boolean isCleanUpAll() {
 		return isRemovesEmptyParagraphs() && isRemovesContainingFields() && isRemovesUnusedFields() && isRemovesUnusedRegions();
+	}
+
+	@Override
+	public int hashCode() {
+	  return new HashCodeBuilder()
+	          .append(isRemovesBlankLines())
+	          .append(isRemovesEmptyParagraphs())
+	          .append(isRemovesUnusedFields())
+	          .append(isRemovesUnusedRegions())
+	          .toHashCode();
 	}
 
 	@Override
