@@ -2,7 +2,8 @@ package ch.ivyteam.ivy.addons.docfactory.mergefield.internal;
 
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.Serializable;
@@ -25,7 +26,7 @@ public class MergeFieldsExtractorTest {
 
 	@Test
 	public void getMergeFields_returns_empty_Collection_if_bean_null() {
-		
+
 		Collection<TemplateMergeField> result = MergeFieldsExtractor.getMergeFields(null);
 
 		assertTrue(result.isEmpty());
@@ -33,7 +34,7 @@ public class MergeFieldsExtractorTest {
 
 	@Test
 	public void getMergeFields_returns_empty_Collection_if_bean_has_no_property() {
-		
+
 		Collection<TemplateMergeField> result = MergeFieldsExtractor.getMergeFields(new MyEmptyBean());
 
 		assertTrue(result.isEmpty());
@@ -44,7 +45,7 @@ public class MergeFieldsExtractorTest {
 		SimplePerson person = new SimplePerson();
 		person.setFirstname("Emmanuel");
 		person.setName("Comba");
-		
+
 		Collection<TemplateMergeField> result = MergeFieldsExtractor.getMergeFields(person);
 		assertThat(
 				result,
@@ -54,15 +55,15 @@ public class MergeFieldsExtractorTest {
 				)
 		);
 	}
-	
+
 	@Test
 	public void getMergeFields_returns_templateMergeFields_with_embedded_beans_values() {
 		Person person = makePerson();
 		java.io.File paySlip = new java.io.File("path/to/payslip/payslip.pdf");
 		person.setPaySlip(paySlip);
-		
+
 		Collection<TemplateMergeField> result = MergeFieldsExtractor.getMergeFields(person);
-		
+
 		assertThat(
 				result,
 				containsInAnyOrder(
@@ -77,7 +78,7 @@ public class MergeFieldsExtractorTest {
 				)
 		);
 	}
-	
+
 	@Test
 	public void getMergeFields_withOneCollection() {
 		BeanWithCollection bean = new BeanWithCollection();
@@ -86,7 +87,7 @@ public class MergeFieldsExtractorTest {
 		bean.hobbies = new ArrayList<>();
 		bean.hobbies.add("fishing");
 		bean.hobbies.add("cooking");
-		
+
 		Collection<TemplateMergeField> result = MergeFieldsExtractor.getMergeFields(bean);
 		assertThat(
 				result,
@@ -98,7 +99,7 @@ public class MergeFieldsExtractorTest {
 		);
 		assertTrue(hasGivenNumberOfCollectionTemplateMergeFields(1, result));
 	}
-	
+
 	@Test
 	public void getMergeFields_withTwoCollection() {
 		BeanWithCollection bean = new BeanWithCollection();
@@ -107,7 +108,7 @@ public class MergeFieldsExtractorTest {
 		bean.hobbies = new ArrayList<>();
 		bean.hobbies.add("fishing");
 		bean.hobbies.add("cooking");
-		
+
 		bean.addresses = new ArrayList<>();
 		Address address = new Address();
 		address.street = "Main Street 44";
@@ -117,7 +118,7 @@ public class MergeFieldsExtractorTest {
 		address.street = "Holydays Street 44";
 		address.zipCode = "456";
 		bean.addresses.add(address);
-		
+
 		Collection<TemplateMergeField> result = MergeFieldsExtractor.getMergeFields(bean);
 		for(TemplateMergeField tmf: result) {
 			System.out.println(tmf.getMergeFieldName());
@@ -132,9 +133,9 @@ public class MergeFieldsExtractorTest {
 				)
 		);
 		assertTrue(hasGivenNumberOfCollectionTemplateMergeFields(2, result));
-		
+
 	}
-	
+
 	private boolean hasGivenNumberOfCollectionTemplateMergeFields(int expectedNumber, Collection<TemplateMergeField> result) {
 		int nb = 0;
 		for(TemplateMergeField tmf: result) {
@@ -145,7 +146,7 @@ public class MergeFieldsExtractorTest {
 		}
 		return nb == expectedNumber;
 	}
-	
+
 	@Test
 	public void getMergeFields_doesNot_get_class_properties_children_fields() {
 		Person person = makePerson();
@@ -157,25 +158,25 @@ public class MergeFieldsExtractorTest {
 		infos.add(new AdditionalInformation().withDate(new Date())
 				.withType(String.class).withUsername("lt"));
 		person.setPersonalInformations(infos);
-		
+
 		Collection<TemplateMergeField> personMergeFields = MergeFieldsExtractor.getMergeFields(person);
-		
-		
+
+
 		Optional<TemplateMergeField> personAdditionalInformationsTemplateMergeField = personMergeFields.stream().
 				filter(tm -> tm.getMergeFieldName().equals("person.personalInformations")).findFirst();
-		
+
 		assertTrue(personAdditionalInformationsTemplateMergeField.get().isCollection());
-		
-		Collection<TemplateMergeField> additionalTemplateTypeMergeFields = 
+
+		Collection<TemplateMergeField> additionalTemplateTypeMergeFields =
 				personAdditionalInformationsTemplateMergeField.get().getChildren().
 					stream().filter(tm -> tm.getMergeFieldName().equals("additionalinformation.type")).
 					collect(Collectors.toList());
-		
+
 		assertThat(additionalTemplateTypeMergeFields, hasSize(infos.size()));
-		
+
 		assertTrue(haveAllNoChildrenMergeFields(additionalTemplateTypeMergeFields));
 	}
-	
+
 	private boolean haveAllNoChildrenMergeFields(Collection<TemplateMergeField> mergeFields) {
 		return mergeFields.stream().allMatch(tm -> tm.getChildren().isEmpty());
 	}
@@ -185,7 +186,7 @@ public class MergeFieldsExtractorTest {
 		Calendar cal = Calendar.getInstance();
 		cal.set(1972, 9, 19);
 		Date birthday = cal.getTime();
-		
+
 		person.setFirstname("Emmanuel");
 		person.setName("Comba");
 		person.setId(885);
@@ -196,7 +197,7 @@ public class MergeFieldsExtractorTest {
 		person.setAddress(address);
 		return person;
 	}
-	
+
 
 	private class MyEmptyBean implements Serializable {
 		private static final long serialVersionUID = -1788146613602936894L;
@@ -225,7 +226,7 @@ public class MergeFieldsExtractorTest {
 		}
 
 	}
-	
+
 	public class Person extends SimplePerson {
 		private static final long serialVersionUID = 1L;
 		Address address;
@@ -233,7 +234,7 @@ public class MergeFieldsExtractorTest {
 		private Date birthday;
 		private File paySlip;
 		private Collection<AdditionalInformation> personalInformations;
-		
+
 		public long getId() {
 			return id;
 		}
@@ -267,15 +268,15 @@ public class MergeFieldsExtractorTest {
 				Collection<AdditionalInformation> personalInformations) {
 			this.personalInformations = personalInformations;
 		}
-		
-		
+
+
 	}
-	
+
 	public class Address implements Serializable {
 		private static final long serialVersionUID = 1L;
 		private String street;
 		private String zipCode;
-		
+
 		public String getStreet() {
 			return street;
 		}
@@ -289,23 +290,24 @@ public class MergeFieldsExtractorTest {
 			this.zipCode = zipCode;
 		}
 	}
-	
+
+	@SuppressWarnings("hiding")
 	class AdditionalInformation {
-		
+
 		private Class<?> type;
 		private Date date;
 		private String username;
-		
+
 		AdditionalInformation withType(Class<?> type){
 			this.type = type;
 			return this;
 		}
-		
+
 		AdditionalInformation withDate(Date date){
 			this.date = date;
 			return this;
 		}
-		
+
 		AdditionalInformation withUsername(String username){
 			this.username = username;
 			return this;
@@ -335,15 +337,15 @@ public class MergeFieldsExtractorTest {
 			this.username = username;
 		}
 	}
-	
+
 	public class BeanWithCollection implements Serializable {
 		private static final long serialVersionUID = 1L;
-		
+
 		private String UID;
 		private int age;
 		private List<String> hobbies;
 		private List<Address> addresses;
-		
+
 		public String getUID() {
 			return UID;
 		}
@@ -368,7 +370,7 @@ public class MergeFieldsExtractorTest {
 		public void setAddresses(List<Address> addresses) {
 			this.addresses = addresses;
 		}
-		
+
 	}
 
 }

@@ -30,7 +30,7 @@ public class ImageDimensionCalculatorFromImageMergeFieldName implements
 		}
 		return new Dimension(width, height);
 	}
-	
+
 	private int getImageWithInImageFieldName(String imageFieldName) {
 		if(imageFieldName.contains("__WIDTH:")) {
 			String widthSub = imageFieldName.substring(imageFieldName.indexOf("__WIDTH:") + 8);
@@ -43,12 +43,12 @@ public class ImageDimensionCalculatorFromImageMergeFieldName implements
 			try {
 				return Integer.parseInt(widthSub);
 			} catch (Exception ex) {
-				
+
 			}
 		}
 		return 0;
 	}
-	
+
 	private int getImageHeightInImageFieldName(String imageFieldName) {
 		if(imageFieldName.contains("__HEIGHT:")) {
 			String heightSub = imageFieldName.substring(imageFieldName.indexOf("__HEIGHT:") + 9);
@@ -61,13 +61,13 @@ public class ImageDimensionCalculatorFromImageMergeFieldName implements
 			try {
 				return Integer.parseInt(heightSub);
 			} catch (Exception ex) {
-				
+
 			}
 		}
 		return 0;
 	}
-	
-	private int getScaledWidth(InputStream imageStream, int resizedHeight) throws IOException {
+
+	private int getScaledWidth(InputStream imageStream, int resizedHeight) {
 		BufferedImage bimg = readInputStreamToBufferedImage(imageStream);
 		if(bimg == null) {
 			return 0;
@@ -76,8 +76,8 @@ public class ImageDimensionCalculatorFromImageMergeFieldName implements
 		int height = bimg.getHeight();
 		return width * resizedHeight / height;
 	}
-	
-	private int getScaledHeight(InputStream imageStream, int resizedWidth) throws IOException {
+
+	private int getScaledHeight(InputStream imageStream, int resizedWidth) {
 		BufferedImage bimg = readInputStreamToBufferedImage(imageStream);
 		if(bimg == null) {
 			return 0;

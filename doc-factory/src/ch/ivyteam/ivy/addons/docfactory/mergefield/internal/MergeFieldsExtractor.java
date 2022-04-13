@@ -31,19 +31,18 @@ public class MergeFieldsExtractor {
 	private static final String DOT = ".";
 	private static final String EMPTY_MERGEFIELD_PREFIX_NAME = "";
 	private static final Set<Class<?>> TYPES_IGNORED_FOR_GETTING_EMBEDDED_PROPERTIES = getTypesWhichShouldNotBeIntrospected();
-	
+
 	/**
 	 * Returns a collection of template merge-fields built with the given bean accessible properties and its contained children-beans-tree accessible properties.<br />
-	 * Each template merge field of the collection is NOT set as a simple value. This means that its contained collections can be used 
+	 * Each template merge field of the collection is NOT set as a simple value. This means that its contained collections can be used
 	 * for mail merging with regions.
 	 * @param bean the bean which properties have to be transformed in TemplateMergeField objects. If null, an empty collection is returned.
-	 * @return
 	 */
 	public static Collection<TemplateMergeField> getMergeFields(Object bean) {
 		if(bean == null) {
 			return Collections.emptyList();
 		}
-		Map<String, Object> fieldsNameValueMap = getBeanPropertyValues(bean, 
+		Map<String, Object> fieldsNameValueMap = getBeanPropertyValues(bean,
 				Introspector.decapitalize(bean.getClass().getSimpleName()) + DOT);
 		if(fieldsNameValueMap == null) {
 			return Collections.emptyList();
@@ -52,18 +51,17 @@ public class MergeFieldsExtractor {
 		fieldsNameValueMap.forEach((key, value) -> result.add(TemplateMergeField.withName(key).withValue(value)));
 		return result;
 	}
-	
+
 	/**
 	 * Returns a collection of template merge-fields built with the given bean accessible properties and its contained children-beans-tree accessible properties.<br />
 	 * Each template merge field of the collection is set as a simple value. This means that the collections won't be used for mail merging with region.
 	 * @param bean the bean which properties have to be transformed in TemplateMergeField objects. If null, an empty collection is returned.
-	 * @return
 	 */
 	public static Collection<TemplateMergeField> getMergeFieldsForSimpleMerge(Object bean) {
 		if(bean == null) {
 			return Collections.emptyList();
 		}
-		Map<String, Object> fieldsNameValueMap = getBeanPropertyValues(bean, 
+		Map<String, Object> fieldsNameValueMap = getBeanPropertyValues(bean,
 				Introspector.decapitalize(bean.getClass().getSimpleName()) + DOT);
 		if(fieldsNameValueMap == null) {
 			return Collections.emptyList();
@@ -76,7 +74,6 @@ public class MergeFieldsExtractor {
 	/**
 	 * Same as {@link #getMergeFields(Object)} where the object bean is the given TemplateMergeField value
 	 * @param templateMergeField
-	 * @return
 	 */
 	public static Collection<TemplateMergeField> getChildrenMergeFieldsOfTemplateMergeField(TemplateMergeField templateMergeField) {
 		API.checkNotNull(templateMergeField, "TemplateMergeField");
@@ -84,14 +81,14 @@ public class MergeFieldsExtractor {
 			return Collections.emptyList();
 		}
 		String baseName = getNamePrefixForChildrenTemplateMergeFields(templateMergeField);
-		
-		Map<String, Object> childrenPropertiesForTemplateMergeField = getBeanPropertyValues(templateMergeField.getValue(), 
+
+		Map<String, Object> childrenPropertiesForTemplateMergeField = getBeanPropertyValues(templateMergeField.getValue(),
 				baseName + Introspector.decapitalize(templateMergeField.getValue().getClass().getSimpleName()) + DOT);
 
 		if(childrenPropertiesForTemplateMergeField == null) {
 			return Collections.emptyList();
 		}
-		
+
 		Collection<TemplateMergeField> result = new ArrayList<>();
 		childrenPropertiesForTemplateMergeField.forEach((key, value) -> result.add
 			(
@@ -107,7 +104,6 @@ public class MergeFieldsExtractor {
 	 * Used by the DocFactory for building Mail merge data sources for mail merging with regions.
 	 * @param tablename
 	 * @param templateMergeFieldFromCollectionType
-	 * @return
 	 */
 	public static Collection<Collection<TemplateMergeField>> getMergeFieldsForCollectionTemplateMergeField(String tablename, TemplateMergeField templateMergeFieldFromCollectionType) {
 		if(!templateMergeFieldFromCollectionType.isCollection()) {
@@ -127,7 +123,7 @@ public class MergeFieldsExtractor {
 				templateMergeFieldsRow.add(TemplateMergeField.withName(tablename).withValue(obj));
 				result.add(templateMergeFieldsRow);
 				continue;
-			} 
+			}
 			Map<String, Object> introspected =  getBeanPropertyValues(obj, obj.getClass().getSimpleName().toLowerCase() + DOT);
 			introspected.forEach((key, value) -> templateMergeFieldsRow.add(TemplateMergeField.withName(key).
 					withValue(value).
@@ -138,7 +134,7 @@ public class MergeFieldsExtractor {
 		}
 		return result;
 	}
-	
+
 	private static String getNamePrefixForChildrenTemplateMergeFields(TemplateMergeField templateMergeField) {
 		String baseName = templateMergeField.getMergeFieldName();
 		if(StringUtils.isBlank(baseName)) {
@@ -170,7 +166,7 @@ public class MergeFieldsExtractor {
 		}
 		return result;
 	}
-	
+
 	private static Object getPropertyValue(Object objectContainingValue, PropertyDescriptor propertyDescriptor) {
 		Method reader = propertyDescriptor.getReadMethod();
 		if(reader == null || propertyDescriptor.getName().equals(CLASS_PROPERTY_NAME)) {
@@ -210,9 +206,9 @@ public class MergeFieldsExtractor {
 	private static boolean isCollection(Object obj) {
 		return obj instanceof Collection || obj instanceof Map<?,?>;
 	}
-	
+
 	/**
-	 * @deprecated 
+	 * @deprecated
 	 * Because it is not used in the DocFactory API. As this class is not Public API, you should not use it.
 	 */
 	@Deprecated
@@ -233,7 +229,7 @@ public class MergeFieldsExtractor {
 		fieldsNameValueMap.forEach((key, value) -> result.add(TemplateMergeField.withName(key).withValue(value)));
 		return result;
 	}
-	
+
 	/**
 	 * @deprecated
 	 * Use {@link #getChildrenMergeFieldsOfTemplateMergeField(TemplateMergeField)} instead

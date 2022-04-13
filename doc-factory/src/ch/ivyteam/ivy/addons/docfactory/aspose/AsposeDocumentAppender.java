@@ -2,25 +2,25 @@ package ch.ivyteam.ivy.addons.docfactory.aspose;
 
 import java.util.List;
 
-import ch.ivyteam.api.API;
-import ch.ivyteam.ivy.addons.docfactory.options.DocumentAppendingStart;
-import ch.ivyteam.ivy.addons.docfactory.options.FileAppenderOptions;
-
 import com.aspose.words.Document;
 import com.aspose.words.ImportFormatMode;
 import com.aspose.words.Node;
 import com.aspose.words.Section;
 import com.aspose.words.SectionStart;
 
+import ch.ivyteam.api.API;
+import ch.ivyteam.ivy.addons.docfactory.options.DocumentAppendingStart;
+import ch.ivyteam.ivy.addons.docfactory.options.FileAppenderOptions;
+
 public class AsposeDocumentAppender {
-	
+
 	private static final int SECOND_DOCUMENT_INDEX = 1;
 
 	/**
-	 * Appends the given list of Documents together. 
+	 * Appends the given list of Documents together.
 	 * The first Document is the first part of the produced document, the second one the second part and do on ...
 	 * @param documents the Document Objects that should be appended together. Cannot be null or empty.
-	 * @param FileAppenderOptions Options for fine tuning the way the documents will be appended. See {@link FileAppenderOptions#getDocumentAppendingStart()},
+	 * @param fileAppenderOptions Options for fine tuning the way the documents will be appended. See {@link FileAppenderOptions#getDocumentAppendingStart()},
 	 * {@link FileAppenderOptions#isUseHeadersFootersFromLeadingPage()} and {@link FileAppenderOptions#isRestartPageNumbering()}.
 	 * Cannot be null.
 	 * @return The document containing all the Documents appended together
@@ -29,7 +29,7 @@ public class AsposeDocumentAppender {
 	public static Document appendDocuments(List<Document> documents, FileAppenderOptions fileAppenderOptions) throws Exception {
 		API.checkNotEmpty(documents, "List<Document> documents");
 		API.checkNotNull(fileAppenderOptions, "FileAppenderOptions fileAppenderOptions");
-		
+
 		// deep clone the leading document because of Issue https://jira.axonivy.com/jira/browse/AIPROD-189
 		Document leadingDocument = (Document) documents.get(0).deepClone(true);
 		int sectionStart = DocumentAppendingStart.CONTINUOUS.equals(fileAppenderOptions.getDocumentAppendingStart()) ? SectionStart.CONTINUOUS : SectionStart.NEW_PAGE;
@@ -45,7 +45,7 @@ public class AsposeDocumentAppender {
 		}
 		return leadingDocument;
 	}
-	
+
 	/**
 	 * A useful function that you can use to easily append one document to another.
 	 * @param dstDoc : The destination document where to append to. This will be the leading document. Cannot be null.
