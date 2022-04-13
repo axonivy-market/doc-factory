@@ -4,9 +4,10 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
+@SuppressWarnings("hiding")
 public class Person implements Serializable {
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 	private String name;
@@ -18,33 +19,33 @@ public class Person implements Serializable {
 	private boolean acceptToBeContacted;
 
 	private Person() { }
-	
+
 	public static Person withNameFirstname(String name, String firstname) {
 		Person p = new Person();
 		p.setName(name);
 		p.setFirstname(firstname);
 		return p;
 	}
-	
+
 	public static Person emptyPerson() {
 		return new Person();
 	}
-	
+
 	public Person withAddress(Address address) {
 		this.setAddress(address);
 		return this;
 	}
-	
+
 	public Person withInsuranceBasket(InsuranceBasket insuranceBasket) {
 		this.setInsuranceBasket(insuranceBasket);
 		return this;
 	}
-	
+
 	public Person withBirthday(Date birthday) {
 		this.setBirthday(birthday);
 		return this;
 	}
-	
+
 	public Person withId(BigDecimal id) {
 		this.setId(id);
 		return this;
@@ -97,7 +98,7 @@ public class Person implements Serializable {
 	public void setInsuranceBasket(InsuranceBasket insuranceBasket) {
 		this.insuranceBasket = insuranceBasket;
 	}
-	
+
 	public boolean isAcceptToBeContacted() {
 		return acceptToBeContacted;
 	}

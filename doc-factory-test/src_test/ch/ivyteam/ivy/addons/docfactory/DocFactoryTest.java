@@ -35,23 +35,23 @@ import ch.ivyteam.ivy.scripting.objects.util.IIvyScriptObjectEnvironment;
 import ch.ivyteam.log.Logger;
 
 @RunWith(PowerMockRunner.class)
-//tell powermock to ignore things different in java 11 
+//tell powermock to ignore things different in java 11
 //see https://github.com/mockito/mockito/issues/1562
-@PowerMockIgnore({"com.sun.org.apache.xerces.*", "com.aspose.pdf.*", "javax.xml.parsers.*", "org.w3c.dom.*"}) 
+@PowerMockIgnore({"com.sun.org.apache.xerces.*", "com.aspose.pdf.*", "javax.xml.parsers.*", "org.w3c.dom.*"})
 @PrepareForTest({Ivy.class, ThirdPartyLicenses.class, File.class, LicenseLoader.class, IIvyScriptObjectEnvironment.class})
 public abstract class DocFactoryTest {
-	
+
 	@Rule
 	public ExpectedException thrown = ExpectedException.none();
-	
+
 	protected static final String TEMPLATE_PERSON_DOCX = "resources/template_person.docx";
 	protected static final String TEMPLATE_WITH_FIELDS_FORM_DOCX = "resources/template_with_field_form.docx";
 	protected static final String TEMPLATE_FOR_TESTING_NULL_VALUES_DOCX = "resources/template_for_testing_null_value.docx";
 	protected static final String TEMPLATE_FOR_TESTING_LONG_EDITABLE_FIELDS_DOCX = "resources/template_with_long_editable_fields.docx";
-	
+
 	private static com.aspose.pdf.License PDF_LICENSE;
 	private static com.aspose.words.License WORDS_LICENSE;
-	
+
 	@BeforeClass
 	public static void loadLicenses() {
 		try (InputStream licIn = DocFactoryTest.class.getResourceAsStream("aspose/resources/docfactory_2019_09_04.lic")) {
@@ -59,13 +59,13 @@ public abstract class DocFactoryTest {
 			PDF_LICENSE.setLicense(licIn);
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
-		} 
+		}
 		try (InputStream licIn = DocFactoryTest.class.getResourceAsStream("aspose/resources/docfactory_2019_09_04.lic")) {
 			WORDS_LICENSE = new com.aspose.words.License();
 			WORDS_LICENSE.setLicense(licIn);
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
-		} 
+		}
 	}
 
 	@Before
@@ -82,13 +82,13 @@ public abstract class DocFactoryTest {
 		mockStatic(Ivy.class);
 		mockStatic(LicenseLoader.class);
 		mockStatic(IIvyScriptObjectEnvironment.class);
-		
+
 		when(Ivy.log()).thenReturn(mockLogger);
 		when(Ivy.cms()).thenReturn(mockedCms);
 		when(ThirdPartyLicenses.getDocumentFactoryLicense()).thenReturn(null);
 		when(IIvyScriptObjectEnvironment.current()).thenReturn(new MyIvyScriptObjectEnvironment());
 	}
-	
+
 	protected java.io.File makeFile(String path) {
 		java.io.File resultFile = new java.io.File(path);
 		if(resultFile.isFile()) {
@@ -99,7 +99,7 @@ public abstract class DocFactoryTest {
 		}
 		return resultFile;
 	}
-	
+
 	protected Person makePerson() {
 		return Person.withNameFirstname("Comba", "Emmanuel")
 				.withAddress(Address.withStreetZipCodeCityCountry("Muristrasse 4", "8000", "Z�rich", "CH"))
@@ -134,7 +134,7 @@ public abstract class DocFactoryTest {
 	}
 
 	protected Person makePersonWithHTMLFormattedInCssFile() {
-		String htmlStreet = 
+		String htmlStreet =
 				"<html>"
 						+ "<head>"
 						+ "<link rel='stylesheet' href='styles.css'>"

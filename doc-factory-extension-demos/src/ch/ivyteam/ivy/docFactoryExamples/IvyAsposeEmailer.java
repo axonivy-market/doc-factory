@@ -33,9 +33,9 @@ public class IvyAsposeEmailer {
 		}
 
 	}
-	 
+
 	// create an outlock .msg file
-	public static void createMail(OutlockMailData data) throws IOException
+	public static void createMail(OutlockMailData data)
 	{
 
 	   // Create a new instance of MailMessage class
@@ -58,7 +58,7 @@ public class IvyAsposeEmailer {
 		Attachment attachment = new Attachment(data.getAttachment().getAbsolutePath());  //ivyFile from the /files/application directory
 		message.addAttachment(attachment);
 
-	   
+
 	   // Create an instance of MapiMessage and load the MailMessag instance into it
 	   MapiMessage mapiMsg = MapiMessage.fromMailMessage(message);
 
@@ -68,9 +68,9 @@ public class IvyAsposeEmailer {
 	   // Save the MapiMessage to disk
 	   mapiMsg.save(data.getMsgFile().getAbsolutePath());  // save the output into the ivy  /files/application directory
 	}
-	
+
 	  // send a outlock msg file as response to the web browser with mime type in the header
-	  public static void downloadMsgFile (java.io.File file) throws IOException 
+	  public static void downloadMsgFile (java.io.File file) throws IOException
 	  {
 	    if (file == null) {
 	      Ivy.log().info("Template NULL");
@@ -79,13 +79,13 @@ public class IvyAsposeEmailer {
 
 	    FacesContext facesContext = FacesContext.getCurrentInstance();
 	    HttpServletResponse response = (HttpServletResponse) facesContext.getExternalContext().getResponse();
-	    
+
 	    response.reset();
-	    
-	    response.setHeader("Content-Type", 
+
+	    response.setHeader("Content-Type",
 	      "application/vnd.openxmlformats");
-	    
-	    response.setHeader("Content-Disposition", 
+
+	    response.setHeader("Content-Disposition",
 	      "attachment;filename=" + file.getName());
 
 	    OutputStream responseOutputStream = response.getOutputStream();
@@ -94,4 +94,4 @@ public class IvyAsposeEmailer {
 	    responseOutputStream.close();
 	    facesContext.responseComplete();
 	  }
-} 
+}

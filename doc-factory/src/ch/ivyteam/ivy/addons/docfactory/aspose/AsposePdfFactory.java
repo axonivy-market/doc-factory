@@ -1,13 +1,15 @@
 package ch.ivyteam.ivy.addons.docfactory.aspose;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
+
+import com.aspose.pdf.ConvertErrorAction;
+import com.aspose.pdf.Document;
 
 import ch.ivyteam.api.API;
 import ch.ivyteam.ivy.addons.docfactory.PdfFactory;
@@ -18,22 +20,19 @@ import ch.ivyteam.ivy.addons.docfactory.pdf.PdfAType;
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.scripting.objects.File;
 
-import com.aspose.pdf.ConvertErrorAction;
-import com.aspose.pdf.Document;
-
 public class AsposePdfFactory extends PdfFactory {
 
 	private static final long PDF_FACTORY_LOG_MAX_BYTE_SIZE = 5 * 1024;
 	private static final String PDF_EXTENSION = ".pdf";
 	private static final String PDF_FACTORY_LOG_FILENAME = "pdfFactory.log";
 	private static final String JAVA_IO_TMPDIR = "java.io.tmpdir";
-	
+
 	private DocFactoryLogDirectoryRetriever logDirectoryRetriever;
 
 	public AsposePdfFactory() {
 		init();
 	}
-	
+
 	/**
 	 * visible for unit tests
 	 * @param loadLicense
@@ -63,7 +62,7 @@ public class AsposePdfFactory extends PdfFactory {
 			return appendFilesToDocument(pdfDocument, pdfsToAppend.subList(1, pdfsToAppend.size()), resultFilePath);
 		} catch(Exception ex) {
 			throw new DocFactoryException("An error occurred while generating the pdf file. " + ex.getMessage(), ex);
-		} 
+		}
 	}
 
 	@Override
@@ -100,7 +99,7 @@ public class AsposePdfFactory extends PdfFactory {
 	protected void setLogDirectoryRetriever(DocFactoryLogDirectoryRetriever logDirectoryRetriever) {
 		this.logDirectoryRetriever = logDirectoryRetriever;
 	}
-	
+
 	private int getAsposePDFAType(PdfAType pdfAType) {
 		switch(pdfAType) {
 			case PDF_A_1A : return com.aspose.pdf.PdfFormat.PDF_A_1A;
@@ -127,7 +126,7 @@ public class AsposePdfFactory extends PdfFactory {
 			FileUtils.moveFile(logFile, new java.io.File(logFile.getParentFile(), logFile.getName() + System.nanoTime()));
 			logFile.createNewFile();
 		}
-		
+
 		return logFile;
 	}
 
@@ -152,8 +151,7 @@ public class AsposePdfFactory extends PdfFactory {
 	/**
 	 * Only visible for testing
 	 */
-	protected void appendPdfDocuments(Document pdfDocument, Document appendedPdfDocument)
-			throws FileNotFoundException {
+	protected void appendPdfDocuments(Document pdfDocument, Document appendedPdfDocument) {
 		try {
 			pdfDocument.getPages().add(appendedPdfDocument.getPages());
 		} finally {

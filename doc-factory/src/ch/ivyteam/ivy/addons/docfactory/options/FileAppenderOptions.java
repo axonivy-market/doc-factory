@@ -15,6 +15,7 @@ import ch.ivyteam.ivy.environment.Ivy;
  * or documents (See {@link BaseDocFactory#generateDocuments(java.util.List, MultipleDocumentsCreationOptions)}) may be appended together in a common file.
  * @since version 7.3.0
  */
+@SuppressWarnings("hiding")
 public class FileAppenderOptions {
 
 	private String appendedSingleFileName = DocFactoryConstants.DEFAULT_FILE_NAME;
@@ -31,11 +32,10 @@ public class FileAppenderOptions {
 	}
 
 	/**
-	 * Used by the DocFactory in its {@link BaseDocFactory#generateDocument(MultipleDocumentsCreationOptions, ch.ivyteam.ivy.addons.docfactory.DocumentTemplate...)} method.
+	 * Used by the DocFactory in its BaseDocFactory#generateDocument(MultipleDocumentsCreationOptions, ch.ivyteam.ivy.addons.docfactory.DocumentTemplate...) method.
 	 * Set the file name of the file which will be produced by appending a bunch of other documents or files.<br />
 	 * Note: if you don't set this property, a default file name will be used for producing the appended file (see {@link DocFactoryConstants#DEFAULT_FILE_NAME}.
 	 * @param appendedSingleFileName the file name of the file which will be produced by appending a bunch of other documents or files. Cannot be blank.
-	 * @return
 	 */
 	public FileAppenderOptions withAppendedFileName(String appendedSingleFileName) {
 		API.checkNotEmpty(appendedSingleFileName, "String appendedSingleFileName");
@@ -46,7 +46,6 @@ public class FileAppenderOptions {
 	/**
 	 * Defines the file output format. Must be between {@link DocFactoryConstants#DOC_FORMAT} and {@link DocFactoryConstants#ODT_FORMAT}
 	 * @param format the format to be set. By default if the format is not set the option object uses the PDF format.
-	 * @return
 	 */
 	public FileAppenderOptions withAppendedFileOutputFormat(int format) {
 		API.checkParameterRange(format, "format",  DocFactoryConstants.DOC_FORMAT, DocFactoryConstants.ODT_FORMAT);
@@ -64,7 +63,6 @@ public class FileAppenderOptions {
 	 * and {@linkplain <a href="https://docs.aspose.com/display/wordsjava/Joining+Documents+with+Headers+and+Footers">Aspose documentation illustrating this point</a>} <br />
 	 * <b>Note: </b><u>Applies only for appending Words documents (doc, docx and odt) together, or for appending documents at mail merge time</u>. Has no effect if used for appending existing PDF files together.
 	 * @param restartPageNumbering true if you want that each appended document has its own page numbering. Else leave it false (default).
-	 * @return
 	 */
 	public FileAppenderOptions restartPageNumbering(boolean restartPageNumbering) {
 		this.restartPageNumbering = restartPageNumbering;
@@ -76,7 +74,6 @@ public class FileAppenderOptions {
 	 * <br />
 	 * <b>Note: </b><u>Applies only for appending Words documents (doc, docx and odt) together, or for appending documents at mail merge time</u>. Has no effect if used for appending existing PDF files together.
 	 * @param useHeadersFootersFromLeadingPage true if you want that each appended document uses the header and footer from leading page. Else leave it false (default).
-	 * @return
 	 */
 	public FileAppenderOptions useHeadersFootersFromLeadingPage(boolean useHeadersFootersFromLeadingPage) {
 		this.useHeadersFootersFromLeadingPage = useHeadersFootersFromLeadingPage;
@@ -88,7 +85,6 @@ public class FileAppenderOptions {
 	 * By default, each document are added as a new page ({@link DocumentAppendingStart#NEW_PAGE}).
 	 * The {@link DocumentAppendingStart#CONTINUOUS} allows appending the documents continuously without page break.
 	 * @param documentAppendingStart
-	 * @return
 	 */
 	public FileAppenderOptions withDocumentAppendingStart(DocumentAppendingStart documentAppendingStart) {
 		this.documentAppendingStart = documentAppendingStart;
@@ -106,7 +102,6 @@ public class FileAppenderOptions {
 	/**
 	 * Returns the file output format as int index. Will be between {@link DocFactoryConstants#DOC_FORMAT} and {@link DocFactoryConstants#ODT_FORMAT}
 	 * By default it is set to {@link DocFactoryConstants#PDF_FORMAT}
-	 * @return
 	 */
 	public int getAppendedFileOutputFormat() {
 		return appendedFileFormat;
@@ -114,7 +109,6 @@ public class FileAppenderOptions {
 
 	/**
 	 * Returns the file format as String representation corresponding to the {@link #getAppendedFileOutputFormat()} int representation.
-	 * @return
 	 */
 	public String getAppendedFileFormat() {
 		return "." + BaseDocFactory.getSupportedFormats()[appendedFileFormat];
@@ -123,7 +117,6 @@ public class FileAppenderOptions {
 	/**
 	 * Defines the file output format. Must be between {@link DocFactoryConstants#DOC_FORMAT} and {@link DocFactoryConstants#ODT_FORMAT}
 	 * @param format the format to be set. By default if the format is not set the option object uses the PDF format.
-	 * @return
 	 */
 	public void setAppendedFileFormat(int format) {
 		API.checkParameterRange(format, "format",  DocFactoryConstants.DOC_FORMAT, DocFactoryConstants.ODT_FORMAT);

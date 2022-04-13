@@ -1,12 +1,11 @@
 package ch.ivyteam.ivy.addons.docfactory;
 
-import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
-import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import ivyAddons_tests.Data;
 
 import java.io.File;
 import java.net.URISyntaxException;
@@ -23,6 +22,7 @@ import ch.ivyteam.ivy.scripting.objects.CompositeObject;
 import ch.ivyteam.ivy.scripting.objects.List;
 import ch.ivyteam.ivy.scripting.objects.Recordset;
 import ch.ivyteam.ivy.scripting.objects.Tree;
+import ivyAddons_tests.Data;
 
 public class DocumentTemplateTest extends DocFactoryTest {
 
@@ -30,61 +30,61 @@ public class DocumentTemplateTest extends DocFactoryTest {
 	private static final String OUTPUT_FILENAME = "output_filename";
 	private static final String OUTPUT_PATH = "/outputpath";
 	private static final String TEMPLATE_PATH = "resources/template.docx";
-	
+
 	private DocumentWorker documentWorker = new PageColorDocumentWorker();
 
 	@Test
 	public void new_documentTemplate_with_empty_constructor_docFactory_not_null(){
 		DocumentTemplate documentTemplate = new DocumentTemplate().
 				withDocumentWorker(documentWorker);
-		
+
 		assertThat(documentTemplate.getDocumentFactory(), notNullValue());
 		assertThat(documentTemplate.getDocumentFactory().getDocumentWorker(), is(documentWorker));
 	}
-	
+
 	@Test
 	public void new_documentTemplate_with_dataClass_param_docFactory_not_null(){
 		DocumentTemplate documentTemplate = new DocumentTemplate(TEMPLATE_PATH, OUTPUT_PATH, OUTPUT_FILENAME, OUTPUT_FORMAT, new Data()).
 				withDocumentWorker(documentWorker);
-		
+
 		assertThat(documentTemplate.getDocumentFactory(), notNullValue());
 		assertThat(documentTemplate.getDocumentFactory().getDocumentWorker(), is(documentWorker));
 	}
-	
+
 	@Test
 	public void new_documentTemplate_with_List_param_docFactory_not_null(){
 		DocumentTemplate documentTemplate = new DocumentTemplate(TEMPLATE_PATH, OUTPUT_PATH, OUTPUT_FILENAME, OUTPUT_FORMAT, List.create(TemplateMergeField.class)).
 				withDocumentWorker(documentWorker);
-		
+
 		assertThat(documentTemplate.getDocumentFactory(), notNullValue());
 		assertThat(documentTemplate.getDocumentFactory().getDocumentWorker(), is(documentWorker));
 	}
-	
+
 	@Test
 	public void new_documentTemplate_with_TreeData_param_docFactory_not_null(){
 		DocumentTemplate documentTemplate = new DocumentTemplate(TEMPLATE_PATH, OUTPUT_PATH, OUTPUT_FILENAME, OUTPUT_FORMAT, new Tree()).
 				withDocumentWorker(documentWorker);
-		
+
 		assertThat(documentTemplate.getDocumentFactory(), notNullValue());
 		assertThat(documentTemplate.getDocumentFactory().getDocumentWorker(), is(documentWorker));
 	}
-	
+
 	@Test
 	public void new_documentTemplate_with_HashMapDataClass_param_docFactory_not_null(){
-		DocumentTemplate documentTemplate = new DocumentTemplate(TEMPLATE_PATH, OUTPUT_PATH, OUTPUT_FILENAME, OUTPUT_FORMAT, new Data(), 
+		DocumentTemplate documentTemplate = new DocumentTemplate(TEMPLATE_PATH, OUTPUT_PATH, OUTPUT_FILENAME, OUTPUT_FORMAT, new Data(),
 				new HashMap<String, java.util.List<CompositeObject>>()).
 				withDocumentWorker(documentWorker);
-		
+
 		assertThat(documentTemplate.getDocumentFactory(), notNullValue());
 		assertThat(documentTemplate.getDocumentFactory().getDocumentWorker(), is(documentWorker));
 	}
-	
+
 	@Test
 	public void new_documentTemplate_with_HashtableRecordSet_param_docFactory_not_null(){
-		DocumentTemplate documentTemplate = new DocumentTemplate(TEMPLATE_PATH, OUTPUT_PATH, OUTPUT_FILENAME, OUTPUT_FORMAT, new Data(), 
+		DocumentTemplate documentTemplate = new DocumentTemplate(TEMPLATE_PATH, OUTPUT_PATH, OUTPUT_FILENAME, OUTPUT_FORMAT, new Data(),
 				new Hashtable<String , Recordset>()).
 				withDocumentWorker(documentWorker);
-		
+
 		assertThat(documentTemplate.getDocumentFactory(), notNullValue());
 		assertThat(documentTemplate.getDocumentFactory().getDocumentWorker(), is(documentWorker));
 	}
@@ -118,9 +118,9 @@ public class DocumentTemplateTest extends DocFactoryTest {
 
 		assertThat(documentTemplate.getMergeFields(), hasSize(12));
 	}
-	
+
 	@Test
-	public void produceDocument_throws_DocumentGenerationException_if_template_does_not_exist() throws URISyntaxException {
+	public void produceDocument_throws_DocumentGenerationException_if_template_does_not_exist() {
 		File template = new File("path/to/template.doc");
 
 		DocumentTemplate documentTemplate = DocumentTemplate.
@@ -129,7 +129,7 @@ public class DocumentTemplateTest extends DocFactoryTest {
 				useLocale(Locale.forLanguageTag("de-CH"));
 
 		File resultFile = makeFile("test/documentTemplate/mail_merge_without_template.pdf");
-		
+
 		thrown.expect(DocumentGenerationException.class);
 		documentTemplate.produceDocument(resultFile);
 	}
