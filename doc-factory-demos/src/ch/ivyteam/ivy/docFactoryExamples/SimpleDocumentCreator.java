@@ -10,26 +10,20 @@ import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.workflow.document.IDocument;
 import ch.ivyteam.ivy.workflow.document.Path;
 
-public class SimpleDocumentCreator
-{
+public class SimpleDocumentCreator {
   private String name;
   private Long documentId;
 
-  public void init()
-  {
+  public void init() {
     // Load license for aspose slides & cell
-    try
-    {
+    try {
       LicenseLoader.loadLicenseforProduct(AsposeProduct.WORDS);
-    }
-    catch (Exception e)
-    {
+    } catch (Exception e) {
       Ivy.log().error(e);
     }
   }
 
-  public void createHelloWord() throws Exception
-  {
+  public void createHelloWord() throws Exception {
 
     String bindingName = name.trim().replace(" ", "_");
 
@@ -61,23 +55,19 @@ public class SimpleDocumentCreator
     documentId = document.getId();
   }
 
-  public String getName()
-  {
+  public String getName() {
     return name;
   }
 
-  public void setName(String name)
-  {
+  public void setName(String name) {
     this.name = name;
   }
 
-  public Long getDocumentId()
-  {
+  public Long getDocumentId() {
     return documentId;
   }
 
-  public void setDocumentId(Long documentId)
-  {
+  public void setDocumentId(Long documentId) {
     this.documentId = documentId;
   }
 }

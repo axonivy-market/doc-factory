@@ -22,157 +22,161 @@ import ch.ivyteam.api.API;
 import ch.ivyteam.ivy.addons.docfactory.aspose.DocumentWorker;
 import ch.ivyteam.ivy.addons.docfactory.exception.DocumentGenerationException;
 
-// tell powermock to ignore things different in java 11 
+// tell powermock to ignore things different in java 11
 // see https://github.com/mockito/mockito/issues/1562
 public class DocumentWorkerInjectionForPostFileProduceIT extends DocFactoryTest {
-	
-	private static final String PROTECTED_FILE_PATH = "test/documentWorker/aPasswordProtectedFile.pdf";
-	
-	@Rule
-	ExpectedException exception = ExpectedException.none();
 
+  private static final String PROTECTED_FILE_PATH = "test/documentWorker/aPasswordProtectedFile.pdf";
 
-	@Test
-	public void noDocumentWorkerInjected() throws URISyntaxException  {
-		java.io.File template = new java.io.File(this.getClass().getResource(TEMPLATE_PERSON_DOCX).toURI().getPath());
-		
-		DocumentTemplate documentTemplate = DocumentTemplate
-				.withTemplate(template)
-				.putDataAsSourceForSimpleMailMerge(makePerson())
-				.useLocale(Locale.forLanguageTag("de-CH"));
+  @Rule
+  ExpectedException exception = ExpectedException.none();
 
-		File resultFile = makeFile("test/documentWorker/aFile.pdf");
-		
-		FileOperationMessage result = documentTemplate.produceDocument(resultFile);
-		assertNotNull(result);
-		assertTrue(result.isSuccess());
-		assertThat(result.getFiles(), hasItem(resultFile));
-		
-		com.aspose.pdf.Document pdfDoc = new com.aspose.pdf.Document(resultFile.getAbsolutePath());
-		assertThat(pdfDoc.isEncrypted(), is(false));
-	}
-	
-	@Test
-	public void injectDocumentWorkerImplementing_onGeneratedFile_example_with_pdfEncrypter() throws URISyntaxException  {
-		java.io.File template = new java.io.File(this.getClass().getResource(TEMPLATE_PERSON_DOCX).toURI().getPath());
-		String secret = "mySecret";
-		
-		DocumentWorker pdfFileEncrypter = PdfFileEncrypter.withUserSecret(secret);
+  @Test
+  public void noDocumentWorkerInjected() throws URISyntaxException {
+    java.io.File template = new java.io.File(
+            this.getClass().getResource(TEMPLATE_PERSON_DOCX).toURI().getPath());
 
-		DocumentTemplate documentTemplate = DocumentTemplate
-				.withTemplate(template)
-				.putDataAsSourceForSimpleMailMerge(makePerson())
-				.useLocale(Locale.forLanguageTag("de-CH"))
-				.withDocumentWorker(pdfFileEncrypter);
-		
-		deletePreviousProtectedFile(PROTECTED_FILE_PATH, secret);
+    DocumentTemplate documentTemplate = DocumentTemplate
+            .withTemplate(template)
+            .putDataAsSourceForSimpleMailMerge(makePerson())
+            .useLocale(Locale.forLanguageTag("de-CH"));
 
-		File resultFile = makeFile(PROTECTED_FILE_PATH);
-		
-		FileOperationMessage result = documentTemplate.produceDocument(resultFile);
-		assertNotNull(result);
-		assertTrue(result.isSuccess());
-		assertThat(result.getFiles(), hasItem(resultFile));
-		
-		com.aspose.pdf.Document pdfDoc = new com.aspose.pdf.Document(resultFile.getAbsolutePath(), secret);
-		assertThat(pdfDoc.isEncrypted(), is(true));
-		
-	}
-	
-	@Test
-	public void injectDocumentWorkerImplementing_onGeneratedFile_which_returns_null_DocumentGenerationException_thrown() throws URISyntaxException  {
-		java.io.File template = new java.io.File(this.getClass().getResource(TEMPLATE_PERSON_DOCX).toURI().getPath());
-		
-		DocumentWorker DocumentWorkerReturningNull = new DocumentWorkerReturningNull();
+    File resultFile = makeFile("test/documentWorker/aFile.pdf");
 
-		DocumentTemplate documentTemplate = DocumentTemplate
-				.withTemplate(template)
-				.putDataAsSourceForSimpleMailMerge(makePerson())
-				.useLocale(Locale.forLanguageTag("de-CH"))
-				.withDocumentWorker(DocumentWorkerReturningNull);
+    FileOperationMessage result = documentTemplate.produceDocument(resultFile);
+    assertNotNull(result);
+    assertTrue(result.isSuccess());
+    assertThat(result.getFiles(), hasItem(resultFile));
 
-		File resultFile = new File("test/documentWorker/anotherFile.pdf");
-		
-		exception.expect(DocumentGenerationException.class);
-		documentTemplate.produceDocument(resultFile);
-	}
-	
-	@Test
-	public void injectDocumentWorkerImplementing_onGeneratedFile_which_returns_notExistingFile_DocumentGenerationException_thrown() throws URISyntaxException  {
-		java.io.File template = new java.io.File(this.getClass().getResource(TEMPLATE_PERSON_DOCX).toURI().getPath());
-		
-		DocumentWorker documentWorkerReturningNotExistingFile = new DocumentWorkerReturningNotExistingFile();
+    com.aspose.pdf.Document pdfDoc = new com.aspose.pdf.Document(resultFile.getAbsolutePath());
+    assertThat(pdfDoc.isEncrypted(), is(false));
+  }
 
-		DocumentTemplate documentTemplate = DocumentTemplate
-				.withTemplate(template)
-				.putDataAsSourceForSimpleMailMerge(makePerson())
-				.useLocale(Locale.forLanguageTag("de-CH"))
-				.withDocumentWorker(documentWorkerReturningNotExistingFile);
+  @Test
+  public void injectDocumentWorkerImplementing_onGeneratedFile_example_with_pdfEncrypter()
+          throws URISyntaxException {
+    java.io.File template = new java.io.File(
+            this.getClass().getResource(TEMPLATE_PERSON_DOCX).toURI().getPath());
+    String secret = "mySecret";
 
-		File resultFile = new File("test/documentWorker/anotherFile.pdf");
-		
-		exception.expect(DocumentGenerationException.class);
-		documentTemplate.produceDocument(resultFile);
-	}
-	
-	
-	private void deletePreviousProtectedFile(String passwordProtectedFilePath, String password) {
-		File file = new File(passwordProtectedFilePath);
-		try {
-			com.aspose.pdf.Document pdfDoc = new com.aspose.pdf.Document(file.getAbsolutePath(), password);
-			pdfDoc.decrypt();
-			file.delete();
-		} catch (Exception ex) {
-			// Ignore the exception here
-		}
-	}
+    DocumentWorker pdfFileEncrypter = PdfFileEncrypter.withUserSecret(secret);
 
+    DocumentTemplate documentTemplate = DocumentTemplate
+            .withTemplate(template)
+            .putDataAsSourceForSimpleMailMerge(makePerson())
+            .useLocale(Locale.forLanguageTag("de-CH"))
+            .withDocumentWorker(pdfFileEncrypter);
 
-	public static class PdfFileEncrypter implements DocumentWorker {
-		
-		private String userSecret;
-		
-		private PdfFileEncrypter() {}
-		
-		public static PdfFileEncrypter withUserSecret(String userSecret) {
-			API.checkNotBlank(userSecret, "the user secret");
-			PdfFileEncrypter pdfEncrypter = new PdfFileEncrypter();
-			pdfEncrypter.userSecret = userSecret;
-			return pdfEncrypter;
-		}
+    deletePreviousProtectedFile(PROTECTED_FILE_PATH, secret);
 
-		@Override
-		public File onGeneratedFile(Document document, File producedFile) {
-			if(producedFile.getName().endsWith("pdf")) {
-				com.aspose.pdf.Document pdfDoc = new com.aspose.pdf.Document(producedFile.getAbsolutePath());
-				pdfDoc.encrypt(userSecret, "ownerSecret", Permissions.PrintDocument, CryptoAlgorithm.AESx256);
-				pdfDoc.save(producedFile.getAbsolutePath());
-			}
-			return producedFile;
-		}
-		
-	}
-	
-	public static class DocumentWorkerReturningNull implements DocumentWorker {
-		
-		public DocumentWorkerReturningNull() {}
+    File resultFile = makeFile(PROTECTED_FILE_PATH);
 
-		@Override
-		public File onGeneratedFile(Document document, File producedFile) {
-			return null;
-		}
-		
-	}
-	
-	public static class DocumentWorkerReturningNotExistingFile implements DocumentWorker {
-		
-		public DocumentWorkerReturningNotExistingFile() {}
+    FileOperationMessage result = documentTemplate.produceDocument(resultFile);
+    assertNotNull(result);
+    assertTrue(result.isSuccess());
+    assertThat(result.getFiles(), hasItem(resultFile));
 
-		@Override
-		public File onGeneratedFile(Document document, File producedFile) {
-			return new File("I do not exist.doc");
-		}
-		
-	}
+    com.aspose.pdf.Document pdfDoc = new com.aspose.pdf.Document(resultFile.getAbsolutePath(), secret);
+    assertThat(pdfDoc.isEncrypted(), is(true));
+
+  }
+
+  @Test
+  public void injectDocumentWorkerImplementing_onGeneratedFile_which_returns_null_DocumentGenerationException_thrown()
+          throws URISyntaxException {
+    java.io.File template = new java.io.File(
+            this.getClass().getResource(TEMPLATE_PERSON_DOCX).toURI().getPath());
+
+    DocumentWorker DocumentWorkerReturningNull = new DocumentWorkerReturningNull();
+
+    DocumentTemplate documentTemplate = DocumentTemplate
+            .withTemplate(template)
+            .putDataAsSourceForSimpleMailMerge(makePerson())
+            .useLocale(Locale.forLanguageTag("de-CH"))
+            .withDocumentWorker(DocumentWorkerReturningNull);
+
+    File resultFile = new File("test/documentWorker/anotherFile.pdf");
+
+    exception.expect(DocumentGenerationException.class);
+    documentTemplate.produceDocument(resultFile);
+  }
+
+  @Test
+  public void injectDocumentWorkerImplementing_onGeneratedFile_which_returns_notExistingFile_DocumentGenerationException_thrown()
+          throws URISyntaxException {
+    java.io.File template = new java.io.File(
+            this.getClass().getResource(TEMPLATE_PERSON_DOCX).toURI().getPath());
+
+    DocumentWorker documentWorkerReturningNotExistingFile = new DocumentWorkerReturningNotExistingFile();
+
+    DocumentTemplate documentTemplate = DocumentTemplate
+            .withTemplate(template)
+            .putDataAsSourceForSimpleMailMerge(makePerson())
+            .useLocale(Locale.forLanguageTag("de-CH"))
+            .withDocumentWorker(documentWorkerReturningNotExistingFile);
+
+    File resultFile = new File("test/documentWorker/anotherFile.pdf");
+
+    exception.expect(DocumentGenerationException.class);
+    documentTemplate.produceDocument(resultFile);
+  }
+
+  private void deletePreviousProtectedFile(String passwordProtectedFilePath, String password) {
+    File file = new File(passwordProtectedFilePath);
+    try {
+      com.aspose.pdf.Document pdfDoc = new com.aspose.pdf.Document(file.getAbsolutePath(), password);
+      pdfDoc.decrypt();
+      file.delete();
+    } catch (Exception ex) {
+      // Ignore the exception here
+    }
+  }
+
+  public static class PdfFileEncrypter implements DocumentWorker {
+
+    private String userSecret;
+
+    private PdfFileEncrypter() {}
+
+    public static PdfFileEncrypter withUserSecret(String userSecret) {
+      API.checkNotBlank(userSecret, "the user secret");
+      PdfFileEncrypter pdfEncrypter = new PdfFileEncrypter();
+      pdfEncrypter.userSecret = userSecret;
+      return pdfEncrypter;
+    }
+
+    @Override
+    public File onGeneratedFile(Document document, File producedFile) {
+      if (producedFile.getName().endsWith("pdf")) {
+        com.aspose.pdf.Document pdfDoc = new com.aspose.pdf.Document(producedFile.getAbsolutePath());
+        pdfDoc.encrypt(userSecret, "ownerSecret", Permissions.PrintDocument, CryptoAlgorithm.AESx256);
+        pdfDoc.save(producedFile.getAbsolutePath());
+      }
+      return producedFile;
+    }
+
+  }
+
+  public static class DocumentWorkerReturningNull implements DocumentWorker {
+
+    public DocumentWorkerReturningNull() {}
+
+    @Override
+    public File onGeneratedFile(Document document, File producedFile) {
+      return null;
+    }
+
+  }
+
+  public static class DocumentWorkerReturningNotExistingFile implements DocumentWorker {
+
+    public DocumentWorkerReturningNotExistingFile() {}
+
+    @Override
+    public File onGeneratedFile(Document document, File producedFile) {
+      return new File("I do not exist.doc");
+    }
+
+  }
 
 }

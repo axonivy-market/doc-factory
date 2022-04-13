@@ -22,57 +22,48 @@ import com.codeborne.selenide.FileDownloadMode;
 import com.codeborne.selenide.Selenide;
 
 @IvyWebTest
-class WebTestApiExamplesIT
-{
+class WebTestApiExamplesIT {
   private final String DOC_DEMOS_BASE = "/DocFactoryDemos/16B45CBCE0D2056C/";
 
   @BeforeAll
-  static void setup(@TempDir Path tempDir)
-  {
+  static void setup(@TempDir Path tempDir) {
     Configuration.timeout = 10000;
     Configuration.proxyEnabled = true;
     Configuration.fileDownload = FileDownloadMode.PROXY;
     Configuration.downloadsFolder = tempDir.toString();
   }
-  
+
   @Test
-  void docWithCompositeObj() throws Exception
-  {
+  void docWithCompositeObj() throws Exception {
     assertDownload("start6.ivp", "DocWithCompositeObject.pdf");
   }
-  
+
   @Test
-  void docWithNestedTablesPDF() throws Exception
-  {
+  void docWithNestedTablesPDF() throws Exception {
     assertDownload("start3.ivp", "DocWithFullNestedTables.pdf");
   }
-  
+
   @Test
-  void docWithNestedTablesDOCX() throws Exception
-  {
+  void docWithNestedTablesDOCX() throws Exception {
     assertDownload("start4.ivp", "DocWithFullNestedTables.docx");
   }
-  
+
   @Test
-  void docWithNestedTablesHTML() throws Exception
-  {
+  void docWithNestedTablesHTML() throws Exception {
     assertDownload("start5.ivp", "DocWithFullNestedTables.html");
   }
-  
+
   @Test
-  void zipMultipleDocuments() throws FileNotFoundException
-  {
+  void zipMultipleDocuments() throws FileNotFoundException {
     open(EngineUrl.createProcessUrl("/DocFactoryDemos/16CD7829EF6B489B/start2.ivp"));
     var doc = Selenide.$$("button").find(exactText("Create Multiple Formats")).shouldBe(visible).download();
     assertThat(doc).hasName("Documents.zip");
     assertThat(doc.length() / 1024).isGreaterThan(100);
   }
-  
+
   @Test
-  void ivyDocApi()
-  {
-    if (!EngineUrl.isDesigner())
-    {
+  void ivyDocApi() {
+    if (!EngineUrl.isDesigner()) {
       open(EngineUrl.create().path("login").toUrl());
       $(By.id("loginForm:userName")).shouldBe(visible).sendKeys("test");
       $(By.id("loginForm:password")).shouldBe(visible).sendKeys("test");
@@ -89,9 +80,8 @@ class WebTestApiExamplesIT
     $("h3").shouldHave(exactText("DocFactoryDemos: Attached Document"));
     $("iframe").shouldBe(visible);
   }
-  
-  private void assertDownload(String process, String expectedFileName) throws FileNotFoundException
-  {
+
+  private void assertDownload(String process, String expectedFileName) throws FileNotFoundException {
     open(EngineUrl.createProcessUrl(DOC_DEMOS_BASE + process));
     var doc = $("#docLink").shouldBe(visible).download();
     assertThat(doc).hasName(expectedFileName);

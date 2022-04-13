@@ -10,8 +10,7 @@ import ch.ivyteam.ivy.addons.docfactory.aspose.AsposeProduct;
 import ch.ivyteam.ivy.addons.docfactory.aspose.LicenseLoader;
 import ch.ivyteam.ivy.environment.Ivy;
 
-public class DocumentCreator
-{
+public class DocumentCreator {
   private String name;
   private Date date;
   private byte[] image;
@@ -23,135 +22,110 @@ public class DocumentCreator
 
   public final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
-  public void init()
-  {
+  public void init() {
     expectations = new ArrayList<>();
     expectations.add("Sunshine");
     expectations.add("Beach Bar");
     memberType = "1";
 
     // Load license for aspose slides & cell
-    try
-    {
+    try {
       LicenseLoader.loadLicenseforProduct(AsposeProduct.SLIDES);
       LicenseLoader.loadLicenseforProduct(AsposeProduct.CELLS);
-    }
-    catch (Exception e)
-    {
+    } catch (Exception e) {
       Ivy.log().error(e);
     }
   }
 
-  public File createWordDocument() throws IOException
-  {
+  public File createWordDocument() throws IOException {
     File template = new LocalResource("resources/myDocumentCreatorTemplate.docx").asFile();
     File result = new DocxCreator(this).create(template);
     return result;
   }
 
-  public File createMultiDocument() throws IOException
-  {
+  public File createMultiDocument() throws IOException {
     File template = new LocalResource("resources/mySimpleDocTemplate.docx").asFile();
     File result = new DocxCreator(this).createMulti(template);
     return result;
   }
 
-  public File createSimpleDocument()
-  {
+  public File createSimpleDocument() {
     File template = new LocalResource("resources/myDocumentCreatorTemplate.docx").asFile();
     File result = new DocxCreator(this).createSimple(template);
     return result;
   }
 
-  public File createPowerPoint() throws IOException
-  {
+  public File createPowerPoint() throws IOException {
     java.io.File template = new LocalResource("resources/myPowerPointTemplate.pptx").asFile();
     java.io.File result = new PptCreator(this).create(template);
     return result;
   }
 
-  public File createExcel() throws Exception
-  {
+  public File createExcel() throws Exception {
     return new XlsxCreator(this).create();
   }
 
-  public String getName()
-  {
+  public String getName() {
     return name;
   }
 
-  public void setName(String name)
-  {
+  public void setName(String name) {
     this.name = name;
   }
 
-  public Date getDate()
-  {
+  public Date getDate() {
     return date;
   }
 
-  public void setDate(Date date)
-  {
+  public void setDate(Date date) {
     this.date = date;
   }
 
-  public java.util.List<String> getExpectations()
-  {
+  public java.util.List<String> getExpectations() {
     return expectations;
   }
 
-  public void setExpectations(java.util.List<String> expectations)
-  {
+  public void setExpectations(java.util.List<String> expectations) {
     this.expectations = expectations;
   }
 
-  public String getNewExpectation()
-  {
+  public String getNewExpectation() {
     return newExpectation;
   }
 
-  public void setNewExpectation(String newExpectation)
-  {
+  public void setNewExpectation(String newExpectation) {
     this.newExpectation = newExpectation;
   }
 
-  public byte[] getImage()
-  {
+  public byte[] getImage() {
     return image;
   }
 
-  public void setImage(byte[] image)
-  {
+  public void setImage(byte[] image) {
     this.image = image;
   }
 
-  public String getImageName()
-  {
+  public String getImageName() {
     return imageName;
   }
 
-  public void setImageName(String imageName)
-  {
+  public void setImageName(String imageName) {
     this.imageName = imageName;
   }
 
-  public ch.ivyteam.ivy.scripting.objects.File getIvyFile()
-  {
+  public ch.ivyteam.ivy.scripting.objects.File getIvyFile() {
     return ivyFile;
   }
 
-  public void setIvyFile(ch.ivyteam.ivy.scripting.objects.File ivyFile)
-  {
+  public void setIvyFile(ch.ivyteam.ivy.scripting.objects.File ivyFile) {
     this.ivyFile = ivyFile;
   }
 
-  public String getMemberType()
-  {
+  public String getMemberType() {
     return memberType;
   }
 
-  public void setMemberType(String memberType)
-  {
+  public void setMemberType(String memberType) {
     this.memberType = memberType;
   }
 }

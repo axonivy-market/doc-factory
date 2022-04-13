@@ -12,99 +12,95 @@ import org.junit.Test;
 
 public class DocumentTemplateFormatsGenerationIT extends DocFactoryTest {
 
-	File template;
-	DocumentTemplate documentTemplate;
+  File template;
+  DocumentTemplate documentTemplate;
 
-	@Override
+  @Override
   @Before
-	public void setup() throws Exception {
-		super.setup();
-		File tpl = new File(this.getClass().getResource(TEMPLATE_PERSON_DOCX).toURI().getPath());
+  public void setup() throws Exception {
+    super.setup();
+    File tpl = new File(this.getClass().getResource(TEMPLATE_PERSON_DOCX).toURI().getPath());
 
-		documentTemplate = DocumentTemplate.
-				withTemplate(tpl).
-				putDataAsSourceForSimpleMailMerge(makePerson()).
-				useLocale(Locale.forLanguageTag("de-CH"));
-	}
+    documentTemplate = DocumentTemplate.withTemplate(tpl).putDataAsSourceForSimpleMailMerge(makePerson())
+            .useLocale(Locale.forLanguageTag("de-CH"));
+  }
 
+  @Test
+  public void produceDocument_html() {
+    documentTemplate.setOutputFormat("html");
 
+    File resultFile = makeFile("test/documentTemplate/formats/simple_mail_merge_test.html");
 
-	@Test
-	public void produceDocument_html() {
-		documentTemplate.setOutputFormat("html");
+    FileOperationMessage result = documentTemplate.produceDocument(resultFile);
 
-		File resultFile = makeFile("test/documentTemplate/formats/simple_mail_merge_test.html");
+    assertNotNull(result);
+    assertTrue(result.isSuccess());
+    assertThat(result.getFiles(), org.hamcrest.core.IsCollectionContaining.hasItem(resultFile));
+  }
 
-		FileOperationMessage result = documentTemplate.produceDocument(resultFile);
+  @Test
+  public void produceDocument_doc() {
+    documentTemplate.setOutputFormat("doc");
 
-		assertNotNull(result);
-		assertTrue(result.isSuccess());
-		assertThat(result.getFiles(), org.hamcrest.core.IsCollectionContaining.hasItem(resultFile));
-	}
+    File resultFile = makeFile("test/documentTemplate/formats/simple_mail_merge_test.doc");
 
-	@Test
-	public void produceDocument_doc() {
-		documentTemplate.setOutputFormat("doc");
+    FileOperationMessage result = documentTemplate.produceDocument(resultFile);
 
-		File resultFile = makeFile("test/documentTemplate/formats/simple_mail_merge_test.doc");
+    assertNotNull(result);
+    assertTrue(result.isSuccess());
+    assertThat(result.getFiles(), org.hamcrest.core.IsCollectionContaining.hasItem(resultFile));
+  }
 
-		FileOperationMessage result = documentTemplate.produceDocument(resultFile);
+  @Test
+  public void produceDocument_docx() {
+    documentTemplate.setOutputFormat("docx");
 
-		assertNotNull(result);
-		assertTrue(result.isSuccess());
-		assertThat(result.getFiles(), org.hamcrest.core.IsCollectionContaining.hasItem(resultFile));
-	}
+    File resultFile = makeFile("test/documentTemplate/formats/simple_mail_merge_test.docx");
 
-	@Test
-	public void produceDocument_docx() {
-		documentTemplate.setOutputFormat("docx");
+    FileOperationMessage result = documentTemplate.produceDocument(resultFile);
 
-		File resultFile = makeFile("test/documentTemplate/formats/simple_mail_merge_test.docx");
+    assertNotNull(result);
+    assertTrue(result.isSuccess());
+    assertThat(result.getFiles(), org.hamcrest.core.IsCollectionContaining.hasItem(resultFile));
+  }
 
-		FileOperationMessage result = documentTemplate.produceDocument(resultFile);
+  @Test
+  public void produceDocument_odt() {
+    documentTemplate.setOutputFormat("odt");
 
-		assertNotNull(result);
-		assertTrue(result.isSuccess());
-		assertThat(result.getFiles(), org.hamcrest.core.IsCollectionContaining.hasItem(resultFile));
-	}
+    File resultFile = makeFile("test/documentTemplate/formats/simple_mail_merge_test.odt");
 
-	@Test
-	public void produceDocument_odt() {
-		documentTemplate.setOutputFormat("odt");
+    FileOperationMessage result = documentTemplate.produceDocument(resultFile);
 
-		File resultFile = makeFile("test/documentTemplate/formats/simple_mail_merge_test.odt");
+    assertNotNull(result);
+    assertTrue(result.isSuccess());
+    assertThat(result.getFiles(), org.hamcrest.core.IsCollectionContaining.hasItem(resultFile));
+  }
 
-		FileOperationMessage result = documentTemplate.produceDocument(resultFile);
+  @Test
+  public void produceDocument_txt() {
+    documentTemplate.setOutputFormat("txt");
 
-		assertNotNull(result);
-		assertTrue(result.isSuccess());
-		assertThat(result.getFiles(), org.hamcrest.core.IsCollectionContaining.hasItem(resultFile));
-	}
+    File resultFile = makeFile("test/documentTemplate/formats/simple_mail_merge_test.txt");
 
-	@Test
-	public void produceDocument_txt() {
-		documentTemplate.setOutputFormat("txt");
+    FileOperationMessage result = documentTemplate.produceDocument(resultFile);
 
-		File resultFile = makeFile("test/documentTemplate/formats/simple_mail_merge_test.txt");
+    assertNotNull(result);
+    assertTrue(result.isSuccess());
+    assertThat(result.getFiles(), org.hamcrest.core.IsCollectionContaining.hasItem(resultFile));
+  }
 
-		FileOperationMessage result = documentTemplate.produceDocument(resultFile);
+  @Test
+  public void produceDocument_pdf() {
+    documentTemplate.setOutputFormat("pdf");
 
-		assertNotNull(result);
-		assertTrue(result.isSuccess());
-		assertThat(result.getFiles(), org.hamcrest.core.IsCollectionContaining.hasItem(resultFile));
-	}
+    File resultFile = makeFile("test/documentTemplate/formats/simple_mail_merge_test.pdf");
 
-	@Test
-	public void produceDocument_pdf() {
-		documentTemplate.setOutputFormat("pdf");
+    FileOperationMessage result = documentTemplate.produceDocument(resultFile);
 
-		File resultFile = makeFile("test/documentTemplate/formats/simple_mail_merge_test.pdf");
-
-		FileOperationMessage result = documentTemplate.produceDocument(resultFile);
-
-		assertNotNull(result);
-		assertTrue(result.isSuccess());
-		assertThat(result.getFiles(), org.hamcrest.core.IsCollectionContaining.hasItem(resultFile));
-	}
+    assertNotNull(result);
+    assertTrue(result.isSuccess());
+    assertThat(result.getFiles(), org.hamcrest.core.IsCollectionContaining.hasItem(resultFile));
+  }
 
 }

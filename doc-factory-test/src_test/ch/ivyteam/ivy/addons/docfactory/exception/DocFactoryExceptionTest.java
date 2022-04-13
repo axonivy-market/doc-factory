@@ -23,55 +23,55 @@ import ch.ivyteam.log.Logger;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({Ivy.class, ThirdPartyLicenses.class, LicenseLoader.class})
 public class DocFactoryExceptionTest {
-	
-	@Before
-	public void setup() throws Exception {
-		Logger mockLogger = mock(Logger.class);
-		doNothing().when(mockLogger).error(any(String.class));
-		doNothing().when(mockLogger).info(any(String.class));
-		doNothing().when(mockLogger).debug(any(String.class));
-		
-		IContentManagementSystem mockedCms = mock(IContentManagementSystem.class);
-		when(mockedCms.co(any(String.class))).thenReturn("");
-		
-		mockStatic(ThirdPartyLicenses.class);
-		mockStatic(LicenseLoader.class);
-		mockStatic(Ivy.class);
-		when(Ivy.log()).thenReturn(mockLogger);
-		when(Ivy.cms()).thenReturn(mockedCms);
-		when(ThirdPartyLicenses.getDocumentFactoryLicense()).thenReturn(null);
-	}
 
-	@Test
-	public void docFactoryExceptionInstanciatedWithExceptionOnlyHasMessageOfThisException() {
-		Exception ex = new Exception("An Exception occurred");
-		DocFactoryException docFactoryException = new DocFactoryException(ex);
-		
-		assertThat(docFactoryException.getMessage(), CoreMatchers.is(ex.getMessage()));
-	}
-	
-	@Test
-	public void docFactoryExceptionInstanciatedWithExceptionAndMessage() {
-		Exception ex = new Exception("An Exception occurred");
-		DocFactoryException docFactoryException = new DocFactoryException("dummy message", ex);
-		
-		assertThat(docFactoryException.getMessage(), CoreMatchers.is("dummy message"));
-	}
-	
-	@Test
-	public void docFactoryExceptionInstanciatedWithExceptionAndMessageGetCause() {
-		Exception ex = new Exception("An Exception occurred");
-		DocFactoryException docFactoryException = new DocFactoryException("dummy message", ex);
-		
-		assertThat(docFactoryException.getCause(), CoreMatchers.is(ex));
-	}
-	
-	@Test
-	public void docFactoryExceptionInstanciatedWithExceptionGetCause() {
-		Exception ex = new Exception("An Exception occurred");
-		DocFactoryException docFactoryException = new DocFactoryException(ex);
-		
-		assertThat(docFactoryException.getCause(), CoreMatchers.is(ex));
-	}
+  @Before
+  public void setup() throws Exception {
+    Logger mockLogger = mock(Logger.class);
+    doNothing().when(mockLogger).error(any(String.class));
+    doNothing().when(mockLogger).info(any(String.class));
+    doNothing().when(mockLogger).debug(any(String.class));
+
+    IContentManagementSystem mockedCms = mock(IContentManagementSystem.class);
+    when(mockedCms.co(any(String.class))).thenReturn("");
+
+    mockStatic(ThirdPartyLicenses.class);
+    mockStatic(LicenseLoader.class);
+    mockStatic(Ivy.class);
+    when(Ivy.log()).thenReturn(mockLogger);
+    when(Ivy.cms()).thenReturn(mockedCms);
+    when(ThirdPartyLicenses.getDocumentFactoryLicense()).thenReturn(null);
+  }
+
+  @Test
+  public void docFactoryExceptionInstanciatedWithExceptionOnlyHasMessageOfThisException() {
+    Exception ex = new Exception("An Exception occurred");
+    DocFactoryException docFactoryException = new DocFactoryException(ex);
+
+    assertThat(docFactoryException.getMessage(), CoreMatchers.is(ex.getMessage()));
+  }
+
+  @Test
+  public void docFactoryExceptionInstanciatedWithExceptionAndMessage() {
+    Exception ex = new Exception("An Exception occurred");
+    DocFactoryException docFactoryException = new DocFactoryException("dummy message", ex);
+
+    assertThat(docFactoryException.getMessage(), CoreMatchers.is("dummy message"));
+  }
+
+  @Test
+  public void docFactoryExceptionInstanciatedWithExceptionAndMessageGetCause() {
+    Exception ex = new Exception("An Exception occurred");
+    DocFactoryException docFactoryException = new DocFactoryException("dummy message", ex);
+
+    assertThat(docFactoryException.getCause(), CoreMatchers.is(ex));
+  }
+
+  @Test
+  public void docFactoryExceptionInstanciatedWithExceptionGetCause() {
+    Exception ex = new Exception("An Exception occurred");
+    DocFactoryException docFactoryException = new DocFactoryException(ex);
+
+    assertThat(docFactoryException.getCause(), CoreMatchers.is(ex));
+  }
 
 }
