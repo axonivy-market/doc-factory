@@ -15,33 +15,27 @@ import ch.ivyteam.ivy.addons.docfactory.aspose.AsposeFieldMergingCallback;
 /*
  * Custom call back that allows scaling for images
  */
-public class FieldMergingCallBack extends AsposeFieldMergingCallback
-{
+public class FieldMergingCallBack extends AsposeFieldMergingCallback {
   private final int width;
   private final int height;
 
-  public FieldMergingCallBack(int width, int height)
-  {
+  public FieldMergingCallBack(int width, int height) {
     this.width = width;
     this.height = height;
   }
 
   @Override
-  public void fieldMerging(FieldMergingArgs fieldMergingArgs) throws Exception
-  {
-    if (fieldMergingArgs.getFieldValue() == null)
-    {
+  public void fieldMerging(FieldMergingArgs fieldMergingArgs) throws Exception {
+    if (fieldMergingArgs.getFieldValue() == null) {
       removeBlankLine(fieldMergingArgs);
       return;
     }
   }
 
   @Override
-  public void imageFieldMerging(ImageFieldMergingArgs imageFieldMergingArgs) throws Exception
-  {
+  public void imageFieldMerging(ImageFieldMergingArgs imageFieldMergingArgs) throws Exception {
     // The field value is a byte array, cast it and create a stream on it.
-    if (imageFieldMergingArgs.getFieldValue() instanceof byte[])
-    {
+    if (imageFieldMergingArgs.getFieldValue() instanceof byte[]) {
       byte[] bytes = (byte[]) imageFieldMergingArgs.getFieldValue();
       ByteArrayInputStream imageStream = new ByteArrayInputStream(bytes);
       // Now the mail merge engine will retrieve the image from the stream.
@@ -51,13 +45,11 @@ public class FieldMergingCallBack extends AsposeFieldMergingCallback
     }
   }
 
-  private static void removeBlankLine(FieldMergingArgs fieldMergingArgs) throws Exception
-  {
+  private static void removeBlankLine(FieldMergingArgs fieldMergingArgs) throws Exception {
     DocumentBuilder builder = new DocumentBuilder(fieldMergingArgs.getDocument());
     builder.moveToMergeField(fieldMergingArgs.getFieldName());
     Paragraph paragraph = builder.getCurrentParagraph();
-    if (StringUtils.isBlank(paragraph.getText()))
-    {
+    if (StringUtils.isBlank(paragraph.getText())) {
       paragraph.remove();
     }
   }

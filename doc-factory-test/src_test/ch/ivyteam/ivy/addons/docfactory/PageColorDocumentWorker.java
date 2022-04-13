@@ -8,9 +8,9 @@ import ch.ivyteam.ivy.addons.docfactory.aspose.DocumentWorker;
 
 public class PageColorDocumentWorker implements DocumentWorker {
 
-	@Override
-	public void prepare(Document document) {
-		document.setPageColor(Color.green);
-	}
-	
+  @Override
+  public void prepare(Document document) {
+    document.setPageColor(Color.green);
+  }
+
 }

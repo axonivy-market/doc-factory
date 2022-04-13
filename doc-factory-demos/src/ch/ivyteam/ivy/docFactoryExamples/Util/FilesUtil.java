@@ -13,13 +13,11 @@ import org.primefaces.model.file.UploadedFile;
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.scripting.objects.File;
 
-public class FilesUtil
-{
+public class FilesUtil {
   /*
    * set file reference into the session
    */
-  public static void setFileRef(File ivyFile)
-  {
+  public static void setFileRef(File ivyFile) {
     Ivy.session().setAttribute("docRef", Ivy.html().fileref(ivyFile));
     Ivy.session().setAttribute("docFilename", ivyFile.getName());
   }
@@ -27,22 +25,19 @@ public class FilesUtil
   /*
    * set file reference into the session
    */
-  public static void setFileRef(java.io.File file) throws IOException
-  {
+  public static void setFileRef(java.io.File file) throws IOException {
     File ivyFile = new File(file.getParentFile().getName() + "/" + file.getName(), false);
     setFileRef(ivyFile);
   }
 
   public static ch.ivyteam.ivy.scripting.objects.File primeToIvyFile(UploadedFile file)
-          throws IOException
-  {
+          throws IOException {
     var ivyFile = new ch.ivyteam.ivy.scripting.objects.File(file.getFileName(), true);
     FileUtils.writeByteArrayToFile(ivyFile.getJavaFile(), file.getContent());
     return ivyFile;
   }
 
-  public static void downloadJsf(java.io.File file) throws IOException
-  {
+  public static void downloadJsf(java.io.File file) throws IOException {
     if (file == null) {
       Ivy.log().info("Template NULL");
       return;
@@ -53,9 +48,9 @@ public class FilesUtil
 
     response.reset();
     response.setHeader("Content-Type",
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
     response.setHeader("Content-Disposition",
-      "attachment;filename=" + file.getName());
+            "attachment;filename=" + file.getName());
 
     OutputStream responseOutputStream = response.getOutputStream();
     responseOutputStream.write(Files.readAllBytes(file.toPath()));

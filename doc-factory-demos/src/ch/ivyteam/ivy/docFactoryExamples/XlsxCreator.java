@@ -14,20 +14,17 @@ import com.aspose.cells.TextAlignmentType;
 import com.aspose.cells.Workbook;
 import com.aspose.cells.Worksheet;
 
-class XlsxCreator
-{
+class XlsxCreator {
   private final DocumentCreator service;
 
-  public XlsxCreator(DocumentCreator service)
-  {
+  public XlsxCreator(DocumentCreator service) {
     this.service = service;
   }
 
-  public File create() throws Exception
-  {
+  public File create() throws Exception {
     // Create excel file
-    ch.ivyteam.ivy.scripting.objects.File tempExcel = 
-      new ch.ivyteam.ivy.scripting.objects.File("ivy_DocFactoryDemo/ExcelDocument.xlsx", false);
+    ch.ivyteam.ivy.scripting.objects.File tempExcel = new ch.ivyteam.ivy.scripting.objects.File(
+            "ivy_DocFactoryDemo/ExcelDocument.xlsx", false);
     tempExcel.createNewFile();
 
     Workbook workbook = new Workbook();
@@ -44,10 +41,8 @@ class XlsxCreator
     cellA1.setValue("DocFactoryDemos");
 
     // Binding image
-    if (service.getIvyFile() != null)
-    {
-      try (InputStream is = new FileInputStream(service.getIvyFile().getJavaFile()))
-      {
+    if (service.getIvyFile() != null) {
+      try (InputStream is = new FileInputStream(service.getIvyFile().getJavaFile())) {
         int pictureIndex = worksheet.getPictures().add(4, 1, is);
         Picture picture = worksheet.getPictures().get(pictureIndex);
         picture.setWidth(200);
@@ -78,8 +73,7 @@ class XlsxCreator
     // binding table data
     List<String> expectations = service.getExpectations();
     int startRow = 29;
-    for (int i = 0; i < expectations.size(); i++)
-    {
+    for (int i = 0; i < expectations.size(); i++) {
       // worksheet.getCells().merge(startRow, 2, 1, 5);
       worksheet.getCells().get("B" + startRow).setStyle(style);
       worksheet.getCells().get("B" + startRow).setValue(i + 1);
