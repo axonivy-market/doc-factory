@@ -7,6 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import ch.ivyteam.api.API;
 import ch.ivyteam.ivy.addons.docfactory.BaseDocFactory;
 import ch.ivyteam.ivy.addons.docfactory.DocFactoryConstants;
+import ch.ivyteam.ivy.application.IApplication;
 import ch.ivyteam.ivy.environment.Ivy;
 
 /**
@@ -15,20 +16,20 @@ import ch.ivyteam.ivy.environment.Ivy;
  * @since version 7.3.0
  */
 public class FileAppenderOptions {
-	
+
 	private String appendedSingleFileName = DocFactoryConstants.DEFAULT_FILE_NAME;
 	private String appendedFileParentDirectoryPath;
 	private DocumentAppendingStart documentAppendingStart = DocumentAppendingStart.NEW_PAGE;
 	private int appendedFileFormat = DocFactoryConstants.PDF_FORMAT;
 	private boolean useHeadersFootersFromLeadingPage = false;
 	private boolean restartPageNumbering = false;
-	
+
 	private FileAppenderOptions() {}
-	
+
 	public static FileAppenderOptions getInstance() {
 		return new FileAppenderOptions();
 	}
-	
+
 	/**
 	 * Used by the DocFactory in its {@link BaseDocFactory#generateDocument(MultipleDocumentsCreationOptions, ch.ivyteam.ivy.addons.docfactory.DocumentTemplate...)} method.
 	 * Set the file name of the file which will be produced by appending a bunch of other documents or files.<br />
@@ -41,7 +42,7 @@ public class FileAppenderOptions {
 		this.appendedSingleFileName = appendedSingleFileName;
 		return this;
 	}
-	
+
 	/**
 	 * Defines the file output format. Must be between {@link DocFactoryConstants#DOC_FORMAT} and {@link DocFactoryConstants#ODT_FORMAT}
 	 * @param format the format to be set. By default if the format is not set the option object uses the PDF format.
@@ -52,12 +53,12 @@ public class FileAppenderOptions {
 		this.setAppendedFileFormat(format);
 		return this;
 	}
-	
+
 	public FileAppenderOptions withAppendedFileParentDirectoryPath(String outputDirectoryPath) {
 		this.setAppendedFileParentDirectoryPath(outputDirectoryPath);
 		return this;
 	}
-	
+
 	/**
 	 * See {@linkplain <a href="https://support.office.com/en-us/article/add-different-page-numbers-or-number-formats-to-different-sections-bb4da2bd-1597-4b0c-9e91-620615ed8c05?ui=en-US&rs=en-US&ad=US">Microsoft Office support article</a>}
 	 * and {@linkplain <a href="https://docs.aspose.com/display/wordsjava/Joining+Documents+with+Headers+and+Footers">Aspose documentation illustrating this point</a>} <br />
@@ -69,7 +70,7 @@ public class FileAppenderOptions {
 		this.restartPageNumbering = restartPageNumbering;
 		return this;
 	}
-	
+
 	/**
 	 * See {@linkplain <a href="https://docs.aspose.com/display/wordsjava/Joining+Documents+with+Headers+and+Footers">Aspose documentation illustrating this point</a>}
 	 * <br />
@@ -81,10 +82,10 @@ public class FileAppenderOptions {
 		this.useHeadersFootersFromLeadingPage = useHeadersFootersFromLeadingPage;
 		return this;
 	}
-	
+
 	/**
-	 * The DocumentAppendingStart enum sets the way the different document will be appended to the first one. 
-	 * By default, each document are added as a new page ({@link DocumentAppendingStart#NEW_PAGE}). 
+	 * The DocumentAppendingStart enum sets the way the different document will be appended to the first one.
+	 * By default, each document are added as a new page ({@link DocumentAppendingStart#NEW_PAGE}).
 	 * The {@link DocumentAppendingStart#CONTINUOUS} allows appending the documents continuously without page break.
 	 * @param documentAppendingStart
 	 * @return
@@ -93,7 +94,7 @@ public class FileAppenderOptions {
 		this.documentAppendingStart = documentAppendingStart;
 		return this;
 	}
-	
+
 	public String getAppendedSingleFileName() {
 		return appendedSingleFileName;
 	}
@@ -110,7 +111,7 @@ public class FileAppenderOptions {
 	public int getAppendedFileOutputFormat() {
 		return appendedFileFormat;
 	}
-	
+
 	/**
 	 * Returns the file format as String representation corresponding to the {@link #getAppendedFileOutputFormat()} int representation.
 	 * @return
@@ -136,13 +137,13 @@ public class FileAppenderOptions {
 	 */
 	public String getAppendedFileParentDirectoryPath() {
 		if(StringUtils.isBlank(this.appendedFileParentDirectoryPath)) {
-			return Ivy.wf().getApplication().getSessionFileArea(Ivy.session()).getAbsolutePath();
+			return IApplication.current().getSessionFileArea(Ivy.session()).getAbsolutePath();
 		}
 		return appendedFileParentDirectoryPath;
 	}
-	
+
 	/**
-	 * Returns the absolute path of the file which will be the result of the appending of all the documents. 
+	 * Returns the absolute path of the file which will be the result of the appending of all the documents.
 	 * Returns null if the appended file name (see {@link #withAppendedFileName(String)} or {@link #setAppendedSingleFileName(String)}) has not be set.
 	 * @return absolute path of the file which will be the result of the appending of all the documents. Null if the appended file name has not be set.
 	 */
@@ -152,7 +153,7 @@ public class FileAppenderOptions {
 		}
 		return new File(getAppendedFileParentDirectoryPath(), getAppendedSingleFileName() + getAppendedFileFormat()).getAbsolutePath();
 	}
-	
+
 	/**
 	 * Similar to the {@link #getAppendedFileAbsolutePath()} but the given file path does not contain the format ending like ".doc" or ".pdf".
 	 * @return absolute path without format of the file which will be the result of the appending of all the documents. Null if the appended file name has not be set.
@@ -169,8 +170,8 @@ public class FileAppenderOptions {
 	}
 
 	/**
-	 * The DocumentAppendingStart enum sets the way the different document will be appended to the first one. 
-	 * By default, each document are added as a new page ({@link DocumentAppendingStart#NEW_PAGE}). 
+	 * The DocumentAppendingStart enum sets the way the different document will be appended to the first one.
+	 * By default, each document are added as a new page ({@link DocumentAppendingStart#NEW_PAGE}).
 	 * The {@link DocumentAppendingStart#CONTINUOUS} allows appending the documents continuously without page break.
 	 * @return the DocumentAppendingStart (default is {@link DocumentAppendingStart#NEW_PAGE})
 	 */
@@ -179,8 +180,8 @@ public class FileAppenderOptions {
 	}
 
 	/**
-	 * The DocumentAppendingStart enum sets the way the different document will be appended to the first one. 
-	 * By default, each document are added as a new page ({@link DocumentAppendingStart#NEW_PAGE}). 
+	 * The DocumentAppendingStart enum sets the way the different document will be appended to the first one.
+	 * By default, each document are added as a new page ({@link DocumentAppendingStart#NEW_PAGE}).
 	 * The {@link DocumentAppendingStart#CONTINUOUS} allows appending the documents continuously without page break.
 	 * @param documentAppendingStart
 	 */
@@ -221,7 +222,7 @@ public class FileAppenderOptions {
 	}
 
 	/**
-	 * If set to true 
+	 * If set to true
 	 * See {@linkplain <a href="https://support.office.com/en-us/article/add-different-page-numbers-or-number-formats-to-different-sections-bb4da2bd-1597-4b0c-9e91-620615ed8c05?ui=en-US&rs=en-US&ad=US">Microsoft Office support article</a>}
 	 * and {@linkplain <a href="https://docs.aspose.com/display/wordsjava/Joining+Documents+with+Headers+and+Footers">Aspose documentation illustrating this point</a>}
 	 * <br />
