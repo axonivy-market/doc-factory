@@ -18,7 +18,7 @@ import ch.ivyteam.ivy.addons.docfactory.options.DocumentCreationOptions;
 import ch.ivyteam.ivy.addons.docfactory.options.MergeCleanupOptions;
 import ch.ivyteam.ivy.addons.docfactory.options.SimpleMergeCleanupOptions;
 import ch.ivyteam.ivy.addons.docfactory.response.ResponseHandler;
-import ch.ivyteam.ivy.environment.Ivy;
+import ch.ivyteam.ivy.application.IApplication;
 import ch.ivyteam.ivy.scripting.objects.CompositeObject;
 import ch.ivyteam.ivy.scripting.objects.List;
 import ch.ivyteam.ivy.scripting.objects.Recordset;
@@ -80,7 +80,7 @@ public class DocumentTemplate implements Serializable {
 	 * Used in case of merge mail with regions for reporting.
 	 */
 	private Hashtable<String, Recordset> tablesNamesAndFieldsHashtable = null;
-	
+
 	/**
 	 * Used in case of merge mail with nested tables
 	 */
@@ -94,7 +94,7 @@ public class DocumentTemplate implements Serializable {
 	 * Used in case of merge mail with nested tables
 	 */
 	private List<CompositeObject> nestedDataSourceForNestedMailMerge = null;
-	
+
 	/**
 	 * Used as possible Data for MergeMail with Nested Regions
 	 */
@@ -104,11 +104,11 @@ public class DocumentTemplate implements Serializable {
 	 * Locale used for Date and Number formatting
 	 */
 	private Locale locale = DocFactoryConstants.DEFAULT_LOCALE;
-	
+
 	private Collection<Object> dataTables = new ArrayList<>();
-	
+
 	private DocumentCreationOptions documentCreationOptions = DocumentCreationOptions.getInstance();
-	
+
 	/**
 	 * Generates a DocumentTemplate with the given Template file
 	 * @param template a File as Template. Cannot be null.
@@ -124,7 +124,7 @@ public class DocumentTemplate implements Serializable {
 			);
 		return documentTemplate;
 	}
-	
+
 	/**
 	 * empty constructor
 	 */
@@ -142,7 +142,7 @@ public class DocumentTemplate implements Serializable {
 	 * The key is the name of the mergeField that can be found in the template<br>
 	 * The value is the String that will replace the mergeField in the template during the template merging.
 	 */
-	public DocumentTemplate(String _templatePath, String _outputPath, String _outputName, 
+	public DocumentTemplate(String _templatePath, String _outputPath, String _outputName,
 			String _outputFormat, List<TemplateMergeField> _mergeFields) {
 		super();
 		initializeConstructorVariables(_templatePath, _outputPath, _outputName,
@@ -166,8 +166,8 @@ public class DocumentTemplate implements Serializable {
 	 * @param _tablesNamesAndFieldsmap: an HashMap containing the tables name contained in the template as keys and the compositeObjects whose values should be inserted in the corresponding table.
 	 * if not null or not empty and if the template contains Merge Regions, the Merge Regions are going to be filled as table with the values.
 	 */
-	public DocumentTemplate(String _templatePath, String _outputPath, String _outputName, 
-			String _outputFormat, List<TemplateMergeField> _mergeFields, HashMap<String , 
+	public DocumentTemplate(String _templatePath, String _outputPath, String _outputName,
+			String _outputFormat, List<TemplateMergeField> _mergeFields, HashMap<String ,
 			java.util.List<CompositeObject>> _tablesNamesAndFieldsmap) {
 		super();
 		initializeConstructorVariables(_templatePath, _outputPath, _outputName,
@@ -193,8 +193,8 @@ public class DocumentTemplate implements Serializable {
 	 * @param _tablesNamesAndFieldsHashtable: an Hashtable containing the tables name contained in the template as keys and the values should be inserted in the corresponding table as a ch.ivyteam.ivy.scripting.objects.Recordset.<br>
 	 * if not null or not empty and if the template contains Merge Regions, the Merge Regions are going to be filled as table with the values.
 	 */
-	public DocumentTemplate(String _templatePath, String _outputPath, String _outputName, 
-			String _outputFormat, List<TemplateMergeField> _mergeFields, 
+	public DocumentTemplate(String _templatePath, String _outputPath, String _outputName,
+			String _outputFormat, List<TemplateMergeField> _mergeFields,
 			Hashtable<String , Recordset> _tablesNamesAndFieldsHashtable) {
 		super();
 		initializeConstructorVariables(_templatePath, _outputPath, _outputName,
@@ -287,7 +287,7 @@ public class DocumentTemplate implements Serializable {
 
 		initializeFileOperationMessage();
 	}
-	
+
 	/**
 	 * Constructor, instantiates the DocumentTemplate's variable
 	 * @param _templatePath : the path where to find the template
@@ -300,11 +300,11 @@ public class DocumentTemplate implements Serializable {
 	 * The value is the String that will replace the mergeField in the template during the template merging.
 	 * @param _parentDataSourceForNestedMailMerge: List<CompositeObject> parent data
 	 * @param _childrenDataSourcesForNestedMailMerge: List<List<CompositeObject>> child data
-	 * The two last parameters are used together for mail merge with Nested regions. 
+	 * The two last parameters are used together for mail merge with Nested regions.
 	 * The parentDataSource List contains the DataClasses corresponding to the parent table and the
 	 * childrenDataSource contains the list of DataClasses that are nested in the parent table.
 	 * the parentDataSourceForNestedMailMerge list and childrenDataSourcesForNestedMailMerge list must have the same number of elements.
-	 * The first parent dataclass object correspond to the first child list of dataclasses, the second one to the second one and so on... . 
+	 * The first parent dataclass object correspond to the first child list of dataclasses, the second one to the second one and so on... .
 	 * Here only one level of nested table is supported.
 	 */
 	public DocumentTemplate(String _templatePath, String _outputPath, String _outputName, String _outputFormat, CompositeObject _data, List<CompositeObject> _parentDataSourceForNestedMailMerge,List<List<CompositeObject>> _childrenDataSourcesForNestedMailMerge) {
@@ -325,7 +325,7 @@ public class DocumentTemplate implements Serializable {
 
 		initializeFileOperationMessage();
 	}
-	
+
 	/**
 	 * Constructor, instantiates the DocumentTemplate's variable
 	 * @param _templatePath : the path where to find the template
@@ -336,7 +336,7 @@ public class DocumentTemplate implements Serializable {
 	 * The merge fields of the template have to be the same as the names of the dataClass fields.
 	 * The key is the name of the mergeField that can be found in the template<br>
 	 * The value is the String that will replace the mergeField in the template during the template merging.
-	 * @param _nestedDataSourceForNestedMailMerge: List of CompositeObject - Used for mail merge with Nested regions. 
+	 * @param _nestedDataSourceForNestedMailMerge: List of CompositeObject - Used for mail merge with Nested regions.
 	 * In this case each dataclass may contain lists of other nested dataclasses and so on... .
 	 * There is no limit in nesting regions.
 	 */
@@ -355,7 +355,7 @@ public class DocumentTemplate implements Serializable {
 
 		initializeFileOperationMessage();
 	}
-	
+
 	/**
 	 * Constructor, instantiates the DocumentTemplate's variable
 	 * @param _templatePath : the path where to find the template
@@ -376,20 +376,20 @@ public class DocumentTemplate implements Serializable {
 			if( _treeData.getValue()!=null) {
 				CompositeObject obj;
 				try {
-					obj = (CompositeObject) _treeData.getValue(); 
+					obj = (CompositeObject) _treeData.getValue();
 					this.mergeFields = DataClassToMergefields.transformDataClassInMergeField(obj);
 					this.tablesNamesAndFieldsHashtable = DataClassToMergefields.transformDataClassInTablesNamesAndFields(obj);
 				}catch(Exception ex) {
-					//ignore the Exception the _treeData does not have a real DataClass object, 
+					//ignore the Exception the _treeData does not have a real DataClass object,
 					//so we do not have any merge fields.
 				}
 			}
 			this.treeData=_treeData;
 		}
-		
+
 		initializeFileOperationMessage();
 	}
-	
+
 	private void initializeConstructorVariables(String _templatePath,
 			String _outputPath, String _outputName, String _outputFormat) {
 		this.documentFactory = BaseDocFactory.getInstance();
@@ -400,7 +400,7 @@ public class DocumentTemplate implements Serializable {
 		this.outputFormat = (_outputFormat==null)?"":_outputFormat;
 		this.mergeFields = List.create(TemplateMergeField.class);
 	}
-	
+
 	/**
 	 * Set the responseHandler that will be used as callBack Response in the document Factory
 	 * @see {@link BaseDocFactory#withResponseHandler(ResponseHandler)}
@@ -414,9 +414,9 @@ public class DocumentTemplate implements Serializable {
 		this.documentFactory.withResponseHandler(responseHandler);
 		return this;
 	}
-	
+
 	/**
-	 * Some DocFactory may allow injecting a DocumentWorker class which can apply some custom logic 
+	 * Some DocFactory may allow injecting a DocumentWorker class which can apply some custom logic
 	 * on the document after it has been produced by the factory and before it has been returned to the user.
 	 * <b>Note:</b> at the time of the writing of this method, the default DocFactory is based on Aspose.
 	 * A DocumentWorker Interface has been made for the AsposeDocFactory. See: {@link ch.ivyteam.ivy.addons.docfactory.aspose.DocumentWorker} <br>
@@ -428,7 +428,7 @@ public class DocumentTemplate implements Serializable {
 		this.documentFactory.withDocumentWorker(documentWorker);
 		return this;
 	}
-	
+
 	/**
 	 * Allows specifying a Locale for formatting the Numbers and Dates objects
 	 * @param locale
@@ -443,19 +443,19 @@ public class DocumentTemplate implements Serializable {
 		}
 		return this;
 	}
-	
+
 	/**
 	 * Allows using a Serializable bean which attributes accessible with public getters will be used as MergeFields.
 	 * The Nested Serializable in this Serializable are supported.<br>
 	 * Example: a Person Serializable which holds a name, an Address with a zipCode. The following MergeFields will be retrieved:<br>
 	 * person.name and person.address.zipCode <br>
 	 * You can call this method several times with several Data. All the MergeFields will be added. <br>
-	 * <b>Be aware that no reporting with tables is supported</b> (merge mail with regions or nested regions). 
+	 * <b>Be aware that no reporting with tables is supported</b> (merge mail with regions or nested regions).
 	 * If the given bean has some nested Collections, these collections are not parsed for merging the tables.
 	 * Use {@link DocumentTemplate#putDataAsSourceForMailMerge(Serializable)} instead if you want that the MailMergeWithRegions support
 	 * @param data the data, cannot be null.
 	 * @return the DocumentTemplate which MergFields List is completed with the MergeFields retrieved from the given Data
-	 * 
+	 *
 	 */
 	public DocumentTemplate putDataAsSourceForSimpleMailMerge(Serializable data) {
 		if(data == null) {
@@ -470,12 +470,12 @@ public class DocumentTemplate implements Serializable {
 		}
 		return this;
 	}
-	
+
 	/**
 	 * Allows using a Serializable bean which attributes accessible with public getters will be used as MergeFields.
 	 * The Nested Serializable in this Serializable are supported.<br>
 	 * Collections of Serializables in this Serializable are going to be used as sources for mail merge regions.<br>
-	 * <b>Important</b> Due to the way the DocFactory introspects the data for retrieving and building the mail merge regions sources, 
+	 * <b>Important</b> Due to the way the DocFactory introspects the data for retrieving and building the mail merge regions sources,
 	 * having some collection of objects with cyclic relationships will end to an OutOfMemory Exception.<br>
 	 * Example: Person with a Collection of Addresses and each Address holds a reference to the Person object. This is not supported.<br><br>
 	 * You can call this method several times with several Data. All the MergeFields will be added.
@@ -495,7 +495,7 @@ public class DocumentTemplate implements Serializable {
 		}
 		return this;
 	}
-	
+
 	/**
 	 * Put an object that will be used for merging a table in the template. The DataTable Object must hold enough information for being placed in the template.<br>
 	 * Example by using Aspose: the DataTable name must be the same as the Region-MergeField.
@@ -511,7 +511,7 @@ public class DocumentTemplate implements Serializable {
 		this.dataTables.add(dataTable);
 		return this;
 	}
-	
+
 	public DocumentTemplate withDocFactory(BaseDocFactory docFactory) {
 		if(docFactory == null) {
 			throw new IllegalArgumentException("The docFactory parameter cannot be null");
@@ -519,19 +519,19 @@ public class DocumentTemplate implements Serializable {
 		this.documentFactory = docFactory;
 		return this;
 	}
-	
+
 	public boolean hasDataTable() {
 		return !this.dataTables.isEmpty();
 	}
-	
+
 	public Collection<?> getDataTable() {
 		return this.dataTables;
 	}
-	
+
 	/**
 	 * Add a specific mergeField.<br>
 	 * Note that the MergeField will be added as simple value and won't be introspected for merge mail with regions.
-	 * 
+	 *
 	 * @param mergeFieldName the name of the merge field as it should appears in the template, cannot be blank.
 	 * @param value The value: cannot be blank
 	 * @return the documentTemplate which contains a new "simple mail merge" TemplateMergeField.
@@ -543,7 +543,7 @@ public class DocumentTemplate implements Serializable {
 		this.mergeFields.add(TemplateMergeField.withName(mergeFieldName).asSimpleValue(value).useLocaleAndResetNumberFormatAndDateFormat(this.locale));
 		return this;
 	}
-	
+
 	/**
 	 * Produces the document
 	 * @param destinationDocument
@@ -555,7 +555,7 @@ public class DocumentTemplate implements Serializable {
 		}
 		this.outputPath = destinationDocument.getParent();
 		if(this.outputPath == null) {
-			this.outputPath = Ivy.wf().getApplication().getSessionFileArea().getPath();
+			this.outputPath = IApplication.current().getSessionFileArea().getPath();
 		}
 		this.outputFormat = FilenameUtils.getExtension(destinationDocument.getName());
 		try {
@@ -566,16 +566,16 @@ public class DocumentTemplate implements Serializable {
 			return this.fileOperationMessage;
 		}
 		return this.documentFactory.generateDocument(this);
-		
+
 	}
-	
-	
+
+
 
 	/**
 	 * Try to generate the document with his objects variables.<br>
 	 * Mail merge with regions and mail merge with nested regions are supported.
 	 * @return the fileOperationMessage that results of the Document Factory mail Merge and File Creation
-	 * 
+	 *
 	 */
 	public FileOperationMessage generateDocument(){
 		if(this.documentFactory==null) {
@@ -616,7 +616,7 @@ public class DocumentTemplate implements Serializable {
 
 	/**
 	 * Set the Dataclass that has to be taken to fill the template's merge fields.
-	 * If the data is not null, the merge field List is going to be set with the list of the data parameters. 
+	 * If the data is not null, the merge field List is going to be set with the list of the data parameters.
 	 * @param _data the data to set
 	 */
 	public void setData(CompositeObject _data) {
@@ -636,7 +636,7 @@ public class DocumentTemplate implements Serializable {
 		if(this.data instanceof CompositeObject) {
 			return (CompositeObject) data;
 		}
-		
+
 		return null;
 	}
 
@@ -702,7 +702,7 @@ public class DocumentTemplate implements Serializable {
 	public FileOperationMessage getFileOperationMessage() {
 		return fileOperationMessage;
 	}
-	
+
 	/**
 	 * set the fileOperationMessage Object of the DocumentTemplate.<br>
 	 * There should be no reason to use this method, since the fileOperationMessage is the result of the generateDocument() method.
@@ -723,7 +723,7 @@ public class DocumentTemplate implements Serializable {
 	 */
 	public void setTablesNamesAndFieldsmap(HashMap<String, java.util.List<CompositeObject>> _tablesNamesAndFieldsmap) {
 		this.tablesNamesAndFieldsmap = _tablesNamesAndFieldsmap;
-		//we clear the hashTable if not null because we only use one of the two possible data Input 
+		//we clear the hashTable if not null because we only use one of the two possible data Input
 		//for Mail merge with regions.
 		if(this.tablesNamesAndFieldsHashtable != null) {
 			this.tablesNamesAndFieldsHashtable.clear();
@@ -745,7 +745,7 @@ public class DocumentTemplate implements Serializable {
 	public void setTablesNamesAndFieldsHashtable(
 			Hashtable<String, Recordset> tablesNamesAndFieldsHashtable) {
 		this.tablesNamesAndFieldsHashtable = tablesNamesAndFieldsHashtable;
-		//we clear the hashMap if not null because we only use one of the two possible data Input 
+		//we clear the hashMap if not null because we only use one of the two possible data Input
 		//for Mail merge with regions.
 		if(this.tablesNamesAndFieldsmap !=null) {
 			this.tablesNamesAndFieldsmap.clear();
@@ -818,7 +818,7 @@ public class DocumentTemplate implements Serializable {
 	public void setTreeData(Tree treeData) {
 		this.treeData = treeData;
 	}
-	
+
 	public DocumentTemplate withSimpleMergeCleanupOptions(
 			SimpleMergeCleanupOptions simpleMergeCleanupOptions) {
 		API.checkNotNull(simpleMergeCleanupOptions, "simpleMergeCleanupOptions");
@@ -832,7 +832,7 @@ public class DocumentTemplate implements Serializable {
 		this.getDocumentFactory().withRegionsMergeCleanupOption(mergeCleanupOptions);
 		return this;
 	}
-	
+
 	private void initializeFileOperationMessage() {
 		this.fileOperationMessage= FileOperationMessage.generateInformationTypeFileOperationMessage("");
 	}
