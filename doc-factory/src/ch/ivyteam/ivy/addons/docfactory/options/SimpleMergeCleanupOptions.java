@@ -1,5 +1,7 @@
 package ch.ivyteam.ivy.addons.docfactory.options;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 public class SimpleMergeCleanupOptions {
 
 	private boolean removesBlankLines = true;
@@ -45,6 +47,12 @@ public class SimpleMergeCleanupOptions {
 		return this.removesBlankLines == other.removesBlankLines && this.removesEmptyParagraphs == other.removesEmptyParagraphs;
 	}
 
-
+        @Override
+        public int hashCode() {
+          return new HashCodeBuilder()
+                  .append(removesBlankLines)
+                  .append(removesEmptyParagraphs)
+                  .toHashCode();
+        }
 
 }
