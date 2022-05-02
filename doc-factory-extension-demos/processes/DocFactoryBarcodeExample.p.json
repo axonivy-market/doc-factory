@@ -1,0 +1,132 @@
+{
+  "format" : "9.4.8",
+  "id" : "16CD7829EF6B489B",
+  "data" : "doc.factory.demos.Data",
+  "elements" : [ {
+      "id" : "f42",
+      "type" : "ProcessAnnotation",
+      "name" : [
+        "Uses additional aspose-barcode.jar, that is not included in the Axon Ivy DocFactory by default but can be added to the project classpath.",
+        "The document templates (.docx) used here are loaded from the /src/resources Folder.",
+        "The generated documents are created in the ivy files directory and displayed in the Webbrowser."
+      ],
+      "visual" : {
+        "at" : { "x" : 408, "y" : 96 },
+        "size" : { "width" : 752, "height" : 60 },
+        "labelOffset" : { "x" : -367, "y" : -24 }
+      }
+    }, {
+      "id" : "f15",
+      "type" : "RequestStart",
+      "name" : "Barcode generation",
+      "config" : {
+        "callSignature" : "start",
+        "outLink" : "start.ivp",
+        "startName" : "1. Generate Barcodes"
+      },
+      "visual" : {
+        "at" : { "x" : 64, "y" : 288 },
+        "labelOffset" : { "x" : -33, "y" : 30 }
+      },
+      "connect" : { "id" : "f19", "to" : "f17" }
+    }, {
+      "id" : "f16",
+      "type" : "Script",
+      "name" : "Print Barcodes",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import ch.ivyteam.ivy.docFactoryExamples.IvyAsposeBarcoder;",
+            "import com.aspose.barcode.EncodeTypes;",
+            "import com.aspose.barcode.generation.BarcodeGenerator;",
+            " ",
+            "IvyAsposeBarcoder.init();",
+            "",
+            "File tempFile = new File(\"ivy_DocFactoryDemo\");",
+            "tempFile.mkdir();",
+            "",
+            "BarcodeGenerator generator = new BarcodeGenerator(EncodeTypes.CODE_128);",
+            "generator.setCodeText(in.str);",
+            "generator.save(new File(\"ivy_DocFactoryDemo/code128.png\").getJavaFile().getPath());",
+            "         ",
+            "generator.setBarcodeType(EncodeTypes.QR);",
+            "generator.getParameters().setResolution(200);",
+            "generator.save(new File(\"ivy_DocFactoryDemo/codeQR.png\").getJavaFile().getPath());      ",
+            "                   ",
+            "generator.setBarcodeType(EncodeTypes.EAN_14);",
+            "generator.save(new File(\"ivy_DocFactoryDemo/codeEAN_14.png\").getJavaFile().getPath());        ",
+            "         ",
+            "generator.setBarcodeType(EncodeTypes.DOT_CODE);",
+            "generator.getParameters().setResolution(50);",
+            "generator.save(new File(\"ivy_DocFactoryDemo/codeDOT.png\").getJavaFile().getPath());      ",
+            "     ",
+            "generator.setBarcodeType(EncodeTypes.ISBN);",
+            "generator.getParameters().setResolution(150);",
+            "generator.save(new File(\"ivy_DocFactoryDemo/codeISBN.png\").getJavaFile().getPath());    ",
+            "",
+            "generator.setBarcodeType(EncodeTypes.DATA_MATRIX);",
+            "generator.getParameters().setResolution(300);",
+            "generator.save(new File(\"ivy_DocFactoryDemo/codeMatrix.png\").getJavaFile().getPath());           "
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 352, "y" : 288 },
+        "labelOffset" : { "x" : -40, "y" : -8 }
+      },
+      "connect" : { "id" : "f21", "to" : "f18" }
+    }, {
+      "id" : "f17",
+      "type" : "DialogCall",
+      "name" : "Enter Parameter",
+      "config" : {
+        "dialogId" : "doc.factory.demos.BarCode",
+        "startMethod" : "start(String)",
+        "output" : {
+          "map" : {
+            "out" : "in",
+            "out.str" : "result.str"
+          }
+        },
+        "call" : {
+          "params" : [
+            { "name" : "str", "type" : "String" }
+          ],
+          "map" : {
+            "param.str" : "in.str"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 192, "y" : 288 },
+        "labelOffset" : { "x" : -45, "y" : -8 }
+      },
+      "connect" : { "id" : "f20", "to" : "f16" }
+    }, {
+      "id" : "f18",
+      "type" : "TaskEndPage",
+      "config" : {
+        "template" : "view/barcode.xhtml"
+      },
+      "visual" : {
+        "at" : { "x" : 480, "y" : 288 }
+      }
+    }, {
+      "id" : "f22",
+      "type" : "ProcessAnnotation",
+      "name" : "Note: That you have to initialize the modul first.",
+      "visual" : {
+        "at" : { "x" : 712, "y" : 288 },
+        "size" : { "width" : 256, "height" : 30 },
+        "labelOffset" : { "x" : -125, "y" : -8 }
+      }
+    } ],
+  "layout" : {
+    "lanes" : [ {
+        "size" : 192
+      }, {
+        "name" : "Barcode Generation",
+        "size" : 192
+      } ]
+  }
+}
