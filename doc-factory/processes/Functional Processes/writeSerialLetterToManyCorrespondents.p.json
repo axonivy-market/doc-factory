@@ -1,0 +1,224 @@
+{
+  "format" : "9.4.8",
+  "id" : "1249FCC8592E4E39",
+  "data" : "ch.ivyteam.ivy.addons.docfactory.WriteSerialLetterToMany",
+  "kind" : "CALLABLE_SUB",
+  "description" : [
+    "parses a document that contains mergefields ",
+    "and replaces those mergefields with real data",
+    "into multiple letters."
+  ],
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "CallSubStart",
+      "name" : "writeSerialLettersToManyCorrespondents",
+      "config" : {
+        "callSignature" : "writeSerialLettersToManyCorrespondents",
+        "input" : {
+          "params" : [
+            { "name" : "optionalSingleDocumentOutputPath", "type" : "String", "desc" : "Parent directory path of the produced file for the case \"allInOneDocument\" is true. Default is \"%IVY-ROOT-PATH%/ivy_RIA_files/\"." },
+            { "name" : "documentTemplatesList", "type" : "List<ch.ivyteam.ivy.addons.docfactory.DocumentTemplate>", "desc" : "The list of DocumentTemplate. Each template will produce a file." },
+            { "name" : "allInOneDocument", "type" : "Boolean", "desc" : "If true, all the documents are appened into one file." },
+            { "name" : "allInSeparatesDocuments", "type" : "Boolean", "desc" : "If true, a file is produced for each DocumentTemplate." },
+            { "name" : "optionalSingleDocumentFormat", "type" : "String", "desc" : "Format of the produced single file (\"pdf\", \"doc\", \"docx\", \"txt\", \"html\") for the case \"allInOneDocument\" is true. Default is \"doc\"." },
+            { "name" : "optionalSingleDocumentName", "type" : "String", "desc" : "Name of the produced file for the case \"allInOneDocument\" is true. Default is \"letter\" + nanotime." }
+          ],
+          "map" : {
+            "out.manyDocuments" : "param.allInSeparatesDocuments",
+            "out.oneDocument" : "param.allInOneDocument",
+            "out.oneDocumentFormat" : "param.optionalSingleDocumentFormat",
+            "out.oneDocumentName" : "param.optionalSingleDocumentName",
+            "out.oneDocumentPath" : "param.optionalSingleDocumentOutputPath",
+            "out.templateDocumentsList" : "param.documentTemplatesList"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "FileOperationMessage", "type" : "ch.ivyteam.ivy.addons.docfactory.FileOperationMessage", "desc" : "Result containing a Type indicating if the operation was successfull, a message in the Session User language, a list of java.io.File that were created during the process." },
+            { "name" : "listOfFileOperationMessages", "type" : "List<ch.ivyteam.ivy.addons.docfactory.FileOperationMessage>", "desc" : "list of result, one for each produced file. Result containing a Type indicating if the operation was successfull, a message in the Session User language, a list of java.io.File that were created during the process." }
+          ],
+          "map" : {
+            "result.FileOperationMessage" : "in.fileOperationMessage",
+            "result.listOfFileOperationMessages" : "in.listofFileOperationMessages"
+          }
+        },
+        "tags" : "CONNECTOR"
+      },
+      "visual" : {
+        "at" : { "x" : 336, "y" : 72 },
+        "size" : { "width" : 26, "height" : 26 },
+        "labelOffset" : { "x" : -104, "y" : -39 },
+        "description" : [
+          "Produces documents corresponding to the given DocumentTemplate list.",
+          "The documents can be appended together in one file or be stored in separated files."
+        ]
+      },
+      "connect" : { "id" : "f10", "to" : "f9" }
+    }, {
+      "id" : "f1",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 336, "y" : 408 },
+        "size" : { "width" : 26, "height" : 26 }
+      }
+    }, {
+      "id" : "f11",
+      "type" : "ProcessAnnotation",
+      "name" : [
+        "If the boolean allInOne parameter is True",
+        "all the letters are going to be append ",
+        "in one single document."
+      ],
+      "visual" : {
+        "at" : { "x" : 152, "y" : 200 },
+        "size" : { "width" : 234, "height" : 58 },
+        "labelOffset" : { "x" : -112, "y" : -24 },
+        "color" : "NodeStyle16"
+      }
+    }, {
+      "id" : "f12",
+      "type" : "ProcessAnnotation",
+      "name" : [
+        "If the boolean allInSeparatesDocuments ",
+        "parameter is True",
+        "each documentTemplate Object ",
+        "is going to generate one single letter."
+      ],
+      "visual" : {
+        "at" : { "x" : 152, "y" : 304 },
+        "size" : { "width" : 234, "height" : 74 },
+        "labelOffset" : { "x" : -112, "y" : -32 },
+        "color" : "NodeStyle8"
+      }
+    }, {
+      "id" : "f14",
+      "type" : "Script",
+      "name" : "write the serial letter",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import ch.ivyteam.ivy.addons.docfactory.BaseDocFactory;",
+            "import ch.ivyteam.ivy.addons.docfactory.DocumentTemplate;",
+            "if(in.oneDocument){",
+            "  ",
+            "  if(in.#documentFactory!=null){",
+            "    in.fileOperationMessage = in.documentFactory.generateMultipleDocumentsInOne( in.oneDocumentPath,in.oneDocumentName,in.oneDocumentFormat,in.templateDocumentsList);",
+            "  }",
+            "}"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 336, "y" : 200 },
+        "size" : { "width" : 36, "height" : 24 },
+        "labelOffset" : { "x" : 22, "y" : -9 }
+      },
+      "connect" : { "id" : "f3", "to" : "f16" }
+    }, {
+      "id" : "f16",
+      "type" : "Script",
+      "name" : "write the letters",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import ch.ivyteam.ivy.addons.docfactory.TemplateMergeField;",
+            "import ch.ivyteam.ivy.addons.docfactory.DocumentTemplate;",
+            "import ch.ivyteam.ivy.addons.docfactory.BaseDocFactory;",
+            "",
+            "",
+            "if(in.manyDocuments){",
+            "  in.listofFileOperationMessages.clear();",
+            "  ",
+            "  if(in.#documentFactory!=null){",
+            "    in.listofFileOperationMessages.addAll(",
+            "      in.documentFactory.generateDocumentsWithDifferentDestination(in.templateDocumentsList)",
+            "    );",
+            "  }",
+            "  ",
+            "  ",
+            "}"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 336, "y" : 304 },
+        "size" : { "width" : 36, "height" : 24 },
+        "labelOffset" : { "x" : 22, "y" : -8 }
+      },
+      "connect" : { "id" : "f4", "to" : "f1" }
+    }, {
+      "id" : "f9",
+      "type" : "Script",
+      "name" : "make the documentFactory Object",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import ch.ivyteam.ivy.addons.docfactory.BaseDocFactory;",
+            "in.documentFactory= BaseDocFactory.getInstance();"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 336, "y" : 128 },
+        "size" : { "width" : 36, "height" : 24 },
+        "labelOffset" : { "x" : 20, "y" : -2 }
+      },
+      "connect" : { "id" : "f2", "to" : "f14" }
+    }, {
+      "id" : "f5",
+      "type" : "ProcessAnnotation",
+      "name" : [
+        "This callable produces documents with a List of DocumentTemplate objects and ",
+        "with the help of a document factory Object. Each DocumentTemplate will be ",
+        "turned into a document."
+      ],
+      "visual" : {
+        "at" : { "x" : 832, "y" : 64 },
+        "size" : { "width" : 512, "height" : 60 },
+        "description" : [
+          "The Document Factory Object is a Java Object that can parse a document model",
+          "that contains mergefields and replace those mergefields by some String Data.",
+          "",
+          "1. The Merge Mail With Regions is supported.",
+          "A Mail Merge Region is a Table in the template whose rows are going to be automatically filled with some data.",
+          "If your template contains such regions, you have to provide to the DocumentTemplates Objects the datas that should be inserted.",
+          "The DocumentTemplates objects have two fields that can be used for that purpose:",
+          "    - ```HashMap<String, java.util.List<CompositeObject>> tablesNamesAndFieldsmap```  : the datas are List of CompositeObjects (dataClass), each one represents a Row. ",
+          "      The name of each DataClass Attribut corresponds to a MergeFields in the Table.",
+          "    - ```Hashtable<String, Recordset> tablesNamesAndFieldsHashtable```: the datas are Recordset, each Record represents a Row. ",
+          "      The name of each Record Field corresponds to a MergeFields in the Table.",
+          "The keys (String) of the Maps are the tables' names contained in the template. ",
+          "The Names of the tables in the template are given by a Start Mergefield(TableStart:nameOfTheTable).",
+          "",
+          "2. The Merge Mail With Nested Regions is supported.",
+          "Nested mail merge regions are at least two regions in which one is defined entirely inside the other, so they are \"nested\" in one another.",
+          "The DocumentTemplates objects have fields/attributes that can be used for that purpose:",
+          "    - ```List<CompositeObject> parentDataSourceForNestedMailMerge``` and ```List<List<CompositeObject>> childrenDataSourcesForNestedMailMerge```.",
+          "      With these attributes set, only one nested level is supported: the parent list contains the information for the parent table/region,",
+          "      each child ```List<CompositeObject>``` contains the information for one parent data object and is nested in this parent.",
+          "    - ```List<CompositeObject> nestedDataSourceForNestedMailMerge```: In this case each dataclass may contain lists of other nested dataclasses and so on... .",
+          "      There is no limit in nesting regions.",
+          "    - ```Tree treeData```: The first root node of the Tree contains a dataclass as value object. The attributes of this dataclass are used ",
+          "      to fill merge fields outside of the nested regions area.",
+          "      All the children nodes at each level of the Tree contain dataclasses as value that are used to fill the corresponding nested region."
+        ],
+        "color" : "NodeStyle12"
+      }
+    } ],
+  "layout" : {
+    "lanes" : [ {
+        "size" : 150
+      }, {
+        "size" : 102
+      }, {
+        "size" : 112
+      }, {
+        "size" : 101
+      } ],
+    "colors" : {
+      "NodeStyle12" : "rgb(245, 245, 220)",
+      "NodeStyle16" : "rgb(240, 215, 224)",
+      "NodeStyle8" : "rgb(141, 202, 245)"
+    }
+  }
+}

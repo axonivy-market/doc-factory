@@ -1,0 +1,80 @@
+{
+  "format" : "9.4.8",
+  "id" : "16CD86F645B6B18E",
+  "data" : "doc.factory.demos.CreateSimpleDocument.CreateSimpleDocumentData",
+  "kind" : "HTML_DIALOG",
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "HtmlDialogStart",
+      "name" : "start()",
+      "config" : {
+        "callSignature" : "start",
+        "result" : {
+          "params" : [
+            { "name" : "documentId", "type" : "Long" }
+          ],
+          "map" : {
+            "result.documentId" : "in.service.documentId"
+          }
+        },
+        "guid" : "1692E8DD9FCF9CE4"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 64 },
+        "labelOffset" : { "x" : -16, "y" : 15 }
+      },
+      "connect" : { "id" : "f9", "to" : "f8" }
+    }, {
+      "id" : "f1",
+      "type" : "HtmlDialogEnd",
+      "visual" : {
+        "at" : { "x" : 352, "y" : 64 }
+      }
+    }, {
+      "id" : "f6",
+      "type" : "Script",
+      "name" : "Create document",
+      "config" : {
+        "output" : {
+          "code" : "in.service.createHelloWord();"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 224, "y" : 160 },
+        "labelOffset" : { "x" : -47, "y" : -8 }
+      },
+      "connect" : { "id" : "f3", "to" : "f10" }
+    }, {
+      "id" : "f8",
+      "type" : "Script",
+      "name" : "init",
+      "config" : {
+        "output" : {
+          "code" : "in.service.init();"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 224, "y" : 64 },
+        "labelOffset" : { "x" : -8, "y" : -8 }
+      },
+      "connect" : { "id" : "f2", "to" : "f1" }
+    }, {
+      "id" : "f10",
+      "type" : "HtmlDialogExit",
+      "visual" : {
+        "at" : { "x" : 352, "y" : 160 }
+      }
+    }, {
+      "id" : "f13",
+      "type" : "HtmlDialogEventStart",
+      "name" : "createDocument",
+      "config" : {
+        "guid" : "16D1A363B5FF2DAC"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 160 },
+        "labelOffset" : { "x" : -47, "y" : 15 }
+      },
+      "connect" : { "id" : "f14", "to" : "f6" }
+    } ]
+}

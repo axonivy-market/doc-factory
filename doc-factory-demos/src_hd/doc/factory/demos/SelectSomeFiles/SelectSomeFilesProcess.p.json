@@ -1,0 +1,105 @@
+{
+  "format" : "9.4.8",
+  "id" : "16CE2142F29FF2C4",
+  "data" : "doc.factory.demos.SelectSomeFiles.SelectSomeFilesData",
+  "kind" : "HTML_DIALOG",
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "HtmlDialogStart",
+      "name" : "start()",
+      "config" : {
+        "callSignature" : "start",
+        "result" : {
+          "params" : [
+            { "name" : "files", "type" : "List<java.io.File>" }
+          ],
+          "map" : {
+            "result.files" : "in.files"
+          }
+        },
+        "input" : {
+          "map" : {
+            "out.files" : "null"
+          }
+        },
+        "guid" : "1692E8DD9FCF9CE4"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 64 },
+        "labelOffset" : { "x" : -16, "y" : 15 }
+      },
+      "connect" : { "id" : "f2", "to" : "f1" }
+    }, {
+      "id" : "f1",
+      "type" : "HtmlDialogEnd",
+      "visual" : {
+        "at" : { "x" : 352, "y" : 64 }
+      }
+    }, {
+      "id" : "f10",
+      "type" : "HtmlDialogExit",
+      "visual" : {
+        "at" : { "x" : 352, "y" : 256 }
+      }
+    }, {
+      "id" : "f6",
+      "type" : "HtmlDialogEnd",
+      "visual" : {
+        "at" : { "x" : 352, "y" : 160 }
+      }
+    }, {
+      "id" : "f8",
+      "type" : "Script",
+      "name" : "Handle uploaded files",
+      "config" : {
+        "output" : {
+          "code" : [
+            "// temporary ivy files",
+            "File ivyfile = new File(in.uploadEvent.getFile().getFileName(), true);",
+            "ivyfile.writeBinary(in.uploadEvent.getFile().getContent());",
+            "",
+            "out.files.add(ivyfile.getJavaFile());"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 224, "y" : 160 },
+        "size" : { "width" : 128, "height" : 44 },
+        "labelOffset" : { "x" : -60, "y" : -8 }
+      },
+      "connect" : { "id" : "f7", "to" : "f6" }
+    }, {
+      "id" : "f11",
+      "type" : "HtmlDialogMethodStart",
+      "name" : "uploadFile(FileUploadEvent)",
+      "config" : {
+        "callSignature" : "uploadFile",
+        "input" : {
+          "params" : [
+            { "name" : "fileUploadEvent", "type" : "org.primefaces.event.FileUploadEvent" }
+          ],
+          "map" : {
+            "out.uploadEvent" : "param.fileUploadEvent"
+          }
+        },
+        "guid" : "16CF78AE0476A4DA"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 160 },
+        "labelOffset" : { "x" : -75, "y" : 24 }
+      },
+      "connect" : { "id" : "f12", "to" : "f8" }
+    }, {
+      "id" : "f5",
+      "type" : "HtmlDialogEventStart",
+      "name" : "createDocument",
+      "config" : {
+        "guid" : "16CF790D37B8AFC8"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 256 },
+        "labelOffset" : { "x" : -45, "y" : 12 }
+      },
+      "connect" : { "id" : "f14", "to" : "f10" }
+    } ]
+}

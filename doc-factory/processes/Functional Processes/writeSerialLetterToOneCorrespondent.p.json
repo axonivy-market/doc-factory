@@ -1,0 +1,1860 @@
+{
+  "format" : "9.4.8",
+  "id" : "124971223DD62955",
+  "data" : "ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter",
+  "kind" : "CALLABLE_SUB",
+  "description" : [
+    "parses a document model that contains mergefields ",
+    "and replaces those mergefields with real data."
+  ],
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "CallSubStart",
+      "name" : "writeSerialLetterToOneCorrespondant",
+      "config" : {
+        "callSignature" : "writeSerialLetterToOneCorrespondant",
+        "input" : {
+          "params" : [
+            { "name" : "listOfTemplateMergeFields", "type" : "List<ch.ivyteam.ivy.addons.docfactory.TemplateMergeField>", "desc" : "Each TemplateMergeField holds a key which is the mergefield name and the value which will be written in the document at the place of the corresponding mergefield." },
+            { "name" : "optionalOutputpath", "type" : "String", "desc" : "Output directory path (default is '%IVY-ROOT-PATH%/ivy_RIA_files/)" },
+            { "name" : "optionalLetterName", "type" : "String", "desc" : "Produced document name (default is \"letter\" + nanotime)" },
+            { "name" : "optionalOutputFormat", "type" : "String", "desc" : "Output format among \"doc\", \"docx\", \"pdf\", \"txt\", \"html\". Default is \"doc\"." },
+            { "name" : "templatePath", "type" : "String", "desc" : "The template path. " }
+          ],
+          "map" : {
+            "out.mergeFieldsList" : "param.listOfTemplateMergeFields",
+            "out.outputFormat" : "param.optionalOutputFormat",
+            "out.outputPath" : "param.optionalOutputpath",
+            "out.serialLetterName" : "param.optionalLetterName",
+            "out.templatePath" : "param.templatePath"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "fileOperationMessage", "type" : "ch.ivyteam.ivy.addons.docfactory.FileOperationMessage", "desc" : "Result containing a Type indicating if the operation was successfull, a message in the Session User language, a list of java.io.File that were created during the process." }
+          ],
+          "map" : {
+            "result.fileOperationMessage" : "in.fileOperationMessage"
+          }
+        },
+        "tags" : "CONNECTOR"
+      },
+      "visual" : {
+        "at" : { "x" : 152, "y" : 80 },
+        "size" : { "width" : 26, "height" : 26 },
+        "labelOffset" : { "x" : -98, "y" : -38 },
+        "description" : [
+          "This callable writes a letter to one Correspondant",
+          "with the help of a document factory Object.",
+          "The Document Factory Object is a Java Object that can parse a document model",
+          "that contains mergefields and replace those mergefields by some String Data.",
+          "",
+          "It returns a FileOperationMessage Object that contains:",
+          "a Type indicating if the operation was successfull,",
+          "a message in the Session User language,",
+          "a list of java.io.File that were created during the porcess.",
+          "",
+          "In this callable, just one java.io.File should be created."
+        ]
+      },
+      "connect" : { "id" : "f2", "to" : "f4" }
+    }, {
+      "id" : "f1",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 152, "y" : 376 },
+        "size" : { "width" : 26, "height" : 26 }
+      }
+    }, {
+      "id" : "f4",
+      "type" : "Script",
+      "name" : [
+        "make the documentFactory ",
+        "Object"
+      ],
+      "config" : {
+        "output" : {
+          "code" : [
+            "import ch.ivyteam.ivy.addons.docfactory.BaseDocFactory;",
+            "in.documentFactory= BaseDocFactory.getInstance();"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 152, "y" : 152 },
+        "size" : { "width" : 36, "height" : 24 },
+        "labelOffset" : { "x" : 22, "y" : -15 }
+      },
+      "connect" : { "id" : "f5", "to" : "f3" }
+    }, {
+      "id" : "f7",
+      "type" : "Script",
+      "name" : "write the serialLetter",
+      "config" : {
+        "output" : {
+          "code" : [
+            "",
+            "out.fileOperationMessage = ",
+            "in.documentFactory.generateDocument(in.templatePath,in.serialLetterName,in.outputPath,in.outputFormat,in.mergeFieldsList);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 152, "y" : 304 },
+        "size" : { "width" : 36, "height" : 24 },
+        "labelOffset" : { "x" : 22, "y" : -9 }
+      },
+      "connect" : { "id" : "f6", "to" : "f1" }
+    }, {
+      "id" : "f3",
+      "type" : "Script",
+      "name" : [
+        "Check the outputFormat / ",
+        "outputPath / outputLetterName"
+      ],
+      "config" : {
+        "output" : {
+          "code" : [
+            "import ch.ivyteam.ivy.addons.docfactory.FileUtil;",
+            "",
+            "// if desired format not valid, we take the first supportedFormat",
+            "if(in.#outputFormat == null || in.outputFormat.trim().equalsIgnoreCase(\"\") ",
+            "  || !in.documentFactory.isFormatSupported(in.outputFormat)){",
+            "  if(in.documentFactory.getSupportedFormats().size()>0){",
+            "    out.outputFormat=in.documentFactory.getSupportedFormats().get(0);",
+            "  }",
+            "}",
+            "",
+            "//if desired letter name not valid, we take the name \"letter_nanoTime()\"",
+            "if(in.#serialLetterName == null || in.serialLetterName.trim().equalsIgnoreCase(\"\")",
+            "  || !ch.ivyteam.ivy.addons.docfactory.FileUtil.isFileNameValid(in.serialLetterName)){",
+            "    out.serialLetterName = \"letter_\"+System.nanoTime();",
+            "}",
+            "",
+            "//if desired outputPath is not valid, we take \"ivy_RIA_Files\"",
+            "if(in.outputPath==null || in.outputPath.trim().equalsIgnoreCase(\"\")){",
+            "  out.outputPath=\"ivy_RIA_files\";",
+            "}"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 152, "y" : 224 },
+        "size" : { "width" : 36, "height" : 24 },
+        "labelOffset" : { "x" : 22, "y" : -18 }
+      },
+      "connect" : { "id" : "f8", "to" : "f7" }
+    }, {
+      "id" : "f9",
+      "type" : "ProcessAnnotation",
+      "name" : [
+        "**This callable produces a document with a list of merge fields and ",
+        "with the help of a document factory Object.**",
+        "",
+        "The Document Factory Object is a Java Object that can parse a document model",
+        "that contains mergefields and replace those mergefields by some String Data. "
+      ],
+      "visual" : {
+        "at" : { "x" : 296, "y" : 488 },
+        "size" : { "width" : 512, "height" : 76 },
+        "color" : "NodeStyle12"
+      }
+    }, {
+      "id" : "f10",
+      "type" : "CallSubStart",
+      "name" : [
+        "writeDocumentWithOneDataClass(",
+        "CompositeObject,",
+        "String,String,String,String)"
+      ],
+      "config" : {
+        "callSignature" : "writeDocumentWithOneDataClass",
+        "input" : {
+          "params" : [
+            { "name" : "data", "type" : "CompositeObject", "desc" : "Ivy data class object: the properties names of the object are the mergefields names. The values of these properties will be written in the document at the place of the corresponding mergefields. " },
+            { "name" : "optionalOutputpath", "type" : "String", "desc" : "Output directory path (default is '%IVY-ROOT-PATH%/ivy_RIA_files/)" },
+            { "name" : "optionalLetterName", "type" : "String", "desc" : "Produced document name (default is \"letter\" + nanotime)" },
+            { "name" : "optionalOutputFormat", "type" : "String", "desc" : "Output format among \"doc\", \"docx\", \"pdf\", \"txt\", \"html\". Default is \"doc\"." },
+            { "name" : "templatePath", "type" : "String", "desc" : "The template path. " }
+          ],
+          "map" : {
+            "out.data" : "param.data",
+            "out.outputFormat" : "param.optionalOutputFormat",
+            "out.outputPath" : "param.optionalOutputpath",
+            "out.serialLetterName" : "param.optionalLetterName",
+            "out.templatePath" : "param.templatePath"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "fileOperationMessage", "type" : "ch.ivyteam.ivy.addons.docfactory.FileOperationMessage", "desc" : "Result containing a Type indicating if the operation was successfull, a message in the Session User language, a list of java.io.File that were created during the process." }
+          ],
+          "map" : {
+            "result.fileOperationMessage" : "in.fileOperationMessage"
+          }
+        },
+        "tags" : "CONNECTOR"
+      },
+      "visual" : {
+        "at" : { "x" : 656, "y" : 64 },
+        "size" : { "width" : 26, "height" : 26 },
+        "labelOffset" : { "x" : -173, "y" : -36 },
+        "description" : [
+          "This callable produces a document with a data (DataClass) and ",
+          "with the help of a document factory Object.",
+          "The Document Factory Object is a Java Object that can parse a document model",
+          "that contains mergefields and replace those mergefields by some String Data.",
+          "",
+          "It returns a FileOperationMessage Object that contains:",
+          "a Type indicating if the operation was successfull,",
+          "a message in the Session User language,",
+          "a list of java.io.File that were created during the process.",
+          "",
+          "In this callable, just one java.io.File should be created."
+        ]
+      },
+      "connect" : { "id" : "f13", "to" : "f12" }
+    }, {
+      "id" : "f11",
+      "type" : "ProcessAnnotation",
+      "name" : [
+        "**This callable produces a document with a data (DataClass) and ",
+        "with the help of a document factory Object. **",
+        "",
+        "The Document Factory Object is a Java Object that can parse a document model",
+        "that contains mergefields and replace those mergefields by some String Data."
+      ],
+      "visual" : {
+        "at" : { "x" : 928, "y" : 496 },
+        "size" : { "width" : 512, "height" : 92 }
+      }
+    }, {
+      "id" : "f12",
+      "type" : "Script",
+      "name" : [
+        "make the documentFactory ",
+        "Object"
+      ],
+      "config" : {
+        "output" : {
+          "code" : [
+            "import ch.ivyteam.ivy.addons.docfactory.BaseDocFactory;",
+            "",
+            "in.documentFactory= BaseDocFactory.getInstance();"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 656, "y" : 144 },
+        "size" : { "width" : 36, "height" : 24 },
+        "labelOffset" : { "x" : 30, "y" : -16 }
+      },
+      "connect" : { "id" : "f15", "to" : "f14" }
+    }, {
+      "id" : "f14",
+      "type" : "Script",
+      "name" : [
+        "Check the outputFormat / ",
+        "outputPath / outputLetterName"
+      ],
+      "config" : {
+        "output" : {
+          "code" : [
+            "",
+            "import ch.ivyteam.ivy.addons.docfactory.FileUtil;",
+            "",
+            "// if desired format not valid, we take the first supportedFormat",
+            "if(in.#outputFormat == null || in.outputFormat.trim().equalsIgnoreCase(\"\") ",
+            "  || !in.documentFactory.isFormatSupported(in.outputFormat)){",
+            "  if(in.documentFactory.getSupportedFormats().size()>0){",
+            "    out.outputFormat=in.documentFactory.getSupportedFormats().get(0);",
+            "  }",
+            "}",
+            "",
+            "//if desired letter name not valid, we take the name \"letter_nanoTime()\"",
+            "if(in.#serialLetterName == null || in.serialLetterName.trim().equalsIgnoreCase(\"\")",
+            "  || !ch.ivyteam.ivy.addons.docfactory.FileUtil.isFileNameValid(in.serialLetterName)){",
+            "    out.serialLetterName = \"letter_\"+System.nanoTime();",
+            "}",
+            "",
+            "//if desired outputPath is not valid, we take \"ivy_RIA_Files\"",
+            "if(in.outputPath==null || in.outputPath.trim().equalsIgnoreCase(\"\")){",
+            "  out.outputPath=\"ivy_RIA_files\";",
+            "}"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 656, "y" : 208 },
+        "size" : { "width" : 36, "height" : 24 },
+        "labelOffset" : { "x" : 22, "y" : -18 }
+      },
+      "connect" : { "id" : "f17", "to" : "f16" }
+    }, {
+      "id" : "f16",
+      "type" : "Script",
+      "name" : "build DocumentTemplate",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import ch.ivyteam.ivy.addons.docfactory.DocumentTemplate;",
+            "",
+            "out.documentTemplate = new DocumentTemplate(in.templatePath,in.outputPath, in.serialLetterName,in.outputFormat,in.data);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 656, "y" : 248 },
+        "size" : { "width" : 36, "height" : 24 },
+        "labelOffset" : { "x" : 20, "y" : -2 }
+      },
+      "connect" : { "id" : "f19", "to" : "f18" }
+    }, {
+      "id" : "f18",
+      "type" : "Script",
+      "name" : "write the serial letter",
+      "config" : {
+        "output" : {
+          "code" : "out.fileOperationMessage=in.documentFactory.generateDocument(in.documentTemplate);"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 656, "y" : 296 },
+        "size" : { "width" : 36, "height" : 24 },
+        "labelOffset" : { "x" : 20, "y" : -2 }
+      },
+      "connect" : { "id" : "f21", "to" : "f20" }
+    }, {
+      "id" : "f20",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 656, "y" : 376 },
+        "size" : { "width" : 26, "height" : 26 }
+      }
+    }, {
+      "id" : "f22",
+      "type" : "CallSubStart",
+      "name" : [
+        "writeDocumentWithMailMergeTable(",
+        "List&lt;TemplateMergeField&gt;,",
+        "String,String,String,String,",
+        "List&lt;String&gt;List&lt;List&lt;CompositeObject&gt;&gt;)"
+      ],
+      "config" : {
+        "callSignature" : "writeDocumentWithMailMergeTable",
+        "input" : {
+          "params" : [
+            { "name" : "listOfTemplateMergeFields", "type" : "List<ch.ivyteam.ivy.addons.docfactory.TemplateMergeField>", "desc" : "List of template mergefields (key/values) for the simple merge fields." },
+            { "name" : "optionalOutputpath", "type" : "String", "desc" : "Output directory path (default is '%IVY-ROOT-PATH%/ivy_RIA_files/)" },
+            { "name" : "optionalLetterName", "type" : "String", "desc" : "Produced document name (default is \"letter\" + nanotime)" },
+            { "name" : "optionalOutputFormat", "type" : "String", "desc" : "Output format among \"doc\", \"docx\", \"pdf\", \"txt\", \"html\". Default is \"doc\"." },
+            { "name" : "templatePath", "type" : "String", "desc" : "The template path. " },
+            { "name" : "tableNamesList", "type" : "List<String>", "desc" : "The list of the tables names (mail merge regions) present in the template" },
+            { "name" : "datasForTables", "type" : "List<List<CompositeObject>>", "desc" : "Data for filling the tables. Each list of composite object is used in the corresponding (by the index) table name." }
+          ],
+          "map" : {
+            "out.ListOfCompositeObjectsToFillTheTables" : "param.datasForTables",
+            "out.mergeFieldsList" : "param.listOfTemplateMergeFields",
+            "out.outputFormat" : "param.optionalOutputFormat",
+            "out.outputPath" : "param.optionalOutputpath",
+            "out.serialLetterName" : "param.optionalLetterName",
+            "out.tablesNamesList" : "param.tableNamesList",
+            "out.templatePath" : "param.templatePath"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "fileOperationMessage", "type" : "ch.ivyteam.ivy.addons.docfactory.FileOperationMessage", "desc" : "Result containing a Type indicating if the operation was successfull, a message in the Session User language, a list of java.io.File that were created during the process." }
+          ],
+          "map" : {
+            "result.fileOperationMessage" : "in.fileOperationMessage"
+          }
+        },
+        "tags" : "CONNECTOR"
+      },
+      "visual" : {
+        "at" : { "x" : 1472, "y" : 72 },
+        "size" : { "width" : 26, "height" : 26 },
+        "labelOffset" : { "x" : 16, "y" : -36 },
+        "description" : [
+          "Produces a document with a list of merge fields and ",
+          "with the help of a document factory Object. The Merge Mail With Regions is supported.",
+          "The Document Factory Object is a Java Object that can parse a document model",
+          "that contains mergefields and replace those mergefields by some String Data.",
+          "",
+          "A Mail Merge Region is a Table in the template which rows are going to be automatically filled with some data.",
+          "Each table in the template has a name and is set by a Start Mergefield(TableStart:nameOfTheTable).",
+          "To be able to perform this operation, one may provide the list of the tables names, the merge fields names for each table and the data (rows).",
+          "If there is no table in the given template, or no match between your data and the tables names/fieldsnames, these callables just ignore the tables",
+          "and perform normal mail merge.",
+          "",
+          "It returns a FileOperationMessage Object that contains:",
+          "a Type indicating if the operation was successfull,",
+          "a message in the Session User language,",
+          "a list of java.io.File that were created during the process.",
+          "In this callable just one java.io.File is created. So the list of created File contains only one File in case of success."
+        ]
+      },
+      "connect" : { "id" : "f28", "to" : "f25" }
+    }, {
+      "id" : "f23",
+      "type" : "Script",
+      "name" : [
+        "make the hash map for the merge mail with regions",
+        "and write the serialLetter"
+      ],
+      "config" : {
+        "output" : {
+          "code" : [
+            "import java.util.HashMap;",
+            "HashMap map = new HashMap();",
+            "",
+            "if(in.tablesNamesList.size()>0 && ",
+            "in.ListOfCompositeObjectsToFillTheTables.size()==in.tablesNamesList.size()){",
+            "  int i=0;",
+            "  for(String s : in.tablesNamesList)",
+            "  {",
+            "    map.put(s,in.ListOfCompositeObjectsToFillTheTables.get(i));",
+            "    i++;",
+            "  }",
+            "  ",
+            "}",
+            "try{",
+            "  out.fileOperationMessage = ",
+            "  in.documentFactory.generateDocumentWithRegions(in.templatePath,in.serialLetterName,in.outputPath,in.outputFormat,in.mergeFieldsList,map);",
+            "}catch (Throwable t){",
+            "  ivy.log.error(t.getMessage(),t);",
+            "}"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1472, "y" : 304 },
+        "size" : { "width" : 36, "height" : 24 },
+        "labelOffset" : { "x" : 22, "y" : -9 }
+      },
+      "connect" : { "id" : "f30", "to" : "f29" }
+    }, {
+      "id" : "f24",
+      "type" : "Script",
+      "name" : [
+        "Check the outputFormat / ",
+        "outputPath / outputLetterName "
+      ],
+      "config" : {
+        "output" : {
+          "code" : [
+            "import ch.ivyteam.ivy.addons.docfactory.FileUtil;",
+            "",
+            "// if desired format not valid, we take the first supportedFormat",
+            "if(in.#outputFormat == null || in.outputFormat.trim().equalsIgnoreCase(\"\") ",
+            "  || !in.documentFactory.isFormatSupported(in.outputFormat)){",
+            "  if(in.documentFactory.getSupportedFormats().size()>0){",
+            "    out.outputFormat=in.documentFactory.getSupportedFormats().get(0);",
+            "  }",
+            "}",
+            "",
+            "//if desired letter name not valid, we take the name \"letter_nanoTime()\"",
+            "if(in.#serialLetterName == null || in.serialLetterName.trim().equalsIgnoreCase(\"\")",
+            "  || !ch.ivyteam.ivy.addons.docfactory.FileUtil.isFileNameValid(in.serialLetterName)){",
+            "    out.serialLetterName = \"letter_\"+System.nanoTime();",
+            "}",
+            "",
+            "//if desired outputPath is not valid, we take \"ivy_RIA_Files\"",
+            "if(in.outputPath==null || in.outputPath.trim().equalsIgnoreCase(\"\")){",
+            "  out.outputPath=\"ivy_RIA_files\";",
+            "}"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1472, "y" : 224 },
+        "size" : { "width" : 36, "height" : 24 },
+        "labelOffset" : { "x" : 22, "y" : -18 }
+      },
+      "connect" : { "id" : "f27", "to" : "f23" }
+    }, {
+      "id" : "f25",
+      "type" : "Script",
+      "name" : [
+        "make the documentFactory ",
+        "Object"
+      ],
+      "config" : {
+        "output" : {
+          "code" : [
+            "import ch.ivyteam.ivy.addons.docfactory.BaseDocFactory;",
+            "in.documentFactory= BaseDocFactory.getInstance();"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1472, "y" : 152 },
+        "size" : { "width" : 36, "height" : 24 },
+        "labelOffset" : { "x" : 22, "y" : -15 }
+      },
+      "connect" : { "id" : "f26", "to" : "f24" }
+    }, {
+      "id" : "f29",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 1472, "y" : 376 },
+        "size" : { "width" : 26, "height" : 26 }
+      }
+    }, {
+      "id" : "f31",
+      "type" : "CallSubStart",
+      "name" : [
+        "writeDocumentWithMailMergeTable(",
+        "List&lt;TemplateMergeField&gt;,",
+        "String,String,String,String,",
+        "List&lt;String&gt;,List&lt;Recordset&gt;)"
+      ],
+      "config" : {
+        "callSignature" : "writeDocumentWithMailMergeTable",
+        "input" : {
+          "params" : [
+            { "name" : "listOfTemplateMergeFields", "type" : "List<ch.ivyteam.ivy.addons.docfactory.TemplateMergeField>", "desc" : "List of template mergefields (key/values) for the simple merge fields." },
+            { "name" : "optionalOutputpath", "type" : "String", "desc" : "Output directory path (default is '%IVY-ROOT-PATH%/ivy_RIA_files/)" },
+            { "name" : "optionalLetterName", "type" : "String", "desc" : "Produced document name (default is \"letter\" + nanotime)" },
+            { "name" : "optionalOutputFormat", "type" : "String", "desc" : "Output format among \"doc\", \"docx\", \"pdf\", \"txt\", \"html\". Default is \"doc\"." },
+            { "name" : "templatePath", "type" : "String", "desc" : "The template path. " },
+            { "name" : "tableNamesList", "type" : "List<String>", "desc" : "The list of the tables names (mail merge regions) present in the template" },
+            { "name" : "recordsetsList", "type" : "List<Recordset>", "desc" : "Data for filling some tables (merge region). Each field of the recordset is seen as a mergefield, and each record is a row of data." }
+          ],
+          "map" : {
+            "out.ListOfRecordsets" : "param.recordsetsList",
+            "out.mergeFieldsList" : "param.listOfTemplateMergeFields",
+            "out.outputFormat" : "param.optionalOutputFormat",
+            "out.outputPath" : "param.optionalOutputpath",
+            "out.serialLetterName" : "param.optionalLetterName",
+            "out.tablesNamesList" : "param.tableNamesList",
+            "out.templatePath" : "param.templatePath"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "fileOperationMessage", "type" : "ch.ivyteam.ivy.addons.docfactory.FileOperationMessage", "desc" : "Result containing a Type indicating if the operation was successfull, a message in the Session User language, a list of java.io.File that were created during the process." }
+          ],
+          "map" : {
+            "result.fileOperationMessage" : "in.fileOperationMessage"
+          }
+        },
+        "tags" : "CONNECTOR"
+      },
+      "visual" : {
+        "at" : { "x" : 2064, "y" : 64 },
+        "size" : { "width" : 26, "height" : 26 },
+        "labelOffset" : { "x" : 17, "y" : -31 },
+        "description" : [
+          "Produces a document with a list of merge fields and ",
+          "with the help of a document factory Object. The Merge Mail With Regions is supported.",
+          "The Document Factory Object is a Java Object that can parse a document model",
+          "that contains mergefields and replace those mergefields by some String Data.",
+          "",
+          "A Mail Merge Region is a Table in the template which rows are going to be automatically filled with some data.",
+          "Each table in the template has a name and is set by a Start Mergefield(TableStart:nameOfTheTable).",
+          "To be able to perform this operation, one may provide the list of the tables names, the merge fields names for each table and the data (rows).",
+          "If there is no table in the given template, or no match between your data and the tables names/fieldsnames, these callables just ignore the tables",
+          "and perform normal mail merge.",
+          "",
+          "It returns a FileOperationMessage Object that contains:",
+          "- a Type indicating if the operation was successfull,",
+          "- a message in the Session User language,",
+          "- a list of java.io.File that were created during the process.",
+          "In this callable just one java.io.File is created. So the list of created File contains only one File in case of success."
+        ]
+      },
+      "connect" : { "id" : "f37", "to" : "f32" }
+    }, {
+      "id" : "f32",
+      "type" : "Script",
+      "name" : [
+        "make the documentFactory ",
+        "Object"
+      ],
+      "config" : {
+        "output" : {
+          "code" : [
+            "import ch.ivyteam.ivy.addons.docfactory.BaseDocFactory;",
+            "in.documentFactory= BaseDocFactory.getInstance();"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 2064, "y" : 144 },
+        "size" : { "width" : 36, "height" : 24 },
+        "labelOffset" : { "x" : 22, "y" : -15 }
+      },
+      "connect" : { "id" : "f35", "to" : "f34" }
+    }, {
+      "id" : "f33",
+      "type" : "Script",
+      "name" : [
+        "make the hash table for the merge mail with regions",
+        "and write the serialLetter"
+      ],
+      "config" : {
+        "output" : {
+          "code" : [
+            "import java.util.Hashtable;",
+            "Hashtable htable = new Hashtable();",
+            "",
+            "if(in.tablesNamesList.size()>0 && ",
+            "  in.ListOfRecordsets.size()==in.tablesNamesList.size()){",
+            "  int i=0;",
+            "  for(String s : in.tablesNamesList)",
+            "  {",
+            "    htable.put(s,in.ListOfRecordsets.get(i));",
+            "    i++;",
+            "  }",
+            "}",
+            "try{",
+            "  out.fileOperationMessage = ",
+            "  in.documentFactory.generateDocumentWithRegions(in.templatePath,in.serialLetterName,in.outputPath,in.outputFormat,in.mergeFieldsList,htable);",
+            "}catch (Throwable t){",
+            "  ivy.log.error(t.getMessage(),t);",
+            "}"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 2064, "y" : 296 },
+        "size" : { "width" : 36, "height" : 24 },
+        "labelOffset" : { "x" : 22, "y" : -9 }
+      },
+      "connect" : { "id" : "f39", "to" : "f38" }
+    }, {
+      "id" : "f34",
+      "type" : "Script",
+      "name" : [
+        "Check the outputFormat / ",
+        "outputPath / outputLetterName "
+      ],
+      "config" : {
+        "output" : {
+          "code" : [
+            "import ch.ivyteam.ivy.addons.docfactory.FileUtil;",
+            "",
+            "// if desired format not valid, we take the first supportedFormat",
+            "if(in.#outputFormat == null || in.outputFormat.trim().equalsIgnoreCase(\"\") ",
+            "  || !in.documentFactory.isFormatSupported(in.outputFormat)){",
+            "  if(in.documentFactory.getSupportedFormats().size()>0){",
+            "    out.outputFormat=in.documentFactory.getSupportedFormats().get(0);",
+            "  }",
+            "}",
+            "",
+            "//if desired letter name not valid, we take the name \"letter_nanoTime()\"",
+            "if(in.#serialLetterName == null || in.serialLetterName.trim().equalsIgnoreCase(\"\")",
+            "  || !ch.ivyteam.ivy.addons.docfactory.FileUtil.isFileNameValid(in.serialLetterName)){",
+            "    out.serialLetterName = \"letter_\"+System.nanoTime();",
+            "}",
+            "",
+            "//if desired outputPath is not valid, we take \"ivy_RIA_Files\"",
+            "if(in.outputPath==null || in.outputPath.trim().equalsIgnoreCase(\"\")){",
+            "  out.outputPath=\"ivy_RIA_files\";",
+            "}"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 2064, "y" : 216 },
+        "size" : { "width" : 36, "height" : 24 },
+        "labelOffset" : { "x" : 22, "y" : -18 }
+      },
+      "connect" : { "id" : "f36", "to" : "f33" }
+    }, {
+      "id" : "f38",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 2064, "y" : 376 },
+        "size" : { "width" : 26, "height" : 26 }
+      }
+    }, {
+      "id" : "f40",
+      "type" : "CallSubStart",
+      "name" : [
+        "writeDocumentWithMailMergeTable(",
+        "List&lt;TemplateMergeField&gt;,",
+        "String,String,String,String,",
+        "List&lt;String&gt;,List&lt;List&lt;String&gt;&gt;,",
+        "List&lt;List&lt;List&gt;&gt;)"
+      ],
+      "config" : {
+        "callSignature" : "writeDocumentWithMailMergeTable",
+        "input" : {
+          "params" : [
+            { "name" : "listOfTemplateMergeFields", "type" : "List<ch.ivyteam.ivy.addons.docfactory.TemplateMergeField>", "desc" : "List of template mergefields (key/values) for the simple merge fields." },
+            { "name" : "optionalOutputpath", "type" : "String", "desc" : "Output directory path (default is '%IVY-ROOT-PATH%/ivy_RIA_files/)" },
+            { "name" : "optionalLetterName", "type" : "String", "desc" : "Produced document name (default is \"letter\" + nanotime)" },
+            { "name" : "optionalOutputFormat", "type" : "String", "desc" : "Output format among \"doc\", \"docx\", \"pdf\", \"txt\", \"html\". Default is \"doc\"." },
+            { "name" : "templatePath", "type" : "String", "desc" : "The template path. " },
+            { "name" : "tableNamesList", "type" : "List<String>", "desc" : "The list of the tables names (mail merge regions) present in the template" },
+            { "name" : "tablesFieldsNames", "type" : "List<List<String>>", "desc" : "The list of the tables names merge fields names. Each table having a corresponding (same index) List of mergefields." },
+            { "name" : "tablesRowsValues", "type" : "List<List<List<Object>>>", "desc" : "Data for filling the tables (merge regions): each table mergefield has a corresponding List<List of values>>" }
+          ],
+          "map" : {
+            "out.ListOfTableFieldsNames" : "param.tablesFieldsNames",
+            "out.ListOfTablesRows" : "param.tablesRowsValues",
+            "out.mergeFieldsList" : "param.listOfTemplateMergeFields",
+            "out.outputFormat" : "param.optionalOutputFormat",
+            "out.outputPath" : "param.optionalOutputpath",
+            "out.serialLetterName" : "param.optionalLetterName",
+            "out.tablesNamesList" : "param.tableNamesList",
+            "out.templatePath" : "param.templatePath"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "fileOperationMessage", "type" : "ch.ivyteam.ivy.addons.docfactory.FileOperationMessage", "desc" : "Result containing a Type indicating if the operation was successfull, a message in the Session User language, a list of java.io.File that were created during the process." }
+          ],
+          "map" : {
+            "result.fileOperationMessage" : "in.fileOperationMessage"
+          }
+        },
+        "tags" : "CONNECTOR"
+      },
+      "visual" : {
+        "at" : { "x" : 2440, "y" : 64 },
+        "size" : { "width" : 26, "height" : 26 },
+        "labelOffset" : { "x" : 19, "y" : -35 },
+        "description" : [
+          "Produces a document with a list of merge fields and ",
+          "with the help of a document factory Object. The Merge Mail With Regions is supported.",
+          "The Document Factory Object is a Java Object that can parse a document model",
+          "that contains mergefields and replace those mergefields by some String Data.",
+          "",
+          "A Mail Merge Region is a Table in the template whose rows are going to be automatically filled with some data.",
+          "To be able to perform this operation, one may provide the list of the tables names, the merge fields names for each table and the data (rows).",
+          "If you want to fill some tables, the list of the tables names have to be provided in all the callables Starts. The tables are named in the template.",
+          "Then the fields names and the data can be provided in several ways:",
+          "\t. Lists of DataClasses objects (CompositeObjects): each attribute name will be seen as a mergeField name, each object is a row in a table.",
+          "\t. List of Recordsets: each field of the recordset is seen as a mergefield, and each record is a row of data.",
+          "\t. For each table you provide a list of fields' names and the rows are encapsulated into list of Objects.",
+          "If there is no table in the given template, or no match between your data and the tables names/fieldsnames, these callables just ignore the tables",
+          "and perform normal mail merge.",
+          "",
+          "It returns a FileOperationMessage Object that contains:",
+          "a Type indicating if the operation was successfull,",
+          "a message in the Session User language,",
+          "a list of java.io.File that were created during the process. Just one java.io.File should be created."
+        ]
+      },
+      "connect" : { "id" : "f46", "to" : "f42" }
+    }, {
+      "id" : "f41",
+      "type" : "Script",
+      "name" : [
+        "Check the outputFormat / ",
+        "outputPath / outputLetterName "
+      ],
+      "config" : {
+        "output" : {
+          "code" : [
+            "import ch.ivyteam.ivy.addons.docfactory.FileUtil;",
+            "",
+            "// if desired format not valid, we take the first supportedFormat",
+            "if(in.#outputFormat == null || in.outputFormat.trim().equalsIgnoreCase(\"\") ",
+            "  || !in.documentFactory.isFormatSupported(in.outputFormat)){",
+            "  if(in.documentFactory.getSupportedFormats().size()>0){",
+            "    out.outputFormat=in.documentFactory.getSupportedFormats().get(0);",
+            "  }",
+            "}",
+            "",
+            "//if desired letter name not valid, we take the name \"letter_nanoTime()\"",
+            "if(in.#serialLetterName == null || in.serialLetterName.trim().equalsIgnoreCase(\"\")",
+            "  || !ch.ivyteam.ivy.addons.docfactory.FileUtil.isFileNameValid(in.serialLetterName)){",
+            "    out.serialLetterName = \"letter_\"+System.nanoTime();",
+            "}",
+            "",
+            "//if desired outputPath is not valid, we take \"ivy_RIA_Files\"",
+            "if(in.outputPath==null || in.outputPath.trim().equalsIgnoreCase(\"\")){",
+            "  out.outputPath=\"ivy_RIA_files\";",
+            "}"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 2440, "y" : 224 },
+        "size" : { "width" : 36, "height" : 24 },
+        "labelOffset" : { "x" : 22, "y" : -18 }
+      },
+      "connect" : { "id" : "f45", "to" : "f43" }
+    }, {
+      "id" : "f42",
+      "type" : "Script",
+      "name" : [
+        "make the documentFactory ",
+        "Object"
+      ],
+      "config" : {
+        "output" : {
+          "code" : [
+            "import ch.ivyteam.ivy.addons.docfactory.BaseDocFactory;",
+            "in.documentFactory= BaseDocFactory.getInstance();"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 2440, "y" : 152 },
+        "size" : { "width" : 36, "height" : 24 },
+        "labelOffset" : { "x" : 22, "y" : -15 }
+      },
+      "connect" : { "id" : "f44", "to" : "f41" }
+    }, {
+      "id" : "f43",
+      "type" : "Script",
+      "name" : "write the serialLetter",
+      "config" : {
+        "output" : {
+          "code" : [
+            "",
+            "try{",
+            "  out.fileOperationMessage = ",
+            "  in.documentFactory.generateDocumentWithRegions(in.templatePath,in.serialLetterName,in.outputPath,in.outputFormat,in.mergeFieldsList,in.tablesNamesList,in.ListOfTableFieldsNames,in.ListOfTablesRows);",
+            "}catch (Throwable t){",
+            "  ivy.log.error(t.getMessage(),t);",
+            "}"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 2440, "y" : 304 },
+        "size" : { "width" : 36, "height" : 24 },
+        "labelOffset" : { "x" : 22, "y" : -9 }
+      },
+      "connect" : { "id" : "f48", "to" : "f47" }
+    }, {
+      "id" : "f47",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 2440, "y" : 376 },
+        "size" : { "width" : 26, "height" : 26 }
+      }
+    }, {
+      "id" : "f49",
+      "type" : "ProcessAnnotation",
+      "name" : [
+        "**These callables produce a document with a list of merge fields and ",
+        "with the help of a document factory Object. The Merge Mail With Regions is supported.**",
+        "The Document Factory Object is a Java Object that can parse a document model",
+        "that contains mergefields and replace those mergefields by some String Data."
+      ],
+      "visual" : {
+        "at" : { "x" : 1760, "y" : 488 },
+        "size" : { "width" : 560, "height" : 60 },
+        "description" : [
+          "A Mail Merge Region is a Table in the template whose rows are going to be automatically filled with some data.",
+          "To be able to perform this operation, one may provide the list of the tables names, the merge fields names for each table and the data (rows).",
+          "The Names of the tables in the template are given by a Start Mergefield(TableStart:*++nameOfTheTable++*).",
+          "",
+          "If you want to fill some tables, the list of the tables names have to be provided in all the callables Starts. ",
+          "The fields names and the data can be provided in several ways:",
+          "- Lists of DataClasses objects (CompositeObjects): each attribute name will be seen as a mergeField name, each object is a row in a table.",
+          "- List of Recordsets: each field of the recordset is seen as a mergefield, and each record is a row of data.",
+          "- For each table you provide a list of fields' names and the rows are encapsulated into list of Objects.",
+          "",
+          "If there is no table in the given template, or no match between your data and the tables names/fieldsnames, these callables just ignore the tables",
+          "and perform normal mail merge."
+        ]
+      }
+    }, {
+      "id" : "f50",
+      "type" : "CallSubStart",
+      "name" : [
+        "writeDocumentWithMailMergeTable(",
+        "CompositeObject,",
+        "String,String,String,String,",
+        "List&lt;String&gt;,List&lt;List&lt;CompositeObject&gt;&gt;)"
+      ],
+      "config" : {
+        "callSignature" : "writeDocumentWithMailMergeTable",
+        "input" : {
+          "params" : [
+            { "name" : "data", "type" : "CompositeObject", "desc" : "Ivy data class object used for the normal merge fields: the properties names of the object are the mergefields names. The values of these properties will be written in the document at the place of the corresponding mergefields. " },
+            { "name" : "optionalOutputpath", "type" : "String", "desc" : "Output directory path (default is '%IVY-ROOT-PATH%/ivy_RIA_files/)" },
+            { "name" : "optionalLetterName", "type" : "String", "desc" : "Produced document name (default is \"letter\" + nanotime)" },
+            { "name" : "optionalOutputFormat", "type" : "String", "desc" : "Output format among \"doc\", \"docx\", \"pdf\", \"txt\", \"html\". Default is \"doc\"." },
+            { "name" : "templatePath", "type" : "String", "desc" : "The template path. " },
+            { "name" : "tableNamesList", "type" : "List<String>", "desc" : "The list of the tables names (mail merge regions) present in the template" },
+            { "name" : "datasForTables", "type" : "List<List<CompositeObject>>", "desc" : "Data for filling the tables. Each list of composite object is used in the corresponding (by the index) table name." }
+          ],
+          "map" : {
+            "out.data" : "param.data",
+            "out.ListOfCompositeObjectsToFillTheTables" : "param.datasForTables",
+            "out.outputFormat" : "param.optionalOutputFormat",
+            "out.outputPath" : "param.optionalOutputpath",
+            "out.serialLetterName" : "param.optionalLetterName",
+            "out.tablesNamesList" : "param.tableNamesList",
+            "out.templatePath" : "param.templatePath"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "fileOperationMessage", "type" : "ch.ivyteam.ivy.addons.docfactory.FileOperationMessage", "desc" : "Result containing a Type indicating if the operation was successfull, a message in the Session User language, a list of java.io.File that were created during the process." }
+          ],
+          "map" : {
+            "result.fileOperationMessage" : "in.fileOperationMessage"
+          }
+        },
+        "tags" : "CONNECTOR"
+      },
+      "visual" : {
+        "at" : { "x" : 1360, "y" : 72 },
+        "size" : { "width" : 26, "height" : 26 },
+        "labelOffset" : { "x" : -246, "y" : -48 },
+        "description" : [
+          "Produces a document with a list of merge fields and ",
+          "with the help of a document factory Object. The Merge Mail With Regions is supported.",
+          "The Document Factory Object is a Java Object that can parse a document model",
+          "that contains mergefields and replace those mergefields by some String Data.",
+          "",
+          "A Mail Merge Region is a Table in the template which rows are going to be automatically filled with some data.",
+          "Each table in the template has a name and is set by a Start Mergefield(TableStart:nameOfTheTable).",
+          "To be able to perform this operation, one may provide the list of the tables names, the merge fields names for each table and the data (rows).",
+          "If there is no table in the given template, or no match between your data and the tables names/fieldsnames, these callables just ignore the tables",
+          "and perform normal mail merge.",
+          "",
+          "It returns a FileOperationMessage Object that contains:",
+          "- a Type indicating if the operation was successfull,",
+          "- a message in the Session User language,",
+          "- a list of java.io.File that were created during the process.",
+          "In this callable just one java.io.File is created. So the list of created File contains only one File in case of success."
+        ]
+      },
+      "connect" : { "id" : "f58", "to" : "f53" }
+    }, {
+      "id" : "f51",
+      "type" : "Script",
+      "name" : "build DocumentTemplate",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import ch.ivyteam.ivy.addons.docfactory.DocumentTemplate;",
+            "import java.util.HashMap;",
+            "HashMap map = new HashMap();",
+            "",
+            "if(in.tablesNamesList.size()>0 && ",
+            "in.ListOfCompositeObjectsToFillTheTables.size()==in.tablesNamesList.size()){",
+            "  int i=0;",
+            "  for(String s : in.tablesNamesList)",
+            "  {",
+            "    map.put(s,in.ListOfCompositeObjectsToFillTheTables.get(i));",
+            "    i++;",
+            "  }",
+            "  ",
+            "}",
+            "out.documentTemplate = new DocumentTemplate(in.templatePath,in.outputPath, in.serialLetterName,in.outputFormat,in.data,map);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1360, "y" : 248 },
+        "size" : { "width" : 36, "height" : 24 },
+        "labelOffset" : { "x" : -163, "y" : -11 }
+      },
+      "connect" : { "id" : "f57", "to" : "f54" }
+    }, {
+      "id" : "f52",
+      "type" : "Script",
+      "name" : [
+        "Check the outputFormat / ",
+        "outputPath / outputLetterName"
+      ],
+      "config" : {
+        "output" : {
+          "code" : [
+            "",
+            "import ch.ivyteam.ivy.addons.docfactory.FileUtil;",
+            "",
+            "// if desired format not valid, we take the first supportedFormat",
+            "if(in.#outputFormat == null || in.outputFormat.trim().equalsIgnoreCase(\"\") ",
+            "  || !in.documentFactory.isFormatSupported(in.outputFormat)){",
+            "  if(in.documentFactory.getSupportedFormats().size()>0){",
+            "    out.outputFormat=in.documentFactory.getSupportedFormats().get(0);",
+            "  }",
+            "}",
+            "",
+            "//if desired letter name not valid, we take the name \"letter_nanoTime()\"",
+            "if(in.#serialLetterName == null || in.serialLetterName.trim().equalsIgnoreCase(\"\")",
+            "  || !ch.ivyteam.ivy.addons.docfactory.FileUtil.isFileNameValid(in.serialLetterName)){",
+            "    out.serialLetterName = \"letter_\"+System.nanoTime();",
+            "}",
+            "",
+            "//if desired outputPath is not valid, we take \"ivy_RIA_Files\"",
+            "if(in.outputPath==null || in.outputPath.trim().equalsIgnoreCase(\"\")){",
+            "  out.outputPath=\"ivy_RIA_files\";",
+            "}"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1360, "y" : 208 },
+        "size" : { "width" : 36, "height" : 24 },
+        "labelOffset" : { "x" : -187, "y" : -26 }
+      },
+      "connect" : { "id" : "f56", "to" : "f51" }
+    }, {
+      "id" : "f53",
+      "type" : "Script",
+      "name" : [
+        "make the documentFactory ",
+        "Object"
+      ],
+      "config" : {
+        "output" : {
+          "code" : [
+            "import ch.ivyteam.ivy.addons.docfactory.BaseDocFactory;",
+            "",
+            "in.documentFactory= BaseDocFactory.getInstance();"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1360, "y" : 160 },
+        "size" : { "width" : 36, "height" : 24 },
+        "labelOffset" : { "x" : -175, "y" : -18 }
+      },
+      "connect" : { "id" : "f55", "to" : "f52" }
+    }, {
+      "id" : "f54",
+      "type" : "Script",
+      "name" : "write the serial letter",
+      "config" : {
+        "output" : {
+          "code" : "out.fileOperationMessage=in.documentFactory.generateDocument(in.documentTemplate);"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1360, "y" : 312 },
+        "size" : { "width" : 36, "height" : 24 },
+        "labelOffset" : { "x" : -139, "y" : -9 }
+      },
+      "connect" : { "id" : "f60", "to" : "f59" }
+    }, {
+      "id" : "f59",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 1360, "y" : 376 },
+        "size" : { "width" : 26, "height" : 26 }
+      }
+    }, {
+      "id" : "f61",
+      "type" : "CallSubStart",
+      "name" : [
+        "writeDocumentWithMailMergeTable(",
+        "CompositeObject,String,",
+        "String,String,String,",
+        "List&lt;String&gt;,List&lt;Recordset&gt;)"
+      ],
+      "config" : {
+        "callSignature" : "writeDocumentWithMailMergeTable",
+        "input" : {
+          "params" : [
+            { "name" : "data", "type" : "CompositeObject", "desc" : "Ivy data class object used for the normal merge fields: the properties names of the object are the mergefields names. The values of these properties will be written in the document at the place of the corresponding mergefields. " },
+            { "name" : "optionalOutputpath", "type" : "String", "desc" : "Output directory path (default is '%IVY-ROOT-PATH%/ivy_RIA_files/)" },
+            { "name" : "optionalLetterName", "type" : "String", "desc" : "Produced document name (default is \"letter\" + nanotime)" },
+            { "name" : "optionalOutputFormat", "type" : "String", "desc" : "Output format among \"doc\", \"docx\", \"pdf\", \"txt\", \"html\". Default is \"doc\"." },
+            { "name" : "templatePath", "type" : "String", "desc" : "The template path. " },
+            { "name" : "tableNamesList", "type" : "List<String>", "desc" : "The list of the tables names (mail merge regions) present in the template" },
+            { "name" : "recordsetsList", "type" : "List<Recordset>", "desc" : "Data for filling some tables (merge region). Each field of the recordset is seen as a mergefield, and each record is a row of data." }
+          ],
+          "map" : {
+            "out.data" : "param.data",
+            "out.ListOfRecordsets" : "param.recordsetsList",
+            "out.outputFormat" : "param.optionalOutputFormat",
+            "out.outputPath" : "param.optionalOutputpath",
+            "out.serialLetterName" : "param.optionalLetterName",
+            "out.tablesNamesList" : "param.tableNamesList",
+            "out.templatePath" : "param.templatePath"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "fileOperationMessage", "type" : "ch.ivyteam.ivy.addons.docfactory.FileOperationMessage", "desc" : "Result containing a Type indicating if the operation was successfull, a message in the Session User language, a list of java.io.File that were created during the process." }
+          ]
+        },
+        "tags" : "CONNECTOR"
+      },
+      "visual" : {
+        "at" : { "x" : 1944, "y" : 64 },
+        "size" : { "width" : 26, "height" : 26 },
+        "labelOffset" : { "x" : -171, "y" : -37 },
+        "description" : [
+          "Produces a document with a list of merge fields and ",
+          "with the help of a document factory Object. The Merge Mail With Regions is supported.",
+          "The Document Factory Object is a Java Object that can parse a document model",
+          "that contains mergefields and replace those mergefields by some String Data.",
+          "",
+          "A Mail Merge Region is a Table in the template which rows are going to be automatically filled with some data.",
+          "Each table in the template has a name and is set by a Start Mergefield(TableStart:nameOfTheTable).",
+          "To be able to perform this operation, one may provide the list of the tables names, the merge fields names for each table and the data (rows).",
+          "If there is no table in the given template, or no match between your data and the tables names/fieldsnames, these callables just ignore the tables",
+          "and perform normal mail merge.",
+          "",
+          "It returns a FileOperationMessage Object that contains:",
+          "a Type indicating if the operation was successfull,",
+          "a message in the Session User language,",
+          "a list of java.io.File that were created during the process.",
+          "In this callable just one java.io.File is created. So the list of created File contains only one File in case of success."
+        ]
+      },
+      "connect" : { "id" : "f69", "to" : "f64" }
+    }, {
+      "id" : "f62",
+      "type" : "Script",
+      "name" : [
+        "Check the outputFormat / ",
+        "outputPath / outputLetterName"
+      ],
+      "config" : {
+        "output" : {
+          "code" : [
+            "",
+            "import ch.ivyteam.ivy.addons.docfactory.FileUtil;",
+            "",
+            "// if desired format not valid, we take the first supportedFormat",
+            "if(in.#outputFormat == null || in.outputFormat.trim().equalsIgnoreCase(\"\") ",
+            "  || !in.documentFactory.isFormatSupported(in.outputFormat)){",
+            "  if(in.documentFactory.getSupportedFormats().size()>0){",
+            "    out.outputFormat=in.documentFactory.getSupportedFormats().get(0);",
+            "  }",
+            "}",
+            "",
+            "//if desired letter name not valid, we take the name \"letter_nanoTime()\"",
+            "if(in.#serialLetterName == null || in.serialLetterName.trim().equalsIgnoreCase(\"\")",
+            "  || !ch.ivyteam.ivy.addons.docfactory.FileUtil.isFileNameValid(in.serialLetterName)){",
+            "    out.serialLetterName = \"letter_\"+System.nanoTime();",
+            "}",
+            "",
+            "//if desired outputPath is not valid, we take \"ivy_RIA_Files\"",
+            "if(in.outputPath==null || in.outputPath.trim().equalsIgnoreCase(\"\")){",
+            "  out.outputPath=\"ivy_RIA_files\";",
+            "}"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1944, "y" : 200 },
+        "size" : { "width" : 36, "height" : 24 },
+        "labelOffset" : { "x" : -183, "y" : -18 }
+      },
+      "connect" : { "id" : "f67", "to" : "f63" }
+    }, {
+      "id" : "f63",
+      "type" : "Script",
+      "name" : "build DocumentTemplate",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import ch.ivyteam.ivy.addons.docfactory.DocumentTemplate;",
+            "import java.util.Hashtable;",
+            "Hashtable htable = new Hashtable();",
+            "",
+            "if(in.tablesNamesList.size()>0 && ",
+            "  in.ListOfRecordsets.size()==in.tablesNamesList.size()){",
+            "  int i=0;",
+            "  for(String s : in.tablesNamesList)",
+            "  {",
+            "    htable.put(s,in.ListOfRecordsets.get(i));",
+            "    i++;",
+            "  }",
+            "}",
+            "out.documentTemplate = new DocumentTemplate(in.templatePath,in.outputPath, in.serialLetterName,in.outputFormat,in.data,htable);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1944, "y" : 240 },
+        "size" : { "width" : 36, "height" : 24 },
+        "labelOffset" : { "x" : -160, "y" : -9 }
+      },
+      "connect" : { "id" : "f68", "to" : "f65" }
+    }, {
+      "id" : "f64",
+      "type" : "Script",
+      "name" : [
+        "make the documentFactory ",
+        "Object"
+      ],
+      "config" : {
+        "output" : {
+          "code" : [
+            "import ch.ivyteam.ivy.addons.docfactory.BaseDocFactory;",
+            "",
+            "in.documentFactory= BaseDocFactory.getInstance();"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1944, "y" : 152 },
+        "size" : { "width" : 36, "height" : 24 },
+        "labelOffset" : { "x" : -168, "y" : -23 }
+      },
+      "connect" : { "id" : "f66", "to" : "f62" }
+    }, {
+      "id" : "f65",
+      "type" : "Script",
+      "name" : "write the serial letter",
+      "config" : {
+        "output" : {
+          "code" : "out.fileOperationMessage=in.documentFactory.generateDocument(in.documentTemplate);"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1944, "y" : 304 },
+        "size" : { "width" : 36, "height" : 24 },
+        "labelOffset" : { "x" : -139, "y" : -9 }
+      },
+      "connect" : { "id" : "f71", "to" : "f70" }
+    }, {
+      "id" : "f70",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 1944, "y" : 376 },
+        "size" : { "width" : 26, "height" : 26 }
+      }
+    }, {
+      "id" : "f72",
+      "type" : "CallSubStart",
+      "name" : [
+        "writeDocumentWithMailMergeNestedTable(",
+        "String,String,String,String,",
+        "List&lt;CompositeObject&gt;,List&lt;List&lt;CompositeObject&gt;&gt;)"
+      ],
+      "config" : {
+        "callSignature" : "writeDocumentWithMailMergeNestedTable",
+        "input" : {
+          "params" : [
+            { "name" : "optionalOutputpath", "type" : "String", "desc" : "Output directory path (default is '%IVY-ROOT-PATH%/ivy_RIA_files/)" },
+            { "name" : "optionalLetterName", "type" : "String", "desc" : "Produced document name (default is \"letter\" + nanotime)" },
+            { "name" : "optionalOutputFormat", "type" : "String", "desc" : "Output format among \"doc\", \"docx\", \"pdf\", \"txt\", \"html\". Default is \"doc\"." },
+            { "name" : "templatePath", "type" : "String", "desc" : "The template path. " },
+            { "name" : "DataForMailMergeOutOfTables", "type" : "CompositeObject", "desc" : "Ivy data class object used for the normal merge fields: the properties names of the object are the mergefields names. The values of these properties will be written in the document at the place of the corresponding mergefields. " },
+            { "name" : "parentTableDatas", "type" : "List<CompositeObject>", "desc" : "First level tables data." },
+            { "name" : "nestedChildrenTableDatas", "type" : "List<List<CompositeObject>>", "desc" : "Second level tables (tables inside the first level tables) data." }
+          ],
+          "map" : {
+            "out.data" : "param.DataForMailMergeOutOfTables",
+            "out.ListOfCompositeObjectsToFillTheTables" : "param.nestedChildrenTableDatas",
+            "out.ListOfParentCompositeObjects" : "param.parentTableDatas",
+            "out.outputFormat" : "param.optionalOutputFormat",
+            "out.outputPath" : "param.optionalOutputpath",
+            "out.serialLetterName" : "param.optionalLetterName",
+            "out.templatePath" : "param.templatePath"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "fileOperationMessage", "type" : "ch.ivyteam.ivy.addons.docfactory.FileOperationMessage", "desc" : "Result containing a Type indicating if the operation was successfull, a message in the Session User language, a list of java.io.File that were created during the process." }
+          ],
+          "map" : {
+            "result.fileOperationMessage" : "in.fileOperationMessage"
+          }
+        },
+        "tags" : "CONNECTOR"
+      },
+      "visual" : {
+        "at" : { "x" : 2792, "y" : 56 },
+        "size" : { "width" : 26, "height" : 26 },
+        "labelOffset" : { "x" : 26, "y" : -24 },
+        "description" : [
+          "Produces a document with the data included in  a DataClass Object. ",
+          "The Merge Mail With Nested Regions is supported.",
+          "Just One Level of Nested Regions is supported in this sub Process.",
+          "The List<CompositeObject>  (List of Ivy DataClasses) parameter is used as parent Table.",
+          "The  List<List<CompositeObject>>  (List of List of Ivy DataClasses) parameter is used as child Table.",
+          "",
+          "The Document Factory Object is a Java Object that can parse a document model",
+          "that contains mergefields and replace those mergefields by some String Data.",
+          "",
+          "It returns a FileOperationMessage Object that contains:",
+          "a Type indicating if the operation was successfull,",
+          "a message in the Session User language,",
+          "a list of java.io.File that were created during the process, just one java.io.File should be created."
+        ]
+      },
+      "connect" : { "id" : "f78", "to" : "f73" }
+    }, {
+      "id" : "f73",
+      "type" : "Script",
+      "name" : [
+        "make the documentFactory ",
+        "Object"
+      ],
+      "config" : {
+        "output" : {
+          "code" : [
+            "import ch.ivyteam.ivy.addons.docfactory.BaseDocFactory;",
+            "in.documentFactory= BaseDocFactory.getInstance();"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 2792, "y" : 144 },
+        "size" : { "width" : 36, "height" : 24 },
+        "labelOffset" : { "x" : 22, "y" : -15 }
+      },
+      "connect" : { "id" : "f76", "to" : "f75" }
+    }, {
+      "id" : "f74",
+      "type" : "Script",
+      "name" : "write the serialLetter",
+      "config" : {
+        "output" : {
+          "code" : [
+            "",
+            "import ch.ivyteam.ivy.addons.docfactory.DocumentTemplate;",
+            "try{",
+            "  in.documentTemplate = new DocumentTemplate(in.templatePath,in.outputPath,in.serialLetterName,in.outputFormat,in.data,in.ListOfParentCompositeObjects,in.ListOfCompositeObjectsToFillTheTables);",
+            "  out.fileOperationMessage = ",
+            "in.documentTemplate.generateDocument();",
+            "}catch (Throwable t){",
+            "  ivy.log.error(t.getMessage(),t);",
+            "}"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 2792, "y" : 296 },
+        "size" : { "width" : 36, "height" : 24 },
+        "labelOffset" : { "x" : 22, "y" : -9 }
+      },
+      "connect" : { "id" : "f80", "to" : "f79" }
+    }, {
+      "id" : "f75",
+      "type" : "Script",
+      "name" : [
+        "Check the outputFormat / ",
+        "outputPath / outputLetterName "
+      ],
+      "config" : {
+        "output" : {
+          "code" : [
+            "import ch.ivyteam.ivy.addons.docfactory.FileUtil;",
+            "",
+            "// if desired format not valid, we take the first supportedFormat",
+            "if(in.#outputFormat == null || in.outputFormat.trim().equalsIgnoreCase(\"\") ",
+            "  || !in.documentFactory.isFormatSupported(in.outputFormat)){",
+            "  if(in.documentFactory.getSupportedFormats().size()>0){",
+            "    out.outputFormat=in.documentFactory.getSupportedFormats().get(0);",
+            "  }",
+            "}",
+            "",
+            "//if desired letter name not valid, we take the name \"letter_nanoTime()\"",
+            "if(in.#serialLetterName == null || in.serialLetterName.trim().equalsIgnoreCase(\"\")",
+            "  || !ch.ivyteam.ivy.addons.docfactory.FileUtil.isFileNameValid(in.serialLetterName)){",
+            "    out.serialLetterName = \"letter_\"+System.nanoTime();",
+            "}",
+            "",
+            "//if desired outputPath is not valid, we take \"ivy_RIA_Files\"",
+            "if(in.outputPath==null || in.outputPath.trim().equalsIgnoreCase(\"\")){",
+            "  out.outputPath=\"ivy_RIA_files\";",
+            "}"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 2792, "y" : 216 },
+        "size" : { "width" : 36, "height" : 24 },
+        "labelOffset" : { "x" : 22, "y" : -18 }
+      },
+      "connect" : { "id" : "f77", "to" : "f74" }
+    }, {
+      "id" : "f79",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 2792, "y" : 376 },
+        "size" : { "width" : 26, "height" : 26 }
+      }
+    }, {
+      "id" : "f81",
+      "type" : "Script",
+      "name" : [
+        "make the documentFactory ",
+        "Object"
+      ],
+      "config" : {
+        "output" : {
+          "code" : [
+            "import ch.ivyteam.ivy.addons.docfactory.BaseDocFactory;",
+            "in.documentFactory= BaseDocFactory.getInstance();"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 3192, "y" : 144 },
+        "size" : { "width" : 36, "height" : 24 },
+        "labelOffset" : { "x" : 22, "y" : -15 }
+      },
+      "connect" : { "id" : "f85", "to" : "f82" }
+    }, {
+      "id" : "f82",
+      "type" : "Script",
+      "name" : [
+        "Check the outputFormat / ",
+        "outputPath / outputLetterName "
+      ],
+      "config" : {
+        "output" : {
+          "code" : [
+            "import ch.ivyteam.ivy.addons.docfactory.FileUtil;",
+            "",
+            "// if desired format not valid, we take the first supportedFormat",
+            "if(in.#outputFormat == null || in.outputFormat.trim().equalsIgnoreCase(\"\") ",
+            "  || !in.documentFactory.isFormatSupported(in.outputFormat)){",
+            "  if(in.documentFactory.getSupportedFormats().size()>0){",
+            "    out.outputFormat=in.documentFactory.getSupportedFormats().get(0);",
+            "  }",
+            "}",
+            "",
+            "//if desired letter name not valid, we take the name \"letter_nanoTime()\"",
+            "if(in.#serialLetterName == null || in.serialLetterName.trim().equalsIgnoreCase(\"\")",
+            "  || !ch.ivyteam.ivy.addons.docfactory.FileUtil.isFileNameValid(in.serialLetterName)){",
+            "    out.serialLetterName = \"letter_\"+System.nanoTime();",
+            "}",
+            "",
+            "//if desired outputPath is not valid, we take \"ivy_RIA_Files\"",
+            "if(in.outputPath==null || in.outputPath.trim().equalsIgnoreCase(\"\")){",
+            "  out.outputPath=\"ivy_RIA_files\";",
+            "}"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 3192, "y" : 216 },
+        "size" : { "width" : 36, "height" : 24 },
+        "labelOffset" : { "x" : 22, "y" : -18 }
+      },
+      "connect" : { "id" : "f86", "to" : "f83" }
+    }, {
+      "id" : "f83",
+      "type" : "Script",
+      "name" : "write the serialLetter",
+      "config" : {
+        "output" : {
+          "code" : [
+            "",
+            "import ch.ivyteam.ivy.addons.docfactory.DocumentTemplate;",
+            "try{",
+            "  in.documentTemplate = new DocumentTemplate(in.templatePath,in.outputPath,in.serialLetterName,in.outputFormat,in.TreeDataForNestedMailMerge);",
+            "  out.fileOperationMessage = ",
+            "in.documentTemplate.generateDocument();",
+            "}catch (Throwable t){",
+            "  ivy.log.error(t.getMessage(),t);",
+            "}"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 3192, "y" : 296 },
+        "size" : { "width" : 36, "height" : 24 },
+        "labelOffset" : { "x" : 22, "y" : -9 }
+      },
+      "connect" : { "id" : "f89", "to" : "f88" }
+    }, {
+      "id" : "f84",
+      "type" : "CallSubStart",
+      "name" : [
+        "writeDocumentWithMailMergeNestedTableWithTree(",
+        "String,String,String,String,",
+        "Tree)"
+      ],
+      "config" : {
+        "callSignature" : "writeDocumentWithMailMergeNestedTableWithTree",
+        "input" : {
+          "params" : [
+            { "name" : "optionalOutputpath", "type" : "String", "desc" : "Output directory path (default is '%IVY-ROOT-PATH%/ivy_RIA_files/)" },
+            { "name" : "optionalLetterName", "type" : "String", "desc" : "Produced document name (default is \"letter\" + nanotime)" },
+            { "name" : "optionalOutputFormat", "type" : "String", "desc" : "Output format among \"doc\", \"docx\", \"pdf\", \"txt\", \"html\". Default is \"doc\"." },
+            { "name" : "templatePath", "type" : "String", "desc" : "The template path. " },
+            { "name" : "treeData", "type" : "Tree", "desc" : "Tree data for the tables and nested tables. Just One Level of Nested Regions is supported in this sub Process." }
+          ],
+          "map" : {
+            "out.outputFormat" : "param.optionalOutputFormat",
+            "out.outputPath" : "param.optionalOutputpath",
+            "out.serialLetterName" : "param.optionalLetterName",
+            "out.templatePath" : "param.templatePath",
+            "out.TreeDataForNestedMailMerge" : "param.treeData"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "fileOperationMessage", "type" : "ch.ivyteam.ivy.addons.docfactory.FileOperationMessage", "desc" : "Result containing a Type indicating if the operation was successfull, a message in the Session User language, a list of java.io.File that were created during the process." }
+          ],
+          "map" : {
+            "result.fileOperationMessage" : "in.fileOperationMessage"
+          }
+        },
+        "tags" : "CONNECTOR"
+      },
+      "visual" : {
+        "at" : { "x" : 3192, "y" : 56 },
+        "size" : { "width" : 26, "height" : 26 },
+        "labelOffset" : { "x" : 26, "y" : -24 },
+        "description" : [
+          "Produces a document with the data included in ",
+          "a Tree Object. The Merge Mail With Nested Regions is supported.",
+          "Just One Level of Nested Regions is supported in this sub Process.",
+          "The Tree is used to generate the Mail Merge with Nested Regions.",
+          "The Object Value of the Node should be a DataClass (CompositeObject) and is used ",
+          "to provide the merge fields data outside of the Nested Tables.",
+          "The Document Factory Object is a Java Object that can parse a document model",
+          "that contains mergefields and replace those mergefields by some String Data.",
+          "",
+          "It returns a FileOperationMessage Object that contains:",
+          "a Type indicating if the operation was successfull,",
+          "a message in the Session User language,",
+          "a list of java.io.File that were created during the process, just one java.io.File is created."
+        ]
+      },
+      "connect" : { "id" : "f87", "to" : "f81" }
+    }, {
+      "id" : "f88",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 3192, "y" : 384 },
+        "size" : { "width" : 26, "height" : 26 }
+      }
+    }, {
+      "id" : "f90",
+      "type" : "CallSubStart",
+      "name" : [
+        "writeDocumentWithMailMergeNestedTableWithListOfDatas(",
+        "String,String,String,String,",
+        "CompositeObject, List&lt;CompositeObject&gt;)"
+      ],
+      "config" : {
+        "callSignature" : "writeDocumentWithMailMergeNestedTableWithListOfDatas",
+        "input" : {
+          "params" : [
+            { "name" : "optionalOutputpath", "type" : "String", "desc" : "Output directory path (default is '%IVY-ROOT-PATH%/ivy_RIA_files/)" },
+            { "name" : "optionalLetterName", "type" : "String", "desc" : "Produced document name (default is \"letter\" + nanotime)" },
+            { "name" : "optionalOutputFormat", "type" : "String", "desc" : "Output format among \"doc\", \"docx\", \"pdf\", \"txt\", \"html\". Default is \"doc\"." },
+            { "name" : "templatePath", "type" : "String", "desc" : "The template path. " },
+            { "name" : "aData", "type" : "CompositeObject", "desc" : "Data (CompositeObject) used to provide the merge fields data outside of the Nested Tables." },
+            { "name" : "nestedListOfDatas", "type" : "List<CompositeObject>", "desc" : "A List of Dataclasses used for the mail Merge with nested tables. Each dataclass may contain lists of other nested dataclasses and so on... .There is no limit in nesting regions." }
+          ],
+          "map" : {
+            "out.data" : "param.aData",
+            "out.ListOfParentCompositeObjects" : "param.nestedListOfDatas",
+            "out.outputFormat" : "param.optionalOutputFormat",
+            "out.outputPath" : "param.optionalOutputpath",
+            "out.serialLetterName" : "param.optionalLetterName",
+            "out.templatePath" : "param.templatePath"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "fileOperationMessage", "type" : "ch.ivyteam.ivy.addons.docfactory.FileOperationMessage", "desc" : "Result containing a Type indicating if the operation was successfull, a message in the Session User language, a list of java.io.File that were created during the process." }
+          ],
+          "map" : {
+            "result.fileOperationMessage" : "in.fileOperationMessage"
+          }
+        },
+        "tags" : "CONNECTOR"
+      },
+      "visual" : {
+        "at" : { "x" : 3624, "y" : 56 },
+        "size" : { "width" : 26, "height" : 26 },
+        "labelOffset" : { "x" : 26, "y" : -24 },
+        "description" : [
+          "Produces a document with the data from the given Data object. ",
+          "The Merge Mail With Nested Regions is supported and the each data in the List<CompositeObject> represents a table.",
+          "",
+          "The DataClass (CompositeObject) is used to provide the merge fields data outside of the Nested Tables.",
+          "A List of Dataclasses is be used to do the mail Merge with nested tables.",
+          "Each dataclass may contain lists of other nested dataclasses and so on... .There is no limit in nesting regions.",
+          "",
+          "It returns a FileOperationMessage Object that contains:",
+          "- a Type indicating if the operation was successfull,",
+          "- a message in the Session User language,",
+          "- a list of java.io.File that were created during the process, just one java.io.File is created."
+        ]
+      },
+      "connect" : { "id" : "f96", "to" : "f93" }
+    }, {
+      "id" : "f91",
+      "type" : "Script",
+      "name" : "write the serialLetter",
+      "config" : {
+        "output" : {
+          "code" : [
+            "",
+            "import ch.ivyteam.ivy.addons.docfactory.DocumentTemplate;",
+            "try{",
+            "  in.documentTemplate = new DocumentTemplate(in.templatePath,in.outputPath,in.serialLetterName,in.outputFormat,in.data,in.ListOfParentCompositeObjects);",
+            "  out.fileOperationMessage = ",
+            "in.documentTemplate.generateDocument();",
+            "}catch (Throwable t){",
+            "  ivy.log.error(t.getMessage(),t);",
+            "}"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 3624, "y" : 296 },
+        "size" : { "width" : 36, "height" : 24 },
+        "labelOffset" : { "x" : 22, "y" : -9 }
+      },
+      "connect" : { "id" : "f98", "to" : "f97" }
+    }, {
+      "id" : "f92",
+      "type" : "Script",
+      "name" : [
+        "Check the outputFormat / ",
+        "outputPath / outputLetterName "
+      ],
+      "config" : {
+        "output" : {
+          "code" : [
+            "import ch.ivyteam.ivy.addons.docfactory.FileUtil;",
+            "",
+            "// if desired format not valid, we take the first supportedFormat",
+            "if(in.#outputFormat == null || in.outputFormat.trim().equalsIgnoreCase(\"\") ",
+            "  || !in.documentFactory.isFormatSupported(in.outputFormat)){",
+            "  if(in.documentFactory.getSupportedFormats().size()>0){",
+            "    out.outputFormat=in.documentFactory.getSupportedFormats().get(0);",
+            "  }",
+            "}",
+            "",
+            "//if desired letter name not valid, we take the name \"letter_nanoTime()\"",
+            "if(in.#serialLetterName == null || in.serialLetterName.trim().equalsIgnoreCase(\"\")",
+            "  || !ch.ivyteam.ivy.addons.docfactory.FileUtil.isFileNameValid(in.serialLetterName)){",
+            "    out.serialLetterName = \"letter_\"+System.nanoTime();",
+            "}",
+            "",
+            "//if desired outputPath is not valid, we take \"ivy_RIA_Files\"",
+            "if(in.outputPath==null || in.outputPath.trim().equalsIgnoreCase(\"\")){",
+            "  out.outputPath=\"ivy_RIA_files\";",
+            "}"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 3624, "y" : 216 },
+        "size" : { "width" : 36, "height" : 24 },
+        "labelOffset" : { "x" : 22, "y" : -18 }
+      },
+      "connect" : { "id" : "f95", "to" : "f91" }
+    }, {
+      "id" : "f93",
+      "type" : "Script",
+      "name" : [
+        "make the documentFactory ",
+        "Object"
+      ],
+      "config" : {
+        "output" : {
+          "code" : [
+            "import ch.ivyteam.ivy.addons.docfactory.BaseDocFactory;",
+            "in.documentFactory= BaseDocFactory.getInstance();"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 3624, "y" : 144 },
+        "size" : { "width" : 36, "height" : 24 },
+        "labelOffset" : { "x" : 22, "y" : -15 }
+      },
+      "connect" : { "id" : "f94", "to" : "f92" }
+    }, {
+      "id" : "f97",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 3624, "y" : 384 },
+        "size" : { "width" : 26, "height" : 26 }
+      }
+    }, {
+      "id" : "f99",
+      "type" : "ProcessAnnotation",
+      "name" : [
+        "These callables produce a document with a list of merge fields and ",
+        "with the help of a document factory Object. The Merge Mail With Nested Regions is supported.",
+        "",
+        "The Document Factory Object is a Java Object that can parse a document model",
+        "that contains mergefields and replace those mergefields by some String Data.",
+        "",
+        "Nested mail merge regions are at least two regions in which one is defined entirely inside the other, so they are “nested” in one another.",
+        "The Names of the tables or regions in the template are given by a Start Mergefield(TableStart:*++nameOfTheTable++*)."
+      ],
+      "visual" : {
+        "at" : { "x" : 3216, "y" : 512 },
+        "size" : { "width" : 880, "height" : 140 }
+      }
+    }, {
+      "id" : "f100",
+      "type" : "CallSubStart",
+      "name" : [
+        "writeDocumentWithNestedDataClass(",
+        "CompositeObject, ",
+        "String,String,String,String)"
+      ],
+      "config" : {
+        "callSignature" : "writeDocumentWithNestedDataClass",
+        "input" : {
+          "params" : [
+            { "name" : "data", "type" : "CompositeObject", "desc" : "Ivy data class object: the properties names of the object are the mergefields names. The values of these properties will be written in the document at the place of the corresponding mergefields. The collections of Serializables inside this bean are used for supporting the mail merge with region." },
+            { "name" : "optionalOutputpath", "type" : "String", "desc" : "Output directory path (default is '%IVY-ROOT-PATH%/ivy_RIA_files/)" },
+            { "name" : "optionalLetterName", "type" : "String", "desc" : "Produced document name (default is \"letter\" + nanotime)" },
+            { "name" : "optionalOutputFormat", "type" : "String", "desc" : "Output format among \"doc\", \"docx\", \"pdf\", \"txt\", \"html\". Default is \"doc\"." },
+            { "name" : "templatePath", "type" : "String", "desc" : "The template path. " }
+          ],
+          "map" : {
+            "out.data" : "param.data",
+            "out.outputFormat" : "param.optionalOutputFormat",
+            "out.outputPath" : "param.optionalOutputpath",
+            "out.serialLetterName" : "param.optionalLetterName",
+            "out.templatePath" : "param.templatePath"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "fileOperationMessage", "type" : "ch.ivyteam.ivy.addons.docfactory.FileOperationMessage", "desc" : "Result containing a Type indicating if the operation was successfull, a message in the Session User language, a list of java.io.File that were created during the process." }
+          ],
+          "map" : {
+            "result.fileOperationMessage" : "in.fileOperationMessage"
+          }
+        },
+        "tags" : "CONNECTOR"
+      },
+      "visual" : {
+        "at" : { "x" : 992, "y" : 64 },
+        "size" : { "width" : 26, "height" : 26 },
+        "labelOffset" : { "x" : -161, "y" : -38 },
+        "description" : [
+          "This callable produces a document with a data (DataClass) and ",
+          "with the help of a document factory Object. ",
+          "",
+          "The Document Factory Object is a Java Object that can parse a document model",
+          "that contains mergefields and replace those mergefields by some String Data.",
+          "",
+          "It returns a FileOperationMessage Object that contains:",
+          "a Type indicating if the operation was successfull,",
+          "a message in the Session User language,",
+          "a list of java.io.File that were created during the process.",
+          "",
+          "In this callable, just one java.io.File should be created."
+        ]
+      },
+      "connect" : { "id" : "f108", "to" : "f102" }
+    }, {
+      "id" : "f101",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 992, "y" : 376 },
+        "size" : { "width" : 26, "height" : 26 }
+      }
+    }, {
+      "id" : "f102",
+      "type" : "Script",
+      "name" : [
+        "make the documentFactory ",
+        "Object"
+      ],
+      "config" : {
+        "output" : {
+          "code" : [
+            "import ch.ivyteam.ivy.addons.docfactory.BaseDocFactory;",
+            "",
+            "in.documentFactory= BaseDocFactory.getInstance();"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 992, "y" : 144 },
+        "size" : { "width" : 36, "height" : 24 },
+        "labelOffset" : { "x" : 30, "y" : -16 }
+      },
+      "connect" : { "id" : "f109", "to" : "f103" }
+    }, {
+      "id" : "f103",
+      "type" : "Script",
+      "name" : [
+        "Check the outputFormat / ",
+        "outputPath / outputLetterName"
+      ],
+      "config" : {
+        "output" : {
+          "code" : [
+            "",
+            "import ch.ivyteam.ivy.addons.docfactory.FileUtil;",
+            "",
+            "// if desired format not valid, we take the first supportedFormat",
+            "if(in.#outputFormat == null || in.outputFormat.trim().equalsIgnoreCase(\"\") ",
+            "  || !in.documentFactory.isFormatSupported(in.outputFormat)){",
+            "  if(in.documentFactory.getSupportedFormats().size()>0){",
+            "    out.outputFormat=in.documentFactory.getSupportedFormats().get(0);",
+            "  }",
+            "}",
+            "",
+            "//if desired letter name not valid, we take the name \"letter_nanoTime()\"",
+            "if(in.#serialLetterName == null || in.serialLetterName.trim().equalsIgnoreCase(\"\")",
+            "  || !ch.ivyteam.ivy.addons.docfactory.FileUtil.isFileNameValid(in.serialLetterName)){",
+            "    out.serialLetterName = \"letter_\"+System.nanoTime();",
+            "}",
+            "",
+            "//if desired outputPath is not valid, we take \"ivy_RIA_Files\"",
+            "if(in.outputPath==null || in.outputPath.trim().equalsIgnoreCase(\"\")){",
+            "  out.outputPath=\"ivy_RIA_files\";",
+            "}"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 992, "y" : 208 },
+        "size" : { "width" : 36, "height" : 24 },
+        "labelOffset" : { "x" : 22, "y" : -18 }
+      },
+      "connect" : { "id" : "f106", "to" : "f105" }
+    }, {
+      "id" : "f104",
+      "type" : "Script",
+      "name" : "write the serial letter",
+      "config" : {
+        "output" : {
+          "code" : "out.fileOperationMessage=in.documentFactory.generateDocument(in.documentTemplate);"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 992, "y" : 296 },
+        "size" : { "width" : 36, "height" : 24 },
+        "labelOffset" : { "x" : 20, "y" : -2 }
+      },
+      "connect" : { "id" : "f110", "to" : "f101" }
+    }, {
+      "id" : "f105",
+      "type" : "Script",
+      "name" : "build DocumentTemplate",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import ch.ivyteam.ivy.addons.docfactory.DocumentTemplate;",
+            "",
+            "out.documentTemplate = new DocumentTemplate(in.templatePath,in.outputPath, in.serialLetterName,in.outputFormat,in.data);",
+            "out.documentTemplate.putDataAsSourceForMailMerge(in.data);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 992, "y" : 248 },
+        "size" : { "width" : 36, "height" : 24 },
+        "labelOffset" : { "x" : 20, "y" : -2 }
+      },
+      "connect" : { "id" : "f107", "to" : "f104" }
+    } ],
+  "layout" : {
+    "lanes" : [ {
+        "size" : 115
+      }, {
+        "size" : 64
+      }, {
+        "size" : 87
+      }, {
+        "size" : 72
+      } ],
+    "colors" : {
+      "NodeStyle12" : "rgb(245, 245, 220)"
+    }
+  }
+}
