@@ -1,0 +1,113 @@
+{
+  "format" : "9.4.8",
+  "id" : "1712BF653EA82149",
+  "data" : "doc.factory.demos.Email.EmailData",
+  "kind" : "HTML_DIALOG",
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "HtmlDialogStart",
+      "name" : "start()",
+      "config" : {
+        "callSignature" : "start",
+        "input" : {
+          "map" : {
+            "out.outlockMail.emailaddress" : "\"helloWorld@gmail.com\"",
+            "out.outlockMail.name" : "\"Hugo\""
+          }
+        },
+        "guid" : "170D46F21633C61C"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 64 },
+        "labelOffset" : { "x" : -16, "y" : 15 }
+      },
+      "connect" : { "id" : "f12", "to" : "f11" }
+    }, {
+      "id" : "f1",
+      "type" : "HtmlDialogEnd",
+      "visual" : {
+        "at" : { "x" : 352, "y" : 64 }
+      }
+    }, {
+      "id" : "f3",
+      "type" : "HtmlDialogEventStart",
+      "name" : "close",
+      "config" : {
+        "guid" : "170D46F217370C2E"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 288 },
+        "labelOffset" : { "x" : -15, "y" : 15 }
+      },
+      "connect" : { "id" : "f5", "to" : "f4" }
+    }, {
+      "id" : "f4",
+      "type" : "HtmlDialogExit",
+      "visual" : {
+        "at" : { "x" : 224, "y" : 288 }
+      }
+    }, {
+      "id" : "f6",
+      "type" : "Script",
+      "name" : "Create an  .msg email file",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import ch.ivyteam.ivy.docFactoryExamples.IvyAsposeEmailer;",
+            "",
+            "import ch.ivyteam.ivy.request.IHttpResponse;",
+            "import javax.servlet.http.HttpServletResponse;",
+            "",
+            "out.OutlockMail.msgFile = new File(\"newEmail.msg\");",
+            "",
+            "IvyAsposeEmailer.createMail(out.outlockMail);",
+            "",
+            "IvyAsposeEmailer.downloadMsgFile(out.outlockMail.msgFile.getJavaFile());"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 216, "y" : 176 },
+        "size" : { "width" : 160, "height" : 44 },
+        "labelOffset" : { "x" : -70, "y" : -8 }
+      },
+      "connect" : { "id" : "f9", "to" : "f8" }
+    }, {
+      "id" : "f7",
+      "type" : "HtmlDialogEventStart",
+      "name" : "create",
+      "config" : {
+        "guid" : "170D4782C4E3CBB3"
+      },
+      "visual" : {
+        "at" : { "x" : 88, "y" : 176 },
+        "labelOffset" : { "x" : -17, "y" : 15 }
+      },
+      "connect" : { "id" : "f10", "to" : "f6" }
+    }, {
+      "id" : "f8",
+      "type" : "HtmlDialogEnd",
+      "visual" : {
+        "at" : { "x" : 352, "y" : 176 }
+      }
+    }, {
+      "id" : "f11",
+      "type" : "Script",
+      "name" : "init Aspose.Email Library",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import ch.ivyteam.ivy.docFactoryExamples.IvyAsposeEmailer;",
+            "",
+            "IvyAsposeEmailer.init();"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 224, "y" : 64 },
+        "size" : { "width" : 144, "height" : 44 },
+        "labelOffset" : { "x" : -68, "y" : -8 }
+      },
+      "connect" : { "id" : "f2", "to" : "f1" }
+    } ]
+}
