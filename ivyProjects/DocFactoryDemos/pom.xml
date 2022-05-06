@@ -23,7 +23,7 @@
 	<repositories>
 		<repository>
 			<id>axon.public</id>
-			<url>https://repo.axonivy.rocks/</url>
+			<url>https://maven.axonivy.com/</url>
 		</repository>
 		<repository>
 			<id>aspose.com</id>
