@@ -13,10 +13,6 @@
 
 	<repositories>
 		<repository>
-			<id>axon.public</id>
-			<url>https://repo.axonivy.rocks/</url>
-		</repository>
-		<repository>
 			<id>aspose.com</id>
 			<url>https://repository.aspose.com/repo</url>
 		</repository>
