@@ -6,13 +6,13 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>ch.ivyteam.ivy.addons</groupId>
+		<groupId>com.axonivy.utils.docfactory</groupId>
 		<artifactId>config</artifactId>
 		<version>${revision}</version>
 		<relativePath>../../maven</relativePath>
 	</parent>
 
-	<groupId>ch.ivyteam.ivy.addons</groupId>
+	<groupId>com.axonivy.utils.docfactory</groupId>
 	<artifactId>doc-factory-demos-test</artifactId>
 	<packaging>iar</packaging>
 
@@ -22,7 +22,7 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>ch.ivyteam.ivy.addons</groupId>
+			<groupId>com.axonivy.utils.docfactory</groupId>
 			<artifactId>doc-factory-demos</artifactId>
 			<version>${project.version}</version>
 			<type>iar</type>
@@ -78,7 +78,7 @@
 							<goal>deploy-to-engine</goal>
 						</goals>
 						<configuration>
-							<deployFile>${ch.ivyteam.ivy.addons:doc-factory:iar}</deployFile>
+							<deployFile>${com.axonivy.utils.docfactory:doc-factory:iar}</deployFile>
 						</configuration>
 					</execution>
 					<execution>
@@ -88,7 +88,7 @@
 							<goal>deploy-to-engine</goal>
 						</goals>
 						<configuration>
-							<deployFile>${ch.ivyteam.ivy.addons:doc-factory-demos:iar}</deployFile>
+							<deployFile>${com.axonivy.utils.docfactory:doc-factory-demos:iar}</deployFile>
 						</configuration>
 					</execution>
 					<execution>
