@@ -5,7 +5,7 @@
             "data": {
                 "dependencies": [
                     {
-                        "groupId": "ch.ivyteam.ivy.addons",
+                        "groupId": "com.axonivy.utils.docfactory",
                         "artifactId": "doc-factory",
                         "version": "${version}",
                         "type": "iar"
@@ -27,7 +27,7 @@
             "data": {
                 "projects": [
                     {
-                        "groupId": "ch.ivyteam.ivy.addons",
+                        "groupId": "com.axonivy.utils.docfactory",
                         "artifactId": "doc-factory-demos",
                         "version": "${version}",
                         "type": "iar"
