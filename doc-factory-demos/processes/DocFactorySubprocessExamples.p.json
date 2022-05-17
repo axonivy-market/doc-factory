@@ -1,5 +1,5 @@
 {
-  "format" : "9.4.9",
+  "format" : "9.4.10",
   "id" : "160D67F5A5647B10",
   "data" : "doc.factory.demos.Data",
   "elements" : [ {
@@ -162,7 +162,7 @@
         "with Object"
       ],
       "config" : {
-        "processCall" : "Functional Processes/writeSerialLetterToOneCorrespondent:writeDocumentWithOneDataClass(ch.ivyteam.ivy.scripting.objects.CompositeObject,String,String,String,String)",
+        "processCall" : "Functional Processes/writeSerialLetterToOneCorrespondent:writeDocumentWithOneDataClass(CompositeObject,String,String,String,String)",
         "call" : {
           "params" : [
             { "name" : "data", "type" : "CompositeObject" },
@@ -406,7 +406,7 @@
         "with tables in tables"
       ],
       "config" : {
-        "processCall" : "Functional Processes/writeSerialLetterToOneCorrespondent:writeDocumentWithMailMergeNestedTableWithListOfDatas(String,String,String,String,ch.ivyteam.ivy.scripting.objects.CompositeObject,List<ch.ivyteam.ivy.scripting.objects.CompositeObject>)",
+        "processCall" : "Functional Processes/writeSerialLetterToOneCorrespondent:writeDocumentWithMailMergeNestedTableWithListOfDatas(String,String,String,String,CompositeObject,List<CompositeObject>)",
         "call" : {
           "params" : [
             { "name" : "optionalOutputpath", "type" : "String" },
