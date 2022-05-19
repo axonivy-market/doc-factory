@@ -12,15 +12,14 @@
     </organization>
 
     <properties>
-        <revision>9.3.1-SNAPSHOT</revision>
+        <revision>9.3.0-SNAPSHOT</revision>
 
         <project-build-plugin-version>9.3.1</project-build-plugin-version>
         <maven-dependency-plugin-version>3.0.2</maven-dependency-plugin-version>
         <maven-deploy-plugin-version>2.8.2</maven-deploy-plugin-version>
 
         <engine.directory>${java.io.tmpdir}/ivy-engine</engine.directory>
-        <ivy.engine.list.url>https://jenkins.ivyteam.io/job/ivy-core_product/job/master/lastSuccessfulBuild/</ivy.engine.list.url>
-        <ivy.engine.version>[9.2.0,]</ivy.engine.version>
+        <ivy.engine.version>9.3.4</ivy.engine.version>
         <ivy.mvn.dep.skip>true</ivy.mvn.dep.skip>
     </properties>
 
