@@ -3,12 +3,12 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>ch.ivyteam.ivy.addons</groupId>
+    <groupId>com.axonivy.utils.docfactory</groupId>
     <artifactId>config</artifactId>
     <version>${revision}</version>
     <relativePath>../maven</relativePath>
   </parent>
-  <groupId>ch.ivyteam.ivy.addons</groupId>
+  <groupId>com.axonivy.utils.docfactory</groupId>
   <artifactId>doc-factory-test</artifactId>
   <packaging>iar</packaging>
   <properties>
@@ -17,7 +17,7 @@
   </properties>
   <dependencies>
     <dependency>
-      <groupId>ch.ivyteam.ivy.addons</groupId>
+      <groupId>com.axonivy.utils.docfactory</groupId>
       <artifactId>doc-factory</artifactId>
       <version>${project.version}</version>
       <type>iar</type>
