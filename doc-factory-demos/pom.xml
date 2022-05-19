@@ -6,13 +6,13 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>ch.ivyteam.ivy.addons</groupId>
+		<groupId>com.axonivy.utils.docfactory</groupId>
 		<artifactId>config</artifactId>
 		<version>${revision}</version>
 		<relativePath>../maven</relativePath>
 	</parent>
 
-	<groupId>ch.ivyteam.ivy.addons</groupId>
+	<groupId>com.axonivy.utils.docfactory</groupId>
 	<artifactId>doc-factory-demos</artifactId>
 	<packaging>iar</packaging>
 
@@ -22,10 +22,6 @@
 
 	<repositories>
 		<repository>
-			<id>axon.public</id>
-			<url>https://repo.axonivy.rocks/</url>
-		</repository>
-		<repository>
 			<id>aspose.com</id>
 			<url>https://repository.aspose.com/repo</url>
 		</repository>
@@ -33,7 +29,7 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>ch.ivyteam.ivy.addons</groupId>
+			<groupId>com.axonivy.utils.docfactory</groupId>
 			<artifactId>doc-factory</artifactId>
 			<version>${project.version}</version>
 			<type>iar</type>

@@ -5,7 +5,7 @@
             "data": {
                 "dependencies": [
                     {
-                        "groupId": "ch.ivyteam.ivy.addons",
+                        "groupId": "com.axonivy.utils.docfactory",
                         "artifactId": "doc-factory",
                         "version": "${version}",
                         "type": "iar"
@@ -13,8 +13,8 @@
                 ],
                 "repositories": [
                     {
-                        "id": "axonivy.public",
-                        "url": "https://repo.axonivy.rocks",
+                        "id": "maven.axonivy.com",
+                        "url": "https://maven.axonivy.com",
                         "snapshots": {
                             "enabled": "true"
                         }
@@ -27,7 +27,7 @@
             "data": {
                 "projects": [
                     {
-                        "groupId": "ch.ivyteam.ivy.addons",
+                        "groupId": "com.axonivy.utils.docfactory",
                         "artifactId": "doc-factory-demos",
                         "version": "${version}",
                         "type": "iar"
@@ -35,8 +35,8 @@
                 ],
                 "repositories": [
                     {
-                        "id": "axonivy.public",
-                        "url": "https://repo.axonivy.rocks"
+                        "id": "maven.axonivy.com",
+                        "url": "https://maven.axonivy.com"
                     }
                 ]
             }

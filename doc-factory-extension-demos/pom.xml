@@ -3,12 +3,12 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>ch.ivyteam.ivy.addons</groupId>
+    <groupId>com.axonivy.utils.docfactory</groupId>
     <artifactId>config</artifactId>
     <version>${revision}</version>
     <relativePath>../maven</relativePath>
   </parent>
-  <groupId>ch.ivyteam.ivy.addons</groupId>
+  <groupId>com.axonivy.utils.docfactory</groupId>
   <artifactId>doc-factory-extension-demos</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>iar</packaging>
@@ -31,10 +31,6 @@
     </dependency>    
   </dependencies>
   <repositories>
-    <repository>
-      <id>axon.public</id>
-      <url>https://repo.axonivy.rocks/</url>
-    </repository>
     <repository>
       <id>aspose.com</id>
       <url>https://repository.aspose.com/repo</url>
