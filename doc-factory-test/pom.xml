@@ -9,7 +9,7 @@
   <properties>
     <project-build-plugin-version>9.3.1</project-build-plugin-version>
     <pdfbox.version>2.0.26</pdfbox.version>
-    <powermock2.version>2.0.2</powermock2.version>
+    <powermock2.version>2.0.9</powermock2.version>
   </properties>
   
   <dependencies>
