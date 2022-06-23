@@ -1,6 +1,42 @@
 version: 2
 updates:
   - package-ecosystem: maven
+    directory: /
+    schedule:
+      interval: daily
+
+  - package-ecosystem: maven
     directory: doc-factory
+    schedule:
+      interval: daily
+
+  - package-ecosystem: maven
+    directory: doc-factory-doc
+    schedule:
+      interval: daily
+
+  - package-ecosystem: maven
+    directory: doc-factory-test
+    schedule:
+      interval: daily
+
+  - package-ecosystem: maven
+    directory: doc-factory-demos
+    schedule:
+      interval: daily
+
+  - package-ecosystem: maven
+    directory: doc-factory-product
+    schedule:
+      interval: daily
+
+
+  - package-ecosystem: maven
+    directory: doc-factory-demos-test
+    schedule:
+      interval: daily
+
+  - package-ecosystem: maven
+    directory: doc-factory-extension-demos
     schedule:
       interval: daily
