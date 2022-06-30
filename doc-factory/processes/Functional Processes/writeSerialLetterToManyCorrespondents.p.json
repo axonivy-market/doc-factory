@@ -1,13 +1,8 @@
 {
-  "format" : "9.4.11",
+  "format" : "9.4.13",
   "id" : "1249FCC8592E4E39",
   "data" : "ch.ivyteam.ivy.addons.docfactory.WriteSerialLetterToMany",
   "kind" : "CALLABLE_SUB",
-  "description" : [
-    "parses a document that contains mergefields ",
-    "and replaces those mergefields with real data",
-    "into multiple letters."
-  ],
   "elements" : [ {
       "id" : "f0",
       "type" : "CallSubStart",
