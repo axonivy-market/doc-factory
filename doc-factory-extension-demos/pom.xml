@@ -10,7 +10,7 @@
     <project-build-plugin-version>9.3.1</project-build-plugin-version>
 
     <aspose.barcode.version>20.8</aspose.barcode.version>
-    <aspose.email.version>20.8</aspose.email.version>
+    <aspose.email.version>22.6</aspose.email.version>
   </properties>
 
   <dependencies>
