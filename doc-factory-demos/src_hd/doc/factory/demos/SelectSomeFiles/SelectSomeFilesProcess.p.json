@@ -1,5 +1,5 @@
 {
-  "format" : "9.4.17",
+  "format" : "9.4.18",
   "id" : "16CE2142F29FF2C4",
   "data" : "doc.factory.demos.SelectSomeFiles.SelectSomeFilesData",
   "kind" : "HTML_DIALOG",
@@ -64,8 +64,7 @@
       },
       "visual" : {
         "at" : { "x" : 224, "y" : 160 },
-        "size" : { "width" : 128, "height" : 44 },
-        "labelOffset" : { "x" : -60, "y" : -8 }
+        "size" : { "width" : 128, "height" : 44 }
       },
       "connect" : { "id" : "f7", "to" : "f6" }
     }, {

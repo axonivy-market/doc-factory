@@ -1,5 +1,5 @@
 {
-  "format" : "9.4.17",
+  "format" : "9.4.18",
   "id" : "16CD7829EF6B489B",
   "data" : "doc.factory.demos.Data",
   "elements" : [ {
@@ -12,8 +12,7 @@
       ],
       "visual" : {
         "at" : { "x" : 408, "y" : 96 },
-        "size" : { "width" : 752, "height" : 60 },
-        "labelOffset" : { "x" : -367, "y" : -24 }
+        "size" : { "width" : 752, "height" : 60 }
       }
     }, {
       "id" : "f15",
@@ -71,8 +70,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 352, "y" : 288 },
-        "labelOffset" : { "x" : -40, "y" : -8 }
+        "at" : { "x" : 352, "y" : 288 }
       },
       "connect" : { "id" : "f21", "to" : "f18" }
     }, {
@@ -98,8 +96,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 192, "y" : 288 },
-        "labelOffset" : { "x" : -45, "y" : -8 }
+        "at" : { "x" : 192, "y" : 288 }
       },
       "connect" : { "id" : "f20", "to" : "f16" }
     }, {
@@ -117,8 +114,7 @@
       "name" : "Note: That you have to initialize the modul first.",
       "visual" : {
         "at" : { "x" : 712, "y" : 288 },
-        "size" : { "width" : 256, "height" : 30 },
-        "labelOffset" : { "x" : -125, "y" : -8 }
+        "size" : { "width" : 256, "height" : 30 }
       }
     } ],
   "layout" : {

@@ -1,5 +1,5 @@
 {
-  "format" : "9.4.17",
+  "format" : "9.4.18",
   "id" : "1712BF653EA82149",
   "data" : "doc.factory.demos.Email.EmailData",
   "kind" : "HTML_DIALOG",
@@ -68,8 +68,7 @@
       },
       "visual" : {
         "at" : { "x" : 216, "y" : 176 },
-        "size" : { "width" : 160, "height" : 44 },
-        "labelOffset" : { "x" : -70, "y" : -8 }
+        "size" : { "width" : 160, "height" : 44 }
       },
       "connect" : { "id" : "f9", "to" : "f8" }
     }, {
@@ -105,8 +104,7 @@
       },
       "visual" : {
         "at" : { "x" : 224, "y" : 64 },
-        "size" : { "width" : 144, "height" : 44 },
-        "labelOffset" : { "x" : -68, "y" : -8 }
+        "size" : { "width" : 144, "height" : 44 }
       },
       "connect" : { "id" : "f2", "to" : "f1" }
     } ]
