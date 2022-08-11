@@ -1,5 +1,5 @@
 {
-  "format" : "9.4.17",
+  "format" : "9.4.18",
   "id" : "1249FCC8592E4E39",
   "data" : "ch.ivyteam.ivy.addons.docfactory.WriteSerialLetterToMany",
   "kind" : "CALLABLE_SUB",
@@ -72,7 +72,6 @@
       "visual" : {
         "at" : { "x" : 152, "y" : 200 },
         "size" : { "width" : 234, "height" : 58 },
-        "labelOffset" : { "x" : -112, "y" : -24 },
         "color" : "NodeStyle16"
       }
     }, {
@@ -87,7 +86,6 @@
       "visual" : {
         "at" : { "x" : 152, "y" : 304 },
         "size" : { "width" : 234, "height" : 74 },
-        "labelOffset" : { "x" : -112, "y" : -32 },
         "color" : "NodeStyle8"
       }
     }, {
@@ -110,8 +108,7 @@
       },
       "visual" : {
         "at" : { "x" : 336, "y" : 200 },
-        "size" : { "width" : 36, "height" : 24 },
-        "labelOffset" : { "x" : 22, "y" : -9 }
+        "size" : { "width" : 36, "height" : 24 }
       },
       "connect" : { "id" : "f3", "to" : "f16" }
     }, {
@@ -142,8 +139,7 @@
       },
       "visual" : {
         "at" : { "x" : 336, "y" : 304 },
-        "size" : { "width" : 36, "height" : 24 },
-        "labelOffset" : { "x" : 22, "y" : -8 }
+        "size" : { "width" : 36, "height" : 24 }
       },
       "connect" : { "id" : "f4", "to" : "f1" }
     }, {
@@ -160,8 +156,7 @@
       },
       "visual" : {
         "at" : { "x" : 336, "y" : 128 },
-        "size" : { "width" : 36, "height" : 24 },
-        "labelOffset" : { "x" : 20, "y" : -2 }
+        "size" : { "width" : 36, "height" : 24 }
       },
       "connect" : { "id" : "f2", "to" : "f14" }
     }, {
