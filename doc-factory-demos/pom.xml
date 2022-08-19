@@ -7,7 +7,7 @@
 	<packaging>iar</packaging>
 
 	<properties>
-		<project-build-plugin-version>9.3.1</project-build-plugin-version>
+		<project-build-plugin-version>9.3.2</project-build-plugin-version>
 		<aspose.version>19.9</aspose.version>
 	</properties>
 
