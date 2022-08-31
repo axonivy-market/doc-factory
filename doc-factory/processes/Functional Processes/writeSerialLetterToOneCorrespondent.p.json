@@ -1,5 +1,5 @@
 {
-  "format" : "9.4.19",
+  "format" : "9.4.20",
   "id" : "124971223DD62955",
   "data" : "ch.ivyteam.ivy.addons.docfactory.WriteSerialLetter",
   "kind" : "CALLABLE_SUB",
@@ -42,7 +42,7 @@
       "visual" : {
         "at" : { "x" : 152, "y" : 80 },
         "size" : { "width" : 26, "height" : 26 },
-        "labelOffset" : { "x" : -98, "y" : -38 },
+        "labelOffset" : { "x" : 28, "y" : -18 },
         "description" : [
           "This callable writes a letter to one Correspondant",
           "with the help of a document factory Object.",
@@ -195,7 +195,7 @@
       "visual" : {
         "at" : { "x" : 656, "y" : 64 },
         "size" : { "width" : 26, "height" : 26 },
-        "labelOffset" : { "x" : -173, "y" : -36 },
+        "labelOffset" : { "x" : -165, "y" : -16 },
         "description" : [
           "This callable produces a document with a data (DataClass) and ",
           "with the help of a document factory Object.",
@@ -368,7 +368,7 @@
       "visual" : {
         "at" : { "x" : 1472, "y" : 72 },
         "size" : { "width" : 26, "height" : 26 },
-        "labelOffset" : { "x" : 16, "y" : -36 },
+        "labelOffset" : { "x" : 24, "y" : -16 },
         "description" : [
           "Produces a document with a list of merge fields and ",
           "with the help of a document factory Object. The Merge Mail With Regions is supported.",
@@ -535,7 +535,7 @@
       "visual" : {
         "at" : { "x" : 2064, "y" : 64 },
         "size" : { "width" : 26, "height" : 26 },
-        "labelOffset" : { "x" : 17, "y" : -31 },
+        "labelOffset" : { "x" : 25, "y" : -11 },
         "description" : [
           "Produces a document with a list of merge fields and ",
           "with the help of a document factory Object. The Merge Mail With Regions is supported.",
@@ -704,7 +704,7 @@
       "visual" : {
         "at" : { "x" : 2440, "y" : 64 },
         "size" : { "width" : 26, "height" : 26 },
-        "labelOffset" : { "x" : 19, "y" : -35 },
+        "labelOffset" : { "x" : 27, "y" : -15 },
         "description" : [
           "Produces a document with a list of merge fields and ",
           "with the help of a document factory Object. The Merge Mail With Regions is supported.",
@@ -886,7 +886,7 @@
       "visual" : {
         "at" : { "x" : 1360, "y" : 72 },
         "size" : { "width" : 26, "height" : 26 },
-        "labelOffset" : { "x" : -246, "y" : -48 },
+        "labelOffset" : { "x" : -238, "y" : -28 },
         "description" : [
           "Produces a document with a list of merge fields and ",
           "with the help of a document factory Object. The Merge Mail With Regions is supported.",
@@ -1059,7 +1059,7 @@
       "visual" : {
         "at" : { "x" : 1944, "y" : 64 },
         "size" : { "width" : 26, "height" : 26 },
-        "labelOffset" : { "x" : -171, "y" : -37 },
+        "labelOffset" : { "x" : -163, "y" : -17 },
         "description" : [
           "Produces a document with a list of merge fields and ",
           "with the help of a document factory Object. The Merge Mail With Regions is supported.",
@@ -1233,7 +1233,7 @@
       "visual" : {
         "at" : { "x" : 2792, "y" : 56 },
         "size" : { "width" : 26, "height" : 26 },
-        "labelOffset" : { "x" : 26, "y" : -24 },
+        "labelOffset" : { "x" : 34, "y" : -4 },
         "description" : [
           "Produces a document with the data included in  a DataClass Object. ",
           "The Merge Mail With Nested Regions is supported.",
@@ -1461,7 +1461,7 @@
       "visual" : {
         "at" : { "x" : 3192, "y" : 56 },
         "size" : { "width" : 26, "height" : 26 },
-        "labelOffset" : { "x" : 26, "y" : -24 },
+        "labelOffset" : { "x" : 34, "y" : -4 },
         "description" : [
           "Produces a document with the data included in ",
           "a Tree Object. The Merge Mail With Nested Regions is supported.",
@@ -1527,7 +1527,7 @@
       "visual" : {
         "at" : { "x" : 3624, "y" : 56 },
         "size" : { "width" : 26, "height" : 26 },
-        "labelOffset" : { "x" : 26, "y" : -24 },
+        "labelOffset" : { "x" : 34, "y" : -4 },
         "description" : [
           "Produces a document with the data from the given Data object. ",
           "The Merge Mail With Nested Regions is supported and the each data in the List<CompositeObject> represents a table.",
@@ -1688,7 +1688,7 @@
       "visual" : {
         "at" : { "x" : 992, "y" : 64 },
         "size" : { "width" : 26, "height" : 26 },
-        "labelOffset" : { "x" : -161, "y" : -38 },
+        "labelOffset" : { "x" : -153, "y" : -18 },
         "description" : [
           "This callable produces a document with a data (DataClass) and ",
           "with the help of a document factory Object. ",

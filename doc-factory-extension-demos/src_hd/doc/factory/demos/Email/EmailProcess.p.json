@@ -1,5 +1,5 @@
 {
-  "format" : "9.4.19",
+  "format" : "9.4.20",
   "id" : "1712BF653EA82149",
   "data" : "doc.factory.demos.Email.EmailData",
   "kind" : "HTML_DIALOG",
@@ -19,7 +19,7 @@
       },
       "visual" : {
         "at" : { "x" : 96, "y" : 64 },
-        "labelOffset" : { "x" : -16, "y" : 15 }
+        "labelOffset" : { "x" : 12, "y" : 35 }
       },
       "connect" : { "id" : "f12", "to" : "f11" }
     }, {
@@ -37,7 +37,7 @@
       },
       "visual" : {
         "at" : { "x" : 96, "y" : 288 },
-        "labelOffset" : { "x" : -15, "y" : 15 }
+        "labelOffset" : { "x" : 9, "y" : 35 }
       },
       "connect" : { "id" : "f5", "to" : "f4" }
     }, {
@@ -68,7 +68,7 @@
       },
       "visual" : {
         "at" : { "x" : 216, "y" : 176 },
-        "size" : { "width" : 160, "height" : 44 }
+        "size" : { "width" : 160, "height" : 60 }
       },
       "connect" : { "id" : "f9", "to" : "f8" }
     }, {
@@ -80,7 +80,7 @@
       },
       "visual" : {
         "at" : { "x" : 88, "y" : 176 },
-        "labelOffset" : { "x" : -17, "y" : 15 }
+        "labelOffset" : { "x" : 11, "y" : 35 }
       },
       "connect" : { "id" : "f10", "to" : "f6" }
     }, {
@@ -104,7 +104,7 @@
       },
       "visual" : {
         "at" : { "x" : 224, "y" : 64 },
-        "size" : { "width" : 144, "height" : 44 }
+        "size" : { "width" : 144, "height" : 60 }
       },
       "connect" : { "id" : "f2", "to" : "f1" }
     } ]
