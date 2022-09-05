@@ -56,7 +56,7 @@ pipeline {
           recordIssues tools: [eclipse(), sphinxBuild()], unstableTotalAll: 1
         
           echo 'deploy doc'
-          docker.image('maven:3.6.3-jdk-11').inside {            
+          docker.image('maven:3.8.6-eclipse-temurin-17').inside {            
             def phase = env.BRANCH_NAME == 'master' ? 'deploy -DaltDeploymentRepository=nexus.axonivy.com::https://nexus.axonivy.com/repository/maven-releases/ -DaltSnapshotDeploymentRepository=nexus.axonivy.com::https://nexus.axonivy.com/repository/maven-snapshots/' : 'verify'
             maven cmd: "-f doc-factory-doc/pom.xml clean ${phase}"
           }
@@ -68,7 +68,7 @@ pipeline {
 }
 
 def getCurrentVersion() {
-  docker.image('maven:3.6.3-jdk-11').inside { 
+  docker.image('maven:3.8.6-eclipse-temurin-17').inside { 
     def cmd = "mvn -f pom.xml help:evaluate -Dexpression=project.version -q -DforceStdout"
     def value = sh (script: cmd, returnStdout: true)
     echo "version is $value"
