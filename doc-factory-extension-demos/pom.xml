@@ -8,22 +8,20 @@
 
   <properties>
     <project-build-plugin-version>9.3.2</project-build-plugin-version>
-
-    <aspose.barcode.version>20.8</aspose.barcode.version>
-    <aspose.email.version>20.8</aspose.email.version>
+    <aspose.version>20.8</aspose.version>
   </properties>
 
   <dependencies>
     <dependency>
       <groupId>com.aspose</groupId>
       <artifactId>aspose-barcode</artifactId>
-      <version>${aspose.barcode.version}</version>
+      <version>${aspose.version}</version>
       <classifier>jdk17</classifier>
     </dependency>
     <dependency>
       <groupId>com.aspose</groupId>
       <artifactId>aspose-email</artifactId>
-      <version>${aspose.email.version}</version>
+      <version>${aspose.version}</version>
       <classifier>jdk16</classifier>
     </dependency>    
   </dependencies>

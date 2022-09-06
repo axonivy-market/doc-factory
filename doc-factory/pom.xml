@@ -8,11 +8,7 @@
 
   <properties>
     <project-build-plugin-version>9.3.2</project-build-plugin-version>
-
-    <aspose.words.version>20.8</aspose.words.version>
-    <aspose.cells.version>20.8</aspose.cells.version>
-    <aspose.pdf.version>20.8</aspose.pdf.version>
-    <aspose.slides.version>20.8</aspose.slides.version>
+    <aspose.version>20.8</aspose.version>
   </properties>
  
   <repositories>
@@ -25,18 +21,18 @@
     <dependency>
       <groupId>com.aspose</groupId>
       <artifactId>aspose-cells</artifactId>
-      <version>${aspose.cells.version}</version>
+      <version>${aspose.version}</version>
     </dependency>
     <dependency>
       <groupId>com.aspose</groupId>
       <artifactId>aspose-pdf</artifactId>
-      <version>${aspose.pdf.version}</version>
+      <version>${aspose.version}</version>
       <classifier>jdk17</classifier>
     </dependency>
     <dependency>
       <groupId>com.aspose</groupId>
       <artifactId>aspose-words</artifactId>
-      <version>${aspose.words.version}</version>
+      <version>${aspose.version}</version>
       <classifier>jdk17</classifier>
       <exclusions>
         <exclusion>
@@ -48,7 +44,7 @@
     <dependency>
       <groupId>com.aspose</groupId>
       <artifactId>aspose-slides</artifactId>
-      <version>${aspose.slides.version}</version>
+      <version>${aspose.version}</version>
       <classifier>jdk16</classifier>
     </dependency>
   </dependencies>
