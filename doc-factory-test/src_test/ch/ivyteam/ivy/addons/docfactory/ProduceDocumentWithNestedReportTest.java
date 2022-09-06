@@ -1,9 +1,6 @@
 package ch.ivyteam.ivy.addons.docfactory;
 
-import static org.hamcrest.core.IsCollectionContaining.hasItem;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
 import java.io.Serializable;
@@ -14,14 +11,16 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Locale;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import ch.ivyteam.ivy.addons.docfactory.test.data.Address;
 import ch.ivyteam.ivy.addons.docfactory.test.data.Insurance;
 import ch.ivyteam.ivy.addons.docfactory.test.data.InsuranceBasket;
 import ch.ivyteam.ivy.addons.docfactory.test.data.Person;
+import ch.ivyteam.ivy.environment.IvyTest;
 
-public class ProduceDocumentWithNestedReportTest extends DocFactoryTest {
+@IvyTest
+public class ProduceDocumentWithNestedReportTest {
 
   @Test
   public void produceDocument_for_reporting_with_nested_tables() throws Exception {
@@ -47,9 +46,9 @@ public class ProduceDocumentWithNestedReportTest extends DocFactoryTest {
       System.out.println("Exception : " + ex.toString());
     }
 
-    assertNotNull(result);
-    assertTrue(result.isSuccess());
-    assertThat(result.getFiles(), hasItem(resultFile));
+	assertThat(result).isNotNull();
+	assertThat(result.isSuccess()).isTrue();
+	assertThat(result.getFiles()).contains(resultFile);
   }
 
   public class InputData implements Serializable {

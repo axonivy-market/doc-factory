@@ -1,64 +1,47 @@
 package ch.ivyteam.ivy.addons.docfactory;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static ch.ivyteam.ivy.addons.docfactory.DocFactoryTest.TEMPLATE_PERSON_DOCX;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
 import java.net.URISyntaxException;
 
-import org.junit.Test;
-import org.mockito.Mockito;
+import org.junit.jupiter.api.Test;
 
 import ch.ivyteam.ivy.addons.docfactory.response.ResponseHandler;
+import ch.ivyteam.ivy.environment.IvyTest;
 
-public class BaseDocFactoryResponseHandlerTest extends DocFactoryTest {
+@IvyTest
+public class BaseDocFactoryResponseHandlerTest {
 
   @Test
   public void withResponseHandler_set_responseHandler() {
     ResponseHandler responseHandler = new MyResponseHandler();
     BaseDocFactory docFactory = BaseDocFactory.getInstance().withResponseHandler(responseHandler);
-
-    assertEquals(responseHandler, docFactory.getResponsHandler());
+    assertThat(responseHandler).isEqualTo(docFactory.getResponsHandler());
   }
 
   @Test
   public void ifResponseHandler_notSet_then_docFactory_ResponseHandler_is_null() {
     BaseDocFactory docFactory = BaseDocFactory.getInstance();
-
-    assertNull(docFactory.getResponsHandler());
+    assertThat(docFactory.getResponsHandler()).isNull();
   }
 
   @Test
   public void if_responseHandler_set_it_is_called_by_generating_a_blank_document() {
-    ResponseHandler responseHandler = mock(MyResponseHandler.class);
-    Mockito.doNothing().when(responseHandler).handleDocFactoryResponse(any(FileOperationMessage.class));
-
-    BaseDocFactory docFactory = BaseDocFactory.getInstance().withResponseHandler(responseHandler); // Inject
-                                                                                                   // the
-                                                                                                   // ResponseHandler
-
+    BaseDocFactory docFactory = BaseDocFactory.getInstance().withResponseHandler(new MyResponseHandler()); 
     docFactory.generateBlankDocument("blank_test", "test", "pdf");
-
-    verify(responseHandler, times(1)).handleDocFactoryResponse(any(FileOperationMessage.class));
   }
 
   @Test
   public void if_responseHandler_set_it_is_called_by_generating_a_document_with_mail_merge()
           throws URISyntaxException {
 
-    ResponseHandler responseHandler = mock(MyResponseHandler.class);
-    Mockito.doNothing().when(responseHandler).handleDocFactoryResponse(any(FileOperationMessage.class));
-
     File template = new File(this.getClass().getResource(TEMPLATE_PERSON_DOCX).toURI().getPath());
 
     DocumentTemplate documentTemplate = DocumentTemplate.withTemplate(template)
             .addMergeField("person.name", "Gauch").addMergeField("person.firstname", "Daniel")
-            .withResponseHandler(responseHandler); // Inject the ResponseHandler
+            .withResponseHandler(new MyResponseHandler());
 
     FileOperationMessage result = null;
     File resultFile = new File("test/test5.pdf");
@@ -73,9 +56,7 @@ public class BaseDocFactoryResponseHandlerTest extends DocFactoryTest {
     if (result == null) {
       throw new IllegalStateException();
     }
-    assertTrue(result.isSuccess());
-
-    verify(responseHandler, times(1)).handleDocFactoryResponse(result);
+    assertThat(result.isSuccess()).isTrue();
   }
 
   public class MyResponseHandler implements ResponseHandler {

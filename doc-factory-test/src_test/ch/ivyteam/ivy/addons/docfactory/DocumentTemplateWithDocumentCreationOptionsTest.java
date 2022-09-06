@@ -1,23 +1,24 @@
 package ch.ivyteam.ivy.addons.docfactory;
 
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
+import static ch.ivyteam.ivy.addons.docfactory.DocFactoryTest.TEMPLATE_WITH_FIELDS_FORM_DOCX;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.io.File;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import ch.ivyteam.ivy.addons.docfactory.options.DocumentCreationOptions;
+import ch.ivyteam.ivy.environment.IvyTest;
 
-public class DocumentTemplateWithDocumentCreationOptionsTest extends DocFactoryTest {
+@IvyTest
+public class DocumentTemplateWithDocumentCreationOptionsTest {
 
   File template;
 
-  @Override
-  @Before
+  @BeforeEach
   public void setup() throws Exception {
-    super.setup();
     template = new File(this.getClass().getResource(TEMPLATE_WITH_FIELDS_FORM_DOCX).toURI().getPath());
   }
 
@@ -25,37 +26,29 @@ public class DocumentTemplateWithDocumentCreationOptionsTest extends DocFactoryT
   @Test
   public void default_documentTemplate_DocumentCreationOptions_pdfFormFields_not_editable() {
     DocumentTemplate documentTemplate = DocumentTemplate.withTemplate(template);
-
     DocumentCreationOptions documentCreationOptions = documentTemplate.getDocumentCreationOptions();
-
-    assertThat(documentCreationOptions.isKeepFormFieldsEditableInPdf(), is(false));
+    assertThat(documentCreationOptions.isKeepFormFieldsEditableInPdf()).isFalse();
   }
 
   @Test
   public void default_documentTemplate_DocumentCreationOptions_backed_in_documentFactory() {
     DocumentTemplate documentTemplate = DocumentTemplate.withTemplate(template);
-
     DocumentCreationOptions documentCreationOptions = documentTemplate.getDocumentCreationOptions();
-
-    assertThat(documentTemplate.getDocumentFactory().documentCreationOptions, is(documentCreationOptions));
+    assertThat(documentTemplate.getDocumentFactory().documentCreationOptions).isEqualTo(documentCreationOptions);
   }
 
   @Test
   public void set_documentTemplate_null_DocumentCreationOptions_throws_IAE() {
-    thrown.expect(IllegalArgumentException.class);
-    DocumentTemplate.withTemplate(template).withDocumentCreationOptions(null);
+	  assertThatThrownBy(() -> DocumentTemplate.withTemplate(template).withDocumentCreationOptions(null));
   }
 
   @SuppressWarnings("deprecation")
   @Test
   public void set_documentTemplate_DocumentCreationOptions() {
-
     DocumentTemplate documentTemplate = DocumentTemplate.withTemplate(template).withDocumentCreationOptions(
             DocumentCreationOptions.getInstance().keepFormFieldsEditableInPdf(false));
-
     DocumentCreationOptions documentCreationOptions = documentTemplate.getDocumentCreationOptions();
-
-    assertThat(documentCreationOptions.isKeepFormFieldsEditableInPdf(), is(false));
+    assertThat(documentCreationOptions.isKeepFormFieldsEditableInPdf()).isFalse();
   }
 
   @SuppressWarnings("deprecation")
@@ -63,10 +56,7 @@ public class DocumentTemplateWithDocumentCreationOptionsTest extends DocFactoryT
   public void documentTemplate_set_DocumentCreationOptions_backed_in_documentFactory() {
     DocumentTemplate documentTemplate = DocumentTemplate.withTemplate(template).withDocumentCreationOptions(
             DocumentCreationOptions.getInstance().keepFormFieldsEditableInPdf(false));
-
     DocumentCreationOptions documentCreationOptions = documentTemplate.getDocumentCreationOptions();
-
-    assertThat(documentTemplate.getDocumentFactory().documentCreationOptions, is(documentCreationOptions));
+    assertThat(documentTemplate.getDocumentFactory().documentCreationOptions).isEqualTo(documentCreationOptions);
   }
-
 }

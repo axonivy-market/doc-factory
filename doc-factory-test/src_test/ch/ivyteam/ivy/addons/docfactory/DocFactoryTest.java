@@ -1,98 +1,24 @@
 package ch.ivyteam.ivy.addons.docfactory;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
-
-import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.Calendar;
-
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
 import com.aspose.words.net.System.Data.DataRow;
 import com.aspose.words.net.System.Data.DataTable;
 
-import ch.ivyteam.ivy.ThirdPartyLicenses;
-import ch.ivyteam.ivy.addons.docfactory.aspose.LicenseLoader;
 import ch.ivyteam.ivy.addons.docfactory.test.data.Address;
 import ch.ivyteam.ivy.addons.docfactory.test.data.Insurance;
 import ch.ivyteam.ivy.addons.docfactory.test.data.InsuranceBasket;
 import ch.ivyteam.ivy.addons.docfactory.test.data.Person;
-import ch.ivyteam.ivy.cm.IContentManagementSystem;
-import ch.ivyteam.ivy.environment.Ivy;
-import ch.ivyteam.ivy.scripting.objects.File;
-import ch.ivyteam.ivy.scripting.objects.util.IIvyScriptObjectEnvironment;
-import ch.ivyteam.log.Logger;
 
-@RunWith(PowerMockRunner.class)
-// tell powermock to ignore things different in java 11
-// see https://github.com/mockito/mockito/issues/1562
-@PowerMockIgnore({"com.sun.org.apache.xerces.*", "com.aspose.pdf.*", "javax.xml.parsers.*", "org.w3c.dom.*"})
-@PrepareForTest({Ivy.class, ThirdPartyLicenses.class, File.class, LicenseLoader.class,
-    IIvyScriptObjectEnvironment.class})
 public abstract class DocFactoryTest {
-
-  @Rule
-  public ExpectedException thrown = ExpectedException.none();
 
   protected static final String TEMPLATE_PERSON_DOCX = "resources/template_person.docx";
   protected static final String TEMPLATE_WITH_FIELDS_FORM_DOCX = "resources/template_with_field_form.docx";
   protected static final String TEMPLATE_FOR_TESTING_NULL_VALUES_DOCX = "resources/template_for_testing_null_value.docx";
   protected static final String TEMPLATE_FOR_TESTING_LONG_EDITABLE_FIELDS_DOCX = "resources/template_with_long_editable_fields.docx";
 
-  private static com.aspose.pdf.License PDF_LICENSE;
-  private static com.aspose.words.License WORDS_LICENSE;
-
-  @BeforeClass
-  public static void loadLicenses() {
-    try (InputStream licIn = DocFactoryTest.class
-            .getResourceAsStream("aspose/resources/docfactory_2019_09_04.lic")) {
-      PDF_LICENSE = new com.aspose.pdf.License();
-      PDF_LICENSE.setLicense(licIn);
-    } catch (Exception e) {
-      System.err.println(e.getMessage());
-    }
-    try (InputStream licIn = DocFactoryTest.class
-            .getResourceAsStream("aspose/resources/docfactory_2019_09_04.lic")) {
-      WORDS_LICENSE = new com.aspose.words.License();
-      WORDS_LICENSE.setLicense(licIn);
-    } catch (Exception e) {
-      System.err.println(e.getMessage());
-    }
-  }
-
-  @Before
-  public void setup() throws Exception {
-    Logger mockLogger = mock(Logger.class);
-    doNothing().when(mockLogger).error(any(String.class));
-    doNothing().when(mockLogger).info(any(String.class));
-    doNothing().when(mockLogger).debug(any(String.class));
-
-    IContentManagementSystem mockedCms = mock(IContentManagementSystem.class);
-    when(mockedCms.co(any(String.class))).thenReturn("");
-
-    mockStatic(ThirdPartyLicenses.class);
-    mockStatic(Ivy.class);
-    mockStatic(LicenseLoader.class);
-    mockStatic(IIvyScriptObjectEnvironment.class);
-
-    when(Ivy.log()).thenReturn(mockLogger);
-    when(Ivy.cms()).thenReturn(mockedCms);
-    when(ThirdPartyLicenses.getDocumentFactoryLicense()).thenReturn(null);
-    when(IIvyScriptObjectEnvironment.current()).thenReturn(new MyIvyScriptObjectEnvironment());
-  }
-
-  protected java.io.File makeFile(String path) {
+  static protected java.io.File makeFile(String path) {
     java.io.File resultFile = new java.io.File(path);
     if (resultFile.isFile()) {
       resultFile.delete();
@@ -103,7 +29,7 @@ public abstract class DocFactoryTest {
     return resultFile;
   }
 
-  protected Person makePerson() {
+  static protected Person makePerson() {
     return Person.withNameFirstname("Comba", "Emmanuel")
             .withAddress(Address.withStreetZipCodeCityCountry("Muristrasse 4", "8000", "Z�rich", "CH"))
             .withBirthday(Calendar.getInstance().getTime())
@@ -114,7 +40,7 @@ public abstract class DocFactoryTest {
             .withId(new BigDecimal(213546));
   }
 
-  protected Person makePersonWithHTML() {
+  static protected Person makePersonWithHTML() {
     String htmlStreet = "Hey dude! This is my address:<br>"
             + "<b>My Street in bold</b>"
             + "<br /><font color='blue'>I am blue</font>"
@@ -136,7 +62,7 @@ public abstract class DocFactoryTest {
             .withId(new BigDecimal(213546));
   }
 
-  protected Person makePersonWithHTMLFormattedInCssFile() {
+  static protected Person makePersonWithHTMLFormattedInCssFile() {
     String htmlStreet = "<html>"
             + "<head>"
             + "<link rel='stylesheet' href='styles.css'>"
@@ -156,7 +82,7 @@ public abstract class DocFactoryTest {
             .withId(new BigDecimal(213546));
   }
 
-  protected DataTable makeDataTable() {
+  static protected DataTable makeDataTable() {
     // The name of the DataTable must be the same as the name of the merge field
     // region (TableStart:itemPrices)
     com.aspose.words.net.System.Data.DataTable data = new DataTable("itemPrices");

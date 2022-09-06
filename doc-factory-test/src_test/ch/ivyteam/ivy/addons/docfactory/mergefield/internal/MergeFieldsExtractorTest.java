@@ -1,9 +1,6 @@
 package ch.ivyteam.ivy.addons.docfactory.mergefield.internal;
 
-import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
-import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
 import java.io.Serializable;
@@ -15,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.aspose.words.Document;
 
@@ -26,18 +23,14 @@ public class MergeFieldsExtractorTest {
 
   @Test
   public void getMergeFields_returns_empty_Collection_if_bean_null() {
-
-    Collection<TemplateMergeField> result = MergeFieldsExtractor.getMergeFields(null);
-
-    assertTrue(result.isEmpty());
+    var result = MergeFieldsExtractor.getMergeFields(null);
+    assertThat(result).isEmpty();
   }
 
   @Test
   public void getMergeFields_returns_empty_Collection_if_bean_has_no_property() {
-
-    Collection<TemplateMergeField> result = MergeFieldsExtractor.getMergeFields(new MyEmptyBean());
-
-    assertTrue(result.isEmpty());
+    var result = MergeFieldsExtractor.getMergeFields(new MyEmptyBean());
+    assertThat(result).isEmpty();
   }
 
   @Test
@@ -47,11 +40,9 @@ public class MergeFieldsExtractorTest {
     person.setName("Comba");
 
     Collection<TemplateMergeField> result = MergeFieldsExtractor.getMergeFields(person);
-    assertThat(
-            result,
-            containsInAnyOrder(
+    assertThat(result).contains(
                     TemplateMergeField.withName("simplePerson.name").withValue("Comba"),
-                    TemplateMergeField.withName("simplePerson.firstname").withValue("Emmanuel")));
+                    TemplateMergeField.withName("simplePerson.firstname").withValue("Emmanuel"));
   }
 
   @Test
@@ -62,9 +53,7 @@ public class MergeFieldsExtractorTest {
 
     Collection<TemplateMergeField> result = MergeFieldsExtractor.getMergeFields(person);
 
-    assertThat(
-            result,
-            containsInAnyOrder(
+    assertThat(result).contains(
                     TemplateMergeField.withName("person.name").withValue("Comba"),
                     TemplateMergeField.withName("person.firstname").withValue("Emmanuel"),
                     TemplateMergeField.withName("person.address.street").withValue("Wellington avenue"),
@@ -72,7 +61,7 @@ public class MergeFieldsExtractorTest {
                     TemplateMergeField.withName("person.id").withValue(885),
                     TemplateMergeField.withName("person.birthday").withValue(person.getBirthday()),
                     TemplateMergeField.withName("person.address").withValue(person.getAddress()),
-                    TemplateMergeField.withName("person.paySlip").withValue(paySlip)));
+                    TemplateMergeField.withName("person.paySlip").withValue(paySlip));
   }
 
   @Test
@@ -85,13 +74,11 @@ public class MergeFieldsExtractorTest {
     bean.hobbies.add("cooking");
 
     Collection<TemplateMergeField> result = MergeFieldsExtractor.getMergeFields(bean);
-    assertThat(
-            result,
-            containsInAnyOrder(
+    assertThat(result).contains(
                     TemplateMergeField.withName("beanWithCollection.age").withValue(10),
                     TemplateMergeField.withName("beanWithCollection.UID").withValue("dgag465h215ht"),
-                    TemplateMergeField.withName("beanWithCollection.hobbies").withValue(bean.hobbies)));
-    assertTrue(hasGivenNumberOfCollectionTemplateMergeFields(1, result));
+                    TemplateMergeField.withName("beanWithCollection.hobbies").withValue(bean.hobbies));
+    assertThat(hasGivenNumberOfCollectionTemplateMergeFields(1, result)).isTrue();
   }
 
   @Test
@@ -117,15 +104,12 @@ public class MergeFieldsExtractorTest {
     for (TemplateMergeField tmf : result) {
       System.out.println(tmf.getMergeFieldName());
     }
-    assertThat(
-            result,
-            containsInAnyOrder(
+    assertThat(result).contains(
                     TemplateMergeField.withName("beanWithCollection.age").withValue(10),
                     TemplateMergeField.withName("beanWithCollection.UID").withValue("dgag465h215ht"),
                     TemplateMergeField.withName("beanWithCollection.hobbies").withValue(bean.hobbies),
-                    TemplateMergeField.withName("beanWithCollection.addresses").withValue(bean.addresses)));
-    assertTrue(hasGivenNumberOfCollectionTemplateMergeFields(2, result));
-
+                    TemplateMergeField.withName("beanWithCollection.addresses").withValue(bean.addresses));
+    assertThat(hasGivenNumberOfCollectionTemplateMergeFields(2, result)).isTrue();
   }
 
   private boolean hasGivenNumberOfCollectionTemplateMergeFields(int expectedNumber,
@@ -157,16 +141,15 @@ public class MergeFieldsExtractorTest {
     Optional<TemplateMergeField> personAdditionalInformationsTemplateMergeField = personMergeFields.stream()
             .filter(tm -> tm.getMergeFieldName().equals("person.personalInformations")).findFirst();
 
-    assertTrue(personAdditionalInformationsTemplateMergeField.get().isCollection());
+    assertThat(personAdditionalInformationsTemplateMergeField.get().isCollection()).isTrue();
 
     Collection<TemplateMergeField> additionalTemplateTypeMergeFields = personAdditionalInformationsTemplateMergeField
             .get().getChildren().stream()
             .filter(tm -> tm.getMergeFieldName().equals("additionalinformation.type"))
             .collect(Collectors.toList());
 
-    assertThat(additionalTemplateTypeMergeFields, hasSize(infos.size()));
-
-    assertTrue(haveAllNoChildrenMergeFields(additionalTemplateTypeMergeFields));
+    assertThat(additionalTemplateTypeMergeFields).hasSize(infos.size());
+    assertThat(haveAllNoChildrenMergeFields(additionalTemplateTypeMergeFields)).isTrue();
   }
 
   private boolean haveAllNoChildrenMergeFields(Collection<TemplateMergeField> mergeFields) {

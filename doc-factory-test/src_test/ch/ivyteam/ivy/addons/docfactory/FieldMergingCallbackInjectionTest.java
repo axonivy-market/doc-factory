@@ -1,24 +1,25 @@
 package ch.ivyteam.ivy.addons.docfactory;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static ch.ivyteam.ivy.addons.docfactory.DocFactoryTest.TEMPLATE_WITH_FIELDS_FORM_DOCX;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
 import java.util.Calendar;
 import java.util.Locale;
 
 import org.apache.commons.lang3.StringUtils;
-import org.junit.Test;
-
-import ch.ivyteam.ivy.addons.docfactory.aspose.AsposeFieldMergingCallback;
-import ch.ivyteam.ivy.addons.docfactory.test.data.Person;
+import org.junit.jupiter.api.Test;
 
 import com.aspose.words.DocumentBuilder;
 import com.aspose.words.FieldMergingArgs;
 import com.aspose.words.Paragraph;
 
-public class FieldMergingCallbackInjectionTest extends DocFactoryTest {
+import ch.ivyteam.ivy.addons.docfactory.aspose.AsposeFieldMergingCallback;
+import ch.ivyteam.ivy.addons.docfactory.test.data.Person;
+import ch.ivyteam.ivy.environment.IvyTest;
+
+@IvyTest
+public class FieldMergingCallbackInjectionTest {
 
   @Test
   public void inject_fieldMergingCallback_test() throws Exception {
@@ -47,9 +48,9 @@ public class FieldMergingCallbackInjectionTest extends DocFactoryTest {
 
     FileOperationMessage result = documentTemplate.produceDocument(resultFile);
 
-    assertNotNull(result);
-    assertTrue(result.isSuccess());
-    assertThat(result.getFiles(), org.hamcrest.core.IsCollectionContaining.hasItem(resultFile));
+    assertThat(result).isNotNull();
+	assertThat(result.isSuccess()).isTrue();
+	assertThat(result.getFiles()).contains(resultFile);
   }
 
   private File makeResultFile() {

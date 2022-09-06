@@ -1,31 +1,31 @@
 package ch.ivyteam.ivy.addons.docfactory;
 
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static ch.ivyteam.ivy.addons.docfactory.DocFactoryTest.makeFile;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
 import java.util.Locale;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import ch.ivyteam.ivy.addons.docfactory.options.DocumentCreationOptions;
+import ch.ivyteam.ivy.environment.IvyTest;
 
 @SuppressWarnings("deprecation")
-public class RemovingWhiteSpaceInPdfEditableFieldsIT extends DocFactoryTest {
+@IvyTest
+public class RemovingWhiteSpaceInPdfEditableFieldsIT {
 
   File template;
   DocumentTemplate documentTemplate;
 
-  @Override
-  @Before
+  @BeforeEach
   public void setup() throws Exception {
-    super.setup();
     File tpl = new File(
-            this.getClass().getResource(TEMPLATE_FOR_TESTING_LONG_EDITABLE_FIELDS_DOCX).toURI().getPath());
+            this.getClass().getResource(DocFactoryTest.TEMPLATE_FOR_TESTING_LONG_EDITABLE_FIELDS_DOCX).toURI().getPath());
 
     documentTemplate = DocumentTemplate.withTemplate(tpl).useLocale(Locale.forLanguageTag("de-CH"))
-            .putDataAsSourceForMailMerge(makePerson());
+            .putDataAsSourceForMailMerge(DocFactoryTest.makePerson());
   }
 
   @Test
@@ -34,13 +34,13 @@ public class RemovingWhiteSpaceInPdfEditableFieldsIT extends DocFactoryTest {
             DocumentCreationOptions.getInstance()
                     .keepFormFieldsEditableInPdf(true));
 
-    File resultFile = makeFile(
+    File resultFile = DocFactoryTest.makeFile(
             "test/documentTemplate/removingWhiteSpaceInPdfEditableFieldsIT/default_not_remove_fieldSpaces.pdf");
 
     FileOperationMessage result = documentTemplate.produceDocument(resultFile);
 
-    assertTrue(result.isSuccess());
-    assertThat(result.getFiles(), org.hamcrest.core.IsCollectionContaining.hasItem(resultFile));
+    assertThat(result.isSuccess()).isTrue();
+    assertThat(result.getFiles()).contains(resultFile);
   }
 
   @Test
@@ -55,8 +55,8 @@ public class RemovingWhiteSpaceInPdfEditableFieldsIT extends DocFactoryTest {
 
     FileOperationMessage result = documentTemplate.produceDocument(resultFile);
 
-    assertTrue(result.isSuccess());
-    assertThat(result.getFiles(), org.hamcrest.core.IsCollectionContaining.hasItem(resultFile));
+    assertThat(result.isSuccess()).isTrue();
+    assertThat(result.getFiles()).contains(resultFile);
   }
 
   @Test
@@ -71,8 +71,8 @@ public class RemovingWhiteSpaceInPdfEditableFieldsIT extends DocFactoryTest {
 
     FileOperationMessage result = documentTemplate.produceDocument(resultFile);
 
-    assertTrue(result.isSuccess());
-    assertThat(result.getFiles(), org.hamcrest.core.IsCollectionContaining.hasItem(resultFile));
+    assertThat(result.isSuccess()).isTrue();
+    assertThat(result.getFiles()).contains(resultFile);
   }
 
   @Test
@@ -86,8 +86,8 @@ public class RemovingWhiteSpaceInPdfEditableFieldsIT extends DocFactoryTest {
 
     FileOperationMessage result = documentTemplate.produceDocument(resultFile);
 
-    assertTrue(result.isSuccess());
-    assertThat(result.getFiles(), org.hamcrest.core.IsCollectionContaining.hasItem(resultFile));
+    assertThat(result.isSuccess()).isTrue();
+    assertThat(result.getFiles()).contains(resultFile);
   }
 
   @Test
@@ -101,8 +101,8 @@ public class RemovingWhiteSpaceInPdfEditableFieldsIT extends DocFactoryTest {
 
     FileOperationMessage result = documentTemplate.produceDocument(resultFile);
 
-    assertTrue(result.isSuccess());
-    assertThat(result.getFiles(), org.hamcrest.core.IsCollectionContaining.hasItem(resultFile));
+    assertThat(result.isSuccess()).isTrue();
+    assertThat(result.getFiles()).contains(resultFile);
   }
 
   @Test
@@ -116,8 +116,8 @@ public class RemovingWhiteSpaceInPdfEditableFieldsIT extends DocFactoryTest {
 
     FileOperationMessage result = documentTemplate.produceDocument(resultFile);
 
-    assertTrue(result.isSuccess());
-    assertThat(result.getFiles(), org.hamcrest.core.IsCollectionContaining.hasItem(resultFile));
+    assertThat(result.isSuccess()).isTrue();
+    assertThat(result.getFiles()).contains(resultFile);
   }
 
   @Test
@@ -131,8 +131,8 @@ public class RemovingWhiteSpaceInPdfEditableFieldsIT extends DocFactoryTest {
 
     FileOperationMessage result = documentTemplate.produceDocument(resultFile);
 
-    assertTrue(result.isSuccess());
-    assertThat(result.getFiles(), org.hamcrest.core.IsCollectionContaining.hasItem(resultFile));
+    assertThat(result.isSuccess()).isTrue();
+    assertThat(result.getFiles()).contains(resultFile);
   }
 
   @Test
@@ -146,8 +146,7 @@ public class RemovingWhiteSpaceInPdfEditableFieldsIT extends DocFactoryTest {
 
     FileOperationMessage result = documentTemplate.produceDocument(resultFile);
 
-    assertTrue(result.isSuccess());
-    assertThat(result.getFiles(), org.hamcrest.core.IsCollectionContaining.hasItem(resultFile));
+    assertThat(result.isSuccess()).isTrue();
+    assertThat(result.getFiles()).contains(resultFile);
   }
-
 }
