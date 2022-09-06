@@ -1,6 +1,6 @@
 package ch.ivyteam.ivy.addons.docfactory;
 
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
 import java.math.BigDecimal;
@@ -11,7 +11,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import ch.ivyteam.ivy.addons.docfactory.mergefield.TemplateMergeFieldType;
 import ch.ivyteam.ivy.addons.docfactory.test.data.Address;
@@ -30,27 +30,27 @@ public class TemplateMergeFieldTest {
 
     TemplateMergeField expected = TemplateMergeField.withName("aName")
             .withValueAs(TemplateMergeFieldType.TEXT, "");
-    assertTrue(result.getMergeFieldName().equals("aName"));
-    assertTrue(result.getValue().equals(""));
-    assertTrue(result.equals(expected));
+    assertThat(result.getMergeFieldName().equals("aName")).isTrue();
+    assertThat(result.getValue().equals("")).isTrue();
+    assertThat(result.equals(expected)).isTrue();
   }
 
   @Test
   public void TemplateMergeField_generated_with_String_as_value_is_from_type_TEXT() {
     TemplateMergeField result = TemplateMergeField.withName("aName").withValue("aString");
 
-    assertTrue(result.getMergeFieldName().equals("aName"));
-    assertTrue(result.getValue().equals("aString"));
-    assertTrue(result.getType().equals(TemplateMergeFieldType.TEXT));
+    assertThat(result.getMergeFieldName().equals("aName")).isTrue();
+    assertThat(result.getValue().equals("aString")).isTrue();
+    assertThat(result.getType().equals(TemplateMergeFieldType.TEXT)).isTrue();
   }
 
   @Test
   public void TemplateMergeField_generated_with_File_as_value_is_from_type_FILE() {
     TemplateMergeField result = TemplateMergeField.withName("aName").withValue(new File("test.doc"));
 
-    assertTrue(result.getMergeFieldName().equals("aName"));
-    assertTrue(result.getValue().equals(new File("test.doc")));
-    assertTrue(result.getType().equals(TemplateMergeFieldType.FILE));
+    assertThat(result.getMergeFieldName().equals("aName")).isTrue();
+    assertThat(result.getValue().equals(new File("test.doc"))).isTrue();
+    assertThat(result.getType().equals(TemplateMergeFieldType.FILE)).isTrue();
   }
 
   @Test
@@ -58,9 +58,9 @@ public class TemplateMergeFieldTest {
     byte[] bytes = new byte[8];
     TemplateMergeField result = TemplateMergeField.withName("aName").withValue(bytes);
 
-    assertTrue(result.getMergeFieldName().equals("aName"));
-    assertTrue(result.getValue().equals(bytes));
-    assertTrue(result.getType().equals(TemplateMergeFieldType.BYTES));
+    assertThat(result.getMergeFieldName().equals("aName")).isTrue();
+    assertThat(result.getValue().equals(bytes)).isTrue();
+    assertThat(result.getType().equals(TemplateMergeFieldType.BYTES)).isTrue();
   }
 
   @Test
@@ -70,9 +70,9 @@ public class TemplateMergeFieldTest {
     Date birthday = cal.getTime();
     TemplateMergeField result = TemplateMergeField.withName("aName").withValue(birthday);
 
-    assertTrue(result.getMergeFieldName().equals("aName"));
-    assertTrue(result.getValue().equals(birthday));
-    assertTrue(result.getType().equals(TemplateMergeFieldType.DATE));
+    assertThat(result.getMergeFieldName().equals("aName")).isTrue();
+    assertThat(result.getValue().equals(birthday)).isTrue();
+    assertThat(result.getType().equals(TemplateMergeFieldType.DATE)).isTrue();
   }
 
   @Test
@@ -82,9 +82,9 @@ public class TemplateMergeFieldTest {
     java.sql.Date birthday = java.sql.Date.valueOf("1972-10-19");
     TemplateMergeField result = TemplateMergeField.withName("aName").withValue(birthday);
 
-    assertTrue(result.getMergeFieldName().equals("aName"));
-    assertTrue(result.getValue().equals(birthday));
-    assertTrue(result.getType().equals(TemplateMergeFieldType.DATE));
+    assertThat(result.getMergeFieldName().equals("aName")).isTrue();
+    assertThat(result.getValue().equals(birthday)).isTrue();
+    assertThat(result.getType().equals(TemplateMergeFieldType.DATE)).isTrue();
   }
 
   @Test
@@ -92,9 +92,9 @@ public class TemplateMergeFieldTest {
 
     TemplateMergeField result = TemplateMergeField.withName("aName").withValue(25);
 
-    assertTrue(result.getMergeFieldName().equals("aName"));
-    assertTrue(result.getValue().equals(25));
-    assertTrue(result.getType().equals(TemplateMergeFieldType.NUMBER));
+    assertThat(result.getMergeFieldName().equals("aName")).isTrue();
+    assertThat(result.getValue().equals(25)).isTrue();
+    assertThat(result.getType().equals(TemplateMergeFieldType.NUMBER)).isTrue();
   }
 
   @Test
@@ -102,9 +102,9 @@ public class TemplateMergeFieldTest {
 
     TemplateMergeField result = TemplateMergeField.withName("aName").withValue(2589l);
 
-    assertTrue(result.getMergeFieldName().equals("aName"));
-    assertTrue(result.getValue().equals(2589l));
-    assertTrue(result.getType().equals(TemplateMergeFieldType.NUMBER));
+    assertThat(result.getMergeFieldName().equals("aName")).isTrue();
+    assertThat(result.getValue().equals(2589l)).isTrue();
+    assertThat(result.getType().equals(TemplateMergeFieldType.NUMBER)).isTrue();
   }
 
   @Test
@@ -112,9 +112,9 @@ public class TemplateMergeFieldTest {
 
     TemplateMergeField result = TemplateMergeField.withName("aName").withValue(28.66);
 
-    assertTrue(result.getMergeFieldName().equals("aName"));
-    assertTrue(result.getValue().equals(28.66));
-    assertTrue(result.getType().equals(TemplateMergeFieldType.NUMBER));
+    assertThat(result.getMergeFieldName().equals("aName")).isTrue();
+    assertThat(result.getValue().equals(28.66)).isTrue();
+    assertThat(result.getType().equals(TemplateMergeFieldType.NUMBER)).isTrue();
   }
 
   @Test
@@ -122,7 +122,7 @@ public class TemplateMergeFieldTest {
 
     TemplateMergeField result = TemplateMergeField.withName("aName").withValue(28.66);
 
-    assertTrue(!result.hasChildren());
+    assertThat(!result.hasChildren()).isTrue();
   }
 
   @Test
@@ -132,9 +132,9 @@ public class TemplateMergeFieldTest {
     hobbies.add("hobbie2");
     TemplateMergeField result = TemplateMergeField.withName("aName").withValue(hobbies);
 
-    assertTrue(result.getMergeFieldName().equals("aName"));
-    assertTrue(result.getValue().equals(hobbies));
-    assertTrue(result.getType().equals(TemplateMergeFieldType.COLLECTION));
+    assertThat(result.getMergeFieldName().equals("aName")).isTrue();
+    assertThat(result.getValue().equals(hobbies)).isTrue();
+    assertThat(result.getType().equals(TemplateMergeFieldType.COLLECTION)).isTrue();
   }
 
   @Test
@@ -144,7 +144,7 @@ public class TemplateMergeFieldTest {
     hobbies.add("hobbie2");
     TemplateMergeField result = TemplateMergeField.withName("aName").withValue(hobbies);
 
-    assertTrue(result.hasChildren());
+    assertThat(result.hasChildren()).isTrue();
   }
 
   @Test
@@ -153,7 +153,7 @@ public class TemplateMergeFieldTest {
     hobbies.add("hobbie1");
     hobbies.add("hobbie2");
     TemplateMergeField result = TemplateMergeField.withName("aName").withValue(hobbies);
-    assertTrue(result.getChildren().size() == hobbies.size());
+    assertThat(result.getChildren().size() == hobbies.size()).isTrue();
   }
 
   @Test
@@ -163,9 +163,9 @@ public class TemplateMergeFieldTest {
     hobbies.add("hobbie2");
     TemplateMergeField result = TemplateMergeField.withName("aName").withValue(hobbies);
 
-    assertTrue(result.getMergeFieldName().equals("aName"));
-    assertTrue(result.getValue().equals(hobbies));
-    assertTrue(result.getType().equals(TemplateMergeFieldType.COLLECTION));
+    assertThat(result.getMergeFieldName().equals("aName")).isTrue();
+    assertThat(result.getValue().equals(hobbies)).isTrue();
+    assertThat(result.getType().equals(TemplateMergeFieldType.COLLECTION)).isTrue();
   }
 
   @Test
@@ -175,7 +175,7 @@ public class TemplateMergeFieldTest {
     hobbies.add("hobbie2");
     TemplateMergeField result = TemplateMergeField.withName("aName").withValue(hobbies);
 
-    assertTrue(result.hasChildren());
+    assertThat(result.hasChildren()).isTrue();
   }
 
   @Test
@@ -185,7 +185,7 @@ public class TemplateMergeFieldTest {
     hobbies.add("hobbie2");
     TemplateMergeField result = TemplateMergeField.withName("aName").withValue(hobbies);
 
-    assertTrue(result.getChildren().size() == hobbies.size());
+    assertThat(result.getChildren().size() == hobbies.size()).isTrue();
   }
 
   @Test
@@ -195,9 +195,9 @@ public class TemplateMergeFieldTest {
     hobbies.add("hobbie2");
     TemplateMergeField result = TemplateMergeField.withName("aName").withValue(hobbies);
 
-    assertTrue(result.getMergeFieldName().equals("aName"));
-    assertTrue(result.getValue().equals(hobbies));
-    assertTrue(result.getType().equals(TemplateMergeFieldType.COLLECTION));
+    assertThat(result.getMergeFieldName().equals("aName")).isTrue();
+    assertThat(result.getValue().equals(hobbies)).isTrue();
+    assertThat(result.getType().equals(TemplateMergeFieldType.COLLECTION)).isTrue();
   }
 
   @Test
@@ -207,9 +207,9 @@ public class TemplateMergeFieldTest {
     hobbies.put(2, "hobbie2");
     TemplateMergeField result = TemplateMergeField.withName("aName").withValue(hobbies);
 
-    assertTrue(result.getMergeFieldName().equals("aName"));
-    assertTrue(result.getValue().equals(hobbies));
-    assertTrue(result.getType().equals(TemplateMergeFieldType.COLLECTION));
+    assertThat(result.getMergeFieldName().equals("aName")).isTrue();
+    assertThat(result.getValue().equals(hobbies)).isTrue();
+    assertThat(result.getType().equals(TemplateMergeFieldType.COLLECTION)).isTrue();
   }
 
   @Test
@@ -217,14 +217,14 @@ public class TemplateMergeFieldTest {
     Collection<Person> persons = makePersons();
     TemplateMergeField result = TemplateMergeField.withName("aName").withValue(persons);
 
-    assertTrue(result.getMergeFieldName().equals("aName"));
-    assertTrue(result.getValue().equals(persons));
-    assertTrue(result.getType().equals(TemplateMergeFieldType.COLLECTION));
+    assertThat(result.getMergeFieldName().equals("aName")).isTrue();
+    assertThat(result.getValue().equals(persons)).isTrue();
+    assertThat(result.getType().equals(TemplateMergeFieldType.COLLECTION)).isTrue();
     for (TemplateMergeField tmf : result.getChildren()) {
       System.out.println(tmf.getMergeFieldName() + " " + tmf.getMergeFieldValue());
     }
     System.out.println(result.getChildren().size());
-    assertTrue(result.hasChildren());
+    assertThat(result.hasChildren()).isTrue();
   }
 
   @Test
@@ -260,5 +260,4 @@ public class TemplateMergeFieldTest {
 
     return persons;
   }
-
 }

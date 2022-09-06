@@ -15,7 +15,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.beanutils.MethodUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.reflect.FieldUtils;
 
 import ch.ivyteam.api.API;
 import ch.ivyteam.ivy.addons.docfactory.TemplateMergeField;
@@ -187,6 +189,8 @@ public class MergeFieldsExtractor {
       return null;
     }
     try {
+      reader.setAccessible(true);
+      //return MethodUtils.getAccessibleMethod(reader).invoke(objectContainingValue);
       return reader.invoke(objectContainingValue);
     } catch (IllegalAccessException | IllegalArgumentException
             | InvocationTargetException e) {

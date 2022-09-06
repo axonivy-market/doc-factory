@@ -1,18 +1,16 @@
 package ch.ivyteam.ivy.addons.docfactory;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.core.IsCollectionContaining.hasItem;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static ch.ivyteam.ivy.addons.docfactory.DocFactoryTest.TEMPLATE_PERSON_DOCX;
+import static ch.ivyteam.ivy.addons.docfactory.DocFactoryTest.makeFile;
+import static ch.ivyteam.ivy.addons.docfactory.DocFactoryTest.makePerson;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.io.File;
 import java.net.URISyntaxException;
 import java.util.Locale;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
 
 import com.aspose.pdf.CryptoAlgorithm;
 import com.aspose.pdf.Permissions;
@@ -21,15 +19,12 @@ import com.aspose.words.Document;
 import ch.ivyteam.api.API;
 import ch.ivyteam.ivy.addons.docfactory.aspose.DocumentWorker;
 import ch.ivyteam.ivy.addons.docfactory.exception.DocumentGenerationException;
+import ch.ivyteam.ivy.environment.IvyTest;
 
-// tell powermock to ignore things different in java 11
-// see https://github.com/mockito/mockito/issues/1562
-public class DocumentWorkerInjectionForPostFileProduceIT extends DocFactoryTest {
+@IvyTest
+public class DocumentWorkerInjectionForPostFileProduceIT {
 
   private static final String PROTECTED_FILE_PATH = "test/documentWorker/aPasswordProtectedFile.pdf";
-
-  @Rule
-  ExpectedException exception = ExpectedException.none();
 
   @Test
   public void noDocumentWorkerInjected() throws URISyntaxException {
@@ -44,12 +39,13 @@ public class DocumentWorkerInjectionForPostFileProduceIT extends DocFactoryTest 
     File resultFile = makeFile("test/documentWorker/aFile.pdf");
 
     FileOperationMessage result = documentTemplate.produceDocument(resultFile);
-    assertNotNull(result);
-    assertTrue(result.isSuccess());
-    assertThat(result.getFiles(), hasItem(resultFile));
+    
+    assertThat(result).isNotNull();
+   	assertThat(result.isSuccess()).isTrue();
+   	assertThat(result.getFiles()).contains(resultFile);
 
     com.aspose.pdf.Document pdfDoc = new com.aspose.pdf.Document(resultFile.getAbsolutePath());
-    assertThat(pdfDoc.isEncrypted(), is(false));
+    assertThat(pdfDoc.isEncrypted()).isFalse();
   }
 
   @Test
@@ -72,13 +68,12 @@ public class DocumentWorkerInjectionForPostFileProduceIT extends DocFactoryTest 
     File resultFile = makeFile(PROTECTED_FILE_PATH);
 
     FileOperationMessage result = documentTemplate.produceDocument(resultFile);
-    assertNotNull(result);
-    assertTrue(result.isSuccess());
-    assertThat(result.getFiles(), hasItem(resultFile));
+    assertThat(result).isNotNull();
+   	assertThat(result.isSuccess()).isTrue();
+   	assertThat(result.getFiles()).contains(resultFile);
 
     com.aspose.pdf.Document pdfDoc = new com.aspose.pdf.Document(resultFile.getAbsolutePath(), secret);
-    assertThat(pdfDoc.isEncrypted(), is(true));
-
+    assertThat(pdfDoc.isEncrypted()).isTrue();
   }
 
   @Test
@@ -97,8 +92,7 @@ public class DocumentWorkerInjectionForPostFileProduceIT extends DocFactoryTest 
 
     File resultFile = new File("test/documentWorker/anotherFile.pdf");
 
-    exception.expect(DocumentGenerationException.class);
-    documentTemplate.produceDocument(resultFile);
+    assertThatThrownBy(() -> documentTemplate.produceDocument(resultFile)).isInstanceOf(DocumentGenerationException.class);
   }
 
   @Test
@@ -117,8 +111,7 @@ public class DocumentWorkerInjectionForPostFileProduceIT extends DocFactoryTest 
 
     File resultFile = new File("test/documentWorker/anotherFile.pdf");
 
-    exception.expect(DocumentGenerationException.class);
-    documentTemplate.produceDocument(resultFile);
+    assertThatThrownBy(() -> documentTemplate.produceDocument(resultFile)).isInstanceOf(DocumentGenerationException.class);
   }
 
   private void deletePreviousProtectedFile(String passwordProtectedFilePath, String password) {

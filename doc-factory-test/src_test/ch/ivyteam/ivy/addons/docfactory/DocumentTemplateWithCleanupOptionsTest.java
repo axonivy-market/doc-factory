@@ -1,67 +1,52 @@
 package ch.ivyteam.ivy.addons.docfactory;
 
-import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
+import static ch.ivyteam.ivy.addons.docfactory.DocFactoryTest.TEMPLATE_FOR_TESTING_NULL_VALUES_DOCX;
+import static ch.ivyteam.ivy.addons.docfactory.DocFactoryTest.makeFile;
+import static ch.ivyteam.ivy.addons.docfactory.DocFactoryTest.makePerson;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
 import java.net.URISyntaxException;
 import java.util.Locale;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import ch.ivyteam.ivy.addons.docfactory.options.MergeCleanupOptions;
 import ch.ivyteam.ivy.addons.docfactory.options.SimpleMergeCleanupOptions;
 import ch.ivyteam.ivy.addons.docfactory.test.data.Person;
+import ch.ivyteam.ivy.environment.IvyTest;
 
-public class DocumentTemplateWithCleanupOptionsTest extends DocFactoryTest {
+@IvyTest
+public class DocumentTemplateWithCleanupOptionsTest {
 
   @Test
   public void documentTemplate_has_default_cleanupOptions_byDefault() throws URISyntaxException {
-    File template = new File(
-            this.getClass().getResource(TEMPLATE_FOR_TESTING_NULL_VALUES_DOCX).toURI().getPath());
-    DocumentTemplate documentTemplate = DocumentTemplate.withTemplate(template);
+    var template = new File(this.getClass().getResource(DocFactoryTest.TEMPLATE_FOR_TESTING_NULL_VALUES_DOCX).toURI().getPath());
+    var documentTemplate = DocumentTemplate.withTemplate(template);
+    var simpleMergeCleanupOptions = documentTemplate.getDocumentFactory().getSimpleMergeCleanupOptions();
+    assertThat(simpleMergeCleanupOptions).isEqualTo(SimpleMergeCleanupOptions.getRecommendedMergeCleanupOptionsForSimpleMerging());
+    assertThat(simpleMergeCleanupOptions.isRemovesBlankLines()).isTrue();
+    assertThat(simpleMergeCleanupOptions.isRemovesEmptyParagraphs()).isTrue();
 
-    SimpleMergeCleanupOptions simpleMergeCleanupOptions = documentTemplate.getDocumentFactory()
-            .getSimpleMergeCleanupOptions();
-
-    assertThat(simpleMergeCleanupOptions,
-            equalTo(SimpleMergeCleanupOptions.getRecommendedMergeCleanupOptionsForSimpleMerging()));
-    assertThat(simpleMergeCleanupOptions.isRemovesBlankLines(), is(true));
-    assertThat(simpleMergeCleanupOptions.isRemovesEmptyParagraphs(), is(true));
-
-    MergeCleanupOptions mergeCleanupOptions = documentTemplate.getDocumentFactory()
-            .getRegionsMergeCleanupOptions();
-
-    assertThat(mergeCleanupOptions,
-            equalTo(MergeCleanupOptions.getRecommendedMergeCleanupOptionsForMergingWithRegions()));
-    assertThat(mergeCleanupOptions.isRemovesBlankLines(), is(true));
-    assertThat(mergeCleanupOptions.isRemovesContainingFields(), is(true));
-    assertThat(mergeCleanupOptions.isRemovesEmptyParagraphs(), is(true));
-    assertThat(mergeCleanupOptions.isRemovesUnusedFields(), is(true));
-    assertThat(mergeCleanupOptions.isRemovesUnusedRegions(), is(true));
+    var mergeCleanupOptions = documentTemplate.getDocumentFactory().getRegionsMergeCleanupOptions();
+    assertThat(mergeCleanupOptions).isEqualTo(MergeCleanupOptions.getRecommendedMergeCleanupOptionsForMergingWithRegions());
+    assertThat(mergeCleanupOptions.isRemovesBlankLines()).isTrue();
+    assertThat(mergeCleanupOptions.isRemovesContainingFields()).isTrue();
+    assertThat(mergeCleanupOptions.isRemovesEmptyParagraphs()).isTrue();
+    assertThat(mergeCleanupOptions.isRemovesUnusedFields()).isTrue();
+    assertThat(mergeCleanupOptions.isRemovesUnusedRegions()).isTrue();
   }
 
   @Test
-  public void withSimpleMergeCleanupOptions_changes_the_cleanupOptions_for_simple_merging()
-          throws URISyntaxException {
-    File template = new File(
-            this.getClass().getResource(TEMPLATE_FOR_TESTING_NULL_VALUES_DOCX).toURI().getPath());
+  public void withSimpleMergeCleanupOptions_changes_the_cleanupOptions_for_simple_merging() throws URISyntaxException {
+    var template = new File(this.getClass().getResource(TEMPLATE_FOR_TESTING_NULL_VALUES_DOCX).toURI().getPath());
 
-    SimpleMergeCleanupOptions changedSimpleMergeCleanupOptions = new SimpleMergeCleanupOptions()
-            .removingBlankLines(false).removingEmptyParagraphs(false);
-
-    DocumentTemplate documentTemplate = DocumentTemplate.withTemplate(template)
-            .withSimpleMergeCleanupOptions(changedSimpleMergeCleanupOptions);
-
-    SimpleMergeCleanupOptions simpleMergeCleanupOptions = documentTemplate.getDocumentFactory()
-            .getSimpleMergeCleanupOptions();
-
-    assertThat(simpleMergeCleanupOptions,
-            not(SimpleMergeCleanupOptions.getRecommendedMergeCleanupOptionsForSimpleMerging()));
-    assertThat(simpleMergeCleanupOptions.isRemovesBlankLines(), is(false));
-    assertThat(simpleMergeCleanupOptions.isRemovesEmptyParagraphs(), is(false));
+    var changedSimpleMergeCleanupOptions = new SimpleMergeCleanupOptions().removingBlankLines(false).removingEmptyParagraphs(false);
+    var documentTemplate = DocumentTemplate.withTemplate(template).withSimpleMergeCleanupOptions(changedSimpleMergeCleanupOptions);
+    var simpleMergeCleanupOptions = documentTemplate.getDocumentFactory().getSimpleMergeCleanupOptions();
+    assertThat(simpleMergeCleanupOptions).isNotEqualTo(SimpleMergeCleanupOptions.getRecommendedMergeCleanupOptionsForSimpleMerging());
+    assertThat(simpleMergeCleanupOptions.isRemovesBlankLines()).isFalse();
+    assertThat(simpleMergeCleanupOptions.isRemovesEmptyParagraphs()).isFalse();
   }
 
   @Test
@@ -79,14 +64,13 @@ public class DocumentTemplateWithCleanupOptionsTest extends DocFactoryTest {
 
     MergeCleanupOptions mergeCleanupOptions = documentTemplate.getDocumentFactory()
             .getRegionsMergeCleanupOptions();
-
-    assertThat(mergeCleanupOptions,
-            not(MergeCleanupOptions.getRecommendedMergeCleanupOptionsForMergingWithRegions()));
-    assertThat(mergeCleanupOptions.isRemovesBlankLines(), is(false));
-    assertThat(mergeCleanupOptions.isRemovesContainingFields(), is(false));
-    assertThat(mergeCleanupOptions.isRemovesEmptyParagraphs(), is(false));
-    assertThat(mergeCleanupOptions.isRemovesUnusedFields(), is(false));
-    assertThat(mergeCleanupOptions.isRemovesUnusedRegions(), is(false));
+    
+    assertThat(mergeCleanupOptions).isNotEqualTo(MergeCleanupOptions.getRecommendedMergeCleanupOptionsForMergingWithRegions());
+    assertThat(mergeCleanupOptions.isRemovesBlankLines()).isFalse();
+    assertThat(mergeCleanupOptions.isRemovesContainingFields()).isFalse();
+    assertThat(mergeCleanupOptions.isRemovesEmptyParagraphs()).isFalse();
+    assertThat(mergeCleanupOptions.isRemovesUnusedFields()).isFalse();
+    assertThat(mergeCleanupOptions.isRemovesUnusedRegions()).isFalse();
   }
 
   @Test
@@ -107,9 +91,9 @@ public class DocumentTemplateWithCleanupOptionsTest extends DocFactoryTest {
     File resultFile = makeFile("test/cleanup/remove_lines_with_only_empty_strings.pdf");
     FileOperationMessage result = documentTemplate.produceDocument(resultFile);
 
-    assertNotNull(result);
-    assertTrue(result.isSuccess());
-    assertThat(result.getFiles(), org.hamcrest.core.IsCollectionContaining.hasItem(resultFile));
+    assertThat(result).isNotNull();
+   	assertThat(result.isSuccess()).isTrue();
+   	assertThat(result.getFiles()).contains(resultFile);
   }
 
   @Test
@@ -130,9 +114,9 @@ public class DocumentTemplateWithCleanupOptionsTest extends DocFactoryTest {
     File resultFile = makeFile("test/cleanup/keep_lines_with_at_least_one_not_empty_string.pdf");
     FileOperationMessage result = documentTemplate.produceDocument(resultFile);
 
-    assertNotNull(result);
-    assertTrue(result.isSuccess());
-    assertThat(result.getFiles(), org.hamcrest.core.IsCollectionContaining.hasItem(resultFile));
+    assertThat(result).isNotNull();
+   	assertThat(result.isSuccess()).isTrue();
+   	assertThat(result.getFiles()).contains(resultFile);
   }
 
   @Test
@@ -152,9 +136,9 @@ public class DocumentTemplateWithCleanupOptionsTest extends DocFactoryTest {
     File resultFile = makeFile("test/cleanup/remove_lines_with_only_null_values.pdf");
     FileOperationMessage result = documentTemplate.produceDocument(resultFile);
 
-    assertNotNull(result);
-    assertTrue(result.isSuccess());
-    assertThat(result.getFiles(), org.hamcrest.core.IsCollectionContaining.hasItem(resultFile));
+    assertThat(result).isNotNull();
+   	assertThat(result.isSuccess()).isTrue();
+   	assertThat(result.getFiles()).contains(resultFile);
   }
 
   @Test
@@ -175,9 +159,9 @@ public class DocumentTemplateWithCleanupOptionsTest extends DocFactoryTest {
     File resultFile = makeFile("test/cleanup/remove_blank_lines_resulting_from_mailMerge.pdf");
     FileOperationMessage result = documentTemplate.produceDocument(resultFile);
 
-    assertNotNull(result);
-    assertTrue(result.isSuccess());
-    assertThat(result.getFiles(), org.hamcrest.core.IsCollectionContaining.hasItem(resultFile));
+    assertThat(result).isNotNull();
+   	assertThat(result.isSuccess()).isTrue();
+   	assertThat(result.getFiles()).contains(resultFile);
   }
 
   @Test
@@ -200,9 +184,9 @@ public class DocumentTemplateWithCleanupOptionsTest extends DocFactoryTest {
     File resultFile = makeFile("test/cleanup/keep_blank_lines_resulting_from_mailMerge.pdf");
     FileOperationMessage result = documentTemplate.produceDocument(resultFile);
 
-    assertNotNull(result);
-    assertTrue(result.isSuccess());
-    assertThat(result.getFiles(), org.hamcrest.core.IsCollectionContaining.hasItem(resultFile));
+    assertThat(result).isNotNull();
+   	assertThat(result.isSuccess()).isTrue();
+   	assertThat(result.getFiles()).contains(resultFile);
   }
 
   @Test
@@ -225,9 +209,8 @@ public class DocumentTemplateWithCleanupOptionsTest extends DocFactoryTest {
     File resultFile = makeFile("test/cleanup/keep_null_lines.pdf");
     FileOperationMessage result = documentTemplate.produceDocument(resultFile);
 
-    assertNotNull(result);
-    assertTrue(result.isSuccess());
-    assertThat(result.getFiles(), org.hamcrest.core.IsCollectionContaining.hasItem(resultFile));
+    assertThat(result).isNotNull();
+   	assertThat(result.isSuccess()).isTrue();
+   	assertThat(result.getFiles()).contains(resultFile);
   }
-
 }

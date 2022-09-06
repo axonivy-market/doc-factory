@@ -1,24 +1,25 @@
 package ch.ivyteam.ivy.addons.docfactory;
 
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static ch.ivyteam.ivy.addons.docfactory.DocFactoryTest.makeFile;
+import static ch.ivyteam.ivy.addons.docfactory.DocFactoryTest.makePerson;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
 import java.util.Locale;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import ch.ivyteam.ivy.addons.docfactory.options.DocumentCreationOptions;
+import ch.ivyteam.ivy.environment.IvyTest;
 
-public class RemoveBlankPagesIT extends DocFactoryTest {
+@IvyTest
+public class RemoveBlankPagesIT {
 
   DocumentTemplate documentTemplate;
 
-  @Override
-  @Before
+  @BeforeEach
   public void setup() throws Exception {
-    super.setup();
     File tpl = new File(
             this.getClass().getResource("resources/template_with_blank_pages.docx").toURI().getPath());
 
@@ -32,8 +33,8 @@ public class RemoveBlankPagesIT extends DocFactoryTest {
     FileOperationMessage result = documentTemplate.putDataAsSourceForMailMerge(makePerson())
             .produceDocument(resultFile);
 
-    assertTrue(result.isSuccess());
-    assertThat(result.getFiles(), org.hamcrest.core.IsCollectionContaining.hasItem(resultFile));
+    assertThat(result.isSuccess()).isTrue();
+    assertThat(result.getFiles()).contains(resultFile);
   }
 
   @Test
@@ -41,10 +42,10 @@ public class RemoveBlankPagesIT extends DocFactoryTest {
     File resultFile = makeFile("test/documentTemplate/blankPages/default_not_remove_blank_pages.docx");
 
     FileOperationMessage result = documentTemplate.putDataAsSourceForMailMerge(makePerson())
-            .produceDocument(resultFile);
+    		.produceDocument(resultFile);
 
-    assertTrue(result.isSuccess());
-    assertThat(result.getFiles(), org.hamcrest.core.IsCollectionContaining.hasItem(resultFile));
+    assertThat(result.isSuccess()).isTrue();
+    assertThat(result.getFiles()).contains(resultFile);
   }
 
   @Test
@@ -54,8 +55,8 @@ public class RemoveBlankPagesIT extends DocFactoryTest {
     FileOperationMessage result = documentTemplate.putDataAsSourceForMailMerge(makePerson())
             .produceDocument(resultFile);
 
-    assertTrue(result.isSuccess());
-    assertThat(result.getFiles(), org.hamcrest.core.IsCollectionContaining.hasItem(resultFile));
+    assertThat(result.isSuccess()).isTrue();
+    assertThat(result.getFiles()).contains(resultFile);
   }
 
   @Test
@@ -65,8 +66,8 @@ public class RemoveBlankPagesIT extends DocFactoryTest {
     FileOperationMessage result = documentTemplate.putDataAsSourceForMailMerge(makePerson())
             .produceDocument(resultFile);
 
-    assertTrue(result.isSuccess());
-    assertThat(result.getFiles(), org.hamcrest.core.IsCollectionContaining.hasItem(resultFile));
+    assertThat(result.isSuccess()).isTrue();
+    assertThat(result.getFiles()).contains(resultFile);
   }
 
   @Test
@@ -79,8 +80,8 @@ public class RemoveBlankPagesIT extends DocFactoryTest {
     FileOperationMessage result = documentTemplate.withDocumentCreationOptions(documentCreationOptions)
             .putDataAsSourceForMailMerge(makePerson()).produceDocument(resultFile);
 
-    assertTrue(result.isSuccess());
-    assertThat(result.getFiles(), org.hamcrest.core.IsCollectionContaining.hasItem(resultFile));
+    assertThat(result.isSuccess()).isTrue();
+    assertThat(result.getFiles()).contains(resultFile);
   }
 
   @Test
@@ -93,8 +94,8 @@ public class RemoveBlankPagesIT extends DocFactoryTest {
     FileOperationMessage result = documentTemplate.withDocumentCreationOptions(documentCreationOptions)
             .putDataAsSourceForMailMerge(makePerson()).produceDocument(resultFile);
 
-    assertTrue(result.isSuccess());
-    assertThat(result.getFiles(), org.hamcrest.core.IsCollectionContaining.hasItem(resultFile));
+    assertThat(result.isSuccess()).isTrue();
+    assertThat(result.getFiles()).contains(resultFile);
   }
 
   @Test
@@ -107,8 +108,8 @@ public class RemoveBlankPagesIT extends DocFactoryTest {
     FileOperationMessage result = documentTemplate.withDocumentCreationOptions(documentCreationOptions)
             .putDataAsSourceForMailMerge(makePerson()).produceDocument(resultFile);
 
-    assertTrue(result.isSuccess());
-    assertThat(result.getFiles(), org.hamcrest.core.IsCollectionContaining.hasItem(resultFile));
+    assertThat(result.isSuccess()).isTrue();
+    assertThat(result.getFiles()).contains(resultFile);
   }
 
   @Test
@@ -121,8 +122,7 @@ public class RemoveBlankPagesIT extends DocFactoryTest {
     FileOperationMessage result = documentTemplate.withDocumentCreationOptions(documentCreationOptions)
             .putDataAsSourceForMailMerge(makePerson()).produceDocument(resultFile);
 
-    assertTrue(result.isSuccess());
-    assertThat(result.getFiles(), org.hamcrest.core.IsCollectionContaining.hasItem(resultFile));
+    assertThat(result.isSuccess()).isTrue();
+    assertThat(result.getFiles()).contains(resultFile);
   }
-
 }

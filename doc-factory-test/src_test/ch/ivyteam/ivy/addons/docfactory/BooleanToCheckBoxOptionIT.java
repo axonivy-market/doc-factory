@@ -1,28 +1,28 @@
 package ch.ivyteam.ivy.addons.docfactory;
 
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static ch.ivyteam.ivy.addons.docfactory.DocFactoryTest.makeFile;
+import static ch.ivyteam.ivy.addons.docfactory.DocFactoryTest.makePerson;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
 import java.util.Locale;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import ch.ivyteam.ivy.addons.docfactory.options.DocumentCreationOptions;
 import ch.ivyteam.ivy.addons.docfactory.test.data.Person;
+import ch.ivyteam.ivy.environment.IvyTest;
 
-public class BooleanToCheckBoxOptionIT extends DocFactoryTest {
+@IvyTest
+public class BooleanToCheckBoxOptionIT {
 
   File template;
   DocumentTemplate documentTemplate;
 
-  @Override
-  @Before
+  @BeforeEach
   public void setup() throws Exception {
-    super.setup();
-    File tmpl = new File(this.getClass().getResource(TEMPLATE_PERSON_DOCX).toURI().getPath());
-
+    File tmpl = new File(this.getClass().getResource(DocFactoryTest.TEMPLATE_PERSON_DOCX).toURI().getPath());
     documentTemplate = DocumentTemplate.withTemplate(tmpl).useLocale(Locale.forLanguageTag("de-CH"));
   }
 
@@ -35,9 +35,9 @@ public class BooleanToCheckBoxOptionIT extends DocFactoryTest {
 
     FileOperationMessage result = documentTemplate.putDataAsSourceForMailMerge(data)
             .produceDocument(resultFile);
-
-    assertTrue(result.isSuccess());
-    assertThat(result.getFiles(), org.hamcrest.core.IsCollectionContaining.hasItem(resultFile));
+    
+    assertThat(result.isSuccess()).isTrue();
+    assertThat(result.getFiles()).contains(resultFile);
   }
 
   @Test
@@ -50,8 +50,8 @@ public class BooleanToCheckBoxOptionIT extends DocFactoryTest {
     FileOperationMessage result = documentTemplate.putDataAsSourceForMailMerge(data)
             .produceDocument(resultFile);
 
-    assertTrue(result.isSuccess());
-    assertThat(result.getFiles(), org.hamcrest.core.IsCollectionContaining.hasItem(resultFile));
+    assertThat(result.isSuccess()).isTrue();
+    assertThat(result.getFiles()).contains(resultFile);
   }
 
   @Test
@@ -66,8 +66,8 @@ public class BooleanToCheckBoxOptionIT extends DocFactoryTest {
                     DocumentCreationOptions.getInstance().displayBooleanValuesAsCheckBox(true))
             .produceDocument(resultFile);
 
-    assertTrue(result.isSuccess());
-    assertThat(result.getFiles(), org.hamcrest.core.IsCollectionContaining.hasItem(resultFile));
+    assertThat(result.isSuccess()).isTrue();
+    assertThat(result.getFiles()).contains(resultFile);
   }
 
   @Test
@@ -82,8 +82,8 @@ public class BooleanToCheckBoxOptionIT extends DocFactoryTest {
                     DocumentCreationOptions.getInstance().displayBooleanValuesAsCheckBox(true))
             .produceDocument(resultFile);
 
-    assertTrue(result.isSuccess());
-    assertThat(result.getFiles(), org.hamcrest.core.IsCollectionContaining.hasItem(resultFile));
+    assertThat(result.isSuccess()).isTrue();
+    assertThat(result.getFiles()).contains(resultFile);
   }
 
   @Test
@@ -98,8 +98,8 @@ public class BooleanToCheckBoxOptionIT extends DocFactoryTest {
                     DocumentCreationOptions.getInstance().displayBooleanValuesAsCheckBox(true))
             .produceDocument(resultFile);
 
-    assertTrue(result.isSuccess());
-    assertThat(result.getFiles(), org.hamcrest.core.IsCollectionContaining.hasItem(resultFile));
+    assertThat(result.isSuccess()).isTrue();
+    assertThat(result.getFiles()).contains(resultFile);
   }
 
   @Test
@@ -114,8 +114,8 @@ public class BooleanToCheckBoxOptionIT extends DocFactoryTest {
                     DocumentCreationOptions.getInstance().displayBooleanValuesAsCheckBox(true))
             .produceDocument(resultFile);
 
-    assertTrue(result.isSuccess());
-    assertThat(result.getFiles(), org.hamcrest.core.IsCollectionContaining.hasItem(resultFile));
+    assertThat(result.isSuccess()).isTrue();
+    assertThat(result.getFiles()).contains(resultFile);
   }
 
   @Test
@@ -130,8 +130,8 @@ public class BooleanToCheckBoxOptionIT extends DocFactoryTest {
                     DocumentCreationOptions.getInstance().displayBooleanValuesAsCheckBox(true))
             .produceDocument(resultFile);
 
-    assertTrue(result.isSuccess());
-    assertThat(result.getFiles(), org.hamcrest.core.IsCollectionContaining.hasItem(resultFile));
+    assertThat(result.isSuccess()).isTrue();
+    assertThat(result.getFiles()).contains(resultFile);
   }
 
   @Test
@@ -146,8 +146,8 @@ public class BooleanToCheckBoxOptionIT extends DocFactoryTest {
                     DocumentCreationOptions.getInstance().displayBooleanValuesAsCheckBox(true))
             .produceDocument(resultFile);
 
-    assertTrue(result.isSuccess());
-    assertThat(result.getFiles(), org.hamcrest.core.IsCollectionContaining.hasItem(resultFile));
+    assertThat(result.isSuccess()).isTrue();
+    assertThat(result.getFiles()).contains(resultFile);
   }
 
   @Test
@@ -162,8 +162,8 @@ public class BooleanToCheckBoxOptionIT extends DocFactoryTest {
                     DocumentCreationOptions.getInstance().displayBooleanValuesAsCheckBox(true))
             .produceDocument(resultFile);
 
-    assertTrue(result.isSuccess());
-    assertThat(result.getFiles(), org.hamcrest.core.IsCollectionContaining.hasItem(resultFile));
+    assertThat(result.isSuccess()).isTrue();
+    assertThat(result.getFiles()).contains(resultFile);
   }
 
   @Test
@@ -178,8 +178,8 @@ public class BooleanToCheckBoxOptionIT extends DocFactoryTest {
                     DocumentCreationOptions.getInstance().displayBooleanValuesAsCheckBox(true))
             .produceDocument(resultFile);
 
-    assertTrue(result.isSuccess());
-    assertThat(result.getFiles(), org.hamcrest.core.IsCollectionContaining.hasItem(resultFile));
+    assertThat(result.isSuccess()).isTrue();
+    assertThat(result.getFiles()).contains(resultFile);
   }
 
   @Test
@@ -195,8 +195,8 @@ public class BooleanToCheckBoxOptionIT extends DocFactoryTest {
                     DocumentCreationOptions.getInstance().displayBooleanValuesAsCheckBox(true))
             .produceDocument(resultFile);
 
-    assertTrue(result.isSuccess());
-    assertThat(result.getFiles(), org.hamcrest.core.IsCollectionContaining.hasItem(resultFile));
+    assertThat(result.isSuccess()).isTrue();
+    assertThat(result.getFiles()).contains(resultFile);
   }
 
   @Test
@@ -211,8 +211,8 @@ public class BooleanToCheckBoxOptionIT extends DocFactoryTest {
                     DocumentCreationOptions.getInstance().displayBooleanValuesAsCheckBox(true))
             .produceDocument(resultFile);
 
-    assertTrue(result.isSuccess());
-    assertThat(result.getFiles(), org.hamcrest.core.IsCollectionContaining.hasItem(resultFile));
+    assertThat(result.isSuccess()).isTrue();
+    assertThat(result.getFiles()).contains(resultFile);
   }
 
   @Test
@@ -221,30 +221,22 @@ public class BooleanToCheckBoxOptionIT extends DocFactoryTest {
 
     Person data = makePerson();
     data.acceptToBeContacted(false);
-
-    FileOperationMessage result = documentTemplate.putDataAsSourceForMailMerge(data)
-            .withDocumentCreationOptions(
-                    DocumentCreationOptions.getInstance().displayBooleanValuesAsCheckBox(true))
+    var result = documentTemplate.putDataAsSourceForMailMerge(data)
+            .withDocumentCreationOptions(DocumentCreationOptions.getInstance().displayBooleanValuesAsCheckBox(true))
             .produceDocument(resultFile);
-
-    assertTrue(result.isSuccess());
-    assertThat(result.getFiles(), org.hamcrest.core.IsCollectionContaining.hasItem(resultFile));
+    assertThat(result.isSuccess()).isTrue();
+    assertThat(result.getFiles()).contains(resultFile);
   }
 
   @Test
   public void true_mergeFieldValue_displayed_as_selectedCheckBox_output_html() {
     File resultFile = makeFile("test/documentTemplate/checkBox/true_displayed_as_selected_checkbox.html");
-
     Person data = makePerson();
     data.acceptToBeContacted(true);
-
-    FileOperationMessage result = documentTemplate.putDataAsSourceForMailMerge(data)
-            .withDocumentCreationOptions(
-                    DocumentCreationOptions.getInstance().displayBooleanValuesAsCheckBox(true))
+    var result = documentTemplate.putDataAsSourceForMailMerge(data)
+            .withDocumentCreationOptions(DocumentCreationOptions.getInstance().displayBooleanValuesAsCheckBox(true))
             .produceDocument(resultFile);
-
-    assertTrue(result.isSuccess());
-    assertThat(result.getFiles(), org.hamcrest.core.IsCollectionContaining.hasItem(resultFile));
+    assertThat(result.isSuccess()).isTrue();
+    assertThat(result.getFiles()).contains(resultFile);
   }
-
 }

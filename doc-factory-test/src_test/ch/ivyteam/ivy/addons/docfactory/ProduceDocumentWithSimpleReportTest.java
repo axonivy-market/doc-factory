@@ -1,8 +1,6 @@
 package ch.ivyteam.ivy.addons.docfactory;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
 import java.io.Serializable;
@@ -12,9 +10,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class ProduceDocumentWithSimpleReportTest extends DocFactoryTest {
+import ch.ivyteam.ivy.environment.IvyTest;
+
+@IvyTest
+public class ProduceDocumentWithSimpleReportTest {
 
   @Test
   public void produceDocument_with_simple_tables() throws Exception {
@@ -35,9 +36,9 @@ public class ProduceDocumentWithSimpleReportTest extends DocFactoryTest {
       System.out.println("Exception : " + ex.toString());
     }
 
-    assertNotNull(result);
-    assertTrue(result.isSuccess());
-    assertThat(result.getFiles(), org.hamcrest.core.IsCollectionContaining.hasItem(resultFile));
+    assertThat(result).isNotNull();
+    assertThat(result.isSuccess()).isTrue();
+    assertThat(result.getFiles()).contains(resultFile);
   }
 
   private BeanWithCollection makeBeanWithCollection() {

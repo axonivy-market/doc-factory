@@ -1,21 +1,19 @@
 package ch.ivyteam.ivy.addons.docfactory.aspose.options;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
-import static org.hamcrest.CoreMatchers.is;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.aspose.words.MailMergeCleanupOptions;
 
 import ch.ivyteam.ivy.addons.docfactory.options.MergeCleanupOptions;
+import ch.ivyteam.ivy.environment.IvyTest;
 
+@IvyTest
 public class AsposeMergeCleanupOptionsTest {
 
   MergeCleanupOptions cleanUpOptions;
 
-  /**
-   * 
-   */
   @Test
   public void getCleanupOptionIntValues_with_reconmmended_cleanUpOptions_returns_all_MailMergeCleanupOptions_addition() {
     cleanUpOptions = MergeCleanupOptions.getRecommendedMergeCleanupOptionsForMergingWithRegions();
@@ -27,7 +25,7 @@ public class AsposeMergeCleanupOptionsTest {
             MailMergeCleanupOptions.REMOVE_UNUSED_FIELDS +
             MailMergeCleanupOptions.REMOVE_UNUSED_REGIONS;
 
-    assertThat(cleanupAsIntResult, is(expectedResult));
+    assertThat(cleanupAsIntResult).isEqualTo(expectedResult);
   }
 
   @Test
@@ -39,7 +37,7 @@ public class AsposeMergeCleanupOptionsTest {
 
     int expectedResult = MailMergeCleanupOptions.NONE;
 
-    assertThat(cleanupAsIntResult, is(expectedResult));
+    assertThat(cleanupAsIntResult).isEqualTo(expectedResult);
   }
 
   @Test
@@ -51,7 +49,7 @@ public class AsposeMergeCleanupOptionsTest {
 
     int expectedResult = MailMergeCleanupOptions.REMOVE_CONTAINING_FIELDS;
 
-    assertThat(cleanupAsIntResult, is(expectedResult));
+    assertThat(cleanupAsIntResult).isEqualTo(expectedResult);
   }
 
   @Test
@@ -63,7 +61,7 @@ public class AsposeMergeCleanupOptionsTest {
 
     int expectedResult = MailMergeCleanupOptions.REMOVE_UNUSED_FIELDS;
 
-    assertThat(cleanupAsIntResult, is(expectedResult));
+    assertThat(cleanupAsIntResult).isEqualTo(expectedResult);
   }
 
   @Test
@@ -75,7 +73,7 @@ public class AsposeMergeCleanupOptionsTest {
 
     int expectedResult = MailMergeCleanupOptions.REMOVE_UNUSED_REGIONS;
 
-    assertThat(cleanupAsIntResult, is(expectedResult));
+    assertThat(cleanupAsIntResult).isEqualTo(expectedResult);
   }
 
   @Test
@@ -87,7 +85,7 @@ public class AsposeMergeCleanupOptionsTest {
 
     int expectedResult = MailMergeCleanupOptions.REMOVE_EMPTY_PARAGRAPHS;
 
-    assertThat(cleanupAsIntResult, is(expectedResult));
+    assertThat(cleanupAsIntResult).isEqualTo(expectedResult);
   }
 
   @Test
@@ -100,7 +98,7 @@ public class AsposeMergeCleanupOptionsTest {
     int expectedResult = MailMergeCleanupOptions.REMOVE_CONTAINING_FIELDS +
             MailMergeCleanupOptions.REMOVE_UNUSED_FIELDS;
 
-    assertThat(cleanupAsIntResult, is(expectedResult));
+    assertThat(cleanupAsIntResult).isEqualTo(expectedResult);
   }
 
   @Test
@@ -114,7 +112,7 @@ public class AsposeMergeCleanupOptionsTest {
             MailMergeCleanupOptions.REMOVE_UNUSED_FIELDS +
             MailMergeCleanupOptions.REMOVE_UNUSED_REGIONS;
 
-    assertThat(cleanupAsIntResult, is(expectedResult));
+    assertThat(cleanupAsIntResult).isEqualTo(expectedResult);
   }
 
   @Test
@@ -128,7 +126,7 @@ public class AsposeMergeCleanupOptionsTest {
             MailMergeCleanupOptions.REMOVE_UNUSED_FIELDS +
             MailMergeCleanupOptions.REMOVE_EMPTY_PARAGRAPHS;
 
-    assertThat(cleanupAsIntResult, is(expectedResult));
+    assertThat(cleanupAsIntResult).isEqualTo(expectedResult);
   }
 
   @Test
@@ -142,7 +140,7 @@ public class AsposeMergeCleanupOptionsTest {
             MailMergeCleanupOptions.REMOVE_UNUSED_REGIONS +
             MailMergeCleanupOptions.REMOVE_EMPTY_PARAGRAPHS;
 
-    assertThat(cleanupAsIntResult, is(expectedResult));
+    assertThat(cleanupAsIntResult).isEqualTo(expectedResult);
   }
 
   @Test
@@ -155,7 +153,7 @@ public class AsposeMergeCleanupOptionsTest {
     int expectedResult = MailMergeCleanupOptions.REMOVE_CONTAINING_FIELDS +
             MailMergeCleanupOptions.REMOVE_UNUSED_REGIONS;
 
-    assertThat(cleanupAsIntResult, is(expectedResult));
+    assertThat(cleanupAsIntResult).isEqualTo(expectedResult);
   }
 
   @Test
@@ -168,7 +166,7 @@ public class AsposeMergeCleanupOptionsTest {
     int expectedResult = MailMergeCleanupOptions.REMOVE_CONTAINING_FIELDS +
             MailMergeCleanupOptions.REMOVE_EMPTY_PARAGRAPHS;
 
-    assertThat(cleanupAsIntResult, is(expectedResult));
+    assertThat(cleanupAsIntResult).isEqualTo(expectedResult);
   }
 
   @Test
@@ -181,7 +179,7 @@ public class AsposeMergeCleanupOptionsTest {
     int expectedResult = MailMergeCleanupOptions.REMOVE_UNUSED_FIELDS +
             MailMergeCleanupOptions.REMOVE_UNUSED_REGIONS;
 
-    assertThat(cleanupAsIntResult, is(expectedResult));
+    assertThat(cleanupAsIntResult).isEqualTo(expectedResult);
   }
 
   @Test
@@ -195,7 +193,7 @@ public class AsposeMergeCleanupOptionsTest {
             MailMergeCleanupOptions.REMOVE_UNUSED_REGIONS +
             MailMergeCleanupOptions.REMOVE_EMPTY_PARAGRAPHS;
 
-    assertThat(cleanupAsIntResult, is(expectedResult));
+    assertThat(cleanupAsIntResult).isEqualTo(expectedResult);
   }
 
   @Test
@@ -208,7 +206,7 @@ public class AsposeMergeCleanupOptionsTest {
     int expectedResult = MailMergeCleanupOptions.REMOVE_UNUSED_FIELDS +
             MailMergeCleanupOptions.REMOVE_EMPTY_PARAGRAPHS;
 
-    assertThat(cleanupAsIntResult, is(expectedResult));
+    assertThat(cleanupAsIntResult).isEqualTo(expectedResult);
   }
 
   @Test
@@ -221,7 +219,7 @@ public class AsposeMergeCleanupOptionsTest {
     int expectedResult = MailMergeCleanupOptions.REMOVE_UNUSED_REGIONS +
             MailMergeCleanupOptions.REMOVE_EMPTY_PARAGRAPHS;
 
-    assertThat(cleanupAsIntResult, is(expectedResult));
+    assertThat(cleanupAsIntResult).isEqualTo(expectedResult);
   }
 
 }

@@ -1,24 +1,20 @@
 package ch.ivyteam.ivy.addons.docfactory.image;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
 import java.awt.Dimension;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import static org.junit.Assert.assertThat;
-import static org.hamcrest.CoreMatchers.*;
+import org.junit.jupiter.api.Test;
 
 public class ImageDimensionCalculatorTest {
 
   private static final String WIDTH_MARKER = "__WIDTH:";
   private static final String HEIGHT_MARKER = "__HEIGHT:";
-
-  @Rule
-  public ExpectedException thrown = ExpectedException.none();
 
   @Test
   public void calculateImageDimensionForMergingInTemplate_throws_IAE_if_inputStream_null()
@@ -27,9 +23,7 @@ public class ImageDimensionCalculatorTest {
     String imageFieldName = "Image:myImage";
     InputStream is = null;
 
-    thrown.expect(IllegalArgumentException.class);
-    idc.calculateImageDimensionForMergingInTemplate(is, imageFieldName);
-
+    assertThatThrownBy(() -> idc.calculateImageDimensionForMergingInTemplate(is, imageFieldName)).isInstanceOf(IllegalArgumentException.class);
   }
 
   @Test
@@ -40,8 +34,8 @@ public class ImageDimensionCalculatorTest {
     InputStream is = new FileInputStream(image);
     String imageFieldName = null;
 
-    thrown.expect(IllegalArgumentException.class);
-    idc.calculateImageDimensionForMergingInTemplate(is, imageFieldName);
+    
+    assertThatThrownBy(() -> idc.calculateImageDimensionForMergingInTemplate(is, imageFieldName)).isInstanceOf(IllegalArgumentException.class);
   }
 
   @Test
@@ -52,8 +46,7 @@ public class ImageDimensionCalculatorTest {
     InputStream is = new FileInputStream(image);
     String imageFieldName = " ";
 
-    thrown.expect(IllegalArgumentException.class);
-    idc.calculateImageDimensionForMergingInTemplate(is, imageFieldName);
+    assertThatThrownBy(() -> idc.calculateImageDimensionForMergingInTemplate(is, imageFieldName)).isInstanceOf(IllegalArgumentException.class);
   }
 
   @Test
@@ -66,8 +59,7 @@ public class ImageDimensionCalculatorTest {
     String imageFieldName = "Image:myImage" + WIDTH_MARKER + HEIGHT_MARKER;
     Dimension dimension = idc.calculateImageDimensionForMergingInTemplate(is, imageFieldName);
     Dimension expectedDimension = new Dimension(0, 0);
-
-    assertThat(dimension, equalTo(expectedDimension));
+    assertThat(dimension).isEqualTo(expectedDimension);
   }
 
   @Test
@@ -80,8 +72,7 @@ public class ImageDimensionCalculatorTest {
     Dimension dimension = idc.calculateImageDimensionForMergingInTemplate(is,
             "Image:myImage:__HEIGHT:__WIDTH");
     Dimension expectedDimension = new Dimension(0, 0);
-
-    assertThat(dimension, equalTo(expectedDimension));
+    assertThat(dimension).isEqualTo(expectedDimension);
   }
 
   @Test
@@ -93,8 +84,7 @@ public class ImageDimensionCalculatorTest {
 
     Dimension dimension = idc.calculateImageDimensionForMergingInTemplate(is, "Image:myImage");
     Dimension expectedDimension = new Dimension(0, 0);
-
-    assertThat(dimension, equalTo(expectedDimension));
+    assertThat(dimension).isEqualTo(expectedDimension);
   }
 
   @Test
@@ -106,7 +96,7 @@ public class ImageDimensionCalculatorTest {
 
     Dimension dimension = idc.calculateImageDimensionForMergingInTemplate(is, "Image:myImage__WIDTH:50");
 
-    assertThat(dimension.getWidth(), equalTo((double) 50));
+    assertThat(dimension.getWidth()).isEqualTo(50d);
   }
 
   @Test
@@ -119,7 +109,7 @@ public class ImageDimensionCalculatorTest {
     Dimension dimension = idc.calculateImageDimensionForMergingInTemplate(is, "Image:myImage__HEIGHT:");
     Dimension expectedDimension = new Dimension(0, 0);
 
-    assertThat(dimension, equalTo(expectedDimension));
+    assertThat(dimension).isEqualTo(expectedDimension);
   }
 
   @Test
@@ -132,7 +122,7 @@ public class ImageDimensionCalculatorTest {
     Dimension dimension = idc.calculateImageDimensionForMergingInTemplate(is, "Image:myImage__WIDTH:");
     Dimension expectedDimension = new Dimension(0, 0);
 
-    assertThat(dimension, equalTo(expectedDimension));
+    assertThat(dimension).isEqualTo(expectedDimension);
   }
 
   @Test
@@ -146,7 +136,7 @@ public class ImageDimensionCalculatorTest {
     Dimension dimension1 = idc.calculateImageDimensionForMergingInTemplate(is, "Image:myImage__WIDTH:50");
     Dimension dimension2 = idc.calculateImageDimensionForMergingInTemplate(is2, "Image:myImage__WIDTH:100");
 
-    assertThat(dimension2.height, equalTo(dimension1.height * 2));
+    assertThat(dimension2.height).isEqualTo(dimension1.height * 2);
   }
 
   @Test
@@ -162,7 +152,7 @@ public class ImageDimensionCalculatorTest {
     Dimension dimension2 = idc.calculateImageDimensionForMergingInTemplate(is2,
             "Image:myImage__WIDTH:100__HEIGHT:");
 
-    assertThat(dimension2.height, equalTo(dimension1.height * 2));
+    assertThat(dimension2.height).isEqualTo(dimension1.height * 2);
   }
 
   @Test
@@ -178,7 +168,7 @@ public class ImageDimensionCalculatorTest {
     Dimension dimension2 = idc.calculateImageDimensionForMergingInTemplate(is2,
             "Image:myImage__HEIGHT:__WIDTH:100");
 
-    assertThat(dimension2.height, equalTo(dimension1.height * 2));
+    assertThat(dimension2.height).isEqualTo(dimension1.height * 2);
   }
 
 }

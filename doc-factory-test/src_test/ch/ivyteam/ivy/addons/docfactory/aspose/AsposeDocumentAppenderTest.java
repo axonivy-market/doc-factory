@@ -1,17 +1,14 @@
 package ch.ivyteam.ivy.addons.docfactory.aspose;
 
-import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsNot.not;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.aspose.words.Document;
 
@@ -20,14 +17,11 @@ import ch.ivyteam.ivy.addons.docfactory.options.FileAppenderOptions;
 
 public class AsposeDocumentAppenderTest {
 
-  @Rule
-  public ExpectedException thrown = ExpectedException.none();
-
   private List<Document> documents;
   private FileAppenderOptions fileAppenderOptions;
   private int totalDocumentPages;
 
-  @Before
+  @BeforeEach
   public void setup() throws Exception {
     documents = new ArrayList<>();
     Document doc1 = new Document(
@@ -55,82 +49,68 @@ public class AsposeDocumentAppenderTest {
 
   @Test
   public void appendDocuments_throws_IAE_if_documentsList_null() throws Exception {
-    thrown.expect(IllegalArgumentException.class);
-    AsposeDocumentAppender.appendDocuments(null, fileAppenderOptions);
+    assertThatThrownBy(() -> AsposeDocumentAppender.appendDocuments(null, fileAppenderOptions)).isInstanceOf(IllegalArgumentException.class);
   }
 
   @Test
   public void appendDocuments_throws_IAE_if_documentsList_isEmpty() throws Exception {
-    thrown.expect(IllegalArgumentException.class);
-    AsposeDocumentAppender.appendDocuments(new ArrayList<>(), fileAppenderOptions);
+    assertThatThrownBy(() -> AsposeDocumentAppender.appendDocuments(new ArrayList<>(), fileAppenderOptions)).isInstanceOf(IllegalArgumentException.class);
   }
 
   @Test
   public void appendDocuments_throws_IAE_if_FileAppenderOptions_isNull() throws Exception {
-    thrown.expect(IllegalArgumentException.class);
-    AsposeDocumentAppender.appendDocuments(documents, null);
+    assertThatThrownBy(() -> AsposeDocumentAppender.appendDocuments(documents, null)).isInstanceOf(IllegalArgumentException.class);
   }
 
   @Test
   public void appendDocuments_returns_document_with_appended_documents() throws Exception {
-    Document result = AsposeDocumentAppender.appendDocuments(documents, fileAppenderOptions);
-
-    assertThat(result.getPageCount(), is(totalDocumentPages));
+    var result = AsposeDocumentAppender.appendDocuments(documents, fileAppenderOptions);
+    assertThat(result.getPageCount()).isEqualTo(totalDocumentPages);
   }
 
   @Test
   public void appendDocuments_returns_document_which_is_not_equal_to_given_documents() throws Exception {
-    Document result = AsposeDocumentAppender.appendDocuments(documents, fileAppenderOptions);
-
+    var result = AsposeDocumentAppender.appendDocuments(documents, fileAppenderOptions);
     for (Document doc : documents) {
-      assertThat(result, not(doc));
+      assertThat(result).isNotEqualTo(doc);
     }
   }
 
   @Test
   public void appendDocuments_givenOnlyOneDocument_returns_document_with_same_content() throws Exception {
     List<Document> listWithOnlyOneDocument = documents.subList(0, 1);
-    assertThat(listWithOnlyOneDocument.size(), is(1));
+    assertThat(listWithOnlyOneDocument).hasSize(1);
 
-    Document result = AsposeDocumentAppender.appendDocuments(listWithOnlyOneDocument, fileAppenderOptions);
-
-    assertThat(result.getPageCount(), is(listWithOnlyOneDocument.get(0).getPageCount()));
-    assertThat(result.getText(), is(listWithOnlyOneDocument.get(0).getText()));
+    var result = AsposeDocumentAppender.appendDocuments(listWithOnlyOneDocument, fileAppenderOptions);
+    assertThat(result.getPageCount()).isEqualTo(listWithOnlyOneDocument.get(0).getPageCount());
+    assertThat(result.getText()).isEqualTo(listWithOnlyOneDocument.get(0).getText());
   }
 
   @Test
-  public void appendDocuments_givenOnlyOneDocument_returns_document_which_is_not_equal_to_given_document()
-          throws Exception {
+  public void appendDocuments_givenOnlyOneDocument_returns_document_which_is_not_equal_to_given_document() throws Exception {
     List<Document> listWithOnlyOneDocument = documents.subList(0, 1);
-    assertThat(listWithOnlyOneDocument.size(), is(1));
+    assertThat(listWithOnlyOneDocument).hasSize(1);
 
     Document result = AsposeDocumentAppender.appendDocuments(listWithOnlyOneDocument, fileAppenderOptions);
-
-    assertThat(result, not(listWithOnlyOneDocument.get(0)));
+    assertThat(result).isNotEqualTo(listWithOnlyOneDocument.get(0));
   }
 
   @Test
   public void appendDoc_throws_IAE_if_leadingDoc_is_null() throws Exception {
-    thrown.expect(IllegalArgumentException.class);
-    AsposeDocumentAppender.appendDoc(null, documents.get(1));
+    assertThatThrownBy(() -> AsposeDocumentAppender.appendDoc(null, documents.get(1))).isInstanceOf(IllegalArgumentException.class);
   }
 
   @Test
   public void appendDoc_throws_IAE_if_docToAppend_is_null() throws Exception {
-    thrown.expect(IllegalArgumentException.class);
-    AsposeDocumentAppender.appendDoc(documents.get(0), null);
+    assertThatThrownBy(() -> AsposeDocumentAppender.appendDoc(documents.get(0), null)).isInstanceOf(IllegalArgumentException.class);
   }
 
   @Test
   public void after_appendDoc_leadingDoc_sectionsCount_has_appendedDoc_sectionsCount() throws Exception {
-    int expectedSectionNumbers = documents.get(0).getSections().getCount()
-            + documents.get(1).getSections().getCount();
-
-    assertThat(documents.get(0).getSections().getCount(), not(expectedSectionNumbers));
+    int expectedSectionNumbers = documents.get(0).getSections().getCount() + documents.get(1).getSections().getCount();
+    assertThat(documents.get(0).getSections().getCount()).isNotEqualTo(expectedSectionNumbers);
 
     AsposeDocumentAppender.appendDoc(documents.get(0), documents.get(1));
-
-    assertThat(documents.get(0).getSections().getCount(), is(expectedSectionNumbers));
+    assertThat(documents.get(0).getSections().getCount()).isEqualTo(expectedSectionNumbers);
   }
-
 }
