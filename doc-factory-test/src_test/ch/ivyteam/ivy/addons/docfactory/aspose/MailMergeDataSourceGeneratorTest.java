@@ -1,8 +1,7 @@
 package ch.ivyteam.ivy.addons.docfactory.aspose;
 
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -12,23 +11,17 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-
-import ch.ivyteam.ivy.addons.docfactory.TemplateMergeField;
+import org.junit.jupiter.api.Test;
 
 import com.aspose.words.IMailMergeDataSource;
 
-public class MailMergeDataSourceGeneratorTest {
+import ch.ivyteam.ivy.addons.docfactory.TemplateMergeField;
 
-  @Rule
-  public ExpectedException thrown = ExpectedException.none();
+public class MailMergeDataSourceGeneratorTest {
 
   @Test
   public void getFromCollectionTypeTemplateMergeField_throws_IAE_with_null_parameter() throws Exception {
-    thrown.expect(IllegalArgumentException.class);
-    MailMergeDataSourceGenerator.getFromCollectionTypeTemplateMergeField(null);
+    assertThatThrownBy(() -> MailMergeDataSourceGenerator.getFromCollectionTypeTemplateMergeField(null)).isInstanceOf(IllegalArgumentException.class);
   }
 
   @Test
@@ -37,8 +30,7 @@ public class MailMergeDataSourceGeneratorTest {
 
     TemplateMergeField tmf = TemplateMergeField.withName("myHobbies").withValue("a value");
     IMailMergeDataSource mmds = MailMergeDataSourceGenerator.getFromCollectionTypeTemplateMergeField(tmf);
-
-    assertNull(mmds);
+    assertThat(mmds).isNull();
   }
 
   @Test
@@ -52,10 +44,10 @@ public class MailMergeDataSourceGeneratorTest {
 
     TemplateMergeField tmf = TemplateMergeField.withName("myHobbies").withValue(hobbies);
     IMailMergeDataSource mmds = MailMergeDataSourceGenerator.getFromCollectionTypeTemplateMergeField(tmf);
-    assertThat(mmds.getTableName(), org.hamcrest.CoreMatchers.equalTo("myHobbies"));
+    assertThat(mmds.getTableName()).isEqualTo("myHobbies");
     for (@SuppressWarnings("unused")
     String string : hobbies) {
-      assertTrue(mmds.moveNext());
+      assertThat(mmds.moveNext()).isTrue();
     }
 
   }
@@ -71,10 +63,10 @@ public class MailMergeDataSourceGeneratorTest {
 
     TemplateMergeField tmf = TemplateMergeField.withName("myHobbies").withValue(hobbies);
     IMailMergeDataSource mmds = MailMergeDataSourceGenerator.getFromCollectionTypeTemplateMergeField(tmf);
-    assertThat(mmds.getTableName(), org.hamcrest.CoreMatchers.equalTo("myHobbies"));
+    assertThat(mmds.getTableName()).isEqualTo("myHobbies");
     for (@SuppressWarnings("unused")
     String string : hobbies.values()) {
-      assertTrue(mmds.moveNext());
+      assertThat(mmds.moveNext()).isTrue();
     }
   }
 
@@ -89,10 +81,10 @@ public class MailMergeDataSourceGeneratorTest {
 
     TemplateMergeField tmf = TemplateMergeField.withName("persons").withValue(persons);
     IMailMergeDataSource mmds = MailMergeDataSourceGenerator.getFromCollectionTypeTemplateMergeField(tmf);
-    assertThat(mmds.getTableName(), org.hamcrest.CoreMatchers.equalTo("persons"));
+    assertThat(mmds.getTableName()).isEqualTo("persons");
     for (@SuppressWarnings("unused")
     Person p : persons) {
-      assertTrue(mmds.moveNext());
+      assertThat(mmds.moveNext()).isTrue();
     }
   }
 
@@ -109,10 +101,10 @@ public class MailMergeDataSourceGeneratorTest {
 
     TemplateMergeField tmf = TemplateMergeField.withName("myHobbies").withValue(persons);
     IMailMergeDataSource mmds = MailMergeDataSourceGenerator.getFromCollectionTypeTemplateMergeField(tmf);
-    assertThat(mmds.getTableName(), org.hamcrest.CoreMatchers.equalTo("myHobbies"));
+    assertThat(mmds.getTableName()).isEqualTo("myHobbies");
     for (@SuppressWarnings("unused")
     Person p : persons.values()) {
-      assertTrue(mmds.moveNext());
+      assertThat(mmds.moveNext()).isTrue();
     }
   }
 
