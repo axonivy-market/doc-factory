@@ -1,76 +1,60 @@
 package ch.ivyteam.ivy.addons.docfactory;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static ch.ivyteam.ivy.addons.docfactory.DocFactoryTest.makeFile;
+import static ch.ivyteam.ivy.addons.docfactory.DocFactoryTest.makePerson;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import ch.ivyteam.ivy.addons.docfactory.options.DocumentCreationOptions;
+import ch.ivyteam.ivy.environment.IvyTest;
 
-public class DocumentTemplateWithDocumentCreationOptionsIT extends DocFactoryTest {
+@IvyTest
+public class DocumentTemplateWithDocumentCreationOptionsIT {
 
   File template;
 
-  @Override
-  @Before
+  @BeforeEach
   public void setup() throws Exception {
-    super.setup();
-    template = new File(this.getClass().getResource(TEMPLATE_WITH_FIELDS_FORM_DOCX).toURI().getPath());
+    template = new File(this.getClass().getResource(DocFactoryTest.TEMPLATE_WITH_FIELDS_FORM_DOCX).toURI().getPath());
   }
 
   @Test
   public void default_produces_fieldForm_not_editablePDF() {
-    DocumentTemplate documentTemplate = DocumentTemplate.withTemplate(template)
-            .putDataAsSourceForMailMerge(makePerson());
-
-    File resultFile = makeFile("test/documentCreationOptions/default_field_form_not_editable.pdf");
-    FileOperationMessage result = documentTemplate.produceDocument(resultFile);
-
-    assertNotNull(result);
-    assertTrue(result.isSuccess());
-    assertThat(result.getFiles(), org.hamcrest.core.IsCollectionContaining.hasItem(resultFile));
-
+    var documentTemplate = DocumentTemplate.withTemplate(template).putDataAsSourceForMailMerge(makePerson());
+    var resultFile = makeFile("test/documentCreationOptions/default_field_form_not_editable.pdf");
+    var result = documentTemplate.produceDocument(resultFile);
+    assertThat(result).isNotNull();
+    assertThat(result.isSuccess()).isTrue();
+    assertThat(result.getFiles()).contains(resultFile);
   }
 
   @Test
   public void with_documentCreationOptions_producing_fieldForm_editablePDF() {
     @SuppressWarnings("deprecation")
-    DocumentCreationOptions options = DocumentCreationOptions.getInstance().keepFormFieldsEditableInPdf(true);
-
-    DocumentTemplate documentTemplate = DocumentTemplate.withTemplate(template)
-            .putDataAsSourceForMailMerge(makePerson()).withDocumentCreationOptions(options); // Set
-                                                                                             // the
-                                                                                             // DocumentCreationOptions
-
-    File resultFile = makeFile("test/documentCreationOptions/field_form_editable.pdf");
-    FileOperationMessage result = documentTemplate.produceDocument(resultFile);
-
-    assertNotNull(result);
-    assertTrue(result.isSuccess());
-    assertThat(result.getFiles(), org.hamcrest.core.IsCollectionContaining.hasItem(resultFile));
-
+    var options = DocumentCreationOptions.getInstance().keepFormFieldsEditableInPdf(true);
+    var documentTemplate = DocumentTemplate.withTemplate(template)
+            .putDataAsSourceForMailMerge(makePerson()).withDocumentCreationOptions(options);
+    var resultFile = makeFile("test/documentCreationOptions/field_form_editable.pdf");
+    var result = documentTemplate.produceDocument(resultFile);
+    assertThat(result).isNotNull();
+    assertThat(result.isSuccess()).isTrue();
+    assertThat(result.getFiles()).contains(resultFile);
   }
 
   @Test
   public void with_documentCreationOptions_producing_fieldForm_not_editablePDF() {
     @SuppressWarnings("deprecation")
-    DocumentCreationOptions options = DocumentCreationOptions.getInstance()
+    var options = DocumentCreationOptions.getInstance()
             .keepFormFieldsEditableInPdf(false);
-
-    DocumentTemplate documentTemplate = DocumentTemplate.withTemplate(template)
-            .putDataAsSourceForMailMerge(makePerson()).withDocumentCreationOptions(options);
-
-    File resultFile = makeFile("test/documentCreationOptions/field_form_not_editable.pdf");
-    FileOperationMessage result = documentTemplate.produceDocument(resultFile);
-
-    assertNotNull(result);
-    assertTrue(result.isSuccess());
-    assertThat(result.getFiles(), org.hamcrest.core.IsCollectionContaining.hasItem(resultFile));
-
+    var documentTemplate = DocumentTemplate.withTemplate(template).putDataAsSourceForMailMerge(makePerson()).withDocumentCreationOptions(options);
+    var resultFile = makeFile("test/documentCreationOptions/field_form_not_editable.pdf");
+    var result = documentTemplate.produceDocument(resultFile);
+    assertThat(result).isNotNull();
+    assertThat(result.isSuccess()).isTrue();
+    assertThat(result.getFiles()).contains(resultFile);
   }
-
 }

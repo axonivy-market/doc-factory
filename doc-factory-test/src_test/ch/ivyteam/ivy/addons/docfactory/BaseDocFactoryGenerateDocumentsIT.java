@@ -1,10 +1,10 @@
 package ch.ivyteam.ivy.addons.docfactory;
 
-import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
-import static org.hamcrest.collection.IsIterableContainingInOrder.contains;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static ch.ivyteam.ivy.addons.docfactory.DocFactoryTest.TEMPLATE_FOR_TESTING_NULL_VALUES_DOCX;
+import static ch.ivyteam.ivy.addons.docfactory.DocFactoryTest.TEMPLATE_PERSON_DOCX;
+import static ch.ivyteam.ivy.addons.docfactory.DocFactoryTest.TEMPLATE_WITH_FIELDS_FORM_DOCX;
+import static ch.ivyteam.ivy.addons.docfactory.DocFactoryTest.makePerson;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
 import java.net.URISyntaxException;
@@ -12,8 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import ch.ivyteam.ivy.addons.docfactory.options.DocumentAppendingStart;
 import ch.ivyteam.ivy.addons.docfactory.options.DocumentCreationOptions;
@@ -21,7 +21,7 @@ import ch.ivyteam.ivy.addons.docfactory.options.FileAppenderOptions;
 import ch.ivyteam.ivy.addons.docfactory.options.MultipleDocumentsCreationOptions;
 import ch.ivyteam.ivy.addons.docfactory.test.data.Person;
 
-public class BaseDocFactoryGenerateDocumentsIT extends DocFactoryTest {
+public class BaseDocFactoryGenerateDocumentsIT {
 
   private static final String TEST_DIRECTORY_RELATIVE_PATH = "test/generateDocuments";
   private static File TEMPLATE_1, TEMPLATE_2, TEMPLATE_3;
@@ -44,9 +44,8 @@ public class BaseDocFactoryGenerateDocumentsIT extends DocFactoryTest {
   private DocumentTemplate documentTemplate1, documentTemplate2, documentTemplate3;
 
   @SuppressWarnings("deprecation")
-  @Before
+  @BeforeEach
   public void setUp() throws Exception {
-    super.setup();
     docFactory = BaseDocFactory.getInstance()
             .withDocumentCreationOptions(
                     DocumentCreationOptions.getInstance().keepFormFieldsEditableInPdf(true));
@@ -98,12 +97,11 @@ public class BaseDocFactoryGenerateDocumentsIT extends DocFactoryTest {
     File resultFile3 = new File(TEST_DIRECTORY_RELATIVE_PATH + "/file3.pdf");
     File resultFile4 = new File(TEST_DIRECTORY_RELATIVE_PATH + "/bigFile.pdf");
 
-    assertThat(result.isSuccess(), is(true));
-    assertThat(result.getFiles(), hasSize(4));
-    assertThat(resultFilePaths,
-            contains(resultFile1.getAbsolutePath(), resultFile2.getAbsolutePath(),
-                    resultFile3.getAbsolutePath(), resultFile4.getAbsolutePath()));
-    assertTrue(resultFile1.isFile() && resultFile2.isFile() && resultFile3.isFile() && resultFile4.isFile());
+    assertThat(result.isSuccess()).isTrue();
+    assertThat(result.getFiles()).hasSize(4);
+    assertThat(resultFilePaths).contains(resultFile1.getAbsolutePath(), resultFile2.getAbsolutePath(),
+                    resultFile3.getAbsolutePath(), resultFile4.getAbsolutePath());
+    assertThat(resultFile1.isFile() && resultFile2.isFile() && resultFile3.isFile() && resultFile4.isFile()).isTrue();
   }
 
   @Test
@@ -129,8 +127,7 @@ public class BaseDocFactoryGenerateDocumentsIT extends DocFactoryTest {
 
     File appendedFile = result.getFiles().get(result.getFiles().size() - 1);
     com.aspose.pdf.Document pdfDocument = new com.aspose.pdf.Document(appendedFile.getAbsolutePath());
-
-    assertThat(pdfDocument.getPages().size(), is(documentTemplates.size()));
+    assertThat(pdfDocument.getPages()).hasSize(documentTemplates.size());
   }
 
   @Test
@@ -156,12 +153,11 @@ public class BaseDocFactoryGenerateDocumentsIT extends DocFactoryTest {
     File resultFile3 = new File(TEST_DIRECTORY_RELATIVE_PATH + "/fileSameTemplate3.pdf");
     File resultFile4 = new File(TEST_DIRECTORY_RELATIVE_PATH + "/bigFileSameTemplate.pdf");
 
-    assertThat(result.isSuccess(), is(true));
-    assertThat(result.getFiles(), hasSize(4));
-    assertThat(resultFilePaths,
-            contains(resultFile1.getAbsolutePath(), resultFile2.getAbsolutePath(),
-                    resultFile3.getAbsolutePath(), resultFile4.getAbsolutePath()));
-    assertTrue(resultFile1.isFile() && resultFile2.isFile() && resultFile3.isFile() && resultFile4.isFile());
+    assertThat(result.isSuccess()).isTrue();
+    assertThat(result.getFiles()).hasSize(4);
+    assertThat(resultFilePaths).contains(resultFile1.getAbsolutePath(), resultFile2.getAbsolutePath(),
+                    resultFile3.getAbsolutePath(), resultFile4.getAbsolutePath());
+    assertThat(resultFile1.isFile() && resultFile2.isFile() && resultFile3.isFile() && resultFile4.isFile()).isTrue();
   }
 
   @Test
@@ -180,8 +176,7 @@ public class BaseDocFactoryGenerateDocumentsIT extends DocFactoryTest {
 
     File appendedFile = result.getFiles().get(result.getFiles().size() - 1);
     com.aspose.pdf.Document pdfDocument = new com.aspose.pdf.Document(appendedFile.getAbsolutePath());
-
-    assertThat(pdfDocument.getPages().size(), is(documentTemplates.size()));
+    assertThat(pdfDocument.getPages()).hasSize(documentTemplates.size());
   }
 
   @Test
@@ -208,15 +203,14 @@ public class BaseDocFactoryGenerateDocumentsIT extends DocFactoryTest {
     File resultFile2 = new File(TEST_DIRECTORY_RELATIVE_PATH + "/file5.docx");
     File resultFile3 = new File(TEST_DIRECTORY_RELATIVE_PATH + "/file6.pdf");
 
-    assertThat(result.isSuccess(), is(true));
-    assertThat(result.getFiles(), hasSize(3));
-    assertThat(resultFilePaths,
+    assertThat(result.isSuccess()).isTrue();
+    assertThat(result.getFiles()).hasSize(3);
+    assertThat(resultFilePaths).
             contains(resultFile1.getAbsolutePath(), resultFile2.getAbsolutePath(),
-                    resultFile3.getAbsolutePath()));
-    assertTrue(resultFile1.isFile() && resultFile2.isFile() && resultFile3.isFile());
-
+                    resultFile3.getAbsolutePath());
+    assertThat(resultFile1.isFile() && resultFile2.isFile() && resultFile3.isFile()).isTrue();
   }
-
+  
   @Test
   public void generateDocuments_onlyAppendedDoc_created() throws Exception {
     List<DocumentTemplate> documentTemplates = new ArrayList<>();
@@ -240,10 +234,10 @@ public class BaseDocFactoryGenerateDocumentsIT extends DocFactoryTest {
 
     File resultFile = new File(TEST_DIRECTORY_RELATIVE_PATH + "/singleAppendedFile.docx");
 
-    assertThat(result.isSuccess(), is(true));
-    assertThat(result.getFiles(), hasSize(1));
-    assertThat(resultFilePaths, contains(resultFile.getAbsolutePath()));
-    assertTrue(resultFile.isFile());
+    assertThat(result.isSuccess()).isTrue();
+    assertThat(result.getFiles()).hasSize(1);
+    assertThat(resultFilePaths).contains(resultFile.getAbsolutePath());
+    assertThat(resultFile.isFile()).isTrue();
 
   }
 
@@ -271,10 +265,10 @@ public class BaseDocFactoryGenerateDocumentsIT extends DocFactoryTest {
 
     File resultFile = new File(TEST_DIRECTORY_RELATIVE_PATH + "/singleAppendedFileContinuous.docx");
 
-    assertThat(result.isSuccess(), is(true));
-    assertThat(result.getFiles(), hasSize(1));
-    assertThat(resultFilePaths, contains(resultFile.getAbsolutePath()));
-    assertTrue(resultFile.isFile());
+    assertThat(result.isSuccess()).isTrue();
+    assertThat(result.getFiles()).hasSize(1);
+    assertThat(resultFilePaths).contains(resultFile.getAbsolutePath());
+    assertThat(resultFile.isFile()).isTrue();
   }
 
   @Test
@@ -298,12 +292,11 @@ public class BaseDocFactoryGenerateDocumentsIT extends DocFactoryTest {
     File resultFile2 = new File(TEST_DIRECTORY_RELATIVE_PATH + "/file8.docx");
     File resultFile3 = new File(TEST_DIRECTORY_RELATIVE_PATH + "/file9.pdf");
 
-    assertThat(result.isSuccess(), is(true));
-    assertThat(result.getFiles(), hasSize(3));
-    assertThat(resultFilePaths,
-            contains(resultFile1.getAbsolutePath(), resultFile2.getAbsolutePath(),
-                    resultFile3.getAbsolutePath()));
-    assertTrue(resultFile1.isFile() && resultFile2.isFile() && resultFile3.isFile());
+    assertThat(result.isSuccess()).isTrue();
+    assertThat(result.getFiles()).hasSize(3);
+    assertThat(resultFilePaths).contains(resultFile1.getAbsolutePath(), resultFile2.getAbsolutePath(),
+                    resultFile3.getAbsolutePath());
+    assertThat(resultFile1.isFile() && resultFile2.isFile() && resultFile3.isFile()).isTrue();
 
   }
 

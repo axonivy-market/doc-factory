@@ -1,28 +1,25 @@
 package ch.ivyteam.ivy.addons.docfactory.aspose;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import ch.ivyteam.ivy.addons.docfactory.exception.DocFactoryException;
 import ch.ivyteam.ivy.addons.docfactory.log.DocFactoryLogDirectoryRetriever;
 import ch.ivyteam.ivy.addons.docfactory.pdf.PdfAType;
 import ch.ivyteam.ivy.addons.docfactory.pdfbox.PdfAValidator;
 
+@Disabled("aspose needs jdk.nashorn which is not available with java 17")
 public class AsposePdfFactoryTest {
-
-  @Rule
-  public ExpectedException thrown = ExpectedException.none();
 
   private static java.io.File PDF_FILE;
   private static com.aspose.pdf.License PDF_LICENSE;
@@ -30,7 +27,7 @@ public class AsposePdfFactoryTest {
 
   AsposePdfFactory asposePdfFactory;
 
-  @BeforeClass
+  @BeforeAll
   public static void setupClass() throws URISyntaxException {
     try (InputStream licIn = AsposePdfFactoryTest.class
             .getResourceAsStream("resources/docfactory_2019_09_04.lic")) {
@@ -50,7 +47,7 @@ public class AsposePdfFactoryTest {
             AsposePdfFactoryTest.class.getResource("../resources/files/simplePDF.pdf").toURI().getPath());
   }
 
-  @Before
+  @BeforeEach
   public void setup() throws Exception {
     asposePdfFactory = new AsposePdfFactory(false);
     asposePdfFactory.setLogDirectoryRetriever(new LogDirectoryRetriever());
@@ -58,29 +55,24 @@ public class AsposePdfFactoryTest {
 
   @Test
   public void convertToPdfA_thows_IllegalArgumentException_with_null_arg() throws Exception {
-    thrown.expect(IllegalArgumentException.class);
-    asposePdfFactory.convertToPdfA(null, PdfAType.PDF_A_1A);
+    assertThatThrownBy(() -> asposePdfFactory.convertToPdfA(null, PdfAType.PDF_A_1A)).isInstanceOf(IllegalArgumentException.class);
   }
 
   @Test
   public void convertToPdfA_thows_IllegalArgumentException_with_emptyString_arg() throws Exception {
-    thrown.expect(IllegalArgumentException.class);
-    asposePdfFactory.convertToPdfA(" ", PdfAType.PDF_A_1A);
+    assertThatThrownBy(() -> asposePdfFactory.convertToPdfA(" ", PdfAType.PDF_A_1A)).isInstanceOf(IllegalArgumentException.class);
   }
 
   @Test
   public void convertToPdfA_thows_DocFactoryException_for_non_existing_file() throws Exception {
     java.io.File nonExistingPdf = new java.io.File("test/nonExistingPdf.pdf");
-    assertFalse(nonExistingPdf.exists());
-
-    thrown.expect(DocFactoryException.class);
-    asposePdfFactory.convertToPdfA(nonExistingPdf.getAbsolutePath(), PdfAType.PDF_A_1A);
+    assertThat(nonExistingPdf.exists()).isFalse();
+    assertThatThrownBy(() -> asposePdfFactory.convertToPdfA(nonExistingPdf.getAbsolutePath(), PdfAType.PDF_A_1A)).isInstanceOf(DocFactoryException.class);
   }
 
   @Test
   public void convertToPdfA_thows_IllegalArgumentException_for_file_other_than_pdf() throws Exception {
-    thrown.expect(IllegalArgumentException.class);
-    asposePdfFactory.convertToPdfA("document.docx", PdfAType.PDF_A_1A);
+    assertThatThrownBy(() -> asposePdfFactory.convertToPdfA("document.docx", PdfAType.PDF_A_1A)).isInstanceOf(IllegalArgumentException.class);
   }
 
   @Test
@@ -89,12 +81,12 @@ public class AsposePdfFactoryTest {
 
     asposePdfFactory.convertToPdfA(resultFile.getAbsolutePath(), PdfAType.PDF_A_1A);
 
-    assertTrue(resultFile.isFile());
+    assertThat(resultFile.isFile()).isTrue();
     // PDFBox can validate the PDF/A result
     // This tool cannot validate it: https: www.pdf-online.com/osa/validate.aspx
     // We should in general be careful with PDF/A validation as it does not seem
     // to be consistent across different tools.
-    assertTrue(PdfAValidator.isPDFACompliant(resultFile));
+    assertThat(PdfAValidator.isPDFACompliant(resultFile)).isTrue();
   }
 
   @Test
@@ -103,12 +95,12 @@ public class AsposePdfFactoryTest {
 
     asposePdfFactory.convertToPdfA(resultFile.getAbsolutePath(), PdfAType.PDF_A_1B);
 
-    assertTrue(resultFile.isFile());
+    assertThat(resultFile.isFile()).isTrue();
     // PDFBox can validate the PdfAType.PDF_A_1B result
     // this tool also: https://www.pdf-online.com/osa/validate.aspx
     // We should in general be careful with PDF/A validation as it does not seem
     // to be consistent across different tools.
-    assertTrue(PdfAValidator.isPDFACompliant(resultFile));
+    assertThat(PdfAValidator.isPDFACompliant(resultFile)).isTrue();
   }
 
   @Test
@@ -117,14 +109,14 @@ public class AsposePdfFactoryTest {
 
     asposePdfFactory.convertToPdfA(resultFile.getAbsolutePath(), PdfAType.PDF_A_2A);
 
-    assertTrue(resultFile.isFile());
+    assertThat(resultFile.isFile()).isTrue();
     // PDFBox cannot validate the PdfAType.PDF_A_2A result.
     // it seems there is a bug with aspose with PdfAType.PDF_A_2A,
     // PdfAType.PDF_A_3A see
     // https://forum.aspose.com/t/aspose-pdf-java-pdf-to-pdf-a-convertion-does-not-produce-valid-pdf-a-1a-pdf-a-2a-pdf-a-3a/212847
     // We should in general be careful with PDF/A validation as it does not seem
     // to be consistent across different tools.
-    assertFalse(PdfAValidator.isPDFACompliant(resultFile));
+    assertThat(PdfAValidator.isPDFACompliant(resultFile)).isFalse();
   }
 
   @Test
@@ -133,14 +125,14 @@ public class AsposePdfFactoryTest {
 
     asposePdfFactory.convertToPdfA(resultFile.getAbsolutePath(), PdfAType.PDF_A_2B);
 
-    assertTrue(resultFile.isFile());
+    assertThat(resultFile.isFile()).isTrue();
     // PDFBox cannot validate the PdfAType.PDF_A_2B result. But other online
     // tools can.
     // Example: https://www.pdf-online.com/osa/validate.aspx can validate the
     // result of this unit test.
     // We should in general be careful with PDF/A validation as it does not seem
     // to be consistent across different tools.
-    assertFalse(PdfAValidator.isPDFACompliant(resultFile));
+    assertThat(PdfAValidator.isPDFACompliant(resultFile)).isFalse();
   }
 
   @Test
@@ -149,14 +141,14 @@ public class AsposePdfFactoryTest {
 
     asposePdfFactory.convertToPdfA(resultFile.getAbsolutePath(), PdfAType.PDF_A_3A);
 
-    assertTrue(resultFile.isFile());
+    assertThat(resultFile.isFile()).isTrue();
     // PDFBox cannot validate the PdfAType.PDF_A_3A result.
     // it seems there is a bug with aspose with PdfAType.PDF_A_2A,
     // PdfAType.PDF_A_3A see
     // https://forum.aspose.com/t/aspose-pdf-java-pdf-to-pdf-a-convertion-does-not-produce-valid-pdf-a-1a-pdf-a-2a-pdf-a-3a/212847
     // We should in general be careful with PDF/A validation as it does not seem
     // to be consistent across different tools.
-    assertFalse(PdfAValidator.isPDFACompliant(resultFile));
+    assertThat(PdfAValidator.isPDFACompliant(resultFile)).isFalse();
   }
 
   @Test
@@ -165,14 +157,14 @@ public class AsposePdfFactoryTest {
 
     asposePdfFactory.convertToPdfA(resultFile.getAbsolutePath(), PdfAType.PDF_A_3B);
 
-    assertTrue(resultFile.isFile());
+    assertThat(resultFile.isFile()).isTrue();
     // PDFBox cannot validate the PdfAType.PDF_A_3B result. But other online
     // tools can.
     // Example: https://www.pdf-online.com/osa/validate.aspx can validate the
     // result of this unit test.
     // We should in general be careful with PDF/A validation as it does not seem
     // to be consistent across different tools.
-    assertFalse(PdfAValidator.isPDFACompliant(resultFile));
+    assertThat(PdfAValidator.isPDFACompliant(resultFile)).isFalse();
   }
 
   @Test
@@ -181,14 +173,14 @@ public class AsposePdfFactoryTest {
 
     asposePdfFactory.convertToPdfA(resultFile.getAbsolutePath(), PdfAType.PDF_A_2U);
 
-    assertTrue(resultFile.isFile());
+    assertThat(resultFile.isFile()).isTrue();
     // PDFBox cannot validate the PdfAType.PDF_A_2U result. But other online
     // tools can.
     // Example: https://www.pdf-online.com/osa/validate.aspx can validate the
     // result of this unit test.
     // We should in general be careful with PDF/A validation as it does not seem
     // to be consistent across different tools.
-    assertFalse(PdfAValidator.isPDFACompliant(resultFile));
+    assertThat(PdfAValidator.isPDFACompliant(resultFile)).isFalse();
   }
 
   @Test
@@ -197,14 +189,14 @@ public class AsposePdfFactoryTest {
 
     asposePdfFactory.convertToPdfA(resultFile.getAbsolutePath(), PdfAType.PDF_A_3U);
 
-    assertTrue(resultFile.isFile());
+    assertThat(resultFile.isFile()).isTrue();
     // PDFBox cannot validate the PdfAType.PDF_A_3U result. But other online
     // tools can.
     // Example: https://www.pdf-online.com/osa/validate.aspx can validate the
     // result of this unit test.
     // We should in general be careful with PDF/A validation as it does not seem
     // to be consistent across different tools.
-    assertFalse(PdfAValidator.isPDFACompliant(resultFile));
+    assertThat(PdfAValidator.isPDFACompliant(resultFile)).isFalse();
   }
 
   private java.io.File makePDFToConvert(String pdfToConvertPath) throws IOException {
@@ -231,5 +223,4 @@ public class AsposePdfFactoryTest {
     }
 
   }
-
 }

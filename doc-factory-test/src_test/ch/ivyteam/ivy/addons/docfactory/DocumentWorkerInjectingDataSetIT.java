@@ -1,14 +1,15 @@
 package ch.ivyteam.ivy.addons.docfactory;
 
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static ch.ivyteam.ivy.addons.docfactory.DocFactoryTest.TEMPLATE_PERSON_DOCX;
+import static ch.ivyteam.ivy.addons.docfactory.DocFactoryTest.makePerson;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
 import java.net.URISyntaxException;
 import java.util.Locale;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.aspose.words.Document;
 import com.aspose.words.net.System.Data.DataRow;
@@ -16,12 +17,14 @@ import com.aspose.words.net.System.Data.DataSet;
 import com.aspose.words.net.System.Data.DataTable;
 
 import ch.ivyteam.ivy.addons.docfactory.aspose.DocumentWorker;
+import ch.ivyteam.ivy.environment.IvyTest;
 
-public class DocumentWorkerInjectingDataSetIT extends DocFactoryTest {
+@IvyTest
+public class DocumentWorkerInjectingDataSetIT  {
 
   File template;
 
-  @Before
+  @BeforeEach
   public void setUp() throws URISyntaxException {
     template = new File(this.getClass().getResource(TEMPLATE_PERSON_DOCX).toURI().getPath());
   }
@@ -44,8 +47,9 @@ public class DocumentWorkerInjectingDataSetIT extends DocFactoryTest {
     if (result == null) {
       throw new IllegalStateException();
     }
-    assertTrue(result.isSuccess());
-    assertThat(result.getFiles(), org.hamcrest.core.IsCollectionContaining.hasItem(resultFile));
+    
+    assertThat(result.isSuccess()).isTrue();
+    assertThat(result.getFiles()).contains(resultFile);
   }
 
   class dataInjector implements DocumentWorker {

@@ -1,52 +1,48 @@
 package ch.ivyteam.ivy.addons.docfactory;
 
-import static org.hamcrest.collection.IsIterableContainingInOrder.contains;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import ch.ivyteam.ivy.addons.docfactory.options.FileAppenderOptions;
 
-public class FileAppenderIT extends DocFactoryTest {
+public class FileAppenderIT {
 
   @Test
   public void isPdf_true_for_pdf() {
-    assertTrue(FileAppender.isPdf(new File("aPdf.PDF")));
-    assertTrue(FileAppender.isPdf(new File("aPdf.pdf")));
-    assertTrue(FileAppender.isPdf(new File("aPdf.pDf")));
+    assertThat(FileAppender.isPdf(new File("aPdf.PDF"))).isTrue();
+    assertThat(FileAppender.isPdf(new File("aPdf.pdf"))).isTrue();
+    assertThat(FileAppender.isPdf(new File("aPdf.pDf"))).isTrue();
   }
-
+  
   @Test
   public void isPdf_false_for_non_pdf() {
-    assertFalse(FileAppender.isPdf(new File("aDoc.DOC")));
-    assertFalse(FileAppender.isPdf(new File("aDoc.doc")));
-    assertFalse(FileAppender.isPdf(new File("aDirectory")));
+    assertThat(FileAppender.isPdf(new File("aDoc.DOC"))).isFalse();
+    assertThat(FileAppender.isPdf(new File("aDoc.doc"))).isFalse();
+    assertThat(FileAppender.isPdf(new File("aDirectory"))).isFalse();
   }
-
+  
   @Test
   public void isOffice_true_for_office_file() {
-    assertTrue(FileAppender.isOfficeWord(new File("aDoc.DOC")));
-    assertTrue(FileAppender.isOfficeWord(new File("aDoc.doc")));
-    assertTrue(FileAppender.isOfficeWord(new File("aDocx.DOCX")));
-    assertTrue(FileAppender.isOfficeWord(new File("aDocx.docx")));
-    assertTrue(FileAppender.isOfficeWord(new File("aOdt.ODT")));
-    assertTrue(FileAppender.isOfficeWord(new File("aOdt.odt")));
+    assertThat(FileAppender.isOfficeWord(new File("aDoc.DOC"))).isTrue();
+    assertThat(FileAppender.isOfficeWord(new File("aDoc.doc"))).isTrue();
+    assertThat(FileAppender.isOfficeWord(new File("aDocx.DOCX"))).isTrue();
+    assertThat(FileAppender.isOfficeWord(new File("aDocx.docx"))).isTrue();
+    assertThat(FileAppender.isOfficeWord(new File("aOdt.ODT"))).isTrue();
+    assertThat(FileAppender.isOfficeWord(new File("aOdt.odt"))).isTrue();
   }
 
   @Test
   public void isOffice_false_for_non_office() {
-    assertFalse(FileAppender.isOfficeWord(new File("aTxt.txt")));
-    assertFalse(FileAppender.isOfficeWord(new File("aPdf.pdf")));
-    assertFalse(FileAppender.isOfficeWord(new File("anHTML.html")));
-    assertFalse(FileAppender.isOfficeWord(new File("aDirectory")));
+    assertThat(FileAppender.isOfficeWord(new File("aTxt.txt"))).isFalse();
+    assertThat(FileAppender.isOfficeWord(new File("aPdf.pdf"))).isFalse();
+    assertThat(FileAppender.isOfficeWord(new File("anHTML.html"))).isFalse();
+    assertThat(FileAppender.isOfficeWord(new File("aDirectory"))).isFalse();
   }
 
   @Test
@@ -56,8 +52,7 @@ public class FileAppenderIT extends DocFactoryTest {
             new File("aDirectory"), new File("anotherPdf.pDf"), new File("pdf1.pDf"));
 
     List<File> pdfs = FileAppender.filterPdfFiles(filesToFilter);
-
-    assertThat(pdfs, contains(new File("aPdf.pdf"), new File("anotherPdf.pDf"), new File("pdf1.pDf")));
+    assertThat(pdfs).contains(new File("aPdf.pdf"), new File("anotherPdf.pDf"), new File("pdf1.pDf"));
   }
 
   @Test
@@ -67,8 +62,7 @@ public class FileAppenderIT extends DocFactoryTest {
             new File("aDirectory"), new File("anotherDoc.doc"), new File("pdf1.pDf"));
 
     List<File> pdfs = FileAppender.filterOfficeWordFiles(filesToFilter);
-
-    assertThat(pdfs, contains(new File("anOdt.ODT"), new File("aDocx.docx"), new File("anotherDoc.doc")));
+    assertThat(pdfs).contains(new File("anOdt.ODT"), new File("aDocx.docx"), new File("anotherDoc.doc"));
   }
 
   @Test
@@ -93,8 +87,8 @@ public class FileAppenderIT extends DocFactoryTest {
                     .withAppendedFileName("differentDocTypesAppended")
                     .withAppendedFileParentDirectoryPath("test/fileAppender"));
 
-    assertThat(result.isFile(), is(true));
-    assertThat(result.getName(), is("differentDocTypesAppended.pdf"));
+    assertThat(result.isFile()).isTrue();
+    assertThat(result.getName()).isEqualTo("differentDocTypesAppended.pdf");
   }
 
   @Test
@@ -120,8 +114,8 @@ public class FileAppenderIT extends DocFactoryTest {
                     .withAppendedFileParentDirectoryPath("test/fileAppender")
                     .restartPageNumbering(true));
 
-    assertThat(result.isFile(), is(true));
-    assertThat(result.getName(), is("documentRestartingPageNumbering.docx"));
+    assertThat(result.isFile()).isTrue();
+    assertThat(result.getName()).isEqualTo("documentRestartingPageNumbering.docx");
   }
 
   @Test
@@ -147,8 +141,8 @@ public class FileAppenderIT extends DocFactoryTest {
                     .withAppendedFileParentDirectoryPath("test/fileAppender")
                     .useHeadersFootersFromLeadingPage(true));
 
-    assertThat(result.isFile(), is(true));
-    assertThat(result.getName(), is("documentUsingHeadersFootersFromLeadingPage.docx"));
+    assertThat(result.isFile()).isTrue();
+    assertThat(result.getName()).isEqualTo("documentUsingHeadersFootersFromLeadingPage.docx");
   }
 
   @Test
@@ -175,8 +169,7 @@ public class FileAppenderIT extends DocFactoryTest {
     // no effect
     );
 
-    assertThat(result.isFile(), is(true));
-    assertThat(result.getName(), is("appendingPdfTogether.pdf"));
+    assertThat(result.isFile()).isTrue();
+    assertThat(result.getName()).isEqualTo("appendingPdfTogether.pdf");
   }
-
 }
