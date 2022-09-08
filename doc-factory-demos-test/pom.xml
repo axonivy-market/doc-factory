@@ -7,7 +7,7 @@
 	<packaging>iar-integration-test</packaging>
 
 	<properties>
-		<project-build-plugin-version>9.4.0</project-build-plugin-version>
+		<project-build-plugin-version>9.4.1</project-build-plugin-version>
 	</properties>
 
 	<dependencies>
