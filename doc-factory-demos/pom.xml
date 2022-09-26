@@ -3,7 +3,7 @@
 
 	<groupId>com.axonivy.utils.docfactory</groupId>
 	<artifactId>doc-factory-demos</artifactId>
-	<version>9.4.0</version>
+	<version>9.4.1-SNAPSHOT</version>
 	<packaging>iar</packaging>
 
 	<properties>
