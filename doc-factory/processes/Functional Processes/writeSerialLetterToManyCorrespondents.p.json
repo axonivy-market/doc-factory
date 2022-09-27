@@ -45,21 +45,21 @@
         "tags" : "CONNECTOR"
       },
       "visual" : {
-        "at" : { "x" : 336, "y" : 72 },
-        "size" : { "width" : 26, "height" : 26 },
-        "labelOffset" : { "x" : 32, "y" : -19 },
+        "at" : { "x" : 336, "y" : 56 },
+        "labelOffset" : { "x" : 25, "y" : -23 },
         "description" : [
           "Produces documents corresponding to the given DocumentTemplate list.",
           "The documents can be appended together in one file or be stored in separated files."
-        ]
+        ],
+        "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
       },
       "connect" : { "id" : "f10", "to" : "f9" }
     }, {
       "id" : "f1",
       "type" : "CallSubEnd",
       "visual" : {
-        "at" : { "x" : 336, "y" : 408 },
-        "size" : { "width" : 26, "height" : 26 }
+        "at" : { "x" : 336, "y" : 432 },
+        "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
       }
     }, {
       "id" : "f11",
@@ -70,9 +70,8 @@
         "in one single document."
       ],
       "visual" : {
-        "at" : { "x" : 152, "y" : 200 },
-        "size" : { "width" : 234, "height" : 58 },
-        "color" : "NodeStyle16"
+        "at" : { "x" : 152, "y" : 224 },
+        "size" : { "width" : 234, "height" : 58 }
       }
     }, {
       "id" : "f12",
@@ -84,9 +83,8 @@
         "is going to generate one single letter."
       ],
       "visual" : {
-        "at" : { "x" : 152, "y" : 304 },
-        "size" : { "width" : 234, "height" : 74 },
-        "color" : "NodeStyle8"
+        "at" : { "x" : 152, "y" : 328 },
+        "size" : { "width" : 234, "height" : 74 }
       }
     }, {
       "id" : "f14",
@@ -107,8 +105,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 336, "y" : 200 },
-        "size" : { "width" : 36, "height" : 24 }
+        "at" : { "x" : 336, "y" : 224 }
       },
       "connect" : { "id" : "f3", "to" : "f16" }
     }, {
@@ -138,8 +135,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 336, "y" : 304 },
-        "size" : { "width" : 36, "height" : 24 }
+        "at" : { "x" : 336, "y" : 328 }
       },
       "connect" : { "id" : "f4", "to" : "f1" }
     }, {
@@ -155,8 +151,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 336, "y" : 128 },
-        "size" : { "width" : 36, "height" : 24 }
+        "at" : { "x" : 336, "y" : 120 }
       },
       "connect" : { "id" : "f2", "to" : "f14" }
     }, {
@@ -168,7 +163,7 @@
         "turned into a document."
       ],
       "visual" : {
-        "at" : { "x" : 832, "y" : 64 },
+        "at" : { "x" : 832, "y" : 48 },
         "size" : { "width" : 512, "height" : 60 },
         "description" : [
           "The Document Factory Object is a Java Object that can parse a document model",
@@ -196,24 +191,18 @@
           "    - ```Tree treeData```: The first root node of the Tree contains a dataclass as value object. The attributes of this dataclass are used ",
           "      to fill merge fields outside of the nested regions area.",
           "      All the children nodes at each level of the Tree contain dataclasses as value that are used to fill the corresponding nested region."
-        ],
-        "color" : "NodeStyle12"
+        ]
       }
     } ],
   "layout" : {
     "lanes" : [ {
-        "size" : 150
+        "size" : 174
       }, {
         "size" : 102
       }, {
-        "size" : 112
+        "size" : 104
       }, {
         "size" : 101
-      } ],
-    "colors" : {
-      "NodeStyle12" : "rgb(245, 245, 220)",
-      "NodeStyle16" : "rgb(240, 215, 224)",
-      "NodeStyle8" : "rgb(141, 202, 245)"
-    }
+      } ]
   }
 }
