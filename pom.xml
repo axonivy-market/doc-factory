@@ -13,6 +13,7 @@
 		<module>doc-factory-demos-test</module>
 		<module>doc-factory-extension-demos</module>
 		<module>doc-factory-product</module>
+		<module>doc-factory-doc</module>
 	</modules>
 	
 	<build>
