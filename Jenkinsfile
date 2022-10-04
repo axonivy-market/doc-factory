@@ -2,7 +2,7 @@ pipeline {
   agent any
 
   triggers {
-    cron '0 20 * * *'
+    cron '@midnight'
   }
 
   options {
@@ -21,6 +21,11 @@ pipeline {
     stage('build') {
       steps {
         script {
+          docker.image('axonivy/build-container:read-the-docs-2').inside {
+            sh "make -C /doc-build html BASEDIR='${env.WORKSPACE}/doc-factory-doc'"
+          }
+          archiveArtifacts 'doc-factory-doc/build/html/**/*'
+
           def random = (new Random()).nextInt(10000000)
           def networkName = "build-" + random
           def seleniumName = "selenium-" + random
@@ -38,42 +43,11 @@ pipeline {
           }
           archiveArtifacts '**/target/*.iar'
           archiveArtifacts artifacts: '**/target/selenide/reports/**/*', allowEmptyArchive: true
-          junit '**/target/*-reports/**/*.xml'
-        }
-      }
-    }
-
-    stage('doc') {
-      steps {
-        script {
-          def currentVersion = 'dev';
-          currentVersion = getCurrentVersion();
-          docker.image('axonivy/build-container:read-the-docs-2').inside {
-            sh "make -C /doc-build html BASEDIR='${env.WORKSPACE}/doc-factory-doc' VERSION='${currentVersion}'"
-          }
-          archiveArtifacts 'doc-factory-doc/build/html/**/*'
-          recordIssues tools: [eclipse(), sphinxBuild()], unstableTotalAll: 1
-        
-          echo 'deploy doc'
-          docker.image('maven:3.8.6-eclipse-temurin-17').inside {            
-            def phase = env.BRANCH_NAME == 'master' ? 'deploy -DaltDeploymentRepository=nexus.axonivy.com::https://nexus.axonivy.com/repository/maven-releases/ -DaltSnapshotDeploymentRepository=nexus.axonivy.com::https://nexus.axonivy.com/repository/maven-snapshots/' : 'verify'
-            maven cmd: "-f doc-factory-doc/pom.xml clean ${phase}"
-          }
           archiveArtifacts 'doc-factory-doc/target/*.zip'
+          junit '**/target/*-reports/**/*.xml'
+          recordIssues tools: [eclipse(), sphinxBuild()], unstableTotalAll: 1
         }
       }
     }
-  }
-}
-
-def getCurrentVersion() {
-  docker.image('maven:3.8.6-eclipse-temurin-17').inside { 
-    def cmd = "mvn -f pom.xml help:evaluate -Dexpression=project.version -q -DforceStdout"
-    def value = sh (script: cmd, returnStdout: true)
-    echo "version is $value"
-    if (value == "null object or invalid expression") {
-      throw new Exception("could not evaluate maven project.version property");
-    }
-    return value
   }
 }
