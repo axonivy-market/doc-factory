@@ -11,6 +11,7 @@
 		<module>doc-factory-test</module>
 		<module>doc-factory-demos</module>
 		<module>doc-factory-demos-test</module>
+		<module>doc-factory-extension-demos</module>
 		<module>doc-factory-product</module>
 	</modules>
 	
