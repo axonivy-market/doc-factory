@@ -1,0 +1,59 @@
+name: CI-Build
+
+on:
+  push:
+  schedule:
+    - cron:  '21 21 * * *'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: build doc
+      run: docker run -u 1001 -v ${{ github.workspace }}/doc-factory-doc:/tmp axonivy/build-container:read-the-docs-2 make -C /doc-build html BASEDIR='/tmp'
+
+    - name: Setup Java JDK
+      uses: actions/setup-java@v3
+      with:
+        java-version: 17
+        distribution: temurin
+
+    - name: Decide to deploy or not
+      uses: haya14busa/action-cond@v1
+      id: condval
+      with:
+        cond: ${{ contains('refs/heads/master refs/heads/release/', github.ref) }}
+        if_false: "deploy -DaltSnapshotDeploymentRepository=nexus.axonivy.com::https://nexus.axonivy.com/repository/maven-snapshots/"
+        if_true: verify
+
+    - name: Provide maven repository credentials
+      uses: s4u/maven-settings-action@v2
+      with:
+        servers: |
+          [{
+              "id": "nexus.axonivy.com",
+              "username": "${{ secrets.NEXUS_AXONIVY_COM_USER }}",
+              "password": "${{ secrets.NEXUS_AXONIVY_COM_PASSWORD }}"
+          }]
+
+    - name: Build with Maven
+      run: mvn clean ${{ steps.condval.outputs.value }} --batch-mode
+
+    - name: Publish Unit Test Results
+      uses: EnricoMi/publish-unit-test-result-action@v2
+      if: always()
+      with:
+        junit_files: |
+          */target/*-reports/*.xml
+          !*/target/*-reports/failsafe-summary.xml
+
+    - name: Archive build artifact
+      uses: actions/upload-artifact@v3
+      with:
+        path: |
+          */target/*.iar
+          *product/target/*.zip
