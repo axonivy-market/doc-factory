@@ -49,14 +49,27 @@
 		</plugins>
 
 		<pluginManagement>
-		<plugins>
-			<plugin>
-			<artifactId>maven-deploy-plugin</artifactId>
-			<configuration>
-				<skip>true</skip>
-			</configuration>
-			</plugin>
-		</plugins>
+			<plugins>
+				<plugin>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+				</plugin>
+			</plugins>
 		</pluginManagement>
 	</build>
+
+	<pluginRepositories>
+		<pluginRepository>
+		<id>central.snapshots</id>
+		<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		<releases>
+			<enabled>false</enabled>
+		</releases>
+		<snapshots>
+			<updatePolicy>always</updatePolicy>
+		</snapshots>
+		</pluginRepository>
+  </pluginRepositories>
 </project>
