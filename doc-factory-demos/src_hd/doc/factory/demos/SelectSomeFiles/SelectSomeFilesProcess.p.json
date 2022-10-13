@@ -1,8 +1,10 @@
 {
-  "format" : "9.4.20",
+  "format" : "10.0.0",
   "id" : "16CE2142F29FF2C4",
-  "data" : "doc.factory.demos.SelectSomeFiles.SelectSomeFilesData",
   "kind" : "HTML_DIALOG",
+  "config" : {
+    "data" : "doc.factory.demos.SelectSomeFiles.SelectSomeFilesData"
+  },
   "elements" : [ {
       "id" : "f0",
       "type" : "HtmlDialogStart",

@@ -1,8 +1,10 @@
 {
-  "format" : "9.4.20",
+  "format" : "10.0.0",
   "id" : "1712BF653EA82149",
-  "data" : "doc.factory.demos.Email.EmailData",
   "kind" : "HTML_DIALOG",
+  "config" : {
+    "data" : "doc.factory.demos.Email.EmailData"
+  },
   "elements" : [ {
       "id" : "f0",
       "type" : "HtmlDialogStart",
