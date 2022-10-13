@@ -1,8 +1,10 @@
 {
-  "format" : "9.4.20",
+  "format" : "10.0.0",
   "id" : "16CD86F955A91647",
-  "data" : "doc.factory.demos.ViewSimpleDocument.ViewSimpleDocumentData",
   "kind" : "HTML_DIALOG",
+  "config" : {
+    "data" : "doc.factory.demos.ViewSimpleDocument.ViewSimpleDocumentData"
+  },
   "elements" : [ {
       "id" : "f0",
       "type" : "HtmlDialogStart",

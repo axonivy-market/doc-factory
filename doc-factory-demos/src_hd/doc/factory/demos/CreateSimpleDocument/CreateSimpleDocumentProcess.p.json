@@ -1,8 +1,10 @@
 {
-  "format" : "9.4.20",
+  "format" : "10.0.0",
   "id" : "16CD86F645B6B18E",
-  "data" : "doc.factory.demos.CreateSimpleDocument.CreateSimpleDocumentData",
   "kind" : "HTML_DIALOG",
+  "config" : {
+    "data" : "doc.factory.demos.CreateSimpleDocument.CreateSimpleDocumentData"
+  },
   "elements" : [ {
       "id" : "f0",
       "type" : "HtmlDialogStart",

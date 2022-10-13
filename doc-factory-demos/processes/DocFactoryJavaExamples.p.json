@@ -1,7 +1,9 @@
 {
-  "format" : "9.4.20",
+  "format" : "10.0.0",
   "id" : "16CD7829EF6B489B",
-  "data" : "doc.factory.demos.Data",
+  "config" : {
+    "data" : "doc.factory.demos.Data"
+  },
   "elements" : [ {
       "id" : "f3",
       "type" : "DialogCall",
