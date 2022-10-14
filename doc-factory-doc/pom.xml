@@ -9,6 +9,24 @@
 
 	<build>
 		<plugins>
+		 <plugin>
+        	<groupId>org.codehaus.mojo</groupId>
+        	<artifactId>exec-maven-plugin</artifactId>
+        	<version>3.1.0</version>
+        	<executions>
+        	  <execution>
+		  		<phase>package</phase>
+            	<goals>
+             	 <goal>exec</goal>
+            	</goals>
+          	  </execution>
+        	</executions>
+			<configuration>
+				<executable>docker</executable>
+				<commandlineArgs>run -u 1000 -v ${project.basedir}:/tmp axonivy/build-container:read-the-docs-2 make -C /doc-build html BASEDIR='/tmp'</commandlineArgs>
+			</configuration>
+    	  </plugin>
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
