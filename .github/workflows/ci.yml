@@ -13,9 +13,6 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - name: build doc
-      run: docker run -u 1001 -v ${{ github.workspace }}/doc-factory-doc:/tmp axonivy/build-container:read-the-docs-2 make -C /doc-build html BASEDIR='/tmp'
-
     - name: Setup Java JDK
       uses: actions/setup-java@v3
       with:
