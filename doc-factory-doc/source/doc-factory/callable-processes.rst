@@ -94,7 +94,7 @@ following variables, each of which can be accessed through get/set methods:
    |                                       |                                  | fields.                                                                                     |
    +---------------------------------------+----------------------------------+---------------------------------------------------------------------------------------------+
    | data                                  | CompositeObject                  | The DocumentTemplate object accepts a DataClass as an alternative to a List of              |
-   |                                       | (like a DataClass)          | TemplateMergeFields. Each attribute of the dataclass is linked to a template                |
+   |                                       | (like a DataClass)               | TemplateMergeFields. Each attribute of the dataclass is linked to a template                |
    |                                       |                                  | merge field with the same name. The String value of the attribute is inserted into the      |
    |                                       |                                  | corresponding merge field.                                                                  |
    +---------------------------------------+----------------------------------+---------------------------------------------------------------------------------------------+
@@ -105,7 +105,7 @@ following variables, each of which can be accessed through get/set methods:
    +---------------------------------------+----------------------------------+---------------------------------------------------------------------------------------------+
    | tablesNamesAndFieldsmap*              | java.util.HashMap<String,        | This parameter is used for mail merge with regions. This object consists of key/value       |
    |                                       | java.util.List<CompositeObject>> | pairs, where the keys (String) are the table start names and the lists of CompositeObjects  |
-   |                                       |                                  | contain the data. Each CompositeObject (i.e., DataClass) represents a row in a table. The     |
+   |                                       |                                  | contain the data. Each CompositeObject (i.e., DataClass) represents a row in a table. The   |
    |                                       |                                  | value of the dataclass attributes whose names match merge field names of the table will     |
    |                                       |                                  | used to fill these merge fields.                                                            |
    +---------------------------------------+----------------------------------+---------------------------------------------------------------------------------------------+
