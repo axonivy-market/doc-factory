@@ -127,20 +127,21 @@ The following picture shows the result of the mail merge with regions:
 
 .. _mail-merge-nested-mapping:
 
-The previous nested mail merging was made by using List of |ivy| DataClasses built as following:
+The previous nested mail merge has been made by using List of |ivy| DataClasses
+built as follows:
 
 .. figure:: /_static/images/mail-merge-nested-4.png
 
 **It is very important to create your templates with this in mind:**
 
    * Each TableStart merge field has to be named like the corresponding
-     dataclass: e.g. the TableStart:Employee will correspond to the Employee data
-     object. This rule is case sensitive.
-   * Within each "Data Object - Table" the merge fields will be filled with the
+     dataclass: e.g. the TableStart:Employee will correspond to the Employee
+     data object. This rule is case sensitive.
+   * Within each "Data Object - Table", the merge fields will be filled with the
      corresponding data attribute value. The merge field must have the same name
-     as the data attribute. E.g. the level attribute/mergefield in the
-     HumanCapital table.
+     as the data attribute. Refer to the level attribute and mergefield in the
+     HumanCapital table as an example.
 
-We have provided some callables subprocesses to ease the use of mail merge and
+We have provided some callable subprocesses to ease the use of mail merge and
 mail merge with nested regions. Please refer to the :ref:`next section
 <df-doc-factory-object>`.
