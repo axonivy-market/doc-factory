@@ -3,7 +3,7 @@
 Document Factory Object
 =======================
 
-We implemented the Axon Ivy DocFactory Object based on the commercial
+We implemented the |ivy| DocFactory Object based on the commercial
 Aspose Java API. To be able to allow developing other Document Factories that
 work the same way as this one, a DocFactory implementation should always
 extend the abstract class

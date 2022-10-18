@@ -94,7 +94,7 @@ following variables, each of which can be accessed through get/set methods:
    |                                       |                                  | fields.                                                                                     |
    +---------------------------------------+----------------------------------+---------------------------------------------------------------------------------------------+
    | data                                  | CompositeObject                  | The DocumentTemplate object accepts a DataClass as an alternative to a List of              |
-   |                                       | (like an Ivy DataClass)          | TemplateMergeFields. Each attribute of the dataclass is linked to a template                |
+   |                                       | (like a DataClass)          | TemplateMergeFields. Each attribute of the dataclass is linked to a template                |
    |                                       |                                  | merge field with the same name. The String value of the attribute is inserted into the      |
    |                                       |                                  | corresponding merge field.                                                                  |
    +---------------------------------------+----------------------------------+---------------------------------------------------------------------------------------------+
@@ -105,7 +105,7 @@ following variables, each of which can be accessed through get/set methods:
    +---------------------------------------+----------------------------------+---------------------------------------------------------------------------------------------+
    | tablesNamesAndFieldsmap*              | java.util.HashMap<String,        | This parameter is used for mail merge with regions. This object consists of key/value       |
    |                                       | java.util.List<CompositeObject>> | pairs, where the keys (String) are the table start names and the lists of CompositeObjects  |
-   |                                       |                                  | contain the data. Each CompositeObject (Ivy DataClass) represents a row in a table. The     |
+   |                                       |                                  | contain the data. Each CompositeObject (i.e., DataClass) represents a row in a table. The     |
    |                                       |                                  | value of the dataclass attributes whose names match merge field names of the table will     |
    |                                       |                                  | used to fill these merge fields.                                                            |
    +---------------------------------------+----------------------------------+---------------------------------------------------------------------------------------------+
@@ -163,13 +163,13 @@ process file:
 
 The second one (writeDocumentWithOneDataClass) allows writing a single document
 with a template by providing a **CompositeObject (DataClass)**. Here is the
-description of this callable that you can find in the ivy process file:
+description of this callable that you can find in the |ivy| process file:
 
 .. figure:: /_static/images/callable-processes-3.png
 
 Other ones (writeDocumentWithMailMergeTable) allow writing a single document
 with a template that can contain merge mail with regions (tables). Here is the
-description of this callable that you can find in the ivy process file:
+description of this callable that you can find in the |ivy| process file:
 
 .. figure:: /_static/images/callable-processes-4.png
 
@@ -195,6 +195,6 @@ than one document with a list of **DocumentTemplate** objects. Each
 regions and mail merge with nested regions are now supported, because the
 DocumentTemplate Object encapsulates the necessary parameters to perform such
 merges (:ref:`DocumentTemplate <df-callable-processes-document-template>`). Here
-is the description of this callable that you can find in the ivy process file:
+is the description of this callable that you can find in the |ivy| process file:
 
 .. figure:: /_static/images/callable-processes-2.png
