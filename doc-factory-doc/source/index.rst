@@ -27,19 +27,19 @@ for a letter.
 
 .. table:: Terms and Definitions used in the DocFactory chapter
 
-+------------------+-----------------------------------------------------------------------------------------------------------+
-| Document Factory | The Document Factory System implemented in the DocFactory Project                                         |
-+------------------+-----------------------------------------------------------------------------------------------------------+
-| Template         | A Microsoft Office template (document model)                                                              |
-+------------------+-----------------------------------------------------------------------------------------------------------+
-| Merge field      | Placeholder in the template for data supplied                                                             |
-+------------------+-----------------------------------------------------------------------------------------------------------+
-| Document         | If not defined, this is a letter or document generated based on a template after the mail merge operation |
-+------------------+-----------------------------------------------------------------------------------------------------------+
-| Mail merging     | Document generation with the replacement of the merge fields with the corresponding information           |
-+------------------+-----------------------------------------------------------------------------------------------------------+
-| Format           | The format in which the serial document has to be saved (doc, txt, html…)                                 |
-+------------------+-----------------------------------------------------------------------------------------------------------+
+   +------------------+-----------------------------------------------------------------------------------------------------------+
+   | Document Factory | The Document Factory System implemented in the DocFactory Project                                         |
+   +------------------+-----------------------------------------------------------------------------------------------------------+
+   | Template         | A Microsoft Office template (document model)                                                              |
+   +------------------+-----------------------------------------------------------------------------------------------------------+
+   | Merge field      | Placeholder in the template for data supplied                                                             |
+   +------------------+-----------------------------------------------------------------------------------------------------------+
+   | Document         | If not defined, this is a letter or document generated based on a template after the mail merge operation |
+   +------------------+-----------------------------------------------------------------------------------------------------------+
+   | Mail merging     | Document generation with the replacement of the merge fields with the corresponding information           |
+   +------------------+-----------------------------------------------------------------------------------------------------------+
+   | Format           | The format in which the serial document has to be saved (doc, txt, html…)                                 |
+   +------------------+-----------------------------------------------------------------------------------------------------------+
 
 Read more about the DocFactory API and the merging of fields in Microsoft
 Office templates in the sections below.
