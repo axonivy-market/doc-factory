@@ -3,9 +3,9 @@
 Complex Mergefields (Field Update)
 ==================================
 
-Aspose and its implementation in the docFactory allows using complex fields
-types like IF, NEXTIF, ADDRESSBLOCK etc... The list of the fields type that are
-supported and the way they can be handled is explained `here
+Aspose and its implementation in the DocFactory allow using complex field
+types like IF, NEXTIF, ADDRESSBLOCK etc.. The list of the field types that are
+supported and the way to handle them is explained `here
 <https://docs.aspose.com/display/wordsnet/Field+Update>`_.
 
 The DocFactory Demo uses an IF Mergefield to write a salutation depending on the

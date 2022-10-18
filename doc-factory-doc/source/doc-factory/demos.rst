@@ -1,5 +1,6 @@
 Demos
 =====
 
-In the DocFactoryDemos Project that is available in the Designer
-Ivy Project Import you will find a number of hands-on examples how to create documents with the DocFactory.  
+In the DocFactoryDemos Project included in the DocFactory |ivy| Market artifact
+that is available in the |ivy-designer| Ivy Project Import, you will find
+several hands-on examples showing how to create documents with the DocFactory.  
