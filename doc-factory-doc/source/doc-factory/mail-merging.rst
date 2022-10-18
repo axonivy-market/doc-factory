@@ -110,7 +110,7 @@ regions and merge regions in general:
      in the same row as the first cell.
    * The names of the columns in the DataTable must match the merge field name.
      Unless you have specified mapped fields the merge will not be successful
-     for those fields whose names are different. In the Ivy Implementation of
+     for those fields whose names are different. In the |ivy| Implementation of
      this feature we use the Dataclasses Class names as TableStart names and the
      Dataclasses attributes names as mergefields names (more information
      :ref:`here <mail-merge-nested-mapping>`).
@@ -127,7 +127,7 @@ The following picture shows the result of the mail merge with regions:
 
 .. _mail-merge-nested-mapping:
 
-The previous nested mail merging was made by using List of Ivy DataClasses built as following:
+The previous nested mail merging was made by using List of |ivy| DataClasses built as following:
 
 .. figure:: /_static/images/mail-merge-nested-4.png
 
