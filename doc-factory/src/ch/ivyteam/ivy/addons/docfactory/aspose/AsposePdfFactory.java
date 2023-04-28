@@ -10,6 +10,7 @@ import org.apache.commons.lang.StringUtils;
 
 import com.aspose.pdf.ConvertErrorAction;
 import com.aspose.pdf.Document;
+import com.aspose.pdf.PdfFormat;
 
 import ch.ivyteam.api.API;
 import ch.ivyteam.ivy.addons.docfactory.PdfFactory;
@@ -104,7 +105,7 @@ public class AsposePdfFactory extends PdfFactory {
     this.logDirectoryRetriever = logDirectoryRetriever;
   }
 
-  private int getAsposePDFAType(PdfAType pdfAType) {
+  private PdfFormat getAsposePDFAType(PdfAType pdfAType) {
     switch (pdfAType) {
       case PDF_A_1A:
         return com.aspose.pdf.PdfFormat.PDF_A_1A;
