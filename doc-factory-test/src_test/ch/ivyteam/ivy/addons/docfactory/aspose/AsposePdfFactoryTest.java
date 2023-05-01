@@ -10,7 +10,6 @@ import java.nio.file.Files;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import ch.ivyteam.ivy.addons.docfactory.exception.DocFactoryException;
@@ -18,7 +17,6 @@ import ch.ivyteam.ivy.addons.docfactory.log.DocFactoryLogDirectoryRetriever;
 import ch.ivyteam.ivy.addons.docfactory.pdf.PdfAType;
 import ch.ivyteam.ivy.addons.docfactory.pdfbox.PdfAValidator;
 
-@Disabled("aspose needs jdk.nashorn which is not available with java 17")
 public class AsposePdfFactoryTest {
 
   private static java.io.File PDF_FILE;
