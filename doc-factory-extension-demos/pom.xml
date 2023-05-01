@@ -3,12 +3,12 @@
 
   <groupId>com.axonivy.utils.docfactory</groupId>
   <artifactId>doc-factory-extension-demos</artifactId>
-  <version>10.0.1-SNAPSHOT</version>
+  <version>10.0.8-SNAPSHOT</version>
   <packaging>iar</packaging>
 
   <properties>
-    <project-build-plugin-version>10.0.3</project-build-plugin-version>
-    <aspose.version>20.8</aspose.version>
+    <project-build-plugin-version>10.0.6</project-build-plugin-version>
+    <aspose.version>23.3</aspose.version>
   </properties>
 
   <dependencies>
@@ -16,7 +16,6 @@
       <groupId>com.aspose</groupId>
       <artifactId>aspose-barcode</artifactId>
       <version>${aspose.version}</version>
-      <classifier>jdk17</classifier>
     </dependency>
     <dependency>
       <groupId>com.aspose</groupId>

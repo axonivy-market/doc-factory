@@ -38,7 +38,7 @@ jobs:
           }]
 
     - name: Build with Maven
-      run: mvn clean ${{ steps.condval.outputs.value }} --batch-mode
+      run: mvn clean ${{ steps.condval.outputs.value }} --batch-mode -Divy.engine.version=10.0.8
 
     - name: Publish Unit Test Results
       uses: EnricoMi/publish-unit-test-result-action@v2
