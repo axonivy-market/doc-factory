@@ -10,6 +10,7 @@ on:
       mvnArgs:
         type: string
         required: false
+      
 
 jobs:
   build:
@@ -33,7 +34,7 @@ jobs:
         if_true: verify
 
     - name: Provide maven repository credentials
-      uses: s4u/maven-settings-action@v2
+      uses: s4u/maven-settings-action@v2.8.0
       with:
         servers: |
           [{
