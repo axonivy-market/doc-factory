@@ -9,6 +9,7 @@ on:
     inputs:
       mvnArgs:
         type: string
+        default: '-Divy.engine.version=10.0.8'
         required: false
       
 
