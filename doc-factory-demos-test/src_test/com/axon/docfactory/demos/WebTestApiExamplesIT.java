@@ -34,10 +34,15 @@ class WebTestApiExamplesIT {
   }
 
   @Test
-  void docWithCompositeObj() throws Exception {
+  void docWithCompositeObjPdf() throws Exception {
     assertDownload("start6.ivp", "DocWithCompositeObject.pdf");
   }
 
+  @Test
+  void docWithCompositeObjPdfA() throws Exception {
+    assertDownload("start8.ivp", "DocWithCompositeObjectA.pdf");
+  }  
+  
   @Test
   void docWithNestedTablesPDF() throws Exception {
     assertDownload("start3.ivp", "DocWithFullNestedTables.pdf");
