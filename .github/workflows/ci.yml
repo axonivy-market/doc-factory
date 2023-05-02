@@ -5,6 +5,11 @@ on:
   schedule:
     - cron:  '21 21 * * *'
   workflow_dispatch:
+  workflow_call:
+    inputs:
+      mvnArgs:
+        type: string
+        required: false
 
 jobs:
   build:
@@ -38,7 +43,7 @@ jobs:
           }]
 
     - name: Build with Maven
-      run: mvn clean ${{ steps.condval.outputs.value }} --batch-mode
+      run: mvn clean ${{ steps.condval.outputs.value }} --batch-mode ${{ inputs.mvnArgs }}
 
     - name: Publish Unit Test Results
       uses: EnricoMi/publish-unit-test-result-action@v2
