@@ -61,3 +61,14 @@ jobs:
         path: |
           */target/*.iar
           *product/target/*.zip
+
+    - name: Archive test reports
+      uses: actions/upload-artifact@v3
+      if: failure()
+      with:
+        name: test-reports
+        retention-days: 5
+        path: |
+          */target/testEngineOut.log
+          */target/selenide/*
+          */target/ivyEngine/deploy/*/*.deploymentLog
