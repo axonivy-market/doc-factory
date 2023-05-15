@@ -1,5 +1,5 @@
 {
-    "minimumIvyVersion": "10.0.8"
+    "minimumIvyVersion": "10.0.8",
     "installers": [
         {
             "id": "maven-dependency",
