@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:f="http://xmlns.jcp.org/jsf/core"
+  xmlns:h="http://xmlns.jcp.org/jsf/html"
+  xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+  xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+  xmlns:ic="http://ivyteam.ch/jsf/component"
+  xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+  <f:attribute name="primefaces.THEME" value="serenity-ivy" />
+  <link rel="shortcut icon" href="#{resource['ivy-webcontent:layouts/images/ivy_favicon_48.png']}" />
+  <h:outputStylesheet name="css/layout-ivy.css" library="serenity-layout" />
+  <h:outputStylesheet name="layouts/styles/ivy-common-8.css" />
+</h:head>
+<h:body>
+  <div id="content" class="container">
+  	<table>
+		<tr>
+			<td>CODE_128</td>
+			<td><h:graphicImage id="code_128" value="#{ivy.html.fileref('ivy_DocFactoryDemo/code128.png', false)}"></h:graphicImage></td>
+		</tr>
+		<tr>
+			<td>EAN_14</td>
+			<td><h:graphicImage value="#{ivy.html.fileref('ivy_DocFactoryDemo/codeEAN_14.png', false)}"></h:graphicImage></td>
+		</tr>
+		<tr>
+			<td>ISBN</td>
+			<td><h:graphicImage value="#{ivy.html.fileref('ivy_DocFactoryDemo/codeISBN.png', false)}"></h:graphicImage></td>
+		</tr>
+		<tr>
+			<td>QR</td>
+			<td><h:graphicImage value="#{ivy.html.fileref('ivy_DocFactoryDemo/codeQR.png', false)}"></h:graphicImage></td>
+		</tr>
+		<tr>
+			<td>DOT_CODE</td>
+			<td><h:graphicImage value="#{ivy.html.fileref('ivy_DocFactoryDemo/codeDOT.png', false)}"></h:graphicImage></td>
+		</tr>
+		<tr>
+			<td>DATA_MATRIX</td>
+			<td><h:graphicImage value="#{ivy.html.fileref('ivy_DocFactoryDemo/codeMatrix.png', false)}"></h:graphicImage></td>
+		</tr>
+	</table>
+  </div>
+</h:body>
+</html>
