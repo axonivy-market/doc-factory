@@ -1,0 +1,232 @@
+/* General */
+@media (min-width: 1025px) {
+  .layout-topbar .layout-topbar-wrapper {
+    max-width: 1170px;
+    margin: 0 auto;
+  }
+}
+@media (min-width: 1200px) {
+  .layout-main .layout-content {
+    max-width: 1170px;
+    align-self: center;
+    width: 1170px;
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+.layout-dashboard .card {
+  height: 100%;
+}
+.card .card-title-icon, .card .card-title > .si {
+  font-size: 1.4em;
+}
+body .ui-commandlink:hover,
+body .ui-link:hover {
+  text-decoration: none;
+}
+body .ui-staticmessage {
+  width: 100%;
+  margin: 0 0 0.5rem 0;
+}
+.custom-list {
+  margin-top: 0px;
+  padding: 0px;
+}
+.height-100 {
+  height: 100%;
+}
+a > i.detail-btn {
+  font-size: 16pt;
+}
+.details-description-label {
+  opacity: 0.65;
+}
+
+/* Tables */
+.table-header-none thead {
+  display: none;
+}
+.ui-datatable .icon-row {
+  width: 20px;
+}
+.ui-datatable .table-btn-1 {
+  width: 40px;
+  text-align: center;
+}
+.ui-datatable .ui-column-filter {
+  display: none;
+}
+.straight-text-icon {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+body .ui-datatable .ui-datatable-data > tr.ui-state-hover,
+body .ui-datatable .ui-datatable-data > tr.ui-state-highlight {
+  background: var(--surface-c);
+  color: var(--text-color);
+}
+
+/* Dialog */
+.ui-dialog .ui-dialog-content .dialog-button-container .ui-button {
+  float: right;
+  margin-left: 0.5rem;
+}
+
+/* States */
+.task-state-open {
+  color: var(--primary-color);
+}
+.task-state-done, .case-state-done {
+  color: #2aa483;
+}
+.task-state-reserved, .task-state-system {
+  color: var(--text-color);
+}
+.task-state-zombie-destroyed, .task-state-failed, .case-state-zombie-destroyed {
+  color: #d23636;
+}
+.task-state-waiting, .task-state-in-progress, .case-state-in-progress {
+  color: #ffce29;
+}
+
+/* Starts */
+.start-title {
+  display: flex;
+  align-items: center;
+}
+.start-element {
+  border-radius: 8px;
+}
+.start-element .start-link {
+  width: 100%;
+  padding: 0.5rem;
+}
+.start-element:hover {
+  background-color: var(--primary-lighter-color);
+}
+.start-description {
+  color: var(--text-color-secondary);
+}
+.main-starts-container .ui-panel-content.ui-widget-content {
+  padding: 0px;
+}
+.main-starts-container-empty {
+  padding: 2em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+.main-starts-container-empty > i {
+  font-size: 1.5em;
+  margin-right: 5px
+}
+body .custom-accordion.ui-accordion .ui-accordion-header,
+body .custom-accordion.ui-accordion .ui-accordion-content {
+  border: 0px;
+}
+body .custom-accordion.ui-accordion .ui-accordion-header:first-child {
+  border-radius: 0px;
+}
+
+/* Send Signal */
+.ui-button.send-signal-button {
+  width: 10em;
+}
+
+/* API Browser */
+.api-browser-frame {
+  border: none;
+  width: 100%;
+  height: calc(100vh - 200px);
+  min-height: 400px;
+  margin-top: 10px;
+}
+
+/* Process Viewer */
+.process-viewer-preview {
+  height: 100%;
+  width: 100%;
+  border: none;
+}
+
+/* Case Map */
+.case-map-element {
+  height: 100%;
+}
+.case-map-icon-container {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--surface-d);
+  border-radius: 3px;
+  margin-bottom: 10px;
+}
+.case-map-icon-container .current {
+  color: var(--primary-color);
+}
+.case-map-icon-container .visited {
+  color: var(--text-color);
+}
+.case-map-icon-container .waiting {
+  color: var(--text-color-secondary);
+}
+.case-map-container {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+.case-map-container .process-flow {
+  height: 50px;
+  display: flex;
+  flex-grow: 2;
+  max-width: 60px;
+}
+.case-map-container .process-flow .flow-txt {
+  position: relative;
+  float: left;
+  width: 100%;
+  text-align: center;
+}
+.case-map-container .process-flow .flow-txt hr{
+  border-top: 1px solid var(--surface-d);
+}
+.case-map-icon {
+  font-size: 1.5em;
+}
+.stage-icon-container {
+  position: absolute;
+  margin-top: -60px;
+  margin-left: 15px;
+}
+.case-map-state-icon {
+  font-size: 0.9em;
+  position: absolute;
+  font-weight: bold;
+  margin-top: 3px;
+  margin-left: 3px;
+}
+.dot {
+  position: absolute;
+  background-color: var(--surface-b);
+  border: 1px solid var(--text-color);
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+}
+.case-state-finished {
+  color: var(--success-color);
+}
+.case-state-running {
+  color: var(--primary-color);
+}
+.case-map-column {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
