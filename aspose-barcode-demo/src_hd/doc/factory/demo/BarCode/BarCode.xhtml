@@ -6,7 +6,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 <h:body>
-	<ui:composition template="/layouts/basic-10.xhtml">
+	<ui:composition template="/layouts/frame-10.xhtml">
 		<ui:define name="title">BarCode</ui:define>
 		<ui:define name="content">
 
@@ -21,7 +21,7 @@
 						ui-g-12 ui-md-3 ui-lg-2, 
 						ui-g-12 ui-md-9 ui-lg-4">
 					<p:outputLabel for="str" value="Enter a String" />
-					<p:inputText id="str" value="#{data.str}" maxlength="20" size="24" />
+					<p:inputText id="str" value="#{data.str}" maxlength="20" size="24" required="true"/>
 					<br />
 					<p:commandButton id="proceed" actionListener="#{logic.close}" value="Proceed"
 						update="form" icon="ui-icon-check" />
