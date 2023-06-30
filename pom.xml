@@ -11,9 +11,14 @@
 		<module>doc-factory-test</module>
 		<module>doc-factory-demos</module>
 		<module>doc-factory-demos-test</module>
-		<module>doc-factory-extension-demos</module>
 		<module>doc-factory-product</module>
 		<module>doc-factory-doc</module>
+		<module>aspose-barcode-demo</module>
+		<module>aspose-barcode-demo-product</module>
+		<module>aspose-barcode-demo-test</module>
+		<module>aspose-email-demo</module>
+		<module>aspose-email-demo-product</module>
+		<module>aspose-email-demo-test</module>
 	</modules>
 
 	<scm>
