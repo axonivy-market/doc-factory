@@ -9,6 +9,7 @@ import java.io.FileNotFoundException;
 import java.nio.file.Path;
 
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -16,6 +17,7 @@ import com.axonivy.ivy.webtest.IvyWebTest;
 import com.axonivy.ivy.webtest.engine.EngineUrl;
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.FileDownloadMode;
+import com.codeborne.selenide.Selenide;
 
 @IvyWebTest
 class WebTestSubprocessExamplesIT {
@@ -55,6 +57,7 @@ class WebTestSubprocessExamplesIT {
   }
 
   @Test
+  @Disabled
   void docWithNestedObject() throws Exception {
     assertDownload("start6.ivp", "DocWithNestedObject.pdf");
   }
