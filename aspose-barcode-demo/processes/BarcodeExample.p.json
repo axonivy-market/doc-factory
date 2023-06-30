@@ -22,7 +22,8 @@
       "config" : {
         "callSignature" : "start",
         "outLink" : "start.ivp",
-        "startName" : "1. Generate Barcodes"
+        "startName" : "1. Generate Barcodes",
+        "tags" : "demo"
       },
       "visual" : {
         "at" : { "x" : 64, "y" : 288 },
