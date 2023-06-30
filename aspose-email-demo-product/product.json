@@ -1,0 +1,24 @@
+{
+    "minimumIvyVersion": "10.0.8",
+    "installers": [
+        {
+            "id": "maven-import",
+            "data": {
+                "projects": [
+                    {
+                        "groupId": "com.axonivy.utils.docfactory",
+                        "artifactId": "aspose-email-demo",
+                        "version": "${version}",
+                        "type": "iar"
+                    }
+                ],
+                "repositories": [
+                    {
+                        "id": "maven.axonivy.com",
+                        "url": "https://maven.axonivy.com"
+                    }
+                ]
+            }
+        }
+    ]
+}

@@ -1,5 +1,6 @@
 **/target
 **/.flattened-pom.xml
+**/build
 .metadata
 logs
 
