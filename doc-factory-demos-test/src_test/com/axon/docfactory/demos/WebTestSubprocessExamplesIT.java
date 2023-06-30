@@ -7,17 +7,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.FileNotFoundException;
 import java.nio.file.Path;
+import java.time.Duration;
 
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import com.axonivy.ivy.webtest.IvyWebTest;
 import com.axonivy.ivy.webtest.engine.EngineUrl;
 import com.codeborne.selenide.Configuration;
+import com.codeborne.selenide.DownloadOptions;
 import com.codeborne.selenide.FileDownloadMode;
-import com.codeborne.selenide.Selenide;
+import com.codeborne.selenide.files.FileFilters;
 
 @IvyWebTest
 class WebTestSubprocessExamplesIT {
@@ -32,44 +33,41 @@ class WebTestSubprocessExamplesIT {
   }
 
   @Test
-  @Disabled
   void docWithTemplateMergeFields() throws Exception {
     assertDownload("start1.ivp", "DocWithMergeFields.docx");
   }
 
   @Test
-  @Disabled
   void docWithCompositeObjData() throws Exception {
     assertDownload("start2.ivp", "DocWithObjectData.pdf");
   }
 
   @Test
-  @Disabled
   void docWithTable() throws Exception {
     assertDownload("start3.ivp", "DocWithTable.pdf");
   }
 
   @Test
-  @Disabled
   void docWithConditionalText() throws Exception {
     assertDownload("start4.ivp", "DocWithConditionalText.pdf");
   }
 
   @Test
-  @Disabled
   void docWithNestedTable() throws Exception {
     assertDownload("start5.ivp", "DocWithNestedTables.pdf");
   }
 
   @Test
-  @Disabled
   void docWithNestedObject() throws Exception {
     assertDownload("start6.ivp", "DocWithNestedObject.pdf");
   }
 
   private void assertDownload(String process, String expectedFileName) throws FileNotFoundException {
     open(EngineUrl.createProcessUrl(DOC_DEMOS_BASE + process));
-    var doc = $("#docLink").shouldBe(visible).download();
+    var doc = $("#docLink").shouldBe(visible).download(DownloadOptions.using(FileDownloadMode.PROXY)
+            .withTimeout(Duration.ofSeconds(10))
+            .withFilter(FileFilters.withName(expectedFileName))); 
+
     assertThat(doc).hasName(expectedFileName);
     assertThat(doc.length() / 1024).isGreaterThan(15);
   }
