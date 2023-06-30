@@ -64,6 +64,7 @@ class WebTestSubprocessExamplesIT {
 
   private void assertDownload(String process, String expectedFileName) throws FileNotFoundException {
     open(EngineUrl.createProcessUrl(DOC_DEMOS_BASE + process));
+    Selenide.sleep(2000);
     var doc = $("#docLink").shouldBe(visible).download();
     assertThat(doc).hasName(expectedFileName);
     assertThat(doc.length() / 1024).isGreaterThan(15);
