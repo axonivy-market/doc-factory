@@ -22,7 +22,8 @@
       "config" : {
         "callSignature" : "start",
         "outLink" : "start.ivp",
-        "startName" : "2. Create an .msg mail document"
+        "startName" : "2. Create an .msg mail document",
+        "tags" : "demo"
       },
       "visual" : {
         "at" : { "x" : 128, "y" : 288 },
