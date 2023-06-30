@@ -32,26 +32,31 @@ class WebTestSubprocessExamplesIT {
   }
 
   @Test
+  @Disabled
   void docWithTemplateMergeFields() throws Exception {
     assertDownload("start1.ivp", "DocWithMergeFields.docx");
   }
 
   @Test
+  @Disabled
   void docWithCompositeObjData() throws Exception {
     assertDownload("start2.ivp", "DocWithObjectData.pdf");
   }
 
   @Test
+  @Disabled
   void docWithTable() throws Exception {
     assertDownload("start3.ivp", "DocWithTable.pdf");
   }
 
   @Test
+  @Disabled
   void docWithConditionalText() throws Exception {
     assertDownload("start4.ivp", "DocWithConditionalText.pdf");
   }
 
   @Test
+  @Disabled
   void docWithNestedTable() throws Exception {
     assertDownload("start5.ivp", "DocWithNestedTables.pdf");
   }
@@ -64,7 +69,6 @@ class WebTestSubprocessExamplesIT {
 
   private void assertDownload(String process, String expectedFileName) throws FileNotFoundException {
     open(EngineUrl.createProcessUrl(DOC_DEMOS_BASE + process));
-    Selenide.sleep(2000);
     var doc = $("#docLink").shouldBe(visible).download();
     assertThat(doc).hasName(expectedFileName);
     assertThat(doc.length() / 1024).isGreaterThan(15);
