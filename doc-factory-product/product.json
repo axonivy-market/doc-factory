@@ -1,4 +1,6 @@
 {
+    "$schema": "https://json-schema.axonivy.com/market/10.0.0/product.json",
+    "minimumIvyVersion": "10.0.8",
     "installers": [
         {
             "id": "maven-dependency",

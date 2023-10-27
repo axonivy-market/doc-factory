@@ -1,0 +1,47 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:ic="http://ivyteam.ch/jsf/component"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+	<ui:composition template="/layouts/frame-10.xhtml">
+		<ui:define name="title">CreateAnEmail</ui:define>
+		<ui:define name="content">
+			<h3>DocFactoryExtensionDemo: Aspose.Email Message&#160;</h3>
+			<p>Based on Aspose.Email, an email processing component
+				to create, manipulate, convert message formats such as .MSG</p>
+			<h:form id="form" enctype="multipart/form-data">
+				<f:facet name="header">
+					<p:messages></p:messages>
+				</f:facet>
+				<p:panelGrid columns="2" layout="grid"
+					styleClass="ui-panelgrid-blank"
+					columnClasses="ui-g-12 ui-md-3 ui-lg-2, 
+						ui-g-12 ui-md-9 ui-lg-4, 
+						ui-g-12 ui-md-3 ui-lg-2, 
+						ui-g-12 ui-md-9 ui-lg-4">
+
+					<p:outputLabel value="Customer name" for="customer"></p:outputLabel>
+					<p:inputText id="customer" value="#{data.outlockMail.name}"
+						required="true" />
+					<p:outputLabel value="Email address" for="address"></p:outputLabel>
+					<p:inputText id="address" value="#{data.outlockMail.emailaddress}"
+						required="true" />
+					<p:outputLabel value="Mail Attachment"></p:outputLabel>
+					<p:fileUpload value="#{data.outlockMail.attachment}"
+						skinSimple="true" mode="simple"></p:fileUpload>
+				</p:panelGrid>
+				<h4>Create and download .msg email document</h4>
+				<br />
+				<p:commandButton id="createBtn" actionListener="#{logic.create}" value="Create"
+					icon="ui-icon-check" ajax="false" />
+
+
+			</h:form>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>
