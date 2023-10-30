@@ -5,7 +5,6 @@ package ch.ivyteam.ivy.addons.docfactory.pdf;
  * has to produce a PDF document.
  *
  */
-@SuppressWarnings("hiding")
 public class PdfOptions {
 
   private PdfAType pdfAType = null;
@@ -49,20 +48,20 @@ public class PdfOptions {
    * Returns the PdfOptions instance which {@link PdfAType} for the PDF
    * generation has been set.
    *
-   * @param pdfAType
+   * @param type
    */
-  public PdfOptions withPdfAType(PdfAType pdfAType) {
-    this.pdfAType = pdfAType;
+  public PdfOptions withPdfAType(PdfAType type) {
+    this.pdfAType = type;
     return this;
   }
 
   /**
    * Returns the PdfOptions instance which {@link #keepFormFieldsEditableInPdf}
    * option for the PDF generation has been set.
-   * @param keepFormFieldsEditableInPdf
+   * @param keep
    */
-  public PdfOptions hasToKeepFormFieldsEditable(boolean keepFormFieldsEditableInPdf) {
-    this.keepFormFieldsEditableInPdf = keepFormFieldsEditableInPdf;
+  public PdfOptions hasToKeepFormFieldsEditable(boolean keep) {
+    this.keepFormFieldsEditableInPdf = keep;
     return this;
   }
 
@@ -70,10 +69,10 @@ public class PdfOptions {
    * Returns the PdfOptions instance which
    * {@link #removeWhiteSpaceInPdfEditableFields} option for the PDF generation
    * has been set.
-   * @param removeWhiteSpaceInPdfEditableFields
+   * @param remove
    */
-  public PdfOptions hasToRemoveWhiteSpaceInPdfEditableFields(boolean removeWhiteSpaceInPdfEditableFields) {
-    this.removeWhiteSpaceInPdfEditableFields = removeWhiteSpaceInPdfEditableFields;
+  public PdfOptions hasToRemoveWhiteSpaceInPdfEditableFields(boolean remove) {
+    this.removeWhiteSpaceInPdfEditableFields = remove;
     return this;
   }
 
