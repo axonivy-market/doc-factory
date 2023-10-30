@@ -16,7 +16,6 @@ import ch.ivyteam.api.API;
  * appending other files or documents.
  * </ul>
  */
-@SuppressWarnings("hiding")
 public class MultipleDocumentsCreationOptions {
 
   private boolean createSingleFileForEachDocument = true;
@@ -33,15 +32,14 @@ public class MultipleDocumentsCreationOptions {
    * Used by the DocFactory in its
    * {@link ch.ivyteam.ivy.addons.docfactory.BaseDocFactory#generateDocuments(java.util.List, MultipleDocumentsCreationOptions)}
    * method.
-   * @param createSingleFileForEachDocument if true each given documentTemplate
+   * @param singleFiles if true each given documentTemplate
    *          will generate one single document file. By default this is true.
    *          You can set it false, if you want to only generate a single file
    *          by appending all the Documents in one file. See
    *          {@link MultipleDocumentsCreationOptions#createOneFileByAppendingAllTheDocuments(boolean)}
    */
-  public MultipleDocumentsCreationOptions createSingleFileForEachDocument(
-          boolean createSingleFileForEachDocument) {
-    this.createSingleFileForEachDocument = createSingleFileForEachDocument;
+  public MultipleDocumentsCreationOptions createSingleFileForEachDocument(boolean singleFiles) {
+    this.createSingleFileForEachDocument = singleFiles;
     return this;
   }
 
@@ -49,13 +47,12 @@ public class MultipleDocumentsCreationOptions {
    * Used by the DocFactory in its
    * {@link ch.ivyteam.ivy.addons.docfactory.BaseDocFactory#generateDocuments(java.util.List, MultipleDocumentsCreationOptions)}
    * method.
-   * @param createOneFileByAppendingAllTheDocuments if true, the
+   * @param appendAllDocs if true, the
    *          DocumentTemplates will be appended in one file which name is set
    *          it this DocumentAppenderOptions object by its method.
    */
-  public MultipleDocumentsCreationOptions createOneFileByAppendingAllTheDocuments(
-          boolean createOneFileByAppendingAllTheDocuments) {
-    this.createOneFileByAppendingAllTheDocuments = createOneFileByAppendingAllTheDocuments;
+  public MultipleDocumentsCreationOptions createOneFileByAppendingAllTheDocuments(boolean appendAllDocs) {
+    this.createOneFileByAppendingAllTheDocuments = appendAllDocs;
     return this;
   }
 
@@ -64,12 +61,12 @@ public class MultipleDocumentsCreationOptions {
    * {@link ch.ivyteam.ivy.addons.docfactory.BaseDocFactory#generateDocuments(java.util.List, MultipleDocumentsCreationOptions)}
    * method. The FileAppenderOptions contains the options for producing a file
    * appending other files or documents.
-   * @param fileAppenderOptions FileAppenderOptions contains the options for
+   * @param fileOptions FileAppenderOptions contains the options for
    *          producing a file appending other files or documents. Cannot be
    *          null.
    */
-  public MultipleDocumentsCreationOptions withFileAppenderOptions(FileAppenderOptions fileAppenderOptions) {
-    this.setFileAppenderOptions(fileAppenderOptions);
+  public MultipleDocumentsCreationOptions withFileAppenderOptions(FileAppenderOptions fileOptions) {
+    this.setFileAppenderOptions(fileOptions);
     return this;
   }
 

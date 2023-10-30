@@ -159,7 +159,7 @@ public class MailMergeDataSource implements IMailMergeDataSource {
     // makeListOfChildrenDataSourceInComposite(dataSourceObjects);
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("all")
   private void makeListOfChildrenDataSourceInComposite(List<CompositeObject> dataSourceObjects) {
     this.nestedChildrenDatasources = List.create(MetaType.listOf(MetaType.listOf(CompositeObject.class)));
     for (int j = 0; j < dataSourceObjects.size(); j++) {
@@ -313,7 +313,7 @@ public class MailMergeDataSource implements IMailMergeDataSource {
     return null;
   }
 
-  void putChildMailMergeDataSource(IMailMergeDataSource mmds, @SuppressWarnings("unused") String tblName) {
+  void putChildMailMergeDataSource(IMailMergeDataSource mmds, @SuppressWarnings("all") String tblName) {
     if (mmds == null) {
       return;
     }

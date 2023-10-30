@@ -3,7 +3,6 @@ package ch.ivyteam.ivy.addons.docfactory.options;
 import ch.ivyteam.api.API;
 import ch.ivyteam.ivy.addons.docfactory.pdf.PdfOptions;
 
-@SuppressWarnings("hiding")
 public class DocumentCreationOptions {
 
   private PdfOptions pdfOptions = PdfOptions.getInstance();
@@ -19,11 +18,11 @@ public class DocumentCreationOptions {
 
   /**
    * returns the DocumentCreationOptions which {@link PdfOptions} has been set.
-   * @param pdfOptions the {@link PdfOptions} to set. Cannot be null.
+   * @param options the {@link PdfOptions} to set. Cannot be null.
    */
-  public DocumentCreationOptions withPdfOptions(PdfOptions pdfOptions) {
-    API.checkNotNull(pdfOptions, "the pdfOptions");
-    this.pdfOptions = pdfOptions;
+  public DocumentCreationOptions withPdfOptions(PdfOptions options) {
+    API.checkNotNull(options, "options");
+    this.pdfOptions = options;
     return this;
   }
 
@@ -48,13 +47,13 @@ public class DocumentCreationOptions {
     return this;
   }
 
-  public DocumentCreationOptions displayBooleanValuesAsCheckBox(boolean displayBooleanValuesAsCheckBox) {
-    this.displayBooleanValuesAsCheckBox = displayBooleanValuesAsCheckBox;
+  public DocumentCreationOptions displayBooleanValuesAsCheckBox(boolean checkbox) {
+    this.displayBooleanValuesAsCheckBox = checkbox;
     return this;
   }
 
-  public DocumentCreationOptions removeBlankPages(boolean removeBlankPages) {
-    this.removeBlankPages = removeBlankPages;
+  public DocumentCreationOptions removeBlankPages(boolean remove) {
+    this.removeBlankPages = remove;
     return this;
   }
 
