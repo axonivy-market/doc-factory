@@ -97,15 +97,13 @@ public class AsposeFieldMergingCallback implements IFieldMergingCallback {
    * <ul>
    * <li>displayBooleanValuesAsCheckBox
    * </ul>
-   * @param documentCreationOptions the DocumentCreationOptions object. If null
+   * @param options the DocumentCreationOptions object. If null
    *          throws an IllegalArgumentException
    * @return the current AsposeFieldMergingCallback object
    */
-  @SuppressWarnings("hiding")
-  public AsposeFieldMergingCallback withDocumentCreationOptions(
-          DocumentCreationOptions documentCreationOptions) {
-    API.checkNotNull(documentCreationOptions, "documentCreationOptions");
-    this.documentCreationOptions = documentCreationOptions;
+  public AsposeFieldMergingCallback withDocumentCreationOptions(DocumentCreationOptions options) {
+    API.checkNotNull(options, "options");
+    this.documentCreationOptions = options;
     return this;
   }
 

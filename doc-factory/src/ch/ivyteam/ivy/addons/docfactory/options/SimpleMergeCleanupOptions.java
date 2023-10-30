@@ -16,9 +16,8 @@ public class SimpleMergeCleanupOptions {
     return this;
   }
 
-  @SuppressWarnings("hiding")
-  public SimpleMergeCleanupOptions removingEmptyParagraphs(boolean removesEmptyParagraphs) {
-    this.removesEmptyParagraphs = removesEmptyParagraphs;
+  public SimpleMergeCleanupOptions removingEmptyParagraphs(boolean remove) {
+    this.removesEmptyParagraphs = remove;
     return this;
   }
 

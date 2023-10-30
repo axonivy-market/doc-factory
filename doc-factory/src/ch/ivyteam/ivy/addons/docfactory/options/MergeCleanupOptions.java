@@ -2,7 +2,6 @@ package ch.ivyteam.ivy.addons.docfactory.options;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-@SuppressWarnings("hiding")
 public class MergeCleanupOptions extends SimpleMergeCleanupOptions {
 
   private boolean removesUnusedRegions = true;
@@ -13,18 +12,18 @@ public class MergeCleanupOptions extends SimpleMergeCleanupOptions {
     return new MergeCleanupOptions();
   }
 
-  public MergeCleanupOptions removingContainingFields(boolean removesContainingFields) {
-    this.removesContainingFields = removesContainingFields;
+  public MergeCleanupOptions removingContainingFields(boolean removeContaining) {
+    this.removesContainingFields = removeContaining;
     return this;
   }
 
-  public MergeCleanupOptions removingUnusedRegions(boolean removesUnusedRegions) {
-    this.removesUnusedRegions = removesUnusedRegions;
+  public MergeCleanupOptions removingUnusedRegions(boolean removeRegions) {
+    this.removesUnusedRegions = removeRegions;
     return this;
   }
 
-  public MergeCleanupOptions removingUnusedFields(boolean removesUnusedFields) {
-    this.removesUnusedFields = removesUnusedFields;
+  public MergeCleanupOptions removingUnusedFields(boolean removeFields) {
+    this.removesUnusedFields = removeFields;
     return this;
   }
 

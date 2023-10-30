@@ -40,7 +40,6 @@ import ch.ivyteam.ivy.environment.Ivy;
  * with its generateDocument methods.
  *
  */
-@SuppressWarnings("hiding")
 public class AsposeDocFactoryFileGenerator {
 
   private DocumentCreationOptions documentCreationOptions = DocumentCreationOptions.getInstance();
@@ -55,15 +54,14 @@ public class AsposeDocFactoryFileGenerator {
   /**
    * The DocumentCreationOptions contains diverse options for the final file
    * generation (e.g should a PDF be editable ...)
-   * @param documentCreationOptions the DocumentCreationOptions object, cannot
+   * @param options the DocumentCreationOptions object, cannot
    *          be null.
    * @return the AsposeDocFactoryFileGenerator object which
    *         DocumentCreationOptions has been set.
    */
-  public AsposeDocFactoryFileGenerator withDocumentCreationOptions(
-          DocumentCreationOptions documentCreationOptions) {
-    API.checkNotNull(documentCreationOptions, "documentCreationOptions");
-    this.documentCreationOptions = documentCreationOptions;
+  public AsposeDocFactoryFileGenerator withDocumentCreationOptions(DocumentCreationOptions options) {
+    API.checkNotNull(options, "options");
+    this.documentCreationOptions = options;
     return this;
   }
 
@@ -72,14 +70,14 @@ public class AsposeDocFactoryFileGenerator {
    * this AsposeDocFactoryFileGenerator. If set the
    * {@link ch.ivyteam.ivy.addons.docfactory.aspose.DocumentWorker#onGeneratedFile(Document, File)}
    * logic will be applied after the file has been generated
-   * @param documentWorker the
+   * @param worker the
    *          {@link ch.ivyteam.ivy.addons.docfactory.aspose.DocumentWorker}
    *          implementation to set. Null is accepted.
    * @return the AsposeDocFactoryFileGenerator object which documentWorker has
    *         been set.
    */
-  public AsposeDocFactoryFileGenerator withDocumentWorker(DocumentWorker documentWorker) {
-    this.documentWorker = documentWorker;
+  public AsposeDocFactoryFileGenerator withDocumentWorker(DocumentWorker worker) {
+    this.documentWorker = worker;
     return this;
   }
 

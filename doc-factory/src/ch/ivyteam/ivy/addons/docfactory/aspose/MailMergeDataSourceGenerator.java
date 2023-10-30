@@ -2,14 +2,14 @@ package ch.ivyteam.ivy.addons.docfactory.aspose;
 
 import java.util.Collection;
 
+import com.aspose.words.IMailMergeDataSource;
+
 import ch.ivyteam.api.API;
 import ch.ivyteam.ivy.addons.docfactory.TemplateMergeField;
 import ch.ivyteam.ivy.addons.docfactory.mergefield.TemplateMergeFieldType;
 import ch.ivyteam.ivy.addons.docfactory.mergefield.internal.MergeFieldsExtractor;
 import ch.ivyteam.ivy.scripting.objects.Record;
 import ch.ivyteam.ivy.scripting.objects.Recordset;
-
-import com.aspose.words.IMailMergeDataSource;
 
 public class MailMergeDataSourceGenerator {
 
@@ -73,8 +73,8 @@ public class MailMergeDataSourceGenerator {
     IMailMergeDataSource childMailMergeDataSource = null;
     if (templateMergeField.isPossibleTableData() && templateMergeField.isCollection()) {
       childMailMergeDataSource = getFromCollectionTypeTemplateMergeField(templateMergeField, parentTableName);
-      parentDataSource.putChildMailMergeDataSource(childMailMergeDataSource,
-              simplifiedName + getSecondPart(templateMergeField.getMergeFieldName()));
+      String tblName = simplifiedName + getSecondPart(templateMergeField.getMergeFieldName());
+      parentDataSource.putChildMailMergeDataSource(childMailMergeDataSource, tblName);
     }
     if (templateMergeField.isPossibleTableData()
             && templateMergeField.getType().is(TemplateMergeFieldType.OBJECT)) {
