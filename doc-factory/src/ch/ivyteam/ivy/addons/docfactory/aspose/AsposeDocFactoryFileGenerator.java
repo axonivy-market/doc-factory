@@ -190,10 +190,10 @@ public class AsposeDocFactoryFileGenerator {
               filePath, e);
       return;
     }
-    com.aspose.pdf.Document pdfDoc = new com.aspose.pdf.Document(filePath);
-
-    cleanPdfFields(pdfDoc.getForm().getFields());
-    pdfDoc.save(filePath);
+    try(com.aspose.pdf.Document pdfDoc = new com.aspose.pdf.Document(filePath)) {
+      cleanPdfFields(pdfDoc.getForm().getFields());
+      pdfDoc.save(filePath);
+    }
   }
 
   private static void cleanPdfFields(com.aspose.pdf.Field[] fields) {
