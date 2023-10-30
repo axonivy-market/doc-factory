@@ -512,16 +512,15 @@ public class DocumentTemplate implements Serializable {
 
   /**
    * Allows specifying a Locale for formatting the Numbers and Dates objects
-   * @param locale
+   * @param newLocale
    * @return The DocumenTemplate which Locale as been set.
    */
-  @SuppressWarnings("hiding")
-  public DocumentTemplate useLocale(Locale locale) {
-    if (locale != null) {
-      this.locale = locale;
+  public DocumentTemplate useLocale(Locale newLocale) {
+    if (newLocale != null) {
+      this.locale = newLocale;
     }
     for (TemplateMergeField tmf : this.mergeFields) {
-      tmf.useLocaleAndResetNumberFormatAndDateFormat(locale);
+      tmf.useLocaleAndResetNumberFormatAndDateFormat(newLocale);
     }
     return this;
   }
@@ -956,10 +955,9 @@ public class DocumentTemplate implements Serializable {
     return documentCreationOptions;
   }
 
-  @SuppressWarnings("hiding")
-  public DocumentTemplate withDocumentCreationOptions(DocumentCreationOptions documentCreationOptions) {
-    API.checkNotNull(documentCreationOptions, "documentCreationOptions");
-    this.documentCreationOptions = documentCreationOptions;
+  public DocumentTemplate withDocumentCreationOptions(DocumentCreationOptions options) {
+    API.checkNotNull(options, "options");
+    this.documentCreationOptions = options;
     this.documentFactory.withDocumentCreationOptions(this.documentCreationOptions);
     return this;
   }

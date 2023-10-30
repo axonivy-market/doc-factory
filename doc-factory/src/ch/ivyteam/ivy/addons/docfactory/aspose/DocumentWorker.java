@@ -21,9 +21,8 @@ public interface DocumentWorker {
    * @param document the aspose words Document upon which the mail merge will be
    *          performed.
    */
-  @SuppressWarnings("unused")
-  default void prepare(Document document) {
 
+  default void prepare(@SuppressWarnings("all") Document document) {
   }
 
   /**
@@ -33,9 +32,7 @@ public interface DocumentWorker {
    * @param document the aspose words Document upon which the mail merge has
    *          been performed.
    */
-  @SuppressWarnings("unused")
-  default void postCreate(Document document) {
-
+  default void postCreate(@SuppressWarnings("all") Document document) {
   }
 
   /**
@@ -58,7 +55,7 @@ public interface DocumentWorker {
    *         the result file must exist (file.isFile() must return true). Else
    *         the DocFactory will throw a DocumentGenerationException.
    */
-  @SuppressWarnings("unused")
+  @SuppressWarnings("all")
   default File onGeneratedFile(Document document, File generatedFile) {
     return generatedFile;
   }

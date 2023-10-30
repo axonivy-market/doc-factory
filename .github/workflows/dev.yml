@@ -1,0 +1,15 @@
+name: Dev-Build
+
+on:
+  push:
+  schedule:
+    - cron:  '21 21 * * *'
+  workflow_dispatch:
+
+jobs:
+  build:
+    uses: './.github/workflows/ci.yml'
+    secrets: inherit
+    with:
+      mvnArgs: '"-Divy.engine.download.url=https://dev.axonivy.com/permalink/dev/axonivy-engine.zip" "-Divy.engine.version=11.2.0" "-Dproject-build-plugin-version=11.2.0-SNAPSHOT" -Dmaven.deploy.skip=true'
+
