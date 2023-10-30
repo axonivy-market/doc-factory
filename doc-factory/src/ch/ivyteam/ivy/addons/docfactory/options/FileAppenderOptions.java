@@ -18,7 +18,6 @@ import ch.ivyteam.ivy.environment.Ivy;
  * may be appended together in a common file.
  * @since version 7.3.0
  */
-@SuppressWarnings("hiding")
 public class FileAppenderOptions {
 
   private String appendedSingleFileName = DocFactoryConstants.DEFAULT_FILE_NAME;
@@ -43,13 +42,13 @@ public class FileAppenderOptions {
    * Note: if you don't set this property, a default file name will be used for
    * producing the appended file (see
    * {@link DocFactoryConstants#DEFAULT_FILE_NAME}.
-   * @param appendedSingleFileName the file name of the file which will be
+   * @param fileName the file name of the file which will be
    *          produced by appending a bunch of other documents or files. Cannot
    *          be blank.
    */
-  public FileAppenderOptions withAppendedFileName(String appendedSingleFileName) {
-    API.checkNotEmpty(appendedSingleFileName, "String appendedSingleFileName");
-    this.appendedSingleFileName = appendedSingleFileName;
+  public FileAppenderOptions withAppendedFileName(String fileName) {
+    API.checkNotEmpty(fileName, "fileName");
+    this.appendedSingleFileName = fileName;
     return this;
   }
 
@@ -80,11 +79,11 @@ public class FileAppenderOptions {
    * <b>Note: </b><u>Applies only for appending Words documents (doc, docx and
    * odt) together, or for appending documents at mail merge time</u>. Has no
    * effect if used for appending existing PDF files together.
-   * @param restartPageNumbering true if you want that each appended document
+   * @param restart true if you want that each appended document
    *          has its own page numbering. Else leave it false (default).
    */
-  public FileAppenderOptions restartPageNumbering(boolean restartPageNumbering) {
-    this.restartPageNumbering = restartPageNumbering;
+  public FileAppenderOptions restartPageNumbering(boolean restart) {
+    this.restartPageNumbering = restart;
     return this;
   }
 
@@ -95,12 +94,12 @@ public class FileAppenderOptions {
    * <b>Note: </b><u>Applies only for appending Words documents (doc, docx and
    * odt) together, or for appending documents at mail merge time</u>. Has no
    * effect if used for appending existing PDF files together.
-   * @param useHeadersFootersFromLeadingPage true if you want that each appended
+   * @param useLeading true if you want that each appended
    *          document uses the header and footer from leading page. Else leave
    *          it false (default).
    */
-  public FileAppenderOptions useHeadersFootersFromLeadingPage(boolean useHeadersFootersFromLeadingPage) {
-    this.useHeadersFootersFromLeadingPage = useHeadersFootersFromLeadingPage;
+  public FileAppenderOptions useHeadersFootersFromLeadingPage(boolean useLeading) {
+    this.useHeadersFootersFromLeadingPage = useLeading;
     return this;
   }
 
@@ -110,10 +109,10 @@ public class FileAppenderOptions {
    * page ({@link DocumentAppendingStart#NEW_PAGE}). The
    * {@link DocumentAppendingStart#CONTINUOUS} allows appending the documents
    * continuously without page break.
-   * @param documentAppendingStart
+   * @param appendigStart
    */
-  public FileAppenderOptions withDocumentAppendingStart(DocumentAppendingStart documentAppendingStart) {
-    this.documentAppendingStart = documentAppendingStart;
+  public FileAppenderOptions withDocumentAppendingStart(DocumentAppendingStart appendigStart) {
+    this.documentAppendingStart = appendigStart;
     return this;
   }
 
