@@ -5,6 +5,8 @@ import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
 
+import java.time.Duration;
+
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 
@@ -26,7 +28,7 @@ public class WebTestAsposeBarcodeDemoIT{
     $(By.id(BARCODE_STRING)).sendKeys(String.valueOf("Hello Axon Ivy"));
     $(By.id(PROCEED_BUTTON)).shouldBe(visible).click();
 
-    $(By.id(BARCODE_IMAGE)).shouldBe(visible).isImage();
+    $(By.id(BARCODE_IMAGE)).shouldBe(visible, Duration.ofSeconds(30)).isImage();
   }
 
 }
