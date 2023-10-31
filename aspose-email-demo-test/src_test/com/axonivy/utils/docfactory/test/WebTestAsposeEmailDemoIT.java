@@ -19,12 +19,10 @@ import com.codeborne.selenide.FileDownloadMode;
 import com.codeborne.selenide.Selenide;
 
 @IvyWebTest
-public class WebTestAsposeEmailDemo
-{
+public class WebTestAsposeEmailDemoIT {
 
   @BeforeAll
-  public static void setUp()
-  {
+  public static void setUp() {
     Selenide.closeWebDriver();
     Configuration.proxyEnabled = true;
     Configuration.fileDownload = FileDownloadMode.PROXY;
@@ -32,9 +30,8 @@ public class WebTestAsposeEmailDemo
   }
 
   @Test
-  public void testMsgEmail() throws Exception
-  {
-	open(EngineUrl.createProcessUrl("AsposeEmailDemo/1712BF5507F25F15/start.ivp"));
+  public void testMsgEmail() throws Exception {
+    open(EngineUrl.createProcessUrl("AsposeEmailDemo/1712BF5507F25F15/start.ivp"));
     File msg = $(By.id("form:createBtn")).shouldBe(visible).download();
 
     Awaitility.await().untilAsserted(() -> {
