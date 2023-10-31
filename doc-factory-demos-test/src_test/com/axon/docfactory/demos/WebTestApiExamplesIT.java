@@ -71,6 +71,8 @@ class WebTestApiExamplesIT {
     if (!EngineUrl.isDesigner()) {
       fixture.login("test", "test");
     }
+    fixture.config("StandardProcess.DefaultPages", "ch.ivyteam.workflow:dev-workflow-ui");
+
     open(EngineUrl.createProcessUrl("/DocFactoryDemos/16DFD8AB2E4BFFF9/start2.ivp"));
     $(By.id("form:name")).shouldBe(visible).sendKeys("Batman");
     $("button").click();
