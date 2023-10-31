@@ -17,6 +17,7 @@ import org.openqa.selenium.By;
 
 import com.axonivy.ivy.webtest.IvyWebTest;
 import com.axonivy.ivy.webtest.engine.EngineUrl;
+import com.axonivy.ivy.webtest.engine.WebAppFixture;
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.FileDownloadMode;
 import com.codeborne.selenide.Selenide;
@@ -41,8 +42,8 @@ class WebTestApiExamplesIT {
   @Test
   void docWithCompositeObjPdfA() throws Exception {
     assertDownload("start8.ivp", "DocWithCompositeObjectA.pdf");
-  }  
-  
+  }
+
   @Test
   void docWithNestedTablesPDF() throws Exception {
     assertDownload("start3.ivp", "DocWithFullNestedTables.pdf");
@@ -67,18 +68,17 @@ class WebTestApiExamplesIT {
   }
 
   @Test
-  void ivyDocApi() {
+  void ivyDocApi(WebAppFixture fixture) {
     if (!EngineUrl.isDesigner()) {
-      open(EngineUrl.create().path("login").toUrl());
-      $(By.id("loginForm:userName")).shouldBe(visible).sendKeys("test");
-      $(By.id("loginForm:password")).shouldBe(visible).sendKeys("test");
-      $(By.id("loginForm:login")).click();
-      $(By.id("sessionUserName")).shouldHave(exactText("test"));
+      fixture.login("test", "test");
     }
+    fixture.config("StandardProcess.DefaultPages", "ch.ivyteam.workflow:dev-workflow-ui");
+
     open(EngineUrl.createProcessUrl("/DocFactoryDemos/16DFD8AB2E4BFFF9/start2.ivp"));
     $(By.id("form:name")).shouldBe(visible).sendKeys("Batman");
     $("button").click();
     $(withText("Task End")).shouldBe(visible);
+
     open(EngineUrl.create().path("tasks").toUrl());
     $(By.linkText("Task: View attached document")).shouldBe(visible).click();
     Selenide.switchTo().frame("iFrame");

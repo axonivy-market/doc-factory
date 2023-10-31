@@ -1,11 +1,11 @@
 package ch.ivyteam.ivy.addons.docfactory.aspose;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 
 import com.aspose.pdf.ConvertErrorAction;
@@ -15,20 +15,15 @@ import com.aspose.pdf.PdfFormat;
 import ch.ivyteam.api.API;
 import ch.ivyteam.ivy.addons.docfactory.PdfFactory;
 import ch.ivyteam.ivy.addons.docfactory.exception.DocFactoryException;
-import ch.ivyteam.ivy.addons.docfactory.log.DocFactoryLogDirectoryRetriever;
-import ch.ivyteam.ivy.addons.docfactory.log.IvyLogDirectoryRetriever;
 import ch.ivyteam.ivy.addons.docfactory.pdf.PdfAType;
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.scripting.objects.File;
+import ch.ivyteam.log.Logger;
 
 public class AsposePdfFactory extends PdfFactory {
 
-  private static final long PDF_FACTORY_LOG_MAX_BYTE_SIZE = 5 * 1024;
+  private static final Logger LOGGER = Logger.getLogger(AsposePdfFactory.class);
   private static final String PDF_EXTENSION = ".pdf";
-  private static final String PDF_FACTORY_LOG_FILENAME = "pdfFactory.log";
-  private static final String JAVA_IO_TMPDIR = "java.io.tmpdir";
-
-  private DocFactoryLogDirectoryRetriever logDirectoryRetriever;
 
   public AsposePdfFactory() {
     init();
@@ -53,8 +48,7 @@ public class AsposePdfFactory extends PdfFactory {
   }
 
   @Override
-  public File appendPdfFiles(String resultFilePath, List<java.io.File> pdfsToAppend)
-          throws DocFactoryException {
+  public File appendPdfFiles(String resultFilePath, List<java.io.File> pdfsToAppend) throws DocFactoryException {
     API.checkNotEmpty(resultFilePath, "resultFileName");
     API.checkNotNull(pdfsToAppend, "pdfsToAppend");
     API.checkNotEmpty(pdfsToAppend, "pdfsToAppend");
@@ -63,8 +57,7 @@ public class AsposePdfFactory extends PdfFactory {
       Document pdfDocument = new Document(new FileInputStream(pdfsToAppend.get(0)));
       return appendFilesToDocument(pdfDocument, pdfsToAppend.subList(1, pdfsToAppend.size()), resultFilePath);
     } catch (Exception ex) {
-      throw new DocFactoryException("An error occurred while generating the pdf file. " + ex.getMessage(),
-              ex);
+      throw new DocFactoryException("An error occurred while generating the pdf file. " + ex.getMessage(), ex);
     }
   }
 
@@ -74,35 +67,22 @@ public class AsposePdfFactory extends PdfFactory {
     if (StringUtils.isBlank(filePath) || !filePath.toLowerCase().endsWith(PDF_EXTENSION)) {
       throw new IllegalArgumentException("The filePath parameter must point to a PDF file.");
     }
-    com.aspose.pdf.Document pdfDocument = null;
-    try (InputStream in = new FileInputStream(filePath)) {
-      pdfDocument = new com.aspose.pdf.Document(in);
-      pdfDocument.convert(getAsposePdfFactoryLogFile().getAbsolutePath(), getAsposePDFAType(pdfAType),
-              ConvertErrorAction.Delete);
+    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+    try (InputStream in = new FileInputStream(filePath);
+      var pdfDocument = new com.aspose.pdf.Document(in)) {
+      pdfDocument.convert(bos, getAsposePDFAType(pdfAType), ConvertErrorAction.Delete);
       pdfDocument.setLinearized(true);
       pdfDocument.save(filePath);
     } catch (Exception ex) {
       throw new DocFactoryException(ex);
     } finally {
-      if (pdfDocument != null) {
-        pdfDocument.close();
+      var logs = new String(bos.toByteArray());
+      if (!logs.isBlank()) {
+        logs.lines().forEachOrdered(logLine -> {
+          LOGGER.error(logLine);
+        });
       }
     }
-  }
-
-  public DocFactoryLogDirectoryRetriever getLogDirectoryRetriever() {
-    if (this.logDirectoryRetriever == null) {
-      this.setLogDirectoryRetriever(new IvyLogDirectoryRetriever());
-    }
-    return logDirectoryRetriever;
-  }
-
-  /**
-   * visible for unit tests
-   * @param logDirectoryRetriever
-   */
-  protected void setLogDirectoryRetriever(DocFactoryLogDirectoryRetriever logDirectoryRetriever) {
-    this.logDirectoryRetriever = logDirectoryRetriever;
   }
 
   private PdfFormat getAsposePDFAType(PdfAType pdfAType) {
@@ -126,23 +106,6 @@ public class AsposePdfFactory extends PdfFactory {
       default:
         return com.aspose.pdf.PdfFormat.PDF_A_1A;
     }
-  }
-
-  private java.io.File getAsposePdfFactoryLogFile() throws IOException {
-    java.io.File logDir = this.getLogDirectoryRetriever().getLogDirectory();
-    if (logDir == null) {
-      logDir = new java.io.File(System.getProperty(JAVA_IO_TMPDIR));
-    }
-    java.io.File logFile = new java.io.File(logDir, PDF_FACTORY_LOG_FILENAME);
-    if (!logFile.exists()) {
-      logFile.createNewFile();
-    } else if (FileUtils.sizeOf(logFile) > PDF_FACTORY_LOG_MAX_BYTE_SIZE) {
-      FileUtils.moveFile(logFile,
-              new java.io.File(logFile.getParentFile(), logFile.getName() + System.nanoTime()));
-      logFile.createNewFile();
-    }
-
-    return logFile;
   }
 
   /**
