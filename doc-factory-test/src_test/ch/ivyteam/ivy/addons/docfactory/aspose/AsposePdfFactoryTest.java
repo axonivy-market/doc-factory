@@ -13,7 +13,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import ch.ivyteam.ivy.addons.docfactory.exception.DocFactoryException;
-import ch.ivyteam.ivy.addons.docfactory.log.DocFactoryLogDirectoryRetriever;
 import ch.ivyteam.ivy.addons.docfactory.pdf.PdfAType;
 import ch.ivyteam.ivy.addons.docfactory.pdfbox.PdfAValidator;
 
@@ -48,7 +47,6 @@ public class AsposePdfFactoryTest {
   @BeforeEach
   public void setup() throws Exception {
     asposePdfFactory = new AsposePdfFactory(false);
-    asposePdfFactory.setLogDirectoryRetriever(new LogDirectoryRetriever());
   }
 
   @Test
@@ -209,16 +207,4 @@ public class AsposePdfFactoryTest {
     return pdfToConvert;
   }
 
-  private class LogDirectoryRetriever implements DocFactoryLogDirectoryRetriever {
-
-    @Override
-    public java.io.File getLogDirectory() {
-      java.io.File logDir = new java.io.File("test/logs");
-      if (!logDir.isDirectory()) {
-        logDir.mkdir();
-      }
-      return new java.io.File("test/logs");
-    }
-
-  }
 }
