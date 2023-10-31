@@ -8,6 +8,7 @@
 
 	<properties>
 		<project-build-plugin-version>10.0.14</project-build-plugin-version>
+		<web-tester.version>10.0.14</web-tester.version>
 	</properties>
 
 	<dependencies>
@@ -18,10 +19,10 @@
 			<type>iar</type>
 		</dependency>
 		<dependency>
-		    <groupId>com.axonivy.ivy.webtest</groupId>
-		    <artifactId>web-tester</artifactId>
-		    <version>10.0.0</version>
-		    <scope>test</scope>
+			<groupId>com.axonivy.ivy.webtest</groupId>
+			<artifactId>web-tester</artifactId>
+			<version>${web-tester.version}</version>
+		 	<scope>test</scope>
  		</dependency>
  		<dependency>
 			<groupId>com.codeborne</groupId>
@@ -62,14 +63,26 @@
 
 	<pluginRepositories>
 		<pluginRepository>
-		<id>central.snapshots</id>
-		<url>https://oss.sonatype.org/content/repositories/snapshots</url>
-		<releases>
-			<enabled>false</enabled>
-		</releases>
-		<snapshots>
-			<updatePolicy>always</updatePolicy>
-		</snapshots>
+			<id>central.snapshots</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<updatePolicy>always</updatePolicy>
+			</snapshots>
 		</pluginRepository>
-  </pluginRepositories>
+	</pluginRepositories>
+	<repositories>
+		<repository>
+			<id>central.snapshots</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<updatePolicy>always</updatePolicy>
+			</snapshots>
+		</repository>
+	</repositories>
 </project>
