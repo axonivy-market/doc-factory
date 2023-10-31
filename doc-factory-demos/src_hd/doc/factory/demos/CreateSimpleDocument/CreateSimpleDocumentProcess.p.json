@@ -37,6 +37,7 @@
       "type" : "Script",
       "name" : "Create document",
       "config" : {
+        "security" : "system",
         "output" : {
           "code" : "in.service.createHelloWord();"
         }
