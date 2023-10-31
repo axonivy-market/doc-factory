@@ -1,8 +1,11 @@
 package ch.ivyteam.ivy.addons.docfactory.aspose;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
@@ -74,18 +77,23 @@ public class AsposePdfFactory extends PdfFactory {
     if (StringUtils.isBlank(filePath) || !filePath.toLowerCase().endsWith(PDF_EXTENSION)) {
       throw new IllegalArgumentException("The filePath parameter must point to a PDF file.");
     }
-    com.aspose.pdf.Document pdfDocument = null;
-    try (InputStream in = new FileInputStream(filePath)) {
-      pdfDocument = new com.aspose.pdf.Document(in);
-      pdfDocument.convert(getAsposePdfFactoryLogFile().getAbsolutePath(), getAsposePDFAType(pdfAType),
-              ConvertErrorAction.Delete);
+    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+    try (InputStream in = new FileInputStream(filePath);
+      var pdfDocument = new com.aspose.pdf.Document(in)) {
+      pdfDocument.convert(bos, getAsposePDFAType(pdfAType), ConvertErrorAction.Delete);
       pdfDocument.setLinearized(true);
       pdfDocument.save(filePath);
     } catch (Exception ex) {
       throw new DocFactoryException(ex);
     } finally {
-      if (pdfDocument != null) {
-        pdfDocument.close();
+      try {
+        var logs = new String(bos.toByteArray());
+        if (!logs.isBlank()) {
+          var file = getAsposePdfFactoryLogFile().toPath();
+          Files.writeString(file, logs, StandardOpenOption.APPEND);
+        }
+      } catch (IOException ex) {
+        throw new RuntimeException(ex);
       }
     }
   }
