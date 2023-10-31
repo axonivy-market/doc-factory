@@ -4,8 +4,10 @@ import java.io.File;
 import java.util.Collection;
 
 import javax.faces.bean.ApplicationScoped;
+
 import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.SuffixFileFilter;
+
 import ch.ivyteam.di.restricted.DiCore;
 import ch.ivyteam.ivy.config.IFileAccess;
 import ch.ivyteam.ivy.environment.Ivy;
@@ -27,7 +29,8 @@ public class IvyLogDirectoryRetriever implements DocFactoryLogDirectoryRetriever
     }
     try {
       IOFileFilter filter = new SuffixFileFilter(".log");
-      Collection<File> logs = DiCore.getGlobalInjector().getInstance(IFileAccess.class).getLogFiles(filter);
+      IFileAccess files = DiCore.getGlobalInjector().getInstance(IFileAccess.class);
+      Collection<File> logs = files.getLogFiles(filter);
       File log = logs.stream().findFirst().orElse(null);
       if (log != null) {
         ivyLogDirectory = log.getParentFile();
