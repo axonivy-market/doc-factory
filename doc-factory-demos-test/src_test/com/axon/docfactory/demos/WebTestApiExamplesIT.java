@@ -2,6 +2,7 @@ package com.axon.docfactory.demos;
 
 import static com.codeborne.selenide.Condition.exactText;
 import static com.codeborne.selenide.Condition.visible;
+import static com.codeborne.selenide.Selectors.withText;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -67,7 +68,7 @@ class WebTestApiExamplesIT {
   }
 
   @Test
-  void ivyDocApi(WebAppFixture fixture) throws InterruptedException {
+  void ivyDocApi(WebAppFixture fixture) {
     if (!EngineUrl.isDesigner()) {
       fixture.login("test", "test");
     }
@@ -76,7 +77,7 @@ class WebTestApiExamplesIT {
     open(EngineUrl.createProcessUrl("/DocFactoryDemos/16DFD8AB2E4BFFF9/start2.ivp"));
     $(By.id("form:name")).shouldBe(visible).sendKeys("Batman");
     $("button").click();
-    Thread.sleep(10_000); // wait for doc generation
+    $(withText("Task End")).shouldBe(visible);
 
     open(EngineUrl.create().path("tasks").toUrl());
     $(By.linkText("Task: View attached document")).shouldBe(visible).click();
