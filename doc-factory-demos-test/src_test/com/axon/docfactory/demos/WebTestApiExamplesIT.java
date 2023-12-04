@@ -7,7 +7,6 @@ import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.io.FileNotFoundException;
 import java.nio.file.Path;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -60,7 +59,7 @@ class WebTestApiExamplesIT {
   }
 
   @Test
-  void zipMultipleDocuments() throws FileNotFoundException {
+  void zipMultipleDocuments() throws Exception {
     open(EngineUrl.createProcessUrl("/DocFactoryDemos/16CD7829EF6B489B/start2.ivp"));
     var doc = Selenide.$$("button").find(exactText("Create Multiple Formats")).shouldBe(visible).download();
     assertThat(doc).hasName("Documents.zip");
@@ -86,7 +85,7 @@ class WebTestApiExamplesIT {
     $("iframe").shouldBe(visible);
   }
 
-  private void assertDownload(String process, String expectedFileName) throws FileNotFoundException {
+  private void assertDownload(String process, String expectedFileName) throws Exception {
     open(EngineUrl.createProcessUrl(DOC_DEMOS_BASE + process));
     var doc = $("#docLink").shouldBe(visible).download();
     assertThat(doc).hasName(expectedFileName);

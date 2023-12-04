@@ -9,7 +9,7 @@ on:
     inputs:
       mvnArgs:
         type: string
-        default: '-Divy.engine.download.url=https://dev.axonivy.com/permalink/nightly-10/axonivy-engine.zip'
+        default: '-Divy.engine.download.url=https://dev.axonivy.com/permalink/nightly-11.2/axonivy-engine.zip'
         required: false
       
 
