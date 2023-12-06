@@ -9,6 +9,7 @@
 	<properties>
 		<project-build-plugin-version>10.0.14</project-build-plugin-version>
 		<web-tester.version>10.0.14</web-tester.version>
+		<selenide.version>6.9.0</selenide.version>
 	</properties>
 
 	<dependencies>
@@ -27,7 +28,7 @@
  		<dependency>
 			<groupId>com.codeborne</groupId>
 			<artifactId>selenide-proxy</artifactId>
-			<version>6.9.0</version>
+			<version>${selenide.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
