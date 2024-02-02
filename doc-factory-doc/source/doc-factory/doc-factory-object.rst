@@ -30,3 +30,12 @@ instance of your document factory class.
 .. tip::
    For more information about the methods of the BaseDocFactory, please refer to its **JavaDoc**.
 
+.. tip::
+   If you use Aspose libraries delivered with the Axon Ivy Platform outside of the
+   AsposeDocFactory, then you have to load the licenses for each product used.
+   See :file:DocumentCreator.java in the DocFactory examples.
+
+.. tip::
+   If you use Aspose libraries **not** packaged with the Axon Ivy Platform, then you
+   have to add the packages and load the appropriate license for each product used. 
+   See :file:IvyAsposeBarcoder.java in aspose-barcode-demo.
