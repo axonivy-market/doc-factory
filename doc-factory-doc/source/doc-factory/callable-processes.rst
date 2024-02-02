@@ -163,13 +163,13 @@ process file:
 
 The second one (writeDocumentWithOneDataClass) allows writing a single document
 with a template by providing a **CompositeObject (DataClass)**. Here is the
-description of this callable that you can find in the |ivy| process file:
+description of this callable that you can find in the Axon Ivy process file:
 
 .. figure:: /_static/images/callable-processes-3.png
 
 Other ones (writeDocumentWithMailMergeTable) allow writing a single document
 with a template that can contain merge mail with regions (tables). Here is the
-description of this callable that you can find in the |ivy| process file:
+description of this callable that you can find in the Axon Ivy process file:
 
 .. figure:: /_static/images/callable-processes-4.png
 
@@ -195,6 +195,6 @@ than one document with a list of **DocumentTemplate** objects. Each
 regions and mail merge with nested regions are now supported, because the
 DocumentTemplate Object encapsulates the necessary parameters to perform such
 merges (:ref:`DocumentTemplate <df-callable-processes-document-template>`). Here
-is the description of this callable that you can find in the |ivy| process file:
+is the description of this callable that you can find in the Axon Ivy process file:
 
 .. figure:: /_static/images/callable-processes-2.png
