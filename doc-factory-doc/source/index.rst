@@ -7,15 +7,15 @@ merge letters with the help of Microsoft Office Templates (:file:`.dot` or
 
 You can extend the DocFactory to cover your project requirements. At the
 moment, it is implemented with the commercial Java Library `Aspose
-<https://www.aspose.com>`_ that we ship with the |ivy| Platform.
+<https://www.aspose.com>`_ that we ship with the Axon Ivy Platform.
 
 .. tip::
 
    The DocFactory currently bundles the modules aspose-words, aspose-cells,
    aspose-pdf, aspose-slides. There are additional Aspose modules such as
-   aspose-barcode, aspose-ocr, aspose-diagram, that you can use in |ivy|. You
+   aspose-barcode, aspose-ocr, aspose-diagram, that you can use in Axon Ivy. You
    have to add these modules from the `Aspose repository
-   <https://repository.aspose.com/repo/com/aspose/>`_ to your |ivy| project and
+   <https://repository.aspose.com/repo/com/aspose/>`_ to your Axon Ivy project and
    call the Java API. You can find the complete documentation on the Aspose
    website at `Aspose <https://www.aspose.com>`_. 
 

@@ -3,7 +3,7 @@
 Document Factory Object
 =======================
 
-We implemented the |ivy| DocFactory Object based on the commercial
+We implemented the Axon Ivy DocFactory Object based on the commercial
 Aspose Java API. To be able to allow developing other Document Factories that
 work the same way as this one, a DocFactory implementation should always
 extend the abstract class
@@ -21,7 +21,7 @@ public static method :code:`BaseDocFactory.getInstance()` returns such an
 object.
 
 Suppose you want to use your own implementation class of the **BaseDocFactory**.
-In that case, you have to set a special Java system property on the |ivy-engine|
+In that case, you have to set a special Java system property on the Axon Ivy Engine
 named **document.factory**. Its value is the fully qualified name of your
 DocFactory class, e.g., :code:`com.acme.docfactory.MyDocFactory`. The
 :code:`getInstance()` method of the **BaseDocFactory** will then return an
