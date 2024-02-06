@@ -18,6 +18,8 @@ moment, it is implemented with the commercial Java Library `Aspose
    <https://repository.aspose.com/repo/com/aspose/>`_ to your Axon Ivy project and
    call the Java API. You can find the complete documentation on the Aspose
    website at `Aspose <https://www.aspose.com>`_. 
+   For correct license handling, kindly refer to the tips given in 
+   :ref:`DocFactory Object <df-doc-factory-object>`
 
 Microsoft Office templates contain fixed text and dynamic merge fields. A merge
 field is a placeholder for text information. Each merge field has a name and
