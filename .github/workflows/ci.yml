@@ -11,19 +11,25 @@ on:
         type: string
         default: '-Divy.engine.download.url=https://dev.axonivy.com/permalink/nightly-10/axonivy-engine.zip'
         required: false
+      javaVersion:
+        type: number
+        default: 17
+      mvnVersion:
+        type: string
+        default: 3.6.3
       
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Setup Java JDK
-      uses: actions/setup-java@v3
+      uses: actions/setup-java@v4
       with:
-        java-version: 17
+        java-version: ${{ inputs.javaVersion || '17' }}
         distribution: temurin
 
     - name: Decide to deploy or not
@@ -44,8 +50,13 @@ jobs:
               "password": "${{ secrets.NEXUS_AXONIVY_COM_PASSWORD }}"
           }]
 
+    - name: Setup Maven
+      uses: stCarolas/setup-maven@v5
+      with:
+        maven-version: ${{ inputs.mvnVersion || '3.6.3' }}
+
     - name: Build with Maven
-      run: mvn clean ${{ steps.condval.outputs.value }} --batch-mode ${{ inputs.mvnArgs }}
+      run: mvn clean ${{ steps.condval.outputs.value }} --batch-mode --fail-at-end ${{ inputs.mvnArgs }}
 
     - name: Publish Unit Test Results
       uses: EnricoMi/publish-unit-test-result-action@v2
@@ -56,14 +67,15 @@ jobs:
           !*/target/*-reports/failsafe-summary.xml
 
     - name: Archive build artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         path: |
           */target/*.iar
+          */target/*-[0-9]*.jar
           *product/target/*.zip
 
     - name: Archive test reports
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: failure()
       with:
         name: test-reports

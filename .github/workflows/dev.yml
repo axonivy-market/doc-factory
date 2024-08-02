@@ -12,3 +12,5 @@ jobs:
     secrets: inherit
     with:
       mvnArgs: '"-Divy.engine.download.url=https://dev.axonivy.com/permalink/dev/axonivy-engine.zip" "-Divy.engine.version=11.4.0" "-Dproject-build-plugin-version=11.4.0-SNAPSHOT" "-Dweb-tester.version=11.4.0-SNAPSHOT" "-Dselenide.version=7.0.3" -Dmaven.deploy.skip=true'
+      javaVersion: 21
+      mvnVersion: 3.9.8
