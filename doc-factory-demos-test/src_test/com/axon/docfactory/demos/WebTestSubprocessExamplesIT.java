@@ -19,7 +19,7 @@ import com.codeborne.selenide.DownloadOptions;
 import com.codeborne.selenide.FileDownloadMode;
 import com.codeborne.selenide.files.FileFilters;
 
-@IvyWebTest
+@IvyWebTest(headless = true)
 class WebTestSubprocessExamplesIT {
   private final String DOC_DEMOS_BASE = "/DocFactoryDemos/160D67F5A5647B10/";
 

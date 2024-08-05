@@ -21,7 +21,7 @@ import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.FileDownloadMode;
 import com.codeborne.selenide.Selenide;
 
-@IvyWebTest
+@IvyWebTest(headless = true)
 class WebTestApiExamplesIT {
   private final String DOC_DEMOS_BASE = "/DocFactoryDemos/16B45CBCE0D2056C/";
 

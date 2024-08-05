@@ -56,7 +56,7 @@ jobs:
         maven-version: ${{ inputs.mvnVersion || '3.6.3' }}
 
     - name: Build with Maven
-      run: mvn clean ${{ steps.condval.outputs.value }} --batch-mode --fail-at-end ${{ inputs.mvnArgs }}
+      run: mvn clean ${{ steps.condval.outputs.value }} --batch-mode ${{ inputs.mvnArgs }}
 
     - name: Publish Unit Test Results
       uses: EnricoMi/publish-unit-test-result-action@v2
