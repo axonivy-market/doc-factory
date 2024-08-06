@@ -7,8 +7,8 @@
 	<packaging>iar-integration-test</packaging>
 
 	<properties>
-		<project-build-plugin-version>10.0.14</project-build-plugin-version>
-		<web-tester.version>10.0.14</web-tester.version>
+		<project.build.plugin.version>10.0.16</project.build.plugin.version>
+    <tester.version>10.0.16</tester.version>
 		<selenide.version>6.9.0</selenide.version>
 	</properties>
 
@@ -22,7 +22,7 @@
 		<dependency>
 			<groupId>com.axonivy.ivy.webtest</groupId>
 			<artifactId>web-tester</artifactId>
-			<version>${web-tester.version}</version>
+			<version>${tester.version}</version>
 		 	<scope>test</scope>
  		</dependency>
  		<dependency>
@@ -41,7 +41,7 @@
 			<plugin>
 				<groupId>com.axonivy.ivy.ci</groupId>
 				<artifactId>project-build-plugin</artifactId>
-				<version>${project-build-plugin-version}</version>
+				<version>${project.build.plugin.version}</version>
 				<extensions>true</extensions>
 				<configuration>
 					<deployToEngineApplication>doc-factory</deployToEngineApplication>
