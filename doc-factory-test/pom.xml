@@ -7,7 +7,8 @@
   <packaging>iar</packaging>
   
   <properties>
-    <project-build-plugin-version>10.0.14</project-build-plugin-version>
+    <project.build.plugin.version>10.0.16</project.build.plugin.version>
+    <tester.version>10.0.16</tester.version>
     <pdfbox.version>2.0.28</pdfbox.version>
     <powermock2.version>2.0.9</powermock2.version>
   </properties>
@@ -22,7 +23,7 @@
     <dependency>
       <groupId>com.axonivy.ivy.test</groupId>
       <artifactId>unit-tester</artifactId>
-      <version>10.0.0</version>
+      <version>${tester.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.pdfbox</groupId>
@@ -50,7 +51,7 @@
       <plugin>
         <groupId>com.axonivy.ivy.ci</groupId>
         <artifactId>project-build-plugin</artifactId>
-        <version>${project-build-plugin-version}</version>
+        <version>${project.build.plugin.version}</version>
         <extensions>true</extensions>
       </plugin>  
     </plugins>
@@ -68,4 +69,13 @@
       </snapshots>
     </pluginRepository>
   </pluginRepositories>
+  <repositories>
+    <repository>
+      <id>sonatype</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+      <snapshots>
+        <updatePolicy>always</updatePolicy>
+      </snapshots>
+    </repository>
+  </repositories>
 </project>
