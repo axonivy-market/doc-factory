@@ -5,7 +5,21 @@ The aspose-mail.jar is not part of the aspose components included the Axon Ivy D
 
 ## Demo
 
-![Aspose.Email Demo](doc.png)
+![Aspose.Email Demo](asposeemail0.png)
+
+
+When you start this demo, a UI opens:
+
+![Aspose.Email Demo](asposeemail1.png)
+
+Pushing the button "Create" will generate a `newEmail.msg` file, according to you input you have entered in the UI before.
+
+![Aspose.Email Demo](asposeemail2.png)
+
+The `newEmail.msg` file can be opened with Outlook
+
+![Aspose.Email Demo](asposeemail3.png)
+
 
 ## Setup
 
