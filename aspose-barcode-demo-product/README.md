@@ -13,4 +13,4 @@ By pressing **Proceed** this string is converted to a barcode:
 
 ## Setup
 
-Simply install the marketplace connector - nothing else needs to be done :blush:
+Simply install the marketplace connector - nothing else needs to be done.

@@ -23,4 +23,4 @@ The `newEmail.msg` file can be opened with Outlook
 
 ## Setup
 
-Simply install the marketplace connector - nothing else needs to be done :blush:
+Simply install the marketplace connector - nothing else needs to be done.
