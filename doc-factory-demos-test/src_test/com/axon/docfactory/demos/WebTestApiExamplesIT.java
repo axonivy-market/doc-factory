@@ -79,7 +79,8 @@ class WebTestApiExamplesIT {
     $(withText("Task End")).shouldBe(visible);
 
     open(EngineUrl.create().path("tasks").toUrl());
-    $(By.linkText("Task: View attached document")).shouldBe(visible).click();
+    $(By.id("tasksForm:tasks:0:taskName")).shouldBe(visible).click();
+    $(By.id("actionMenuForm:taskStartBtn")).shouldBe(visible).click();
     Selenide.switchTo().frame("iFrame");
     $("h3").shouldHave(exactText("DocFactoryDemos: Attached Document"));
     $("iframe").shouldBe(visible);
