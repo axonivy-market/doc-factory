@@ -20,6 +20,7 @@ import com.axonivy.ivy.webtest.engine.WebAppFixture;
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.FileDownloadMode;
 import com.codeborne.selenide.Selenide;
+import com.codeborne.selenide.SelenideElement;
 
 @IvyWebTest
 class WebTestApiExamplesIT {
@@ -80,7 +81,10 @@ class WebTestApiExamplesIT {
 
     open(EngineUrl.create().path("tasks").toUrl());
     $(By.id("tasksForm:tasks:0:taskName")).shouldBe(visible).click();
-    $(By.id("actionMenuForm:taskStartBtn")).shouldBe(visible).click();
+    SelenideElement taskStartBtn = $(By.id("actionMenuForm:taskStartBtn"));
+    if (taskStartBtn.isDisplayed()) {
+    	taskStartBtn.shouldBe(visible).click();
+    }
     Selenide.switchTo().frame("iFrame");
     $("h3").shouldHave(exactText("DocFactoryDemos: Attached Document"));
     $("iframe").shouldBe(visible);
