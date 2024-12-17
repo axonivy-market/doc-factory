@@ -26,17 +26,6 @@ public class DocumentCreationOptions {
     return this;
   }
 
-  /**
-   * @deprecated use {@link #withPdfOptions(PdfOptions)} instead. The
-   *             {@link PdfOptions} contains this option now.
-   */
-  @Deprecated
-  public DocumentCreationOptions removeWhiteSpaceInPdfEditableFields(
-          boolean removeWhiteSpaceInPdfEditableFields) {
-    pdfOptions.setRemoveWhiteSpaceInPdfEditableFields(removeWhiteSpaceInPdfEditableFields);
-    return this;
-  }
-
   public DocumentCreationOptions displayBooleanValuesAsCheckBox(boolean checkbox) {
     this.displayBooleanValuesAsCheckBox = checkbox;
     return this;
@@ -62,43 +51,6 @@ public class DocumentCreationOptions {
 
   public void setRemoveBlankPages(boolean removeBlankPages) {
     this.removeBlankPages = removeBlankPages;
-  }
-
-  /**
-   * @deprecated use {@link #withPdfOptions(PdfOptions)} instead. The
-   *             {@link PdfOptions} contains this option now.
-   */
-  @Deprecated
-  public boolean isRemoveWhiteSpaceInPdfEditableFields() {
-    return pdfOptions.isRemoveWhiteSpaceInPdfEditableFields();
-  }
-
-  /**
-   * @deprecated use {@link #withPdfOptions(PdfOptions)} instead. The
-   *             {@link PdfOptions} contains this option now.
-   */
-  @Deprecated
-  public void setRemoveWhiteSpaceInPdfEditableFields(
-          boolean removeWhiteSpaceInPdfEditableFields) {
-    this.pdfOptions.setRemoveWhiteSpaceInPdfEditableFields(removeWhiteSpaceInPdfEditableFields);
-  }
-
-  /**
-   * @deprecated use {@link #withPdfOptions(PdfOptions)} instead. The
-   *             {@link PdfOptions} contains this option now.
-   */
-  @Deprecated
-  public boolean isKeepFormFieldsEditableInPdf() {
-    return pdfOptions.isKeepFormFieldsEditableInPdf();
-  }
-
-  /**
-   * @deprecated use {@link #withPdfOptions(PdfOptions)} instead. The
-   *             {@link PdfOptions} contains this option now.
-   */
-  @Deprecated
-  public void setKeepFormFieldsEditableInPdf(boolean keepFormFieldsEditable) {
-    this.pdfOptions.setKeepFormFieldsEditableInPdf(keepFormFieldsEditable);
   }
 
   public PdfOptions getPdfOptions() {
