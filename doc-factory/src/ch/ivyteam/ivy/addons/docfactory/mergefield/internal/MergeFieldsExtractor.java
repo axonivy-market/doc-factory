@@ -224,40 +224,4 @@ public class MergeFieldsExtractor {
   private static boolean isCollection(Object obj) {
     return obj instanceof Collection || obj instanceof Map<?, ?>;
   }
-
-  /**
-   * @deprecated Because it is not used in the DocFactory API. As this class is
-   *             not Public API, you should not use it.
-   */
-  @Deprecated
-  public static Collection<TemplateMergeField> getMergeFieldsWithBaseName(Object bean,
-          String mergeFieldsNamePrefix) {
-    if (bean == null) {
-      return Collections.emptyList();
-    }
-    if (StringUtils.isBlank(mergeFieldsNamePrefix)) {
-      mergeFieldsNamePrefix = EMPTY_MERGEFIELD_PREFIX_NAME;
-    } else if (!mergeFieldsNamePrefix.endsWith(DOT)) {
-      mergeFieldsNamePrefix = mergeFieldsNamePrefix + DOT;
-    }
-    Map<String, Object> fieldsNameValueMap = getBeanPropertyValues(bean, mergeFieldsNamePrefix);
-    if (fieldsNameValueMap == null) {
-      return Collections.emptyList();
-    }
-    Collection<TemplateMergeField> result = new ArrayList<>();
-    fieldsNameValueMap.forEach((key, value) -> result.add(TemplateMergeField.withName(key).withValue(value)));
-    return result;
-  }
-
-  /**
-   * @deprecated Use
-   *             {@link #getChildrenMergeFieldsOfTemplateMergeField(TemplateMergeField)}
-   *             instead Will be removed in a near future
-   */
-  @Deprecated
-  public static Collection<TemplateMergeField> getChildrenMergeFieldsForObjectMergeField(
-          TemplateMergeField templateMergeField) {
-    return getChildrenMergeFieldsOfTemplateMergeField(templateMergeField);
-  }
-
 }

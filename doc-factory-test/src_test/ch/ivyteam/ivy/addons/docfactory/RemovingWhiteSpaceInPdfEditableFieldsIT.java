@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import ch.ivyteam.ivy.addons.docfactory.options.DocumentCreationOptions;
+import ch.ivyteam.ivy.addons.docfactory.pdf.PdfOptions;
 import ch.ivyteam.ivy.environment.IvyTest;
 
 @SuppressWarnings("deprecation")
@@ -30,9 +31,10 @@ public class RemovingWhiteSpaceInPdfEditableFieldsIT {
 
   @Test
   public void defaultDoesNotRemoveWhiteSpaceInPdfEditableFields() {
+    
     documentTemplate.withDocumentCreationOptions(
             DocumentCreationOptions.getInstance()
-                    .keepFormFieldsEditableInPdf(true));
+                    .withPdfOptions(PdfOptions.getInstance()));
 
     File resultFile = DocFactoryTest.makeFile(
             "test/documentTemplate/removingWhiteSpaceInPdfEditableFieldsIT/default_not_remove_fieldSpaces.pdf");

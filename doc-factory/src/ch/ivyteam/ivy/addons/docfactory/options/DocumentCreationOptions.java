@@ -31,16 +31,6 @@ public class DocumentCreationOptions {
    *             {@link PdfOptions} contains this option now.
    */
   @Deprecated
-  public DocumentCreationOptions keepFormFieldsEditableInPdf(boolean keepFormFieldsEditable) {
-    pdfOptions.setKeepFormFieldsEditableInPdf(keepFormFieldsEditable);
-    return this;
-  }
-
-  /**
-   * @deprecated use {@link #withPdfOptions(PdfOptions)} instead. The
-   *             {@link PdfOptions} contains this option now.
-   */
-  @Deprecated
   public DocumentCreationOptions removeWhiteSpaceInPdfEditableFields(
           boolean removeWhiteSpaceInPdfEditableFields) {
     pdfOptions.setRemoveWhiteSpaceInPdfEditableFields(removeWhiteSpaceInPdfEditableFields);
