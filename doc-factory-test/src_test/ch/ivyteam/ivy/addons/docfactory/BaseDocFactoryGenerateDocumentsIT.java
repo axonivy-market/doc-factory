@@ -19,6 +19,7 @@ import ch.ivyteam.ivy.addons.docfactory.options.DocumentAppendingStart;
 import ch.ivyteam.ivy.addons.docfactory.options.DocumentCreationOptions;
 import ch.ivyteam.ivy.addons.docfactory.options.FileAppenderOptions;
 import ch.ivyteam.ivy.addons.docfactory.options.MultipleDocumentsCreationOptions;
+import ch.ivyteam.ivy.addons.docfactory.pdf.PdfOptions;
 import ch.ivyteam.ivy.addons.docfactory.test.data.Person;
 
 public class BaseDocFactoryGenerateDocumentsIT {
@@ -46,9 +47,13 @@ public class BaseDocFactoryGenerateDocumentsIT {
   @SuppressWarnings("deprecation")
   @BeforeEach
   public void setUp() throws Exception {
-    docFactory = BaseDocFactory.getInstance()
-            .withDocumentCreationOptions(
-                    DocumentCreationOptions.getInstance().keepFormFieldsEditableInPdf(true));
+//    docFactory = BaseDocFactory.getInstance()
+//            .withDocumentCreationOptions(
+//                    DocumentCreationOptions.getInstance().keepFormFieldsEditableInPdf(true));
+	  
+	  docFactory = BaseDocFactory.getInstance()
+	          .withDocumentCreationOptions(
+	                  DocumentCreationOptions.getInstance().withPdfOptions(PdfOptions.getInstance().hasToKeepFormFieldsEditable(true)));
 
     Person person = makePerson();
     documentTemplate1 = DocumentTemplate.withTemplate(TEMPLATE_1).putDataAsSourceForSimpleMailMerge(person)
