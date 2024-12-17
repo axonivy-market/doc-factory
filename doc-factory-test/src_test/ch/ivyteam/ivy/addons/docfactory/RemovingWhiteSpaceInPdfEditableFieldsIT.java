@@ -77,11 +77,11 @@ public class RemovingWhiteSpaceInPdfEditableFieldsIT {
   }
 
   @Test
-  public void removeWhiteSpaceInPdfEditableFields_has_no_effect_if_output_is_doc() {
-    documentTemplate.withDocumentCreationOptions(
-            DocumentCreationOptions.getInstance()
-                    .keepFormFieldsEditableInPdf(true)
-                    .removeWhiteSpaceInPdfEditableFields(true));
+  public void removeWhiteSpaceInPdfEditableFields_has_no_effect_if_output_is_doc() {    
+    DocumentCreationOptions documentCreationOptions = DocumentCreationOptions.getInstance()
+			 .withPdfOptions(PdfOptions.getInstance().hasToKeepFormFieldsEditable(true)
+					 .hasToRemoveWhiteSpaceInPdfEditableFields(true));  
+    documentTemplate.withDocumentCreationOptions(documentCreationOptions);
 
     File resultFile = makeFile("test/documentTemplate/removingWhiteSpaceInPdfEditableFieldsIT/aDoc.doc");
 
