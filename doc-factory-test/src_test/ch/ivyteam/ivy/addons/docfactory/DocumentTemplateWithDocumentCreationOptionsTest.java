@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import ch.ivyteam.ivy.addons.docfactory.options.DocumentCreationOptions;
+import ch.ivyteam.ivy.addons.docfactory.pdf.PdfOptions;
 import ch.ivyteam.ivy.environment.IvyTest;
 
 @IvyTest
@@ -22,12 +23,11 @@ public class DocumentTemplateWithDocumentCreationOptionsTest {
     template = new File(this.getClass().getResource(TEMPLATE_WITH_FIELDS_FORM_DOCX).toURI().getPath());
   }
 
-  @SuppressWarnings("deprecation")
   @Test
   public void default_documentTemplate_DocumentCreationOptions_pdfFormFields_not_editable() {
     DocumentTemplate documentTemplate = DocumentTemplate.withTemplate(template);
     DocumentCreationOptions documentCreationOptions = documentTemplate.getDocumentCreationOptions();
-    assertThat(documentCreationOptions.isKeepFormFieldsEditableInPdf()).isFalse();
+    assertThat(documentCreationOptions.getPdfOptions().isKeepFormFieldsEditableInPdf()).isFalse();
   }
 
   @Test
@@ -42,20 +42,18 @@ public class DocumentTemplateWithDocumentCreationOptionsTest {
 	  assertThatThrownBy(() -> DocumentTemplate.withTemplate(template).withDocumentCreationOptions(null));
   }
 
-  @SuppressWarnings("deprecation")
   @Test
-  public void set_documentTemplate_DocumentCreationOptions() {
+  public void set_documentTemplate_DocumentCreationOptions() {    
     DocumentTemplate documentTemplate = DocumentTemplate.withTemplate(template).withDocumentCreationOptions(
-            DocumentCreationOptions.getInstance().keepFormFieldsEditableInPdf(false));
+            DocumentCreationOptions.getInstance().withPdfOptions(PdfOptions.getInstance().hasToKeepFormFieldsEditable(false)));
     DocumentCreationOptions documentCreationOptions = documentTemplate.getDocumentCreationOptions();
-    assertThat(documentCreationOptions.isKeepFormFieldsEditableInPdf()).isFalse();
+    assertThat(documentCreationOptions.getPdfOptions().isKeepFormFieldsEditableInPdf()).isFalse();
   }
 
-  @SuppressWarnings("deprecation")
   @Test
   public void documentTemplate_set_DocumentCreationOptions_backed_in_documentFactory() {
     DocumentTemplate documentTemplate = DocumentTemplate.withTemplate(template).withDocumentCreationOptions(
-            DocumentCreationOptions.getInstance().keepFormFieldsEditableInPdf(false));
+            DocumentCreationOptions.getInstance().withPdfOptions(PdfOptions.getInstance().hasToKeepFormFieldsEditable(false)));
     DocumentCreationOptions documentCreationOptions = documentTemplate.getDocumentCreationOptions();
     assertThat(documentTemplate.getDocumentFactory().documentCreationOptions).isEqualTo(documentCreationOptions);
   }
