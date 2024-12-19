@@ -249,11 +249,6 @@ public class MailMergeDataSource implements IMailMergeDataSource {
     tableName = name;
   }
 
-  @Deprecated
-  public boolean getValue(String fieldName, Object[] fieldValue) throws Exception {
-    return getValue(fieldName, new Ref<Object>(fieldValue[0]));
-  }
-
   @Override
   public boolean getValue(String fieldName, Ref<Object> fieldValue) throws Exception {
     try {

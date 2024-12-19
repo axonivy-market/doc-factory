@@ -46,10 +46,6 @@ public abstract class BaseDocFactory {
   public static final String[] SUPPORTED_OUTPUT_FORMATS = new String[] {"doc", "docx", "html", "txt", "pdf",
       "odt"};
 
-  @Deprecated
-  public static final String[] supportedOutputFormats = new String[] {"doc", "docx", "html", "txt", "pdf",
-      "odt"};
-
   /* Format types for convenient use of switch control */
   public static final int UNSUPPORTED_FORMAT = DocFactoryConstants.UNSUPPORTED_FORMAT;
   public static final int DOC_FORMAT = DocFactoryConstants.DOC_FORMAT;
@@ -587,17 +583,6 @@ public abstract class BaseDocFactory {
   }
 
   protected Object fieldMergingCallback;
-
-  /**
-   * @deprecated Deprecated because of typo in method name. Please use
-   *             {@link #withFieldMergingCallBack(Object)} instead. Will be
-   *             removed in the future.
-   * @param callback
-   */
-  @Deprecated
-  public <T> BaseDocFactory withFielMergingCallBack(T callback) {
-    return this.withFieldMergingCallBack(callback);
-  }
 
   /**
    * Some DocFactory may allow injecting its own FieldMerging plug-in class for

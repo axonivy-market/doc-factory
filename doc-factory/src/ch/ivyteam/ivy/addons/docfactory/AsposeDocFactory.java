@@ -1405,36 +1405,6 @@ public class AsposeDocFactory extends BaseDocFactory {
     return (T) this.fieldMergingCallback;
   }
 
-  /**
-   * Sets the AsposeFieldMergingCallback object used to apply special rules to
-   * merge fields while performing the mail merge operation.<br>
-   * <br>
-   * A typical use of FieldMergingCallback objects is to insert images in merge
-   * fields if these merge fields name are declared as "Image:fieldName". In
-   * such a case the merge-field-value corresponding to this field can be a
-   * String (path of the image file) or the images itself as ByteArray.<br>
-   * <br>
-   * You can provide your own AsposeFieldMergingCallback object that covers your
-   * special needs. For example, you should override the <br>
-   * {@code public void fieldMerging(FieldMergingArgs arg0)}<br>
-   * method to apply special rules to HTML merge fields. See
-   * www.aspose.com/community/forums/thread/380671/html-text-with-merge-field.aspx
-   * @param fieldMergingCallback
-   * @throws IllegalArgumentException if the parameter is null.
-   * @deprecated use the {@link BaseDocFactory#getInstance()} for instantiating
-   *             the DocFactory and the
-   *             {@link BaseDocFactory#withFieldMergingCallBack(Object)} for
-   *             setting its fieldMergingCallback
-   */
-  @Deprecated
-  public void setAsposeFieldMergingCallback(AsposeFieldMergingCallback fieldMergingCallback)
-          throws IllegalArgumentException {
-    if (fieldMergingCallback == null) {
-      throw new IllegalArgumentException("The AsposeFieldMergingCallback must not be null.");
-    }
-    this.fieldMergingCallback = fieldMergingCallback;
-  }
-
   private SimpleMergeCleanupOptions simpleMergeCleanupOptions = SimpleMergeCleanupOptions
           .getRecommendedMergeCleanupOptionsForSimpleMerging();
   private MergeCleanupOptions regionMergeCleanupOptions = MergeCleanupOptions

@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import ch.ivyteam.ivy.addons.docfactory.options.DocumentCreationOptions;
+import ch.ivyteam.ivy.addons.docfactory.pdf.PdfOptions;
 import ch.ivyteam.ivy.environment.IvyTest;
 
 @IvyTest
@@ -34,8 +35,7 @@ public class DocumentTemplateWithDocumentCreationOptionsIT {
 
   @Test
   public void with_documentCreationOptions_producing_fieldForm_editablePDF() {
-    @SuppressWarnings("deprecation")
-    var options = DocumentCreationOptions.getInstance().keepFormFieldsEditableInPdf(true);
+    var options = DocumentCreationOptions.getInstance().withPdfOptions(PdfOptions.getInstance().hasToKeepFormFieldsEditable(true));
     var documentTemplate = DocumentTemplate.withTemplate(template)
             .putDataAsSourceForMailMerge(makePerson()).withDocumentCreationOptions(options);
     var resultFile = makeFile("test/documentCreationOptions/field_form_editable.pdf");
@@ -47,9 +47,7 @@ public class DocumentTemplateWithDocumentCreationOptionsIT {
 
   @Test
   public void with_documentCreationOptions_producing_fieldForm_not_editablePDF() {
-    @SuppressWarnings("deprecation")
-    var options = DocumentCreationOptions.getInstance()
-            .keepFormFieldsEditableInPdf(false);
+    var options = DocumentCreationOptions.getInstance().withPdfOptions(PdfOptions.getInstance().hasToKeepFormFieldsEditable(false));
     var documentTemplate = DocumentTemplate.withTemplate(template).putDataAsSourceForMailMerge(makePerson()).withDocumentCreationOptions(options);
     var resultFile = makeFile("test/documentCreationOptions/field_form_not_editable.pdf");
     var result = documentTemplate.produceDocument(resultFile);
