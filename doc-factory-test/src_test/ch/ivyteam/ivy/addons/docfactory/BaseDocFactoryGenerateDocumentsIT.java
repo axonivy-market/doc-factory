@@ -47,8 +47,8 @@ public class BaseDocFactoryGenerateDocumentsIT {
   @BeforeEach
   public void setUp() throws Exception {
 	docFactory = BaseDocFactory.getInstance()
-	         .withDocumentCreationOptions(
-	                 DocumentCreationOptions.getInstance().withPdfOptions(PdfOptions.getInstance().hasToKeepFormFieldsEditable(true)));
+         .withDocumentCreationOptions(
+                 DocumentCreationOptions.getInstance().withPdfOptions(PdfOptions.getInstance().hasToKeepFormFieldsEditable(true)));
 
     Person person = makePerson();
     documentTemplate1 = DocumentTemplate.withTemplate(TEMPLATE_1).putDataAsSourceForSimpleMailMerge(person)
