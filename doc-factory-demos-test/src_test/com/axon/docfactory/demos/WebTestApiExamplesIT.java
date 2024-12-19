@@ -7,7 +7,6 @@ import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.io.FileNotFoundException;
 import java.nio.file.Path;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -21,6 +20,7 @@ import com.axonivy.ivy.webtest.engine.WebAppFixture;
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.FileDownloadMode;
 import com.codeborne.selenide.Selenide;
+import com.codeborne.selenide.SelenideElement;
 
 @IvyWebTest
 class WebTestApiExamplesIT {
@@ -60,7 +60,7 @@ class WebTestApiExamplesIT {
   }
 
   @Test
-  void zipMultipleDocuments() throws FileNotFoundException {
+  void zipMultipleDocuments() throws Exception {
     open(EngineUrl.createProcessUrl("/DocFactoryDemos/16CD7829EF6B489B/start2.ivp"));
     var doc = Selenide.$$("button").find(exactText("Create Multiple Formats")).shouldBe(visible).download();
     assertThat(doc).hasName("Documents.zip");
@@ -80,13 +80,17 @@ class WebTestApiExamplesIT {
     $(withText("Task End")).shouldBe(visible);
 
     open(EngineUrl.create().path("tasks").toUrl());
-    $(By.linkText("Task: View attached document")).shouldBe(visible).click();
+    $(By.id("tasksForm:tasks:0:taskName")).shouldBe(visible).click();
+    SelenideElement taskStartBtn = $(By.id("actionMenuForm:taskStartBtn"));
+    if (taskStartBtn.isDisplayed()) {
+    	taskStartBtn.shouldBe(visible).click();
+    }
     Selenide.switchTo().frame("iFrame");
     $("h3").shouldHave(exactText("DocFactoryDemos: Attached Document"));
     $("iframe").shouldBe(visible);
   }
 
-  private void assertDownload(String process, String expectedFileName) throws FileNotFoundException {
+  private void assertDownload(String process, String expectedFileName) throws Exception {
     open(EngineUrl.createProcessUrl(DOC_DEMOS_BASE + process));
     var doc = $("#docLink").shouldBe(visible).download();
     assertThat(doc).hasName(expectedFileName);
