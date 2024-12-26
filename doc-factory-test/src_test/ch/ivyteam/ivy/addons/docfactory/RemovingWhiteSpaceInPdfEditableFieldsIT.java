@@ -31,7 +31,7 @@ public class RemovingWhiteSpaceInPdfEditableFieldsIT {
   @Test
   public void defaultDoesNotRemoveWhiteSpaceInPdfEditableFields() {
     DocumentCreationOptions documentCreationOptions = DocumentCreationOptions.getInstance()
-			 .withPdfOptions(PdfOptions.getInstance().hasToKeepFormFieldsEditable(true));  
+        .withPdfOptions(PdfOptions.getInstance().hasToKeepFormFieldsEditable(true));
     documentTemplate.withDocumentCreationOptions(documentCreationOptions);
 
     File resultFile = DocFactoryTest.makeFile(
@@ -45,9 +45,8 @@ public class RemovingWhiteSpaceInPdfEditableFieldsIT {
 
   @Test
   public void removeWhiteSpaceInPdfEditableFields() {
-    DocumentCreationOptions documentCreationOptions = DocumentCreationOptions.getInstance()
-			 .withPdfOptions(PdfOptions.getInstance().hasToKeepFormFieldsEditable(true)
-					 .hasToRemoveWhiteSpaceInPdfEditableFields(true));  
+    DocumentCreationOptions documentCreationOptions = DocumentCreationOptions.getInstance().withPdfOptions(
+        PdfOptions.getInstance().hasToKeepFormFieldsEditable(true).hasToRemoveWhiteSpaceInPdfEditableFields(true));
     documentTemplate.withDocumentCreationOptions(documentCreationOptions);
 
     File resultFile = makeFile(
@@ -61,9 +60,8 @@ public class RemovingWhiteSpaceInPdfEditableFieldsIT {
 
   @Test
   public void removeWhiteSpaceInPdfEditableFields_has_no_effect_if_fieldsNotEditable() {
-    DocumentCreationOptions documentCreationOptions = DocumentCreationOptions.getInstance()
-			 .withPdfOptions(PdfOptions.getInstance().hasToKeepFormFieldsEditable(false)
-					 .hasToRemoveWhiteSpaceInPdfEditableFields(true));  
+    DocumentCreationOptions documentCreationOptions = DocumentCreationOptions.getInstance().withPdfOptions(
+        PdfOptions.getInstance().hasToKeepFormFieldsEditable(false).hasToRemoveWhiteSpaceInPdfEditableFields(true));
     documentTemplate.withDocumentCreationOptions(documentCreationOptions);
 
     File resultFile = makeFile(
@@ -77,9 +75,8 @@ public class RemovingWhiteSpaceInPdfEditableFieldsIT {
 
   @Test
   public void removeWhiteSpaceInPdfEditableFields_has_no_effect_if_output_is_doc() {
-    DocumentCreationOptions documentCreationOptions = DocumentCreationOptions.getInstance()
-			 .withPdfOptions(PdfOptions.getInstance().hasToKeepFormFieldsEditable(true)
-					 .hasToRemoveWhiteSpaceInPdfEditableFields(true));  
+    DocumentCreationOptions documentCreationOptions = DocumentCreationOptions.getInstance().withPdfOptions(
+        PdfOptions.getInstance().hasToKeepFormFieldsEditable(true).hasToRemoveWhiteSpaceInPdfEditableFields(true));
     documentTemplate.withDocumentCreationOptions(documentCreationOptions);
 
     File resultFile = makeFile("test/documentTemplate/removingWhiteSpaceInPdfEditableFieldsIT/aDoc.doc");
@@ -92,9 +89,8 @@ public class RemovingWhiteSpaceInPdfEditableFieldsIT {
 
   @Test
   public void removeWhiteSpaceInPdfEditableFields_has_no_effect_if_output_is_docx() {    
-    DocumentCreationOptions documentCreationOptions = DocumentCreationOptions.getInstance()
-			 .withPdfOptions(PdfOptions.getInstance().hasToKeepFormFieldsEditable(true)
-					 .hasToRemoveWhiteSpaceInPdfEditableFields(true));  
+    DocumentCreationOptions documentCreationOptions = DocumentCreationOptions.getInstance().withPdfOptions(
+        PdfOptions.getInstance().hasToKeepFormFieldsEditable(true).hasToRemoveWhiteSpaceInPdfEditableFields(true));
     documentTemplate.withDocumentCreationOptions(documentCreationOptions);
 
     File resultFile = makeFile("test/documentTemplate/removingWhiteSpaceInPdfEditableFieldsIT/aDocx.docx");
@@ -107,9 +103,8 @@ public class RemovingWhiteSpaceInPdfEditableFieldsIT {
 
   @Test
   public void removeWhiteSpaceInPdfEditableFields_has_no_effect_if_output_is_odt() {    
-    DocumentCreationOptions documentCreationOptions = DocumentCreationOptions.getInstance()
-			 .withPdfOptions(PdfOptions.getInstance().hasToKeepFormFieldsEditable(true)
-					 .hasToRemoveWhiteSpaceInPdfEditableFields(true));  
+    DocumentCreationOptions documentCreationOptions = DocumentCreationOptions.getInstance().withPdfOptions(
+        PdfOptions.getInstance().hasToKeepFormFieldsEditable(true).hasToRemoveWhiteSpaceInPdfEditableFields(true));
     documentTemplate.withDocumentCreationOptions(documentCreationOptions);
 
     File resultFile = makeFile("test/documentTemplate/removingWhiteSpaceInPdfEditableFieldsIT/anOdt.odt");
@@ -122,9 +117,8 @@ public class RemovingWhiteSpaceInPdfEditableFieldsIT {
 
   @Test
   public void removeWhiteSpaceInPdfEditableFields_has_no_effect_if_output_is_html() {
-    DocumentCreationOptions documentCreationOptions = DocumentCreationOptions.getInstance()
-			 .withPdfOptions(PdfOptions.getInstance().hasToKeepFormFieldsEditable(true)
-					 .hasToRemoveWhiteSpaceInPdfEditableFields(true));  
+    DocumentCreationOptions documentCreationOptions = DocumentCreationOptions.getInstance().withPdfOptions(
+        PdfOptions.getInstance().hasToKeepFormFieldsEditable(true).hasToRemoveWhiteSpaceInPdfEditableFields(true));
     documentTemplate.withDocumentCreationOptions(documentCreationOptions);
 
     File resultFile = makeFile("test/documentTemplate/removingWhiteSpaceInPdfEditableFieldsIT/anHtml.html");
@@ -137,9 +131,8 @@ public class RemovingWhiteSpaceInPdfEditableFieldsIT {
 
   @Test
   public void removeWhiteSpaceInPdfEditableFields_has_no_effect_if_output_is_txt() {
-    DocumentCreationOptions documentCreationOptions = DocumentCreationOptions.getInstance()
-			 .withPdfOptions(PdfOptions.getInstance().hasToKeepFormFieldsEditable(true)
-					 .hasToRemoveWhiteSpaceInPdfEditableFields(true));  
+    DocumentCreationOptions documentCreationOptions = DocumentCreationOptions.getInstance().withPdfOptions(
+        PdfOptions.getInstance().hasToKeepFormFieldsEditable(true).hasToRemoveWhiteSpaceInPdfEditableFields(true));
     documentTemplate.withDocumentCreationOptions(documentCreationOptions);
 
     File resultFile = makeFile("test/documentTemplate/removingWhiteSpaceInPdfEditableFieldsIT/aTxt.txt");

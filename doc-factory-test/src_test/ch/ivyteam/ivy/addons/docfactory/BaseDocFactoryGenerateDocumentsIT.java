@@ -44,12 +44,10 @@ public class BaseDocFactoryGenerateDocumentsIT {
 
   private DocumentTemplate documentTemplate1, documentTemplate2, documentTemplate3;
 
-  @SuppressWarnings("deprecation")
   @BeforeEach
   public void setUp() throws Exception {
-    docFactory = BaseDocFactory.getInstance()
-            .withDocumentCreationOptions(
-                    DocumentCreationOptions.getInstance().withPdfOptions(PdfOptions.getInstance().hasToKeepFormFieldsEditable(true)));
+    docFactory = BaseDocFactory.getInstance().withDocumentCreationOptions(DocumentCreationOptions.getInstance()
+        .withPdfOptions(PdfOptions.getInstance().hasToKeepFormFieldsEditable(true)));
 
     Person person = makePerson();
     documentTemplate1 = DocumentTemplate.withTemplate(TEMPLATE_1).putDataAsSourceForSimpleMailMerge(person)
