@@ -53,7 +53,7 @@ public class WatermarkTextDocumentWorker implements DocumentWorker {
     // Text will be directed from the bottom-left to the top-right corner.
     watermark.setRotation(-40);
     // Remove the following two lines if you need a solid black text.
-    watermark.getFill().setColor(Color.LIGHT_GRAY); // Try LightGray to get more
+    watermark.getFill().setForeColor(Color.LIGHT_GRAY); // Try LightGray to get more
                                                     // Word-style watermark
     watermark.setStrokeColor(Color.LIGHT_GRAY); // Try LightGray to get more
                                                 // Word-style watermark
