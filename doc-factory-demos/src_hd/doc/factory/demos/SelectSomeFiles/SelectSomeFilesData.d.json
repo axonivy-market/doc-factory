@@ -6,11 +6,9 @@
   "fields" : [ {
     "name" : "files",
     "type" : "List<java.io.File>",
-    "comment" : "java.io.Files",
-    "modifiers" : [ "PERSISTENT" ]
+    "comment" : "java.io.Files"
   }, {
     "name" : "uploadEvent",
-    "type" : "org.primefaces.event.FileUploadEvent",
-    "modifiers" : [ "PERSISTENT" ]
+    "type" : "org.primefaces.event.FileUploadEvent"
   } ]
 }

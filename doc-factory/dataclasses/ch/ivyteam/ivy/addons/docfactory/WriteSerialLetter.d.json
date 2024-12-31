@@ -45,27 +45,27 @@
     "type" : "List<String>",
     "comment" : "If the template contains some table to fill through Mail Merge With regions, this is the list of those tables names in the template."
   }, {
-    "name" : "ListOfCompositeObjectsToFillTheTables",
+    "name" : "listOfCompositeObjectsToFillTheTables",
     "type" : "List<List<ch.ivyteam.ivy.scripting.objects.CompositeObject>>",
     "comment" : "Each List of Composite Object represents the rows for a table (Mail Merge Regions). The CompositeObjects attributesNames are going to be  used to match the merge fields names of each tables."
   }, {
-    "name" : "ListOfRecordsets",
+    "name" : "listOfRecordsets",
     "type" : "List<Recordset>",
     "comment" : "Each Recordset represents the rows for a table (Mail Merge Regions). The recordset fieldNames are going to be  used to match the merge fields names of each tables."
   }, {
-    "name" : "ListOfTableFieldsNames",
+    "name" : "listOfTableFieldsNames",
     "type" : "List<List<String>>",
     "comment" : "Each List<String> represents the names of the merge Field in one table row. Used with the ListOfTableRows parameter."
   }, {
-    "name" : "ListOfTablesRows",
+    "name" : "listOfTablesRows",
     "type" : "List<List<List<Object>>>",
     "comment" : "Each List<List<Object>> represents the rows destinated to fill one table. It is used with the ListOfTableFieldsNames parameter."
   }, {
-    "name" : "ListOfParentCompositeObjects",
+    "name" : "listOfParentCompositeObjects",
     "type" : "List<ch.ivyteam.ivy.scripting.objects.CompositeObject>",
     "comment" : "For Mail Merge with nested Table: Each List of Component Object represent a parent Table: that will contain its List<CompositeObject> datas."
   }, {
-    "name" : "TreeDataForNestedMailMerge",
+    "name" : "treeDataForNestedMailMerge",
     "type" : "Tree",
     "comment" : "For Mail Merge with nested Table: each Tree Level will be seen as a nested table."
   } ]

@@ -61,7 +61,7 @@
         "from case"
       ],
       "config" : {
-        "dialog" : "doc.factory.demos.ViewSimpleDocument:start(Long)",
+        "dialog" : "doc.factory.demos.ViewSimpleDocument:start(String)",
         "call" : {
           "map" : {
             "param.documentId" : "in.documentId"

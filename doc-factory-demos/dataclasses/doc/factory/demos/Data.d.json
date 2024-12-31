@@ -27,7 +27,7 @@
     "comment" : "java.io.File"
   }, {
     "name" : "documentId",
-    "type" : "Long",
+    "type" : "String",
     "modifiers" : [ "PERSISTENT" ]
   }, {
     "name" : "fileList",

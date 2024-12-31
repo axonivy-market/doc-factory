@@ -13,7 +13,7 @@
         "signature" : "start",
         "input" : {
           "params" : [
-            { "name" : "documentId", "type" : "Long", "desc" : "" }
+            { "name" : "documentId", "type" : "String", "desc" : "" }
           ],
           "map" : {
             "out.service.documentId" : "param.documentId"

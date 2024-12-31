@@ -5,7 +5,6 @@
   "isBusinessCaseData" : false,
   "fields" : [ {
     "name" : "service",
-    "type" : "ch.ivyteam.ivy.docFactoryExamples.SimpleDocumentViewer",
-    "modifiers" : [ "PERSISTENT" ]
+    "type" : "ch.ivyteam.ivy.docFactoryExamples.SimpleDocumentViewer"
   } ]
 }

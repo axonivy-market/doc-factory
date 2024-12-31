@@ -5,11 +5,9 @@
   "isBusinessCaseData" : false,
   "fields" : [ {
     "name" : "service",
-    "type" : "ch.ivyteam.ivy.docFactoryExamples.DocumentCreator",
-    "modifiers" : [ "PERSISTENT" ]
+    "type" : "ch.ivyteam.ivy.docFactoryExamples.DocumentCreator"
   }, {
     "name" : "uploadEvent",
-    "type" : "org.primefaces.event.FileUploadEvent",
-    "modifiers" : [ "PERSISTENT" ]
+    "type" : "org.primefaces.event.FileUploadEvent"
   } ]
 }
