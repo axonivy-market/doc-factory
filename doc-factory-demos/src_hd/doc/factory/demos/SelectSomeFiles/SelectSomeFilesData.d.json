@@ -1,0 +1,16 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/data-class/12.0.0/data-class.json",
+  "simpleName" : "SelectSomeFilesData",
+  "namespace" : "doc.factory.demos.SelectSomeFiles",
+  "isBusinessCaseData" : false,
+  "fields" : [ {
+    "name" : "files",
+    "type" : "List<java.io.File>",
+    "comment" : "java.io.Files",
+    "modifiers" : [ "PERSISTENT" ]
+  }, {
+    "name" : "uploadEvent",
+    "type" : "org.primefaces.event.FileUploadEvent",
+    "modifiers" : [ "PERSISTENT" ]
+  } ]
+}

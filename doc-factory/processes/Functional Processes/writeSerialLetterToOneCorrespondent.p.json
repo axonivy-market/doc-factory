@@ -1,5 +1,5 @@
 {
-  "format" : "10.0.0",
+  "$schema" : "https://json-schema.axonivy.com/process/12.0.0/process.json",
   "id" : "124971223DD62955",
   "kind" : "CALLABLE_SUB",
   "description" : [
@@ -14,7 +14,7 @@
       "type" : "CallSubStart",
       "name" : "writeSerialLetterToOneCorrespondant",
       "config" : {
-        "callSignature" : "writeSerialLetterToOneCorrespondant",
+        "signature" : "writeSerialLetterToOneCorrespondant",
         "input" : {
           "params" : [
             { "name" : "listOfTemplateMergeFields", "type" : "List<ch.ivyteam.ivy.addons.docfactory.TemplateMergeField>", "desc" : "Each TemplateMergeField holds a key which is the mergefield name and the value which will be written in the document at the place of the corresponding mergefield." },
@@ -38,9 +38,11 @@
           "map" : {
             "result.fileOperationMessage" : "in.fileOperationMessage"
           }
-        },
-        "tags" : "CONNECTOR"
+        }
       },
+      "tags" : [
+        "CONNECTOR"
+      ],
       "visual" : {
         "at" : { "x" : 152, "y" : 88 },
         "labelOffset" : { "x" : 17, "y" : -23 },
@@ -59,7 +61,9 @@
         ],
         "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
       },
-      "connect" : { "id" : "f2", "to" : "f4" }
+      "connect" : [
+        { "id" : "f2", "to" : "f4" }
+      ]
     }, {
       "id" : "f1",
       "type" : "CallSubEnd",
@@ -85,7 +89,9 @@
       "visual" : {
         "at" : { "x" : 152, "y" : 168 }
       },
-      "connect" : { "id" : "f5", "to" : "f3" }
+      "connect" : [
+        { "id" : "f5", "to" : "f3" }
+      ]
     }, {
       "id" : "f7",
       "type" : "Script",
@@ -102,7 +108,9 @@
       "visual" : {
         "at" : { "x" : 152, "y" : 464 }
       },
-      "connect" : { "id" : "f6", "to" : "f1" }
+      "connect" : [
+        { "id" : "f6", "to" : "f1" }
+      ]
     }, {
       "id" : "f3",
       "type" : "Script",
@@ -139,7 +147,9 @@
       "visual" : {
         "at" : { "x" : 152, "y" : 272 }
       },
-      "connect" : { "id" : "f8", "to" : "f7" }
+      "connect" : [
+        { "id" : "f8", "to" : "f7" }
+      ]
     }, {
       "id" : "f9",
       "type" : "ProcessAnnotation",
@@ -163,7 +173,7 @@
         "String,String,String,String)"
       ],
       "config" : {
-        "callSignature" : "writeDocumentWithOneDataClass",
+        "signature" : "writeDocumentWithOneDataClass",
         "input" : {
           "params" : [
             { "name" : "data", "type" : "CompositeObject", "desc" : "Ivy data class object: the properties names of the object are the mergefields names. The values of these properties will be written in the document at the place of the corresponding mergefields. " },
@@ -187,9 +197,11 @@
           "map" : {
             "result.fileOperationMessage" : "in.fileOperationMessage"
           }
-        },
-        "tags" : "CONNECTOR"
+        }
       },
+      "tags" : [
+        "CONNECTOR"
+      ],
       "visual" : {
         "at" : { "x" : 680, "y" : 88 },
         "labelOffset" : { "x" : 17, "y" : -47 },
@@ -208,7 +220,9 @@
         ],
         "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
       },
-      "connect" : { "id" : "f13", "to" : "f12" }
+      "connect" : [
+        { "id" : "f13", "to" : "f12" }
+      ]
     }, {
       "id" : "f11",
       "type" : "ProcessAnnotation",
@@ -242,7 +256,9 @@
       "visual" : {
         "at" : { "x" : 680, "y" : 168 }
       },
-      "connect" : { "id" : "f15", "to" : "f14" }
+      "connect" : [
+        { "id" : "f15", "to" : "f14" }
+      ]
     }, {
       "id" : "f14",
       "type" : "Script",
@@ -280,7 +296,9 @@
       "visual" : {
         "at" : { "x" : 680, "y" : 272 }
       },
-      "connect" : { "id" : "f17", "to" : "f16" }
+      "connect" : [
+        { "id" : "f17", "to" : "f16" }
+      ]
     }, {
       "id" : "f16",
       "type" : "Script",
@@ -297,7 +315,9 @@
       "visual" : {
         "at" : { "x" : 680, "y" : 360 }
       },
-      "connect" : { "id" : "f19", "to" : "f18" }
+      "connect" : [
+        { "id" : "f19", "to" : "f18" }
+      ]
     }, {
       "id" : "f18",
       "type" : "Script",
@@ -310,7 +330,9 @@
       "visual" : {
         "at" : { "x" : 680, "y" : 464 }
       },
-      "connect" : { "id" : "f21", "to" : "f20" }
+      "connect" : [
+        { "id" : "f21", "to" : "f20" }
+      ]
     }, {
       "id" : "f20",
       "type" : "CallSubEnd",
@@ -328,7 +350,7 @@
         "List&lt;String&gt;List&lt;List&lt;CompositeObject&gt;&gt;)"
       ],
       "config" : {
-        "callSignature" : "writeDocumentWithMailMergeTable",
+        "signature" : "writeDocumentWithMailMergeTable",
         "input" : {
           "params" : [
             { "name" : "listOfTemplateMergeFields", "type" : "List<ch.ivyteam.ivy.addons.docfactory.TemplateMergeField>", "desc" : "List of template mergefields (key/values) for the simple merge fields." },
@@ -356,9 +378,11 @@
           "map" : {
             "result.fileOperationMessage" : "in.fileOperationMessage"
           }
-        },
-        "tags" : "CONNECTOR"
+        }
       },
+      "tags" : [
+        "CONNECTOR"
+      ],
       "visual" : {
         "at" : { "x" : 1600, "y" : 88 },
         "labelOffset" : { "x" : 17, "y" : -63 },
@@ -382,7 +406,9 @@
         ],
         "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
       },
-      "connect" : { "id" : "f28", "to" : "f25" }
+      "connect" : [
+        { "id" : "f28", "to" : "f25" }
+      ]
     }, {
       "id" : "f23",
       "type" : "Script",
@@ -419,7 +445,9 @@
         "at" : { "x" : 1600, "y" : 464 },
         "size" : { "width" : 180, "height" : 58 }
       },
-      "connect" : { "id" : "f30", "to" : "f29" }
+      "connect" : [
+        { "id" : "f30", "to" : "f29" }
+      ]
     }, {
       "id" : "f24",
       "type" : "Script",
@@ -456,7 +484,9 @@
       "visual" : {
         "at" : { "x" : 1600, "y" : 272 }
       },
-      "connect" : { "id" : "f27", "to" : "f23" }
+      "connect" : [
+        { "id" : "f27", "to" : "f23" }
+      ]
     }, {
       "id" : "f25",
       "type" : "Script",
@@ -475,7 +505,9 @@
       "visual" : {
         "at" : { "x" : 1600, "y" : 168 }
       },
-      "connect" : { "id" : "f26", "to" : "f24" }
+      "connect" : [
+        { "id" : "f26", "to" : "f24" }
+      ]
     }, {
       "id" : "f29",
       "type" : "CallSubEnd",
@@ -493,7 +525,7 @@
         "List&lt;String&gt;,List&lt;Recordset&gt;)"
       ],
       "config" : {
-        "callSignature" : "writeDocumentWithMailMergeTable",
+        "signature" : "writeDocumentWithMailMergeTable",
         "input" : {
           "params" : [
             { "name" : "listOfTemplateMergeFields", "type" : "List<ch.ivyteam.ivy.addons.docfactory.TemplateMergeField>", "desc" : "List of template mergefields (key/values) for the simple merge fields." },
@@ -521,9 +553,11 @@
           "map" : {
             "result.fileOperationMessage" : "in.fileOperationMessage"
           }
-        },
-        "tags" : "CONNECTOR"
+        }
       },
+      "tags" : [
+        "CONNECTOR"
+      ],
       "visual" : {
         "at" : { "x" : 2160, "y" : 88 },
         "labelOffset" : { "x" : 9, "y" : -63 },
@@ -547,7 +581,9 @@
         ],
         "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
       },
-      "connect" : { "id" : "f37", "to" : "f32" }
+      "connect" : [
+        { "id" : "f37", "to" : "f32" }
+      ]
     }, {
       "id" : "f32",
       "type" : "Script",
@@ -566,7 +602,9 @@
       "visual" : {
         "at" : { "x" : 2160, "y" : 168 }
       },
-      "connect" : { "id" : "f35", "to" : "f34" }
+      "connect" : [
+        { "id" : "f35", "to" : "f34" }
+      ]
     }, {
       "id" : "f33",
       "type" : "Script",
@@ -600,9 +638,11 @@
       },
       "visual" : {
         "at" : { "x" : 2160, "y" : 464 },
-        "size" : { "width" : 184, "height" : 60 }
+        "size" : { "width" : 184 }
       },
-      "connect" : { "id" : "f39", "to" : "f38" }
+      "connect" : [
+        { "id" : "f39", "to" : "f38" }
+      ]
     }, {
       "id" : "f34",
       "type" : "Script",
@@ -639,7 +679,9 @@
       "visual" : {
         "at" : { "x" : 2160, "y" : 272 }
       },
-      "connect" : { "id" : "f36", "to" : "f33" }
+      "connect" : [
+        { "id" : "f36", "to" : "f33" }
+      ]
     }, {
       "id" : "f38",
       "type" : "CallSubEnd",
@@ -658,7 +700,7 @@
         "List&lt;List&lt;List&gt;&gt;)"
       ],
       "config" : {
-        "callSignature" : "writeDocumentWithMailMergeTable",
+        "signature" : "writeDocumentWithMailMergeTable",
         "input" : {
           "params" : [
             { "name" : "listOfTemplateMergeFields", "type" : "List<ch.ivyteam.ivy.addons.docfactory.TemplateMergeField>", "desc" : "List of template mergefields (key/values) for the simple merge fields." },
@@ -688,9 +730,11 @@
           "map" : {
             "result.fileOperationMessage" : "in.fileOperationMessage"
           }
-        },
-        "tags" : "CONNECTOR"
+        }
       },
+      "tags" : [
+        "CONNECTOR"
+      ],
       "visual" : {
         "at" : { "x" : 2464, "y" : 88 },
         "labelOffset" : { "x" : 17, "y" : -71 },
@@ -704,9 +748,9 @@
           "To be able to perform this operation, one may provide the list of the tables names, the merge fields names for each table and the data (rows).",
           "If you want to fill some tables, the list of the tables names have to be provided in all the callables Starts. The tables are named in the template.",
           "Then the fields names and the data can be provided in several ways:",
-          "\t. Lists of DataClasses objects (CompositeObjects): each attribute name will be seen as a mergeField name, each object is a row in a table.",
-          "\t. List of Recordsets: each field of the recordset is seen as a mergefield, and each record is a row of data.",
-          "\t. For each table you provide a list of fields' names and the rows are encapsulated into list of Objects.",
+          "  . Lists of DataClasses objects (CompositeObjects): each attribute name will be seen as a mergeField name, each object is a row in a table.",
+          "  . List of Recordsets: each field of the recordset is seen as a mergefield, and each record is a row of data.",
+          "  . For each table you provide a list of fields' names and the rows are encapsulated into list of Objects.",
           "If there is no table in the given template, or no match between your data and the tables names/fieldsnames, these callables just ignore the tables",
           "and perform normal mail merge.",
           "",
@@ -717,7 +761,9 @@
         ],
         "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
       },
-      "connect" : { "id" : "f46", "to" : "f42" }
+      "connect" : [
+        { "id" : "f46", "to" : "f42" }
+      ]
     }, {
       "id" : "f41",
       "type" : "Script",
@@ -754,7 +800,9 @@
       "visual" : {
         "at" : { "x" : 2464, "y" : 272 }
       },
-      "connect" : { "id" : "f45", "to" : "f43" }
+      "connect" : [
+        { "id" : "f45", "to" : "f43" }
+      ]
     }, {
       "id" : "f42",
       "type" : "Script",
@@ -773,7 +821,9 @@
       "visual" : {
         "at" : { "x" : 2464, "y" : 168 }
       },
-      "connect" : { "id" : "f44", "to" : "f41" }
+      "connect" : [
+        { "id" : "f44", "to" : "f41" }
+      ]
     }, {
       "id" : "f43",
       "type" : "Script",
@@ -794,7 +844,9 @@
       "visual" : {
         "at" : { "x" : 2464, "y" : 464 }
       },
-      "connect" : { "id" : "f48", "to" : "f47" }
+      "connect" : [
+        { "id" : "f48", "to" : "f47" }
+      ]
     }, {
       "id" : "f47",
       "type" : "CallSubEnd",
@@ -839,7 +891,7 @@
         "List&lt;String&gt;,List&lt;List&lt;CompositeObject&gt;&gt;)"
       ],
       "config" : {
-        "callSignature" : "writeDocumentWithMailMergeTable",
+        "signature" : "writeDocumentWithMailMergeTable",
         "input" : {
           "params" : [
             { "name" : "data", "type" : "CompositeObject", "desc" : "Ivy data class object used for the normal merge fields: the properties names of the object are the mergefields names. The values of these properties will be written in the document at the place of the corresponding mergefields. " },
@@ -867,9 +919,11 @@
           "map" : {
             "result.fileOperationMessage" : "in.fileOperationMessage"
           }
-        },
-        "tags" : "CONNECTOR"
+        }
       },
+      "tags" : [
+        "CONNECTOR"
+      ],
       "visual" : {
         "at" : { "x" : 1280, "y" : 88 },
         "labelOffset" : { "x" : 9, "y" : -63 },
@@ -893,7 +947,9 @@
         ],
         "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
       },
-      "connect" : { "id" : "f58", "to" : "f53" }
+      "connect" : [
+        { "id" : "f58", "to" : "f53" }
+      ]
     }, {
       "id" : "f51",
       "type" : "Script",
@@ -922,7 +978,9 @@
       "visual" : {
         "at" : { "x" : 1280, "y" : 360 }
       },
-      "connect" : { "id" : "f57", "to" : "f54" }
+      "connect" : [
+        { "id" : "f57", "to" : "f54" }
+      ]
     }, {
       "id" : "f52",
       "type" : "Script",
@@ -960,7 +1018,9 @@
       "visual" : {
         "at" : { "x" : 1280, "y" : 272 }
       },
-      "connect" : { "id" : "f56", "to" : "f51" }
+      "connect" : [
+        { "id" : "f56", "to" : "f51" }
+      ]
     }, {
       "id" : "f53",
       "type" : "Script",
@@ -980,7 +1040,9 @@
       "visual" : {
         "at" : { "x" : 1280, "y" : 168 }
       },
-      "connect" : { "id" : "f55", "to" : "f52" }
+      "connect" : [
+        { "id" : "f55", "to" : "f52" }
+      ]
     }, {
       "id" : "f54",
       "type" : "Script",
@@ -993,7 +1055,9 @@
       "visual" : {
         "at" : { "x" : 1280, "y" : 464 }
       },
-      "connect" : { "id" : "f60", "to" : "f59" }
+      "connect" : [
+        { "id" : "f60", "to" : "f59" }
+      ]
     }, {
       "id" : "f59",
       "type" : "CallSubEnd",
@@ -1011,7 +1075,7 @@
         "List&lt;String&gt;,List&lt;Recordset&gt;)"
       ],
       "config" : {
-        "callSignature" : "writeDocumentWithMailMergeTable",
+        "signature" : "writeDocumentWithMailMergeTable",
         "input" : {
           "params" : [
             { "name" : "data", "type" : "CompositeObject", "desc" : "Ivy data class object used for the normal merge fields: the properties names of the object are the mergefields names. The values of these properties will be written in the document at the place of the corresponding mergefields. " },
@@ -1035,10 +1099,13 @@
         "result" : {
           "params" : [
             { "name" : "fileOperationMessage", "type" : "ch.ivyteam.ivy.addons.docfactory.FileOperationMessage", "desc" : "Result containing a Type indicating if the operation was successfull, a message in the Session User language, a list of java.io.File that were created during the process." }
-          ]
-        },
-        "tags" : "CONNECTOR"
+          ],
+          "map" : { }
+        }
       },
+      "tags" : [
+        "CONNECTOR"
+      ],
       "visual" : {
         "at" : { "x" : 1904, "y" : 88 },
         "labelOffset" : { "x" : 9, "y" : -63 },
@@ -1062,7 +1129,9 @@
         ],
         "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
       },
-      "connect" : { "id" : "f69", "to" : "f64" }
+      "connect" : [
+        { "id" : "f69", "to" : "f64" }
+      ]
     }, {
       "id" : "f62",
       "type" : "Script",
@@ -1100,7 +1169,9 @@
       "visual" : {
         "at" : { "x" : 1904, "y" : 272 }
       },
-      "connect" : { "id" : "f67", "to" : "f63" }
+      "connect" : [
+        { "id" : "f67", "to" : "f63" }
+      ]
     }, {
       "id" : "f63",
       "type" : "Script",
@@ -1128,7 +1199,9 @@
       "visual" : {
         "at" : { "x" : 1904, "y" : 360 }
       },
-      "connect" : { "id" : "f68", "to" : "f65" }
+      "connect" : [
+        { "id" : "f68", "to" : "f65" }
+      ]
     }, {
       "id" : "f64",
       "type" : "Script",
@@ -1148,7 +1221,9 @@
       "visual" : {
         "at" : { "x" : 1904, "y" : 168 }
       },
-      "connect" : { "id" : "f66", "to" : "f62" }
+      "connect" : [
+        { "id" : "f66", "to" : "f62" }
+      ]
     }, {
       "id" : "f65",
       "type" : "Script",
@@ -1161,7 +1236,9 @@
       "visual" : {
         "at" : { "x" : 1904, "y" : 464 }
       },
-      "connect" : { "id" : "f71", "to" : "f70" }
+      "connect" : [
+        { "id" : "f71", "to" : "f70" }
+      ]
     }, {
       "id" : "f70",
       "type" : "CallSubEnd",
@@ -1178,7 +1255,7 @@
         "List&lt;CompositeObject&gt;,List&lt;List&lt;CompositeObject&gt;&gt;)"
       ],
       "config" : {
-        "callSignature" : "writeDocumentWithMailMergeNestedTable",
+        "signature" : "writeDocumentWithMailMergeNestedTable",
         "input" : {
           "params" : [
             { "name" : "optionalOutputpath", "type" : "String", "desc" : "Output directory path (default is '%IVY-ROOT-PATH%/ivy_RIA_files/)" },
@@ -1206,9 +1283,11 @@
           "map" : {
             "result.fileOperationMessage" : "in.fileOperationMessage"
           }
-        },
-        "tags" : "CONNECTOR"
+        }
       },
+      "tags" : [
+        "CONNECTOR"
+      ],
       "visual" : {
         "at" : { "x" : 2800, "y" : 88 },
         "labelOffset" : { "x" : 25, "y" : -55 },
@@ -1229,7 +1308,9 @@
         ],
         "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
       },
-      "connect" : { "id" : "f78", "to" : "f73" }
+      "connect" : [
+        { "id" : "f78", "to" : "f73" }
+      ]
     }, {
       "id" : "f73",
       "type" : "Script",
@@ -1248,7 +1329,9 @@
       "visual" : {
         "at" : { "x" : 2800, "y" : 168 }
       },
-      "connect" : { "id" : "f76", "to" : "f75" }
+      "connect" : [
+        { "id" : "f76", "to" : "f75" }
+      ]
     }, {
       "id" : "f74",
       "type" : "Script",
@@ -1271,7 +1354,9 @@
       "visual" : {
         "at" : { "x" : 2800, "y" : 464 }
       },
-      "connect" : { "id" : "f80", "to" : "f79" }
+      "connect" : [
+        { "id" : "f80", "to" : "f79" }
+      ]
     }, {
       "id" : "f75",
       "type" : "Script",
@@ -1308,7 +1393,9 @@
       "visual" : {
         "at" : { "x" : 2800, "y" : 272 }
       },
-      "connect" : { "id" : "f77", "to" : "f74" }
+      "connect" : [
+        { "id" : "f77", "to" : "f74" }
+      ]
     }, {
       "id" : "f79",
       "type" : "CallSubEnd",
@@ -1334,7 +1421,9 @@
       "visual" : {
         "at" : { "x" : 3200, "y" : 168 }
       },
-      "connect" : { "id" : "f85", "to" : "f82" }
+      "connect" : [
+        { "id" : "f85", "to" : "f82" }
+      ]
     }, {
       "id" : "f82",
       "type" : "Script",
@@ -1371,7 +1460,9 @@
       "visual" : {
         "at" : { "x" : 3200, "y" : 272 }
       },
-      "connect" : { "id" : "f86", "to" : "f83" }
+      "connect" : [
+        { "id" : "f86", "to" : "f83" }
+      ]
     }, {
       "id" : "f83",
       "type" : "Script",
@@ -1394,7 +1485,9 @@
       "visual" : {
         "at" : { "x" : 3200, "y" : 464 }
       },
-      "connect" : { "id" : "f89", "to" : "f88" }
+      "connect" : [
+        { "id" : "f89", "to" : "f88" }
+      ]
     }, {
       "id" : "f84",
       "type" : "CallSubStart",
@@ -1404,7 +1497,7 @@
         "Tree)"
       ],
       "config" : {
-        "callSignature" : "writeDocumentWithMailMergeNestedTableWithTree",
+        "signature" : "writeDocumentWithMailMergeNestedTableWithTree",
         "input" : {
           "params" : [
             { "name" : "optionalOutputpath", "type" : "String", "desc" : "Output directory path (default is '%IVY-ROOT-PATH%/ivy_RIA_files/)" },
@@ -1428,9 +1521,11 @@
           "map" : {
             "result.fileOperationMessage" : "in.fileOperationMessage"
           }
-        },
-        "tags" : "CONNECTOR"
+        }
       },
+      "tags" : [
+        "CONNECTOR"
+      ],
       "visual" : {
         "at" : { "x" : 3200, "y" : 88 },
         "labelOffset" : { "x" : 17, "y" : -55 },
@@ -1451,7 +1546,9 @@
         ],
         "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
       },
-      "connect" : { "id" : "f87", "to" : "f81" }
+      "connect" : [
+        { "id" : "f87", "to" : "f81" }
+      ]
     }, {
       "id" : "f88",
       "type" : "CallSubEnd",
@@ -1468,7 +1565,7 @@
         "CompositeObject, List&lt;CompositeObject&gt;)"
       ],
       "config" : {
-        "callSignature" : "writeDocumentWithMailMergeNestedTableWithListOfDatas",
+        "signature" : "writeDocumentWithMailMergeNestedTableWithListOfDatas",
         "input" : {
           "params" : [
             { "name" : "optionalOutputpath", "type" : "String", "desc" : "Output directory path (default is '%IVY-ROOT-PATH%/ivy_RIA_files/)" },
@@ -1494,9 +1591,11 @@
           "map" : {
             "result.fileOperationMessage" : "in.fileOperationMessage"
           }
-        },
-        "tags" : "CONNECTOR"
+        }
       },
+      "tags" : [
+        "CONNECTOR"
+      ],
       "visual" : {
         "at" : { "x" : 3544, "y" : 88 },
         "labelOffset" : { "x" : 9, "y" : -55 },
@@ -1515,7 +1614,9 @@
         ],
         "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
       },
-      "connect" : { "id" : "f96", "to" : "f93" }
+      "connect" : [
+        { "id" : "f96", "to" : "f93" }
+      ]
     }, {
       "id" : "f91",
       "type" : "Script",
@@ -1538,7 +1639,9 @@
       "visual" : {
         "at" : { "x" : 3544, "y" : 464 }
       },
-      "connect" : { "id" : "f98", "to" : "f97" }
+      "connect" : [
+        { "id" : "f98", "to" : "f97" }
+      ]
     }, {
       "id" : "f92",
       "type" : "Script",
@@ -1575,7 +1678,9 @@
       "visual" : {
         "at" : { "x" : 3544, "y" : 272 }
       },
-      "connect" : { "id" : "f95", "to" : "f91" }
+      "connect" : [
+        { "id" : "f95", "to" : "f91" }
+      ]
     }, {
       "id" : "f93",
       "type" : "Script",
@@ -1594,7 +1699,9 @@
       "visual" : {
         "at" : { "x" : 3544, "y" : 168 }
       },
-      "connect" : { "id" : "f94", "to" : "f92" }
+      "connect" : [
+        { "id" : "f94", "to" : "f92" }
+      ]
     }, {
       "id" : "f97",
       "type" : "CallSubEnd",
@@ -1628,7 +1735,7 @@
         "String,String,String,String)"
       ],
       "config" : {
-        "callSignature" : "writeDocumentWithNestedDataClass",
+        "signature" : "writeDocumentWithNestedDataClass",
         "input" : {
           "params" : [
             { "name" : "data", "type" : "CompositeObject", "desc" : "Ivy data class object: the properties names of the object are the mergefields names. The values of these properties will be written in the document at the place of the corresponding mergefields. The collections of Serializables inside this bean are used for supporting the mail merge with region." },
@@ -1652,9 +1759,11 @@
           "map" : {
             "result.fileOperationMessage" : "in.fileOperationMessage"
           }
-        },
-        "tags" : "CONNECTOR"
+        }
       },
+      "tags" : [
+        "CONNECTOR"
+      ],
       "visual" : {
         "at" : { "x" : 920, "y" : 88 },
         "labelOffset" : { "x" : 17, "y" : -47 },
@@ -1674,7 +1783,9 @@
         ],
         "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
       },
-      "connect" : { "id" : "f108", "to" : "f102" }
+      "connect" : [
+        { "id" : "f108", "to" : "f102" }
+      ]
     }, {
       "id" : "f101",
       "type" : "CallSubEnd",
@@ -1701,7 +1812,9 @@
       "visual" : {
         "at" : { "x" : 920, "y" : 168 }
       },
-      "connect" : { "id" : "f109", "to" : "f103" }
+      "connect" : [
+        { "id" : "f109", "to" : "f103" }
+      ]
     }, {
       "id" : "f103",
       "type" : "Script",
@@ -1739,7 +1852,9 @@
       "visual" : {
         "at" : { "x" : 920, "y" : 272 }
       },
-      "connect" : { "id" : "f106", "to" : "f105" }
+      "connect" : [
+        { "id" : "f106", "to" : "f105" }
+      ]
     }, {
       "id" : "f104",
       "type" : "Script",
@@ -1752,7 +1867,9 @@
       "visual" : {
         "at" : { "x" : 920, "y" : 464 }
       },
-      "connect" : { "id" : "f110", "to" : "f101" }
+      "connect" : [
+        { "id" : "f110", "to" : "f101" }
+      ]
     }, {
       "id" : "f105",
       "type" : "Script",
@@ -1770,7 +1887,9 @@
       "visual" : {
         "at" : { "x" : 920, "y" : 360 }
       },
-      "connect" : { "id" : "f107", "to" : "f104" }
+      "connect" : [
+        { "id" : "f107", "to" : "f104" }
+      ]
     } ],
   "layout" : {
     "lanes" : [ {

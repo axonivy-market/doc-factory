@@ -1,0 +1,15 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/data-class/12.0.0/data-class.json",
+  "simpleName" : "Unit",
+  "namespace" : "doc.factory.demos",
+  "isBusinessCaseData" : false,
+  "fields" : [ {
+    "name" : "amount",
+    "type" : "Number",
+    "modifiers" : [ "PERSISTENT" ]
+  }, {
+    "name" : "text",
+    "type" : "String",
+    "modifiers" : [ "PERSISTENT" ]
+  } ]
+}

@@ -1,5 +1,5 @@
 {
-  "format" : "10.0.0",
+  "$schema" : "https://json-schema.axonivy.com/process/12.0.0/process.json",
   "id" : "16CD7829EF6B489B",
   "config" : {
     "data" : "doc.factory.demos.Data"
@@ -9,14 +9,15 @@
       "type" : "DialogCall",
       "name" : "DocumentCreation Samples",
       "config" : {
-        "dialogId" : "doc.factory.demos.CreateDocumentsFromTemplates",
-        "startMethod" : "start()"
+        "dialog" : "doc.factory.demos.CreateDocumentsFromTemplates:start()"
       },
       "visual" : {
         "at" : { "x" : 240, "y" : 288 },
-        "size" : { "width" : 176, "height" : 60 }
+        "size" : { "width" : 176 }
       },
-      "connect" : { "id" : "f7", "to" : "f4" }
+      "connect" : [
+        { "id" : "f7", "to" : "f4" }
+      ]
     }, {
       "id" : "f4",
       "type" : "TaskEnd",
@@ -28,15 +29,18 @@
       "type" : "RequestStart",
       "name" : "Document Creation Capabilities",
       "config" : {
-        "callSignature" : "start2",
-        "outLink" : "start2.ivp",
-        "startName" : "3.1 Document Creation Capabilities"
+        "signature" : "start2",
+        "request" : {
+          "name" : "3.1 Document Creation Capabilities"
+        }
       },
       "visual" : {
         "at" : { "x" : 96, "y" : 288 },
         "labelOffset" : { "x" : 80, "y" : 50 }
       },
-      "connect" : { "id" : "f6", "to" : "f3" }
+      "connect" : [
+        { "id" : "f6", "to" : "f3" }
+      ]
     }, {
       "id" : "f42",
       "type" : "ProcessAnnotation",
@@ -47,7 +51,7 @@
       ],
       "visual" : {
         "at" : { "x" : 288, "y" : 96 },
-        "size" : { "width" : 528, "height" : 60 }
+        "size" : { "width" : 528 }
       }
     } ],
   "layout" : {

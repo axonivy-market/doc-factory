@@ -1,0 +1,72 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/data-class/12.0.0/data-class.json",
+  "simpleName" : "WriteSerialLetter",
+  "namespace" : "ch.ivyteam.ivy.addons.docfactory",
+  "comment" : "This DataClass is used to create the document in the DocFactory.",
+  "isBusinessCaseData" : false,
+  "fields" : [ {
+    "name" : "documentFactory",
+    "type" : "ch.ivyteam.ivy.addons.docfactory.BaseDocFactory",
+    "comment" : "the docFactory object that is responsible of the documents generation"
+  }, {
+    "name" : "outputPath",
+    "type" : "String",
+    "comment" : "The path where the generated File has to be saved (if not precised we take \"ivy_RIA_files\")"
+  }, {
+    "name" : "outputFormat",
+    "type" : "String",
+    "comment" : "The format of the generated File(doc, docx, HTML, TXT) (If not precised, default will be the first supported one)"
+  }, {
+    "name" : "templatePath",
+    "type" : "String",
+    "comment" : "The template file path (MUST be precised)"
+  }, {
+    "name" : "serialLetterName",
+    "type" : "String",
+    "comment" : "the name of the generated file (if not precised, default is \"letter_nanotime\""
+  }, {
+    "name" : "mergeFieldsList",
+    "type" : "List<ch.ivyteam.ivy.addons.docfactory.TemplateMergeField>",
+    "comment" : "The mergeFieldList : each Merge field Object should have a counter one into the template. If it doesn't have one, it will be simply ignored"
+  }, {
+    "name" : "data",
+    "type" : "ch.ivyteam.ivy.scripting.objects.CompositeObject",
+    "comment" : "An initialized DataClass that can be taken to fill the template's fields: it can be used as alternative to a mergefields List. Each attribute of the dataClass will be transformed in a MergeField."
+  }, {
+    "name" : "fileOperationMessage",
+    "type" : "ch.ivyteam.ivy.addons.docfactory.FileOperationMessage",
+    "comment" : "Object that will be returned by the docFactory Object after the file generation"
+  }, {
+    "name" : "documentTemplate",
+    "type" : "ch.ivyteam.ivy.addons.docfactory.DocumentTemplate",
+    "comment" : "A documentTemplate can generate a letter by itself"
+  }, {
+    "name" : "tablesNamesList",
+    "type" : "List<String>",
+    "comment" : "If the template contains some table to fill through Mail Merge With regions, this is the list of those tables names in the template."
+  }, {
+    "name" : "ListOfCompositeObjectsToFillTheTables",
+    "type" : "List<List<ch.ivyteam.ivy.scripting.objects.CompositeObject>>",
+    "comment" : "Each List of Composite Object represents the rows for a table (Mail Merge Regions). The CompositeObjects attributesNames are going to be  used to match the merge fields names of each tables."
+  }, {
+    "name" : "ListOfRecordsets",
+    "type" : "List<Recordset>",
+    "comment" : "Each Recordset represents the rows for a table (Mail Merge Regions). The recordset fieldNames are going to be  used to match the merge fields names of each tables."
+  }, {
+    "name" : "ListOfTableFieldsNames",
+    "type" : "List<List<String>>",
+    "comment" : "Each List<String> represents the names of the merge Field in one table row. Used with the ListOfTableRows parameter."
+  }, {
+    "name" : "ListOfTablesRows",
+    "type" : "List<List<List<Object>>>",
+    "comment" : "Each List<List<Object>> represents the rows destinated to fill one table. It is used with the ListOfTableFieldsNames parameter."
+  }, {
+    "name" : "ListOfParentCompositeObjects",
+    "type" : "List<ch.ivyteam.ivy.scripting.objects.CompositeObject>",
+    "comment" : "For Mail Merge with nested Table: Each List of Component Object represent a parent Table: that will contain its List<CompositeObject> datas."
+  }, {
+    "name" : "TreeDataForNestedMailMerge",
+    "type" : "Tree",
+    "comment" : "For Mail Merge with nested Table: each Tree Level will be seen as a nested table."
+  } ]
+}
