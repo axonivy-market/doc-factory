@@ -3,10 +3,10 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.axonivy.utils.docfactory</groupId>
   <artifactId>aspose-email-demo</artifactId>
-  <version>10.0.15-SNAPSHOT</version>
+  <version>12.0.0-SNAPSHOT</version>
   <packaging>iar</packaging>
   <properties>
-    <project.build.plugin.version>10.0.16</project.build.plugin.version>
+    <project.build.plugin.version>12.0.0</project.build.plugin.version>
     <aspose.version>24.3.1</aspose.version>
   </properties>
   <dependencies>
