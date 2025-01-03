@@ -1,4 +1,0 @@
-BarCodeData #class
-doc.factory.demo.BarCode #namespace
-str String #field
-str PERSISTENT #fieldModifier

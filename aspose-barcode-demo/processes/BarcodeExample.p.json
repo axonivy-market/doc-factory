@@ -1,5 +1,5 @@
 {
-  "format" : "10.0.0",
+  "$schema" : "https://json-schema.axonivy.com/process/12.0.0/process.json",
   "id" : "16CD7829EF6B489B",
   "config" : {
     "data" : "doc.factory.demos.Data"
@@ -20,16 +20,21 @@
       "type" : "RequestStart",
       "name" : "Barcode generation",
       "config" : {
-        "callSignature" : "start",
-        "outLink" : "start.ivp",
-        "startName" : "1. Generate Barcodes",
-        "tags" : "demo"
+        "signature" : "start",
+        "request" : {
+          "name" : "1. Generate Barcodes"
+        }
       },
+      "tags" : [
+        "demo"
+      ],
       "visual" : {
         "at" : { "x" : 64, "y" : 288 },
         "labelOffset" : { "x" : 37, "y" : 50 }
       },
-      "connect" : { "id" : "f19", "to" : "f17" }
+      "connect" : [
+        { "id" : "f19", "to" : "f17" }
+      ]
     }, {
       "id" : "f16",
       "type" : "Script",
@@ -76,38 +81,38 @@
       "visual" : {
         "at" : { "x" : 352, "y" : 288 }
       },
-      "connect" : { "id" : "f21", "to" : "f18" }
+      "connect" : [
+        { "id" : "f21", "to" : "f18" }
+      ]
     }, {
       "id" : "f17",
       "type" : "DialogCall",
       "name" : "Enter Parameter",
       "config" : {
-        "dialogId" : "doc.factory.demo.BarCode",
-        "startMethod" : "start(String)",
+        "dialog" : "doc.factory.demo.BarCode:start(String)",
+        "call" : {
+          "map" : {
+            "param.str" : "in.str"
+          }
+        },
         "output" : {
           "map" : {
             "out" : "in",
             "out.str" : "result.str"
-          }
-        },
-        "call" : {
-          "params" : [
-            { "name" : "str", "type" : "String" }
-          ],
-          "map" : {
-            "param.str" : "in.str"
           }
         }
       },
       "visual" : {
         "at" : { "x" : 192, "y" : 288 }
       },
-      "connect" : { "id" : "f20", "to" : "f16" }
+      "connect" : [
+        { "id" : "f20", "to" : "f16" }
+      ]
     }, {
       "id" : "f18",
       "type" : "TaskEndPage",
       "config" : {
-        "template" : "view/barcode.xhtml"
+        "page" : "view/barcode.xhtml"
       },
       "visual" : {
         "at" : { "x" : 480, "y" : 288 }

@@ -1,4 +1,0 @@
-Data #class
-doc.factory.demos #namespace
-str String #field
-str PERSISTENT #fieldModifier

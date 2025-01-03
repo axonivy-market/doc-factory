@@ -1,7 +1,0 @@
-SelectSomeFilesData #class
-doc.factory.demos.SelectSomeFiles #namespace
-files List<java.io.File> #field
-files java.io.Files #fieldComment
-files PERSISTENT #fieldModifier
-uploadEvent org.primefaces.event.FileUploadEvent #field
-uploadEvent PERSISTENT #fieldModifier

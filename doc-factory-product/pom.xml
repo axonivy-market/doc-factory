@@ -3,7 +3,7 @@
 
 	<groupId>com.axonivy.utils.docfactory</groupId>
   <artifactId>doc-factory-product</artifactId>
-  <version>10.0.16-SNAPSHOT</version>
+  <version>12.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <build>
@@ -18,7 +18,7 @@
             <goals>
               <goal>single</goal>
             </goals>
-            <configuration>              
+            <configuration>
               <appendAssemblyId>false</appendAssemblyId>
               <descriptors>
                 <descriptor>zip.xml</descriptor>
@@ -34,7 +34,7 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-deploy-plugin</artifactId>
           <version>3.1.1</version>
-        </plugin>        
+        </plugin>
       </plugins>
     </pluginManagement>
   </build>

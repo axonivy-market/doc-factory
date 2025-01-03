@@ -1,5 +1,5 @@
 {
-  "format" : "10.0.0",
+  "$schema" : "https://json-schema.axonivy.com/process/12.0.0/process.json",
   "id" : "16CD86F645B6B18E",
   "kind" : "HTML_DIALOG",
   "config" : {
@@ -10,10 +10,10 @@
       "type" : "HtmlDialogStart",
       "name" : "start()",
       "config" : {
-        "callSignature" : "start",
+        "signature" : "start",
         "result" : {
           "params" : [
-            { "name" : "documentId", "type" : "Long" }
+            { "name" : "documentId", "type" : "String", "desc" : "" }
           ],
           "map" : {
             "result.documentId" : "in.service.documentId"
@@ -25,7 +25,9 @@
         "at" : { "x" : 96, "y" : 64 },
         "labelOffset" : { "x" : 12, "y" : 35 }
       },
-      "connect" : { "id" : "f9", "to" : "f8" }
+      "connect" : [
+        { "id" : "f9", "to" : "f8" }
+      ]
     }, {
       "id" : "f1",
       "type" : "HtmlDialogEnd",
@@ -37,15 +39,17 @@
       "type" : "Script",
       "name" : "Create document",
       "config" : {
-        "security" : "system",
         "output" : {
           "code" : "in.service.createHelloWord();"
-        }
+        },
+        "sudo" : true
       },
       "visual" : {
         "at" : { "x" : 224, "y" : 160 }
       },
-      "connect" : { "id" : "f3", "to" : "f10" }
+      "connect" : [
+        { "id" : "f3", "to" : "f10" }
+      ]
     }, {
       "id" : "f8",
       "type" : "Script",
@@ -58,7 +62,9 @@
       "visual" : {
         "at" : { "x" : 224, "y" : 64 }
       },
-      "connect" : { "id" : "f2", "to" : "f1" }
+      "connect" : [
+        { "id" : "f2", "to" : "f1" }
+      ]
     }, {
       "id" : "f10",
       "type" : "HtmlDialogExit",
@@ -74,8 +80,10 @@
       },
       "visual" : {
         "at" : { "x" : 96, "y" : 160 },
-        "labelOffset" : { "x" : 13, "y" : 35 }
+        "labelOffset" : { "y" : 35 }
       },
-      "connect" : { "id" : "f14", "to" : "f6" }
+      "connect" : [
+        { "id" : "f14", "to" : "f6" }
+      ]
     } ]
 }

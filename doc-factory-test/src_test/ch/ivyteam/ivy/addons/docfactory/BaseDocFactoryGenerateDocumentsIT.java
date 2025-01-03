@@ -125,8 +125,9 @@ public class BaseDocFactoryGenerateDocumentsIT {
                                     .withAppendedFileName("bigFile")));
 
     File appendedFile = result.getFiles().get(result.getFiles().size() - 1);
-    com.aspose.pdf.Document pdfDocument = new com.aspose.pdf.Document(appendedFile.getAbsolutePath());
-    assertThat(pdfDocument.getPages()).hasSize(documentTemplates.size());
+    try (com.aspose.pdf.Document pdfDocument = new com.aspose.pdf.Document(appendedFile.getAbsolutePath())) {
+		assertThat(pdfDocument.getPages()).hasSize(documentTemplates.size());
+	}
   }
 
   @Test
@@ -174,8 +175,9 @@ public class BaseDocFactoryGenerateDocumentsIT {
                                     .withAppendedFileName("bigFileSameTemplate")));
 
     File appendedFile = result.getFiles().get(result.getFiles().size() - 1);
-    com.aspose.pdf.Document pdfDocument = new com.aspose.pdf.Document(appendedFile.getAbsolutePath());
-    assertThat(pdfDocument.getPages()).hasSize(documentTemplates.size());
+    try (com.aspose.pdf.Document pdfDocument = new com.aspose.pdf.Document(appendedFile.getAbsolutePath())) {
+		assertThat(pdfDocument.getPages()).hasSize(documentTemplates.size());
+	}
   }
 
   @Test

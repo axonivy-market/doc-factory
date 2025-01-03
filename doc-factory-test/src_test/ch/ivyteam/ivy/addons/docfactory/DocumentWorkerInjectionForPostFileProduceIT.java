@@ -44,8 +44,9 @@ public class DocumentWorkerInjectionForPostFileProduceIT {
    	assertThat(result.isSuccess()).isTrue();
    	assertThat(result.getFiles()).contains(resultFile);
 
-    com.aspose.pdf.Document pdfDoc = new com.aspose.pdf.Document(resultFile.getAbsolutePath());
-    assertThat(pdfDoc.isEncrypted()).isFalse();
+    try (com.aspose.pdf.Document pdfDoc = new com.aspose.pdf.Document(resultFile.getAbsolutePath())) {
+		assertThat(pdfDoc.isEncrypted()).isFalse();
+	}
   }
 
   @Test
@@ -72,8 +73,9 @@ public class DocumentWorkerInjectionForPostFileProduceIT {
    	assertThat(result.isSuccess()).isTrue();
    	assertThat(result.getFiles()).contains(resultFile);
 
-    com.aspose.pdf.Document pdfDoc = new com.aspose.pdf.Document(resultFile.getAbsolutePath(), secret);
-    assertThat(pdfDoc.isEncrypted()).isTrue();
+    try (com.aspose.pdf.Document pdfDoc = new com.aspose.pdf.Document(resultFile.getAbsolutePath(), secret)) {
+		assertThat(pdfDoc.isEncrypted()).isTrue();
+	}
   }
 
   @Test
@@ -116,8 +118,7 @@ public class DocumentWorkerInjectionForPostFileProduceIT {
 
   private void deletePreviousProtectedFile(String passwordProtectedFilePath, String password) {
     File file = new File(passwordProtectedFilePath);
-    try {
-      com.aspose.pdf.Document pdfDoc = new com.aspose.pdf.Document(file.getAbsolutePath(), password);
+    try (com.aspose.pdf.Document pdfDoc = new com.aspose.pdf.Document(file.getAbsolutePath(), password)) {
       pdfDoc.decrypt();
       file.delete();
     } catch (Exception ex) {
@@ -141,9 +142,10 @@ public class DocumentWorkerInjectionForPostFileProduceIT {
     @Override
     public File onGeneratedFile(Document document, File producedFile) {
       if (producedFile.getName().endsWith("pdf")) {
-        com.aspose.pdf.Document pdfDoc = new com.aspose.pdf.Document(producedFile.getAbsolutePath());
-        pdfDoc.encrypt(userSecret, "ownerSecret", Permissions.PrintDocument, CryptoAlgorithm.AESx256);
-        pdfDoc.save(producedFile.getAbsolutePath());
+        try (com.aspose.pdf.Document pdfDoc = new com.aspose.pdf.Document(producedFile.getAbsolutePath())) {
+			pdfDoc.encrypt(userSecret, "ownerSecret", Permissions.PrintDocument, CryptoAlgorithm.AESx256);
+			pdfDoc.save(producedFile.getAbsolutePath());
+		}
       }
       return producedFile;
     }

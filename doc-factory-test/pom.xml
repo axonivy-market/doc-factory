@@ -3,12 +3,13 @@
 
   <groupId>com.axonivy.utils.docfactory</groupId>
   <artifactId>doc-factory-test</artifactId>
-  <version>10.0.16-SNAPSHOT</version>
+  <version>12.0.0-SNAPSHOT</version>
   <packaging>iar</packaging>
   
   <properties>
-    <project.build.plugin.version>10.0.16</project.build.plugin.version>
-    <tester.version>10.0.16</tester.version>
+    <project.build.plugin.version>12.0.0</project.build.plugin.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <tester.version>12.0.1</tester.version>
     <pdfbox.version>2.0.28</pdfbox.version>
     <powermock2.version>2.0.9</powermock2.version>
   </properties>

@@ -1,5 +1,4 @@
-ch.ivyteam.ivy.designer.preferences.DataClassPreferencePage\:DEFAULT_DATA_CLASS=doc.factory.demos.test.Data
 ch.ivyteam.ivy.designer.preferences.DataClassPreferencePage\:DEFAULT_NAMESPACE=doc.factory.demos.test
-ch.ivyteam.ivy.project.preferences\:PRIMEFACES_VERSION=11
-ch.ivyteam.ivy.project.preferences\:PROJECT_VERSION=100000
+ch.ivyteam.ivy.project.preferences\:PRIMEFACES_VERSION=13
+ch.ivyteam.ivy.project.preferences\:PROJECT_VERSION=120001
 eclipse.preferences.version=1
