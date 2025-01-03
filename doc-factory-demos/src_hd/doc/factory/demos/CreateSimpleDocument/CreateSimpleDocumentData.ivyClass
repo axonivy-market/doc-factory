@@ -1,4 +1,0 @@
-CreateSimpleDocumentData #class
-doc.factory.demos.CreateSimpleDocument #namespace
-service ch.ivyteam.ivy.docFactoryExamples.SimpleDocumentCreator #field
-service PERSISTENT #fieldModifier

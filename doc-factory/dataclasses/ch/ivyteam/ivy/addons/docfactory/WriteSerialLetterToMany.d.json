@@ -1,0 +1,67 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/data-class/12.0.0/data-class.json",
+  "simpleName" : "WriteSerialLetterToMany",
+  "namespace" : "ch.ivyteam.ivy.addons.docfactory",
+  "isBusinessCaseData" : false,
+  "fields" : [ {
+    "name" : "listOfMergeFieldsList",
+    "type" : "List<List<ch.ivyteam.ivy.addons.docfactory.TemplateMergeField>>",
+    "comment" : "Each List of MergerFields List represents one Letter. Each MergeFields has a name and a value. The name is the Name of the mergeField in the template, The value will replace the corresponding MergeField in the template."
+  }, {
+    "name" : "datas",
+    "type" : "List<ch.ivyteam.ivy.scripting.objects.CompositeObject>",
+    "comment" : "List of An initialized DataClass that can be taken to fill the template's fields: it can be used as alternative to a mergefields List. Each attribute of the dataClass will be transformed in a MergeField."
+  }, {
+    "name" : "documentFactory",
+    "type" : "ch.ivyteam.ivy.addons.docfactory.BaseDocFactory",
+    "comment" : "The document factory object that is responsible of the documents generation"
+  }, {
+    "name" : "fileOperationMessage",
+    "type" : "ch.ivyteam.ivy.addons.docfactory.FileOperationMessage",
+    "comment" : "This Object is the result of the Letters creation. If its Type is 1 (SUCCESS_MESSAGE) than its Files field contains all the created java.io.File during the mail merge."
+  }, {
+    "name" : "mergeFieldsList",
+    "type" : "List<ch.ivyteam.ivy.addons.docfactory.TemplateMergeField>",
+    "comment" : "For intern use"
+  }, {
+    "name" : "templatePath",
+    "type" : "String",
+    "comment" : "The path of the template (document model) used for the letter creation"
+  }, {
+    "name" : "oneDocument",
+    "type" : "Boolean",
+    "comment" : "IF true we insert all the letters in One Document (easy to print for example)"
+  }, {
+    "name" : "oneDocumentName",
+    "type" : "String",
+    "comment" : "The name of the single document (if needed)"
+  }, {
+    "name" : "oneDocumentPath",
+    "type" : "String",
+    "comment" : "The outputpath of the single document (if needed)"
+  }, {
+    "name" : "oneDocumentFormat",
+    "type" : "String",
+    "comment" : "The desired output format of the single document (default will be \"doc\")"
+  }, {
+    "name" : "manyDocuments",
+    "type" : "Boolean",
+    "comment" : "IF true each letter is going to be saved in a single document (easy to print for example)"
+  }, {
+    "name" : "manyDocumentsName",
+    "type" : "String",
+    "comment" : "The name of each single documents (each output path should be indicated in each List of TemplateMergeFields, in a MergeFeld named \"destinationPath\")"
+  }, {
+    "name" : "manyDocumentsFormat",
+    "type" : "String",
+    "comment" : "The format of each single documents (default will be \"doc\")"
+  }, {
+    "name" : "templateDocumentsList",
+    "type" : "List<ch.ivyteam.ivy.addons.docfactory.DocumentTemplate>",
+    "comment" : "this is a list of TemplateDocuments. Each one can be transformed into a final letter."
+  }, {
+    "name" : "listofFileOperationMessages",
+    "type" : "List<ch.ivyteam.ivy.addons.docfactory.FileOperationMessage>",
+    "comment" : "Will be returned after the File generation occured."
+  } ]
+}

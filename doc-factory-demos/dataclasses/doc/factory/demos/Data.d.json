@@ -1,0 +1,40 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/data-class/12.0.0/data-class.json",
+  "simpleName" : "Data",
+  "namespace" : "doc.factory.demos",
+  "isBusinessCaseData" : false,
+  "fields" : [ {
+    "name" : "mergeFields",
+    "type" : "List<ch.ivyteam.ivy.addons.docfactory.TemplateMergeField>"
+  }, {
+    "name" : "position",
+    "type" : "doc.factory.demos.Position"
+  }, {
+    "name" : "positions",
+    "type" : "List<doc.factory.demos.Position>"
+  }, {
+    "name" : "report",
+    "type" : "doc.factory.demos.Report"
+  }, {
+    "name" : "tableNames",
+    "type" : "List"
+  }, {
+    "name" : "tableRecords",
+    "type" : "List<Recordset>"
+  }, {
+    "name" : "templateFile",
+    "type" : "java.io.File",
+    "comment" : "java.io.File"
+  }, {
+    "name" : "documentId",
+    "type" : "String",
+    "modifiers" : [ "PERSISTENT" ]
+  }, {
+    "name" : "fileList",
+    "type" : "List<java.io.File>",
+    "comment" : "java.io.Files"
+  }, {
+    "name" : "str",
+    "type" : "String"
+  } ]
+}

@@ -1,6 +1,0 @@
-CreateDocumentsFromTemplatesData #class
-doc.factory.demos.CreateDocumentsFromTemplates #namespace
-service ch.ivyteam.ivy.docFactoryExamples.DocumentCreator #field
-service PERSISTENT #fieldModifier
-uploadEvent org.primefaces.event.FileUploadEvent #field
-uploadEvent PERSISTENT #fieldModifier

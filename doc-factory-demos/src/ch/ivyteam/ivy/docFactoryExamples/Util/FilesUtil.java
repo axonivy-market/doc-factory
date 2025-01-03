@@ -18,7 +18,7 @@ public class FilesUtil {
    * set file reference into the session
    */
   public static void setFileRef(File ivyFile) {
-    Ivy.session().setAttribute("docRef", Ivy.html().fileref(ivyFile));
+    Ivy.session().setAttribute("docRef", Ivy.html().fileLink(ivyFile).getAbsolute());
     Ivy.session().setAttribute("docFilename", ivyFile.getName());
   }
 

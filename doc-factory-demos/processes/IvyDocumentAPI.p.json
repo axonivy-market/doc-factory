@@ -1,5 +1,5 @@
 {
-  "format" : "10.0.0",
+  "$schema" : "https://json-schema.axonivy.com/process/12.0.0/process.json",
   "id" : "16DFD8AB2E4BFFF9",
   "config" : {
     "data" : "doc.factory.demos.Data"
@@ -9,16 +9,21 @@
       "type" : "RequestStart",
       "name" : "Create and Attach Document to Case",
       "config" : {
-        "callSignature" : "start2",
-        "outLink" : "start2.ivp",
-        "wfuser" : "1",
-        "startName" : "4.1 Create and Attach Document to Case"
+        "signature" : "start2",
+        "request" : {
+          "name" : "4.1 Create and Attach Document to Case"
+        },
+        "permission" : {
+          "anonymous" : false
+        }
       },
       "visual" : {
         "at" : { "x" : 96, "y" : 160 },
         "labelOffset" : { "x" : 102, "y" : 51 }
       },
-      "connect" : { "id" : "f5", "to" : "f8" }
+      "connect" : [
+        { "id" : "f5", "to" : "f8" }
+      ]
     }, {
       "id" : "f8",
       "type" : "DialogCall",
@@ -27,8 +32,7 @@
         "Attach it to case documents"
       ],
       "config" : {
-        "dialogId" : "doc.factory.demos.CreateSimpleDocument",
-        "startMethod" : "start()",
+        "dialog" : "doc.factory.demos.CreateSimpleDocument:start()",
         "output" : {
           "map" : {
             "out" : "in",
@@ -38,9 +42,11 @@
       },
       "visual" : {
         "at" : { "x" : 240, "y" : 160 },
-        "size" : { "width" : 176, "height" : 60 }
+        "size" : { "width" : 176 }
       },
-      "connect" : { "id" : "f13", "to" : "f12" }
+      "connect" : [
+        { "id" : "f13", "to" : "f12" }
+      ]
     }, {
       "id" : "f10",
       "type" : "TaskEnd",
@@ -55,12 +61,8 @@
         "from case"
       ],
       "config" : {
-        "dialogId" : "doc.factory.demos.ViewSimpleDocument",
-        "startMethod" : "start(Long)",
+        "dialog" : "doc.factory.demos.ViewSimpleDocument:start(String)",
         "call" : {
-          "params" : [
-            { "name" : "documentId", "type" : "Long" }
-          ],
           "map" : {
             "param.documentId" : "in.documentId"
           }
@@ -68,9 +70,11 @@
       },
       "visual" : {
         "at" : { "x" : 496, "y" : 160 },
-        "size" : { "width" : 128, "height" : 60 }
+        "size" : { "width" : 128 }
       },
-      "connect" : { "id" : "f11", "to" : "f10" }
+      "connect" : [
+        { "id" : "f11", "to" : "f10" }
+      ]
     }, {
       "id" : "f12",
       "type" : "TaskSwitchEvent",
@@ -82,7 +86,9 @@
       "visual" : {
         "at" : { "x" : 384, "y" : 160 }
       },
-      "connect" : { "id" : "f9", "to" : "f4", "condition" : "ivp==\"TaskA.ivp\"" }
+      "connect" : [
+        { "id" : "f9", "to" : "f4", "condition" : "ivp==\"TaskA.ivp\"" }
+      ]
     }, {
       "id" : "f14",
       "type" : "ProcessAnnotation",

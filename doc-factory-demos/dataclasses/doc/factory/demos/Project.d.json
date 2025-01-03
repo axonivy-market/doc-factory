@@ -1,0 +1,23 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/data-class/12.0.0/data-class.json",
+  "simpleName" : "Project",
+  "namespace" : "doc.factory.demos",
+  "isBusinessCaseData" : false,
+  "fields" : [ {
+    "name" : "positions",
+    "type" : "List<doc.factory.demos.Position>",
+    "modifiers" : [ "PERSISTENT" ]
+  }, {
+    "name" : "title",
+    "type" : "String",
+    "modifiers" : [ "PERSISTENT" ]
+  }, {
+    "name" : "nr",
+    "type" : "Number",
+    "modifiers" : [ "PERSISTENT" ]
+  }, {
+    "name" : "position",
+    "type" : "doc.factory.demos.Position",
+    "modifiers" : [ "PERSISTENT" ]
+  } ]
+}

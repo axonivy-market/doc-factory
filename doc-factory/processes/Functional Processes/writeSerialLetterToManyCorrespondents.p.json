@@ -1,5 +1,5 @@
 {
-  "format" : "10.0.0",
+  "$schema" : "https://json-schema.axonivy.com/process/12.0.0/process.json",
   "id" : "1249FCC8592E4E39",
   "kind" : "CALLABLE_SUB",
   "description" : [
@@ -15,7 +15,7 @@
       "type" : "CallSubStart",
       "name" : "writeSerialLettersToManyCorrespondents",
       "config" : {
-        "callSignature" : "writeSerialLettersToManyCorrespondents",
+        "signature" : "writeSerialLettersToManyCorrespondents",
         "input" : {
           "params" : [
             { "name" : "optionalSingleDocumentOutputPath", "type" : "String", "desc" : "Parent directory path of the produced file for the case \"allInOneDocument\" is true. Default is \"%IVY-ROOT-PATH%/ivy_RIA_files/\"." },
@@ -43,9 +43,11 @@
             "result.FileOperationMessage" : "in.fileOperationMessage",
             "result.listOfFileOperationMessages" : "in.listofFileOperationMessages"
           }
-        },
-        "tags" : "CONNECTOR"
+        }
       },
+      "tags" : [
+        "CONNECTOR"
+      ],
       "visual" : {
         "at" : { "x" : 336, "y" : 56 },
         "labelOffset" : { "x" : 25, "y" : -23 },
@@ -55,7 +57,9 @@
         ],
         "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
       },
-      "connect" : { "id" : "f10", "to" : "f9" }
+      "connect" : [
+        { "id" : "f10", "to" : "f9" }
+      ]
     }, {
       "id" : "f1",
       "type" : "CallSubEnd",
@@ -109,7 +113,9 @@
       "visual" : {
         "at" : { "x" : 336, "y" : 224 }
       },
-      "connect" : { "id" : "f3", "to" : "f16" }
+      "connect" : [
+        { "id" : "f3", "to" : "f16" }
+      ]
     }, {
       "id" : "f16",
       "type" : "Script",
@@ -139,7 +145,9 @@
       "visual" : {
         "at" : { "x" : 336, "y" : 328 }
       },
-      "connect" : { "id" : "f4", "to" : "f1" }
+      "connect" : [
+        { "id" : "f4", "to" : "f1" }
+      ]
     }, {
       "id" : "f9",
       "type" : "Script",
@@ -155,7 +163,9 @@
       "visual" : {
         "at" : { "x" : 336, "y" : 120 }
       },
-      "connect" : { "id" : "f2", "to" : "f14" }
+      "connect" : [
+        { "id" : "f2", "to" : "f14" }
+      ]
     }, {
       "id" : "f5",
       "type" : "ProcessAnnotation",
@@ -166,7 +176,7 @@
       ],
       "visual" : {
         "at" : { "x" : 832, "y" : 48 },
-        "size" : { "width" : 512, "height" : 60 },
+        "size" : { "width" : 512 },
         "description" : [
           "The Document Factory Object is a Java Object that can parse a document model",
           "that contains mergefields and replace those mergefields by some String Data.",
