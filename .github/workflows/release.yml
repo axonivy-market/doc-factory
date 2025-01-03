@@ -37,6 +37,11 @@ jobs:
               "password": "${{ secrets.NEXUS_AXONIVY_COM_PASSWORD }}"
           }]
 
+    - name: Setup Maven
+      uses: stCarolas/setup-maven@v5
+      with:
+        maven-version: 3.9.8
+
     - name: Build with Maven
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
