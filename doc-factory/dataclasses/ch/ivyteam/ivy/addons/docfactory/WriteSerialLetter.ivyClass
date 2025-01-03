@@ -21,15 +21,15 @@ documentTemplate ch.ivyteam.ivy.addons.docfactory.DocumentTemplate #field
 documentTemplate 'A documentTemplate can generate a letter by itself' #fieldComment
 tablesNamesList List<String> #field
 tablesNamesList 'If the template contains some table to fill through Mail Merge With regions, this is the list of those tables names in the template.' #fieldComment
-ListOfCompositeObjectsToFillTheTables List<List<ch.ivyteam.ivy.scripting.objects.CompositeObject>> #field
-ListOfCompositeObjectsToFillTheTables 'Each List of Composite Object represents the rows for a table (Mail Merge Regions). The CompositeObjects attributesNames are going to be  used to match the merge fields names of each tables.' #fieldComment
-ListOfRecordsets List<Recordset> #field
-ListOfRecordsets 'Each Recordset represents the rows for a table (Mail Merge Regions). The recordset fieldNames are going to be  used to match the merge fields names of each tables.' #fieldComment
-ListOfTableFieldsNames List<List<String>> #field
-ListOfTableFieldsNames 'Each List<String> represents the names of the merge Field in one table row. Used with the ListOfTableRows parameter.' #fieldComment
-ListOfTablesRows List<List<List<Object>>> #field
-ListOfTablesRows 'Each List<List<Object>> represents the rows destinated to fill one table. It is used with the ListOfTableFieldsNames parameter.' #fieldComment
-ListOfParentCompositeObjects List<ch.ivyteam.ivy.scripting.objects.CompositeObject> #field
-ListOfParentCompositeObjects 'For Mail Merge with nested Table: Each List of Component Object represent a parent Table: that will contain its List<CompositeObject> datas.' #fieldComment
-TreeDataForNestedMailMerge Tree #field
-TreeDataForNestedMailMerge 'For Mail Merge with nested Table: each Tree Level will be seen as a nested table.' #fieldComment
+listOfCompositeObjectsToFillTheTables List<List<ch.ivyteam.ivy.scripting.objects.CompositeObject>> #field
+listOfCompositeObjectsToFillTheTables 'Each List of Composite Object represents the rows for a table (Mail Merge Regions). The CompositeObjects attributesNames are going to be  used to match the merge fields names of each tables.' #fieldComment
+listOfRecordsets List<Recordset> #field
+listOfRecordsets 'Each Recordset represents the rows for a table (Mail Merge Regions). The recordset fieldNames are going to be  used to match the merge fields names of each tables.' #fieldComment
+listOfTableFieldsNames List<List<String>> #field
+listOfTableFieldsNames 'Each List<String> represents the names of the merge Field in one table row. Used with the ListOfTableRows parameter.' #fieldComment
+listOfTablesRows List<List<List<Object>>> #field
+listOfTablesRows 'Each List<List<Object>> represents the rows destinated to fill one table. It is used with the ListOfTableFieldsNames parameter.' #fieldComment
+listOfParentCompositeObjects List<ch.ivyteam.ivy.scripting.objects.CompositeObject> #field
+listOfParentCompositeObjects 'For Mail Merge with nested Table: Each List of Component Object represent a parent Table: that will contain its List<CompositeObject> datas.' #fieldComment
+treeDataForNestedMailMerge Tree #field
+treeDataForNestedMailMerge 'For Mail Merge with nested Table: each Tree Level will be seen as a nested table.' #fieldComment
