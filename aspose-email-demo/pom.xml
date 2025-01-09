@@ -3,11 +3,12 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.axonivy.utils.docfactory</groupId>
   <artifactId>aspose-email-demo</artifactId>
-  <version>10.0.11-SNAPSHOT</version>
+  <version>12.0.1-SNAPSHOT</version>
   <packaging>iar</packaging>
   <properties>
-    <project-build-plugin-version>10.0.14</project-build-plugin-version>
-    <aspose.version>23.4</aspose.version>
+    <project.build.plugin.version>12.0.0</project.build.plugin.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <aspose.version>24.3.1</aspose.version>
   </properties>
   <dependencies>
     <dependency>
@@ -40,7 +41,7 @@
       <plugin>
         <groupId>com.axonivy.ivy.ci</groupId>
         <artifactId>project-build-plugin</artifactId>
-        <version>${project-build-plugin-version}</version>
+        <version>${project.build.plugin.version}</version>
         <extensions>true</extensions>
       </plugin>
     </plugins>

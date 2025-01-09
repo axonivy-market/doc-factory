@@ -1,4 +1,0 @@
-EmailData #class
-doc.factory.demo.Email #namespace
-outlockMail doc.factory.demos.OutlockMailData #field
-outlockMail PERSISTENT #fieldModifier

@@ -1,6 +1,0 @@
-Unit #class
-doc.factory.demos #namespace
-amount Number #field
-amount PERSISTENT #fieldModifier
-text String #field
-text PERSISTENT #fieldModifier

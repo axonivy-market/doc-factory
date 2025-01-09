@@ -1,5 +1,5 @@
 {
-  "format" : "10.0.0",
+  "$schema" : "https://json-schema.axonivy.com/process/12.0.0/process.json",
   "id" : "16CD874DD7DD365F",
   "kind" : "HTML_DIALOG",
   "config" : {
@@ -10,14 +10,16 @@
       "type" : "HtmlDialogStart",
       "name" : "start()",
       "config" : {
-        "callSignature" : "start",
+        "signature" : "start",
         "guid" : "16923D67E685C598"
       },
       "visual" : {
         "at" : { "x" : 96, "y" : 64 },
         "labelOffset" : { "x" : 12, "y" : 35 }
       },
-      "connect" : { "id" : "f14", "to" : "f13" }
+      "connect" : [
+        { "id" : "f14", "to" : "f13" }
+      ]
     }, {
       "id" : "f1",
       "type" : "HtmlDialogEnd",
@@ -29,14 +31,16 @@
       "type" : "HtmlDialogMethodStart",
       "name" : "download()",
       "config" : {
-        "callSignature" : "download",
+        "signature" : "download",
         "guid" : "16923DCAC0E6392E"
       },
       "visual" : {
         "at" : { "x" : 96, "y" : 256 },
         "labelOffset" : { "x" : 12, "y" : 35 }
       },
-      "connect" : { "id" : "f11", "to" : "f9" }
+      "connect" : [
+        { "id" : "f11", "to" : "f9" }
+      ]
     }, {
       "id" : "f10",
       "type" : "HtmlDialogEnd",
@@ -66,20 +70,24 @@
       "visual" : {
         "at" : { "x" : 224, "y" : 256 }
       },
-      "connect" : { "id" : "f12", "to" : "f10" }
+      "connect" : [
+        { "id" : "f12", "to" : "f10" }
+      ]
     }, {
       "id" : "f3",
       "type" : "HtmlDialogMethodStart",
       "name" : "downloadMultiFile()",
       "config" : {
-        "callSignature" : "downloadMultiFile",
+        "signature" : "downloadMultiFile",
         "guid" : "1692424EDB01FA1B"
       },
       "visual" : {
         "at" : { "x" : 96, "y" : 352 },
         "labelOffset" : { "x" : 15, "y" : 45 }
       },
-      "connect" : { "id" : "f7", "to" : "f5" }
+      "connect" : [
+        { "id" : "f7", "to" : "f5" }
+      ]
     }, {
       "id" : "f4",
       "type" : "HtmlDialogEnd",
@@ -113,7 +121,9 @@
         "at" : { "x" : 224, "y" : 352 },
         "size" : { "width" : 168, "height" : 48 }
       },
-      "connect" : { "id" : "f6", "to" : "f4" }
+      "connect" : [
+        { "id" : "f6", "to" : "f4" }
+      ]
     }, {
       "id" : "f13",
       "type" : "Script",
@@ -130,9 +140,11 @@
       },
       "visual" : {
         "at" : { "x" : 224, "y" : 64 },
-        "size" : { "width" : 176, "height" : 60 }
+        "size" : { "width" : 176 }
       },
-      "connect" : { "id" : "f2", "to" : "f1" }
+      "connect" : [
+        { "id" : "f2", "to" : "f1" }
+      ]
     }, {
       "id" : "f16",
       "type" : "HtmlDialogEnd",
@@ -157,7 +169,9 @@
       "visual" : {
         "at" : { "x" : 224, "y" : 160 }
       },
-      "connect" : { "id" : "f17", "to" : "f16" }
+      "connect" : [
+        { "id" : "f17", "to" : "f16" }
+      ]
     }, {
       "id" : "f20",
       "type" : "Script",
@@ -175,7 +189,9 @@
       "visual" : {
         "at" : { "x" : 224, "y" : 448 }
       },
-      "connect" : { "id" : "f24", "to" : "f21" }
+      "connect" : [
+        { "id" : "f24", "to" : "f21" }
+      ]
     }, {
       "id" : "f21",
       "type" : "HtmlDialogEnd",
@@ -199,20 +215,24 @@
         "at" : { "x" : 96, "y" : 448 },
         "labelOffset" : { "x" : 11, "y" : 35 }
       },
-      "connect" : { "id" : "f23", "to" : "f20" }
+      "connect" : [
+        { "id" : "f23", "to" : "f20" }
+      ]
     }, {
       "id" : "f25",
       "type" : "HtmlDialogMethodStart",
       "name" : "downloadPowerPoint()",
       "config" : {
-        "callSignature" : "downloadPowerPoint",
+        "signature" : "downloadPowerPoint",
         "guid" : "16929B86D66AFADD"
       },
       "visual" : {
         "at" : { "x" : 88, "y" : 576 },
         "labelOffset" : { "x" : 16, "y" : 35 }
       },
-      "connect" : { "id" : "f28", "to" : "f26" }
+      "connect" : [
+        { "id" : "f28", "to" : "f26" }
+      ]
     }, {
       "id" : "f26",
       "type" : "Script",
@@ -236,7 +256,9 @@
       "visual" : {
         "at" : { "x" : 216, "y" : 576 }
       },
-      "connect" : { "id" : "f29", "to" : "f27" }
+      "connect" : [
+        { "id" : "f29", "to" : "f27" }
+      ]
     }, {
       "id" : "f27",
       "type" : "HtmlDialogEnd",
@@ -276,20 +298,24 @@
       "visual" : {
         "at" : { "x" : 216, "y" : 672 }
       },
-      "connect" : { "id" : "f33", "to" : "f30" }
+      "connect" : [
+        { "id" : "f33", "to" : "f30" }
+      ]
     }, {
       "id" : "f32",
       "type" : "HtmlDialogMethodStart",
       "name" : "downloadExcel()",
       "config" : {
-        "callSignature" : "downloadExcel",
+        "signature" : "downloadExcel",
         "guid" : "1692D29B899FCE25"
       },
       "visual" : {
         "at" : { "x" : 88, "y" : 672 },
         "labelOffset" : { "x" : 14, "y" : 35 }
       },
-      "connect" : { "id" : "f34", "to" : "f31" }
+      "connect" : [
+        { "id" : "f34", "to" : "f31" }
+      ]
     }, {
       "id" : "f35",
       "type" : "HtmlDialogEventStart",
@@ -301,6 +327,8 @@
         "at" : { "x" : 96, "y" : 160 },
         "labelOffset" : { "x" : 23, "y" : 35 }
       },
-      "connect" : { "id" : "f36", "to" : "f18" }
+      "connect" : [
+        { "id" : "f36", "to" : "f18" }
+      ]
     } ]
 }

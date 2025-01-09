@@ -809,19 +809,6 @@ public class DocumentTemplate implements Serializable {
   }
 
   /**
-   * set the fileOperationMessage Object of the DocumentTemplate.<br>
-   * There should be no reason to use this method, since the
-   * fileOperationMessage is the result of the generateDocument() method.
-   * @param _fop the fileOperationMessage
-   */
-  @Deprecated
-  public void setFileOperationMessage(FileOperationMessage _fop) {
-    if (_fop != null) {
-      this.fileOperationMessage = _fop;
-    }
-  }
-
-  /**
    * set the tableNames/Fields values HashMap Object. It clears also the
    * tableNames/Fields values java.util.Hashtable object, <br>
    * because we use only one of the two objects for the merge mail with regions.

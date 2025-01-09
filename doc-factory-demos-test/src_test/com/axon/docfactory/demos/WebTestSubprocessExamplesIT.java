@@ -5,7 +5,6 @@ import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.io.FileNotFoundException;
 import java.nio.file.Path;
 import java.time.Duration;
 
@@ -62,11 +61,11 @@ class WebTestSubprocessExamplesIT {
     assertDownload("start6.ivp", "DocWithNestedObject.pdf");
   }
 
-  private void assertDownload(String process, String expectedFileName) throws FileNotFoundException {
+  private void assertDownload(String process, String expectedFileName) throws Exception {
     open(EngineUrl.createProcessUrl(DOC_DEMOS_BASE + process));
     var doc = $("#docLink").shouldBe(visible).download(DownloadOptions.using(FileDownloadMode.PROXY)
             .withTimeout(Duration.ofSeconds(10))
-            .withFilter(FileFilters.withName(expectedFileName))); 
+            .withFilter(FileFilters.withName(expectedFileName)));
 
     assertThat(doc).hasName(expectedFileName);
     assertThat(doc.length() / 1024).isGreaterThan(15);

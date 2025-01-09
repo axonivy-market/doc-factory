@@ -12,7 +12,7 @@ import ch.ivyteam.ivy.workflow.document.Path;
 
 public class SimpleDocumentCreator {
   private String name;
-  private Long documentId;
+  private String documentId;
 
   public void init() {
     // Load license for aspose slides & cell
@@ -52,7 +52,7 @@ public class SimpleDocumentCreator {
             .withContentFrom(tempFileIvy.getJavaFile());
 
     // Get document id for the next dialog
-    documentId = document.getId();
+    documentId = document.uuid();
   }
 
   public String getName() {
@@ -63,11 +63,11 @@ public class SimpleDocumentCreator {
     this.name = name;
   }
 
-  public Long getDocumentId() {
+  public String getDocumentId() {
     return documentId;
   }
 
-  public void setDocumentId(Long documentId) {
+  public void setDocumentId(String documentId) {
     this.documentId = documentId;
   }
 }
