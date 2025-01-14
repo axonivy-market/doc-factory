@@ -6,6 +6,7 @@ import com.aspose.words.Document;
 import com.aspose.words.LayoutCollector;
 import com.aspose.words.Node;
 import com.aspose.words.NodeCollection;
+import com.aspose.words.NodeType;
 import com.aspose.words.Paragraph;
 import com.aspose.words.ParagraphCollection;
 import com.aspose.words.SaveFormat;
@@ -47,7 +48,7 @@ public class DocumentBlankPageRemover {
       ParagraphCollection pc = section.getBody().getParagraphs();
       for (Paragraph p : pc) {
         if (lc.getStartPageIndex(p) == page) {
-          NodeCollection<?> nodes = p.getChildNodes();
+          NodeCollection<?> nodes = p.getChildNodes(NodeType.PARAGRAPH, false);
           for (Node node : nodes) {
             pageText += node.toString(SaveFormat.TEXT).trim();
           }
