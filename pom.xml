@@ -20,7 +20,7 @@
     <module>aspose-email-demo-product</module>
     <module>aspose-email-demo-test</module>
     <module>doc-factory-demo-app</module>
-    <module>aspose-barcode-demo-app</module>
+    <module>aspose-email-demo-app</module>
   </modules>
   <scm>
     <developerConnection>scm:git:https://github.com/axonivy-market/doc-factory.git</developerConnection>
