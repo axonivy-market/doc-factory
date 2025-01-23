@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>doc-factory-modules</groupId>
+  <artifactId>aspose-barcode-demo-app-app</artifactId>
+  <version>12.0.1-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <scm>
+    <developerConnection>scm:git:https://github.com/axonivy-market/doc-factory.git</developerConnection>
+  </scm>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+  <dependencies>
+    <dependency>
+      <groupId>com.axonivy.utils.docfactory</groupId>
+      <artifactId>doc-factory-demos</artifactId>
+      <version>12.0.1-SNAPSHOT</version>
+      <type>iar</type>
+    </dependency>
+  </dependencies>
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>3.1.0</version>
+        <executions>
+          <execution>
+            <id>create.app</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <descriptors>
+            <descriptor>assembly.xml</descriptor>
+          </descriptors>
+          <appendAssemblyId>false</appendAssemblyId>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>
