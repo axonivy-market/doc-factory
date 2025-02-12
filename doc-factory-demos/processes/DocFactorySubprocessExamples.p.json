@@ -12,8 +12,7 @@
         "callSignature" : "start1",
         "outLink" : "start1.ivp",
         "startName" : "1.1 Document with TemplateMergeFields",
-        "tags" : "demo",
-        "case" : { }
+        "tags" : "demo"
       },
       "visual" : {
         "at" : { "x" : 96, "y" : 208 },
@@ -114,8 +113,7 @@
       "config" : {
         "callSignature" : "start2",
         "outLink" : "start2.ivp",
-        "startName" : "1.2a Document with Object",
-        "case" : { }
+        "startName" : "1.2a Document with Object"
       },
       "visual" : {
         "at" : { "x" : 88, "y" : 344 },
@@ -283,8 +281,7 @@
       "config" : {
         "callSignature" : "start3",
         "outLink" : "start3.ivp",
-        "startName" : "1.3 Document with Table",
-        "case" : { }
+        "startName" : "1.3 Document with Table"
       },
       "visual" : {
         "at" : { "x" : 96, "y" : 696 },
@@ -461,8 +458,7 @@
       "config" : {
         "callSignature" : "start5",
         "outLink" : "start5.ivp",
-        "startName" : "1.5 Document with nested Tables",
-        "case" : { }
+        "startName" : "1.5 Document with nested Tables"
       },
       "visual" : {
         "at" : { "x" : 96, "y" : 1080 },
@@ -664,8 +660,7 @@
       "config" : {
         "callSignature" : "start6",
         "outLink" : "start6.ivp",
-        "startName" : "1.2b Document with nested Object",
-        "case" : { }
+        "startName" : "1.2b Document with nested Object"
       },
       "visual" : {
         "at" : { "x" : 88, "y" : 440 },
@@ -793,8 +788,7 @@
       "config" : {
         "callSignature" : "start7",
         "outLink" : "start7.ivp",
-        "startName" : "1.2c Document with Object And Table",
-        "case" : { }
+        "startName" : "1.2c Document with Object And Table"
       },
       "visual" : {
         "at" : { "x" : 88, "y" : 536 },
