@@ -118,7 +118,7 @@
         "case" : { }
       },
       "visual" : {
-        "at" : { "x" : 96, "y" : 440 },
+        "at" : { "x" : 88, "y" : 344 },
         "labelOffset" : { "x" : 34, "y" : 49 }
       },
       "connect" : { "id" : "f14", "to" : "f11" }
@@ -151,7 +151,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 208, "y" : 440 }
+        "at" : { "x" : 216, "y" : 344 }
       },
       "connect" : { "id" : "f16", "to" : "f13" }
     }, {
@@ -189,7 +189,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 592, "y" : 440 }
+        "at" : { "x" : 600, "y" : 344 }
       },
       "connect" : { "id" : "f23", "to" : "f1" }
     }, {
@@ -209,7 +209,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 384, "y" : 440 },
+        "at" : { "x" : 392, "y" : 344 },
         "size" : { "width" : 128, "height" : 60 }
       },
       "connect" : { "id" : "f17", "to" : "f12" }
@@ -588,7 +588,7 @@
         "Nested fields e.g. \"unit.amount\" is not expanded."
       ],
       "visual" : {
-        "at" : { "x" : 920, "y" : 440 },
+        "at" : { "x" : 944, "y" : 336 },
         "size" : { "width" : 304, "height" : 60 }
       }
     }, {
@@ -619,7 +619,7 @@
         "template" : "view/done.xhtml"
       },
       "visual" : {
-        "at" : { "x" : 736, "y" : 440 }
+        "at" : { "x" : 744, "y" : 344 }
       }
     }, {
       "id" : "f2",
@@ -655,7 +655,7 @@
         "template" : "view/done.xhtml"
       },
       "visual" : {
-        "at" : { "x" : 736, "y" : 536 }
+        "at" : { "x" : 752, "y" : 440 }
       }
     }, {
       "id" : "f15",
@@ -668,7 +668,7 @@
         "case" : { }
       },
       "visual" : {
-        "at" : { "x" : 96, "y" : 536 },
+        "at" : { "x" : 88, "y" : 440 },
         "labelOffset" : { "x" : 56, "y" : 53 }
       },
       "connect" : { "id" : "f56", "to" : "f28" }
@@ -707,7 +707,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 592, "y" : 536 }
+        "at" : { "x" : 600, "y" : 440 }
       },
       "connect" : { "id" : "f55", "to" : "f9" }
     }, {
@@ -739,7 +739,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 208, "y" : 536 },
+        "at" : { "x" : 224, "y" : 440 },
         "size" : { "width" : 128, "height" : 60 }
       },
       "connect" : { "id" : "f57", "to" : "f36" }
@@ -760,7 +760,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 384, "y" : 536 },
+        "at" : { "x" : 392, "y" : 440 },
         "size" : { "width" : 128, "height" : 60 }
       },
       "connect" : { "id" : "f54", "to" : "f18" }
@@ -774,31 +774,39 @@
         "Use full qualified names for merge fields."
       ],
       "visual" : {
-        "at" : { "x" : 928, "y" : 544 },
+        "at" : { "x" : 960, "y" : 432 },
         "size" : { "width" : 320, "height" : 76 }
       }
     }, {
       "id" : "f58",
+      "type" : "TaskEndPage",
+      "config" : {
+        "template" : "view/done.xhtml"
+      },
+      "visual" : {
+        "at" : { "x" : 752, "y" : 536 }
+      }
+    }, {
+      "id" : "f59",
       "type" : "RequestStart",
-      "name" : "Document with Object And Table",
+      "name" : "Document with Object and Table",
       "config" : {
         "callSignature" : "start7",
         "outLink" : "start7.ivp",
-        "startName" : "1.1 Document with TemplateMergeFields",
-        "tags" : "demo",
+        "startName" : "1.2c Document with Object And Table",
         "case" : { }
       },
       "visual" : {
-        "at" : { "x" : 96, "y" : 328 },
-        "labelOffset" : { "x" : 65, "y" : 57 }
+        "at" : { "x" : 88, "y" : 536 },
+        "labelOffset" : { "x" : 56, "y" : 53 }
       },
-      "connect" : { "id" : "f64", "to" : "f59" }
+      "connect" : { "id" : "f63", "to" : "f61" }
     }, {
       "id" : "f60",
       "type" : "SubProcessCall",
       "name" : [
         "Create Document",
-        "with Object"
+        "with Object and Table "
       ],
       "config" : {
         "processCall" : "Functional Processes/writeSerialLetterToOneCorrespondent:writeDocumentWithMailMergeTable(CompositeObject,String,String,String,String,List<String>,List<Recordset>)",
@@ -816,7 +824,7 @@
             "param.data" : "in.position",
             "param.optionalOutputpath" : "new File(\"ivy_DocFactoryDemo\").getAbsolutePath()",
             "param.optionalLetterName" : "\"DocWithObjectAndTable\"",
-            "param.optionalOutputFormat" : "\"docx\"",
+            "param.optionalOutputFormat" : "\"pdf\"",
             "param.templatePath" : "in.templateFile.getAbsolutePath()",
             "param.tableNamesList" : "in.tableNames",
             "param.recordsetsList" : "in.tableRecords"
@@ -826,49 +834,19 @@
           "code" : [
             "import ch.ivyteam.ivy.docFactoryExamples.Util.FilesUtil;",
             "in.templateFile.delete();",
+            "",
             "FilesUtil.setFileRef(result.fileOperationMessage.files.get(0));"
           ]
         }
       },
       "visual" : {
-        "at" : { "x" : 592, "y" : 328 },
-        "size" : { "width" : 160, "height" : 60 }
+        "at" : { "x" : 600, "y" : 536 }
       },
-      "connect" : { "id" : "f63", "to" : "f62" }
+      "connect" : { "id" : "f64", "to" : "f58" }
     }, {
       "id" : "f61",
       "type" : "Script",
-      "name" : [
-        "Get Template from",
-        "CMS"
-      ],
-      "config" : {
-        "output" : {
-          "code" : [
-            "import ch.ivyteam.ivy.docFactoryExamples.ExportFromCms;",
-            "",
-            "out.templateFile = ExportFromCms.export(\"/Templates/myTemplateWithObjectAndTable\", \"doc\");"
-          ]
-        }
-      },
-      "visual" : {
-        "at" : { "x" : 384, "y" : 328 },
-        "size" : { "width" : 128, "height" : 60 }
-      },
-      "connect" : { "id" : "f65", "to" : "f60" }
-    }, {
-      "id" : "f62",
-      "type" : "TaskEndPage",
-      "config" : {
-        "template" : "view/done.xhtml"
-      },
-      "visual" : {
-        "at" : { "x" : 736, "y" : 328 }
-      }
-    }, {
-      "id" : "f59",
-      "type" : "Script",
-      "name" : "Create Object and Record Set",
+      "name" : "Create Object and Recordset",
       "config" : {
         "output" : {
           "map" : {
@@ -896,22 +874,44 @@
             "out.tableRecords.add(rs);",
             "out.tableNames.add(\"reporting\");",
             "",
-            "//an Object",
+            "//a structured Object",
             "Position p = new Position();",
             "p.date = '11.9.2019';",
             "p.code = 1243;",
             "p.description = \"London - Dublin\";",
-            "p.unit.amount = 190;",
-            "p.unit.text = \"km\";",
+            "p.unit.amount=190;",
+            "p.unit.text = \"Km\";",
             "",
             "out.position = p;"
           ]
         }
       },
       "visual" : {
-        "at" : { "x" : 208, "y" : 328 }
+        "at" : { "x" : 224, "y" : 536 },
+        "size" : { "width" : 128, "height" : 60 }
       },
-      "connect" : { "id" : "f66", "to" : "f61" }
+      "connect" : { "id" : "f66", "to" : "f62" }
+    }, {
+      "id" : "f62",
+      "type" : "Script",
+      "name" : [
+        "Get Template from",
+        "CMS"
+      ],
+      "config" : {
+        "output" : {
+          "code" : [
+            "import ch.ivyteam.ivy.docFactoryExamples.ExportFromCms;",
+            "",
+            "out.templateFile = ExportFromCms.export(\"/Templates/myTemplateWithObjectAndTable\", \"doc\");"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 392, "y" : 536 },
+        "size" : { "width" : 128, "height" : 60 }
+      },
+      "connect" : { "id" : "f65", "to" : "f60" }
     } ],
   "layout" : {
     "lanes" : [ {
