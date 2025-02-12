@@ -232,7 +232,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 384, "y" : 656 },
+        "at" : { "x" : 384, "y" : 720 },
         "size" : { "width" : 128 }
       },
       "connect" : [
@@ -268,7 +268,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 592, "y" : 656 }
+        "at" : { "x" : 592, "y" : 720 }
       },
       "connect" : [
         { "id" : "f35", "to" : "f2" }
@@ -284,7 +284,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 96, "y" : 656 },
+        "at" : { "x" : 96, "y" : 720 },
         "labelOffset" : { "x" : 27, "y" : 52 }
       },
       "connect" : [
@@ -307,7 +307,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 384, "y" : 824 },
+        "at" : { "x" : 384, "y" : 912 },
         "size" : { "width" : 128 }
       },
       "connect" : [
@@ -341,7 +341,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 592, "y" : 824 },
+        "at" : { "x" : 592, "y" : 912 },
         "size" : { "width" : 128 }
       },
       "connect" : [
@@ -361,7 +361,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 96, "y" : 824 },
+        "at" : { "x" : 96, "y" : 912 },
         "labelOffset" : { "x" : 60, "y" : 50 }
       },
       "connect" : [
@@ -387,7 +387,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 208, "y" : 824 },
+        "at" : { "x" : 208, "y" : 912 },
         "size" : { "width" : 144 }
       },
       "connect" : [
@@ -422,7 +422,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 592, "y" : 1032 },
+        "at" : { "x" : 592, "y" : 1104 },
         "size" : { "width" : 128 }
       },
       "connect" : [
@@ -445,7 +445,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 384, "y" : 1032 },
+        "at" : { "x" : 384, "y" : 1104 },
         "size" : { "width" : 128 }
       },
       "connect" : [
@@ -462,7 +462,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 96, "y" : 1032 },
+        "at" : { "x" : 96, "y" : 1104 },
         "labelOffset" : { "x" : 51, "y" : 55 }
       },
       "connect" : [
@@ -497,7 +497,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 208, "y" : 656 },
+        "at" : { "x" : 208, "y" : 720 },
         "size" : { "width" : 144 }
       },
       "connect" : [
@@ -563,7 +563,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 208, "y" : 1032 },
+        "at" : { "x" : 208, "y" : 1104 },
         "size" : { "width" : 128 }
       },
       "connect" : [
@@ -603,7 +603,7 @@
         "e.g. \"person.address\" are not expanded."
       ],
       "visual" : {
-        "at" : { "x" : 912, "y" : 1032 },
+        "at" : { "x" : 912, "y" : 1104 },
         "size" : { "width" : 224 }
       }
     }, {
@@ -631,7 +631,7 @@
         "page" : "view/done.xhtml"
       },
       "visual" : {
-        "at" : { "x" : 736, "y" : 656 }
+        "at" : { "x" : 736, "y" : 720 }
       }
     }, {
       "id" : "f50",
@@ -640,7 +640,7 @@
         "page" : "view/done.xhtml"
       },
       "visual" : {
-        "at" : { "x" : 736, "y" : 824 }
+        "at" : { "x" : 736, "y" : 912 }
       }
     }, {
       "id" : "f51",
@@ -649,7 +649,7 @@
         "page" : "view/done.xhtml"
       },
       "visual" : {
-        "at" : { "x" : 736, "y" : 1032 }
+        "at" : { "x" : 736, "y" : 1104 }
       }
     }, {
       "id" : "f9",
@@ -781,6 +781,140 @@
         "at" : { "x" : 928, "y" : 488 },
         "size" : { "width" : 320, "height" : 76 }
       }
+    }, {
+      "id" : "f58",
+      "type" : "TaskEndPage",
+      "config" : {
+        "page" : "view/done.xhtml"
+      },
+      "visual" : {
+        "at" : { "x" : 736, "y" : 576 }
+      }
+    }, {
+      "id" : "f59",
+      "type" : "SubProcessCall",
+      "name" : [
+        "Create Document",
+        "with Object And Table"
+      ],
+      "config" : {
+        "processCall" : "Functional Processes/writeSerialLetterToOneCorrespondent:writeDocumentWithMailMergeTable(CompositeObject,String,String,String,String,List<String>,List<Recordset>)",
+        "call" : {
+          "map" : {
+            "param.data" : "in.position",
+            "param.optionalOutputpath" : "new File(\"ivy_DocFactoryDemo\").getAbsolutePath()",
+            "param.optionalLetterName" : "\"DocWithObjectAndTable\"",
+            "param.optionalOutputFormat" : "\"pdf\"",
+            "param.templatePath" : "in.templateFile.getAbsolutePath()",
+            "param.tableNamesList" : "in.tableNames",
+            "param.recordsetsList" : "in.tableRecords"
+          }
+        },
+        "output" : {
+          "code" : [
+            "import ch.ivyteam.ivy.docFactoryExamples.Util.FilesUtil;",
+            "in.templateFile.delete();",
+            "",
+            "FilesUtil.setFileRef(result.fileOperationMessage.files.get(0));"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 592, "y" : 576 }
+      },
+      "connect" : [
+        { "id" : "f66", "to" : "f58" }
+      ]
+    }, {
+      "id" : "f60",
+      "type" : "Script",
+      "name" : [
+        "Get Template from",
+        "CMS"
+      ],
+      "config" : {
+        "output" : {
+          "code" : [
+            "import ch.ivyteam.ivy.docFactoryExamples.ExportFromCms;",
+            "",
+            "out.templateFile = ExportFromCms.export(\"/Templates/myTemplateWithObjectAndTable\", \"doc\");"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 384, "y" : 576 },
+        "size" : { "width" : 128 }
+      },
+      "connect" : [
+        { "id" : "f65", "to" : "f59" }
+      ]
+    }, {
+      "id" : "f61",
+      "type" : "Script",
+      "name" : "Create Object and Recordset",
+      "config" : {
+        "output" : {
+          "map" : {
+            "out" : "in",
+            "out.mergeFields" : "[]",
+            "out.positions" : "[]",
+            "out.report.projects" : "[]",
+            "out.tableRecords" : "[]"
+          },
+          "code" : [
+            "import ch.ivyteam.ivy.addons.docfactory.TemplateMergeField;",
+            "import doc.factory.demos.Position;",
+            "",
+            "//Header Data",
+            "in.mergeFields.add(new TemplateMergeField(\"name\", \"Hüerlimann\"));",
+            "in.mergeFields.add(new TemplateMergeField(\"firstname\", \"Caty\"));",
+            "in.mergeFields.add(new TemplateMergeField(\"address\", \"CH-6300 Zug\"));",
+            "",
+            "//Recordset for Table rows",
+            "Recordset rs = new Recordset();",
+            "rs.addColumn(\"date\", [new Date(), new Date(), new Date()]);",
+            "rs.addColumn(\"hours\", [12,34,51]);",
+            "rs.addColumn(\"desc\", [\"Team Meeting\",\"Requirement Analysis\",\"DOM Model\"]);",
+            "",
+            "out.tableRecords.add(rs);",
+            "out.tableNames.add(\"reporting\");",
+            "",
+            "//a structured Object",
+            "Position p = new Position();",
+            "p.date = '11.9.2019';",
+            "p.code = 1243;",
+            "p.description = \"London - Dublin\";",
+            "p.unit.amount=190;",
+            "p.unit.text = \"Km\";",
+            "",
+            "out.position = p;"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 208, "y" : 576 },
+        "size" : { "width" : 128 }
+      },
+      "connect" : [
+        { "id" : "f63", "to" : "f60" }
+      ]
+    }, {
+      "id" : "f62",
+      "type" : "RequestStart",
+      "name" : "Document with Object And Table",
+      "config" : {
+        "signature" : "start62",
+        "request" : {
+          "name" : "1.2c Document with Object and Table"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 576 },
+        "labelOffset" : { "x" : 56, "y" : 53 }
+      },
+      "connect" : [
+        { "id" : "f64", "to" : "f61" }
+      ]
     } ],
   "layout" : {
     "lanes" : [ {
@@ -790,7 +924,7 @@
         "size" : 176
       }, {
         "name" : "CompositeObject Data",
-        "size" : 224
+        "size" : 296
       }, {
         "name" : "Document with Table",
         "size" : 184
