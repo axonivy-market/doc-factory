@@ -903,7 +903,7 @@
       "type" : "RequestStart",
       "name" : "Document with Object And Table",
       "config" : {
-        "signature" : "start62",
+        "signature" : "start7",
         "request" : {
           "name" : "1.2c Document with Object and Table"
         }
