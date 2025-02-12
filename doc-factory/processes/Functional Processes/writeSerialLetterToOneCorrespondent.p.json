@@ -1035,7 +1035,10 @@
         "result" : {
           "params" : [
             { "name" : "fileOperationMessage", "type" : "ch.ivyteam.ivy.addons.docfactory.FileOperationMessage", "desc" : "Result containing a Type indicating if the operation was successfull, a message in the Session User language, a list of java.io.File that were created during the process." }
-          ]
+          ],
+          "map" : {
+            "result.fileOperationMessage" : "in.fileOperationMessage"
+          }
         },
         "tags" : "CONNECTOR"
       },
