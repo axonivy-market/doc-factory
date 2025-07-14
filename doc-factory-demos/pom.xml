@@ -12,9 +12,6 @@
   <artifactId>doc-factory-demos</artifactId>
   <version>13.1.1-SNAPSHOT</version>
   <packaging>iar</packaging>
-  <properties>
-    <project.build.plugin.version>12.0.0</project.build.plugin.version>
-  </properties>
   <dependencies>
     <dependency>
       <groupId>com.axonivy.utils.docfactory</groupId>

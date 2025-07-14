@@ -16,6 +16,7 @@ import org.openqa.selenium.By;
 import com.axonivy.ivy.webtest.IvyWebTest;
 import com.axonivy.ivy.webtest.engine.EngineUrl;
 import com.codeborne.selenide.Configuration;
+import com.codeborne.selenide.DownloadOptions;
 import com.codeborne.selenide.FileDownloadMode;
 import com.codeborne.selenide.Selenide;
 
@@ -35,7 +36,7 @@ public class WebTestAsposeEmailDemoIT {
     open(EngineUrl.createProcessUrl("AsposeEmailDemo/1712BF5507F25F15/start.ivp"));
     $(By.id("form:customer")).shouldBe(visible);
     var creator = $(By.id("form:createBtn")).shouldBe(visible, Duration.ofSeconds(30));
-    File msg = creator.download(Duration.ofSeconds(30).toMillis());
+    File msg = creator.download(DownloadOptions.using(FileDownloadMode.PROXY).withTimeout(Duration.ofSeconds(30)));
 
     Awaitility.await().untilAsserted(() -> {
       assertThat(msg).exists();
