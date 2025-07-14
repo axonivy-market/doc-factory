@@ -10,7 +10,7 @@
   </parent>
   <groupId>com.axonivy.utils.docfactory</groupId>
   <artifactId>doc-factory-test</artifactId>
-  <version>12.0.3-SNAPSHOT</version>
+  <version>13.1.1-SNAPSHOT</version>
   <packaging>iar</packaging>
   <properties>
     <pdfbox.version>3.0.4</pdfbox.version>
