@@ -17,6 +17,10 @@ on:
       mvnVersion:
         type: string
         default: 3.9.8
+      ivyVersion:
+        type: string
+        default: dev
+        description: the ivy version to use (e.g. dev/nightly/nightly-10/...)
       migrateToLatestIvyVersion :
         type: boolean
         default: false
