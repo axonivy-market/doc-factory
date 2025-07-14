@@ -11,6 +11,5 @@ jobs:
     uses: './.github/workflows/ci.yml'
     secrets: inherit
     with:
-      mvnArgs: '"-Divy.engine.download.url=https://dev.axonivy.com/permalink/dev/axonivy-engine.zip" "-Divy.engine.version=(12.0.0,]" "-Dproject.build.plugin.version=13.1.0-SNAPSHOT" "-Dtester.version=13.1.0-SNAPSHOT" "-Dselenide.version=7.6.1" -Dmaven.deploy.skip=true'
-      javaVersion: 21
-      mvnVersion: 3.9.8
+      mvnArgs: '"-Divy.engine.download.url=https://dev.axonivy.com/permalink/dev/axonivy-engine.zip" "-Divy.engine.version=(12.0.0,]" "-Dproject.build.plugin.version=13.1.0-SNAPSHOT" "-Dselenide.version=7.6.1" -Dmaven.deploy.skip=true'
+      migrateToLatestIvyVersion: true
