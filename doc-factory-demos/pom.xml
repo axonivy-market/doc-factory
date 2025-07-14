@@ -1,70 +1,86 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"> 
-	<modelVersion>4.0.0</modelVersion>
-
-	<groupId>com.axonivy.utils.docfactory</groupId>
-	<artifactId>doc-factory-demos</artifactId>
-	<version>12.0.3-SNAPSHOT</version>
-	<packaging>iar</packaging>
-
-	<properties>
-		<project.build.plugin.version>12.0.0</project.build.plugin.version>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
-
-	<repositories>
-		<repository>
-			<id>aspose.com</id>
-			<url>https://repository.aspose.com/repo</url>
-		</repository>
-		<repository>
-      <id>sonatype</id>
-      <url>https://central.sonatype.com/repository/maven-snapshots</url>
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.axonivy.ivy.api</groupId>
+    <artifactId>ivy-project-parent</artifactId>
+    <version>13.1.1</version>
+    <relativePath></relativePath>
+  </parent>
+  <groupId>com.axonivy.utils.docfactory</groupId>
+  <artifactId>doc-factory-demos</artifactId>
+  <version>12.0.3-SNAPSHOT</version>
+  <packaging>iar</packaging>
+  <properties>
+    <project.build.plugin.version>12.0.0</project.build.plugin.version>
+  </properties>
+  <dependencies>
+    <dependency>
+      <groupId>com.axonivy.utils.docfactory</groupId>
+      <artifactId>doc-factory</artifactId>
+      <version>${project.version}</version>
+      <type>iar</type>
+    </dependency>
+    <dependency>
+      <groupId>com.axonivy.ivy.api</groupId>
+      <artifactId>ivy-api</artifactId>
+    </dependency>
+  </dependencies>
+  <repositories>
+    <repository>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <id>central</id>
+      <url>https://repo.maven.apache.org/maven2</url>
+    </repository>
+    <repository>
+      <id>aspose.com</id>
+      <url>https://repository.aspose.com/repo</url>
+    </repository>
+    <repository>
       <snapshots>
         <updatePolicy>always</updatePolicy>
       </snapshots>
+      <id>sonatype</id>
+      <url>https://central.sonatype.com/repository/maven-snapshots</url>
     </repository>
-	</repositories>
-
-	<dependencies>
-		<dependency>
-			<groupId>com.axonivy.utils.docfactory</groupId>
-			<artifactId>doc-factory</artifactId>
-			<version>${project.version}</version>
-			<type>iar</type>
-		</dependency>
-	</dependencies>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>com.axonivy.ivy.ci</groupId>
-				<artifactId>project-build-plugin</artifactId>
-				<version>${project.build.plugin.version}</version>
-				<extensions>true</extensions>
-			</plugin>
-		</plugins>
-
-		<pluginManagement>
-			<plugins>
-				<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-deploy-plugin</artifactId>
-				<version>3.1.3</version>
-				</plugin>        
-			</plugins>
-		</pluginManagement>
-	</build>
-
-	<pluginRepositories>
-		<pluginRepository>
-			<id>central.snapshots</id>
-			<url>https://central.sonatype.com/repository/maven-snapshots</url>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-			<snapshots>
-				<updatePolicy>always</updatePolicy>
-			</snapshots>
-		</pluginRepository>
+    <repository>
+      <snapshots>
+        <updatePolicy>always</updatePolicy>
+      </snapshots>
+      <id>maven.axonivy.com</id>
+      <url>https://maven.axonivy.com</url>
+    </repository>
+  </repositories>
+  <pluginRepositories>
+    <pluginRepository>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <updatePolicy>always</updatePolicy>
+      </snapshots>
+      <id>central.snapshots</id>
+      <url>https://central.sonatype.com/repository/maven-snapshots</url>
+    </pluginRepository>
   </pluginRepositories>
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <artifactId>maven-deploy-plugin</artifactId>
+          <version>3.1.3</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+    <plugins>
+      <plugin>
+        <groupId>com.axonivy.ivy.ci</groupId>
+        <artifactId>project-build-plugin</artifactId>
+        <extensions>true</extensions>
+      </plugin>
+    </plugins>
+  </build>
 </project>

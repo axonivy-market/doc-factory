@@ -1,19 +1,23 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
-
+  <parent>
+    <groupId>com.axonivy.ivy.api</groupId>
+    <artifactId>ivy-project-parent</artifactId>
+    <version>13.1.1</version>
+    <relativePath></relativePath>
+  </parent>
   <groupId>com.axonivy.utils.docfactory</groupId>
   <artifactId>doc-factory-test</artifactId>
   <version>12.0.3-SNAPSHOT</version>
   <packaging>iar</packaging>
-  
   <properties>
-    <project.build.plugin.version>12.0.0</project.build.plugin.version>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <tester.version>12.0.1</tester.version>
     <pdfbox.version>3.0.4</pdfbox.version>
+    <tester.version>12.0.1</tester.version>
     <powermock2.version>2.0.9</powermock2.version>
+    <project.build.plugin.version>12.0.0</project.build.plugin.version>
   </properties>
-  
   <dependencies>
     <dependency>
       <groupId>com.axonivy.utils.docfactory</groupId>
@@ -24,7 +28,6 @@
     <dependency>
       <groupId>com.axonivy.ivy.test</groupId>
       <artifactId>unit-tester</artifactId>
-      <version>${tester.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.pdfbox</groupId>
@@ -32,11 +35,48 @@
       <version>${pdfbox.version}</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>com.axonivy.ivy.api</groupId>
+      <artifactId>ivy-api</artifactId>
+    </dependency>
   </dependencies>
-
+  <repositories>
+    <repository>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <id>central</id>
+      <url>https://repo.maven.apache.org/maven2</url>
+    </repository>
+    <repository>
+      <snapshots>
+        <updatePolicy>always</updatePolicy>
+      </snapshots>
+      <id>sonatype</id>
+      <url>https://central.sonatype.com/repository/maven-snapshots</url>
+    </repository>
+    <repository>
+      <snapshots>
+        <updatePolicy>always</updatePolicy>
+      </snapshots>
+      <id>maven.axonivy.com</id>
+      <url>https://maven.axonivy.com</url>
+    </repository>
+  </repositories>
+  <pluginRepositories>
+    <pluginRepository>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <updatePolicy>always</updatePolicy>
+      </snapshots>
+      <id>central.snapshots</id>
+      <url>https://central.sonatype.com/repository/maven-snapshots</url>
+    </pluginRepository>
+  </pluginRepositories>
   <build>
     <testSourceDirectory>src_test</testSourceDirectory>
-
     <pluginManagement>
       <plugins>
         <plugin>
@@ -47,36 +87,12 @@
         </plugin>
       </plugins>
     </pluginManagement>
-
     <plugins>
       <plugin>
         <groupId>com.axonivy.ivy.ci</groupId>
         <artifactId>project-build-plugin</artifactId>
-        <version>${project.build.plugin.version}</version>
         <extensions>true</extensions>
-      </plugin>  
+      </plugin>
     </plugins>
   </build>
-
-  <pluginRepositories>
-    <pluginRepository>
-      <id>central.snapshots</id>
-      <url>https://central.sonatype.com/repository/maven-snapshots</url>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-      <snapshots>
-        <updatePolicy>always</updatePolicy>
-      </snapshots>
-    </pluginRepository>
-  </pluginRepositories>
-  <repositories>
-    <repository>
-      <id>sonatype</id>
-      <url>https://central.sonatype.com/repository/maven-snapshots</url>
-      <snapshots>
-        <updatePolicy>always</updatePolicy>
-      </snapshots>
-    </repository>
-  </repositories>
 </project>
