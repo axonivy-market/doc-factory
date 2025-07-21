@@ -17,8 +17,14 @@ on:
       mvnVersion:
         type: string
         default: 3.9.8
+      ivyVersion:
+        type: string
+        default: dev
+        description: the ivy version to use (e.g. dev/nightly/nightly-10/...)
+      migrateToLatestIvyVersion :
+        type: boolean
+        default: false
       
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -54,6 +60,48 @@ jobs:
       uses: stCarolas/setup-maven@v5
       with:
         maven-version: ${{ inputs.mvnVersion || '3.9.8' }}
+
+    - name: Download latest ivy engine
+      if: ! ${{ inputs.migrateToLatestIvyVersion}}
+      run: |
+        engineUrl="https://dev.axonivy.com/permalink/${{ inputs.ivyVersion }}/axonivy-engine.zip"
+        workDir=$(pwd)
+        DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+        if [ -z "$workDir" ]; then
+          workDir=$(mktemp -d -t projectConvertXXX)
+        fi
+        if [ -z "$gitDir" ]; then
+          gitDir="$DIR/repos"
+          echo $(mkdir -v -p $DIR/repos)
+        fi
+        if ! [ -d "${workDir}/engine" ]; then
+          echo "Downloading engine from ${engineUrl}"
+          (cd "$workDir" && curl --progress-bar -L -O "${engineUrl}") 
+          zipped=$(find "${workDir}" -maxdepth 1 -name "*.zip")
+          unzip -qq "${zipped}" -d "${workDir}/engine"
+          rm "${zipped}"
+        fi
+        echo "workDir=$workDir" >> $GITHUB_ENV
+
+    - name: Convert projects to latest ivy version
+      if: ! ${{ inputs.migrateToLatestIvyVersion}}
+      run: |
+        export IVY_JAVA_HOME=$JAVA_HOME_21_X64
+        gitDir=$(pwd)
+        gitName=$(basename ${gitDir})
+        echo "Searching projects in ${gitDir}"
+        projects=()
+        for ivyPref in $(find ${gitDir} -name "ch.ivyteam.ivy.designer.prefs"); do
+          project=$(dirname $(dirname $ivyPref))
+          if ! [ -f "${project}/pom.xml" ]; then
+            continue # prefs file not in natural project structure
+          fi
+          projects+=("${project}")
+        done
+        if [ ${#projects[@]} -gt 0 ]; then
+          echo "Collected projects: ${projects[@]}"
+          ${workDir}/engine/bin/EngineConfigCli migrate-project ${projects[@]}
+        fi
 
     - name: Build with Maven
       run: mvn clean ${{ steps.condval.outputs.value }} --batch-mode --fail-at-end ${{ inputs.mvnArgs }}
