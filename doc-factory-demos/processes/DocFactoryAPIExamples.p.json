@@ -776,6 +776,41 @@
       "visual" : {
         "at" : { "x" : 736, "y" : 392 }
       }
+    }, {
+      "id" : "f53",
+      "type" : "RequestStart",
+      "name" : "Upload and review file",
+      "config" : {
+        "signature" : "uploadAndReviewFile"
+      },
+      "visual" : {
+        "at" : { "x" : 80, "y" : 1200 }
+      },
+      "connect" : [
+        { "id" : "f55", "to" : "f54" }
+      ]
+    }, {
+      "id" : "f54",
+      "type" : "DialogCall",
+      "name" : "Upload and Preview file",
+      "config" : {
+        "dialog" : "doc.factory.demos.UploadAndReviewDocument:start()"
+      },
+      "visual" : {
+        "at" : { "x" : 232, "y" : 1200 }
+      },
+      "connect" : [
+        { "id" : "f57", "to" : "f56" }
+      ]
+    }, {
+      "id" : "f56",
+      "type" : "TaskEndPage",
+      "config" : {
+        "page" : "view/done.xhtml"
+      },
+      "visual" : {
+        "at" : { "x" : 392, "y" : 1200 }
+      }
     } ],
   "layout" : {
     "lanes" : [ {
@@ -791,6 +826,9 @@
         "size" : 424
       }, {
         "name" : "Combine PDFs",
+        "size" : 192
+      }, {
+        "name" : "Preview documents",
         "size" : 192
       } ]
   }
