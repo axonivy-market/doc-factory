@@ -1,0 +1,14 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/data-class/13.1.0/data-class.json",
+  "simpleName" : "reviewDocumentData",
+  "namespace" : "ch.ivyteam.ivy.doc.factory",
+  "isBusinessCaseData" : false,
+  "fields" : [ {
+    "name" : "fileReview",
+    "type" : "ch.ivyteam.ivy.addons.docfactory.entity.FileReviewEntity"
+  }, {
+    "name" : "streamedContent",
+    "type" : "org.primefaces.model.StreamedContent",
+    "modifiers" : [ "PERSISTENT" ]
+  } ]
+}

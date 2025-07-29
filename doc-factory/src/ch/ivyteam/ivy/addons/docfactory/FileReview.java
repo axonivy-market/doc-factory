@@ -1,52 +1,29 @@
-package ch.ivyteam.ivy.docFactoryExamples;
+package ch.ivyteam.ivy.addons.docfactory;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
-
-import org.apache.commons.lang3.ObjectUtils;
-import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 
 import com.aspose.cells.PdfSaveOptions;
 import com.aspose.cells.Workbook;
+import com.aspose.email.MailMessage;
 import com.aspose.words.Document;
 import com.aspose.words.LoadFormat;
 import com.aspose.words.LoadOptions;
 import com.aspose.words.SaveFormat;
-import com.aspose.email.MailMessage;
 
-@ManagedBean
-@SessionScoped
-public class DocumentPreviewBean {
-  private StreamedContent streamedContent;
-  private boolean image;
+import ch.ivyteam.ivy.addons.docfactory.entity.FileReviewEntity;
 
-  @PostConstruct
-  public void init() {
-    image = false;
-    streamedContent = null;
-  }
+public class FileReview {
 
-
-  public void handleFileUpload(FileUploadEvent event) throws Exception {
-    String fileName = event.getFile().getFileName();
-    String contentType = event.getFile().getContentType();
-    byte[] fileContent = event.getFile().getContent();
-    image = contentType != null && contentType.startsWith("image/");
-    if (image) {
-      streamedContent = DefaultStreamedContent.builder().contentType(contentType)
-          .stream(() -> new ByteArrayInputStream(fileContent)).build();
-      return;
-    }
-    streamedContent = generateStreamedContent(fileName, contentType, fileContent);
-  }
-
-  private StreamedContent generateStreamedContent(String fileName, String contentType, byte[] fileContent)
-      throws Exception {
+  public static StreamedContent generateStreamedContent(FileReviewEntity fileReviewEntity) throws Exception {
+    String fileName = fileReviewEntity.getFileName();
+    String contentType = fileReviewEntity.getContentType();
+    byte[] fileContent = fileReviewEntity.getFileContent();
     StreamedContent content = null;
     if (fileName.endsWith(".xlsx")) {
       content = convertExcelToPdfStreamedContent(fileContent, fileName);
@@ -63,7 +40,7 @@ public class DocumentPreviewBean {
     return content;
   }
 
-  private StreamedContent convertExcelToPdfStreamedContent(byte[] data, String fileName) throws Exception {
+  private static StreamedContent convertExcelToPdfStreamedContent(byte[] data, String fileName) throws Exception {
     try (InputStream inputStream = new ByteArrayInputStream(data);
         ByteArrayOutputStream pdfOut = new ByteArrayOutputStream()) {
       Workbook workbook = new Workbook(inputStream);
@@ -75,7 +52,7 @@ public class DocumentPreviewBean {
     }
   }
 
-  private StreamedContent convertWordToPdfStreamedContent(byte[] data, String fileName) throws Exception {
+  private static StreamedContent convertWordToPdfStreamedContent(byte[] data, String fileName) throws Exception {
     try (InputStream inputStream = new ByteArrayInputStream(data);
         ByteArrayOutputStream pdfOut = new ByteArrayOutputStream()) {
       LoadOptions loadOptions = new LoadOptions();
@@ -86,7 +63,7 @@ public class DocumentPreviewBean {
     }
   }
 
-  private StreamedContent convertEmlToPdfStreamedContent(byte[] data, String fileName) throws Exception {
+  private static StreamedContent convertEmlToPdfStreamedContent(byte[] data, String fileName) throws Exception {
     try (InputStream inputStream = new ByteArrayInputStream(data);
         ByteArrayOutputStream mhtStream = new ByteArrayOutputStream();
         ByteArrayOutputStream pdfOut = new ByteArrayOutputStream()) {
@@ -103,7 +80,7 @@ public class DocumentPreviewBean {
     }
   }
 
-  private StreamedContent convertPdfToStreamedContent(byte[] data, String fileName) throws IOException {
+  private static StreamedContent convertPdfToStreamedContent(byte[] data, String fileName) throws IOException {
     ByteArrayInputStream inputPdfStream = new ByteArrayInputStream(data);
     com.aspose.pdf.Document pdfDocument = new com.aspose.pdf.Document(inputPdfStream);
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -112,26 +89,9 @@ public class DocumentPreviewBean {
   }
 
 
-  private StreamedContent convertOutputStreamToStreamedContent(ByteArrayOutputStream pdfOut, String fileName) {
+  private static StreamedContent convertOutputStreamToStreamedContent(ByteArrayOutputStream pdfOut, String fileName) {
     byte[] pdfBytes = pdfOut.toByteArray();
     return DefaultStreamedContent.builder().contentType("application/pdf").name(fileName)
         .stream(() -> new ByteArrayInputStream(pdfBytes)).build();
-  }
-
-
-  public StreamedContent getStreamedContent() {
-    return streamedContent;
-  }
-
-  public boolean isImage() {
-    return image;
-  }
-
-  public void setImage(boolean image) {
-    this.image = image;
-  }
-
-  public boolean isEmpty() {
-    return ObjectUtils.isEmpty(streamedContent);
   }
 }
