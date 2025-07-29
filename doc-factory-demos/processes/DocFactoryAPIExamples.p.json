@@ -784,7 +784,7 @@
         "signature" : "uploadAndReviewFile"
       },
       "visual" : {
-        "at" : { "x" : 80, "y" : 1200 }
+        "at" : { "x" : 136, "y" : 1200 }
       },
       "connect" : [
         { "id" : "f55", "to" : "f54" }
@@ -797,7 +797,7 @@
         "dialog" : "doc.factory.demos.UploadAndReviewDocument:start()"
       },
       "visual" : {
-        "at" : { "x" : 232, "y" : 1200 }
+        "at" : { "x" : 320, "y" : 1200 }
       },
       "connect" : [
         { "id" : "f57", "to" : "f56" }
@@ -809,7 +809,7 @@
         "page" : "view/done.xhtml"
       },
       "visual" : {
-        "at" : { "x" : 392, "y" : 1200 }
+        "at" : { "x" : 472, "y" : 1200 }
       }
     } ],
   "layout" : {
