@@ -19,6 +19,7 @@ import com.aspose.words.SaveFormat;
 import ch.ivyteam.ivy.addons.docfactory.entity.FileReviewEntity;
 
 public class FileReview {
+  private static final String PDF_CONTENT_TYPE = "application/pdf";
 
   public static StreamedContent generateStreamedContent(FileReviewEntity fileReviewEntity) throws Exception {
     String fileName = fileReviewEntity.getFileName();
@@ -91,7 +92,7 @@ public class FileReview {
 
   private static StreamedContent convertOutputStreamToStreamedContent(ByteArrayOutputStream pdfOut, String fileName) {
     byte[] pdfBytes = pdfOut.toByteArray();
-    return DefaultStreamedContent.builder().contentType("application/pdf").name(fileName)
+    return DefaultStreamedContent.builder().contentType(PDF_CONTENT_TYPE).name(fileName)
         .stream(() -> new ByteArrayInputStream(pdfBytes)).build();
   }
 }

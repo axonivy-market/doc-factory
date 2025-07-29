@@ -15,17 +15,21 @@
           "params" : [
             { "name" : "fileReviewEntity", "type" : "ch.ivyteam.ivy.addons.docfactory.entity.FileReviewEntity", "desc" : "" }
           ],
-          "map" : { }
+          "map" : {
+            "out.fileReview" : "param.fileReviewEntity"
+          }
         },
         "result" : {
           "params" : [
             { "name" : "streamedContent", "type" : "org.primefaces.model.StreamedContent", "desc" : "" }
           ],
-          "map" : { }
+          "map" : {
+            "result.streamedContent" : "in.streamedContent"
+          }
         }
       },
       "visual" : {
-        "at" : { "x" : 96, "y" : 64 }
+        "at" : { "x" : 88, "y" : 64 }
       },
       "connect" : [
         { "id" : "f2", "to" : "f3" }
@@ -34,24 +38,27 @@
       "id" : "f1",
       "type" : "CallSubEnd",
       "visual" : {
-        "at" : { "x" : 440, "y" : 64 }
+        "at" : { "x" : 448, "y" : 64 }
       }
     }, {
       "id" : "f3",
       "type" : "Script",
+      "name" : "Generate StreamedContent to display",
       "config" : {
         "output" : {
           "code" : [
             "import ch.ivyteam.ivy.addons.docfactory.FileReview;",
+            "",
             "out.streamedContent = FileReview.generateStreamedContent(in.fileReview);"
           ]
         }
       },
       "visual" : {
-        "at" : { "x" : 264, "y" : 64 }
+        "at" : { "x" : 280, "y" : 61 },
+        "size" : { "width" : 144, "height" : 54 }
       },
       "connect" : [
-        { "id" : "f4", "to" : "f1", "color" : "default" }
+        { "id" : "f4", "to" : "f1" }
       ]
     } ]
 }
