@@ -2,7 +2,6 @@ package ch.ivyteam.ivy.addons.docfactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 
 import org.primefaces.model.DefaultStreamedContent;
@@ -26,14 +25,12 @@ public class FileReview {
     String contentType = fileReviewEntity.getContentType();
     byte[] fileContent = fileReviewEntity.getFileContent();
     StreamedContent content = null;
-    if (fileName.endsWith(".xlsx")) {
+    if (fileName.endsWith(".xlsx") || fileName.endsWith(".xls")) {
       content = convertExcelToPdfStreamedContent(fileContent, fileName);
     } else if (fileName.endsWith(".doc") || fileName.endsWith(".docx")) {
       content = convertWordToPdfStreamedContent(fileContent, fileName);
     } else if (fileName.endsWith(".eml")) {
       content = convertEmlToPdfStreamedContent(fileContent, fileName);
-    } else if (fileName.endsWith(".pdf")) {
-      content = convertPdfToStreamedContent(fileContent, fileName);
     } else {
       content = DefaultStreamedContent.builder().contentType(contentType).name(fileName)
           .stream(() -> new ByteArrayInputStream(fileContent)).build();
@@ -80,15 +77,6 @@ public class FileReview {
       return convertOutputStreamToStreamedContent(pdfOut, fileName);
     }
   }
-
-  private static StreamedContent convertPdfToStreamedContent(byte[] data, String fileName) throws IOException {
-    ByteArrayInputStream inputPdfStream = new ByteArrayInputStream(data);
-    com.aspose.pdf.Document pdfDocument = new com.aspose.pdf.Document(inputPdfStream);
-    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-    pdfDocument.save(outputStream);
-    return convertOutputStreamToStreamedContent(outputStream, fileName);
-  }
-
 
   private static StreamedContent convertOutputStreamToStreamedContent(ByteArrayOutputStream pdfOut, String fileName) {
     byte[] pdfBytes = pdfOut.toByteArray();
