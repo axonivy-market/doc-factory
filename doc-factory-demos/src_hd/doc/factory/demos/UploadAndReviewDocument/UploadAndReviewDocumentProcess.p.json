@@ -44,5 +44,110 @@
       "visual" : {
         "at" : { "x" : 224, "y" : 160 }
       }
+    }, {
+      "id" : "f6",
+      "type" : "HtmlDialogMethodStart",
+      "name" : "upload(FileUploadEvent)",
+      "config" : {
+        "signature" : "upload",
+        "input" : {
+          "params" : [
+            { "name" : "fileUploadEvent", "type" : "org.primefaces.event.FileUploadEvent", "desc" : "" }
+          ],
+          "map" : {
+            "out.fileUploadEvent" : "param.fileUploadEvent"
+          }
+        },
+        "guid" : "1985BB99F7F26F01"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 256 }
+      },
+      "connect" : [
+        { "id" : "f8", "to" : "f7" }
+      ]
+    }, {
+      "id" : "f7",
+      "type" : "Script",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import ch.ivyteam.ivy.workflow.document.IDocument;",
+            "import ch.ivyteam.ivy.docFactoryExamples.DocumentPreviewBean;",
+            "",
+            "IDocument doc = DocumentPreviewBean.handleFileUpload2(in.fileUploadEvent);",
+            "",
+            "in.documents.add(doc);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 280, "y" : 256 }
+      },
+      "connect" : [
+        { "id" : "f17", "to" : "f16" }
+      ]
+    }, {
+      "id" : "f11",
+      "type" : "HtmlDialogMethodStart",
+      "name" : "reviewDocument(IDocument)",
+      "config" : {
+        "signature" : "reviewDocument",
+        "input" : {
+          "params" : [
+            { "name" : "document", "type" : "ch.ivyteam.ivy.workflow.document.IDocument", "desc" : "" }
+          ],
+          "map" : {
+            "out.currentDocument" : "param.document"
+          }
+        },
+        "guid" : "1985BC682E389925"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 328 }
+      },
+      "connect" : [
+        { "id" : "f13", "to" : "f12" }
+      ]
+    }, {
+      "id" : "f12",
+      "type" : "Script",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import org.primefaces.model.StreamedContent;",
+            "import ch.ivyteam.ivy.workflow.document.IDocument;",
+            "import ch.ivyteam.ivy.docFactoryExamples.DocumentPreviewBean;",
+            "",
+            "StreamedContent content = DocumentPreviewBean.reviewFile(in.currentDocument);",
+            "",
+            "out.result = content;"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 280, "y" : 328 }
+      },
+      "connect" : [
+        { "id" : "f19", "to" : "f18" }
+      ]
+    }, {
+      "id" : "f14",
+      "type" : "HtmlDialogExit",
+      "visual" : {
+        "at" : { "x" : 488, "y" : 312 }
+      }
+    }, {
+      "id" : "f16",
+      "type" : "HtmlDialogEnd",
+      "visual" : {
+        "at" : { "x" : 400, "y" : 256 }
+      }
+    }, {
+      "id" : "f18",
+      "type" : "HtmlDialogEnd",
+      "visual" : {
+        "at" : { "x" : 416, "y" : 328 }
+      }
     } ]
 }

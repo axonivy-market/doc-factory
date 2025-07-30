@@ -2,5 +2,26 @@
   "$schema" : "https://json-schema.axonivy.com/data-class/13.1.0/data-class.json",
   "simpleName" : "UploadAndReviewDocumentData",
   "namespace" : "doc.factory.demos.UploadAndReviewDocument",
-  "isBusinessCaseData" : false
+  "isBusinessCaseData" : false,
+  "fields" : [ {
+    "name" : "uploadedFile",
+    "type" : "org.primefaces.model.file.UploadedFile",
+    "modifiers" : [ "PERSISTENT" ]
+  }, {
+    "name" : "fileUploadEvent",
+    "type" : "org.primefaces.event.FileUploadEvent",
+    "modifiers" : [ "PERSISTENT" ]
+  }, {
+    "name" : "documents",
+    "type" : "List<ch.ivyteam.ivy.workflow.document.IDocument>",
+    "modifiers" : [ "PERSISTENT" ]
+  }, {
+    "name" : "currentDocument",
+    "type" : "ch.ivyteam.ivy.workflow.document.IDocument",
+    "modifiers" : [ "PERSISTENT" ]
+  }, {
+    "name" : "result",
+    "type" : "org.primefaces.model.StreamedContent",
+    "modifiers" : [ "PERSISTENT" ]
+  } ]
 }
