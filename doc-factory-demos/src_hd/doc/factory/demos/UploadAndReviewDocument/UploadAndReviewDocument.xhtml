@@ -10,7 +10,7 @@
     <ui:define name="title">UploadAndReviewDocument</ui:define>
     <ui:define name="content">
 
-      <h:form enctype="multipart/form-data">
+      <h:form enctype="multipart/form-data" id="abc">
         <h2 style="margin-bottom: 1rem;">Upload and Preview
           Document</h2>
 
@@ -21,7 +21,7 @@
           mode="advanced" auto="true" dragDropSupport="true"
           label="Choose File" sizeLimit="10485760"
           allowTypes="/(\.|\/)(pdf|docx|doc|xlsx|xls|jpeg|jpg|png|eml|txt)$/"
-          update="previewPanel messages" styleClass="custom-upload" />
+          update="abc" styleClass="custom-upload" />
 
         <h:panelGroup id="previewPanel"
           rendered="#{!documentPreviewBean.isEmpty()}"
@@ -30,8 +30,7 @@
             width="100%" height="800" cache="false" player="pdf"
             rendered="#{!documentPreviewBean.image}" />
 
-          <p:graphicImage
-            value="#{documentPreviewBean.streamedContent}"
+          <p:graphicImage value="#{documentPreviewBean.streamedContent}"
             width="100%" height="500" stream="false"
             rendered="#{documentPreviewBean.image}" />
         </h:panelGroup>

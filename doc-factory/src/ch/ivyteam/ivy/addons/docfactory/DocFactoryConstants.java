@@ -10,6 +10,10 @@ public final class DocFactoryConstants {
   public static final String PDF_EXTENSION = ".pdf";
   public static final String HTML_EXTENSION = ".html";
   public static final String ODT_EXTENSION = ".odt";
+  public static final String XLS_EXTENSION = ".xls";
+  public static final String XLSX_EXTENSION = ".xlsx";
+  public static final String EML_EXTENSION = ".eml";
+  public static final String PDF_CONTENT_TYPE = "application/pdf";
 
   public static final int UNSUPPORTED_FORMAT = -1;
   public static final int DOC_FORMAT = 0;

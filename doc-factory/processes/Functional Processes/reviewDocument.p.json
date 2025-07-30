@@ -3,20 +3,20 @@
   "id" : "1985535DC4B94B67",
   "kind" : "CALLABLE_SUB",
   "config" : {
-    "data" : "ch.ivyteam.ivy.doc.factory.reviewDocumentData"
+    "data" : "ch.ivyteam.ivy.doc.factory.DocumentPreviewData"
   },
   "elements" : [ {
       "id" : "f0",
       "type" : "CallSubStart",
-      "name" : "reviewDocument(FileReviewEntity)",
+      "name" : "reviewDocument(DocumentPreview)",
       "config" : {
         "signature" : "reviewDocument",
         "input" : {
           "params" : [
-            { "name" : "fileReviewEntity", "type" : "ch.ivyteam.ivy.addons.docfactory.entity.FileReviewEntity", "desc" : "" }
+            { "name" : "documentReview", "type" : "ch.ivyteam.ivy.addons.docfactory.entity.DocumentPreview", "desc" : "" }
           ],
           "map" : {
-            "out.fileReview" : "param.fileReviewEntity"
+            "out.documentReview" : "param.documentReview"
           }
         },
         "result" : {
@@ -29,7 +29,8 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 88, "y" : 64 }
+        "at" : { "x" : 88, "y" : 64 },
+        "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
       },
       "connect" : [
         { "id" : "f2", "to" : "f3" }
@@ -38,7 +39,8 @@
       "id" : "f1",
       "type" : "CallSubEnd",
       "visual" : {
-        "at" : { "x" : 448, "y" : 64 }
+        "at" : { "x" : 448, "y" : 64 },
+        "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
       }
     }, {
       "id" : "f3",
@@ -47,14 +49,13 @@
       "config" : {
         "output" : {
           "code" : [
-            "import ch.ivyteam.ivy.addons.docfactory.FileReview;",
-            "",
-            "out.streamedContent = FileReview.generateStreamedContent(in.fileReview);"
+            "import com.axonivy.utils.docfactory.preview.DocumentPreviewService;",
+            "out.streamedContent = DocumentPreviewService.generateStreamedContent(in.documentReview);"
           ]
         }
       },
       "visual" : {
-        "at" : { "x" : 280, "y" : 61 },
+        "at" : { "x" : 280, "y" : 64 },
         "size" : { "width" : 144, "height" : 54 }
       },
       "connect" : [
