@@ -28,24 +28,23 @@ public class DocumentPreviewService {
   public static StreamedContent generateStreamedContent(DocumentPreview documentReview) throws Exception {
     String fileName = documentReview.getFileName();
     String contentType = documentReview.getContentType();
-    byte[] fileContent = documentReview.getFileContent();
+    InputStream inputStream = documentReview.getInputStream();
     StreamedContent content = null;
     if (fileName.endsWith(XLSX_EXTENSION) || fileName.endsWith(XLS_EXTENSION)) {
-      content = convertExcelToPdfStreamedContent(fileContent, fileName);
+      content = convertExcelToPdfStreamedContent(inputStream, fileName);
     } else if (fileName.endsWith(DOC_EXTENSION) || fileName.endsWith(DOCX_EXTENSION)) {
-      content = convertWordToPdfStreamedContent(fileContent, fileName);
+      content = convertWordToPdfStreamedContent(inputStream, fileName);
     } else if (fileName.endsWith(EML_EXTENSION)) {
-      content = convertEmlToPdfStreamedContent(fileContent, fileName);
+      content = convertEmlToPdfStreamedContent(inputStream, fileName);
     } else {
-      content = convertOutputStreamToStreamedContent(fileName, contentType, fileContent);
+      content = convertOutputStreamToStreamedContent(fileName, contentType, inputStream);
     }
     return content;
   }
 
-  private static StreamedContent convertExcelToPdfStreamedContent(byte[] data, String fileName) throws Exception {
-    try (InputStream inputStream = new ByteArrayInputStream(data);
-        ByteArrayOutputStream pdfOut = new ByteArrayOutputStream()) {
-      Workbook workbook = new Workbook(inputStream);
+  private static StreamedContent convertExcelToPdfStreamedContent(InputStream data, String fileName) throws Exception {
+    try (ByteArrayOutputStream pdfOut = new ByteArrayOutputStream()) {
+      Workbook workbook = new Workbook(data);
       PdfSaveOptions options = new PdfSaveOptions();
       options.setOnePagePerSheet(false);
       options.setAllColumnsInOnePagePerSheet(true);
@@ -54,22 +53,20 @@ public class DocumentPreviewService {
     }
   }
 
-  private static StreamedContent convertWordToPdfStreamedContent(byte[] data, String fileName) throws Exception {
-    try (InputStream inputStream = new ByteArrayInputStream(data);
-        ByteArrayOutputStream pdfOut = new ByteArrayOutputStream()) {
+  private static StreamedContent convertWordToPdfStreamedContent(InputStream data, String fileName) throws Exception {
+    try (ByteArrayOutputStream pdfOut = new ByteArrayOutputStream()) {
       LoadOptions loadOptions = new LoadOptions();
       loadOptions.setLoadFormat(LoadFormat.AUTO);
-      Document document = new Document(inputStream, loadOptions);
+      Document document = new Document(data, loadOptions);
       document.save(pdfOut, SaveFormat.PDF);
       return convertOutputStreamToStreamedContent(pdfOut, fileName);
     }
   }
 
-  private static StreamedContent convertEmlToPdfStreamedContent(byte[] data, String fileName) throws Exception {
-    try (InputStream inputStream = new ByteArrayInputStream(data);
-        ByteArrayOutputStream mhtmlStream = new ByteArrayOutputStream();
+  private static StreamedContent convertEmlToPdfStreamedContent(InputStream data, String fileName) throws Exception {
+    try (ByteArrayOutputStream mhtmlStream = new ByteArrayOutputStream();
         ByteArrayOutputStream pdfOut = new ByteArrayOutputStream()) {
-      MailMessage mailMsg = MailMessage.load(inputStream);
+      MailMessage mailMsg = MailMessage.load(data);
       mailMsg.save(mhtmlStream, com.aspose.email.SaveOptions.getDefaultMhtml());
       var loadOptions = new LoadOptions();
       loadOptions.setLoadFormat(LoadFormat.MHTML);
@@ -84,12 +81,12 @@ public class DocumentPreviewService {
 
   private static StreamedContent convertOutputStreamToStreamedContent(ByteArrayOutputStream pdfOut, String fileName) {
     byte[] pdfBytes = pdfOut.toByteArray();
-    return convertOutputStreamToStreamedContent(fileName, PDF_CONTENT_TYPE, pdfBytes);
+    return DefaultStreamedContent.builder().contentType(PDF_CONTENT_TYPE).name(fileName)
+        .stream(() -> new ByteArrayInputStream(pdfBytes)).build();
   }
 
   private static StreamedContent convertOutputStreamToStreamedContent(String fileName, String contentType,
-      byte[] fileContent) {
-    return DefaultStreamedContent.builder().contentType(contentType).name(fileName)
-        .stream(() -> new ByteArrayInputStream(fileContent)).build();
+      InputStream inputStream) {
+    return DefaultStreamedContent.builder().contentType(contentType).name(fileName).stream(() -> inputStream).build();
   }
 }
