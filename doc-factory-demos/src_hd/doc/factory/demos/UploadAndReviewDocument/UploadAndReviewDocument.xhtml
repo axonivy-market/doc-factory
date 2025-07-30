@@ -8,33 +8,53 @@
 <h:body>
   <ui:composition template="/layouts/frame-10-full-width.xhtml">
     <ui:define name="title">UploadAndReviewDocument</ui:define>
-    <ui:define name="content">
 
-      <h:form enctype="multipart/form-data" id="abc">
+    <ui:define name="content">
+      <h:form enctype="multipart/form-data">
         <h2 style="margin-bottom: 1rem;">Upload and Preview
           Document</h2>
 
         <p:messages id="messages" showDetail="true" closable="true" />
 
-        <p:fileUpload id="fileUploader"
-          listener="#{documentPreviewBean.handleFileUpload}"
-          mode="advanced" auto="true" dragDropSupport="true"
-          label="Choose File" sizeLimit="10485760"
+        <p:fileUpload id="fileUploader" value="#{data.uploadedFile}"
+          listener="#{logic.upload}" mode="advanced" auto="true"
+          dragDropSupport="true" label="Choose File"
+          sizeLimit="10485760"
           allowTypes="/(\.|\/)(pdf|docx|doc|xlsx|xls|jpeg|jpg|png|eml|txt)$/"
-          update="abc" styleClass="custom-upload" />
+          update="fileTable" styleClass="custom-upload" />
 
-        <h:panelGroup id="previewPanel"
-          rendered="#{!documentPreviewBean.isEmpty()}"
-          style="margin-top: 2rem;">
-          <p:media value="#{documentPreviewBean.streamedContent}"
-            width="100%" height="800" cache="false" player="pdf"
+        <p:dataTable var="file" lazy="false" value="#{data.documents}"
+          id="fileTable" styleClass="p-mt-3">
+          <p:column headerText="File Name">
+            <h:outputText value="#{file.name}" />
+          </p:column>
+          <p:column headerText="Action">
+            <p:commandButton icon="pi pi-eye" title="Preview"
+              actionListener="#{logic.reviewDocument(file)}"
+              update="preview-document-dialog"
+              oncomplete="PF('preview-document-dialog').show();" />
+          </p:column>
+        </p:dataTable>
+      </h:form>
+
+      <!-- Dialog for previewing document -->
+      <p:dialog widgetVar="preview-document-dialog"
+        id="preview-document-dialog" appendTo="@(body)"
+        header="Preview" modal="true" maximizable="true" width="850"
+        height="650" showEffect="fade" hideEffect="fade"
+        dynamic="true" fitViewport="true" responsive="true">
+
+        <div class="ui-g-12">
+          <p:media value="#{data.result}" width="100%" height="620"
+            cache="false" id="media-content" player="pdf"
             rendered="#{!documentPreviewBean.image}" />
 
-          <p:graphicImage value="#{documentPreviewBean.streamedContent}"
-            width="100%" height="500" stream="false"
+          <p:graphicImage
+            value="#{documentPreviewBean.streamedContent}"
+            width="100%" height="620" stream="false"
             rendered="#{documentPreviewBean.image}" />
-        </h:panelGroup>
-      </h:form>
+        </div>
+      </p:dialog>
     </ui:define>
   </ui:composition>
 </h:body>
