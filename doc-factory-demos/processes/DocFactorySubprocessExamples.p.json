@@ -920,7 +920,7 @@
       "type" : "DialogCall",
       "name" : "Upload and Preview file",
       "config" : {
-        "dialog" : "doc.factory.demos.UploadAndReviewDocument:start()"
+        "dialog" : "doc.factory.demos.UploadAndPreviewDocument:start()"
       },
       "visual" : {
         "at" : { "x" : 280, "y" : 1272 }

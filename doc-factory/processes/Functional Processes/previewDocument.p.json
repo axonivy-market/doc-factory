@@ -8,9 +8,9 @@
   "elements" : [ {
       "id" : "f0",
       "type" : "CallSubStart",
-      "name" : "reviewDocument(DocumentPreview)",
+      "name" : "previewDocument(DocumentPreview)",
       "config" : {
-        "signature" : "reviewDocument",
+        "signature" : "previewDocument",
         "input" : {
           "params" : [
             { "name" : "documentReview", "type" : "ch.ivyteam.ivy.addons.docfactory.entity.DocumentPreview", "desc" : "" }
