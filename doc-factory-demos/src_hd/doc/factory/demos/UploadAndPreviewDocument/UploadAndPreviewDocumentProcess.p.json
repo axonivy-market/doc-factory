@@ -3,7 +3,7 @@
   "id" : "1984EF1DA5D474E7",
   "kind" : "HTML_DIALOG",
   "config" : {
-    "data" : "doc.factory.demos.UploadAndReviewDocument.UploadAndReviewDocumentData"
+    "data" : "doc.factory.demos.UploadAndPreviewDocument.UploadAndPreviewDocumentData"
   },
   "elements" : [ {
       "id" : "f0",
@@ -93,9 +93,9 @@
     }, {
       "id" : "f11",
       "type" : "HtmlDialogMethodStart",
-      "name" : "reviewDocument(IDocument)",
+      "name" : "previewDocument(IDocument)",
       "config" : {
-        "signature" : "reviewDocument",
+        "signature" : "previewDocument",
         "input" : {
           "params" : [
             { "name" : "document", "type" : "ch.ivyteam.ivy.workflow.document.IDocument", "desc" : "" }
@@ -124,7 +124,7 @@
             "import ch.ivyteam.ivy.workflow.document.IDocument;",
             "import ch.ivyteam.ivy.docFactoryExamples.DocumentPreviewService;",
             "",
-            "StreamedContent content = DocumentPreviewService.reviewFile(in.currentDocument);",
+            "StreamedContent content = DocumentPreviewService.previewDocument(in.currentDocument);",
             "",
             "out.result = content;"
           ]

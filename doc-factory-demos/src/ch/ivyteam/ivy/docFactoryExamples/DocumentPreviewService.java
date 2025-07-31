@@ -24,13 +24,13 @@ public class DocumentPreviewService {
     return upload(event.getFile().getFileName(), event.getFile().getInputStream());
   }
 
-  public static StreamedContent reviewFile(IDocument document) throws IOException {
+  public static StreamedContent previewDocument(IDocument document) throws IOException {
     File file = new File(document.getPath().asString());
     byte[] fileContent = documentsOf(Ivy.wfCase()).get(document.uuid()).read().asStream().readAllBytes();
     String contentType = Files.probeContentType(file.getJavaFile().toPath());
     var entity = new DocumentPreview(document.getName(), contentType, fileContent);
-    SubProcessCallResult callResult = SubProcessCall.withPath("Functional Processes/reviewDocument")
-        .withStartName("reviewDocument").withParam("documentReview", entity).call();
+    SubProcessCallResult callResult = SubProcessCall.withPath("Functional Processes/previewDocument")
+        .withStartName("previewDocument").withParam("documentReview", entity).call();
     return (StreamedContent) callResult.get("streamedContent");
   }
 
