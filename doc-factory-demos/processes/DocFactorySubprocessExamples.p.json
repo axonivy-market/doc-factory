@@ -928,11 +928,11 @@
     }, {
       "id" : "f68",
       "type" : "RequestStart",
-      "name" : "Upload and review file",
+      "name" : "Upload and preview document",
       "config" : {
-        "signature" : "uploadAndReviewFile",
+        "signature" : "uploadAndPreviewDocument",
         "request" : {
-          "name" : "1.6 Upload and review file"
+          "name" : "1.6 Upload and preview document"
         }
       },
       "visual" : {
