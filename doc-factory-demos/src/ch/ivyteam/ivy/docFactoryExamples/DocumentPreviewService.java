@@ -18,17 +18,17 @@ import ch.ivyteam.ivy.workflow.ICase;
 import ch.ivyteam.ivy.workflow.document.IDocument;
 import ch.ivyteam.ivy.workflow.document.IDocumentService;
 
-public class DocumentPreviewBean {
+public class DocumentPreviewService {
 
-  public static IDocument handleFileUpload2(FileUploadEvent event) throws IOException {
+  public static IDocument handleFileUpload(FileUploadEvent event) throws IOException {
     return upload(event.getFile().getFileName(), event.getFile().getInputStream());
   }
 
   public static StreamedContent reviewFile(IDocument document) throws IOException {
-    InputStream inputStream = documentsOf(Ivy.wfCase()).get(document.uuid()).read().asStream();
     File file = new File(document.getPath().asString());
+    byte[] fileContent = documentsOf(Ivy.wfCase()).get(document.uuid()).read().asStream().readAllBytes();
     String contentType = Files.probeContentType(file.getJavaFile().toPath());
-    var entity = new DocumentPreview(document.getName(), contentType, inputStream);
+    var entity = new DocumentPreview(document.getName(), contentType, fileContent);
     SubProcessCallResult callResult = SubProcessCall.withPath("Functional Processes/reviewDocument")
         .withStartName("reviewDocument").withParam("documentReview", entity).call();
     return (StreamedContent) callResult.get("streamedContent");
