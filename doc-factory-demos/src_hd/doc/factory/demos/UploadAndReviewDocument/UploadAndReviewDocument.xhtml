@@ -28,7 +28,8 @@
           <p:column headerText="File Name">
             <h:outputText value="#{file.name}" />
           </p:column>
-          <p:column headerText="Action">
+          <p:column headerText="Action"
+            style="width: 10%; text-align: center;">
             <p:commandButton icon="pi pi-eye" title="Preview"
               actionListener="#{logic.reviewDocument(file)}"
               update="preview-document-dialog"
@@ -39,10 +40,10 @@
 
       <!-- Dialog for previewing document -->
       <p:dialog widgetVar="preview-document-dialog"
-        id="preview-document-dialog" appendTo="@(body)"
-        header="Preview" modal="true" maximizable="true" width="850"
-        height="650" showEffect="fade" hideEffect="fade"
-        dynamic="true" fitViewport="true" responsive="true">
+        id="preview-document-dialog" appendTo="@(body)" header="Preview"
+        modal="true" maximizable="true" width="850" height="650"
+        showEffect="fade" hideEffect="fade" dynamic="true"
+        fitViewport="true" responsive="true">
 
         <div class="ui-g-12">
           <p:media value="#{data.result}" width="100%" height="620"

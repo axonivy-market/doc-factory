@@ -61,7 +61,8 @@
         "guid" : "1985BB99F7F26F01"
       },
       "visual" : {
-        "at" : { "x" : 96, "y" : 256 }
+        "at" : { "x" : 96, "y" : 256 },
+        "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
       },
       "connect" : [
         { "id" : "f8", "to" : "f7" }
@@ -69,20 +70,22 @@
     }, {
       "id" : "f7",
       "type" : "Script",
+      "name" : "Upload and save document to case",
       "config" : {
         "output" : {
           "code" : [
             "import ch.ivyteam.ivy.workflow.document.IDocument;",
-            "import ch.ivyteam.ivy.docFactoryExamples.DocumentPreviewBean;",
+            "import ch.ivyteam.ivy.docFactoryExamples.DocumentPreviewService;",
             "",
-            "IDocument doc = DocumentPreviewBean.handleFileUpload2(in.fileUploadEvent);",
+            "IDocument doc = DocumentPreviewService.handleFileUpload(in.fileUploadEvent);",
             "",
             "in.documents.add(doc);"
           ]
         }
       },
       "visual" : {
-        "at" : { "x" : 280, "y" : 256 }
+        "at" : { "x" : 248, "y" : 256 },
+        "description" : "Upload and save the file into the current case"
       },
       "connect" : [
         { "id" : "f17", "to" : "f16" }
@@ -104,7 +107,8 @@
         "guid" : "1985BC682E389925"
       },
       "visual" : {
-        "at" : { "x" : 96, "y" : 328 }
+        "at" : { "x" : 96, "y" : 328 },
+        "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
       },
       "connect" : [
         { "id" : "f13", "to" : "f12" }
@@ -112,42 +116,40 @@
     }, {
       "id" : "f12",
       "type" : "Script",
+      "name" : "Read document",
       "config" : {
         "output" : {
           "code" : [
             "import org.primefaces.model.StreamedContent;",
             "import ch.ivyteam.ivy.workflow.document.IDocument;",
-            "import ch.ivyteam.ivy.docFactoryExamples.DocumentPreviewBean;",
+            "import ch.ivyteam.ivy.docFactoryExamples.DocumentPreviewService;",
             "",
-            "StreamedContent content = DocumentPreviewBean.reviewFile(in.currentDocument);",
+            "StreamedContent content = DocumentPreviewService.reviewFile(in.currentDocument);",
             "",
             "out.result = content;"
           ]
         }
       },
       "visual" : {
-        "at" : { "x" : 280, "y" : 328 }
+        "at" : { "x" : 248, "y" : 328 },
+        "description" : "Load document from the case by document's uuid"
       },
       "connect" : [
         { "id" : "f19", "to" : "f18" }
       ]
     }, {
-      "id" : "f14",
-      "type" : "HtmlDialogExit",
-      "visual" : {
-        "at" : { "x" : 488, "y" : 312 }
-      }
-    }, {
       "id" : "f16",
       "type" : "HtmlDialogEnd",
       "visual" : {
-        "at" : { "x" : 400, "y" : 256 }
+        "at" : { "x" : 368, "y" : 256 },
+        "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
       }
     }, {
       "id" : "f18",
       "type" : "HtmlDialogEnd",
       "visual" : {
-        "at" : { "x" : 416, "y" : 328 }
+        "at" : { "x" : 368, "y" : 328 },
+        "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
       }
     } ]
 }

@@ -30,6 +30,11 @@
       },
       "visual" : {
         "at" : { "x" : 88, "y" : 64 },
+        "description" : [
+          "This function receives a DocumentPreview entity and returns the value as a StreamedContent type.",
+          "",
+          "This function currently supports the following types: .eml, .xlsx, .doc, .jpg/.png, .xls, .doc, .docx."
+        ],
         "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
       },
       "connect" : [
@@ -61,5 +66,25 @@
       "connect" : [
         { "id" : "f4", "to" : "f1" }
       ]
+    }, {
+      "id" : "f5",
+      "type" : "ProcessAnnotation",
+      "name" : [
+        "This function receives a DocumentPreview entity and returns the value as a StreamedContent.",
+        "",
+        "This function currently supports the following types: .eml, .xlsx, .doc, .jpg/.png, .xls, .doc, .docx."
+      ],
+      "visual" : {
+        "at" : { "x" : 256, "y" : 136 },
+        "size" : { "width" : 512 },
+        "description" : [
+          "The DocumentPreview object is a Java object that can parse a document model from a FileUploadEvent, FileUpload,",
+          " or we can manually create a DocumentPreview object with fileName, contentType, and a byte[] data.",
+          "",
+          "This callable currently supports the following types: .eml, .xlsx, .doc, .jpg/.png, .xls, .doc, .docx.",
+          "",
+          "It will convert these file types to PDF format and return a streamedContent. We can use the <p:media> tag to display this value."
+        ]
+      }
     } ]
 }
