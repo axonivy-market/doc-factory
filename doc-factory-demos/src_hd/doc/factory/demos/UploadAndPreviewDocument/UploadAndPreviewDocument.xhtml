@@ -11,8 +11,7 @@
 
     <ui:define name="content">
       <h:form enctype="multipart/form-data">
-        <h2 style="margin-bottom: 1rem;">Upload and Preview
-          Document</h2>
+        <h2 class="mb-2">Upload and Preview Document</h2>
 
         <p:messages id="messages" showDetail="true" closable="true" />
 
@@ -20,7 +19,7 @@
           listener="#{logic.upload}" mode="advanced" auto="true"
           dragDropSupport="true" label="Choose File"
           sizeLimit="10485760"
-          allowTypes="/(\.|\/)(pdf|docx|doc|xlsx|xls|jpeg|jpg|png|eml|txt)$/"
+          allowTypes="/(\.|\/)(pdf|docx|doc|xlsx|xls|jpeg|jpg|png|eml|txt|log)$/"
           update="fileTable" styleClass="custom-upload" />
 
         <p:dataTable var="file" lazy="false" value="#{data.documents}"
@@ -28,8 +27,7 @@
           <p:column headerText="File Name">
             <h:outputText value="#{file.name}" />
           </p:column>
-          <p:column headerText="Action"
-            style="width: 10%; text-align: center;">
+          <p:column headerText="Action" styleClass="w-1 text-center">
             <p:commandButton icon="pi pi-eye" title="Preview"
               actionListener="#{logic.previewDocument(file)}"
               update="preview-document-dialog"
