@@ -18,6 +18,10 @@ on:
         type: string
         default: 3.9.8
       
+permissions:
+  contents: read
+  checks: write
+  pull-requests: write
 
 jobs:
   build:
