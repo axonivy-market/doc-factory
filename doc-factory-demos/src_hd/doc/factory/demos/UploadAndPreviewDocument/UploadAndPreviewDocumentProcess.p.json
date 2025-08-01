@@ -75,9 +75,9 @@
         "output" : {
           "code" : [
             "import ch.ivyteam.ivy.workflow.document.IDocument;",
-            "import ch.ivyteam.ivy.docFactoryExamples.DocumentPreviewService;",
+            "import ch.ivyteam.ivy.docFactoryExamples.DemoDocumentPreviewService;",
             "",
-            "IDocument doc = DocumentPreviewService.handleFileUpload(in.fileUploadEvent);",
+            "IDocument doc = DemoDocumentPreviewService.handleFileUpload(in.fileUploadEvent);",
             "",
             "in.documents.add(doc);"
           ]
@@ -122,9 +122,9 @@
           "code" : [
             "import org.primefaces.model.StreamedContent;",
             "import ch.ivyteam.ivy.workflow.document.IDocument;",
-            "import ch.ivyteam.ivy.docFactoryExamples.DocumentPreviewService;",
+            "import ch.ivyteam.ivy.docFactoryExamples.DemoDocumentPreviewService;",
             "",
-            "StreamedContent content = DocumentPreviewService.previewDocument(in.currentDocument);",
+            "StreamedContent content = DemoDocumentPreviewService.previewDocument(in.currentDocument);",
             "",
             "out.result = content;"
           ]

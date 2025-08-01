@@ -18,7 +18,7 @@ import ch.ivyteam.ivy.workflow.ICase;
 import ch.ivyteam.ivy.workflow.document.IDocument;
 import ch.ivyteam.ivy.workflow.document.IDocumentService;
 
-public class DocumentPreviewService {
+public class DemoDocumentPreviewService {
 
   public static IDocument handleFileUpload(FileUploadEvent event) throws IOException {
     return upload(event.getFile().getFileName(), event.getFile().getInputStream());

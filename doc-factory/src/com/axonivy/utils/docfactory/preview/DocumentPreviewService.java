@@ -75,8 +75,8 @@ public class DocumentPreviewService {
       var loadOptions = new LoadOptions();
       loadOptions.setLoadFormat(LoadFormat.MHTML);
 
-      try (InputStream mhtInput = new ByteArrayInputStream(mhtmlStream.toByteArray())) {
-        Document doc = new Document(mhtInput);
+      try (InputStream mhtmlInput = new ByteArrayInputStream(mhtmlStream.toByteArray())) {
+        Document doc = new Document(mhtmlInput);
         doc.save(pdfOut, SaveFormat.PDF);
       }
       return convertOutputStreamToStreamedContent(pdfOut, fileName);
