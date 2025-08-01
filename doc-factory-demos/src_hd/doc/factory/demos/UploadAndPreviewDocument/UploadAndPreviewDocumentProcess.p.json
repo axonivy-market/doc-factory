@@ -121,7 +121,6 @@
         "output" : {
           "code" : [
             "import org.primefaces.model.StreamedContent;",
-            "import ch.ivyteam.ivy.workflow.document.IDocument;",
             "import ch.ivyteam.ivy.docFactoryExamples.DemoDocumentPreviewService;",
             "",
             "StreamedContent content = DemoDocumentPreviewService.previewDocument(in.currentDocument);",
