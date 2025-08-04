@@ -111,7 +111,45 @@ jobs:
     - name: Build with Maven
       run: mvn clean ${{ steps.condval.outputs.value }} --batch-mode --fail-at-end ${{ inputs.mvnArgs }}
 
-    - name: Publish Unit Test Results
+    - name: Check if test results exist
+      id: check_test_files
+      if: always() && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
+      run: |
+        if [[ "${{ hashFiles('**/target/*-reports/*.xml') }}" != "" ]]; then
+          echo "exists=true" >> $GITHUB_OUTPUT
+        else
+          echo "exists=false" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Remove test summary files
+      if: always() && steps.check_test_files.outputs.exists == 'true'
+      run: rm -f **/target/*-reports/*-summary.xml
+
+    - name: Publish Unit Test Results with dorny/test-reporter 
+      id: test_report
+      uses: dorny/test-reporter@v1.9.1
+      if: always() && steps.check_test_files.outputs.exists == 'true'
+      with:
+        name: JUnit Test Results
+        reporter: java-junit
+        path: '**/target/*-reports/*.xml'
+        fail-on-error: 'false'
+
+    - name: Export test results to json file
+      if: always() && steps.check_test_files.outputs.exists == 'true'
+      run: |
+        response=$(curl ${{ steps.test_report.outputs.url }})
+        echo $response > test_report.json
+
+    - name: Archive test json file
+      uses: actions/upload-artifact@v4
+      if: always() && steps.check_test_files.outputs.exists == 'true'
+      with:
+        name: export-test-json-file
+        retention-days: 2
+        path: 'test_report.json'
+
+    - name: Publish Unit Test Results with Enricomi
       uses: EnricoMi/publish-unit-test-result-action@v2
       if: always()
       with:
