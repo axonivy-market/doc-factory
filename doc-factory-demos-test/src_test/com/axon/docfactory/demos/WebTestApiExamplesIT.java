@@ -8,6 +8,7 @@ import static com.codeborne.selenide.Selenide.open;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.nio.file.Path;
+import java.time.Duration;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -81,10 +82,9 @@ class WebTestApiExamplesIT {
 
     open(EngineUrl.create().path("tasks").toUrl());
     $(By.id("tasksForm:tasks:0:taskName")).shouldBe(visible).click();
-    SelenideElement taskStartBtn = $(By.id("actionMenuForm:taskStartBtn"));
-    if (taskStartBtn.isDisplayed()) {
-    	taskStartBtn.shouldBe(visible).click();
-    }
+    SelenideElement taskStartBtn = $(By.cssSelector("[id$='taskStartBtn']")).shouldBe(visible);
+    taskStartBtn.click();
+    $("iFrame").shouldBe(visible, Duration.ofSeconds(10));
     Selenide.switchTo().frame("iFrame");
     $("h3").shouldHave(exactText("DocFactoryDemos: Attached Document"));
     $("iframe").shouldBe(visible);
