@@ -198,3 +198,16 @@ merges (:ref:`DocumentTemplate <df-callable-processes-document-template>`). Here
 is the description of this callable that you can find in the Axon Ivy process file:
 
 .. figure:: /_static/images/callable-processes-2.png
+
+
+previewDocument
+^^^^^^^^^^^^^^^
+The function named **previewDocument** allows reading documents with specific types such as:
+pdf, docx, doc, xlsx, xls, jpeg, jpg, png, eml, txt, log.
+
+.. figure:: /_static/images/callable-processes-5.png
+
+The callable receives a DocumentPreview argument that contains the fileName, contentType, and data of the file as a byte[].
+It will respond with a streamedContent that can be rendered using **<p:graphicImage>** or **<p:media>**.
+
+.. figure:: /_static/images/callable-processes-6.png
