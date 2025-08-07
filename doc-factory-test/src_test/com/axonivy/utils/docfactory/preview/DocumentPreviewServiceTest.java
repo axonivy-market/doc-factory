@@ -4,8 +4,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.ByteArrayOutputStream;
+
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.primefaces.model.StreamedContent;
+
+import ch.ivyteam.ivy.addons.docfactory.aspose.LicenseLoader;
 import ch.ivyteam.ivy.addons.docfactory.entity.DocumentPreview;
 import static ch.ivyteam.ivy.addons.docfactory.DocFactoryConstants.PDF_CONTENT_TYPE;
 import static ch.ivyteam.ivy.addons.docfactory.DocFactoryConstants.XLSX_EXTENSION;
@@ -19,6 +23,11 @@ import static ch.ivyteam.ivy.addons.docfactory.DocFactoryConstants.TEXT_CONTENT_
 
 public class DocumentPreviewServiceTest {
   private static final String TEST_FILE_NAME = "test";
+
+  @BeforeAll
+  static void setup() throws Exception {
+    LicenseLoader.setSkipLicenseLoading(true);
+  }
 
   @Test
   void testGenerateStreamedContent_ExcelXlsx() throws Exception {

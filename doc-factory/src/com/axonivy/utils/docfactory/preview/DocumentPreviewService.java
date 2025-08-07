@@ -15,6 +15,8 @@ import com.aspose.words.LoadFormat;
 import com.aspose.words.LoadOptions;
 import com.aspose.words.SaveFormat;
 
+import ch.ivyteam.ivy.addons.docfactory.aspose.AsposeProduct;
+import ch.ivyteam.ivy.addons.docfactory.aspose.LicenseLoader;
 import ch.ivyteam.ivy.addons.docfactory.entity.DocumentPreview;
 
 import static ch.ivyteam.ivy.addons.docfactory.DocFactoryConstants.PDF_CONTENT_TYPE;
@@ -32,10 +34,13 @@ public class DocumentPreviewService {
     byte[] fileContent = documentReview.getFileContent();
     StreamedContent content = null;
     if (fileName.endsWith(XLSX_EXTENSION) || fileName.endsWith(XLS_EXTENSION)) {
+      LicenseLoader.loadLicenseforProduct(AsposeProduct.CELLS);
       content = convertExcelToPdfStreamedContent(fileContent, fileName);
     } else if (fileName.endsWith(DOC_EXTENSION) || fileName.endsWith(DOCX_EXTENSION)) {
+      LicenseLoader.loadLicenseforProduct(AsposeProduct.WORDS);
       content = convertWordToPdfStreamedContent(fileContent, fileName);
     } else if (fileName.endsWith(EML_EXTENSION)) {
+      LicenseLoader.loadLicenseforProduct(AsposeProduct.EMAILS);
       content = convertEmlToPdfStreamedContent(fileContent, fileName);
     } else {
       content = convertOutputStreamToStreamedContent(fileName, contentType, fileContent);
