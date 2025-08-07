@@ -198,3 +198,35 @@ merges (:ref:`DocumentTemplate <df-callable-processes-document-template>`). Here
 is the description of this callable that you can find in the Axon Ivy process file:
 
 .. figure:: /_static/images/callable-processes-2.png
+
+
+previewDocument
+^^^^^^^^^^^^^^^
+The function named **previewDocument** allows reading documents with specific types such as:
+``pdf``, ``docx``, ``doc``, ``xlsx``, ``xls``, ``jpeg``, ``jpg``, ``png``, ``eml``, ``txt``, ``log``
+
+.. figure:: /_static/images/callable-processes-5.png
+
+.. table:: DocumentPreview attributes
+
+   +-------------+----------------+----------------------------------------------------------------------------------------+
+   | Field       | Type           | Description                                                                            |
+   +=============+================+========================================================================================+
+   | fileName    | String         | The name of the file, including its extension (e.g., "report.pdf", "invoice.docx").    |
+   |             |                | This is used to identify and label the file when displaying or processing it.          |
+   +-------------+----------------+----------------------------------------------------------------------------------------+
+   | contentType | String         | The MIME type of the file (e.g., "application/pdf", "image/jpeg". This helps determine |
+   |             |                | how the file should be rendered, either as an image, document, or media file.          |
+   +-------------+----------------+----------------------------------------------------------------------------------------+
+   | fileContent | byte[]         | The raw binary data of the file. This is the actual content that will be converted to  |
+   |             |                | StreamedContent for display using PrimeFaces components like **<p:media>**             |
+   +-------------+----------------+----------------------------------------------------------------------------------------+
+
+There are four constructors:
+
+- The default constructor: :file:`DocumentPreview()`
+- A constructor that accepts file metadata: :file:`DocumentPreview(String fileName, String contentType, byte[] fileContent)`
+- A constructor that accepts a PrimeFaces file upload event: :file:`DocumentPreview(FileUploadEvent event)`
+- A constructor that accepts an uploaded file: :file:`DocumentPreview(UploadedFile file)`
+
+.. figure:: /_static/images/callable-processes-6.png

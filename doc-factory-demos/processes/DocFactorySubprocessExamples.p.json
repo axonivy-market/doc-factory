@@ -915,6 +915,32 @@
       "connect" : [
         { "id" : "f64", "to" : "f61" }
       ]
+    }, {
+      "id" : "f67",
+      "type" : "DialogCall",
+      "name" : "Upload and Preview file",
+      "config" : {
+        "dialog" : "doc.factory.demos.UploadAndPreviewDocument:start()"
+      },
+      "visual" : {
+        "at" : { "x" : 280, "y" : 1272 }
+      }
+    }, {
+      "id" : "f68",
+      "type" : "RequestStart",
+      "name" : "Upload and preview document",
+      "config" : {
+        "signature" : "uploadAndPreviewDocument",
+        "request" : {
+          "name" : "1.6 Upload and preview document"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 1272 }
+      },
+      "connect" : [
+        { "id" : "f69", "to" : "f67" }
+      ]
     } ],
   "layout" : {
     "lanes" : [ {
@@ -933,6 +959,9 @@
         "size" : 192
       }, {
         "name" : "Nested Tables",
+        "size" : 192
+      }, {
+        "name" : "Preview documents",
         "size" : 192
       } ]
   }
