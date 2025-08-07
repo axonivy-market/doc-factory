@@ -9,7 +9,7 @@ import ch.ivyteam.ivy.ThirdPartyLicenses;
 public final class LicenseLoader {
 
   private final static Map<AsposeProduct, Object> LOADED_ASPOSE_LICENSES = new HashMap<>();
-  
+
   private LicenseLoader() {}
 
   public static void loadLicenseforProduct(AsposeProduct product) throws Exception {
@@ -86,7 +86,7 @@ public final class LicenseLoader {
     }
     return lic;
   }
-  
+
   private static com.aspose.email.License loadAsposeEmailsLicense(InputStream in) throws Exception {
     com.aspose.email.License lic = new com.aspose.email.License();
     if (in != null) {
