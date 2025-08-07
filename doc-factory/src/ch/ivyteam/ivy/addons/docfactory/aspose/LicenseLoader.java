@@ -31,6 +31,8 @@ public final class LicenseLoader {
       case SLIDES:
         LOADED_ASPOSE_LICENSES.put(product, loadAsposeSlidesLicense(in));
         break;
+      case EMAIL:
+        LOADED_ASPOSE_LICENSES.put(product, loadAsposeEmailsLicense(in));
       default:
         break;
     }
@@ -85,4 +87,11 @@ public final class LicenseLoader {
     return lic;
   }
 
+  private static com.aspose.email.License loadAsposeEmailsLicense(InputStream in) throws Exception {
+    com.aspose.email.License lic = new com.aspose.email.License();
+    if (in != null) {
+      lic.setLicense(in);
+    }
+    return lic;
+  }
 }
