@@ -4,8 +4,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.ByteArrayOutputStream;
+import java.lang.reflect.Field;
+import java.util.Map;
+
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.primefaces.model.StreamedContent;
+
+import ch.ivyteam.ivy.addons.docfactory.aspose.AsposeProduct;
+import ch.ivyteam.ivy.addons.docfactory.aspose.LicenseLoader;
 import ch.ivyteam.ivy.addons.docfactory.entity.DocumentPreview;
 import static ch.ivyteam.ivy.addons.docfactory.DocFactoryConstants.PDF_CONTENT_TYPE;
 import static ch.ivyteam.ivy.addons.docfactory.DocFactoryConstants.XLSX_EXTENSION;
@@ -19,6 +26,18 @@ import static ch.ivyteam.ivy.addons.docfactory.DocFactoryConstants.TEXT_CONTENT_
 
 public class DocumentPreviewServiceTest {
   private static final String TEST_FILE_NAME = "test";
+  private static DocumentPreviewService documentPreviewService = DocumentPreviewService.getInstance();
+
+  @BeforeAll
+  @SuppressWarnings("unchecked")
+  static void setup() throws Exception {
+    Field field = LicenseLoader.class.getDeclaredField("LOADED_ASPOSE_LICENSES");
+    field.setAccessible(true);
+    Map<AsposeProduct, Object> licenses = (Map<AsposeProduct, Object>) field.get(null);
+    licenses.put(AsposeProduct.CELLS, new Object());
+    licenses.put(AsposeProduct.WORDS, new Object());
+    licenses.put(AsposeProduct.EMAIL, new Object());
+  }
 
   @Test
   void testGenerateStreamedContent_ExcelXlsx() throws Exception {
@@ -28,7 +47,7 @@ public class DocumentPreviewServiceTest {
     workbook.save(out, com.aspose.cells.SaveFormat.XLSX);
 
     DocumentPreview preview = new DocumentPreview(fileName, XLSX_CONTENT_TYPE, out.toByteArray());
-    StreamedContent content = DocumentPreviewService.generateStreamedContent(preview);
+    StreamedContent content = documentPreviewService.generateStreamedContent(preview);
 
     assertNotNull(content);
     assertEquals(fileName, content.getName());
@@ -44,7 +63,7 @@ public class DocumentPreviewServiceTest {
     doc.save(out, com.aspose.words.SaveFormat.DOCX);
 
     DocumentPreview preview = new DocumentPreview(fileName, WORD_CONTENT_TYPE, out.toByteArray());
-    StreamedContent content = DocumentPreviewService.generateStreamedContent(preview);
+    StreamedContent content = documentPreviewService.generateStreamedContent(preview);
 
     assertNotNull(content);
     assertEquals(fileName, content.getName());
@@ -60,7 +79,7 @@ public class DocumentPreviewServiceTest {
     mail.save(out, com.aspose.email.SaveOptions.getDefaultEml());
 
     DocumentPreview preview = new DocumentPreview(fileName, EML_CONTENT_TYPE, out.toByteArray());
-    StreamedContent content = DocumentPreviewService.generateStreamedContent(preview);
+    StreamedContent content = documentPreviewService.generateStreamedContent(preview);
     mail.close();
     assertNotNull(content);
     assertEquals(fileName, content.getName());
@@ -72,7 +91,7 @@ public class DocumentPreviewServiceTest {
     String fileName = TEST_FILE_NAME.concat(TXT_EXTENSION);
     byte[] dummy = "Just a text".getBytes();
     DocumentPreview preview = new DocumentPreview(fileName, TEXT_CONTENT_TYPE, dummy);
-    StreamedContent content = DocumentPreviewService.generateStreamedContent(preview);
+    StreamedContent content = documentPreviewService.generateStreamedContent(preview);
 
     assertNotNull(content);
     assertEquals(fileName, content.getName());
