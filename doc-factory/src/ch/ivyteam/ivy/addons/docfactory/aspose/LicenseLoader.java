@@ -9,11 +9,12 @@ import ch.ivyteam.ivy.ThirdPartyLicenses;
 public final class LicenseLoader {
 
   private final static Map<AsposeProduct, Object> LOADED_ASPOSE_LICENSES = new HashMap<>();
-
+  private static boolean skipLicenseLoading = false;
+  
   private LicenseLoader() {}
 
   public static void loadLicenseforProduct(AsposeProduct product) throws Exception {
-    if (isLicenseForProductAlreadyLoaded(product)) {
+    if (skipLicenseLoading || isLicenseForProductAlreadyLoaded(product)) {
       return;
     }
     InputStream in = ThirdPartyLicenses.getDocumentFactoryLicense();
@@ -31,9 +32,15 @@ public final class LicenseLoader {
       case SLIDES:
         LOADED_ASPOSE_LICENSES.put(product, loadAsposeSlidesLicense(in));
         break;
+      case EMAILS:
+        LOADED_ASPOSE_LICENSES.put(product, loadAsposeEmailsLicense(in));
       default:
         break;
     }
+  }
+  
+  public static void setSkipLicenseLoading(boolean skipLicenseLoading) {
+    LicenseLoader.skipLicenseLoading = skipLicenseLoading;
   }
 
   public static void loadLicenseForAllProducts() throws Exception {
@@ -84,5 +91,12 @@ public final class LicenseLoader {
     }
     return lic;
   }
-
+  
+  private static com.aspose.email.License loadAsposeEmailsLicense(InputStream in) throws Exception {
+    com.aspose.email.License lic = new com.aspose.email.License();
+    if (in != null) {
+      lic.setLicense(in);
+    }
+    return lic;
+  }
 }
