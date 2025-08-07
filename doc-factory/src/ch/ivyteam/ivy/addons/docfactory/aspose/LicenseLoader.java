@@ -31,7 +31,7 @@ public final class LicenseLoader {
       case SLIDES:
         LOADED_ASPOSE_LICENSES.put(product, loadAsposeSlidesLicense(in));
         break;
-      case EMAILS:
+      case EMAIL:
         LOADED_ASPOSE_LICENSES.put(product, loadAsposeEmailsLicense(in));
       default:
         break;
