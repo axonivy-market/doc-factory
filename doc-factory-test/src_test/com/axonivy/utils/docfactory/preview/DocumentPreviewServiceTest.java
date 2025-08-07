@@ -4,11 +4,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.ByteArrayOutputStream;
+import java.lang.reflect.Field;
+import java.util.Map;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.primefaces.model.StreamedContent;
 
+import ch.ivyteam.ivy.addons.docfactory.aspose.AsposeProduct;
 import ch.ivyteam.ivy.addons.docfactory.aspose.LicenseLoader;
 import ch.ivyteam.ivy.addons.docfactory.entity.DocumentPreview;
 import static ch.ivyteam.ivy.addons.docfactory.DocFactoryConstants.PDF_CONTENT_TYPE;
@@ -26,7 +29,14 @@ public class DocumentPreviewServiceTest {
 
   @BeforeAll
   static void setup() throws Exception {
-    LicenseLoader.setSkipLicenseLoading(true);
+    // Pretend the license has already been loaded so loadLicenseforProduct() skips re-loading
+    Field field = LicenseLoader.class.getDeclaredField("LOADED_ASPOSE_LICENSES");
+    field.setAccessible(true);
+    @SuppressWarnings("unchecked")
+    Map<AsposeProduct, Object> licenses = (Map<AsposeProduct, Object>) field.get(null);
+    licenses.put(AsposeProduct.CELLS, new Object());
+    licenses.put(AsposeProduct.WORDS, new Object());
+    licenses.put(AsposeProduct.EMAILS, new Object());
   }
 
   @Test
