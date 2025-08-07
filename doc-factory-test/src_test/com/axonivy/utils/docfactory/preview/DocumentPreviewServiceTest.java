@@ -28,11 +28,11 @@ public class DocumentPreviewServiceTest {
   private static final String TEST_FILE_NAME = "test";
 
   @BeforeAll
+  @SuppressWarnings("unchecked")
   static void setup() throws Exception {
     // Pretend the license has already been loaded so loadLicenseforProduct() skips re-loading
     Field field = LicenseLoader.class.getDeclaredField("LOADED_ASPOSE_LICENSES");
     field.setAccessible(true);
-    @SuppressWarnings("unchecked")
     Map<AsposeProduct, Object> licenses = (Map<AsposeProduct, Object>) field.get(null);
     licenses.put(AsposeProduct.CELLS, new Object());
     licenses.put(AsposeProduct.WORDS, new Object());
