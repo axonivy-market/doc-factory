@@ -55,7 +55,7 @@
         "output" : {
           "code" : [
             "import com.axonivy.utils.docfactory.preview.DocumentPreviewService;",
-            "out.streamedContent = DocumentPreviewService.generateStreamedContent(in.documentReview);"
+            "out.streamedContent = DocumentPreviewService.getInstance().generateStreamedContent(in.documentReview);"
           ]
         }
       },

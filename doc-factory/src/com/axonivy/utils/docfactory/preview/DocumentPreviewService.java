@@ -28,7 +28,15 @@ import static ch.ivyteam.ivy.addons.docfactory.DocFactoryConstants.EML_EXTENSION
 
 public class DocumentPreviewService {
 
-  public static StreamedContent generateStreamedContent(DocumentPreview documentReview) throws Exception {
+  private static final DocumentPreviewService INSTANCE = new DocumentPreviewService();
+
+  private DocumentPreviewService() {}
+
+  public static DocumentPreviewService getInstance() {
+    return INSTANCE;
+  }
+
+  public StreamedContent generateStreamedContent(DocumentPreview documentReview) throws Exception {
     String fileName = documentReview.getFileName();
     String contentType = documentReview.getContentType();
     byte[] fileContent = documentReview.getFileContent();
@@ -48,7 +56,7 @@ public class DocumentPreviewService {
     return content;
   }
 
-  private static StreamedContent convertExcelToPdfStreamedContent(byte[] data, String fileName) throws Exception {
+  private StreamedContent convertExcelToPdfStreamedContent(byte[] data, String fileName) throws Exception {
     try (InputStream inputStream = new ByteArrayInputStream(data);
         ByteArrayOutputStream pdfOut = new ByteArrayOutputStream()) {
       Workbook workbook = new Workbook(inputStream);
@@ -60,7 +68,7 @@ public class DocumentPreviewService {
     }
   }
 
-  private static StreamedContent convertWordToPdfStreamedContent(byte[] data, String fileName) throws Exception {
+  private StreamedContent convertWordToPdfStreamedContent(byte[] data, String fileName) throws Exception {
     try (InputStream inputStream = new ByteArrayInputStream(data);
         ByteArrayOutputStream pdfOut = new ByteArrayOutputStream()) {
       LoadOptions loadOptions = new LoadOptions();
@@ -71,7 +79,7 @@ public class DocumentPreviewService {
     }
   }
 
-  private static StreamedContent convertEmlToPdfStreamedContent(byte[] data, String fileName) throws Exception {
+  private StreamedContent convertEmlToPdfStreamedContent(byte[] data, String fileName) throws Exception {
     try (InputStream inputStream = new ByteArrayInputStream(data);
         ByteArrayOutputStream mhtmlStream = new ByteArrayOutputStream();
         ByteArrayOutputStream pdfOut = new ByteArrayOutputStream()) {
@@ -88,12 +96,12 @@ public class DocumentPreviewService {
     }
   }
 
-  private static StreamedContent convertOutputStreamToStreamedContent(ByteArrayOutputStream pdfOut, String fileName) {
+  private StreamedContent convertOutputStreamToStreamedContent(ByteArrayOutputStream pdfOut, String fileName) {
     byte[] pdfBytes = pdfOut.toByteArray();
     return convertOutputStreamToStreamedContent(fileName, PDF_CONTENT_TYPE, pdfBytes);
   }
 
-  private static StreamedContent convertOutputStreamToStreamedContent(String fileName, String contentType,
+  private StreamedContent convertOutputStreamToStreamedContent(String fileName, String contentType,
       byte[] fileContent) {
     return DefaultStreamedContent.builder().contentType(contentType).name(fileName)
         .stream(() -> new ByteArrayInputStream(fileContent)).build();
