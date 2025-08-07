@@ -36,7 +36,7 @@ public class DocumentPreviewServiceTest {
     Map<AsposeProduct, Object> licenses = (Map<AsposeProduct, Object>) field.get(null);
     licenses.put(AsposeProduct.CELLS, new Object());
     licenses.put(AsposeProduct.WORDS, new Object());
-    licenses.put(AsposeProduct.EMAILS, new Object());
+    licenses.put(AsposeProduct.EMAIL, new Object());
   }
 
   @Test
