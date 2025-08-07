@@ -9,12 +9,11 @@ import ch.ivyteam.ivy.ThirdPartyLicenses;
 public final class LicenseLoader {
 
   private final static Map<AsposeProduct, Object> LOADED_ASPOSE_LICENSES = new HashMap<>();
-  private static boolean skipLicenseLoading = false;
   
   private LicenseLoader() {}
 
   public static void loadLicenseforProduct(AsposeProduct product) throws Exception {
-    if (skipLicenseLoading || isLicenseForProductAlreadyLoaded(product)) {
+    if (isLicenseForProductAlreadyLoaded(product)) {
       return;
     }
     InputStream in = ThirdPartyLicenses.getDocumentFactoryLicense();
@@ -37,10 +36,6 @@ public final class LicenseLoader {
       default:
         break;
     }
-  }
-  
-  public static void setSkipLicenseLoading(boolean skipLicenseLoading) {
-    LicenseLoader.skipLicenseLoading = skipLicenseLoading;
   }
 
   public static void loadLicenseForAllProducts() throws Exception {
