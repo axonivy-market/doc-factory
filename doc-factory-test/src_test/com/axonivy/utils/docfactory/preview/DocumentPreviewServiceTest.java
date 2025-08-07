@@ -26,11 +26,11 @@ import static ch.ivyteam.ivy.addons.docfactory.DocFactoryConstants.TEXT_CONTENT_
 
 public class DocumentPreviewServiceTest {
   private static final String TEST_FILE_NAME = "test";
+  private static DocumentPreviewService documentPreviewService = DocumentPreviewService.getInstance();
 
   @BeforeAll
   @SuppressWarnings("unchecked")
   static void setup() throws Exception {
-    // Pretend the license has already been loaded so loadLicenseforProduct() skips re-loading
     Field field = LicenseLoader.class.getDeclaredField("LOADED_ASPOSE_LICENSES");
     field.setAccessible(true);
     Map<AsposeProduct, Object> licenses = (Map<AsposeProduct, Object>) field.get(null);
@@ -47,7 +47,7 @@ public class DocumentPreviewServiceTest {
     workbook.save(out, com.aspose.cells.SaveFormat.XLSX);
 
     DocumentPreview preview = new DocumentPreview(fileName, XLSX_CONTENT_TYPE, out.toByteArray());
-    StreamedContent content = DocumentPreviewService.generateStreamedContent(preview);
+    StreamedContent content = documentPreviewService.generateStreamedContent(preview);
 
     assertNotNull(content);
     assertEquals(fileName, content.getName());
@@ -63,7 +63,7 @@ public class DocumentPreviewServiceTest {
     doc.save(out, com.aspose.words.SaveFormat.DOCX);
 
     DocumentPreview preview = new DocumentPreview(fileName, WORD_CONTENT_TYPE, out.toByteArray());
-    StreamedContent content = DocumentPreviewService.generateStreamedContent(preview);
+    StreamedContent content = documentPreviewService.generateStreamedContent(preview);
 
     assertNotNull(content);
     assertEquals(fileName, content.getName());
@@ -79,7 +79,7 @@ public class DocumentPreviewServiceTest {
     mail.save(out, com.aspose.email.SaveOptions.getDefaultEml());
 
     DocumentPreview preview = new DocumentPreview(fileName, EML_CONTENT_TYPE, out.toByteArray());
-    StreamedContent content = DocumentPreviewService.generateStreamedContent(preview);
+    StreamedContent content = documentPreviewService.generateStreamedContent(preview);
     mail.close();
     assertNotNull(content);
     assertEquals(fileName, content.getName());
@@ -91,7 +91,7 @@ public class DocumentPreviewServiceTest {
     String fileName = TEST_FILE_NAME.concat(TXT_EXTENSION);
     byte[] dummy = "Just a text".getBytes();
     DocumentPreview preview = new DocumentPreview(fileName, TEXT_CONTENT_TYPE, dummy);
-    StreamedContent content = DocumentPreviewService.generateStreamedContent(preview);
+    StreamedContent content = documentPreviewService.generateStreamedContent(preview);
 
     assertNotNull(content);
     assertEquals(fileName, content.getName());
