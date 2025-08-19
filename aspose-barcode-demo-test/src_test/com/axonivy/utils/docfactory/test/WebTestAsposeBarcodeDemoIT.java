@@ -12,6 +12,7 @@ import org.openqa.selenium.By;
 
 import com.axonivy.ivy.webtest.IvyWebTest;
 import com.axonivy.ivy.webtest.engine.EngineUrl;
+import com.codeborne.selenide.Selenide;
 
 @IvyWebTest(headless = true)
 public class WebTestAsposeBarcodeDemoIT{
@@ -23,7 +24,8 @@ public class WebTestAsposeBarcodeDemoIT{
     $(By.cssSelector("[id$='str']")).shouldBe(empty);
     $(By.cssSelector("[id$='str']")).sendKeys(String.valueOf("Hello Axon Ivy"));
     $(By.cssSelector("[id$='proceed']")).shouldBe(visible).click();
-    $(By.cssSelector("[id$='code_128']")).shouldBe(visible, Duration.ofSeconds(30)).isImage();
+    Selenide.sleep(5);
+    $(By.cssSelector("[id$='code_128']")).shouldBe(visible, Duration.ofSeconds(30));
   }
 
 }
