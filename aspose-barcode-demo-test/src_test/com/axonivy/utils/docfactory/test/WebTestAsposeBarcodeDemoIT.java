@@ -16,19 +16,15 @@ import com.axonivy.ivy.webtest.engine.EngineUrl;
 @IvyWebTest(headless = true)
 public class WebTestAsposeBarcodeDemoIT{
 
-  private static final String BARCODE_STRING = "form:str";
-  private static final String PROCEED_BUTTON = "form:proceed";
-  private static final String BARCODE_IMAGE = "code_128";
-
   @Test
   public void createBarcodePage(){
     open(EngineUrl.createProcessUrl("AsposeBarcodeDemo/16CD7829EF6B489B/start.ivp"));
 
-    $(By.id(BARCODE_STRING)).shouldBe(empty);
-    $(By.id(BARCODE_STRING)).sendKeys(String.valueOf("Hello Axon Ivy"));
-    $(By.id(PROCEED_BUTTON)).shouldBe(visible).click();
+    $(By.cssSelector("[id$='str']")).shouldBe(empty);
+    $(By.cssSelector("[id$='str']")).sendKeys(String.valueOf("Hello Axon Ivy"));
+    $(By.cssSelector("[id$='proceed']")).shouldBe(visible).click();
 
-    $(By.id(BARCODE_IMAGE)).shouldBe(visible, Duration.ofSeconds(30)).isImage();
+    $(By.cssSelector("[id$='code_128']")).shouldBe(visible, Duration.ofSeconds(30)).isImage();
   }
 
 }
