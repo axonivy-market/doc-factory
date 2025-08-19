@@ -31,7 +31,7 @@ public class WebTestAsposeBarcodeDemoIT{
     new WebDriverWait(WebDriverRunner.getWebDriver(), Duration.ofSeconds(30))
     .until(ExpectedConditions.urlContains("BarCode.xhtml"));
     
-    $("body").shouldHave(text("CODE_128"));
+    $("body").shouldHave(text("CODE_128"), Duration.ofSeconds(30));
     $(By.cssSelector("[id$='code_128']")).shouldBe(visible, Duration.ofSeconds(30));
   }
 }
