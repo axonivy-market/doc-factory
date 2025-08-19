@@ -23,7 +23,6 @@ public class WebTestAsposeBarcodeDemoIT{
     $(By.cssSelector("[id$='str']")).shouldBe(empty);
     $(By.cssSelector("[id$='str']")).sendKeys(String.valueOf("Hello Axon Ivy"));
     $(By.cssSelector("[id$='proceed']")).shouldBe(visible).click();
-
     $(By.cssSelector("[id$='code_128']")).shouldBe(visible, Duration.ofSeconds(30)).isImage();
   }
 

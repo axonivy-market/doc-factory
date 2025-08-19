@@ -34,7 +34,7 @@ public class WebTestAsposeEmailDemoIT {
   @Test
   public void testMsgEmail() throws Exception {
     open(EngineUrl.createProcessUrl("AsposeEmailDemo/1712BF5507F25F15/start.ivp"));
-    $(By.cssSelector("[id$='customer']")).shouldBe(visible);
+    $(By.cssSelector("[id$='customer']")).shouldBe(visible, Duration.ofSeconds(30));
     var creator = $(By.cssSelector("[id$='createBtn']")).shouldBe(visible, Duration.ofSeconds(30));
     File msg = creator.download(DownloadOptions.using(FileDownloadMode.PROXY).withTimeout(Duration.ofSeconds(30)));
 
