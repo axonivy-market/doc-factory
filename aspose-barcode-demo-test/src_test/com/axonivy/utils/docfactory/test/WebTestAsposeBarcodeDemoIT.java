@@ -17,6 +17,7 @@ import com.axonivy.ivy.webtest.IvyWebTest;
 import com.axonivy.ivy.webtest.engine.EngineUrl;
 import com.codeborne.selenide.WebDriverRunner;
 import static com.codeborne.selenide.Condition.text;
+import static com.codeborne.selenide.Selenide.*;
 
 @IvyWebTest
 public class WebTestAsposeBarcodeDemoIT{
@@ -30,7 +31,7 @@ public class WebTestAsposeBarcodeDemoIT{
     $(By.cssSelector("[id$='proceed']")).shouldBe(visible).click();
     new WebDriverWait(WebDriverRunner.getWebDriver(), Duration.ofSeconds(30))
     .until(ExpectedConditions.urlContains("BarCode.xhtml"));
-    
+    switchTo().window(0);
     $("body").shouldHave(text("CODE_128"), Duration.ofSeconds(30));
     $(By.cssSelector("[id$='code_128']")).shouldBe(visible, Duration.ofSeconds(30));
   }
