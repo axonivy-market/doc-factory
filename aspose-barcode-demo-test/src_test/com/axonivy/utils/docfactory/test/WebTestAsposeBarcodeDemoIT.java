@@ -19,7 +19,7 @@ import com.codeborne.selenide.WebDriverRunner;
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.*;
 
-@IvyWebTest(headless = false)
+@IvyWebTest
 public class WebTestAsposeBarcodeDemoIT{
 
   @Test
