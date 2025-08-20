@@ -19,6 +19,7 @@ import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.DownloadOptions;
 import com.codeborne.selenide.FileDownloadMode;
 import com.codeborne.selenide.Selenide;
+import com.codeborne.selenide.WebDriverRunner;
 
 @IvyWebTest
 public class WebTestAsposeEmailDemoIT {
@@ -34,6 +35,8 @@ public class WebTestAsposeEmailDemoIT {
   @Test
   public void testMsgEmail() throws Exception {
     open(EngineUrl.createProcessUrl("AsposeEmailDemo/1712BF5507F25F15/start.ivp"));
+    String html = WebDriverRunner.getWebDriver().getPageSource();
+    System.out.println("✅ PAGE SOURCE:\n" + html);
     $(By.cssSelector("[id$='customer']")).shouldBe(visible, Duration.ofSeconds(30));
     var creator = $(By.cssSelector("[id$='createBtn']")).shouldBe(visible, Duration.ofSeconds(30));
     File msg = creator.download(DownloadOptions.using(FileDownloadMode.PROXY).withTimeout(Duration.ofSeconds(30)));

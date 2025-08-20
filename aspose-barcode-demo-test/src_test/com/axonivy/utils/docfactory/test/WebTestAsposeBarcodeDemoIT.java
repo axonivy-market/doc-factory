@@ -7,6 +7,7 @@ import static com.codeborne.selenide.Selenide.open;
 
 import java.time.Duration;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -36,8 +37,11 @@ public class WebTestAsposeBarcodeDemoIT{
     .until(ExpectedConditions.urlContains("BarCode.xhtml"));
     Selenide.sleep(10000);
     
-    System.out.println("=== Current URL: " + WebDriverRunner.url() + " ===");
-    System.out.println(WebDriverRunner.getWebDriver().getPageSource());
+    String html = WebDriverRunner.getWebDriver().getPageSource();
+    System.out.println("✅ PAGE SOURCE:\n" + html);
+
+    // Assert that the page contains CODE_128
+    Assertions.assertTrue(html.contains("CODE_128"), "Expected CODE_128 in page source");
     $("body").shouldHave(text("CODE_128"), Duration.ofSeconds(200));
     $(By.cssSelector("[id$='code_128']")).shouldBe(visible, Duration.ofSeconds(200));
   }
