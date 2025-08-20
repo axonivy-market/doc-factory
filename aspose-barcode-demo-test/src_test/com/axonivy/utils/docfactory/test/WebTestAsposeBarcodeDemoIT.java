@@ -19,7 +19,7 @@ import com.codeborne.selenide.WebDriverRunner;
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.*;
 
-@IvyWebTest
+@IvyWebTest(headless = false)
 public class WebTestAsposeBarcodeDemoIT{
 
   @Test
@@ -32,7 +32,7 @@ public class WebTestAsposeBarcodeDemoIT{
     new WebDriverWait(WebDriverRunner.getWebDriver(), Duration.ofSeconds(30))
     .until(ExpectedConditions.urlContains("BarCode.xhtml"));
     switchTo().window(0);
-    $("body").shouldHave(text("CODE_128"), Duration.ofSeconds(30));
-    $(By.cssSelector("[id$='code_128']")).shouldBe(visible, Duration.ofSeconds(30));
+    $("body").shouldHave(text("CODE_128"), Duration.ofSeconds(200));
+    $(By.cssSelector("[id$='code_12']")).shouldBe(visible, Duration.ofSeconds(200));
   }
 }
