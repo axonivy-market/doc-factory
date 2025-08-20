@@ -9,12 +9,14 @@ import java.time.Duration;
 
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 
 import com.axonivy.ivy.webtest.IvyWebTest;
 import com.axonivy.ivy.webtest.engine.EngineUrl;
+import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.WebDriverRunner;
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.*;
@@ -29,10 +31,14 @@ public class WebTestAsposeBarcodeDemoIT{
     $(By.cssSelector("[id$='str']")).shouldBe(empty);
     $(By.cssSelector("[id$='str']")).sendKeys(String.valueOf("Hello Axon Ivy"));
     $(By.cssSelector("[id$='proceed']")).shouldBe(visible).click();
+    
     new WebDriverWait(WebDriverRunner.getWebDriver(), Duration.ofSeconds(30))
     .until(ExpectedConditions.urlContains("BarCode.xhtml"));
-    switchTo().window(0);
+    Selenide.sleep(10000);
+    
+    System.out.println("=== Current URL: " + WebDriverRunner.url() + " ===");
+    System.out.println(WebDriverRunner.getWebDriver().getPageSource());
     $("body").shouldHave(text("CODE_128"), Duration.ofSeconds(200));
-    $(By.cssSelector("[id$='code_12']")).shouldBe(visible, Duration.ofSeconds(200));
+    $(By.cssSelector("[id$='code_128']")).shouldBe(visible, Duration.ofSeconds(200));
   }
 }
