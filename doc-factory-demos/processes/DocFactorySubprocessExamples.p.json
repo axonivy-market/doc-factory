@@ -12,7 +12,8 @@
         "callSignature" : "start1",
         "outLink" : "start1.ivp",
         "startName" : "1.1 Document with TemplateMergeFields",
-        "tags" : "demo"
+        "tags" : "demo",
+        "case" : { }
       },
       "visual" : {
         "at" : { "x" : 96, "y" : 208 },
@@ -113,7 +114,8 @@
       "config" : {
         "callSignature" : "start2",
         "outLink" : "start2.ivp",
-        "startName" : "1.2a Document with Object"
+        "startName" : "1.2a Document with Object",
+        "case" : { }
       },
       "visual" : {
         "at" : { "x" : 88, "y" : 344 },
@@ -281,7 +283,8 @@
       "config" : {
         "callSignature" : "start3",
         "outLink" : "start3.ivp",
-        "startName" : "1.3 Document with Table"
+        "startName" : "1.3 Document with Table",
+        "case" : { }
       },
       "visual" : {
         "at" : { "x" : 96, "y" : 696 },
@@ -458,7 +461,8 @@
       "config" : {
         "callSignature" : "start5",
         "outLink" : "start5.ivp",
-        "startName" : "1.5 Document with nested Tables"
+        "startName" : "1.5 Document with nested Tables",
+        "case" : { }
       },
       "visual" : {
         "at" : { "x" : 96, "y" : 1080 },
@@ -660,7 +664,8 @@
       "config" : {
         "callSignature" : "start6",
         "outLink" : "start6.ivp",
-        "startName" : "1.2b Document with nested Object"
+        "startName" : "1.2b Document with nested Object",
+        "case" : { }
       },
       "visual" : {
         "at" : { "x" : 88, "y" : 440 },
@@ -788,7 +793,8 @@
       "config" : {
         "callSignature" : "start7",
         "outLink" : "start7.ivp",
-        "startName" : "1.2c Document with Object And Table"
+        "startName" : "1.2c Document with Object And Table",
+        "case" : { }
       },
       "visual" : {
         "at" : { "x" : 88, "y" : 536 },
@@ -906,6 +912,32 @@
         "size" : { "width" : 128, "height" : 60 }
       },
       "connect" : { "id" : "f65", "to" : "f60" }
+    }, {
+      "id" : "f67",
+      "type" : "RequestStart",
+      "name" : "Upload and preview document",
+      "config" : {
+        "callSignature" : "uploadAndPreviewDocument",
+        "outLink" : "uploadAndPreviewDocument.ivp",
+        "startName" : "1.6 Upload and preview document",
+        "case" : { }
+      },
+      "visual" : {
+        "at" : { "x" : 112, "y" : 1256 },
+        "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
+      },
+      "connect" : { "id" : "f69", "to" : "f68" }
+    }, {
+      "id" : "f68",
+      "type" : "DialogCall",
+      "name" : "Upload and Preview file",
+      "config" : {
+        "dialogId" : "doc.factory.demos.UploadAndPreviewDocument",
+        "startMethod" : "start()"
+      },
+      "visual" : {
+        "at" : { "x" : 288, "y" : 1256 }
+      }
     } ],
   "layout" : {
     "lanes" : [ {
@@ -924,6 +956,10 @@
         "size" : 192
       }, {
         "name" : "Nested Tables",
+        "size" : 192
+      }, {
+        "name" : "Preview documents",
+        "offset" : 2,
         "size" : 192
       } ]
   }

@@ -26,7 +26,7 @@ public class DemoDocumentPreviewService {
 
   public static StreamedContent previewDocument(IDocument document) throws IOException {
     File file = new File(document.getPath().asString());
-    byte[] fileContent = documentsOf(Ivy.wfCase()).get(document.uuid()).read().asStream().readAllBytes();
+    byte[] fileContent = documentsOf(Ivy.wfCase()).get(document.getId()).read().asStream().readAllBytes();
     String contentType = Files.probeContentType(file.getJavaFile().toPath());
     var entity = new DocumentPreview(document.getName(), contentType, fileContent);
     SubProcessCallResult callResult = SubProcessCall.withPath("Functional Processes/previewDocument")
