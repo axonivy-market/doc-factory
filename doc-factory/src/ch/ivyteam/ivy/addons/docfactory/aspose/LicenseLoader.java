@@ -33,6 +33,7 @@ public final class LicenseLoader {
         break;
       case EMAIL:
         LOADED_ASPOSE_LICENSES.put(product, loadAsposeEmailsLicense(in));
+        break;
       default:
         break;
     }
