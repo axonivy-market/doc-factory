@@ -1,0 +1,143 @@
+{
+  "format" : "10.0.0",
+  "id" : "198D07EC2284D733",
+  "kind" : "HTML_DIALOG",
+  "config" : {
+    "data" : "doc.factory.demos.UploadAndPreviewDocument.UploadAndPreviewDocumentData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "HtmlDialogStart",
+      "name" : "start()",
+      "config" : {
+        "callSignature" : "start",
+        "guid" : "198D07EC22981AEC"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 64 }
+      },
+      "connect" : { "id" : "f2", "to" : "f1" }
+    }, {
+      "id" : "f1",
+      "type" : "HtmlDialogEnd",
+      "visual" : {
+        "at" : { "x" : 224, "y" : 64 }
+      }
+    }, {
+      "id" : "f3",
+      "type" : "HtmlDialogEventStart",
+      "name" : "close",
+      "config" : {
+        "guid" : "0198D07EC22A7D42"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 160 }
+      },
+      "connect" : { "id" : "f5", "to" : "f4" }
+    }, {
+      "id" : "f4",
+      "type" : "HtmlDialogExit",
+      "visual" : {
+        "at" : { "x" : 224, "y" : 160 }
+      }
+    }, {
+      "id" : "f6",
+      "type" : "HtmlDialogMethodStart",
+      "name" : "upload(FileUploadEvent)",
+      "config" : {
+        "callSignature" : "upload",
+        "input" : {
+          "params" : [
+            { "name" : "fileUploadEvent", "type" : "org.primefaces.event.FileUploadEvent" }
+          ],
+          "map" : {
+            "out.fileUploadEvent" : "param.fileUploadEvent"
+          }
+        },
+        "guid" : "198D095502BFB7D5"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 280 },
+        "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
+      },
+      "connect" : { "id" : "f10", "to" : "f7" }
+    }, {
+      "id" : "f7",
+      "type" : "Script",
+      "name" : "Upload and save document to case",
+      "config" : {
+        "output" : {
+          "map" : {
+            "out" : "in",
+            "out.fileUploadEvent" : "in.fileUploadEvent"
+          },
+          "code" : [
+            "import ch.ivyteam.ivy.workflow.document.IDocument;",
+            "import ch.ivyteam.ivy.docFactoryExamples.DemoDocumentPreviewService;",
+            "",
+            "IDocument doc = DemoDocumentPreviewService.handleFileUpload(in.fileUploadEvent);",
+            "in.documents.add(doc);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 256, "y" : 280 },
+        "description" : "Upload and save the file into the current case"
+      },
+      "connect" : { "id" : "f17", "to" : "f16" }
+    }, {
+      "id" : "f11",
+      "type" : "HtmlDialogMethodStart",
+      "name" : "previewDocument(IDocument)",
+      "config" : {
+        "callSignature" : "previewDocument",
+        "input" : {
+          "params" : [
+            { "name" : "document", "type" : "ch.ivyteam.ivy.workflow.document.IDocument" }
+          ],
+          "map" : {
+            "out.currentDocument" : "param.document"
+          }
+        },
+        "guid" : "198D0B33BA38822D"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 376 },
+        "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
+      },
+      "connect" : { "id" : "f15", "to" : "f12" }
+    }, {
+      "id" : "f12",
+      "type" : "Script",
+      "name" : "Read document",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import org.primefaces.model.StreamedContent;",
+            "import ch.ivyteam.ivy.docFactoryExamples.DemoDocumentPreviewService;",
+            "",
+            "StreamedContent content = DemoDocumentPreviewService.previewDocument(in.currentDocument);",
+            "",
+            "out.result = content;"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 256, "y" : 376 },
+        "description" : "Load document from the case by document's id"
+      },
+      "connect" : { "id" : "f18", "to" : "f9" }
+    }, {
+      "id" : "f16",
+      "type" : "HtmlDialogEnd",
+      "visual" : {
+        "at" : { "x" : 408, "y" : 280 }
+      }
+    }, {
+      "id" : "f9",
+      "type" : "HtmlDialogEnd",
+      "visual" : {
+        "at" : { "x" : 408, "y" : 376 }
+      }
+    } ]
+}

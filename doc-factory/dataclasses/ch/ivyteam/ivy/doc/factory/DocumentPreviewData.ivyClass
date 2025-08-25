@@ -1,0 +1,4 @@
+DocumentPreviewData #class
+ch.ivyteam.ivy.doc.factory #namespace
+documentReview ch.ivyteam.ivy.addons.docfactory.entity.DocumentPreview #field
+streamedContent org.primefaces.model.StreamedContent #field

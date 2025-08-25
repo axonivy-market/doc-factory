@@ -1,0 +1,12 @@
+UploadAndPreviewDocumentData #class
+doc.factory.demos.UploadAndPreviewDocument #namespace
+uploadedFile org.primefaces.model.file.UploadedFile #field
+uploadedFile PERSISTENT #fieldModifier
+fileUploadEvent org.primefaces.event.FileUploadEvent #field
+fileUploadEvent PERSISTENT #fieldModifier
+documents java.util.List<ch.ivyteam.ivy.workflow.document.IDocument> #field
+documents PERSISTENT #fieldModifier
+currentDocument ch.ivyteam.ivy.workflow.document.IDocument #field
+currentDocument PERSISTENT #fieldModifier
+result org.primefaces.model.StreamedContent #field
+result PERSISTENT #fieldModifier
