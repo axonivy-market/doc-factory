@@ -936,7 +936,8 @@
         "startMethod" : "start()"
       },
       "visual" : {
-        "at" : { "x" : 288, "y" : 1256 }
+        "at" : { "x" : 288, "y" : 1256 },
+        "icon" : "res:/webContent/icons/doc-factory-logo.png"
       }
     } ],
   "layout" : {

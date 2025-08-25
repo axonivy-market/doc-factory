@@ -131,13 +131,13 @@
       "id" : "f16",
       "type" : "HtmlDialogEnd",
       "visual" : {
-        "at" : { "x" : 456, "y" : 272 }
+        "at" : { "x" : 408, "y" : 280 }
       }
     }, {
       "id" : "f9",
       "type" : "HtmlDialogEnd",
       "visual" : {
-        "at" : { "x" : 448, "y" : 400 }
+        "at" : { "x" : 408, "y" : 376 }
       }
     } ]
 }
