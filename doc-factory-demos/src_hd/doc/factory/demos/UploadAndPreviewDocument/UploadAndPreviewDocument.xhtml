@@ -1,0 +1,54 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:f="http://xmlns.jcp.org/jsf/core"
+  xmlns:h="http://xmlns.jcp.org/jsf/html"
+  xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+  xmlns:ic="http://ivyteam.ch/jsf/component"
+  xmlns:p="http://primefaces.org/ui"
+  xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+  <ui:composition template="/layouts/frame-10-full-width.xhtml">
+    <ui:define name="title">UploadAndPreviewDocument</ui:define>
+    <ui:define name="content">
+      <h:form enctype="multipart/form-data">
+        <h2 class="mb-2">Upload and Preview Document</h2>
+
+        <p:messages id="messages" showDetail="true" closable="true" />
+
+        <p:fileUpload id="fileUploader" value="#{data.uploadedFile}"
+          listener="#{logic.upload}" mode="advanced" auto="true"
+          dragDropSupport="true" label="Choose File"
+          sizeLimit="10485760"
+          allowTypes="/(\.|\/)(pdf|docx|doc|xlsx|xls|jpeg|jpg|png|eml|txt|log)$/"
+          update="fileTable" styleClass="custom-upload" />
+
+        <p:dataTable var="file" lazy="false" value="#{data.documents}"
+          id="fileTable" styleClass="p-mt-3">
+          <p:column headerText="File Name">
+            <h:outputText value="#{file.name}" />
+          </p:column>
+          <p:column headerText="Action" styleClass="p-text-center">
+            <p:commandButton icon="pi pi-eye" title="Preview"
+              actionListener="#{logic.previewDocument(file)}"
+              update="preview-document-dialog"
+              oncomplete="PF('preview-document-dialog').show();" />
+          </p:column>
+        </p:dataTable>
+      </h:form>
+
+      <p:dialog widgetVar="preview-document-dialog"
+        id="preview-document-dialog" appendTo="@(body)" header="Preview"
+        modal="true" maximizable="true" width="850" height="650"
+        showEffect="fade" hideEffect="fade" dynamic="true"
+        fitViewport="true" responsive="true">
+
+        <div class="ui-g-12">
+          <p:media value="#{data.result}" width="100%" height="620"
+            cache="false" id="media-content" player="pdf" />
+        </div>
+      </p:dialog>
+
+    </ui:define>
+  </ui:composition>
+</h:body>
+
+</html>
