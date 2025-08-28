@@ -1,13 +1,15 @@
 package ch.ivyteam.ivy.docFactoryExamples;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 
 import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 
-import ch.ivyteam.ivy.addons.docfactory.entity.DocumentPreview;
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.persistence.PersistencyException;
 import ch.ivyteam.ivy.process.call.SubProcessCall;
@@ -26,11 +28,22 @@ public class DemoDocumentPreviewService {
 
   public static StreamedContent previewDocument(IDocument document) throws IOException {
     File file = new File(document.getPath().asString());
-    byte[] fileContent = documentsOf(Ivy.wfCase()).get(document.getId()).read().asStream().readAllBytes();
-    String contentType = Files.probeContentType(file.getJavaFile().toPath());
-    var entity = new DocumentPreview(document.getName(), contentType, fileContent);
-    SubProcessCallResult callResult = SubProcessCall.withPath("Functional Processes/previewDocument")
-        .withStartName("previewDocument").withParam("documentReview", entity).call();
+    SubProcessCallResult callResult = 
+        SubProcessCall.withPath("Functional Processes/previewDocument")
+            .withStartName("previewDocument")
+            .withParam("file", file.getJavaFile())
+            .call();
+    return (StreamedContent) callResult.get("streamedContent");
+  }
+
+  public static StreamedContent previewDocumentViaStreamContent(IDocument document) throws IOException {
+    File file = new File(document.getPath().asString());
+    SubProcessCallResult callResult =
+        SubProcessCall.withPath("Functional Processes/previewDocument")
+            .withStartName("previewDocumentByStream")
+            .withParam("streamedContent", fileToStreamedContent(file.getJavaFile()))
+            .call();
+
     return (StreamedContent) callResult.get("streamedContent");
   }
 
@@ -49,5 +62,22 @@ public class DemoDocumentPreviewService {
     } catch (Exception e) {
       return null;
     }
+  }
+
+  private static StreamedContent fileToStreamedContent(java.io.File file) throws IOException, java.io.IOException {
+    String fileName = file.getName();
+    String contentType = Files.probeContentType(file.toPath());
+
+    return DefaultStreamedContent.builder()
+        .name(fileName)
+        .contentType(contentType != null ? contentType : "application/octet-stream")
+        .stream(() -> {
+          try {
+            return new FileInputStream(file);
+          } catch (FileNotFoundException e) {
+            e.printStackTrace();
+          }
+          return null;
+        }).build();
   }
 }

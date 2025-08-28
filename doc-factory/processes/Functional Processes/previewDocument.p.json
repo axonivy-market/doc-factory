@@ -8,15 +8,15 @@
   "elements" : [ {
       "id" : "f0",
       "type" : "CallSubStart",
-      "name" : "previewDocument(DocumentPreview)",
+      "name" : "previewDocument(File)",
       "config" : {
         "callSignature" : "previewDocument",
         "input" : {
           "params" : [
-            { "name" : "documentReview", "type" : "ch.ivyteam.ivy.addons.docfactory.entity.DocumentPreview" }
+            { "name" : "file", "type" : "java.io.File" }
           ],
           "map" : {
-            "out.documentReview" : "param.documentReview"
+            "out.file" : "param.file"
           }
         },
         "result" : {
@@ -54,7 +54,7 @@
         "output" : {
           "code" : [
             "import com.axonivy.utils.docfactory.preview.DocumentPreviewService;",
-            "out.streamedContent = DocumentPreviewService.getInstance().generateStreamedContent(in.documentReview);"
+            "out.streamedContent = DocumentPreviewService.getInstance().generateStreamedContent(in.file);"
           ]
         }
       },
@@ -66,7 +66,7 @@
       "id" : "f5",
       "type" : "ProcessAnnotation",
       "name" : [
-        "This function receives a DocumentPreview entity and returns the value as a StreamedContent.",
+        "This function receives a java.io.File and returns the value as a StreamedContent.",
         "",
         "This function currently supports the following types: .eml, .xlsx, .doc, .jpg/.png, .xls, .doc, .docx."
       ],
@@ -74,13 +74,76 @@
         "at" : { "x" : 280, "y" : 136 },
         "size" : { "width" : 512, "height" : 60 },
         "description" : [
-          "The DocumentPreview object is a Java object that can parse a document model from a FileUploadEvent, FileUpload,",
-          " or we can manually create a DocumentPreview object with fileName, contentType, and a byte[] data.",
+          "The feature accepts a java.io.File object as input. It can parse and process the file content based on its type.",
           "",
           "This callable currently supports the following types: .eml, .xlsx, .doc, .jpg/.png, .xls, .doc, .docx.",
           "",
           "It will convert these file types to PDF format and return a streamedContent. We can use the <p:media> tag to display this value."
         ]
+      }
+    }, {
+      "id" : "f6",
+      "type" : "CallSubStart",
+      "name" : "previewDocumentByStream(StreamedContent)",
+      "config" : {
+        "callSignature" : "previewDocumentByStream",
+        "input" : {
+          "params" : [
+            { "name" : "streamedContent", "type" : "org.primefaces.model.StreamedContent" }
+          ],
+          "map" : {
+            "out.streamedContent" : "param.streamedContent"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "streamedContent", "type" : "org.primefaces.model.StreamedContent" }
+          ],
+          "map" : {
+            "result.streamedContent" : "in.streamedContent"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 208 },
+        "labelOffset" : { "x" : 17, "y" : 33 },
+        "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
+      },
+      "connect" : { "id" : "f10", "to" : "f8" }
+    }, {
+      "id" : "f7",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 440, "y" : 208 },
+        "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
+      }
+    }, {
+      "id" : "f8",
+      "type" : "Script",
+      "name" : "Generate StreamedContent to display",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.docfactory.preview.DocumentPreviewService;",
+            "out.streamedContent = DocumentPreviewService.getInstance().generateStreamedContent(in.streamedContent);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 288, "y" : 208 }
+      },
+      "connect" : { "id" : "f9", "to" : "f7" }
+    }, {
+      "id" : "f11",
+      "type" : "ProcessAnnotation",
+      "name" : [
+        "This function receives a StreamedContent from a file and returns the value as a StreamedContent with contentType as PDF.",
+        "",
+        "This function currently supports the following types: .eml, .xlsx, .doc, .jpg/.png, .xls, .doc, .docx."
+      ],
+      "visual" : {
+        "at" : { "x" : 280, "y" : 280 },
+        "size" : { "width" : 512, "height" : 60 }
       }
     } ]
 }
