@@ -207,26 +207,25 @@ The function named **previewDocument** allows reading documents with specific ty
 
 .. figure:: /_static/images/callable-processes-5.png
 
-.. table:: DocumentPreview attributes
+.. table:: File attribute
 
    +-------------+----------------+----------------------------------------------------------------------------------------+
    | Field       | Type           | Description                                                                            |
    +=============+================+========================================================================================+
-   | fileName    | String         | The name of the file, including its extension (e.g., "report.pdf", "invoice.docx").    |
-   |             |                | This is used to identify and label the file when displaying or processing it.          |
-   +-------------+----------------+----------------------------------------------------------------------------------------+
-   | contentType | String         | The MIME type of the file (e.g., "application/pdf", "image/jpeg". This helps determine |
-   |             |                | how the file should be rendered, either as an image, document, or media file.          |
-   +-------------+----------------+----------------------------------------------------------------------------------------+
-   | fileContent | byte[]         | The raw binary data of the file. This is the actual content that will be converted to  |
-   |             |                | StreamedContent for display using PrimeFaces components like **<p:media>**             |
+   | file        | java.io.File   | The feature accepts a java.io.File object as input. It can parse and process the file  |
+   |             |                | content based on its type.                                                             |
    +-------------+----------------+----------------------------------------------------------------------------------------+
 
-There are four constructors:
+.. figure:: /_static/images/callable-processes-7.png
 
-- The default constructor: :file:`DocumentPreview()`
-- A constructor that accepts file metadata: :file:`DocumentPreview(String fileName, String contentType, byte[] fileContent)`
-- A constructor that accepts a PrimeFaces file upload event: :file:`DocumentPreview(FileUploadEvent event)`
-- A constructor that accepts an uploaded file: :file:`DocumentPreview(UploadedFile file)`
+.. table:: streamedContent attribute
+
+   +-----------------+-------------------------------------+---------------------------------------------------------------+
+   | Field           | Type                                | Description                                                   |
+   +=================+=====================================+===============================================================+
+   | streamedContent | org.primefaces.model.StreamedContent| This feature accepts an org.primefaces.model.StreamedContent  |
+   |                 |                                     | as input. The content of the file is read and, depending on   |
+   |                 |                                     | its type, converted into a PDF document.                      |
+   +-----------------+------------+------------------------+---------------------------------------------------------------+
 
 .. figure:: /_static/images/callable-processes-6.png
