@@ -1,0 +1,167 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/process/12.0.0/process.json",
+  "id" : "1990E6C2F5654E8A",
+  "kind" : "CALLABLE_SUB",
+  "config" : {
+    "data" : "ch.ivyteam.ivy.doc.factory.DocumentPreviewData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "CallSubStart",
+      "name" : "previewDocument(File)",
+      "config" : {
+        "signature" : "previewDocument",
+        "input" : {
+          "params" : [
+            { "name" : "file", "type" : "java.io.File", "desc" : "" }
+          ],
+          "map" : {
+            "out.file" : "param.file"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "streamedContent", "type" : "org.primefaces.model.StreamedContent", "desc" : "" }
+          ],
+          "map" : {
+            "result.streamedContent" : "in.streamedContent"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 64 },
+        "description" : [
+          "This function receives a DocumentPreview entity and returns the value as a StreamedContent type.",
+          "",
+          "This function currently supports the following types: .eml, .xlsx, .doc, .jpg/.png, .xls, .doc, .docx."
+        ],
+        "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
+      },
+      "connect" : [
+        { "id" : "f2", "to" : "f3" }
+      ]
+    }, {
+      "id" : "f1",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 528, "y" : 64 },
+        "labelOffset" : { "x" : 13, "y" : 33 },
+        "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
+      }
+    }, {
+      "id" : "f3",
+      "type" : "Script",
+      "name" : "Generate StreamedContent to display",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.docfactory.preview.DocumentPreviewService;",
+            "out.streamedContent = DocumentPreviewService.getInstance().generateStreamedContent(in.file);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 312, "y" : 64 },
+        "size" : { "width" : 144 },
+        "icon" : "res:/webContent/icons/doc-factory-logo.png"
+      },
+      "connect" : [
+        { "id" : "f4", "to" : "f1", "color" : "default" }
+      ]
+    }, {
+      "id" : "f5",
+      "type" : "ProcessAnnotation",
+      "name" : [
+        "This function receives a DocumentPreview entity and returns the value as a StreamedContent.",
+        "",
+        "This function currently supports the following types: .eml, .xlsx, .doc, .jpg/.png, .xls, .doc, .docx."
+      ],
+      "visual" : {
+        "at" : { "x" : 311, "y" : 143 },
+        "size" : { "width" : 463, "height" : 79 },
+        "description" : [
+          "The DocumentPreview object is a Java object that can parse a document model from a FileUploadEvent, FileUpload,",
+          " or we can manually create a DocumentPreview object with fileName, contentType, and a byte[] data.",
+          "",
+          "This callable currently supports the following types: .eml, .xlsx, .doc, .jpg/.png, .xls, .doc, .docx.",
+          "",
+          "It will convert these file types to PDF format and return a streamedContent. We can use the <p:media> tag to display this value."
+        ]
+      }
+    }, {
+      "id" : "f6",
+      "type" : "CallSubStart",
+      "name" : "previewDocumentByStream(StreamedContent)",
+      "config" : {
+        "signature" : "previewDocumentByStream",
+        "input" : {
+          "params" : [
+            { "name" : "streamedContent", "type" : "org.primefaces.model.StreamedContent", "desc" : "" }
+          ],
+          "map" : {
+            "out.streamedContent" : "param.streamedContent"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "streamedContent", "type" : "org.primefaces.model.StreamedContent", "desc" : "" }
+          ],
+          "map" : {
+            "result.streamedContent" : "in.streamedContent"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 264 },
+        "description" : [
+          "This function receives a DocumentPreview entity and returns the value as a StreamedContent type.",
+          "",
+          "This function currently supports the following types: .eml, .xlsx, .doc, .jpg/.png, .xls, .doc, .docx."
+        ],
+        "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
+      },
+      "connect" : [
+        { "id" : "f10", "to" : "f7" }
+      ]
+    }, {
+      "id" : "f7",
+      "type" : "Script",
+      "name" : "Generate StreamedContent to display",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.docfactory.preview.DocumentPreviewService;",
+            "out.streamedContent = DocumentPreviewService.getInstance().generateStreamedContent(in.streamedContent);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 312, "y" : 264 },
+        "size" : { "width" : 144, "height" : 70 },
+        "icon" : "res:/webContent/icons/doc-factory-logo.png"
+      },
+      "connect" : [
+        { "id" : "f9", "to" : "f8" }
+      ]
+    }, {
+      "id" : "f8",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 528, "y" : 264 },
+        "labelOffset" : { "x" : 13, "y" : 33 },
+        "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
+      }
+    }, {
+      "id" : "f11",
+      "type" : "ProcessAnnotation",
+      "name" : [
+        "This function receives a StreamedContent from a file and returns the value as a StreamedContent with contentType as PDF.",
+        "",
+        "This function currently supports the following types: .eml, .xlsx, .doc, .jpg/.png, .xls, .doc, .docx."
+      ],
+      "visual" : {
+        "at" : { "x" : 311, "y" : 351 },
+        "size" : { "width" : 463, "height" : 79 }
+      }
+    } ]
+}
