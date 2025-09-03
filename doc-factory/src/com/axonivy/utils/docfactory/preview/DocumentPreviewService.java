@@ -2,7 +2,11 @@ package com.axonivy.utils.docfactory.preview;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
@@ -17,7 +21,7 @@ import com.aspose.words.SaveFormat;
 
 import ch.ivyteam.ivy.addons.docfactory.aspose.AsposeProduct;
 import ch.ivyteam.ivy.addons.docfactory.aspose.LicenseLoader;
-import ch.ivyteam.ivy.addons.docfactory.entity.DocumentPreview;
+import ch.ivyteam.ivy.environment.Ivy;
 
 import static ch.ivyteam.ivy.addons.docfactory.DocFactoryConstants.PDF_CONTENT_TYPE;
 import static ch.ivyteam.ivy.addons.docfactory.DocFactoryConstants.XLSX_EXTENSION;
@@ -36,10 +40,25 @@ public class DocumentPreviewService {
     return INSTANCE;
   }
 
-  public StreamedContent generateStreamedContent(DocumentPreview documentReview) throws Exception {
-    String fileName = documentReview.getFileName();
-    String contentType = documentReview.getContentType();
-    byte[] fileContent = documentReview.getFileContent();
+  public StreamedContent generateStreamedContent(File file) throws Exception {
+    String fileName = file.getName();
+    String contentType = Files.probeContentType(file.toPath());
+    byte[] fileContent = getDataFromFile(file);
+    return convertToStreamContent(fileName, fileContent, contentType);
+  }
+
+  public StreamedContent generateStreamedContent(StreamedContent streamedContent) throws Exception {
+    String fileName = streamedContent.getName();
+    byte[] fileContent;
+    try (InputStream input = streamedContent.getStream().get()) {
+      fileContent = input.readAllBytes();
+    }
+    String contentType = streamedContent.getContentType();
+    return convertToStreamContent(fileName, fileContent, contentType);
+  }
+
+  private StreamedContent convertToStreamContent(String fileName, byte[] fileContent, String contentType)
+      throws Exception {
     StreamedContent content = null;
     if (fileName.endsWith(XLSX_EXTENSION) || fileName.endsWith(XLS_EXTENSION)) {
       LicenseLoader.loadLicenseforProduct(AsposeProduct.CELLS);
@@ -54,6 +73,15 @@ public class DocumentPreviewService {
       content = convertOutputStreamToStreamedContent(fileName, contentType, fileContent);
     }
     return content;
+  }
+
+  private byte[] getDataFromFile(File file) {
+    try (FileInputStream fis = new FileInputStream(file)) {
+      return fis.readAllBytes();
+    } catch (IOException e) {
+      Ivy.log().error(e.getMessage());
+    }
+    return new byte[0];
   }
 
   private StreamedContent convertExcelToPdfStreamedContent(byte[] data, String fileName) throws Exception {
