@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.axonivy.utils.docfactory</groupId>
 	<artifactId>aspose-barcode-demo-test</artifactId>
-	<version>10.0.18-SNAPSHOT</version>
+	<version>10.0.18</version>
 	<packaging>iar-integration-test</packaging>
 
 	<properties>
