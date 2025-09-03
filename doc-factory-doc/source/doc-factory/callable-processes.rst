@@ -198,3 +198,34 @@ merges (:ref:`DocumentTemplate <df-callable-processes-document-template>`). Here
 is the description of this callable that you can find in the Axon Ivy process file:
 
 .. figure:: /_static/images/callable-processes-2.png
+
+
+previewDocument
+^^^^^^^^^^^^^^^
+The function named **previewDocument** allows reading documents with specific types such as:
+``pdf``, ``docx``, ``doc``, ``xlsx``, ``xls``, ``jpeg``, ``jpg``, ``png``, ``eml``, ``txt``, ``log``
+
+.. figure:: /_static/images/callable-processes-5.png
+
+.. table:: File attribute
+
+   +-------------+----------------+----------------------------------------------------------------------------------------+
+   | Field       | Type           | Description                                                                            |
+   +=============+================+========================================================================================+
+   | file        | java.io.File   | The feature accepts a java.io.File object as input. It can parse and process the file  |
+   |             |                | content based on its type.                                                             |
+   +-------------+----------------+----------------------------------------------------------------------------------------+
+
+.. figure:: /_static/images/callable-processes-7.png
+
+.. table:: streamedContent attribute
+
+   +-----------------+-------------------------------------+---------------------------------------------------------------+
+   | Field           | Type                                | Description                                                   |
+   +=================+=====================================+===============================================================+
+   | streamedContent | org.primefaces.model.StreamedContent| This feature accepts an org.primefaces.model.StreamedContent  |
+   |                 |                                     | as input. The content of the file is read and, depending on   |
+   |                 |                                     | its type, converted into a PDF document.                      |
+   +-----------------+------------+------------------------+---------------------------------------------------------------+
+
+.. figure:: /_static/images/callable-processes-6.png
