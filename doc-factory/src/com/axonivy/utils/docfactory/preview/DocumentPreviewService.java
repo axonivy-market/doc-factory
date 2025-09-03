@@ -21,6 +21,7 @@ import com.aspose.words.SaveFormat;
 
 import ch.ivyteam.ivy.addons.docfactory.aspose.AsposeProduct;
 import ch.ivyteam.ivy.addons.docfactory.aspose.LicenseLoader;
+import ch.ivyteam.ivy.environment.Ivy;
 
 import static ch.ivyteam.ivy.addons.docfactory.DocFactoryConstants.PDF_CONTENT_TYPE;
 import static ch.ivyteam.ivy.addons.docfactory.DocFactoryConstants.XLSX_EXTENSION;
@@ -78,9 +79,9 @@ public class DocumentPreviewService {
     try (FileInputStream fis = new FileInputStream(file)) {
       return fis.readAllBytes();
     } catch (IOException e) {
-      e.printStackTrace();
+      Ivy.log().error(e.getMessage());
     }
-    return null;
+    return new byte[0];
   }
 
   private StreamedContent convertExcelToPdfStreamedContent(byte[] data, String fileName) throws Exception {
