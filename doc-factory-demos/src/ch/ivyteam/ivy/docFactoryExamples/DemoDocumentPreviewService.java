@@ -15,7 +15,6 @@ import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.persistence.PersistencyException;
 import ch.ivyteam.ivy.process.call.SubProcessCall;
 import ch.ivyteam.ivy.process.call.SubProcessCallResult;
-import ch.ivyteam.ivy.scripting.objects.File;
 import ch.ivyteam.ivy.security.exec.Sudo;
 import ch.ivyteam.ivy.workflow.ICase;
 import ch.ivyteam.ivy.workflow.document.IDocument;
@@ -31,21 +30,19 @@ public class DemoDocumentPreviewService {
   }
 
   public static StreamedContent previewDocument(IDocument document) throws IOException {
-    File file = new File(document.getPath().asString());
     SubProcessCallResult callResult = 
         SubProcessCall.withPath(PREVIEW_DOCUMENT_PROCESS_PATH)
             .withStartName("previewDocument")
-            .withParam("file", file.getJavaFile())
+            .withParam("file", document.read().asJavaFile())
             .call();
     return (StreamedContent) callResult.get(STREAMED_CONTENT);
   }
 
   public static StreamedContent previewDocumentViaStreamContent(IDocument document) throws IOException {
-    File file = new File(document.getPath().asString());
     SubProcessCallResult callResult =
         SubProcessCall.withPath(PREVIEW_DOCUMENT_PROCESS_PATH)
             .withStartName("previewDocumentByStream")
-            .withParam(STREAMED_CONTENT, fileToStreamedContent(file.getJavaFile()))
+            .withParam(STREAMED_CONTENT, fileToStreamedContent(document.read().asJavaFile()))
             .call();
 
     return (StreamedContent) callResult.get(STREAMED_CONTENT);
