@@ -8,7 +8,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.io.File;
 import java.time.Duration;
 
-import org.awaitility.Awaitility;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
@@ -19,7 +18,6 @@ import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.DownloadOptions;
 import com.codeborne.selenide.FileDownloadMode;
 import com.codeborne.selenide.Selenide;
-import com.codeborne.selenide.WebDriverRunner;
 
 @IvyWebTest
 public class WebTestAsposeEmailDemoIT {
@@ -35,16 +33,9 @@ public class WebTestAsposeEmailDemoIT {
   @Test
   public void testMsgEmail() throws Exception {
     open(EngineUrl.createProcessUrl("AsposeEmailDemo/1712BF5507F25F15/start.ivp"));
-    String html = WebDriverRunner.getWebDriver().getPageSource();
-    System.out.println("✅ PAGE SOURCE:\n" + html);
-    $(By.cssSelector("[id$='customer']")).shouldBe(visible, Duration.ofSeconds(30));
-    var creator = $(By.cssSelector("[id$='createBtn']")).shouldBe(visible, Duration.ofSeconds(30));
-    File msg = creator.download(DownloadOptions.using(FileDownloadMode.PROXY).withTimeout(Duration.ofSeconds(30)));
-
-    Awaitility.await().untilAsserted(() -> {
-      assertThat(msg).exists();
-      assertThat(msg).isFile();
-    });
+    $(By.cssSelector("[id$='customer']")).shouldBe(visible);
+    File msg = $(By.cssSelector("[id$='createBtn']")).shouldBe(visible, Duration.ofSeconds(30))
+      .download(DownloadOptions.using(FileDownloadMode.PROXY).withTimeout(Duration.ofSeconds(30)));
+    assertThat(msg).exists().isFile();
   }
-
 }
