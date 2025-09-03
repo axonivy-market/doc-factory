@@ -1,5 +1,6 @@
 package ch.ivyteam.ivy.docFactoryExamples;
 
+import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -21,6 +22,9 @@ import ch.ivyteam.ivy.workflow.document.IDocument;
 import ch.ivyteam.ivy.workflow.document.IDocumentService;
 
 public class DemoDocumentPreviewService {
+  
+  private static final String PREVIEW_DOCUMENT_PROCESS_PATH = "Functional Processes/previewDocument";
+  private static final String STREAMED_CONTENT = "streamedContent";
 
   public static IDocument handleFileUpload(FileUploadEvent event) throws IOException {
     return upload(event.getFile().getFileName(), event.getFile().getInputStream());
@@ -29,22 +33,22 @@ public class DemoDocumentPreviewService {
   public static StreamedContent previewDocument(IDocument document) throws IOException {
     File file = new File(document.getPath().asString());
     SubProcessCallResult callResult = 
-        SubProcessCall.withPath("Functional Processes/previewDocument")
+        SubProcessCall.withPath(PREVIEW_DOCUMENT_PROCESS_PATH)
             .withStartName("previewDocument")
             .withParam("file", file.getJavaFile())
             .call();
-    return (StreamedContent) callResult.get("streamedContent");
+    return (StreamedContent) callResult.get(STREAMED_CONTENT);
   }
 
   public static StreamedContent previewDocumentViaStreamContent(IDocument document) throws IOException {
     File file = new File(document.getPath().asString());
     SubProcessCallResult callResult =
-        SubProcessCall.withPath("Functional Processes/previewDocument")
+        SubProcessCall.withPath(PREVIEW_DOCUMENT_PROCESS_PATH)
             .withStartName("previewDocumentByStream")
-            .withParam("streamedContent", fileToStreamedContent(file.getJavaFile()))
+            .withParam(STREAMED_CONTENT, fileToStreamedContent(file.getJavaFile()))
             .call();
 
-    return (StreamedContent) callResult.get("streamedContent");
+    return (StreamedContent) callResult.get(STREAMED_CONTENT);
   }
 
   public static IDocument upload(String filename, InputStream content) {
@@ -77,7 +81,7 @@ public class DemoDocumentPreviewService {
           } catch (FileNotFoundException e) {
             e.printStackTrace();
           }
-          return null;
+          return new ByteArrayInputStream(new byte[0]);
         }).build();
   }
 }

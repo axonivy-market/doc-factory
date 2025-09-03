@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 
@@ -13,7 +14,6 @@ import org.primefaces.model.StreamedContent;
 import com.aspose.cells.PdfSaveOptions;
 import com.aspose.cells.Workbook;
 import com.aspose.email.MailMessage;
-import com.aspose.email.system.exceptions.IOException;
 import com.aspose.words.Document;
 import com.aspose.words.LoadFormat;
 import com.aspose.words.LoadOptions;
@@ -77,7 +77,7 @@ public class DocumentPreviewService {
   private byte[] getDataFromFile(File file) {
     try (FileInputStream fis = new FileInputStream(file)) {
       return fis.readAllBytes();
-    } catch (IOException | java.io.IOException e) {
+    } catch (IOException e) {
       e.printStackTrace();
     }
     return null;
