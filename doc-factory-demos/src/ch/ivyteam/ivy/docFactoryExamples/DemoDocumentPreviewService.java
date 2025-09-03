@@ -79,7 +79,7 @@ public class DemoDocumentPreviewService {
           try {
             return new FileInputStream(file);
           } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            Ivy.log().error(e.getMessage());
           }
           return new ByteArrayInputStream(new byte[0]);
         }).build();
