@@ -24,7 +24,10 @@ public class DemoDocumentPreviewService {
   
   private static final String PREVIEW_DOCUMENT_PROCESS_PATH = "Functional Processes/previewDocument";
   private static final String STREAMED_CONTENT = "streamedContent";
-
+  private static final String INPUT_STREAM = "inputStream";
+  private static final String FILE_NAME = "fileName";
+  private static final String CONTENT_TYPE= "contentType";
+  
   public static IDocument handleFileUpload(FileUploadEvent event) throws IOException {
     return upload(event.getFile().getFileName(), event.getFile().getInputStream());
   }
@@ -46,6 +49,18 @@ public class DemoDocumentPreviewService {
             .call();
 
     return (StreamedContent) callResult.get(STREAMED_CONTENT);
+  }
+  
+  public static InputStream previewDocumentViaInputStream(String fileName, String contentType, InputStream inputStream) throws IOException {
+    SubProcessCallResult callResult =
+        SubProcessCall.withPath(PREVIEW_DOCUMENT_PROCESS_PATH)
+            .withStartName("previewDocumentByInputStream")
+            .withParam(FILE_NAME, fileName)
+            .withParam(CONTENT_TYPE, contentType)
+            .withParam(INPUT_STREAM, inputStream)
+            .call();
+
+    return (InputStream) callResult.get(INPUT_STREAM);
   }
 
   public static IDocument upload(String filename, InputStream content) {
