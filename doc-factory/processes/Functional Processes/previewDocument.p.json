@@ -61,7 +61,8 @@
       },
       "visual" : {
         "at" : { "x" : 280, "y" : 64 },
-        "size" : { "width" : 144, "height" : 54 }
+        "size" : { "width" : 144, "height" : 54 },
+        "icon" : "res:/webContent/icons/doc-factory-logo.png"
       },
       "connect" : [
         { "id" : "f4", "to" : "f1" }
@@ -107,7 +108,8 @@
       },
       "visual" : {
         "at" : { "x" : 296, "y" : 216 },
-        "size" : { "width" : 144, "height" : 54 }
+        "size" : { "width" : 144, "height" : 54 },
+        "icon" : "res:/webContent/icons/doc-factory-logo.png"
       },
       "connect" : [
         { "id" : "f8", "to" : "f6" }
@@ -157,6 +159,84 @@
       ],
       "visual" : {
         "at" : { "x" : 256, "y" : 288 },
+        "size" : { "width" : 512 }
+      }
+    }, {
+      "id" : "f12",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 448, "y" : 368 },
+        "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
+      }
+    }, {
+      "id" : "f13",
+      "type" : "Script",
+      "name" : "Generate StreamedContent to display",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.docfactory.preview.DocumentPreviewService;",
+            "out.inputStream = DocumentPreviewService.getInstance().generateInputStream(in.fileName, in.contentType, in.inputStream);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 296, "y" : 368 },
+        "size" : { "width" : 144, "height" : 54 },
+        "icon" : "res:/webContent/icons/doc-factory-logo.png"
+      },
+      "connect" : [
+        { "id" : "f14", "to" : "f12" }
+      ]
+    }, {
+      "id" : "f15",
+      "type" : "CallSubStart",
+      "name" : "previewDocumentByInputStream(String,String,InputStream)",
+      "config" : {
+        "signature" : "previewDocumentByInputStream",
+        "input" : {
+          "params" : [
+            { "name" : "fileName", "type" : "String", "desc" : "" },
+            { "name" : "contentType", "type" : "String", "desc" : "" },
+            { "name" : "inputStream", "type" : "java.io.InputStream", "desc" : "" }
+          ],
+          "map" : {
+            "out.contentType" : "param.contentType",
+            "out.fileName" : "param.fileName",
+            "out.inputStream" : "param.inputStream"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "inputStream", "type" : "java.io.InputStream", "desc" : "" }
+          ],
+          "map" : {
+            "result.inputStream" : "in.inputStream"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 56, "y" : 368 },
+        "description" : [
+          "This function receives a DocumentPreview entity and returns the value as a StreamedContent type.",
+          "",
+          "This function currently supports the following types: .eml, .xlsx, .doc, .jpg/.png, .xls, .doc, .docx."
+        ],
+        "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
+      },
+      "connect" : [
+        { "id" : "f16", "to" : "f13" }
+      ]
+    }, {
+      "id" : "f17",
+      "type" : "ProcessAnnotation",
+      "name" : [
+        "This function receives a inputStream from a file and returns the value as a inputStream with contentType as PDF.",
+        "",
+        "This function currently supports the following types: .eml, .xlsx, .doc, .jpg/.png, .xls, .doc, .docx."
+      ],
+      "visual" : {
+        "at" : { "x" : 256, "y" : 440 },
         "size" : { "width" : 512 }
       }
     } ]
