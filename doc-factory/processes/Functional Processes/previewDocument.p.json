@@ -204,5 +204,17 @@
         "icon" : "res:/webContent/icons/doc-factory-logo.png"
       },
       "connect" : { "id" : "f16", "to" : "f13" }
+    }, {
+      "id" : "f17",
+      "type" : "ProcessAnnotation",
+      "name" : [
+        "This function receives a inputStream from a file and returns the value as an inputStream with contentType as PDF.",
+        "",
+        "This function currently supports the following types: .eml, .xlsx, .doc, .jpg/.png, .xls, .doc, .docx."
+      ],
+      "visual" : {
+        "at" : { "x" : 288, "y" : 464 },
+        "size" : { "width" : 512, "height" : 60 }
+      }
     } ]
 }
