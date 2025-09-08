@@ -231,7 +231,7 @@
       "id" : "f17",
       "type" : "ProcessAnnotation",
       "name" : [
-        "This function receives a inputStream from a file and returns the value as a inputStream with contentType as PDF.",
+        "This function receives a inputStream from a file and returns the value as an inputStream with contentType as PDF.",
         "",
         "This function currently supports the following types: .eml, .xlsx, .doc, .jpg/.png, .xls, .doc, .docx."
       ],
