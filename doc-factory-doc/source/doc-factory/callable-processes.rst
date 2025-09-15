@@ -228,4 +228,19 @@ The function named **previewDocument** allows reading documents with specific ty
    |                 |                                     | its type, converted into a PDF document.                      |
    +-----------------+------------+------------------------+---------------------------------------------------------------+
 
+.. figure:: /_static/images/callable-processes-8.png
+
+.. table:: attributes
+
+   +-----------------+-------------------------------------+---------------------------------------------------------------+
+   | Field           | Type                                | Description                                                   |
+   +=================+=====================================+===============================================================+
+   | fileName        | java.lang.String                    | the original name of the file, including extension            |
+   |                 |                                     | (e.g. "report.pdf").                                          |
+   +-----------------+------------+------------------------+---------------------------------------------------------------+
+   | contentType     | java.lang.String                    | MIME type of the file (e.g."application/pdf", "image/png").   |
+   +-----------------+------------+------------------------+---------------------------------------------------------------+
+   | inputStream     | java.io.InputStream                 | the input stream containing the file’s raw data.              |
+   +-----------------+------------+------------------------+---------------------------------------------------------------+
+
 .. figure:: /_static/images/callable-processes-6.png
