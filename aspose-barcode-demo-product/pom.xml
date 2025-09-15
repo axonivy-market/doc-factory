@@ -3,7 +3,7 @@
 
   <groupId>com.axonivy.utils.docfactory</groupId>
   <artifactId>aspose-barcode-demo-product</artifactId>
-  <version>10.0.19-SNAPSHOT</version>
+  <version>10.0.19</version>
   <packaging>pom</packaging>
 
   <build>
