@@ -3,7 +3,7 @@
 	
 	<artifactId>com.axonivy.utils.docfactory</artifactId>
 	<groupId>doc-factory-modules</groupId>
-	<version>10.0.19</version>
+	<version>10.0.20-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	
 	<modules>
@@ -23,7 +23,7 @@
 
 	<scm>
     	<developerConnection>scm:git:https://github.com/axonivy-market/doc-factory.git</developerConnection>
-      <tag>v10.0.19</tag>
+      <tag>HEAD</tag>
   </scm>
 
   <build>
