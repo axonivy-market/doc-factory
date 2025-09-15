@@ -56,6 +56,12 @@ public class DocumentPreviewService {
     String contentType = streamedContent.getContentType();
     return convertToStreamContent(fileName, fileContent, contentType);
   }
+  
+  public InputStream generateInputStream(String fileName, String contentType, InputStream inputStream)
+      throws Exception {
+    StreamedContent content = convertToStreamContent(fileName, inputStream.readAllBytes(), contentType);
+    return content.getStream().get();
+  }
 
   private StreamedContent convertToStreamContent(String fileName, byte[] fileContent, String contentType)
       throws Exception {
