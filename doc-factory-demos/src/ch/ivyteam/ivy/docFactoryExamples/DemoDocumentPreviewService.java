@@ -24,6 +24,9 @@ public class DemoDocumentPreviewService {
   
   private static final String PREVIEW_DOCUMENT_PROCESS_PATH = "Functional Processes/previewDocument";
   private static final String STREAMED_CONTENT = "streamedContent";
+  private static final String INPUT_STREAM = "inputStream";
+  private static final String FILE_NAME = "fileName";
+  private static final String CONTENT_TYPE= "contentType";
 
   public static IDocument handleFileUpload(FileUploadEvent event) throws IOException {
     return upload(event.getFile().getFileName(), event.getFile().getInputStream());
@@ -48,6 +51,18 @@ public class DemoDocumentPreviewService {
     return (StreamedContent) callResult.get(STREAMED_CONTENT);
   }
 
+  public static InputStream previewDocumentViaInputStream(String fileName, String contentType, InputStream inputStream) throws IOException {
+    SubProcessCallResult callResult =
+        SubProcessCall.withPath(PREVIEW_DOCUMENT_PROCESS_PATH)
+            .withStartName("previewDocumentByInputStream")
+            .withParam(FILE_NAME, fileName)
+            .withParam(CONTENT_TYPE, contentType)
+            .withParam(INPUT_STREAM, inputStream)
+            .call();
+
+    return (InputStream) callResult.get("inputStream");
+  }
+
   public static IDocument upload(String filename, InputStream content) {
     try {
       return documentsOf(Ivy.wfCase()).add(filename).write().withContentFrom(content);
@@ -69,10 +84,8 @@ public class DemoDocumentPreviewService {
     String fileName = file.getName();
     String contentType = Files.probeContentType(file.toPath());
 
-    return DefaultStreamedContent.builder()
-        .name(fileName)
-        .contentType(contentType != null ? contentType : "application/octet-stream")
-        .stream(() -> {
+    return DefaultStreamedContent.builder().name(fileName)
+        .contentType(contentType != null ? contentType : "application/octet-stream").stream(() -> {
           try {
             return new FileInputStream(file);
           } catch (FileNotFoundException e) {
@@ -81,6 +94,4 @@ public class DemoDocumentPreviewService {
           return new ByteArrayInputStream(new byte[0]);
         }).build();
   }
-
- 
 }

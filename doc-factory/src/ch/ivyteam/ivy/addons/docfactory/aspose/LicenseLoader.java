@@ -58,7 +58,7 @@ public final class LicenseLoader {
 
   private static com.aspose.words.License loadAsposeWordsLicense(InputStream in) throws Exception {
     com.aspose.words.License lic = new com.aspose.words.License();
-    if (in != null) {
+    if (in != null && in.available() > 0) {
       lic.setLicense(in);
     }
     return lic;
@@ -66,7 +66,7 @@ public final class LicenseLoader {
 
   private static com.aspose.cells.License loadAsposeCellsLicense(InputStream in) throws Exception {
     com.aspose.cells.License lic = new com.aspose.cells.License();
-    if (in != null) {
+    if (in != null && in.available() > 0) {
       lic.setLicense(in);
     }
     return lic;
@@ -74,7 +74,7 @@ public final class LicenseLoader {
 
   private static com.aspose.pdf.License loadAsposePdfLicense(InputStream in) throws Exception {
     com.aspose.pdf.License lic = new com.aspose.pdf.License();
-    if (in != null) {
+    if (in != null && in.available() > 0) {
       lic.setLicense(in);
     }
     return lic;
@@ -82,15 +82,15 @@ public final class LicenseLoader {
 
   private static com.aspose.slides.License loadAsposeSlidesLicense(InputStream in) throws Exception {
     com.aspose.slides.License lic = new com.aspose.slides.License();
-    if (in != null) {
+    if (in != null && in.available() > 0) {
       lic.setLicense(in);
     }
     return lic;
   }
-  
+
   private static com.aspose.email.License loadAsposeEmailsLicense(InputStream in) throws Exception {
     com.aspose.email.License lic = new com.aspose.email.License();
-    if (in != null) {
+    if (in != null && in.available() > 0) {
       lic.setLicense(in);
     }
     return lic;

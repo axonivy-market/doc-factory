@@ -9,5 +9,14 @@
   }, {
     "name" : "streamedContent",
     "type" : "org.primefaces.model.StreamedContent"
+  }, {
+    "name" : "fileName",
+    "type" : "String"
+  }, {
+    "name" : "contentType",
+    "type" : "String"
+  }, {
+    "name" : "inputStream",
+    "type" : "java.io.InputStream"
   } ]
 }

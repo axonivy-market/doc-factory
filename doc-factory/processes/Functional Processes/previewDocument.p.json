@@ -163,5 +163,79 @@
         "at" : { "x" : 311, "y" : 351 },
         "size" : { "width" : 463, "height" : 79 }
       }
+    }, {
+      "id" : "f12",
+      "type" : "CallSubStart",
+      "name" : "previewDocumentByInputStream(String,String,InputStream)",
+      "config" : {
+        "signature" : "previewDocumentByInputStream",
+        "input" : {
+          "params" : [
+            { "name" : "fileName", "type" : "String", "desc" : "" },
+            { "name" : "contentType", "type" : "String", "desc" : "" },
+            { "name" : "inputStream", "type" : "java.io.InputStream", "desc" : "" }
+          ],
+          "map" : {
+            "out.contentType" : "param.contentType",
+            "out.fileName" : "param.fileName",
+            "out.inputStream" : "param.inputStream"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "inputStream", "type" : "java.io.InputStream", "desc" : "" }
+          ],
+          "map" : {
+            "result.inputStream" : "in.inputStream"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 488 },
+        "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
+      },
+      "connect" : [
+        { "id" : "f15", "to" : "f13" }
+      ]
+    }, {
+      "id" : "f13",
+      "type" : "Script",
+      "name" : "Generate StreamedContent to display",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.docfactory.preview.DocumentPreviewService;",
+            "out.inputStream = DocumentPreviewService.getInstance().generateInputStream(in.fileName, in.contentType, in.inputStream);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 336, "y" : 488 },
+        "size" : { "width" : 144, "height" : 70 },
+        "icon" : "res:/webContent/icons/doc-factory-logo.png"
+      },
+      "connect" : [
+        { "id" : "f16", "to" : "f14" }
+      ]
+    }, {
+      "id" : "f14",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 536, "y" : 488 },
+        "labelOffset" : { "x" : 13, "y" : 33 },
+        "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
+      }
+    }, {
+      "id" : "f17",
+      "type" : "ProcessAnnotation",
+      "name" : [
+        "This function receives a inputStream from a file and returns the value as an inputStream with contentType as PDF.",
+        "",
+        "This function currently supports the following types: .eml, .xlsx, .doc, .jpg/.png, .xls, .doc, .docx."
+      ],
+      "visual" : {
+        "at" : { "x" : 311, "y" : 575 },
+        "size" : { "width" : 463, "height" : 79 }
+      }
     } ]
 }
