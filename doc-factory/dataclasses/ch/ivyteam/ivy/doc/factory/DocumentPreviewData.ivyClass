@@ -2,3 +2,6 @@ DocumentPreviewData #class
 ch.ivyteam.ivy.doc.factory #namespace
 file java.io.File #field
 streamedContent org.primefaces.model.StreamedContent #field
+fileName String #field
+contentType String #field
+inputStream java.io.InputStream #field
