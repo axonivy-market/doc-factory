@@ -4,7 +4,7 @@
 	<groupId>com.axonivy.utils.docfactory</groupId>
 	<artifactId>doc-factory-doc</artifactId>
 	<packaging>pom</packaging>
-	<version>13.1.4-SNAPSHOT</version>
+	<version>13.1.4</version>
 	<name>Doc Factory</name>
 
 	<build>

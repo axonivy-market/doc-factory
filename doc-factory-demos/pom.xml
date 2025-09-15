@@ -9,7 +9,7 @@
   </parent>
   <groupId>com.axonivy.utils.docfactory</groupId>
   <artifactId>doc-factory-demos</artifactId>
-  <version>13.1.4-SNAPSHOT</version>
+  <version>13.1.4</version>
   <packaging>iar</packaging>
   <dependencies>
     <dependency>

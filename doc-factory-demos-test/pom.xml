@@ -9,7 +9,7 @@
   </parent>
   <groupId>com.axonivy.utils.docfactory</groupId>
   <artifactId>doc-factory-demos-test</artifactId>
-  <version>13.1.4-SNAPSHOT</version>
+  <version>13.1.4</version>
   <packaging>iar-integration-test</packaging>
   <properties>
     <selenide.version>7.7.1</selenide.version>
