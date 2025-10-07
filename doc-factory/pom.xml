@@ -30,21 +30,43 @@
       <groupId>com.aspose</groupId>
       <artifactId>aspose-cells</artifactId>
       <version>${aspose.version}</version>
-      <!-- <scope>provided</scope> -->
+      <scope>provided</scope>
     </dependency>
+     <dependency>
+      <groupId>com.aspose</groupId>
+      <artifactId>aspose-cells</artifactId>
+      <version>${aspose.version}</version>
+      <scope>test</scope>
+    </dependency>
+
     <dependency>
       <groupId>com.aspose</groupId>
       <artifactId>aspose-pdf</artifactId>
       <version>${aspose.version}</version>
       <classifier>jdk17</classifier>
-      <!-- <scope>provided</scope> -->
+      <scope>provided</scope>
+    </dependency>
+        <dependency>
+      <groupId>com.aspose</groupId>
+      <artifactId>aspose-pdf</artifactId>
+      <version>${aspose.version}</version>
+      <classifier>jdk17</classifier>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.aspose</groupId>
+      <artifactId>aspose-email</artifactId>
+      <version>${aspose.version}</version>
+      <classifier>jdk16</classifier>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.aspose</groupId>
       <artifactId>aspose-email</artifactId>
       <version>${aspose.version}</version>
       <classifier>jdk16</classifier>
-      <!-- <scope>provided</scope> -->
+      <scope>test</scope>
     </dependency>
 
     <dependency>
@@ -79,7 +101,14 @@
       <artifactId>aspose-slides</artifactId>
       <version>${aspose.version}</version>
       <classifier>jdk16</classifier>
-      <!-- <scope>provided</scope> -->
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.aspose</groupId>
+      <artifactId>aspose-slides</artifactId>
+      <version>${aspose.version}</version>
+      <classifier>jdk16</classifier>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 
