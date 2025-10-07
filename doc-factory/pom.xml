@@ -26,15 +26,12 @@
     </repository>
   </repositories>
   <dependencies>
-  <!-- Aspose Cells -->
     <dependency>
       <groupId>com.aspose</groupId>
       <artifactId>aspose-cells</artifactId>
       <version>${aspose.version}</version>
       <scope>provided</scope>
     </dependency>
-
-    <!-- Aspose PDF -->
     <dependency>
       <groupId>com.aspose</groupId>
       <artifactId>aspose-pdf</artifactId>
@@ -42,8 +39,6 @@
       <classifier>jdk17</classifier>
       <scope>provided</scope>
     </dependency>
-
-    <!-- Aspose Email -->
     <dependency>
       <groupId>com.aspose</groupId>
       <artifactId>aspose-email</artifactId>
@@ -51,8 +46,6 @@
       <classifier>jdk16</classifier>
       <scope>provided</scope>
     </dependency>
-
-    <!-- Aspose Words -->
     <dependency>
       <groupId>com.aspose</groupId>
       <artifactId>aspose-words</artifactId>
@@ -66,8 +59,6 @@
         </exclusion>
       </exclusions>
     </dependency>
-
-    <!-- Aspose Slides -->
     <dependency>
       <groupId>com.aspose</groupId>
       <artifactId>aspose-slides</artifactId>
@@ -76,7 +67,6 @@
       <scope>provided</scope>
     </dependency>
   </dependencies>
-
   <profiles>
     <profile>
       <id>with-test-deps</id>
@@ -124,7 +114,6 @@
       </dependencies>
     </profile>
   </profiles>
-
   <build>
     <plugins>      
       <plugin>
