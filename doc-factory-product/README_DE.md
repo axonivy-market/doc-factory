@@ -1,20 +1,19 @@
-# Dokument Fabrik
-Die Dokument Fabrik ist ein System jener erlaubt zu generieren Dokumente
-gleichnamig Post verleibt ein automatisch #mit Hilfe von #Microsoft Büro
-Vorlagen (.Punkt oder .dotx Dateien). Die Dokument Fabrik ist offen, kann sein
-erweitert und ist gegründet weiter die #Java Bibliothek Aspose jener ist
-#einschließen in den #Axon Efeu Bahnsteig.
+# Dokumentfabrik
+Die Document Factory ist ein System, mit dem Dokumente wie Seriendruckbriefe
+mithilfe von Microsoft Office-Vorlagen (.dot- oder .dotx-Dateien) automatisch
+generiert werden können. Die Document Factory ist offen, kann erweitert werden
+und basiert auf der Java-Bibliothek Aspose, die in der Axon Ivy-Plattform
+enthalten ist.
 
-![Dokument Erzeugung](doc.png)
+![Dokumentenerstellung](doc.png)
 
 ## Einrichtung
-Zu einfügen Images hinein eine Post verleibt ein Vorlage, wir #weiterempfehlen
-benutzen die [Aspose
+Um Bilder in eine Seriendruckvorlage einzufügen, empfehlen wir die Verwendung
+von [Aspose
 DocumentBuilder](https://docs.aspose.com/words/java/insert-picture-in-document/),
-welcher #programmatisch #wiedergewinnen und fügt ein Images während die
-einverleiben Arbeitsgang. Dieses Konzept versieht einen More Stall und
-maintainable Lösung als vertrauend weiter die `INCLUDEPICTURE` Post verleibt ein
-Feld.
+das Bilder während des Seriendruckvorgangs programmgesteuert abruft und einfügt.
+Dieser Ansatz bietet eine stabilere und wartungsfreundlichere Lösung als die
+Verwendung des Seriendruckfelds „ `INCLUDEPICTURE` ”.
 
-*Für #mehr Details, bitte übergeben zu verarbeiten *3.1: Dokument Kreation
-Fähigkeiten** in Demo Projekt*
+*Weitere Informationen finden Sie unter Prozess **3.1: Funktionen zur
+Dokumentenerstellung** im Demo-Projekt.*
