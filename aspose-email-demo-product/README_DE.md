@@ -1,32 +1,33 @@
-# Aspose.#Email Demo
+# Aspose.Email-Demo
 
-Aspose.#Mailen ist eine kraftvolle Bibliothek zu schaffen, manipulier und rechne
-um #eingerechnet #Email Formate MSG, EML, EMLX und MHT #ohne irgendwelche
-#Microsoft Aussicht Kolonien. Das aspose-Post.#Schnarren ist nicht trennen von
-das aspose Komponenten schlossen ein den #Axon Efeu DocFactory aber kann sein
-zugefügt zu dem Projekt classpath via Experten Extension gezeigt da in dieser
-Demo.
+Aspose.Email ist eine leistungsstarke Bibliothek zum Erstellen, Bearbeiten und
+Konvertieren von E-Mail-Formaten wie MSG, EML, EMLX und MHT ohne Abhängigkeiten
+von Microsoft Outlook. Die Datei „aspose-mail.jar” ist nicht Teil der
+Aspose-Komponenten, die in Axon Ivy DocFactory enthalten sind, kann jedoch wie
+in dieser Demo gezeigt über die Maven-Erweiterung zum Projekt-Klassenpfad
+hinzugefügt werden.
 
 ## Demo
 
-![Aspose.#Email Demo](asposeemail0.png)
+![Aspose.Email Demo](asposeemail0.png)
 
 
-Wann du startest diese Demo, eine UI öffnet:
+Wenn Sie diese Demo starten, öffnet sich eine Benutzeroberfläche:
 
-![Aspose.#Email Demo](asposeemail1.png)
+![Aspose.Email Demo](asposeemail1.png)
 
-Drängend den Knopf "Schafft" will generieren einen `newEmail.msg` Datei, gemäß
-du #einlesen dir hast betreten herein die UI bevor.
+Durch Klicken auf die Schaltfläche „Erstellen“ wird eine Datei „ `newEmail.msg“
+im Format „` “ generiert, entsprechend den Angaben, die Sie zuvor in der
+Benutzeroberfläche eingegeben haben.
 
-![Aspose.#Email Demo](asposeemail2.png)
+![Aspose.Email Demo](asposeemail2.png)
 
-Das `newEmail.msg` Datei kann sein geöffnet mit Aussicht
+Die Datei „ `newEmail.msg` ” kann mit Outlook geöffnet werden.
 
-![Aspose.#Email Demo](asposeemail3.png)
+![Aspose.Email Demo](asposeemail3.png)
 
 
 ## Einrichtung
 
-Einfach #installieren den Marktplatz Anschluss - #nichts braucht sonst zu sein
-getan :Erröte:
+Installieren Sie einfach den Marketplace Connector – mehr müssen Sie nicht tun
+:blush:
