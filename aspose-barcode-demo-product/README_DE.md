@@ -1,20 +1,21 @@
-# Aspose.Barcode Demo
-Aspose.Barcode Ist eine kraftvolle Entwicklung Bibliothek zu generieren &
-erkennen barcodes. Das aspose-barcode.#Schnarren ist nicht trennen von das
-aspose Komponenten schlossen ein den #Axon Efeu DocFactory aber kann sein
-zugefügt zu dem Projekt classpath via Experten Extension gezeigt da in dieser
-Demo.
+# Aspose.Barcode-Demo
+Aspose.Barcode ist eine leistungsstarke Entwicklungsbibliothek zum Generieren
+und Erkennen von Barcodes. Die Datei „aspose-barcode.jar” ist nicht Teil der
+Aspose-Komponenten, die in Axon Ivy DocFactory enthalten sind, kann jedoch wie
+in dieser Demo gezeigt über die Maven-Erweiterung zum Projekt-Klassenpfad
+hinzugefügt werden.
 
 ## Demo
 
-Mit unserer Demo für den Anschluss versehen wir ein simples UI für betreten eine
-Schnur: ![Aspose.Barcode UI](UI.png)
+Mit unserer Demo für den Connector bieten wir eine einfache Benutzeroberfläche
+zur Eingabe einer Zeichenfolge: ![Aspose.Barcode UI](UI.png)
 
-Mal drücken **Verfahren** diese Schnur ist #umrechnen zu eine barcode:
-![Aspose.Barcode Demo](barcode.png)
+Durch Drücken von „ **“ (Weiter) unter „** “ (Barcode-Datei erstellen) wird
+diese Zeichenfolge in einen Barcode umgewandelt: ![Aspose.Barcode
+Demo](barcode.png)
 
 
 ## Einrichtung
 
-Einfach #installieren den Marktplatz Anschluss - #nichts braucht sonst zu sein
-getan :Erröte:
+Installieren Sie einfach den Marketplace Connector – mehr müssen Sie nicht tun
+:blush:
