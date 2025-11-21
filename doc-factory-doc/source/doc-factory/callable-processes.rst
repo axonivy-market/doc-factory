@@ -203,7 +203,7 @@ is the description of this callable that you can find in the Axon Ivy process fi
 previewDocument
 ^^^^^^^^^^^^^^^
 The function named **previewDocument** allows reading documents with specific types such as:
-``pdf``, ``docx``, ``doc``, ``xlsx``, ``xls``, ``jpeg``, ``jpg``, ``png``, ``eml``, ``txt``, ``log``
+``pdf``, ``docx``, ``doc``, ``xlsx``, ``xls``, ``jpeg``, ``jpg``, ``png``, ``eml``, ``txt``, ``log``, ``msg``
 
 .. figure:: /_static/images/callable-processes-5.png
 
@@ -244,3 +244,7 @@ The function named **previewDocument** allows reading documents with specific ty
    +-----------------+------------+------------------------+---------------------------------------------------------------+
 
 .. figure:: /_static/images/callable-processes-6.png
+
+The function named **getSupportedTypeForPreview** allows getting all types that supported for **previewDocument** function
+
+.. figure:: /_static/images/callable-processes-9.png

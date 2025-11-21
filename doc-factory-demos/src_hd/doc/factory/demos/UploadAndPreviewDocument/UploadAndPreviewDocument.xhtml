@@ -18,7 +18,7 @@
           listener="#{logic.upload}" mode="advanced" auto="true"
           dragDropSupport="true" label="Choose File"
           sizeLimit="10485760"
-          allowTypes="/(\.|\/)(pdf|docx|doc|xlsx|xls|jpeg|jpg|png|eml|txt|log)$/"
+          allowTypes="/(\.|\/)(pdf|docx|doc|xlsx|xls|jpeg|jpg|png|eml|txt|log|msg)$/"
           update="fileTable" styleClass="custom-upload" />
 
         <p:dataTable var="file" lazy="false" value="#{data.documents}"
