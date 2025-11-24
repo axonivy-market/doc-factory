@@ -5,3 +5,4 @@ streamedContent org.primefaces.model.StreamedContent #field
 fileName String #field
 contentType String #field
 inputStream java.io.InputStream #field
+supportedTypes java.util.List<String> #field
