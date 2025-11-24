@@ -135,11 +135,11 @@ public class DocumentPreviewService {
 
       try (InputStream mhtmlInput = new ByteArrayInputStream(mhtmlStream.toByteArray())) {
         Document doc = new Document(mhtmlInput);
-        doc.save(pdfOut, SaveFormat.PDF);
         for (Section section : doc.getSections()) {
           PageSetup pageSetup = section.getPageSetup();
           pageSetup.setOrientation(Orientation.LANDSCAPE);
         }
+        doc.save(pdfOut, SaveFormat.PDF);
       }
       return convertOutputStreamToStreamedContent(pdfOut, fileName);
     }
