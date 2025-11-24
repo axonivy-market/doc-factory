@@ -82,6 +82,7 @@ public class DocumentPreviewService {
       LicenseLoader.loadLicenseforProduct(AsposeProduct.WORDS);
       content = convertWordToPdfStreamedContent(fileContent, fileName);
     } else if (fileName.endsWith(EML_EXTENSION) || fileName.endsWith(MSG_EXTENSION)) {
+      LicenseLoader.loadLicenseforProduct(AsposeProduct.WORDS);
       LicenseLoader.loadLicenseforProduct(AsposeProduct.EMAIL);
       content = convertEmlToPdfStreamedContent(fileContent, fileName);
     } else {
