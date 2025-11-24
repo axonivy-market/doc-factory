@@ -74,7 +74,7 @@
       "name" : [
         "This function receives a DocumentPreview entity and returns the value as a StreamedContent.",
         "",
-        "This function currently supports the following types: .eml, .xlsx, .doc, .jpg/.png, .xls, .doc, .docx."
+        "This function currently supports the following types: .eml, .xlsx, .doc, .jpg/.png, .xls, .doc, .docx, .msg."
       ],
       "visual" : {
         "at" : { "x" : 311, "y" : 143 },
@@ -157,7 +157,7 @@
       "name" : [
         "This function receives a StreamedContent from a file and returns the value as a StreamedContent with contentType as PDF.",
         "",
-        "This function currently supports the following types: .eml, .xlsx, .doc, .jpg/.png, .xls, .doc, .docx."
+        "This function currently supports the following types: .eml, .xlsx, .doc, .jpg/.png, .xls, .doc, .docx, .msg."
       ],
       "visual" : {
         "at" : { "x" : 311, "y" : 351 },
@@ -231,11 +231,73 @@
       "name" : [
         "This function receives a inputStream from a file and returns the value as an inputStream with contentType as PDF.",
         "",
-        "This function currently supports the following types: .eml, .xlsx, .doc, .jpg/.png, .xls, .doc, .docx."
+        "This function currently supports the following types: .eml, .xlsx, .doc, .jpg/.png, .xls, .doc, .docx, .msg."
       ],
       "visual" : {
         "at" : { "x" : 311, "y" : 575 },
         "size" : { "width" : 463, "height" : 79 }
+      }
+    }, {
+      "id" : "f18",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 528, "y" : 704 },
+        "labelOffset" : { "x" : 13, "y" : 33 },
+        "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
+      }
+    }, {
+      "id" : "f19",
+      "type" : "Script",
+      "name" : "Get supported types for preview",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.docfactory.preview.DocumentPreviewService;",
+            "out.supportedTypes = DocumentPreviewService.getInstance().getSupportedTypeForPreview();"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 328, "y" : 704 },
+        "size" : { "width" : 144, "height" : 70 },
+        "icon" : "res:/webContent/icons/doc-factory-logo.png"
+      },
+      "connect" : [
+        { "id" : "f23", "to" : "f18" }
+      ]
+    }, {
+      "id" : "f20",
+      "type" : "CallSubStart",
+      "name" : "getSupportedTypeForPreview()",
+      "config" : {
+        "signature" : "getSupportedTypeForPreview",
+        "result" : {
+          "params" : [
+            { "name" : "supportedTypes", "type" : "List<String>", "desc" : "" }
+          ],
+          "map" : {
+            "result.supportedTypes" : "in.supportedTypes"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 88, "y" : 704 },
+        "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
+      },
+      "connect" : [
+        { "id" : "f22", "to" : "f19" }
+      ]
+    }, {
+      "id" : "f21",
+      "type" : "ProcessAnnotation",
+      "name" : [
+        "This function return a list of supported types for preview function",
+        "",
+        "eg: .eml, .xlsx, .doc, .xls, .docx, .msg"
+      ],
+      "visual" : {
+        "at" : { "x" : 312, "y" : 784 },
+        "size" : { "width" : 480, "height" : 64 }
       }
     } ]
 }
