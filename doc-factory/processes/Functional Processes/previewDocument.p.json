@@ -73,7 +73,7 @@
       "name" : [
         "This function receives a DocumentPreview entity and returns the value as a StreamedContent.",
         "",
-        "This function currently supports the following types: .eml, .xlsx, .doc, .jpg/.png, .xls, .doc, .docx."
+        "This function currently supports the following types: .eml, .xlsx, .doc, .jpg/.png, .xls, .doc, .docx, .msg."
       ],
       "visual" : {
         "at" : { "x" : 256, "y" : 136 },
@@ -82,7 +82,7 @@
           "The DocumentPreview object is a Java object that can parse a document model from a FileUploadEvent, FileUpload,",
           " or we can manually create a DocumentPreview object with fileName, contentType, and a byte[] data.",
           "",
-          "This callable currently supports the following types: .eml, .xlsx, .doc, .jpg/.png, .xls, .doc, .docx.",
+          "This callable currently supports the following types: .eml, .xlsx, .doc, .jpg/.png, .xls, .doc, .docx, .msg.",
           "",
           "It will convert these file types to PDF format and return a streamedContent. We can use the <p:media> tag to display this value."
         ]
@@ -155,11 +155,11 @@
       "name" : [
         "This function receives a StreamedContent from a file and returns the value as a StreamedContent with contentType as PDF.",
         "",
-        "This function currently supports the following types: .eml, .xlsx, .doc, .jpg/.png, .xls, .doc, .docx."
+        "This function currently supports the following types: .eml, .xlsx, .doc, .jpg/.png, .xls, .doc, .docx, .msg."
       ],
       "visual" : {
-        "at" : { "x" : 256, "y" : 288 },
-        "size" : { "width" : 512 }
+        "at" : { "x" : 256, "y" : 297 },
+        "size" : { "width" : 512, "height" : 78 }
       }
     }, {
       "id" : "f12",
@@ -233,11 +233,77 @@
       "name" : [
         "This function receives a inputStream from a file and returns the value as an inputStream with contentType as PDF.",
         "",
-        "This function currently supports the following types: .eml, .xlsx, .doc, .jpg/.png, .xls, .doc, .docx."
+        "This function currently supports the following types: .eml, .xlsx, .doc, .jpg/.png, .xls, .doc, .docx, .msg."
       ],
       "visual" : {
-        "at" : { "x" : 256, "y" : 440 },
-        "size" : { "width" : 512 }
+        "at" : { "x" : 256, "y" : 449 },
+        "size" : { "width" : 512, "height" : 78 }
+      }
+    }, {
+      "id" : "f18",
+      "type" : "CallSubStart",
+      "name" : "getSupportedTypeForPreview()",
+      "config" : {
+        "signature" : "getSupportedTypeForPreview",
+        "result" : {
+          "params" : [
+            { "name" : "supportedTypes", "type" : "List<String>", "desc" : "" }
+          ],
+          "map" : {
+            "result.supportedTypes" : "in.supportedTypes"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 56, "y" : 544 },
+        "description" : [
+          "This function receives a DocumentPreview entity and returns the value as a StreamedContent type.",
+          "",
+          "This function currently supports the following types: .eml, .xlsx, .doc, .jpg/.png, .xls, .doc, .docx."
+        ],
+        "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
+      },
+      "connect" : [
+        { "id" : "f19", "to" : "f20" }
+      ]
+    }, {
+      "id" : "f20",
+      "type" : "Script",
+      "name" : "Get supported types for preview",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.docfactory.preview.DocumentPreviewService;",
+            "out.supportedTypes = DocumentPreviewService.getInstance().getSupportedTypeForPreview();"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 296, "y" : 544 },
+        "size" : { "width" : 144, "height" : 54 },
+        "icon" : "res:/webContent/icons/doc-factory-logo.png"
+      },
+      "connect" : [
+        { "id" : "f21", "to" : "f22" }
+      ]
+    }, {
+      "id" : "f22",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 448, "y" : 544 },
+        "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
+      }
+    }, {
+      "id" : "f23",
+      "type" : "ProcessAnnotation",
+      "name" : [
+        "This function return a list of supported types for preview function",
+        "",
+        "eg: .eml, .xlsx, .doc, .xls, .docx, .msg"
+      ],
+      "visual" : {
+        "at" : { "x" : 256, "y" : 609 },
+        "size" : { "width" : 512, "height" : 46 }
       }
     } ]
 }
