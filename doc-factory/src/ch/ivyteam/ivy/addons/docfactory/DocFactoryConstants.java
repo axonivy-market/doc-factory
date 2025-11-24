@@ -1,5 +1,6 @@
 package ch.ivyteam.ivy.addons.docfactory;
 
+import java.util.List;
 import java.util.Locale;
 
 public final class DocFactoryConstants {
@@ -13,6 +14,7 @@ public final class DocFactoryConstants {
   public static final String XLS_EXTENSION = ".xls";
   public static final String XLSX_EXTENSION = ".xlsx";
   public static final String EML_EXTENSION = ".eml";
+  public static final String MSG_EXTENSION = ".msg";
   public static final String PDF_CONTENT_TYPE = "application/pdf";
   public static final String XLSX_CONTENT_TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
   public static final String WORD_CONTENT_TYPE =
@@ -35,4 +37,6 @@ public final class DocFactoryConstants {
 
   public static final String DEFAULT_FILE_NAME = "defaultDocFactoryFileName";
 
+  public static final List<String> SUPPORTED_TYPES_FOR_PREVIEW =
+      List.of(DOC_EXTENSION, DOCX_EXTENSION, XLS_EXTENSION, XLSX_EXTENSION, EML_EXTENSION, MSG_EXTENSION);
 }
