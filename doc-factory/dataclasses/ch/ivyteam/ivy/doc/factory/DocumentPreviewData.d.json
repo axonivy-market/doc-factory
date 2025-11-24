@@ -18,5 +18,8 @@
   }, {
     "name" : "inputStream",
     "type" : "java.io.InputStream"
+  }, {
+    "name" : "supportedTypes",
+    "type" : "List<String>"
   } ]
 }
