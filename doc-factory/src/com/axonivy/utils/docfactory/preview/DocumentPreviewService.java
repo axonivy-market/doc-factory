@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.util.List;
 
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
@@ -17,8 +18,12 @@ import com.aspose.email.MailMessage;
 import com.aspose.words.Document;
 import com.aspose.words.LoadFormat;
 import com.aspose.words.LoadOptions;
+import com.aspose.words.Orientation;
+import com.aspose.words.PageSetup;
 import com.aspose.words.SaveFormat;
+import com.aspose.words.Section;
 
+import ch.ivyteam.ivy.addons.docfactory.DocFactoryConstants;
 import ch.ivyteam.ivy.addons.docfactory.aspose.AsposeProduct;
 import ch.ivyteam.ivy.addons.docfactory.aspose.LicenseLoader;
 import ch.ivyteam.ivy.environment.Ivy;
@@ -29,6 +34,7 @@ import static ch.ivyteam.ivy.addons.docfactory.DocFactoryConstants.XLS_EXTENSION
 import static ch.ivyteam.ivy.addons.docfactory.DocFactoryConstants.DOC_EXTENSION;
 import static ch.ivyteam.ivy.addons.docfactory.DocFactoryConstants.DOCX_EXTENSION;
 import static ch.ivyteam.ivy.addons.docfactory.DocFactoryConstants.EML_EXTENSION;
+import static ch.ivyteam.ivy.addons.docfactory.DocFactoryConstants.MSG_EXTENSION;;
 
 public class DocumentPreviewService {
 
@@ -38,6 +44,10 @@ public class DocumentPreviewService {
 
   public static DocumentPreviewService getInstance() {
     return INSTANCE;
+  }
+  
+  public List<String> getSupportedTypeForPreview() {
+    return DocFactoryConstants.SUPPORTED_TYPES_FOR_PREVIEW;
   }
 
   public StreamedContent generateStreamedContent(File file) throws Exception {
@@ -72,7 +82,8 @@ public class DocumentPreviewService {
     } else if (fileName.endsWith(DOC_EXTENSION) || fileName.endsWith(DOCX_EXTENSION)) {
       LicenseLoader.loadLicenseforProduct(AsposeProduct.WORDS);
       content = convertWordToPdfStreamedContent(fileContent, fileName);
-    } else if (fileName.endsWith(EML_EXTENSION)) {
+    } else if (fileName.endsWith(EML_EXTENSION) || fileName.endsWith(MSG_EXTENSION)) {
+      LicenseLoader.loadLicenseforProduct(AsposeProduct.WORDS);
       LicenseLoader.loadLicenseforProduct(AsposeProduct.EMAIL);
       content = convertEmlToPdfStreamedContent(fileContent, fileName);
     } else {
@@ -124,6 +135,10 @@ public class DocumentPreviewService {
 
       try (InputStream mhtmlInput = new ByteArrayInputStream(mhtmlStream.toByteArray())) {
         Document doc = new Document(mhtmlInput);
+        for (Section section : doc.getSections()) {
+          PageSetup pageSetup = section.getPageSetup();
+          pageSetup.setOrientation(Orientation.LANDSCAPE);
+        }
         doc.save(pdfOut, SaveFormat.PDF);
       }
       return convertOutputStreamToStreamedContent(pdfOut, fileName);
