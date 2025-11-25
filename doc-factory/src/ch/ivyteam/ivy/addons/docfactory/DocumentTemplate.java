@@ -10,7 +10,7 @@ import java.util.Hashtable;
 import java.util.Locale;
 
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import ch.ivyteam.api.API;
 import ch.ivyteam.ivy.addons.docfactory.mergefield.internal.MergeFieldsExtractor;
