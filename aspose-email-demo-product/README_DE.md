@@ -27,7 +27,7 @@ Die Datei „ `newEmail.msg` ” kann mit Outlook geöffnet werden.
 ![Aspose.Email Demo](asposeemail3.png)
 
 
-## Einrichtung
+## Setup
 
 Installieren Sie einfach den Marketplace Connector – mehr müssen Sie nicht tun
 :blush:
