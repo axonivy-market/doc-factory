@@ -15,7 +15,7 @@ diese Zeichenfolge in einen Barcode umgewandelt: ![Aspose.Barcode
 Demo](barcode.png)
 
 
-## Einrichtung
+## Setup
 
 Installieren Sie einfach den Marketplace Connector – mehr müssen Sie nicht tun
 :blush:
