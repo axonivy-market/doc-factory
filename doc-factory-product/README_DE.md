@@ -7,7 +7,7 @@ enthalten ist.
 
 ![Dokumentenerstellung](doc.png)
 
-## Einrichtung
+## Setup
 Um Bilder in eine Seriendruckvorlage einzufügen, empfehlen wir die Verwendung
 von [Aspose
 DocumentBuilder](https://docs.aspose.com/words/java/insert-picture-in-document/),
