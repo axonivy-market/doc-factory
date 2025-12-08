@@ -102,7 +102,7 @@ public final class LicenseLoader {
     return lic;
   }
 
-  private static InputStream ensureNotEmptyStream(InputStream in) {
+  public static InputStream ensureNotEmptyStream(InputStream in) {
     try {
       if (in == null) {
         return null;
