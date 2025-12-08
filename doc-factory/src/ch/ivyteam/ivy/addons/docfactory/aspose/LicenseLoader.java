@@ -1,10 +1,12 @@
 package ch.ivyteam.ivy.addons.docfactory.aspose;
 
+import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
 import ch.ivyteam.ivy.ThirdPartyLicenses;
+import ch.ivyteam.ivy.environment.Ivy;
 
 public final class LicenseLoader {
 
@@ -58,41 +60,75 @@ public final class LicenseLoader {
 
   private static com.aspose.words.License loadAsposeWordsLicense(InputStream in) throws Exception {
     com.aspose.words.License lic = new com.aspose.words.License();
-    if (in != null && in.available() > 0) {
-      lic.setLicense(in);
+    InputStream safeStream = ensureNotEmptyStream(in);
+    if (safeStream != null) {
+      lic.setLicense(safeStream);
     }
     return lic;
   }
 
   private static com.aspose.cells.License loadAsposeCellsLicense(InputStream in) throws Exception {
     com.aspose.cells.License lic = new com.aspose.cells.License();
-    if (in != null && in.available() > 0) {
-      lic.setLicense(in);
+    InputStream safeStream = ensureNotEmptyStream(in);
+    if (safeStream != null) {
+      lic.setLicense(safeStream);
     }
     return lic;
   }
 
   private static com.aspose.pdf.License loadAsposePdfLicense(InputStream in) throws Exception {
     com.aspose.pdf.License lic = new com.aspose.pdf.License();
-    if (in != null && in.available() > 0) {
-      lic.setLicense(in);
+    InputStream safeStream = ensureNotEmptyStream(in);
+    if (safeStream != null) {
+      lic.setLicense(safeStream);
     }
     return lic;
   }
 
   private static com.aspose.slides.License loadAsposeSlidesLicense(InputStream in) throws Exception {
     com.aspose.slides.License lic = new com.aspose.slides.License();
-    if (in != null && in.available() > 0) {
-      lic.setLicense(in);
+    InputStream safeStream = ensureNotEmptyStream(in);
+    if (safeStream != null) {
+      lic.setLicense(safeStream);
     }
     return lic;
   }
 
   private static com.aspose.email.License loadAsposeEmailsLicense(InputStream in) throws Exception {
     com.aspose.email.License lic = new com.aspose.email.License();
-    if (in != null && in.available() > 0) {
-      lic.setLicense(in);
+    InputStream safeStream = ensureNotEmptyStream(in);
+    if (safeStream != null) {
+      lic.setLicense(safeStream);
     }
     return lic;
+  }
+
+  public static InputStream ensureNotEmptyStream(InputStream in) {
+    if (in == null) {
+      return null;
+    }
+    try {
+      BufferedInputStream bufferedInputStream = new BufferedInputStream(in);
+      bufferedInputStream.mark(1);
+      int firstByte = bufferedInputStream.read();
+      if (firstByte == -1) {
+        bufferedInputStream.close();
+        return null;
+      }
+      bufferedInputStream.reset();
+      return bufferedInputStream;
+    } catch (Exception e) {
+      closeInputStream(in);
+      Ivy.log().error("There is an error when checking empty stream: " + e.getMessage());
+      return null;
+    }
+  }
+
+  private static void closeInputStream(InputStream in) {
+    try {
+      in.close();
+    } catch (Exception ex) {
+      Ivy.log().error("Cannot close the inputStream: " + ex.getMessage());
+    }
   }
 }
