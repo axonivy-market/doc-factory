@@ -119,7 +119,7 @@ public final class LicenseLoader {
       return bufferedInputStream;
     } catch (Exception e) {
       closeInputStream(in);
-      Ivy.log().error("There is an error when check empty stream: " + e.getMessage());
+      Ivy.log().error("There is an error when checking empty stream: " + e.getMessage());
       return null;
     }
   }
