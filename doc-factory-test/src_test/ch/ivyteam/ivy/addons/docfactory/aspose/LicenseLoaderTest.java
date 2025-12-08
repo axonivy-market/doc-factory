@@ -115,7 +115,8 @@ class LicenseLoaderTest {
 
   @Test
   void ensureNotEmptyStream_shouldReturnBufferedStream_whenStreamNotEmpty() throws Exception {
-    byte[] data = "abc".getBytes();
+    final String CONTENT = "abc";
+    byte[] data = CONTENT.getBytes();
     InputStream original = new ByteArrayInputStream(data);
 
     InputStream result = LicenseLoader.ensureNotEmptyStream(original);
@@ -123,7 +124,7 @@ class LicenseLoaderTest {
     assertNotNull(result, "Non-empty stream should return a stream");
     assertTrue(result instanceof BufferedInputStream, "Result must be a BufferedInputStream");
 
-    byte[] read = result.readNBytes(3);
+    byte[] read = result.readNBytes(CONTENT.length());
     assertArrayEquals(data, read, "Stream should still contain all original data");
   }
 

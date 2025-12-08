@@ -104,10 +104,10 @@ public final class LicenseLoader {
   }
 
   public static InputStream ensureNotEmptyStream(InputStream in) {
+    if (in == null) {
+      return null;
+    }
     try {
-      if (in == null) {
-        return null;
-      }
       BufferedInputStream bufferedInputStream = new BufferedInputStream(in);
       bufferedInputStream.mark(1);
       int firstByte = bufferedInputStream.read();
@@ -118,12 +118,17 @@ public final class LicenseLoader {
       bufferedInputStream.reset();
       return bufferedInputStream;
     } catch (Exception e) {
-      try {
-        in.close();
-      } catch (Exception ex) {
-      }
+      closeInputStream(in);
       Ivy.log().error("There is an error when check empty stream: " + e.getMessage());
       return null;
+    }
+  }
+
+  private static void closeInputStream(InputStream in) {
+    try {
+      in.close();
+    } catch (Exception ex) {
+      Ivy.log().error("Cannot close the inputStream: " + ex.getMessage());
     }
   }
 }
