@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ch.ivyteam.ivy.ThirdPartyLicenses;
+import ch.ivyteam.ivy.environment.Ivy;
 
 public final class LicenseLoader {
 
@@ -111,11 +112,17 @@ public final class LicenseLoader {
       bufferedInputStream.mark(1);
       int firstByte = bufferedInputStream.read();
       if (firstByte == -1) {
+        bufferedInputStream.close();
         return null;
       }
       bufferedInputStream.reset();
       return bufferedInputStream;
     } catch (Exception e) {
+      try {
+        in.close();
+      } catch (Exception ex) {
+      }
+      Ivy.log().error("There is an error when check empty stream: " + e.getMessage());
       return null;
     }
   }
