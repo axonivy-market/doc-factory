@@ -16,10 +16,11 @@ import org.junit.jupiter.api.Test;
 
 import com.aspose.words.Document;
 
+import ch.ivyteam.ivy.addons.docfactory.BaseMergeFieldTest;
 import ch.ivyteam.ivy.addons.docfactory.TemplateMergeField;
 import ch.ivyteam.ivy.addons.docfactory.aspose.MailMergeDataSourceGenerator;
 
-public class MergeFieldsExtractorTest {
+public class MergeFieldsExtractorTest extends BaseMergeFieldTest {
 
   @Test
   public void getMergeFields_returns_empty_Collection_if_bean_null() {
