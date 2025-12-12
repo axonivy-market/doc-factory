@@ -8,7 +8,7 @@ import ch.ivyteam.ivy.environment.IvyTest;
 @IvyTest
 public class BaseMergeFieldTest {
 
-  private static final String CYCLIC_SUPPORT_LEVELS = "com.axonivy.utils.docfactory.CyclicSupportLevels";
+  public static final String CYCLIC_SUPPORT_LEVELS = "com.axonivy.utils.docfactory.CyclicSupportLevels";
 
   @BeforeEach
   public void setup(AppFixture fixture) {

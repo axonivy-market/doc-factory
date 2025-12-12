@@ -19,6 +19,7 @@ import com.aspose.words.Document;
 import ch.ivyteam.ivy.addons.docfactory.BaseMergeFieldTest;
 import ch.ivyteam.ivy.addons.docfactory.TemplateMergeField;
 import ch.ivyteam.ivy.addons.docfactory.aspose.MailMergeDataSourceGenerator;
+import ch.ivyteam.ivy.environment.AppFixture;
 
 public class MergeFieldsExtractorTest extends BaseMergeFieldTest {
 
@@ -61,8 +62,52 @@ public class MergeFieldsExtractorTest extends BaseMergeFieldTest {
                     TemplateMergeField.withName("person.address.zipCode").withValue("C5F0B5"),
                     TemplateMergeField.withName("person.id").withValue(885),
                     TemplateMergeField.withName("person.birthday").withValue(person.getBirthday()),
-                    TemplateMergeField.withName("person.address").withValue(person.getAddress()),
                     TemplateMergeField.withName("person.paySlip").withValue(paySlip));
+  }
+
+  @Test
+  public void getMergeFields_returns_templateMergeFields_with_including_cyclic_relation_in_embedded_beans_values(
+      AppFixture fixture) {
+    Product product = makeComplexProductWithIncludingCyclicRelation();
+
+    // CYCLIC_SUPPORT_LEVELS = 1
+    Collection<TemplateMergeField> result = MergeFieldsExtractor.getMergeFields(product);
+    assertThat(result).contains(TemplateMergeField.withName("product.id").withValue(product.getId()),
+        TemplateMergeField.withName("product.name").withValue(product.getName()),
+        TemplateMergeField.withName("product.relatedProduct.id").withValue(product.getRelatedProduct().getId()),
+        TemplateMergeField.withName("product.relatedProduct.name").withValue(product.getRelatedProduct().getName()));
+    assertThat(result).doesNotContain(
+        TemplateMergeField.withName("product.relatedProduct.relatedProduct.id").withValue(product.getId()),
+        TemplateMergeField.withName("product.relatedProduct.relatedProduct.name").withValue(product.getName()));
+
+    // CYCLIC_SUPPORT_LEVELS = 2
+    fixture.var(CYCLIC_SUPPORT_LEVELS, "2");
+    result = MergeFieldsExtractor.getMergeFields(product);
+    assertThat(result).contains(TemplateMergeField.withName("product.id").withValue(product.getId()),
+        TemplateMergeField.withName("product.name").withValue(product.getName()),
+        TemplateMergeField.withName("product.relatedProduct.id").withValue(product.getRelatedProduct().getId()),
+        TemplateMergeField.withName("product.relatedProduct.name").withValue(product.getRelatedProduct().getName()),
+        TemplateMergeField.withName("product.relatedProduct.relatedProduct.id").withValue(product.getId()),
+        TemplateMergeField.withName("product.relatedProduct.relatedProduct.name").withValue(product.getName()));
+    assertThat(result).doesNotContain(
+        TemplateMergeField.withName("product.relatedProduct.relatedProduct.relatedProduct.id")
+            .withValue(product.getRelatedProduct().getId()),
+        TemplateMergeField.withName("product.relatedProduct.relatedProduct.relatedProduct.name")
+            .withValue(product.getRelatedProduct().getName()));
+
+    // CYCLIC_SUPPORT_LEVELS = 3
+    fixture.var(CYCLIC_SUPPORT_LEVELS, "3");
+    result = MergeFieldsExtractor.getMergeFields(product);
+    assertThat(result).contains(TemplateMergeField.withName("product.id").withValue(product.getId()),
+        TemplateMergeField.withName("product.name").withValue(product.getName()),
+        TemplateMergeField.withName("product.relatedProduct.id").withValue(product.getRelatedProduct().getId()),
+        TemplateMergeField.withName("product.relatedProduct.name").withValue(product.getRelatedProduct().getName()),
+        TemplateMergeField.withName("product.relatedProduct.relatedProduct.id").withValue(product.getId()),
+        TemplateMergeField.withName("product.relatedProduct.relatedProduct.name").withValue(product.getName()),
+        TemplateMergeField.withName("product.relatedProduct.relatedProduct.relatedProduct.id")
+            .withValue(product.getRelatedProduct().getId()),
+        TemplateMergeField.withName("product.relatedProduct.relatedProduct.relatedProduct.name")
+            .withValue(product.getRelatedProduct().getName()));
   }
 
   @Test
@@ -146,7 +191,7 @@ public class MergeFieldsExtractorTest extends BaseMergeFieldTest {
 
     Collection<TemplateMergeField> additionalTemplateTypeMergeFields = personAdditionalInformationsTemplateMergeField
             .get().getChildren().stream()
-            .filter(tm -> tm.getMergeFieldName().equals("additionalinformation.type"))
+            .filter(tm -> tm.getMergeFieldName().equalsIgnoreCase("additionalinformation.type"))
             .collect(Collectors.toList());
 
     assertThat(additionalTemplateTypeMergeFields).hasSize(infos.size());
@@ -172,6 +217,20 @@ public class MergeFieldsExtractorTest extends BaseMergeFieldTest {
     address.setZipCode("C5F0B5");
     person.setAddress(address);
     return person;
+  }
+
+  private Product makeComplexProductWithIncludingCyclicRelation() {
+    Product product = new Product();
+    product.setId("123");
+    product.setName("Table");
+
+    Product relatedProduct = new Product();
+    relatedProduct.setId("456");
+    relatedProduct.setName("Chair");
+    relatedProduct.setRelatedProduct(product);
+
+    product.setRelatedProduct(relatedProduct);
+    return product;
   }
 
   private class MyEmptyBean implements Serializable {
@@ -362,6 +421,32 @@ public class MergeFieldsExtractorTest extends BaseMergeFieldTest {
       this.addresses = addresses;
     }
 
+  }
+
+  private class Product implements Serializable {
+    private static final long serialVersionUID = -4022525690921689448L;
+    
+    private String id;
+    private String name;
+    private Product relatedProduct;
+    public String getId() {
+      return id;
+    }
+    public void setId(String id) {
+      this.id = id;
+    }
+    public String getName() {
+      return name;
+    }
+    public void setName(String name) {
+      this.name = name;
+    }
+    public Product getRelatedProduct() {
+      return relatedProduct;
+    }
+    public void setRelatedProduct(Product relatedProduct) {
+      this.relatedProduct = relatedProduct;
+    }
   }
 
 }
