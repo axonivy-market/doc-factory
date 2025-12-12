@@ -15,9 +15,10 @@ import org.junit.jupiter.api.Test;
 
 import com.aspose.words.IMailMergeDataSource;
 
+import ch.ivyteam.ivy.addons.docfactory.BaseMergeFieldTest;
 import ch.ivyteam.ivy.addons.docfactory.TemplateMergeField;
 
-public class MailMergeDataSourceGeneratorTest {
+public class MailMergeDataSourceGeneratorTest extends BaseMergeFieldTest {
 
   @Test
   public void getFromCollectionTypeTemplateMergeField_throws_IAE_with_null_parameter() throws Exception {

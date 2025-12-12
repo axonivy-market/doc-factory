@@ -61,6 +61,11 @@ class WebTestSubprocessExamplesIT {
     assertDownload("start6.ivp", "DocWithNestedObject.pdf");
   }
 
+  @Test
+  void docWithNestedObjectIncludingCyclicReferences() throws Exception {
+    assertDownload("start8.ivp", "DocWithNestedObjectIncludingCyclicReferences.pdf");
+  }
+
   private void assertDownload(String process, String expectedFileName) throws Exception {
     open(EngineUrl.createProcessUrl(DOC_DEMOS_BASE + process));
     var doc = $("#docLink").shouldBe(visible).download(DownloadOptions.using(FileDownloadMode.PROXY)

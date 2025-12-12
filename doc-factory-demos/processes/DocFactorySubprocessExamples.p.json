@@ -151,7 +151,8 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 216, "y" : 344 }
+        "at" : { "x" : 243, "y" : 342 },
+        "size" : { "width" : 166, "height" : 56 }
       },
       "connect" : { "id" : "f16", "to" : "f13" }
     }, {
@@ -189,7 +190,8 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 600, "y" : 344 }
+        "at" : { "x" : 608, "y" : 344 },
+        "size" : { "width" : 128, "height" : 60 }
       },
       "connect" : { "id" : "f23", "to" : "f1" }
     }, {
@@ -209,7 +211,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 392, "y" : 344 },
+        "at" : { "x" : 432, "y" : 344 },
         "size" : { "width" : 128, "height" : 60 }
       },
       "connect" : { "id" : "f17", "to" : "f12" }
@@ -230,7 +232,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 384, "y" : 696 },
+        "at" : { "x" : 384, "y" : 800 },
         "size" : { "width" : 128, "height" : 60 }
       },
       "connect" : { "id" : "f24", "to" : "f22" }
@@ -273,7 +275,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 592, "y" : 696 }
+        "at" : { "x" : 592, "y" : 800 }
       },
       "connect" : { "id" : "f35", "to" : "f2" }
     }, {
@@ -287,7 +289,7 @@
         "case" : { }
       },
       "visual" : {
-        "at" : { "x" : 96, "y" : 696 },
+        "at" : { "x" : 96, "y" : 800 },
         "labelOffset" : { "x" : 27, "y" : 52 }
       },
       "connect" : { "id" : "f21", "to" : "f45" }
@@ -308,7 +310,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 384, "y" : 888 },
+        "at" : { "x" : 384, "y" : 992 },
         "size" : { "width" : 128, "height" : 60 }
       },
       "connect" : { "id" : "f34", "to" : "f29" }
@@ -347,7 +349,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 592, "y" : 888 },
+        "at" : { "x" : 592, "y" : 992 },
         "size" : { "width" : 128, "height" : 60 }
       },
       "connect" : { "id" : "f41", "to" : "f50" }
@@ -364,7 +366,7 @@
         "startName" : "1.2 Document with Conditional Text"
       },
       "visual" : {
-        "at" : { "x" : 96, "y" : 888 },
+        "at" : { "x" : 96, "y" : 992 },
         "labelOffset" : { "x" : 60, "y" : 50 }
       },
       "connect" : { "id" : "f32", "to" : "f31" }
@@ -388,7 +390,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 208, "y" : 888 },
+        "at" : { "x" : 208, "y" : 992 },
         "size" : { "width" : 144, "height" : 60 }
       },
       "connect" : { "id" : "f33", "to" : "f27" }
@@ -429,7 +431,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 592, "y" : 1080 },
+        "at" : { "x" : 592, "y" : 1184 },
         "size" : { "width" : 128, "height" : 60 }
       },
       "connect" : { "id" : "f52", "to" : "f51" }
@@ -450,7 +452,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 384, "y" : 1080 },
+        "at" : { "x" : 384, "y" : 1184 },
         "size" : { "width" : 128, "height" : 60 }
       },
       "connect" : { "id" : "f43", "to" : "f37" }
@@ -465,7 +467,7 @@
         "case" : { }
       },
       "visual" : {
-        "at" : { "x" : 96, "y" : 1080 },
+        "at" : { "x" : 96, "y" : 1184 },
         "labelOffset" : { "x" : 51, "y" : 55 }
       },
       "connect" : { "id" : "f26", "to" : "f46" }
@@ -498,7 +500,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 208, "y" : 696 },
+        "at" : { "x" : 208, "y" : 800 },
         "size" : { "width" : 144, "height" : 60 }
       },
       "connect" : { "id" : "f25", "to" : "f20" }
@@ -562,7 +564,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 208, "y" : 1080 },
+        "at" : { "x" : 208, "y" : 1184 },
         "size" : { "width" : 128, "height" : 60 }
       },
       "connect" : { "id" : "f40", "to" : "f38" }
@@ -600,7 +602,7 @@
         "e.g. \"person.address\" are not expanded."
       ],
       "visual" : {
-        "at" : { "x" : 912, "y" : 1080 },
+        "at" : { "x" : 912, "y" : 1136 },
         "size" : { "width" : 224, "height" : 60 }
       }
     }, {
@@ -628,7 +630,7 @@
         "template" : "view/done.xhtml"
       },
       "visual" : {
-        "at" : { "x" : 736, "y" : 696 }
+        "at" : { "x" : 736, "y" : 800 }
       }
     }, {
       "id" : "f50",
@@ -637,7 +639,7 @@
         "template" : "view/done.xhtml"
       },
       "visual" : {
-        "at" : { "x" : 736, "y" : 888 }
+        "at" : { "x" : 736, "y" : 992 }
       }
     }, {
       "id" : "f51",
@@ -646,7 +648,7 @@
         "template" : "view/done.xhtml"
       },
       "visual" : {
-        "at" : { "x" : 736, "y" : 1080 }
+        "at" : { "x" : 736, "y" : 1184 }
       }
     }, {
       "id" : "f9",
@@ -707,7 +709,8 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 600, "y" : 440 }
+        "at" : { "x" : 610, "y" : 441 },
+        "size" : { "width" : 132, "height" : 63 }
       },
       "connect" : { "id" : "f55", "to" : "f9" }
     }, {
@@ -733,14 +736,13 @@
             "p.description = \"London - Dublin\";",
             "p.unit.amount=190;",
             "p.unit.text = \"Km\";",
-            "",
             "out.position = p;"
           ]
         }
       },
       "visual" : {
-        "at" : { "x" : 224, "y" : 440 },
-        "size" : { "width" : 128, "height" : 60 }
+        "at" : { "x" : 243, "y" : 438 },
+        "size" : { "width" : 167, "height" : 56 }
       },
       "connect" : { "id" : "f57", "to" : "f36" }
     }, {
@@ -760,7 +762,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 392, "y" : 440 },
+        "at" : { "x" : 432, "y" : 440 },
         "size" : { "width" : 128, "height" : 60 }
       },
       "connect" : { "id" : "f54", "to" : "f18" }
@@ -774,7 +776,7 @@
         "Use full qualified names for merge fields."
       ],
       "visual" : {
-        "at" : { "x" : 960, "y" : 432 },
+        "at" : { "x" : 952, "y" : 432 },
         "size" : { "width" : 320, "height" : 76 }
       }
     }, {
@@ -784,7 +786,7 @@
         "template" : "view/done.xhtml"
       },
       "visual" : {
-        "at" : { "x" : 752, "y" : 536 }
+        "at" : { "x" : 752, "y" : 648 }
       }
     }, {
       "id" : "f59",
@@ -793,11 +795,11 @@
       "config" : {
         "callSignature" : "start7",
         "outLink" : "start7.ivp",
-        "startName" : "1.2c Document with Object And Table",
+        "startName" : "1.2d Document with Object And Table",
         "case" : { }
       },
       "visual" : {
-        "at" : { "x" : 88, "y" : 536 },
+        "at" : { "x" : 88, "y" : 648 },
         "labelOffset" : { "x" : 56, "y" : 53 }
       },
       "connect" : { "id" : "f63", "to" : "f61" }
@@ -840,7 +842,8 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 600, "y" : 536 }
+        "at" : { "x" : 613, "y" : 647 },
+        "size" : { "width" : 138, "height" : 58 }
       },
       "connect" : { "id" : "f64", "to" : "f58" }
     }, {
@@ -887,8 +890,8 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 224, "y" : 536 },
-        "size" : { "width" : 128, "height" : 60 }
+        "at" : { "x" : 244, "y" : 648 },
+        "size" : { "width" : 168, "height" : 60 }
       },
       "connect" : { "id" : "f66", "to" : "f62" }
     }, {
@@ -908,7 +911,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 392, "y" : 536 },
+        "at" : { "x" : 432, "y" : 648 },
         "size" : { "width" : 128, "height" : 60 }
       },
       "connect" : { "id" : "f65", "to" : "f60" }
@@ -923,7 +926,7 @@
         "case" : { }
       },
       "visual" : {
-        "at" : { "x" : 104, "y" : 1232 },
+        "at" : { "x" : 104, "y" : 1360 },
         "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
       },
       "connect" : { "id" : "f69", "to" : "f68" }
@@ -936,8 +939,148 @@
         "startMethod" : "start()"
       },
       "visual" : {
-        "at" : { "x" : 304, "y" : 1232 },
+        "at" : { "x" : 304, "y" : 1360 },
         "icon" : "res:/webContent/icons/doc-factory-logo.png"
+      }
+    }, {
+      "id" : "f70",
+      "type" : "TaskEndPage",
+      "config" : {
+        "template" : "view/done.xhtml"
+      },
+      "visual" : {
+        "at" : { "x" : 752, "y" : 544 }
+      }
+    }, {
+      "id" : "f71",
+      "type" : "RequestStart",
+      "name" : "Document contains nested objects that includes cyclic references",
+      "config" : {
+        "callSignature" : "start8",
+        "outLink" : "start8.ivp",
+        "startName" : "1.2c Document with nested Object that includes cyclic references",
+        "case" : { }
+      },
+      "visual" : {
+        "at" : { "x" : 88, "y" : 544 },
+        "labelOffset" : { "x" : 153, "y" : 57 }
+      },
+      "connect" : { "id" : "f79", "to" : "f73" }
+    }, {
+      "id" : "f72",
+      "type" : "SubProcessCall",
+      "name" : [
+        "Create Document",
+        "with nested Object "
+      ],
+      "config" : {
+        "processCall" : "Functional Processes/writeSerialLetterToOneCorrespondent:writeDocumentWithNestedDataClass(CompositeObject,String,String,String,String)",
+        "call" : {
+          "params" : [
+            { "name" : "data", "type" : "CompositeObject" },
+            { "name" : "optionalOutputpath", "type" : "String" },
+            { "name" : "optionalLetterName", "type" : "String" },
+            { "name" : "optionalOutputFormat", "type" : "String" },
+            { "name" : "templatePath", "type" : "String" }
+          ],
+          "map" : {
+            "param.data" : "in.position",
+            "param.optionalOutputpath" : "new File(\"ivy_DocFactoryDemo\").getAbsolutePath()",
+            "param.optionalLetterName" : "\"DocWithNestedObjectIncludingCyclicReferences\"",
+            "param.optionalOutputFormat" : "\"pdf\"",
+            "param.templatePath" : "in.templateFile.getAbsolutePath()"
+          }
+        },
+        "output" : {
+          "code" : [
+            "import ch.ivyteam.ivy.docFactoryExamples.Util.FilesUtil;",
+            "in.templateFile.delete();",
+            "",
+            "FilesUtil.setFileRef(result.fileOperationMessage.files.get(0));"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 610, "y" : 545 },
+        "size" : { "width" : 133, "height" : 63 }
+      },
+      "connect" : { "id" : "f77", "to" : "f70" }
+    }, {
+      "id" : "f73",
+      "type" : "Script",
+      "name" : "Create nested Object that includes cyclic references",
+      "config" : {
+        "output" : {
+          "map" : {
+            "out" : "in",
+            "out.mergeFields" : "[]",
+            "out.positions" : "[]",
+            "out.report.projects" : "[]",
+            "out.tableRecords" : "[]"
+          },
+          "code" : [
+            "import doc.factory.demos.Position;",
+            "",
+            "//a structured Object",
+            "Position p = new Position();",
+            "p.date = '12.12.2026';",
+            "p.code = 1234;",
+            "p.description = \"London - Dublin\";",
+            "p.unit.amount = 461;",
+            "p.unit.text = \"Km\";",
+            "",
+            "Position rp = new Position();",
+            "rp.date = '11.9.2019';",
+            "rp.code = 9999;",
+            "rp.description = \"London - Berlin\";",
+            "rp.unit.amount = 935;",
+            "rp.unit.text = \"Km\";",
+            "rp.related = p;",
+            "",
+            "p.related = rp;",
+            "out.position = p;"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 248, "y" : 544 },
+        "size" : { "width" : 168, "height" : 60 }
+      },
+      "connect" : { "id" : "f76", "to" : "f74" }
+    }, {
+      "id" : "f74",
+      "type" : "Script",
+      "name" : [
+        "Get Template from",
+        "CMS"
+      ],
+      "config" : {
+        "output" : {
+          "code" : [
+            "import ch.ivyteam.ivy.docFactoryExamples.ExportFromCms;",
+            "",
+            "out.templateFile = ExportFromCms.export(\"/Templates/myTemplateWithNestedObjectIncludingCyclicReferences\", \"doc\");"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 432, "y" : 544 },
+        "size" : { "width" : 128, "height" : 60 }
+      },
+      "connect" : { "id" : "f78", "to" : "f72" }
+    }, {
+      "id" : "f75",
+      "type" : "ProcessAnnotation",
+      "name" : [
+        "Remark:",
+        "This subprocess uses \"mail merge\" for nested objects that includes cyclic references",
+        "e.g. \"position.related.related.related.unit.amount\" is expanded ",
+        "If the variable com.axonivy.utils.docfactory.CyclicSupportLevels = 3",
+        "Use full qualified names for merge fields."
+      ],
+      "visual" : {
+        "at" : { "x" : 976, "y" : 543 },
+        "size" : { "width" : 374, "height" : 97 }
       }
     } ],
   "layout" : {
@@ -948,7 +1091,7 @@
         "size" : 124
       }, {
         "name" : "CompositeObject Data",
-        "size" : 314
+        "size" : 428
       }, {
         "name" : "Document with Table",
         "size" : 184
@@ -957,7 +1100,7 @@
         "size" : 192
       }, {
         "name" : "Nested Tables",
-        "size" : 192
+        "size" : 200
       }, {
         "name" : "Preview documents",
         "offset" : 2,
