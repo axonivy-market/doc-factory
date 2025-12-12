@@ -8,3 +8,5 @@ description String #field
 description PERSISTENT #fieldModifier
 unit doc.factory.demos.Unit #field
 unit PERSISTENT #fieldModifier
+related doc.factory.demos.Position #field
+related PERSISTENT #fieldModifier
