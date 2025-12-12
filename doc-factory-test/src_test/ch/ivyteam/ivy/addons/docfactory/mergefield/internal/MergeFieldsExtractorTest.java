@@ -19,6 +19,7 @@ import com.aspose.words.Document;
 import ch.ivyteam.ivy.addons.docfactory.BaseMergeFieldTest;
 import ch.ivyteam.ivy.addons.docfactory.TemplateMergeField;
 import ch.ivyteam.ivy.addons.docfactory.aspose.MailMergeDataSourceGenerator;
+import ch.ivyteam.ivy.addons.docfactory.test.data.Product;
 import ch.ivyteam.ivy.environment.AppFixture;
 
 public class MergeFieldsExtractorTest extends BaseMergeFieldTest {
@@ -219,20 +220,6 @@ public class MergeFieldsExtractorTest extends BaseMergeFieldTest {
     return person;
   }
 
-  private Product makeComplexProductWithIncludingCyclicRelation() {
-    Product product = new Product();
-    product.setId("123");
-    product.setName("Table");
-
-    Product relatedProduct = new Product();
-    relatedProduct.setId("456");
-    relatedProduct.setName("Chair");
-    relatedProduct.setRelatedProduct(product);
-
-    product.setRelatedProduct(relatedProduct);
-    return product;
-  }
-
   private class MyEmptyBean implements Serializable {
     private static final long serialVersionUID = -1788146613602936894L;
 
@@ -422,31 +409,4 @@ public class MergeFieldsExtractorTest extends BaseMergeFieldTest {
     }
 
   }
-
-  private class Product implements Serializable {
-    private static final long serialVersionUID = -4022525690921689448L;
-    
-    private String id;
-    private String name;
-    private Product relatedProduct;
-    public String getId() {
-      return id;
-    }
-    public void setId(String id) {
-      this.id = id;
-    }
-    public String getName() {
-      return name;
-    }
-    public void setName(String name) {
-      this.name = name;
-    }
-    public Product getRelatedProduct() {
-      return relatedProduct;
-    }
-    public void setRelatedProduct(Product relatedProduct) {
-      this.relatedProduct = relatedProduct;
-    }
-  }
-
 }
