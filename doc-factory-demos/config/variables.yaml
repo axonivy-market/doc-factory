@@ -3,4 +3,4 @@ Variables:
     axonivy:
       utils:
         docfactory:
-          CyclicSupportLevels: 2
+          CyclicSupportLevels: 3

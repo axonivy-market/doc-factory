@@ -1029,6 +1029,8 @@
             "positionB.related = positionA;",
             "",
             "pr.positions.add(positionA);",
+            "pr.positions.add(positionB);",
+            "",
             "out.report.projects.add(pr);"
           ]
         }
