@@ -66,14 +66,7 @@ public class MergeFieldsExtractor {
 
   private static void getBeanPropertyValues(Object bean, String propertiesNamePrefix,
       IdentityHashMap<Object, Boolean> visited, Map<String, Object> result, int levelsLeft) {
-    BeanInfo info;
-    try {
-      info = Introspector.getBeanInfo(bean.getClass());
-    } catch (IntrospectionException e) {
-      throw new MergeFieldsBeansIntrospectionException(
-          "An Exception occurred while getting the BeanInfo of " + bean.getClass().getName(), e);
-    }
-
+    BeanInfo info = getBeanInfoFromObject(bean);
     if (bean == null || (visited.containsKey(bean) && levelsLeft < 0)) {
       return;
     }
@@ -90,6 +83,15 @@ public class MergeFieldsExtractor {
       } else {
         result.put(propertiesNamePrefix + pd.getName(), propertyValue);
       }
+    }
+  }
+
+  private static BeanInfo getBeanInfoFromObject(Object bean) {
+    try {
+      return Introspector.getBeanInfo(bean.getClass());
+    } catch (IntrospectionException e) {
+      throw new MergeFieldsBeansIntrospectionException(
+          "An Exception occurred while getting the BeanInfo of " + bean.getClass().getName(), e);
     }
   }
 
@@ -194,14 +196,7 @@ public class MergeFieldsExtractor {
 
   private static Map<String, Object> getBeanPropertyValues(Object bean, String propertiesNamePrefix) {
     Map<String, Object> result = new HashMap<String, Object>();
-    BeanInfo info;
-    try {
-      info = Introspector.getBeanInfo(bean.getClass());
-    } catch (IntrospectionException e) {
-      throw new MergeFieldsBeansIntrospectionException(
-              "An Exception occurred while getting the BeanInfo of " + bean.getClass().getName(), e);
-    }
-
+    BeanInfo info = getBeanInfoFromObject(bean);
     for (PropertyDescriptor pd : info.getPropertyDescriptors()) {
       Object propertyValue = getPropertyValue(bean, pd);
       if (propertyValue == null) {
