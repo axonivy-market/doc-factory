@@ -75,8 +75,13 @@ public class MergeFieldsExtractorTest extends BaseMergeFieldTest {
     Collection<TemplateMergeField> result = MergeFieldsExtractor.getMergeFields(product);
     assertThat(result).contains(TemplateMergeField.withName("product.id").withValue(product.getId()),
         TemplateMergeField.withName("product.name").withValue(product.getName()),
+        TemplateMergeField.withName("product.price").withValue(product.getPrice()),
+        TemplateMergeField.withName("product.manufacturingDate").withValue(product.getManufacturingDate()),
         TemplateMergeField.withName("product.relatedProduct.id").withValue(product.getRelatedProduct().getId()),
-        TemplateMergeField.withName("product.relatedProduct.name").withValue(product.getRelatedProduct().getName()));
+        TemplateMergeField.withName("product.relatedProduct.name").withValue(product.getRelatedProduct().getName()),
+        TemplateMergeField.withName("product.relatedProduct.price").withValue(product.getRelatedProduct().getPrice()),
+        TemplateMergeField.withName("product.relatedProduct.manufacturingDate")
+            .withValue(product.getRelatedProduct().getManufacturingDate()));
     assertThat(result).doesNotContain(
         TemplateMergeField.withName("product.relatedProduct.relatedProduct.id").withValue(product.getId()),
         TemplateMergeField.withName("product.relatedProduct.relatedProduct.name").withValue(product.getName()));
@@ -89,26 +94,28 @@ public class MergeFieldsExtractorTest extends BaseMergeFieldTest {
         TemplateMergeField.withName("product.relatedProduct.id").withValue(product.getRelatedProduct().getId()),
         TemplateMergeField.withName("product.relatedProduct.name").withValue(product.getRelatedProduct().getName()),
         TemplateMergeField.withName("product.relatedProduct.relatedProduct.id").withValue(product.getId()),
-        TemplateMergeField.withName("product.relatedProduct.relatedProduct.name").withValue(product.getName()));
-    assertThat(result).doesNotContain(
-        TemplateMergeField.withName("product.relatedProduct.relatedProduct.relatedProduct.id")
-            .withValue(product.getRelatedProduct().getId()),
-        TemplateMergeField.withName("product.relatedProduct.relatedProduct.relatedProduct.name")
-            .withValue(product.getRelatedProduct().getName()));
-
-    // CYCLIC_SUPPORT_LEVELS = 3
-    fixture.var(CYCLIC_SUPPORT_LEVELS, "3");
-    result = MergeFieldsExtractor.getMergeFields(product);
-    assertThat(result).contains(TemplateMergeField.withName("product.id").withValue(product.getId()),
-        TemplateMergeField.withName("product.name").withValue(product.getName()),
-        TemplateMergeField.withName("product.relatedProduct.id").withValue(product.getRelatedProduct().getId()),
-        TemplateMergeField.withName("product.relatedProduct.name").withValue(product.getRelatedProduct().getName()),
-        TemplateMergeField.withName("product.relatedProduct.relatedProduct.id").withValue(product.getId()),
         TemplateMergeField.withName("product.relatedProduct.relatedProduct.name").withValue(product.getName()),
         TemplateMergeField.withName("product.relatedProduct.relatedProduct.relatedProduct.id")
             .withValue(product.getRelatedProduct().getId()),
         TemplateMergeField.withName("product.relatedProduct.relatedProduct.relatedProduct.name")
             .withValue(product.getRelatedProduct().getName()));
+    assertThat(result).doesNotContain(
+        TemplateMergeField.withName("product.relatedProduct.relatedProduct.relatedProduct.relatedProduct.id")
+            .withValue(product.getRelatedProduct().getId()),
+        TemplateMergeField.withName("product.relatedProduct.relatedProduct.relatedProduct.relatedProduct.name")
+            .withValue(product.getRelatedProduct().getName()));
+
+    // CYCLIC_SUPPORT_LEVELS = 3
+    fixture.var(CYCLIC_SUPPORT_LEVELS, "3");
+    result = MergeFieldsExtractor.getMergeFields(product);
+    assertThat(result).doesNotContain(
+        TemplateMergeField
+            .withName(
+                "product.relatedProduct.relatedProduct.relatedProduct.relatedProduct.relatedProduct.relatedProduct.id")
+            .withValue(product.getId()),
+        TemplateMergeField.withName(
+            "product.relatedProduct.relatedProduct.relatedProduct.relatedProduct.relatedProduct.relatedProduct.name")
+            .withValue(product.getName()));
   }
 
   @Test

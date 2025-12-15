@@ -6,6 +6,7 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -22,7 +23,9 @@ import ch.ivyteam.api.API;
 import ch.ivyteam.ivy.addons.docfactory.TemplateMergeField;
 import ch.ivyteam.ivy.addons.docfactory.exception.MergeFieldsBeansIntrospectionException;
 import ch.ivyteam.ivy.environment.Ivy;
+import ch.ivyteam.ivy.scripting.objects.DateTime;
 import ch.ivyteam.ivy.scripting.objects.Duration;
+import ch.ivyteam.ivy.scripting.objects.Time;
 
 /**
  * Not public API
@@ -57,33 +60,33 @@ public class MergeFieldsExtractor {
   }
 
   private static Map<String, Object> getFieldsNameValueMap(Object bean, String baseName) {
-    IdentityHashMap<Object, Boolean> objVisited = new IdentityHashMap<>();
-    Map<String, Object> fieldsNameValueMap = new HashMap<>();
-    getBeanPropertyValues(bean, baseName + Introspector.decapitalize(bean.getClass().getSimpleName()) + DOT, objVisited,
-        fieldsNameValueMap, getCyclicSupportLevels());
-    return fieldsNameValueMap;
+    IdentityHashMap<Object, Integer> objVisited = new IdentityHashMap<>();
+    String propertiesNamePrefix = baseName + Introspector.decapitalize(bean.getClass().getSimpleName()) + DOT;
+    return getBeanPropertyValues(bean, propertiesNamePrefix, objVisited);
   }
 
-  private static void getBeanPropertyValues(Object bean, String propertiesNamePrefix,
-      IdentityHashMap<Object, Boolean> visited, Map<String, Object> result, int levelsLeft) {
+  private static Map<String, Object> getBeanPropertyValues(Object bean, String propertiesNamePrefix,
+      IdentityHashMap<Object, Integer> objVisited) {
+    Map<String, Object> result = new HashMap<>();
     BeanInfo info = getBeanInfoFromObject(bean);
-    if (bean == null || (visited.containsKey(bean) && levelsLeft < 0)) {
-      return;
+    if (bean == null || objVisited.merge(bean, 1, Integer::sum) > getCyclicSupportLevels()) {
+      return result;
     }
-    visited.put(bean, Boolean.TRUE);
 
     for (PropertyDescriptor pd : info.getPropertyDescriptors()) {
       Object propertyValue = getPropertyValue(bean, pd);
       if (propertyValue == null) {
         continue;
       }
+
       if (shouldBeIntrospectedForGettingEmbeddedProperties(propertyValue)) {
-        getBeanPropertyValues(propertyValue, propertiesNamePrefix + pd.getName() + DOT, visited, result,
-            levelsLeft - 1);
+        result.putAll(getBeanPropertyValues(propertyValue, propertiesNamePrefix + pd.getName() + DOT, objVisited));
       } else {
         result.put(propertiesNamePrefix + pd.getName(), propertyValue);
       }
     }
+
+    return result;
   }
 
   private static BeanInfo getBeanInfoFromObject(Object bean) {
@@ -249,6 +252,9 @@ public class MergeFieldsExtractor {
     ret.add(java.io.File.class);
     ret.add(Class.class);
     ret.add(ch.ivyteam.ivy.scripting.objects.Date.class);
+    ret.add(BigDecimal.class);
+    ret.add(Time.class);
+    ret.add(DateTime.class);
     ret.add(Duration.class);
     return ret;
   }
