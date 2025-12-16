@@ -14,14 +14,14 @@ To resolve this issue, we use a **visited object** approach to detect and avoid 
 We also introduce a new variable :file:`com.axonivy.utils.docfactory.CyclicSupportLevels`
 to control the number of traversal cycles.
 
-When the value of this variable is **1**, the system can scan :file:`A -> B -> C`.
+When the value of this variable is **1**, the system will scan objects :file:`A -> B -> C`.
 
-When the value of this variable is **2**, the system can scan :file:`A -> B -> C -> A -> B -> C`.
-
-.. warning:: 
-
-   As this value increases, performance may decrease due to additional traversal cycles.
+When the value of this variable is **2**, the system will scan objects :file:`A -> B -> C -> A -> B -> C`.
 
 .. tip::
 
    This variable has a default value of 1, which is the recommended setting. 
+
+.. warning:: 
+
+   As this value increases, performance may decrease due to additional traversal cycles.
