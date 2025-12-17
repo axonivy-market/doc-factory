@@ -8,3 +8,5 @@ till Date #field
 till PERSISTENT #fieldModifier
 projects List<doc.factory.demos.Project> #field
 projects PERSISTENT #fieldModifier
+currentDate DateTime #field
+currentDate PERSISTENT #fieldModifier

@@ -1,0 +1,6 @@
+Variables:
+  com:
+    axonivy:
+      utils:
+        docfactory:
+          CyclicSupportLevels: 3

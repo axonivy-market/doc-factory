@@ -1,0 +1,9 @@
+Variables:
+  com:
+    axonivy:
+      utils:
+        docfactory:
+          # Indicates how many nested cycles in the relationship graph are supported.
+          # Higher value allows deeper cycles but reduce performance.
+          # The minimum value is 1.
+          CyclicSupportLevels: 1
