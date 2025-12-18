@@ -16,10 +16,13 @@ import org.junit.jupiter.api.Test;
 
 import com.aspose.words.Document;
 
+import ch.ivyteam.ivy.addons.docfactory.BaseMergeFieldTest;
 import ch.ivyteam.ivy.addons.docfactory.TemplateMergeField;
 import ch.ivyteam.ivy.addons.docfactory.aspose.MailMergeDataSourceGenerator;
+import ch.ivyteam.ivy.addons.docfactory.test.data.Product;
+import ch.ivyteam.ivy.environment.AppFixture;
 
-public class MergeFieldsExtractorTest {
+public class MergeFieldsExtractorTest extends BaseMergeFieldTest {
 
   @Test
   public void getMergeFields_returns_empty_Collection_if_bean_null() {
@@ -60,8 +63,59 @@ public class MergeFieldsExtractorTest {
                     TemplateMergeField.withName("person.address.zipCode").withValue("C5F0B5"),
                     TemplateMergeField.withName("person.id").withValue(885),
                     TemplateMergeField.withName("person.birthday").withValue(person.getBirthday()),
-                    TemplateMergeField.withName("person.address").withValue(person.getAddress()),
                     TemplateMergeField.withName("person.paySlip").withValue(paySlip));
+  }
+
+  @Test
+  public void getMergeFields_returns_templateMergeFields_with_including_cyclic_relation_in_embedded_beans_values(
+      AppFixture fixture) {
+    Product product = makeComplexProductWithIncludingCyclicRelation();
+
+    // CYCLIC_SUPPORT_LEVELS = 1
+    Collection<TemplateMergeField> result = MergeFieldsExtractor.getMergeFields(product);
+    assertThat(result).contains(TemplateMergeField.withName("product.id").withValue(product.getId()),
+        TemplateMergeField.withName("product.name").withValue(product.getName()),
+        TemplateMergeField.withName("product.price").withValue(product.getPrice()),
+        TemplateMergeField.withName("product.manufacturingDate").withValue(product.getManufacturingDate()),
+        TemplateMergeField.withName("product.relatedProduct.id").withValue(product.getRelatedProduct().getId()),
+        TemplateMergeField.withName("product.relatedProduct.name").withValue(product.getRelatedProduct().getName()),
+        TemplateMergeField.withName("product.relatedProduct.price").withValue(product.getRelatedProduct().getPrice()),
+        TemplateMergeField.withName("product.relatedProduct.manufacturingDate")
+            .withValue(product.getRelatedProduct().getManufacturingDate()));
+    assertThat(result).doesNotContain(
+        TemplateMergeField.withName("product.relatedProduct.relatedProduct.id").withValue(product.getId()),
+        TemplateMergeField.withName("product.relatedProduct.relatedProduct.name").withValue(product.getName()));
+
+    // CYCLIC_SUPPORT_LEVELS = 2
+    fixture.var(CYCLIC_SUPPORT_LEVELS, "2");
+    result = MergeFieldsExtractor.getMergeFields(product);
+    assertThat(result).contains(TemplateMergeField.withName("product.id").withValue(product.getId()),
+        TemplateMergeField.withName("product.name").withValue(product.getName()),
+        TemplateMergeField.withName("product.relatedProduct.id").withValue(product.getRelatedProduct().getId()),
+        TemplateMergeField.withName("product.relatedProduct.name").withValue(product.getRelatedProduct().getName()),
+        TemplateMergeField.withName("product.relatedProduct.relatedProduct.id").withValue(product.getId()),
+        TemplateMergeField.withName("product.relatedProduct.relatedProduct.name").withValue(product.getName()),
+        TemplateMergeField.withName("product.relatedProduct.relatedProduct.relatedProduct.id")
+            .withValue(product.getRelatedProduct().getId()),
+        TemplateMergeField.withName("product.relatedProduct.relatedProduct.relatedProduct.name")
+            .withValue(product.getRelatedProduct().getName()));
+    assertThat(result).doesNotContain(
+        TemplateMergeField.withName("product.relatedProduct.relatedProduct.relatedProduct.relatedProduct.id")
+            .withValue(product.getRelatedProduct().getId()),
+        TemplateMergeField.withName("product.relatedProduct.relatedProduct.relatedProduct.relatedProduct.name")
+            .withValue(product.getRelatedProduct().getName()));
+
+    // CYCLIC_SUPPORT_LEVELS = 3
+    fixture.var(CYCLIC_SUPPORT_LEVELS, "3");
+    result = MergeFieldsExtractor.getMergeFields(product);
+    assertThat(result).doesNotContain(
+        TemplateMergeField
+            .withName(
+                "product.relatedProduct.relatedProduct.relatedProduct.relatedProduct.relatedProduct.relatedProduct.id")
+            .withValue(product.getId()),
+        TemplateMergeField.withName(
+            "product.relatedProduct.relatedProduct.relatedProduct.relatedProduct.relatedProduct.relatedProduct.name")
+            .withValue(product.getName()));
   }
 
   @Test
@@ -145,7 +199,7 @@ public class MergeFieldsExtractorTest {
 
     Collection<TemplateMergeField> additionalTemplateTypeMergeFields = personAdditionalInformationsTemplateMergeField
             .get().getChildren().stream()
-            .filter(tm -> tm.getMergeFieldName().equals("additionalinformation.type"))
+            .filter(tm -> tm.getMergeFieldName().equalsIgnoreCase("additionalinformation.type"))
             .collect(Collectors.toList());
 
     assertThat(additionalTemplateTypeMergeFields).hasSize(infos.size());
@@ -362,5 +416,4 @@ public class MergeFieldsExtractorTest {
     }
 
   }
-
 }
