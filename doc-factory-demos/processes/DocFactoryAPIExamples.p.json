@@ -11,7 +11,7 @@
       "config" : {
         "signature" : "start3",
         "request" : {
-          "name" : "2.2 Document with nested Tables PDF"
+          "name" : "2.2a Document with nested Tables PDF"
         },
         "case" : {
           "attachToBusinessCase" : false
@@ -84,8 +84,8 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 208, "y" : 560 },
-        "size" : { "width" : 128 }
+        "at" : { "x" : 240, "y" : 561 },
+        "size" : { "width" : 192, "height" : 62 }
       },
       "connect" : [
         { "id" : "f11", "to" : "f4" }
@@ -117,7 +117,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 592, "y" : 560 },
+        "at" : { "x" : 688, "y" : 560 },
         "size" : { "width" : 160 }
       },
       "connect" : [
@@ -140,7 +140,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 392, "y" : 560 },
+        "at" : { "x" : 472, "y" : 560 },
         "size" : { "width" : 160 }
       },
       "connect" : [
@@ -218,8 +218,8 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 208, "y" : 688 },
-        "size" : { "width" : 128 }
+        "at" : { "x" : 240, "y" : 833 },
+        "size" : { "width" : 192, "height" : 62 }
       },
       "connect" : [
         { "id" : "f17", "to" : "f7" }
@@ -241,7 +241,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 392, "y" : 688 },
+        "at" : { "x" : 472, "y" : 832 },
         "size" : { "width" : 160 }
       },
       "connect" : [
@@ -254,14 +254,14 @@
       "config" : {
         "signature" : "start4",
         "request" : {
-          "name" : "2.3 Document with nested Tables DOCX"
+          "name" : "2.3a Document with nested Tables DOCX"
         },
         "case" : {
           "attachToBusinessCase" : false
         }
       },
       "visual" : {
-        "at" : { "x" : 80, "y" : 688 },
+        "at" : { "x" : 80, "y" : 832 },
         "labelOffset" : { "x" : 101, "y" : 51 }
       },
       "connect" : [
@@ -293,7 +293,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 592, "y" : 688 },
+        "at" : { "x" : 688, "y" : 832 },
         "size" : { "width" : 160 }
       },
       "connect" : [
@@ -359,8 +359,8 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 208, "y" : 832 },
-        "size" : { "width" : 128 }
+        "at" : { "x" : 240, "y" : 1097 },
+        "size" : { "width" : 192, "height" : 62 }
       },
       "connect" : [
         { "id" : "f22", "to" : "f9" }
@@ -382,7 +382,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 392, "y" : 832 },
+        "at" : { "x" : 472, "y" : 1096 },
         "size" : { "width" : 160 }
       },
       "connect" : [
@@ -401,20 +401,20 @@
             "import ch.ivyteam.ivy.docFactoryExamples.Util.FilesUtil;",
             "import java.util.Locale;",
             "import ch.ivyteam.ivy.addons.docfactory.DocumentTemplate;",
+            "",
+            "DocumentTemplate documentTemplate = DocumentTemplate.",
+            "    withTemplate(in.templateFile).",
+            "    putDataAsSourceForMailMerge(in.report).",
+            "    useLocale(Locale.forLanguageTag(\"de-CH\"));",
             "    ",
-            "    DocumentTemplate documentTemplate = DocumentTemplate.",
-            "        withTemplate(in.templateFile).",
-            "        putDataAsSourceForMailMerge(in.report).",
-            "        useLocale(Locale.forLanguageTag(\"de-CH\"));",
-            "        ",
-            "    File output = new File(\"ivy_DocFactoryDemo/DocWithFullNestedTables.html\");",
-            "    documentTemplate.produceDocument(output.getJavaFile());",
-            "    FilesUtil.setFileRef(output);"
+            "File output = new File(\"ivy_DocFactoryDemo/DocWithFullNestedTables.html\");",
+            "documentTemplate.produceDocument(output.getJavaFile());",
+            "FilesUtil.setFileRef(output);"
           ]
         }
       },
       "visual" : {
-        "at" : { "x" : 592, "y" : 832 },
+        "at" : { "x" : 688, "y" : 1096 },
         "size" : { "width" : 160 }
       },
       "connect" : [
@@ -427,14 +427,14 @@
       "config" : {
         "signature" : "start5",
         "request" : {
-          "name" : "2.4 Document with nested Tables HTML"
+          "name" : "2.4a Document with nested Tables HTML"
         },
         "case" : {
           "attachToBusinessCase" : false
         }
       },
       "visual" : {
-        "at" : { "x" : 80, "y" : 832 },
+        "at" : { "x" : 80, "y" : 1096 },
         "labelOffset" : { "x" : 94, "y" : 51 }
       },
       "connect" : [
@@ -558,7 +558,7 @@
         "page" : "view/done.xhtml"
       },
       "visual" : {
-        "at" : { "x" : 736, "y" : 560 }
+        "at" : { "x" : 824, "y" : 560 }
       }
     }, {
       "id" : "f3",
@@ -567,7 +567,7 @@
         "page" : "view/done.xhtml"
       },
       "visual" : {
-        "at" : { "x" : 736, "y" : 688 }
+        "at" : { "x" : 824, "y" : 832 }
       }
     }, {
       "id" : "f10",
@@ -576,7 +576,7 @@
         "page" : "view/done.xhtml"
       },
       "visual" : {
-        "at" : { "x" : 736, "y" : 832 }
+        "at" : { "x" : 824, "y" : 1096 }
       }
     }, {
       "id" : "f30",
@@ -589,7 +589,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 80, "y" : 1016 },
+        "at" : { "x" : 80, "y" : 1424 },
         "labelOffset" : { "x" : 78, "y" : 51 }
       },
       "connect" : [
@@ -609,7 +609,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 200, "y" : 1016 }
+        "at" : { "x" : 200, "y" : 1424 }
       },
       "connect" : [
         { "id" : "f40", "to" : "f39" }
@@ -642,7 +642,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 384, "y" : 1016 },
+        "at" : { "x" : 384, "y" : 1424 },
         "size" : { "width" : 128 }
       },
       "connect" : [
@@ -655,7 +655,7 @@
         "page" : "view/done.xhtml"
       },
       "visual" : {
-        "at" : { "x" : 528, "y" : 1016 }
+        "at" : { "x" : 528, "y" : 1424 }
       }
     }, {
       "id" : "f44",
@@ -776,6 +776,405 @@
       "visual" : {
         "at" : { "x" : 736, "y" : 392 }
       }
+    }, {
+      "id" : "f53",
+      "type" : "RequestStart",
+      "name" : "Document with nested Tables Including Cyclic References to HTML",
+      "config" : {
+        "signature" : "start11",
+        "request" : {
+          "name" : "2.4b Document with nested Tables Including Cyclic References HTML"
+        },
+        "case" : {
+          "attachToBusinessCase" : false
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 80, "y" : 1232 },
+        "labelOffset" : { "x" : 177, "y" : 57 }
+      },
+      "connect" : [
+        { "id" : "f58", "to" : "f54" }
+      ]
+    }, {
+      "id" : "f54",
+      "type" : "Script",
+      "name" : "Create complex Data Including Cyclic References",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import doc.factory.demos.Position;",
+            "",
+            "import doc.factory.demos.Project;",
+            "out.report.employee = \"George\";",
+            "out.report.from = '1.1.2026';",
+            "out.report.till= '1.1.2036';",
+            "out.report.currentDate = new DateTime();",
+            "",
+            "Project pr = new Project();",
+            "pr.title = \"New Release\";",
+            "pr.nr = 23.100;",
+            "",
+            "Position positionA = new Position();",
+            "positionA.date = '1.1.2026';",
+            "positionA.code = 11;",
+            "positionA.description = \"Position A\";",
+            "positionA.unit.amount = 100;",
+            "positionA.unit.text = \"Km\";",
+            "",
+            "Position positionB = new Position();",
+            "positionB.date = '2.2.2026';",
+            "positionB.code = 22;",
+            "positionB.description = \"Position B\";",
+            "positionB.unit.amount = 200;",
+            "positionB.unit.text = \"Km\";",
+            "",
+            "positionA.related = positionB;",
+            "positionB.related = positionA;",
+            "",
+            "pr.positions.add(positionA);",
+            "pr.positions.add(positionB);",
+            "",
+            "out.report.projects.add(pr);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 240, "y" : 1232 },
+        "size" : { "width" : 192 }
+      },
+      "connect" : [
+        { "id" : "f59", "to" : "f55" }
+      ]
+    }, {
+      "id" : "f55",
+      "type" : "Script",
+      "name" : [
+        "get **Template.docx** from",
+        "**resources folder**"
+      ],
+      "config" : {
+        "output" : {
+          "code" : [
+            "import ch.ivyteam.ivy.docFactoryExamples.LocalResource;",
+            "",
+            "out.templateFile = new LocalResource(\"resources/myAPITemplateWithNestedTablesIncludingCyclicReferences.docx\").asFile();"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 472, "y" : 1232 },
+        "size" : { "width" : 160 }
+      },
+      "connect" : [
+        { "id" : "f61", "to" : "f56" }
+      ]
+    }, {
+      "id" : "f56",
+      "type" : "Script",
+      "name" : [
+        "Call API to ",
+        "produce HTML document"
+      ],
+      "config" : {
+        "output" : {
+          "code" : [
+            "import ch.ivyteam.ivy.docFactoryExamples.Util.FilesUtil;",
+            "import java.util.Locale;",
+            "import ch.ivyteam.ivy.addons.docfactory.DocumentTemplate;",
+            "",
+            "DocumentTemplate documentTemplate = DocumentTemplate.",
+            "    withTemplate(in.templateFile).",
+            "    putDataAsSourceForMailMerge(in.report).",
+            "    useLocale(Locale.forLanguageTag(\"de-CH\"));",
+            "",
+            "File output = new File(\"ivy_DocFactoryDemo/DocWithFullNestedTablesIncludingCyclicReferences.html\");",
+            "documentTemplate.produceDocument(output.getJavaFile());",
+            "FilesUtil.setFileRef(output);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 688, "y" : 1232 },
+        "size" : { "width" : 160 }
+      },
+      "connect" : [
+        { "id" : "f60", "to" : "f57" }
+      ]
+    }, {
+      "id" : "f57",
+      "type" : "TaskEndPage",
+      "config" : {
+        "page" : "view/done.xhtml"
+      },
+      "visual" : {
+        "at" : { "x" : 824, "y" : 1232 }
+      }
+    }, {
+      "id" : "f62",
+      "type" : "RequestStart",
+      "name" : "Document with nested Tables Including Cyclic References to DOCX",
+      "config" : {
+        "signature" : "start10",
+        "request" : {
+          "name" : "2.3b Document with nested Tables Including Cyclic References DOCX"
+        },
+        "case" : {
+          "attachToBusinessCase" : false
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 80, "y" : 968 },
+        "labelOffset" : { "x" : 177, "y" : 57 }
+      },
+      "connect" : [
+        { "id" : "f69", "to" : "f63" }
+      ]
+    }, {
+      "id" : "f63",
+      "type" : "Script",
+      "name" : "Create complex Data Including Cyclic References",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import doc.factory.demos.Position;",
+            "",
+            "import doc.factory.demos.Project;",
+            "out.report.employee = \"George\";",
+            "out.report.from = '1.1.2026';",
+            "out.report.till= '1.1.2036';",
+            "out.report.currentDate = new DateTime();",
+            "",
+            "Project pr = new Project();",
+            "pr.title = \"New Release\";",
+            "pr.nr = 23.100;",
+            "",
+            "Position positionA = new Position();",
+            "positionA.date = '1.1.2026';",
+            "positionA.code = 11;",
+            "positionA.description = \"Position A\";",
+            "positionA.unit.amount = 100;",
+            "positionA.unit.text = \"Km\";",
+            "",
+            "Position positionB = new Position();",
+            "positionB.date = '2.2.2026';",
+            "positionB.code = 22;",
+            "positionB.description = \"Position B\";",
+            "positionB.unit.amount = 200;",
+            "positionB.unit.text = \"Km\";",
+            "",
+            "positionA.related = positionB;",
+            "positionB.related = positionA;",
+            "",
+            "pr.positions.add(positionA);",
+            "out.report.projects.add(pr);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 240, "y" : 969 },
+        "size" : { "width" : 192, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f70", "to" : "f64" }
+      ]
+    }, {
+      "id" : "f64",
+      "type" : "Script",
+      "name" : [
+        "get **Template.docx** from",
+        "**resources folder**"
+      ],
+      "config" : {
+        "output" : {
+          "code" : [
+            "import ch.ivyteam.ivy.docFactoryExamples.LocalResource;",
+            "",
+            "out.templateFile = new LocalResource(\"resources/myAPITemplateWithNestedTablesIncludingCyclicReferences.docx\").asFile();"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 472, "y" : 968 },
+        "size" : { "width" : 160 }
+      },
+      "connect" : [
+        { "id" : "f68", "to" : "f65" }
+      ]
+    }, {
+      "id" : "f65",
+      "type" : "Script",
+      "name" : [
+        "Call API to ",
+        "produce DOCX document"
+      ],
+      "config" : {
+        "output" : {
+          "code" : [
+            "import ch.ivyteam.ivy.docFactoryExamples.Util.FilesUtil;",
+            "import java.util.Locale;",
+            "import ch.ivyteam.ivy.addons.docfactory.DocumentTemplate;",
+            "",
+            "DocumentTemplate documentTemplate = DocumentTemplate.",
+            "    withTemplate(in.templateFile).",
+            "    putDataAsSourceForMailMerge(in.report).",
+            "    useLocale(Locale.forLanguageTag(\"de-CH\"));",
+            "",
+            "File output = new File(\"ivy_DocFactoryDemo/DocWithFullNestedTablesIncludingCyclicReferences.docx\");",
+            "documentTemplate.produceDocument(output.getJavaFile());",
+            "FilesUtil.setFileRef(output);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 688, "y" : 968 },
+        "size" : { "width" : 160 }
+      },
+      "connect" : [
+        { "id" : "f67", "to" : "f66" }
+      ]
+    }, {
+      "id" : "f66",
+      "type" : "TaskEndPage",
+      "config" : {
+        "page" : "view/done.xhtml"
+      },
+      "visual" : {
+        "at" : { "x" : 824, "y" : 968 }
+      }
+    }, {
+      "id" : "f71",
+      "type" : "RequestStart",
+      "name" : "Document with nested Tables Including Cyclic References to PDF",
+      "config" : {
+        "signature" : "start9",
+        "request" : {
+          "name" : "2.2b Document with nested Tables Including Cyclic References PDF"
+        },
+        "case" : {
+          "attachToBusinessCase" : false
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 80, "y" : 696 },
+        "labelOffset" : { "x" : 177, "y" : 57 }
+      },
+      "connect" : [
+        { "id" : "f79", "to" : "f72" }
+      ]
+    }, {
+      "id" : "f72",
+      "type" : "Script",
+      "name" : "Create complex Data Including Cyclic References",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import doc.factory.demos.Position;",
+            "",
+            "import doc.factory.demos.Project;",
+            "out.report.employee = \"George\";",
+            "out.report.from = '1.1.2026';",
+            "out.report.till= '1.1.2036';",
+            "out.report.currentDate = new DateTime();",
+            "",
+            "Project pr = new Project();",
+            "pr.title = \"New Release\";",
+            "pr.nr = 23.100;",
+            "",
+            "Position positionA = new Position();",
+            "positionA.date = '1.1.2026';",
+            "positionA.code = 11;",
+            "positionA.description = \"Position A\";",
+            "positionA.unit.amount = 100;",
+            "positionA.unit.text = \"Km\";",
+            "",
+            "Position positionB = new Position();",
+            "positionB.date = '2.2.2026';",
+            "positionB.code = 22;",
+            "positionB.description = \"Position B\";",
+            "positionB.unit.amount = 200;",
+            "positionB.unit.text = \"Km\";",
+            "",
+            "positionA.related = positionB;",
+            "positionB.related = positionA;",
+            "",
+            "pr.positions.add(positionA);",
+            "out.report.projects.add(pr);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 240, "y" : 697 },
+        "size" : { "width" : 192, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f76", "to" : "f73" }
+      ]
+    }, {
+      "id" : "f73",
+      "type" : "Script",
+      "name" : [
+        "get **Template.docx** from",
+        "**resources folder**"
+      ],
+      "config" : {
+        "output" : {
+          "code" : [
+            "import ch.ivyteam.ivy.docFactoryExamples.LocalResource;",
+            "",
+            "out.templateFile = new LocalResource(\"resources/myAPITemplateWithNestedTablesIncludingCyclicReferences.docx\").asFile();"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 472, "y" : 696 },
+        "size" : { "width" : 160 }
+      },
+      "connect" : [
+        { "id" : "f77", "to" : "f74" }
+      ]
+    }, {
+      "id" : "f74",
+      "type" : "Script",
+      "name" : [
+        "Call API to ",
+        "produce PDF document"
+      ],
+      "config" : {
+        "output" : {
+          "code" : [
+            "import ch.ivyteam.ivy.docFactoryExamples.Util.FilesUtil;",
+            "import java.util.Locale;",
+            "import ch.ivyteam.ivy.addons.docfactory.DocumentTemplate;",
+            "",
+            "DocumentTemplate documentTemplate = DocumentTemplate.",
+            "    withTemplate(in.templateFile).",
+            "    putDataAsSourceForMailMerge(in.report).",
+            "    useLocale(Locale.forLanguageTag(\"de-CH\"));",
+            "    ",
+            "",
+            "File output = new File(\"ivy_DocFactoryDemo/DocWithFullNestedTablesIncludingCyclicReferences.pdf\");",
+            "documentTemplate.produceDocument(output.getJavaFile());",
+            "FilesUtil.setFileRef(output);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 688, "y" : 696 },
+        "size" : { "width" : 160 }
+      },
+      "connect" : [
+        { "id" : "f78", "to" : "f75" }
+      ]
+    }, {
+      "id" : "f75",
+      "type" : "TaskEndPage",
+      "config" : {
+        "page" : "view/done.xhtml"
+      },
+      "visual" : {
+        "at" : { "x" : 824, "y" : 696 }
+      }
     } ],
   "layout" : {
     "lanes" : [ {
@@ -788,7 +1187,7 @@
         "size" : 336
       }, {
         "name" : "Document with nested Tables",
-        "size" : 424
+        "size" : 840
       }, {
         "name" : "Combine PDFs",
         "size" : 192

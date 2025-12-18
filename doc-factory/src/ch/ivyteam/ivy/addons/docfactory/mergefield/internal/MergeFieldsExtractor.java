@@ -6,12 +6,14 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -20,6 +22,10 @@ import org.apache.commons.lang3.StringUtils;
 import ch.ivyteam.api.API;
 import ch.ivyteam.ivy.addons.docfactory.TemplateMergeField;
 import ch.ivyteam.ivy.addons.docfactory.exception.MergeFieldsBeansIntrospectionException;
+import ch.ivyteam.ivy.environment.Ivy;
+import ch.ivyteam.ivy.scripting.objects.DateTime;
+import ch.ivyteam.ivy.scripting.objects.Duration;
+import ch.ivyteam.ivy.scripting.objects.Time;
 
 /**
  * Not public API
@@ -47,14 +53,58 @@ public class MergeFieldsExtractor {
     if (bean == null) {
       return Collections.emptyList();
     }
-    Map<String, Object> fieldsNameValueMap = getBeanPropertyValues(bean,
-            Introspector.decapitalize(bean.getClass().getSimpleName()) + DOT);
-    if (fieldsNameValueMap == null) {
-      return Collections.emptyList();
-    }
+    Map<String, Object> fieldsNameValueMap = getFieldsNameValueMap(bean, StringUtils.EMPTY);
     Collection<TemplateMergeField> result = new ArrayList<>();
     fieldsNameValueMap.forEach((key, value) -> result.add(TemplateMergeField.withName(key).withValue(value)));
     return result;
+  }
+
+  private static Map<String, Object> getFieldsNameValueMap(Object bean, String baseName) {
+    IdentityHashMap<Object, Integer> objVisited = new IdentityHashMap<>();
+    String propertiesNamePrefix = baseName + Introspector.decapitalize(bean.getClass().getSimpleName()) + DOT;
+    return getBeanPropertyValues(bean, propertiesNamePrefix, objVisited);
+  }
+
+  private static Map<String, Object> getBeanPropertyValues(Object bean, String propertiesNamePrefix,
+      IdentityHashMap<Object, Integer> objVisited) {
+    Map<String, Object> result = new HashMap<>();
+    BeanInfo info = getBeanInfoFromObject(bean);
+    if (bean == null || objVisited.merge(bean, 1, Integer::sum) > getCyclicSupportLevels()) {
+      return result;
+    }
+
+    for (PropertyDescriptor pd : info.getPropertyDescriptors()) {
+      Object propertyValue = getPropertyValue(bean, pd);
+      if (propertyValue == null) {
+        continue;
+      }
+
+      if (shouldBeIntrospectedForGettingEmbeddedProperties(propertyValue)) {
+        result.putAll(getBeanPropertyValues(propertyValue, propertiesNamePrefix + pd.getName() + DOT, objVisited));
+      } else {
+        result.put(propertiesNamePrefix + pd.getName(), propertyValue);
+      }
+    }
+
+    return result;
+  }
+
+  private static BeanInfo getBeanInfoFromObject(Object bean) {
+    try {
+      return Introspector.getBeanInfo(bean.getClass());
+    } catch (IntrospectionException e) {
+      throw new MergeFieldsBeansIntrospectionException(
+          "An Exception occurred while getting the BeanInfo of " + bean.getClass().getName(), e);
+    }
+  }
+
+  private static int getCyclicSupportLevels() {
+    String CyclicSupportLevels = Ivy.var().get("com.axonivy.utils.docfactory.CyclicSupportLevels");
+    try {
+      return Integer.parseInt(CyclicSupportLevels);
+    } catch (NumberFormatException e) {
+      return 1;
+    }
   }
 
   /**
@@ -94,20 +144,11 @@ public class MergeFieldsExtractor {
       return Collections.emptyList();
     }
     String baseName = getNamePrefixForChildrenTemplateMergeFields(templateMergeField);
-
-    Map<String, Object> childrenPropertiesForTemplateMergeField = getBeanPropertyValues(
-            templateMergeField.getValue(),
-            baseName + Introspector.decapitalize(templateMergeField.getValue().getClass().getSimpleName())
-                    + DOT);
-
-    if (childrenPropertiesForTemplateMergeField == null) {
-      return Collections.emptyList();
-    }
-
+    Map<String, Object> childrenPropertiesForTemplateMergeField =
+        getFieldsNameValueMap(templateMergeField.getValue(), baseName);
     Collection<TemplateMergeField> result = new ArrayList<>();
-    childrenPropertiesForTemplateMergeField.forEach((key, value) -> result.add(
-            TemplateMergeField.withName(key).withValue(value)
-                    .useLocaleAndResetNumberFormatAndDateFormat(templateMergeField.getLocale())));
+    childrenPropertiesForTemplateMergeField.forEach((key, value) -> result.add(TemplateMergeField.withName(key)
+        .withValue(value).useLocaleAndResetNumberFormatAndDateFormat(templateMergeField.getLocale())));
     return result;
   }
 
@@ -137,8 +178,7 @@ public class MergeFieldsExtractor {
         result.add(templateMergeFieldsRow);
         continue;
       }
-      Map<String, Object> introspected = getBeanPropertyValues(obj,
-              obj.getClass().getSimpleName().toLowerCase() + DOT);
+      Map<String, Object> introspected = getFieldsNameValueMap(obj, StringUtils.EMPTY);;
       introspected.forEach((key, value) -> templateMergeFieldsRow.add(
               TemplateMergeField.withName(key).withValue(value).useLocaleAndResetNumberFormatAndDateFormat(
                       templateMergeFieldFromCollectionType.getLocale())));
@@ -159,14 +199,7 @@ public class MergeFieldsExtractor {
 
   private static Map<String, Object> getBeanPropertyValues(Object bean, String propertiesNamePrefix) {
     Map<String, Object> result = new HashMap<String, Object>();
-    BeanInfo info;
-    try {
-      info = Introspector.getBeanInfo(bean.getClass());
-    } catch (IntrospectionException e) {
-      throw new MergeFieldsBeansIntrospectionException(
-              "An Exception occurred while getting the BeanInfo of " + bean.getClass().getName(), e);
-    }
-
+    BeanInfo info = getBeanInfoFromObject(bean);
     for (PropertyDescriptor pd : info.getPropertyDescriptors()) {
       Object propertyValue = getPropertyValue(bean, pd);
       if (propertyValue == null) {
@@ -218,6 +251,11 @@ public class MergeFieldsExtractor {
     ret.add(String.class);
     ret.add(java.io.File.class);
     ret.add(Class.class);
+    ret.add(ch.ivyteam.ivy.scripting.objects.Date.class);
+    ret.add(BigDecimal.class);
+    ret.add(Time.class);
+    ret.add(DateTime.class);
+    ret.add(Duration.class);
     return ret;
   }
 

@@ -1,2 +1,10 @@
 # yaml-language-server: $schema=https://json-schema.axonivy.com/app/12.0.0/variables.json
 Variables:
+  com:
+    axonivy:
+      utils:
+        docfactory:
+          # Indicates how many nested cycles in the relationship graph are supported.
+          # Higher value allows deeper cycles but reduce performance.
+          # The minimum value is 1.
+          CyclicSupportLevels: 1

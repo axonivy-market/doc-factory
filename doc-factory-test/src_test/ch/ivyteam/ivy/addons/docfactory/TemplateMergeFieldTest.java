@@ -22,7 +22,7 @@ import ch.ivyteam.ivy.addons.docfactory.test.data.OrderDetail;
 import ch.ivyteam.ivy.addons.docfactory.test.data.Person;
 import ch.ivyteam.ivy.scripting.objects.List;
 
-public class TemplateMergeFieldTest {
+public class TemplateMergeFieldTest extends BaseMergeFieldTest {
 
   @Test
   public void withName_returns_TemplateMergeField_as_TEXT() {
