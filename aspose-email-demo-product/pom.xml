@@ -3,7 +3,7 @@
 
   <groupId>com.axonivy.utils.docfactory</groupId>
   <artifactId>aspose-email-demo-product</artifactId>
-  <version>13.1.5-SNAPSHOT</version>
+  <version>13.1.5</version>
   <packaging>pom</packaging>
 
   <build>
