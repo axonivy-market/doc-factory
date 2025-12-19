@@ -3,7 +3,7 @@
   
   <groupId>com.axonivy.utils.docfactory</groupId>
   <artifactId>doc-factory</artifactId>
-  <version>12.0.6-SNAPSHOT</version>
+  <version>12.0.6</version>
   <packaging>iar</packaging>
 
   <properties>
