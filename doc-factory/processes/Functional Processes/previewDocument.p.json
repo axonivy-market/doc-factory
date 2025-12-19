@@ -1,5 +1,5 @@
 {
-  "$schema" : "https://json-schema.axonivy.com/process/13.1.2/process.json",
+  "$schema" : "https://json-schema.axonivy.com/process/13.2.0/process.json",
   "id" : "1985535DC4B94B67",
   "kind" : "CALLABLE_SUB",
   "config" : {
@@ -35,7 +35,7 @@
           "",
           "This function currently supports the following types: .eml, .xlsx, .doc, .jpg/.png, .xls, .doc, .docx."
         ],
-        "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
+        "icon" : "res:/webContent/icons/doc-factory-logo.png"
       },
       "connect" : [
         { "id" : "f2", "to" : "f3" }
@@ -45,7 +45,7 @@
       "type" : "CallSubEnd",
       "visual" : {
         "at" : { "x" : 448, "y" : 64 },
-        "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
+        "icon" : "res:/webContent/icons/doc-factory-logo.png"
       }
     }, {
       "id" : "f3",
@@ -92,7 +92,7 @@
       "type" : "CallSubEnd",
       "visual" : {
         "at" : { "x" : 448, "y" : 216 },
-        "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
+        "icon" : "res:/webContent/icons/doc-factory-logo.png"
       }
     }, {
       "id" : "f7",
@@ -144,7 +144,7 @@
           "",
           "This function currently supports the following types: .eml, .xlsx, .doc, .jpg/.png, .xls, .doc, .docx."
         ],
-        "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
+        "icon" : "res:/webContent/icons/doc-factory-logo.png"
       },
       "connect" : [
         { "id" : "f10", "to" : "f7" }
@@ -166,7 +166,7 @@
       "type" : "CallSubEnd",
       "visual" : {
         "at" : { "x" : 448, "y" : 368 },
-        "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
+        "icon" : "res:/webContent/icons/doc-factory-logo.png"
       }
     }, {
       "id" : "f13",
@@ -222,7 +222,7 @@
           "",
           "This function currently supports the following types: .eml, .xlsx, .doc, .jpg/.png, .xls, .doc, .docx."
         ],
-        "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
+        "icon" : "res:/webContent/icons/doc-factory-logo.png"
       },
       "connect" : [
         { "id" : "f16", "to" : "f13" }
@@ -261,7 +261,7 @@
           "",
           "This function currently supports the following types: .eml, .xlsx, .doc, .jpg/.png, .xls, .doc, .docx."
         ],
-        "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
+        "icon" : "res:/webContent/icons/doc-factory-logo.png"
       },
       "connect" : [
         { "id" : "f19", "to" : "f20" }
@@ -291,7 +291,7 @@
       "type" : "CallSubEnd",
       "visual" : {
         "at" : { "x" : 448, "y" : 544 },
-        "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
+        "icon" : "res:/webContent/icons/doc-factory-logo.png"
       }
     }, {
       "id" : "f23",

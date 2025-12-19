@@ -16,6 +16,7 @@ lib/
 # ivy
 classes/
 src_dataClasses/
+src_generated/
 src_wsproc/
 logs/
 

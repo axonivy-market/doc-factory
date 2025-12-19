@@ -1,5 +1,5 @@
 {
-  "$schema" : "https://json-schema.axonivy.com/process/13.1.2/process.json",
+  "$schema" : "https://json-schema.axonivy.com/process/13.2.0/process.json",
   "id" : "1984EF1DA5D474E7",
   "kind" : "HTML_DIALOG",
   "config" : {
@@ -62,7 +62,7 @@
       },
       "visual" : {
         "at" : { "x" : 96, "y" : 256 },
-        "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
+        "icon" : "res:/webContent/icons/doc-factory-logo.png"
       },
       "connect" : [
         { "id" : "f8", "to" : "f7" }
@@ -108,7 +108,7 @@
       },
       "visual" : {
         "at" : { "x" : 96, "y" : 328 },
-        "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
+        "icon" : "res:/webContent/icons/doc-factory-logo.png"
       },
       "connect" : [
         { "id" : "f13", "to" : "f12" }
@@ -141,14 +141,14 @@
       "type" : "HtmlDialogEnd",
       "visual" : {
         "at" : { "x" : 368, "y" : 256 },
-        "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
+        "icon" : "res:/webContent/icons/doc-factory-logo.png"
       }
     }, {
       "id" : "f18",
       "type" : "HtmlDialogEnd",
       "visual" : {
         "at" : { "x" : 368, "y" : 328 },
-        "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
+        "icon" : "res:/webContent/icons/doc-factory-logo.png"
       }
     } ]
 }
