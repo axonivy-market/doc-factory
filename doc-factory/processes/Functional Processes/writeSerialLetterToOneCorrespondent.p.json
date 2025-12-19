@@ -1,5 +1,5 @@
 {
-  "$schema" : "https://json-schema.axonivy.com/process/13.1.2/process.json",
+  "$schema" : "https://json-schema.axonivy.com/process/13.2.0/process.json",
   "id" : "124971223DD62955",
   "kind" : "CALLABLE_SUB",
   "description" : [
@@ -59,7 +59,7 @@
           "",
           "In this callable, just one java.io.File should be created."
         ],
-        "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
+        "icon" : "res:/webContent/icons/doc-factory-logo.png"
       },
       "connect" : [
         { "id" : "f2", "to" : "f4" }
@@ -69,7 +69,7 @@
       "type" : "CallSubEnd",
       "visual" : {
         "at" : { "x" : 152, "y" : 552 },
-        "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
+        "icon" : "res:/webContent/icons/doc-factory-logo.png"
       }
     }, {
       "id" : "f4",
@@ -218,7 +218,7 @@
           "",
           "In this callable, just one java.io.File should be created."
         ],
-        "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
+        "icon" : "res:/webContent/icons/doc-factory-logo.png"
       },
       "connect" : [
         { "id" : "f13", "to" : "f12" }
@@ -338,7 +338,7 @@
       "type" : "CallSubEnd",
       "visual" : {
         "at" : { "x" : 680, "y" : 552 },
-        "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
+        "icon" : "res:/webContent/icons/doc-factory-logo.png"
       }
     }, {
       "id" : "f22",
@@ -404,7 +404,7 @@
           "a list of java.io.File that were created during the process.",
           "In this callable just one java.io.File is created. So the list of created File contains only one File in case of success."
         ],
-        "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
+        "icon" : "res:/webContent/icons/doc-factory-logo.png"
       },
       "connect" : [
         { "id" : "f28", "to" : "f25" }
@@ -513,7 +513,7 @@
       "type" : "CallSubEnd",
       "visual" : {
         "at" : { "x" : 1600, "y" : 552 },
-        "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
+        "icon" : "res:/webContent/icons/doc-factory-logo.png"
       }
     }, {
       "id" : "f31",
@@ -579,7 +579,7 @@
           "- a list of java.io.File that were created during the process.",
           "In this callable just one java.io.File is created. So the list of created File contains only one File in case of success."
         ],
-        "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
+        "icon" : "res:/webContent/icons/doc-factory-logo.png"
       },
       "connect" : [
         { "id" : "f37", "to" : "f32" }
@@ -687,7 +687,7 @@
       "type" : "CallSubEnd",
       "visual" : {
         "at" : { "x" : 2160, "y" : 552 },
-        "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
+        "icon" : "res:/webContent/icons/doc-factory-logo.png"
       }
     }, {
       "id" : "f40",
@@ -759,7 +759,7 @@
           "a message in the Session User language,",
           "a list of java.io.File that were created during the process. Just one java.io.File should be created."
         ],
-        "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
+        "icon" : "res:/webContent/icons/doc-factory-logo.png"
       },
       "connect" : [
         { "id" : "f46", "to" : "f42" }
@@ -852,7 +852,7 @@
       "type" : "CallSubEnd",
       "visual" : {
         "at" : { "x" : 2464, "y" : 552 },
-        "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
+        "icon" : "res:/webContent/icons/doc-factory-logo.png"
       }
     }, {
       "id" : "f49",
@@ -945,7 +945,7 @@
           "- a list of java.io.File that were created during the process.",
           "In this callable just one java.io.File is created. So the list of created File contains only one File in case of success."
         ],
-        "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
+        "icon" : "res:/webContent/icons/doc-factory-logo.png"
       },
       "connect" : [
         { "id" : "f58", "to" : "f53" }
@@ -1063,7 +1063,7 @@
       "type" : "CallSubEnd",
       "visual" : {
         "at" : { "x" : 1280, "y" : 552 },
-        "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
+        "icon" : "res:/webContent/icons/doc-factory-logo.png"
       }
     }, {
       "id" : "f61",
@@ -1129,7 +1129,7 @@
           "a list of java.io.File that were created during the process.",
           "In this callable just one java.io.File is created. So the list of created File contains only one File in case of success."
         ],
-        "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
+        "icon" : "res:/webContent/icons/doc-factory-logo.png"
       },
       "connect" : [
         { "id" : "f69", "to" : "f64" }
@@ -1246,7 +1246,7 @@
       "type" : "CallSubEnd",
       "visual" : {
         "at" : { "x" : 1904, "y" : 552 },
-        "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
+        "icon" : "res:/webContent/icons/doc-factory-logo.png"
       }
     }, {
       "id" : "f72",
@@ -1308,7 +1308,7 @@
           "a message in the Session User language,",
           "a list of java.io.File that were created during the process, just one java.io.File should be created."
         ],
-        "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
+        "icon" : "res:/webContent/icons/doc-factory-logo.png"
       },
       "connect" : [
         { "id" : "f78", "to" : "f73" }
@@ -1403,7 +1403,7 @@
       "type" : "CallSubEnd",
       "visual" : {
         "at" : { "x" : 2800, "y" : 552 },
-        "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
+        "icon" : "res:/webContent/icons/doc-factory-logo.png"
       }
     }, {
       "id" : "f81",
@@ -1546,7 +1546,7 @@
           "a message in the Session User language,",
           "a list of java.io.File that were created during the process, just one java.io.File is created."
         ],
-        "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
+        "icon" : "res:/webContent/icons/doc-factory-logo.png"
       },
       "connect" : [
         { "id" : "f87", "to" : "f81" }
@@ -1556,7 +1556,7 @@
       "type" : "CallSubEnd",
       "visual" : {
         "at" : { "x" : 3200, "y" : 552 },
-        "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
+        "icon" : "res:/webContent/icons/doc-factory-logo.png"
       }
     }, {
       "id" : "f90",
@@ -1614,7 +1614,7 @@
           "- a message in the Session User language,",
           "- a list of java.io.File that were created during the process, just one java.io.File is created."
         ],
-        "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
+        "icon" : "res:/webContent/icons/doc-factory-logo.png"
       },
       "connect" : [
         { "id" : "f96", "to" : "f93" }
@@ -1709,7 +1709,7 @@
       "type" : "CallSubEnd",
       "visual" : {
         "at" : { "x" : 3544, "y" : 552 },
-        "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
+        "icon" : "res:/webContent/icons/doc-factory-logo.png"
       }
     }, {
       "id" : "f99",
@@ -1783,7 +1783,7 @@
           "",
           "In this callable, just one java.io.File should be created."
         ],
-        "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
+        "icon" : "res:/webContent/icons/doc-factory-logo.png"
       },
       "connect" : [
         { "id" : "f108", "to" : "f102" }
@@ -1793,7 +1793,7 @@
       "type" : "CallSubEnd",
       "visual" : {
         "at" : { "x" : 920, "y" : 552 },
-        "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
+        "icon" : "res:/webContent/icons/doc-factory-logo.png"
       }
     }, {
       "id" : "f102",

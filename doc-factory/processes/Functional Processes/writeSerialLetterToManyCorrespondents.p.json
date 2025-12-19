@@ -1,5 +1,5 @@
 {
-  "$schema" : "https://json-schema.axonivy.com/process/13.1.2/process.json",
+  "$schema" : "https://json-schema.axonivy.com/process/13.2.0/process.json",
   "id" : "1249FCC8592E4E39",
   "kind" : "CALLABLE_SUB",
   "description" : [
@@ -55,7 +55,7 @@
           "Produces documents corresponding to the given DocumentTemplate list.",
           "The documents can be appended together in one file or be stored in separated files."
         ],
-        "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
+        "icon" : "res:/webContent/icons/doc-factory-logo.png"
       },
       "connect" : [
         { "id" : "f10", "to" : "f9" }
@@ -65,7 +65,7 @@
       "type" : "CallSubEnd",
       "visual" : {
         "at" : { "x" : 336, "y" : 432 },
-        "icon" : "res:/webContent/icons/doc-factory-logo.png?small"
+        "icon" : "res:/webContent/icons/doc-factory-logo.png"
       }
     }, {
       "id" : "f11",
