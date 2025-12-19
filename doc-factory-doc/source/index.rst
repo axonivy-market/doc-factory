@@ -55,3 +55,4 @@ Office templates in the sections below.
    doc-factory/demos
    doc-factory/doc-factory-object
    doc-factory/complex-mergefields
+   doc-factory/resolving-cyclic-relations

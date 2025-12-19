@@ -51,13 +51,28 @@ class WebTestApiExamplesIT {
   }
 
   @Test
+  void docWithFullNestedTablesIncludingCyclicReferencesPDF() throws Exception {
+    assertDownload("start9.ivp", "DocWithFullNestedTablesIncludingCyclicReferences.pdf");
+  }
+
+  @Test
   void docWithNestedTablesDOCX() throws Exception {
     assertDownload("start4.ivp", "DocWithFullNestedTables.docx");
   }
 
   @Test
+  void docWithFullNestedTablesIncludingCyclicReferencesDOCX() throws Exception {
+    assertDownload("start10.ivp", "DocWithFullNestedTablesIncludingCyclicReferences.docx");
+  }
+
+  @Test
   void docWithNestedTablesHTML() throws Exception {
     assertDownload("start5.ivp", "DocWithFullNestedTables.html");
+  }
+
+  @Test
+  void docWithFullNestedTablesIncludingCyclicReferencesHTML() throws Exception {
+    assertDownload("start11.ivp", "DocWithFullNestedTablesIncludingCyclicReferences.html");
   }
 
   @Test

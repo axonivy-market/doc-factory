@@ -1,5 +1,5 @@
 {
-  "$schema" : "https://json-schema.axonivy.com/data-class/12.0.0/data-class.json",
+  "$schema" : "https://json-schema.axonivy.com/data-class/13.1.0/data-class.json",
   "simpleName" : "Position",
   "namespace" : "doc.factory.demos",
   "isBusinessCaseData" : false,
@@ -18,6 +18,10 @@
   }, {
     "name" : "unit",
     "type" : "doc.factory.demos.Unit",
+    "modifiers" : [ "PERSISTENT" ]
+  }, {
+    "name" : "related",
+    "type" : "doc.factory.demos.Position",
     "modifiers" : [ "PERSISTENT" ]
   } ]
 }
