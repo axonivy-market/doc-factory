@@ -19,5 +19,9 @@
     "name" : "unit",
     "type" : "doc.factory.demos.Unit",
     "modifiers" : [ "PERSISTENT" ]
+  }, {
+    "name" : "related",
+    "type" : "doc.factory.demos.Position",
+    "modifiers" : [ "PERSISTENT" ]
   } ]
 }

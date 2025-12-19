@@ -19,5 +19,9 @@
     "name" : "projects",
     "type" : "List<doc.factory.demos.Project>",
     "modifiers" : [ "PERSISTENT" ]
+  }, {
+    "name" : "currentDate",
+    "type" : "DateTime",
+    "modifiers" : [ "PERSISTENT" ]
   } ]
 }
