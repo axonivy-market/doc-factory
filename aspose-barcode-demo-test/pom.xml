@@ -4,12 +4,12 @@
   <parent>
     <groupId>com.axonivy.ivy.api</groupId>
     <artifactId>ivy-project-parent</artifactId>
-    <version>13.2.0</version>
+    <version>13.2.0-SNAPSHOT</version>
     <relativePath />
   </parent>
   <groupId>com.axonivy.utils.docfactory</groupId>
   <artifactId>aspose-barcode-demo-test</artifactId>
-  <version>13.2.1-SNAPSHOT</version>
+  <version>13.2.0-SNAPSHOT</version>
   <packaging>iar-integration-test</packaging>
   <dependencies>
     <dependency>
