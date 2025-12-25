@@ -50,4 +50,4 @@ jobs:
     - name: Build with Maven
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: mvn --batch-mode -Darguments="-Dmaven.test.skip=true -DaltDeploymentRepository=nexus.axonivy.com::https://nexus.axonivy.com/repository/maven-releases/" deploy
+      run: mvn --batch-mode -Darguments="-Dmaven.test.skip=true -DaltDeploymentRepository=nexus.axonivy.com::https://nexus.axonivy.com/repository/maven-releases/" -DsuppressCommitBeforeTag=true release:prepare release:perform
