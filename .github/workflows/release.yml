@@ -50,12 +50,4 @@ jobs:
     - name: Build with Maven
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: mvn --batch-mode -Darguments="-Dmaven.test.skip=true -DaltDeploymentRepository=nexus.axonivy.com::https://nexus.axonivy.com/repository/maven-releases/" release:prepare release:perform
-
-    - name: Create pull request
-      uses: repo-sync/pull-request@v2
-      with:
-        destination_branch: ${{ steps.branch-name.outputs.current_branch }}
-        source_branch: new-release
-        pr_title: "Release"
-        github_token: ${{ secrets.GITHUB_TOKEN }}
+      run: mvn --batch-mode -Darguments="-Dmaven.test.skip=true -DaltDeploymentRepository=nexus.axonivy.com::https://nexus.axonivy.com/repository/maven-releases/" deploy
