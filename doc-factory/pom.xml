@@ -9,7 +9,7 @@
   </parent>
   <groupId>com.axonivy.utils.docfactory</groupId>
   <artifactId>doc-factory</artifactId>
-  <version>13.2.1-SNAPSHOT</version>
+  <version>13.2.2-SNAPSHOT</version>
   <packaging>iar</packaging>
   <properties>
     <aspose.version>24.3</aspose.version>
