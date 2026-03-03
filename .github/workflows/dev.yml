@@ -18,3 +18,5 @@ jobs:
     with:
       mvnArgs: '"-Divy.engine.download.url=https://dev.axonivy.com/permalink/dev/axonivy-engine.zip" "-Divy.engine.version=(12.0.0,]" "-Dselenide.version=7.6.1" -Dmaven.deploy.skip=true'
       migrateToLatestIvyVersion: true
+      javaVersion: 25
+      ivyJavaHome: $JAVA_HOME_25_X64
