@@ -138,19 +138,18 @@ public class AsposeFieldMergingCallback implements IFieldMergingCallback {
     InputStream imageStream_dimension = null;
     // e.getDocument().getMailMerge().getFieldNames()
     if (e.getFieldValue() != null) {
-      // The field value is a byte array, just cast it and create a stream on
-      // it.
-      if (e.getFieldValue().getClass().getComponentType() != null &&
-              e.getClass().getComponentType().getName().equalsIgnoreCase("java.lang.Byte")) {
-        imageStream = new ByteArrayInputStream((byte[]) e.getFieldValue());
-        imageStream_dimension = new ByteArrayInputStream((byte[]) e.getFieldValue());
+      // The field value is a byte array, just cast it and create a stream on it
+
+      byte[] imageBytes = extractBytes(e.getFieldValue());
+      if (imageBytes != null) {
+        imageStream = new ByteArrayInputStream(imageBytes);
+        imageStream_dimension = new ByteArrayInputStream(imageBytes);
       } else if (e.getFieldValue().getClass().getName().equalsIgnoreCase("java.lang.String")) {
         try {
           imageStream = new FileInputStream(new java.io.File((String) e.getFieldValue()));
           imageStream_dimension = new FileInputStream(new java.io.File((String) e.getFieldValue()));
         } catch (FileNotFoundException ex) {
-          Ivy.log().error("FileNotFoundException occurred while getting an imageStream for mail merging.",
-                  ex);
+          Ivy.log().error("FileNotFoundException occurred while getting an imageStream for mail merging.", ex);
           return;
         }
       } else if (e.getFieldValue().getClass().getName().equalsIgnoreCase("java.io.File")) {
@@ -158,8 +157,7 @@ public class AsposeFieldMergingCallback implements IFieldMergingCallback {
           imageStream = new FileInputStream((java.io.File) e.getFieldValue());
           imageStream_dimension = new FileInputStream((java.io.File) e.getFieldValue());
         } catch (FileNotFoundException ex) {
-          Ivy.log().error("FileNotFoundException occurred while getting an imageStream for mail merging.",
-                  ex);
+          Ivy.log().error("FileNotFoundException occurred while getting an imageStream for mail merging.", ex);
           return;
         }
       }
@@ -168,13 +166,30 @@ public class AsposeFieldMergingCallback implements IFieldMergingCallback {
       }
 
       Dimension dim = ImageDimensionCalculatorFactory.getInstance()
-              .calculateImageDimensionForMergingInTemplate(imageStream_dimension, e.getFieldName());
+          .calculateImageDimensionForMergingInTemplate(imageStream_dimension, e.getFieldName());
       if (dim.width > 0) {
         e.setImageHeight(new MergeFieldImageDimension(dim.getHeight()));
         e.setImageWidth(new MergeFieldImageDimension(dim.getWidth()));
       }
       e.setImageStream(imageStream);
     }
+  }
+  
+  private byte[] extractBytes(Object value) {
+    if (value instanceof byte[]) {
+      return (byte[]) value;
+    }
+
+    if (value instanceof Byte[]) {
+      Byte[] wrapper = (Byte[]) value;
+      byte[] bytes = new byte[wrapper.length];
+      for (int i = 0; i < wrapper.length; i++) {
+        bytes[i] = wrapper[i];
+      }
+      return bytes;
+    }
+
+    return null;
   }
 
   public void setoutputFormat(String outputFormat) {
