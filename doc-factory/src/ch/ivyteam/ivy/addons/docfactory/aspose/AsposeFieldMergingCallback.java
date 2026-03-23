@@ -136,7 +136,6 @@ public class AsposeFieldMergingCallback implements IFieldMergingCallback {
   public void imageFieldMerging(ImageFieldMergingArgs e) throws Exception {
     InputStream imageStream = null;
     InputStream imageStream_dimension = null;
-    // e.getDocument().getMailMerge().getFieldNames()
     if (e.getFieldValue() != null) {
       // The field value is a byte array, just cast it and create a stream on it
       byte[] imageBytes = extractBytes(e.getFieldValue());
