@@ -176,12 +176,11 @@ public class AsposeFieldMergingCallback implements IFieldMergingCallback {
   }
   
   private byte[] extractBytes(Object value) {
-    if (value instanceof byte[]) {
-      return (byte[]) value;
+    if (value instanceof byte[] bytes) {
+      return bytes;
     }
 
-    if (value instanceof Byte[]) {
-      Byte[] wrapper = (Byte[]) value;
+    if (value instanceof Byte[] wrapper) {
       byte[] bytes = new byte[wrapper.length];
       for (int i = 0; i < wrapper.length; i++) {
         bytes[i] = wrapper[i];
