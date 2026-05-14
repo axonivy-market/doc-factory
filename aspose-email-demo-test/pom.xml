@@ -10,7 +10,7 @@
   <groupId>com.axonivy.utils.docfactory</groupId>
   <artifactId>aspose-email-demo-test</artifactId>
   <version>13.2.3-SNAPSHOT</version>
-  <packaging>iar-integration-test</packaging>
+  <packaging>iar</packaging>
   <properties>
     <selenide.version>7.7.1</selenide.version>
   </properties>

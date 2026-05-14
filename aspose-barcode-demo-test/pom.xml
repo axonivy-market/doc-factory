@@ -10,7 +10,7 @@
   <groupId>com.axonivy.utils.docfactory</groupId>
   <artifactId>aspose-barcode-demo-test</artifactId>
   <version>13.2.3-SNAPSHOT</version>
-  <packaging>iar-integration-test</packaging>
+  <packaging>iar</packaging>
   <dependencies>
     <dependency>
       <groupId>com.axonivy.utils.docfactory</groupId>
