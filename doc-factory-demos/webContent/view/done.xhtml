@@ -14,8 +14,8 @@
 </h:head>
 <h:body>
   <div id="content" class="container">
-    <p>Document has been generated.</p>
-    <a id="docLink" href="#{ivy.session.getAttribute('docRef')}">Click here to view #{ivy.session.getAttribute('docFilename')}</a>
+	<p>Document has been generated.</p>
+	<h:outputLink id="docLink" value="#{ivy.session.getAttribute('docRef')}">Click here to view <h:outputText value="#{ivy.session.getAttribute('docFilename')}" /></h:outputLink>
   </div>
 </h:body>
 </html>
