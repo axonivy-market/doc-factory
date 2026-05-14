@@ -11,9 +11,6 @@
   <artifactId>doc-factory-demos-test</artifactId>
   <version>13.2.3-SNAPSHOT</version>
   <packaging>iar-integration-test</packaging>
-  <properties>
-    <selenide.version>7.7.1</selenide.version>
-  </properties>
   <dependencies>
     <dependency>
       <groupId>com.axonivy.utils.docfactory</groupId>
@@ -29,7 +26,6 @@
     <dependency>
       <groupId>com.codeborne</groupId>
       <artifactId>selenide-proxy</artifactId>
-      <version>${selenide.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
