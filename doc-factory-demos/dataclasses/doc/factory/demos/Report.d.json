@@ -1,27 +1,20 @@
 {
-  "$schema" : "https://json-schema.axonivy.com/data-class/13.1.0/data-class.json",
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
   "simpleName" : "Report",
   "namespace" : "doc.factory.demos",
-  "isBusinessCaseData" : false,
   "fields" : [ {
-    "name" : "employee",
-    "type" : "String",
-    "modifiers" : [ "PERSISTENT" ]
+    "name" : "employee"
   }, {
     "name" : "from",
-    "type" : "Date",
-    "modifiers" : [ "PERSISTENT" ]
+    "type" : "Date"
   }, {
     "name" : "till",
-    "type" : "Date",
-    "modifiers" : [ "PERSISTENT" ]
+    "type" : "Date"
   }, {
     "name" : "projects",
-    "type" : "List<doc.factory.demos.Project>",
-    "modifiers" : [ "PERSISTENT" ]
+    "type" : "List<doc.factory.demos.Project>"
   }, {
     "name" : "currentDate",
-    "type" : "DateTime",
-    "modifiers" : [ "PERSISTENT" ]
+    "type" : "DateTime"
   } ]
 }

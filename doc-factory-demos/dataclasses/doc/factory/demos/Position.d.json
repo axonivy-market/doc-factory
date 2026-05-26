@@ -1,27 +1,20 @@
 {
-  "$schema" : "https://json-schema.axonivy.com/data-class/13.1.0/data-class.json",
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
   "simpleName" : "Position",
   "namespace" : "doc.factory.demos",
-  "isBusinessCaseData" : false,
   "fields" : [ {
     "name" : "date",
-    "type" : "Date",
-    "modifiers" : [ "PERSISTENT" ]
+    "type" : "Date"
   }, {
     "name" : "code",
-    "type" : "Number",
-    "modifiers" : [ "PERSISTENT" ]
+    "type" : "Number"
   }, {
-    "name" : "description",
-    "type" : "String",
-    "modifiers" : [ "PERSISTENT" ]
+    "name" : "description"
   }, {
     "name" : "unit",
-    "type" : "doc.factory.demos.Unit",
-    "modifiers" : [ "PERSISTENT" ]
+    "type" : "doc.factory.demos.Unit"
   }, {
     "name" : "related",
-    "type" : "doc.factory.demos.Position",
-    "modifiers" : [ "PERSISTENT" ]
+    "type" : "doc.factory.demos.Position"
   } ]
 }
