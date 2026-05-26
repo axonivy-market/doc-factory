@@ -1,23 +1,17 @@
 {
-  "$schema" : "https://json-schema.axonivy.com/data-class/12.0.0/data-class.json",
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
   "simpleName" : "Project",
   "namespace" : "doc.factory.demos",
-  "isBusinessCaseData" : false,
   "fields" : [ {
     "name" : "positions",
-    "type" : "List<doc.factory.demos.Position>",
-    "modifiers" : [ "PERSISTENT" ]
+    "type" : "List<doc.factory.demos.Position>"
   }, {
-    "name" : "title",
-    "type" : "String",
-    "modifiers" : [ "PERSISTENT" ]
+    "name" : "title"
   }, {
     "name" : "nr",
-    "type" : "Number",
-    "modifiers" : [ "PERSISTENT" ]
+    "type" : "Number"
   }, {
     "name" : "position",
-    "type" : "doc.factory.demos.Position",
-    "modifiers" : [ "PERSISTENT" ]
+    "type" : "doc.factory.demos.Position"
   } ]
 }

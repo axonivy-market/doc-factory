@@ -1,40 +1,45 @@
 {
-  "$schema" : "https://json-schema.axonivy.com/data-class/12.0.0/data-class.json",
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
   "simpleName" : "Data",
   "namespace" : "doc.factory.demos",
-  "isBusinessCaseData" : false,
   "fields" : [ {
     "name" : "mergeFields",
-    "type" : "List<ch.ivyteam.ivy.addons.docfactory.TemplateMergeField>"
+    "type" : "List<ch.ivyteam.ivy.addons.docfactory.TemplateMergeField>",
+    "modifiers" : [ ]
   }, {
     "name" : "position",
-    "type" : "doc.factory.demos.Position"
+    "type" : "doc.factory.demos.Position",
+    "modifiers" : [ ]
   }, {
     "name" : "positions",
-    "type" : "List<doc.factory.demos.Position>"
+    "type" : "List<doc.factory.demos.Position>",
+    "modifiers" : [ ]
   }, {
     "name" : "report",
-    "type" : "doc.factory.demos.Report"
+    "type" : "doc.factory.demos.Report",
+    "modifiers" : [ ]
   }, {
     "name" : "tableNames",
-    "type" : "List"
+    "type" : "List",
+    "modifiers" : [ ]
   }, {
     "name" : "tableRecords",
-    "type" : "List<Recordset>"
+    "type" : "List<Recordset>",
+    "modifiers" : [ ]
   }, {
     "name" : "templateFile",
     "type" : "java.io.File",
-    "comment" : "java.io.File"
+    "comment" : "java.io.File",
+    "modifiers" : [ ]
   }, {
-    "name" : "documentId",
-    "type" : "String",
-    "modifiers" : [ "PERSISTENT" ]
+    "name" : "documentId"
   }, {
     "name" : "fileList",
     "type" : "List<java.io.File>",
-    "comment" : "java.io.Files"
+    "comment" : "java.io.Files",
+    "modifiers" : [ ]
   }, {
     "name" : "str",
-    "type" : "String"
+    "modifiers" : [ ]
   } ]
 }

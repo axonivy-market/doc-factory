@@ -1,22 +1,26 @@
 {
-  "$schema" : "https://json-schema.axonivy.com/data-class/13.1.0/data-class.json",
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
   "simpleName" : "UploadAndPreviewDocumentData",
   "namespace" : "doc.factory.demos.UploadAndPreviewDocument",
-  "isBusinessCaseData" : false,
   "fields" : [ {
     "name" : "uploadedFile",
-    "type" : "org.primefaces.model.file.UploadedFile"
+    "type" : "org.primefaces.model.file.UploadedFile",
+    "modifiers" : [ ]
   }, {
     "name" : "fileUploadEvent",
-    "type" : "org.primefaces.event.FileUploadEvent"
+    "type" : "org.primefaces.event.FileUploadEvent",
+    "modifiers" : [ ]
   }, {
     "name" : "documents",
-    "type" : "List<ch.ivyteam.ivy.workflow.document.IDocument>"
+    "type" : "List<ch.ivyteam.ivy.workflow.document.IDocument>",
+    "modifiers" : [ ]
   }, {
     "name" : "currentDocument",
-    "type" : "ch.ivyteam.ivy.workflow.document.IDocument"
+    "type" : "ch.ivyteam.ivy.workflow.document.IDocument",
+    "modifiers" : [ ]
   }, {
     "name" : "result",
-    "type" : "org.primefaces.model.StreamedContent"
+    "type" : "org.primefaces.model.StreamedContent",
+    "modifiers" : [ ]
   } ]
 }
