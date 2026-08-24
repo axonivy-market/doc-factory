@@ -1,0 +1,1123 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/process-1.json",
+  "id" : "160D67F5A5647B10",
+  "config" : {
+    "data" : "doc.factory.demos.Data"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "RequestStart",
+      "name" : "Document with TemplateMergeFields",
+      "config" : {
+        "signature" : "start1",
+        "request" : {
+          "name" : "1.1 Document with TemplateMergeFields"
+        }
+      },
+      "tags" : [
+        "demo"
+      ],
+      "visual" : {
+        "at" : { "x" : 96, "y" : 240 },
+        "labelOffset" : { "x" : 93, "y" : 55 }
+      },
+      "connect" : [
+        { "id" : "f4", "to" : "f3" }
+      ]
+    }, {
+      "id" : "f3",
+      "type" : "Script",
+      "name" : [
+        "Create some ",
+        "TemplateMergeFields"
+      ],
+      "config" : {
+        "output" : {
+          "code" : [
+            "import ch.ivyteam.ivy.addons.docfactory.TemplateMergeField;",
+            "",
+            "//Person Data",
+            "in.mergeFields.add(new TemplateMergeField(\"name\", \"Hüerlimann\"));",
+            "in.mergeFields.add(new TemplateMergeField(\"firstname\", \"Caty\"));",
+            "in.mergeFields.add(new TemplateMergeField(\"address.street\", \"Baarerstrasse 12\"));",
+            "in.mergeFields.add(new TemplateMergeField(\"address.city\", \"CH-6300 Zug\"));"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 208, "y" : 240 },
+        "size" : { "width" : 144 }
+      },
+      "connect" : [
+        { "id" : "f8", "to" : "f7" }
+      ]
+    }, {
+      "id" : "f5",
+      "type" : "SubProcessCall",
+      "name" : [
+        "Create Document",
+        "with TemplateMergeFields"
+      ],
+      "config" : {
+        "processCall" : "Functional Processes/writeSerialLetterToOneCorrespondent:writeDocumentWithMailMergeTable(List<ch.ivyteam.ivy.addons.docfactory.TemplateMergeField>,String,String,String,String,List<String>,List<Recordset>)",
+        "call" : {
+          "map" : {
+            "param.listOfTemplateMergeFields" : "in.mergeFields",
+            "param.optionalOutputpath" : "new File(\"ivy_DocFactoryDemo\").getAbsolutePath()",
+            "param.optionalLetterName" : "\"DocWithMergeFields\"",
+            "param.optionalOutputFormat" : "\"docx\"",
+            "param.templatePath" : "in.templateFile.getAbsolutePath()"
+          }
+        },
+        "output" : {
+          "code" : [
+            "import ch.ivyteam.ivy.docFactoryExamples.Util.FilesUtil;",
+            "in.templateFile.delete();",
+            "",
+            "FilesUtil.setFileRef(result.fileOperationMessage.files.get(0));"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 592, "y" : 240 },
+        "size" : { "width" : 160 }
+      },
+      "connect" : [
+        { "id" : "f49", "to" : "f48" }
+      ]
+    }, {
+      "id" : "f7",
+      "type" : "Script",
+      "name" : [
+        "Get Template from",
+        "CMS"
+      ],
+      "config" : {
+        "output" : {
+          "code" : [
+            "import ch.ivyteam.ivy.docFactoryExamples.ExportFromCms;",
+            "",
+            "out.templateFile = ExportFromCms.export(\"/Templates/myTemplateWithMergeFields\", \"doc\");"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 384, "y" : 240 },
+        "size" : { "width" : 128 }
+      },
+      "connect" : [
+        { "id" : "f6", "to" : "f5" }
+      ]
+    }, {
+      "id" : "f10",
+      "type" : "RequestStart",
+      "name" : "Document with Object",
+      "config" : {
+        "signature" : "start2",
+        "request" : {
+          "name" : "1.2a Document with Object"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 384 },
+        "labelOffset" : { "x" : 34, "y" : 49 }
+      },
+      "connect" : [
+        { "id" : "f14", "to" : "f11" }
+      ]
+    }, {
+      "id" : "f11",
+      "type" : "Script",
+      "name" : "Create an Object",
+      "config" : {
+        "output" : {
+          "map" : {
+            "out" : "in",
+            "out.mergeFields" : "[]",
+            "out.positions" : "[]",
+            "out.report.projects" : "[]",
+            "out.tableRecords" : "[]"
+          },
+          "code" : [
+            "import doc.factory.demos.Position;",
+            "",
+            "//an Object",
+            "Position p = new Position();",
+            "p.date = '11.9.2019';",
+            "p.code = 1243;",
+            "p.description = \"London - Dublin\";",
+            "p.unit.amount = 190;",
+            "p.unit.text = \"km\";",
+            "",
+            "out.position = p;"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 228, "y" : 385 },
+        "size" : { "width" : 152, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f16", "to" : "f13" }
+      ]
+    }, {
+      "id" : "f12",
+      "type" : "SubProcessCall",
+      "name" : [
+        "Create Document",
+        "with Object"
+      ],
+      "config" : {
+        "processCall" : "Functional Processes/writeSerialLetterToOneCorrespondent:writeDocumentWithOneDataClass(CompositeObject,String,String,String,String)",
+        "call" : {
+          "map" : {
+            "param.data" : "in.position",
+            "param.optionalOutputpath" : "new File(\"ivy_DocFactoryDemo\").getAbsolutePath()",
+            "param.optionalLetterName" : "\"DocWithObjectData\"",
+            "param.optionalOutputFormat" : "\"pdf\"",
+            "param.templatePath" : "in.templateFile.getAbsolutePath()"
+          }
+        },
+        "output" : {
+          "code" : [
+            "import ch.ivyteam.ivy.docFactoryExamples.Util.FilesUtil;",
+            "in.templateFile.delete();",
+            "",
+            "FilesUtil.setFileRef(result.fileOperationMessage.files.get(0));"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 612, "y" : 385 },
+        "size" : { "width" : 152, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f23", "to" : "f1" }
+      ]
+    }, {
+      "id" : "f13",
+      "type" : "Script",
+      "name" : [
+        "Get Template from",
+        "CMS"
+      ],
+      "config" : {
+        "output" : {
+          "code" : [
+            "import ch.ivyteam.ivy.docFactoryExamples.ExportFromCms;",
+            "",
+            "out.templateFile = ExportFromCms.export(\"/Templates/myTemplateWithObjectData\", \"doc\");"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 424, "y" : 384 },
+        "size" : { "width" : 128 }
+      },
+      "connect" : [
+        { "id" : "f17", "to" : "f12" }
+      ]
+    }, {
+      "id" : "f20",
+      "type" : "Script",
+      "name" : [
+        "Get Template from",
+        "CMS"
+      ],
+      "config" : {
+        "output" : {
+          "code" : [
+            "import ch.ivyteam.ivy.docFactoryExamples.ExportFromCms;",
+            "",
+            "out.templateFile = ExportFromCms.export(\"/Templates/myTemplateWithTable\", \"doc\");"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 384, "y" : 872 },
+        "size" : { "width" : 128 }
+      },
+      "connect" : [
+        { "id" : "f24", "to" : "f22" }
+      ]
+    }, {
+      "id" : "f22",
+      "type" : "SubProcessCall",
+      "name" : [
+        "Create Document",
+        "with Table"
+      ],
+      "config" : {
+        "processCall" : "Functional Processes/writeSerialLetterToOneCorrespondent:writeDocumentWithMailMergeTable(List<ch.ivyteam.ivy.addons.docfactory.TemplateMergeField>,String,String,String,String,List<String>,List<Recordset>)",
+        "call" : {
+          "map" : {
+            "param.listOfTemplateMergeFields" : "in.mergeFields",
+            "param.optionalOutputpath" : "new File(\"ivy_DocFactoryDemo\").getAbsolutePath()",
+            "param.optionalLetterName" : "\"DocWithTable\"",
+            "param.optionalOutputFormat" : "\"pdf\"",
+            "param.templatePath" : "in.templateFile.getAbsolutePath()",
+            "param.tableNamesList" : "in.tableNames",
+            "param.recordsetsList" : "in.tableRecords"
+          }
+        },
+        "output" : {
+          "code" : [
+            "import ch.ivyteam.ivy.docFactoryExamples.Util.FilesUtil;",
+            "in.templateFile.delete();",
+            "",
+            "FilesUtil.setFileRef(result.fileOperationMessage.files.get(0));"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 592, "y" : 872 }
+      },
+      "connect" : [
+        { "id" : "f35", "to" : "f2" }
+      ]
+    }, {
+      "id" : "f19",
+      "type" : "RequestStart",
+      "name" : "Document with Table",
+      "config" : {
+        "signature" : "start3",
+        "request" : {
+          "name" : "1.3 Document with Table"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 872 },
+        "labelOffset" : { "x" : 57, "y" : 57 }
+      },
+      "connect" : [
+        { "id" : "f21", "to" : "f45" }
+      ]
+    }, {
+      "id" : "f27",
+      "type" : "Script",
+      "name" : [
+        "Get Template from",
+        "CMS"
+      ],
+      "config" : {
+        "output" : {
+          "code" : [
+            "import ch.ivyteam.ivy.docFactoryExamples.ExportFromCms;",
+            "",
+            "out.templateFile = ExportFromCms.export(\"/Templates/myTemplateWithConditionalText\", \"doc\");"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 384, "y" : 1064 },
+        "size" : { "width" : 128 }
+      },
+      "connect" : [
+        { "id" : "f34", "to" : "f29" }
+      ]
+    }, {
+      "id" : "f29",
+      "type" : "SubProcessCall",
+      "name" : [
+        "Create Document",
+        "with conditional Text"
+      ],
+      "config" : {
+        "processCall" : "Functional Processes/writeSerialLetterToOneCorrespondent:writeSerialLetterToOneCorrespondant(List<ch.ivyteam.ivy.addons.docfactory.TemplateMergeField>,String,String,String,String)",
+        "call" : {
+          "map" : {
+            "param.listOfTemplateMergeFields" : "in.mergeFields",
+            "param.optionalOutputpath" : "new File(\"ivy_DocFactoryDemo\").getAbsolutePath()",
+            "param.optionalLetterName" : "\"DocWithConditionalText\"",
+            "param.optionalOutputFormat" : "\"pdf\"",
+            "param.templatePath" : "in.templateFile.getAbsolutePath()"
+          }
+        },
+        "output" : {
+          "code" : [
+            "import ch.ivyteam.ivy.docFactoryExamples.Util.FilesUtil;",
+            "in.templateFile.delete();",
+            "",
+            "FilesUtil.setFileRef(result.fileOperationMessage.files.get(0));"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 592, "y" : 1064 },
+        "size" : { "width" : 128 }
+      },
+      "connect" : [
+        { "id" : "f41", "to" : "f50" }
+      ]
+    }, {
+      "id" : "f30",
+      "type" : "RequestStart",
+      "name" : "Document with Conditional Text",
+      "config" : {
+        "signature" : "start4",
+        "request" : {
+          "name" : "1.2 Document with Conditional Text"
+        },
+        "case" : {
+          "attachToBusinessCase" : false
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 1064 },
+        "labelOffset" : { "x" : 81, "y" : 57 }
+      },
+      "connect" : [
+        { "id" : "f32", "to" : "f31" }
+      ]
+    }, {
+      "id" : "f31",
+      "type" : "Script",
+      "name" : [
+        "Create some ",
+        "Template MergeFields"
+      ],
+      "config" : {
+        "output" : {
+          "code" : [
+            "import ch.ivyteam.ivy.addons.docfactory.TemplateMergeField;",
+            "//Customer Data",
+            "in.mergeFields.add(new TemplateMergeField(\"name\", \"Hüerlimann\"));",
+            "in.mergeFields.add(new TemplateMergeField(\"firstname\", \"Caty\"));",
+            "in.mergeFields.add(new TemplateMergeField(\"address\", \"CH-6300 Zug\"));",
+            "in.mergeFields.add(new TemplateMergeField(\"country\", \"Switzerland\"));"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 208, "y" : 1064 },
+        "size" : { "width" : 144 }
+      },
+      "connect" : [
+        { "id" : "f33", "to" : "f27" }
+      ]
+    }, {
+      "id" : "f37",
+      "type" : "SubProcessCall",
+      "name" : [
+        "Create Document",
+        "with tables in tables"
+      ],
+      "config" : {
+        "processCall" : "Functional Processes/writeSerialLetterToOneCorrespondent:writeDocumentWithMailMergeNestedTableWithListOfDatas(String,String,String,String,CompositeObject,List<CompositeObject>)",
+        "call" : {
+          "map" : {
+            "param.optionalOutputpath" : "new File(\"ivy_DocFactoryDemo\").getAbsolutePath()",
+            "param.optionalLetterName" : "\"DocWithNestedTables\"",
+            "param.optionalOutputFormat" : "\"pdf\"",
+            "param.templatePath" : "in.templateFile.getAbsolutePath()",
+            "param.aData" : "in.report",
+            "param.nestedListOfDatas" : "in.report.projects"
+          }
+        },
+        "output" : {
+          "code" : [
+            "import ch.ivyteam.ivy.docFactoryExamples.Util.FilesUtil;",
+            "in.templateFile.delete();",
+            "",
+            "FilesUtil.setFileRef(result.fileOperationMessage.files.get(0));"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 592, "y" : 1256 },
+        "size" : { "width" : 128 }
+      },
+      "connect" : [
+        { "id" : "f52", "to" : "f51" }
+      ]
+    }, {
+      "id" : "f38",
+      "type" : "Script",
+      "name" : [
+        "Get Template from",
+        "CMS"
+      ],
+      "config" : {
+        "output" : {
+          "code" : [
+            "import ch.ivyteam.ivy.docFactoryExamples.ExportFromCms;",
+            "",
+            "out.templateFile = ExportFromCms.export(\"/Templates/myTemplateWithNestedTables\", \"doc\");"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 384, "y" : 1256 },
+        "size" : { "width" : 128 }
+      },
+      "connect" : [
+        { "id" : "f43", "to" : "f37" }
+      ]
+    }, {
+      "id" : "f39",
+      "type" : "RequestStart",
+      "name" : "Document with nested Tables",
+      "config" : {
+        "signature" : "start5",
+        "request" : {
+          "name" : "1.5 Document with nested Tables"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 1256 },
+        "labelOffset" : { "x" : 81, "y" : 57 }
+      },
+      "connect" : [
+        { "id" : "f26", "to" : "f46" }
+      ]
+    }, {
+      "id" : "f45",
+      "type" : "Script",
+      "name" : "Create Recordset Data",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import ch.ivyteam.ivy.addons.docfactory.TemplateMergeField;",
+            "import doc.factory.demos.Position;",
+            "",
+            "//Header Data",
+            "in.mergeFields.add(new TemplateMergeField(\"name\", \"Hüerlimann\"));",
+            "in.mergeFields.add(new TemplateMergeField(\"firstname\", \"Caty\"));",
+            "in.mergeFields.add(new TemplateMergeField(\"address\", \"CH-6300 Zug\"));",
+            "",
+            "",
+            "",
+            "//Recordset for Table rows",
+            "Recordset rs = new Recordset();",
+            "rs.addColumn(\"date\", [new Date(), new Date(), new Date()]);",
+            "rs.addColumn(\"hours\", [12,34,51]);",
+            "rs.addColumn(\"desc\", [\"Team Meeting\",\"Requirement Analysis\",\"DOM Model\"]);",
+            "",
+            "out.tableRecords.add(rs);",
+            "out.tableNames.add(\"reporting\");"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 208, "y" : 872 },
+        "size" : { "width" : 144 }
+      },
+      "connect" : [
+        { "id" : "f25", "to" : "f20" }
+      ]
+    }, {
+      "id" : "f46",
+      "type" : "Script",
+      "name" : "Create complex Data",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import doc.factory.demos.Position;",
+            "",
+            "import doc.factory.demos.Project;",
+            "out.report.employee = \"George\";",
+            "out.report.from = '1.9.2019';",
+            "out.report.till= new Date();",
+            "",
+            "// project 1",
+            "Project pr = new Project();",
+            "pr.nr = 23.100;",
+            "pr.title = \"Release 8\";",
+            "",
+            "Position p = new Position();",
+            "p.date = '11.9.2019';",
+            "p.code = 43;",
+            "p.description = \"Mailand\";",
+            "p.unit.amount=190;",
+            "p.unit.text = \"Km\";",
+            "pr.positions.add(p);",
+            "p = new Position();",
+            "p.date = '21.9.2019';",
+            "p.code = 43;",
+            "p.description = \"Madrid\";",
+            "p.unit.amount=85;",
+            "p.unit.text = \"Km\";",
+            "pr.positions.add(p);",
+            "",
+            "out.report.projects.add(pr);",
+            "",
+            "// project 2",
+            "pr = new Project();",
+            "pr.nr = 10.500;",
+            "pr.title = \"Summer Sale\";",
+            "",
+            "p = new Position();",
+            "p.date = '23.9.2019';",
+            "p.code = 18;",
+            "p.description = \"Coffee Cups\";",
+            "p.unit.amount=60;",
+            "p.unit.text = \"Pieces\";",
+            "pr.positions.add(p);",
+            "p = new Position();",
+            "p.date = '29.9.2019';",
+            "p.code = 18;",
+            "p.description = \"Travel Expenses\";",
+            "p.unit.amount=10;",
+            "p.unit.text = \"Hours\";",
+            "pr.positions.add(p);",
+            "out.report.projects.add(pr);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 208, "y" : 1256 },
+        "size" : { "width" : 128 }
+      },
+      "connect" : [
+        { "id" : "f40", "to" : "f38" }
+      ]
+    }, {
+      "id" : "f42",
+      "type" : "ProcessAnnotation",
+      "name" : [
+        "This examples show the usage of the CallSubprocesses provided by the DocFactory project.",
+        "The data that has to be expanded into {MergeFields} in the document template can be delivered in a number of ways.",
+        "The word document templates (.doc) used in theses examples are loaded from the CMS. ",
+        "If you execute the samples, you will find the output documents in the folder \"ivy_DocFactoryDemo\" in the ivy files directory"
+      ],
+      "visual" : {
+        "at" : { "x" : 432, "y" : 72 },
+        "size" : { "width" : 672, "height" : 76 }
+      }
+    }, {
+      "id" : "f44",
+      "type" : "ProcessAnnotation",
+      "name" : [
+        "Remark:",
+        "Using this method, only simple objects are supported.",
+        "Nested fields e.g. \"unit.amount\" is not expanded."
+      ],
+      "visual" : {
+        "at" : { "x" : 960, "y" : 385 },
+        "size" : { "width" : 384, "height" : 62 }
+      }
+    }, {
+      "id" : "f47",
+      "type" : "ProcessAnnotation",
+      "name" : [
+        "Limitation: ",
+        "Using this method, iner nested objects ",
+        "e.g. \"person.address\" are not expanded."
+      ],
+      "visual" : {
+        "at" : { "x" : 912, "y" : 1256 },
+        "size" : { "width" : 224 }
+      }
+    }, {
+      "id" : "f48",
+      "type" : "TaskEndPage",
+      "config" : {
+        "page" : "view/done.xhtml"
+      },
+      "visual" : {
+        "at" : { "x" : 736, "y" : 240 }
+      }
+    }, {
+      "id" : "f1",
+      "type" : "TaskEndPage",
+      "config" : {
+        "page" : "view/done.xhtml"
+      },
+      "visual" : {
+        "at" : { "x" : 736, "y" : 384 }
+      }
+    }, {
+      "id" : "f2",
+      "type" : "TaskEndPage",
+      "config" : {
+        "page" : "view/done.xhtml"
+      },
+      "visual" : {
+        "at" : { "x" : 736, "y" : 872 }
+      }
+    }, {
+      "id" : "f50",
+      "type" : "TaskEndPage",
+      "config" : {
+        "page" : "view/done.xhtml"
+      },
+      "visual" : {
+        "at" : { "x" : 736, "y" : 1064 }
+      }
+    }, {
+      "id" : "f51",
+      "type" : "TaskEndPage",
+      "config" : {
+        "page" : "view/done.xhtml"
+      },
+      "visual" : {
+        "at" : { "x" : 736, "y" : 1256 }
+      }
+    }, {
+      "id" : "f9",
+      "type" : "TaskEndPage",
+      "config" : {
+        "page" : "view/done.xhtml"
+      },
+      "visual" : {
+        "at" : { "x" : 736, "y" : 496 }
+      }
+    }, {
+      "id" : "f15",
+      "type" : "RequestStart",
+      "name" : "Document with nested Object",
+      "config" : {
+        "signature" : "start6",
+        "request" : {
+          "name" : "1.2b Document with nested Object"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 496 },
+        "labelOffset" : { "x" : 56, "y" : 53 }
+      },
+      "connect" : [
+        { "id" : "f56", "to" : "f28" }
+      ]
+    }, {
+      "id" : "f18",
+      "type" : "SubProcessCall",
+      "name" : [
+        "Create Document",
+        "with nested Object "
+      ],
+      "config" : {
+        "processCall" : "Functional Processes/writeSerialLetterToOneCorrespondent:writeDocumentWithNestedDataClass(CompositeObject,String,String,String,String)",
+        "call" : {
+          "map" : {
+            "param.data" : "in.position",
+            "param.optionalOutputpath" : "new File(\"ivy_DocFactoryDemo\").getAbsolutePath()",
+            "param.optionalLetterName" : "\"DocWithNestedObject\"",
+            "param.optionalOutputFormat" : "\"pdf\"",
+            "param.templatePath" : "in.templateFile.getAbsolutePath()"
+          }
+        },
+        "output" : {
+          "code" : [
+            "import ch.ivyteam.ivy.docFactoryExamples.Util.FilesUtil;",
+            "in.templateFile.delete();",
+            "",
+            "FilesUtil.setFileRef(result.fileOperationMessage.files.get(0));"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 612, "y" : 497 },
+        "size" : { "width" : 152, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f55", "to" : "f9" }
+      ]
+    }, {
+      "id" : "f28",
+      "type" : "Script",
+      "name" : "Create nested Object",
+      "config" : {
+        "output" : {
+          "map" : {
+            "out" : "in",
+            "out.mergeFields" : "[]",
+            "out.positions" : "[]",
+            "out.report.projects" : "[]",
+            "out.tableRecords" : "[]"
+          },
+          "code" : [
+            "import doc.factory.demos.Position;",
+            "",
+            "//a structured Object",
+            "Position p = new Position();",
+            "p.date = '11.9.2019';",
+            "p.code = 1243;",
+            "p.description = \"London - Dublin\";",
+            "p.unit.amount=190;",
+            "p.unit.text = \"Km\";",
+            "",
+            "out.position = p;"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 224, "y" : 497 },
+        "size" : { "width" : 160, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f57", "to" : "f36" }
+      ]
+    }, {
+      "id" : "f36",
+      "type" : "Script",
+      "name" : [
+        "Get Template from",
+        "CMS"
+      ],
+      "config" : {
+        "output" : {
+          "code" : [
+            "import ch.ivyteam.ivy.docFactoryExamples.ExportFromCms;",
+            "",
+            "out.templateFile = ExportFromCms.export(\"/Templates/myTemplateWithNestedObject\", \"doc\");"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 424, "y" : 496 },
+        "size" : { "width" : 128 }
+      },
+      "connect" : [
+        { "id" : "f54", "to" : "f18" }
+      ]
+    }, {
+      "id" : "f53",
+      "type" : "ProcessAnnotation",
+      "name" : [
+        "Remark:",
+        "This subprocess uses \"mail merge\" for nested objects ",
+        "e.g. \"position.unit.amount\" is expanded. ",
+        "Use full qualified names for merge fields."
+      ],
+      "visual" : {
+        "at" : { "x" : 960, "y" : 489 },
+        "size" : { "width" : 384, "height" : 78 }
+      }
+    }, {
+      "id" : "f58",
+      "type" : "TaskEndPage",
+      "config" : {
+        "page" : "view/done.xhtml"
+      },
+      "visual" : {
+        "at" : { "x" : 736, "y" : 720 }
+      }
+    }, {
+      "id" : "f59",
+      "type" : "SubProcessCall",
+      "name" : [
+        "Create Document",
+        "with Object And Table"
+      ],
+      "config" : {
+        "processCall" : "Functional Processes/writeSerialLetterToOneCorrespondent:writeDocumentWithMailMergeTable(CompositeObject,String,String,String,String,List<String>,List<Recordset>)",
+        "call" : {
+          "map" : {
+            "param.data" : "in.position",
+            "param.optionalOutputpath" : "new File(\"ivy_DocFactoryDemo\").getAbsolutePath()",
+            "param.optionalLetterName" : "\"DocWithObjectAndTable\"",
+            "param.optionalOutputFormat" : "\"pdf\"",
+            "param.templatePath" : "in.templateFile.getAbsolutePath()",
+            "param.tableNamesList" : "in.tableNames",
+            "param.recordsetsList" : "in.tableRecords"
+          }
+        },
+        "output" : {
+          "code" : [
+            "import ch.ivyteam.ivy.docFactoryExamples.Util.FilesUtil;",
+            "in.templateFile.delete();",
+            "",
+            "FilesUtil.setFileRef(result.fileOperationMessage.files.get(0));"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 612, "y" : 721 },
+        "size" : { "width" : 152, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f66", "to" : "f58" }
+      ]
+    }, {
+      "id" : "f60",
+      "type" : "Script",
+      "name" : [
+        "Get Template from",
+        "CMS"
+      ],
+      "config" : {
+        "output" : {
+          "code" : [
+            "import ch.ivyteam.ivy.docFactoryExamples.ExportFromCms;",
+            "",
+            "out.templateFile = ExportFromCms.export(\"/Templates/myTemplateWithObjectAndTable\", \"doc\");"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 424, "y" : 720 },
+        "size" : { "width" : 128 }
+      },
+      "connect" : [
+        { "id" : "f65", "to" : "f59" }
+      ]
+    }, {
+      "id" : "f61",
+      "type" : "Script",
+      "name" : "Create Object and Recordset",
+      "config" : {
+        "output" : {
+          "map" : {
+            "out" : "in",
+            "out.mergeFields" : "[]",
+            "out.positions" : "[]",
+            "out.report.projects" : "[]",
+            "out.tableRecords" : "[]"
+          },
+          "code" : [
+            "import ch.ivyteam.ivy.addons.docfactory.TemplateMergeField;",
+            "import doc.factory.demos.Position;",
+            "",
+            "//Header Data",
+            "in.mergeFields.add(new TemplateMergeField(\"name\", \"Hüerlimann\"));",
+            "in.mergeFields.add(new TemplateMergeField(\"firstname\", \"Caty\"));",
+            "in.mergeFields.add(new TemplateMergeField(\"address\", \"CH-6300 Zug\"));",
+            "",
+            "//Recordset for Table rows",
+            "Recordset rs = new Recordset();",
+            "rs.addColumn(\"date\", [new Date(), new Date(), new Date()]);",
+            "rs.addColumn(\"hours\", [12,34,51]);",
+            "rs.addColumn(\"desc\", [\"Team Meeting\",\"Requirement Analysis\",\"DOM Model\"]);",
+            "",
+            "out.tableRecords.add(rs);",
+            "out.tableNames.add(\"reporting\");",
+            "",
+            "//a structured Object",
+            "Position p = new Position();",
+            "p.date = '11.9.2019';",
+            "p.code = 1243;",
+            "p.description = \"London - Dublin\";",
+            "p.unit.amount=190;",
+            "p.unit.text = \"Km\";",
+            "",
+            "out.position = p;"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 224, "y" : 721 },
+        "size" : { "width" : 160, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f63", "to" : "f60" }
+      ]
+    }, {
+      "id" : "f62",
+      "type" : "RequestStart",
+      "name" : "Document with Object And Table",
+      "config" : {
+        "signature" : "start7",
+        "request" : {
+          "name" : "1.2d Document with Object and Table"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 720 },
+        "labelOffset" : { "x" : 73, "y" : 49 }
+      },
+      "connect" : [
+        { "id" : "f64", "to" : "f61" }
+      ]
+    }, {
+      "id" : "f67",
+      "type" : "DialogCall",
+      "name" : "Upload and Preview file",
+      "config" : {
+        "dialog" : "doc.factory.demos.UploadAndPreviewDocument:start()"
+      },
+      "visual" : {
+        "at" : { "x" : 280, "y" : 1424 }
+      }
+    }, {
+      "id" : "f68",
+      "type" : "RequestStart",
+      "name" : "Upload and preview document",
+      "config" : {
+        "signature" : "uploadAndPreviewDocument",
+        "request" : {
+          "name" : "1.6 Upload and preview document"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 1424 },
+        "labelOffset" : { "x" : 73, "y" : 49 }
+      },
+      "connect" : [
+        { "id" : "f69", "to" : "f67" }
+      ]
+    }, {
+      "id" : "f70",
+      "type" : "RequestStart",
+      "name" : "Document contains nested objects that includes cyclic references",
+      "config" : {
+        "signature" : "start8",
+        "request" : {
+          "name" : "1.2c Document with nested Object that includes cyclic references"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 608 },
+        "labelOffset" : { "x" : 153, "y" : 57 }
+      },
+      "connect" : [
+        { "id" : "f71", "to" : "f72" }
+      ]
+    }, {
+      "id" : "f72",
+      "type" : "Script",
+      "name" : "Create nested Object that includes cyclic references",
+      "config" : {
+        "output" : {
+          "map" : {
+            "out" : "in",
+            "out.mergeFields" : "[]",
+            "out.positions" : "[]",
+            "out.report.projects" : "[]",
+            "out.tableRecords" : "[]"
+          },
+          "code" : [
+            "import doc.factory.demos.Position;",
+            "",
+            "//a structured Object",
+            "Position positionA = new Position();",
+            "positionA.date = '1.1.2026';",
+            "positionA.code = 1000;",
+            "positionA.description = \"Position A - Position B\";",
+            "positionA.unit.amount = 100;",
+            "positionA.unit.text = \"Km\";",
+            "",
+            "Position positionB = new Position();",
+            "positionB.date = '2.2.2026';",
+            "positionB.code = 2000;",
+            "positionB.description = \"Position B - Position C\";",
+            "positionB.unit.amount = 200;",
+            "positionB.unit.text = \"Km\";",
+            "",
+            "Position positionC = new Position();",
+            "positionC.date = '3.3.2026';",
+            "positionC.code = 3000;",
+            "positionC.description = \"Position C - Position A\";",
+            "positionC.unit.amount = 300;",
+            "positionC.unit.text = \"Km\";",
+            "",
+            "positionA.related = positionB;",
+            "positionB.related = positionC;",
+            "positionC.related = positionA;",
+            "",
+            "out.position = positionA;"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 224, "y" : 609 },
+        "size" : { "width" : 160, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f73", "to" : "f74" }
+      ]
+    }, {
+      "id" : "f74",
+      "type" : "Script",
+      "name" : [
+        "Get Template from",
+        "CMS"
+      ],
+      "config" : {
+        "output" : {
+          "code" : [
+            "import ch.ivyteam.ivy.docFactoryExamples.ExportFromCms;",
+            "",
+            "out.templateFile = ExportFromCms.export(\"/Templates/myTemplateWithNestedObjectIncludingCyclicReferences\", \"doc\");"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 424, "y" : 608 },
+        "size" : { "width" : 128 }
+      },
+      "connect" : [
+        { "id" : "f75", "to" : "f76" }
+      ]
+    }, {
+      "id" : "f76",
+      "type" : "SubProcessCall",
+      "name" : [
+        "Create Document",
+        "with nested Object "
+      ],
+      "config" : {
+        "processCall" : "Functional Processes/writeSerialLetterToOneCorrespondent:writeDocumentWithNestedDataClass(CompositeObject,String,String,String,String)",
+        "call" : {
+          "map" : {
+            "param.data" : "in.position",
+            "param.optionalOutputpath" : "new File(\"ivy_DocFactoryDemo\").getAbsolutePath()",
+            "param.optionalLetterName" : "\"DocWithNestedObjectIncludingCyclicReferences\"",
+            "param.optionalOutputFormat" : "\"pdf\"",
+            "param.templatePath" : "in.templateFile.getAbsolutePath()"
+          }
+        },
+        "output" : {
+          "code" : [
+            "import ch.ivyteam.ivy.docFactoryExamples.Util.FilesUtil;",
+            "in.templateFile.delete();",
+            "",
+            "FilesUtil.setFileRef(result.fileOperationMessage.files.get(0));"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 612, "y" : 609 },
+        "size" : { "width" : 152, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f77", "to" : "f78" }
+      ]
+    }, {
+      "id" : "f78",
+      "type" : "TaskEndPage",
+      "config" : {
+        "page" : "view/done.xhtml"
+      },
+      "visual" : {
+        "at" : { "x" : 736, "y" : 608 }
+      }
+    }, {
+      "id" : "f79",
+      "type" : "ProcessAnnotation",
+      "name" : [
+        "Remark:",
+        "This subprocess uses \"mail merge\" for nested objects that includes cyclic references",
+        "e.g. \"position.related.related.related.unit.amount\" is expanded ",
+        "If the variable com.axonivy.utils.docfactory.CyclicSupportLevels = 2",
+        "Use full qualified names for merge fields."
+      ],
+      "visual" : {
+        "at" : { "x" : 960, "y" : 609 },
+        "size" : { "width" : 384, "height" : 94 }
+      }
+    } ],
+  "layout" : {
+    "lanes" : [ {
+        "size" : 160
+      }, {
+        "name" : "TemplateMergeFelds",
+        "size" : 176
+      }, {
+        "name" : "CompositeObject Data",
+        "size" : 448
+      }, {
+        "name" : "Document with Table",
+        "size" : 184
+      }, {
+        "name" : "Conditional Text",
+        "size" : 192
+      }, {
+        "name" : "Nested Tables",
+        "size" : 192
+      }, {
+        "name" : "Preview documents",
+        "size" : 192
+      } ]
+  }
+}

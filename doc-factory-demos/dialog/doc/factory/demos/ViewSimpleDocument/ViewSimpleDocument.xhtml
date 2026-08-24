@@ -1,0 +1,21 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="jakarta.faces.core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:ic="http://ivyteam.ch/jsf/component"
+	xmlns:p="primefaces"
+	xmlns:pe="primefaces.extensions"
+	>
+<h:body>
+	<ui:composition template="/layouts/basic.xhtml">
+		<ui:define name="title">ViewDocument</ui:define>
+		<ui:define name="content">
+		<h3>DocFactoryDemos: Attached Document</h3><br></br>
+			<h:form id="form">
+				<h5>Document attached to Case [#{ivy.case.getId()}]</h5>
+				<pe:documentViewer url="#{data.service.documentPath}" height="900" zoom="75"></pe:documentViewer>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

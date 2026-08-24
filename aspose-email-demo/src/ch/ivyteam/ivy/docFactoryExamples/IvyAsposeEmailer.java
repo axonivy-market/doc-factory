@@ -5,8 +5,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 
-import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.faces.context.FacesContext;
+import jakarta.servlet.http.HttpServletResponse;
 
 import com.aspose.email.Attachment;
 import com.aspose.email.MailAddress;
