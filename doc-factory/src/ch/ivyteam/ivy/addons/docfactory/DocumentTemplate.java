@@ -18,7 +18,7 @@ import ch.ivyteam.ivy.addons.docfactory.options.DocumentCreationOptions;
 import ch.ivyteam.ivy.addons.docfactory.options.MergeCleanupOptions;
 import ch.ivyteam.ivy.addons.docfactory.options.SimpleMergeCleanupOptions;
 import ch.ivyteam.ivy.addons.docfactory.response.ResponseHandler;
-import ch.ivyteam.ivy.application.IApplication;
+import ch.ivyteam.ivy.application.app.Application;
 import ch.ivyteam.ivy.scripting.objects.CompositeObject;
 import ch.ivyteam.ivy.scripting.objects.List;
 import ch.ivyteam.ivy.scripting.objects.Recordset;
@@ -659,7 +659,7 @@ public class DocumentTemplate implements Serializable {
     }
     this.outputPath = destinationDocument.getParent();
     if (this.outputPath == null) {
-      this.outputPath = IApplication.current().getSessionFileArea().getPath();
+      this.outputPath = Application.current().paths().sessions().toString();
     }
     this.outputFormat = FilenameUtils.getExtension(destinationDocument.getName());
     try {
