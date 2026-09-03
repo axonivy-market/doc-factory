@@ -13,10 +13,5 @@ permissions:
 
 jobs:
   build:
-    uses: './.github/workflows/ci.yml'
-    secrets: inherit
-    with:
-      mvnArgs: '"-Divy.engine.download.url=https://dev.axonivy.com/permalink/dev/axonivy-engine.zip" "-Divy.engine.version=(12.0.0,]" "-Dselenide.version=7.6.1" -Dmaven.deploy.skip=true'
-      migrateToLatestIvyVersion: true
-      javaVersion: 25
-      ivyJavaHome: $JAVA_HOME_25_X64
+    uses: 'axonivy-market/github-workflows/.github/workflows/dev.yml@v6'
+
