@@ -4,6 +4,7 @@
   "namespace" : "doc.factory.demo.Email",
   "fields" : [ {
     "name" : "outlockMail",
-    "type" : "doc.factory.demos.OutlockMailData"
+    "type" : "doc.factory.demos.OutlockMailData",
+    "modifiers" : [ ]
   } ]
 }
