@@ -3,6 +3,7 @@
   "simpleName" : "BarCodeData",
   "namespace" : "doc.factory.demo.BarCode",
   "fields" : [ {
-    "name" : "str"
+    "name" : "str",
+    "modifiers" : [ ]
   } ]
 }
