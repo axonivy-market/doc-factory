@@ -1,5 +1,5 @@
 {
-  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "$schema" : "https://json-schema.axonivy.com/14.0/project/data-class.json",
   "simpleName" : "WriteSerialLetter",
   "namespace" : "ch.ivyteam.ivy.addons.docfactory",
   "comment" : "This DataClass is used to create the document in the DocFactory.",
