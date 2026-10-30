@@ -17,7 +17,7 @@ permissions:
 
 jobs:
   release:
-    uses: axonivy-market/github-workflows/.github/workflows/release-dev.yml@v14
+    uses: axonivy-market/github-workflows/.github/workflows/release-dev.yml@v6
     with:
       dryRun: ${{ inputs.dryRun }}
     secrets: inherit
