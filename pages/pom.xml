@@ -12,7 +12,7 @@
     <docfactory13.version>13.2.2</docfactory13.version>
     <docfactory.dev.version>14.0.0-SNAPSHOT</docfactory.dev.version>
     <latest.release>13.2</latest.release>
-    <navigation.directory>${project.basedir}/src/release</navigation.directory>
+    <dev.link></dev.link>
     <pages.directory>${project.build.directory}/doc-factory</pages.directory>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
@@ -43,10 +43,6 @@
               <resources>
                 <resource>
                   <directory>${project.basedir}/src/common</directory>
-                  <filtering>true</filtering>
-                </resource>
-                <resource>
-                  <directory>${navigation.directory}</directory>
                   <filtering>true</filtering>
                 </resource>
               </resources>
@@ -96,6 +92,36 @@
 
   <profiles>
     <profile>
+      <id>preview</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>3.5.0</version>
+            <executions>
+              <execution>
+                <id>serve-site-locally</id>
+                <phase>verify</phase>
+                <goals><goal>exec</goal></goals>
+                <configuration>
+                  <executable>${java.home}/bin/java</executable>
+                  <arguments>
+                    <argument>-m</argument>
+                    <argument>jdk.httpserver</argument>
+                    <argument>-b</argument>
+                    <argument>127.0.0.1</argument>
+                    <argument>-d</argument>
+                    <argument>${project.build.directory}</argument>
+                  </arguments>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
       <id>dev</id>
       <activation>
         <property><name>includeDev</name><value>true</value></property>
@@ -109,7 +135,7 @@
         </repository>
       </repositories>
       <properties>
-        <navigation.directory>${project.basedir}/src/dev</navigation.directory>
+        <dev.link>&lt;li&gt;&lt;a href="snapshot/dev/index.html"&gt;Development (${docfactory.dev.version})&lt;/a&gt;&lt;/li&gt;</dev.link>
       </properties>
       <build>
         <plugins>
