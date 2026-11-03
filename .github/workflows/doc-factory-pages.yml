@@ -6,9 +6,9 @@ on:
       include_dev:
         description: 'Include the latest published 14.0.0-SNAPSHOT documentation'
         type: boolean
-        default: false
+        default: true
       publish:
-        description: 'Publish the complete site to PUBLIC GitHub Pages (master only)'
+        description: 'Publish the complete site to public GitHub Pages'
         type: boolean
         default: false
 
