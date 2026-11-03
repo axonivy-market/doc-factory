@@ -9,18 +9,18 @@ on:
     inputs:
       mvnArgs:
         type: string
-        default: '-Divy.engine.download.url=https://dev.axonivy.com/permalink/nightly-10/axonivy-engine.zip'
+        default: '-Divy.engine.download.url=https://dev.axonivy.com/permalink/nightly-14/axonivy-engine.zip'
         required: false
       javaVersion:
         type: number
         default: 25
       mvnVersion:
         type: string
-        default: 3.9.8
+        default: 3.10.0
       ivyVersion:
         type: string
         default: dev
-        description: the ivy version to use (e.g. dev/nightly/nightly-10/...)
+        description: the ivy version to use (e.g. dev/nightly/nightly-14/...)
       migrateToLatestIvyVersion:
         type: boolean
         default: false
@@ -67,7 +67,7 @@ jobs:
     - name: Setup Maven
       uses: stCarolas/setup-maven@v5
       with:
-        maven-version: ${{ inputs.mvnVersion || '3.9.8' }}
+        maven-version: ${{ inputs.mvnVersion || '3.10.0' }}
 
     - name: Download latest ivy engine
       if: ! ${{ inputs.migrateToLatestIvyVersion}}
