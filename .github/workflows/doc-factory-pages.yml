@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       include_dev:
-        description: 'Include the latest published 14.0.0-SNAPSHOT documentation'
+        description: 'Include the configured published development SNAPSHOT documentation'
         type: boolean
         default: true
       publish:

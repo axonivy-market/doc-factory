@@ -10,7 +10,7 @@
     <docfactory10.version>10.0.24</docfactory10.version>
     <docfactory12.version>12.0.8</docfactory12.version>
     <docfactory13.version>13.2.2</docfactory13.version>
-    <docfactory.dev.version>14.0.0-SNAPSHOT</docfactory.dev.version>
+    <docfactory.dev.version>13.2.3-SNAPSHOT</docfactory.dev.version>
     <latest.release>13.2</latest.release>
     <dev.link></dev.link>
     <pages.directory>${project.build.directory}/doc-factory</pages.directory>
