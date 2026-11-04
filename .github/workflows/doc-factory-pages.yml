@@ -1,0 +1,63 @@
+name: Publish Doc Factory Documentation Pages
+
+on:
+  workflow_dispatch:
+    inputs:
+      include_dev:
+        description: 'Include the configured published development SNAPSHOT documentation'
+        type: boolean
+        default: true
+      publish:
+        description: 'Publish the complete site to public GitHub Pages'
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - uses: stCarolas/setup-maven@v5
+        with:
+          maven-version: 3.9.8
+
+      - name: Assemble the complete documentation site
+        run: >-
+          mvn -U --batch-mode -f pages/pom.xml clean generate-resources
+          -DincludeDev=${{ inputs.include_dev }}
+
+      - name: Upload the site for review or deployment
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: pages/target/doc-factory
+          retention-days: 1
+
+  deploy:
+    if: ${{ inputs.publish && github.ref == 'refs/heads/master' }}
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    concurrency:
+      group: doc-factory-documentation-pages
+      cancel-in-progress: false
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Deploy complete site
+        id: deployment
+        uses: actions/deploy-pages@v4
