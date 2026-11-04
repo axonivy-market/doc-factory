@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
 
-import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.faces.context.FacesContext;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
 import org.primefaces.model.file.UploadedFile;

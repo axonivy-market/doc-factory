@@ -1,0 +1,16 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0/project/data-class.json",
+  "simpleName" : "OutlockMailData",
+  "namespace" : "doc.factory.demos",
+  "fields" : [ {
+    "name" : "msgFile",
+    "type" : "File"
+  }, {
+    "name" : "attachment",
+    "type" : "File"
+  }, {
+    "name" : "name"
+  }, {
+    "name" : "emailaddress"
+  } ]
+}

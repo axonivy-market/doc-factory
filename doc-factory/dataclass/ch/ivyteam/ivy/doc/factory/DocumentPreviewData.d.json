@@ -1,0 +1,28 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0/project/data-class.json",
+  "simpleName" : "DocumentPreviewData",
+  "namespace" : "ch.ivyteam.ivy.doc.factory",
+  "fields" : [ {
+    "name" : "file",
+    "type" : "java.io.File",
+    "modifiers" : [ ]
+  }, {
+    "name" : "streamedContent",
+    "type" : "org.primefaces.model.StreamedContent",
+    "modifiers" : [ ]
+  }, {
+    "name" : "fileName",
+    "modifiers" : [ ]
+  }, {
+    "name" : "contentType",
+    "modifiers" : [ ]
+  }, {
+    "name" : "inputStream",
+    "type" : "java.io.InputStream",
+    "modifiers" : [ ]
+  }, {
+    "name" : "supportedTypes",
+    "type" : "List<String>",
+    "modifiers" : [ ]
+  } ]
+}

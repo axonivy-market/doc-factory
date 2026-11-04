@@ -1,0 +1,20 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0/project/data-class.json",
+  "simpleName" : "Report",
+  "namespace" : "doc.factory.demos",
+  "fields" : [ {
+    "name" : "employee"
+  }, {
+    "name" : "from",
+    "type" : "Date"
+  }, {
+    "name" : "till",
+    "type" : "Date"
+  }, {
+    "name" : "projects",
+    "type" : "List<doc.factory.demos.Project>"
+  }, {
+    "name" : "currentDate",
+    "type" : "DateTime"
+  } ]
+}
