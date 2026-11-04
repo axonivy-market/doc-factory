@@ -17,4 +17,4 @@ The root opens the latest release, and <http://127.0.0.1:8000/doc-factory/versio
 
 The [Pages workflow](../.github/workflows/doc-factory-pages.yml) uploads the complete site for review and includes the development snapshot by default. Publishing still requires an explicit `publish=true` dispatch from `master`. A deployment replaces the whole site, so retain all supported releases when updating version pins. Keep existing Marketplace/Maven hosting until consumers are migrated.
 
-Each successful release build passes its exact tag through `Publish Release Drafter` to the Pages version updater, which creates or updates a PR when that release line is configured in `pages/pom.xml` and its pin changes. The updater can also be run manually with a published tag. Add new release lines to the Pages configuration separately before they can be pinned automatically.
+Run the Pages version updater manually with the published release tag, such as `v12.0.9`. It creates or updates a PR when that release line is configured in `pages/pom.xml` and its pin changes. Add new release lines to the Pages configuration separately before they can be pinned.

@@ -47,33 +47,10 @@ jobs:
       with:
         maven-version: 3.10.0
 
-    - name: Determine release tag
-      id: release
-      run: |
-        version="$(mvn --batch-mode -q -N help:evaluate -Dexpression=project.version -DforceStdout)"
-        if [[ "$version" != *-SNAPSHOT ]]; then
-          echo "::error::Expected a SNAPSHOT project version, got $version."
-          exit 1
-        fi
-        echo "tag=v${version%-SNAPSHOT}" >> "$GITHUB_OUTPUT"
-
     - name: Build with Maven
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: mvn --batch-mode -Darguments="-Dmaven.test.skip=true -DaltDeploymentRepository=nexus.axonivy.com::https://nexus.axonivy.com/repository/maven-releases/" release:prepare release:perform
-
-    - name: Save release tag for publishing
-      env:
-        RELEASE_TAG: ${{ steps.release.outputs.tag }}
-      run: |
-        git show-ref --verify --quiet "refs/tags/$RELEASE_TAG"
-        printf '%s\n' "$RELEASE_TAG" > release-tag.txt
-
-    - uses: actions/upload-artifact@v4
-      with:
-        name: release-tag
-        path: release-tag.txt
-        retention-days: 1
 
     - name: Create pull request
       uses: repo-sync/pull-request@v2
