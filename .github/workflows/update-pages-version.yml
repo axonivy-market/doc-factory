@@ -34,27 +34,35 @@ jobs:
           ref: master
 
       - name: Update a configured release pin
-        id: pin
         env:
           RELEASE_LINE: ${{ inputs.release_line }}
           ARTIFACT_VERSION: ${{ inputs.artifact_version }}
-        run: bash pages/update-release-pin.sh "$RELEASE_LINE" "$ARTIFACT_VERSION"
+        run: |
+          case "$RELEASE_LINE" in
+            10.0|12.0|13.2) ;;
+            *) echo "::error::Unsupported release line: $RELEASE_LINE"; exit 1 ;;
+          esac
+          if [[ ! "$ARTIFACT_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(\.[0-9]+)*$ || "$ARTIFACT_VERSION" != "$RELEASE_LINE".* ]]; then
+            echo "::error::Artifact version must be an official version in release line $RELEASE_LINE."
+            exit 1
+          fi
+          mvn --batch-mode -f pages/pom.xml org.codehaus.mojo:versions-maven-plugin:2.19.1:set-property \
+            -Dproperty="docfactory${RELEASE_LINE%%.*}.version" \
+            -DnewVersion="$ARTIFACT_VERSION" -DgenerateBackupPoms=false
 
       - name: Verify the Pages site build
-        if: ${{ steps.pin.outputs.configured == 'true' }}
         run: mvn -U --batch-mode -f pages/pom.xml clean generate-resources -DincludeDev=false
 
       - name: Create or update the release pin PR
-        if: ${{ steps.pin.outputs.configured == 'true' }}
         uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ github.token }}
           base: master
-          branch: build/doc-factory-pages-${{ steps.pin.outputs.release_line }}
+          branch: build/doc-factory-pages-${{ inputs.release_line }}
           add-paths: pages/pom.xml
           commit-message: 'build: update Doc Factory Pages version pin'
-          title: 'build: update Doc Factory Pages ${{ steps.pin.outputs.release_line }} to ${{ steps.pin.outputs.artifact_version }}'
+          title: 'build: update Doc Factory Pages ${{ inputs.release_line }} to ${{ inputs.artifact_version }}'
           body: |
-            Update the Doc Factory Pages documentation artifact pinned for release line `${{ steps.pin.outputs.release_line }}` to `${{ steps.pin.outputs.artifact_version }}`.
+            Update the Doc Factory Pages documentation artifact pinned for release line `${{ inputs.release_line }}` to `${{ inputs.artifact_version }}`.
 
             The Pages site build completed successfully with the updated pin.
