@@ -1,0 +1,62 @@
+name: Update Doc Factory Pages version
+
+on:
+  workflow_run:
+    workflows:
+      - Publish Release Drafter
+    types:
+      - completed
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: doc-factory-pages-version-update
+  cancel-in-progress: false
+
+jobs:
+  update-release-version:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: master
+
+      - name: Get the published release tag
+        id: release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag="$(gh release list --exclude-drafts --limit 1 --json tagName --jq '.[0].tagName')"
+          if [[ -z "$tag" || "$tag" == "null" ]]; then
+            echo "::error::No published GitHub release was found."
+            exit 1
+          fi
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+
+      - name: Update a configured release pin
+        id: pin
+        env:
+          RELEASE_TAG: ${{ steps.release.outputs.tag }}
+        run: bash pages/update-release-pin.sh "$RELEASE_TAG"
+
+      - name: Verify the Pages site build
+        if: ${{ steps.pin.outputs.configured == 'true' }}
+        run: mvn -U --batch-mode -f pages/pom.xml clean generate-resources -DincludeDev=false
+
+      - name: Create or update the release pin PR
+        if: ${{ steps.pin.outputs.configured == 'true' }}
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ github.token }}
+          base: master
+          branch: build/doc-factory-pages-${{ steps.pin.outputs.release_line }}
+          add-paths: pages/pom.xml
+          commit-message: 'build: update Doc Factory Pages version pin'
+          title: 'build: update Doc Factory Pages ${{ steps.pin.outputs.release_line }} to ${{ steps.pin.outputs.artifact_version }}'
+          body: |
+            Update the Doc Factory Pages documentation artifact pinned for release line `${{ steps.pin.outputs.release_line }}` to `${{ steps.pin.outputs.artifact_version }}`.
+
+            The Pages site build completed successfully with the updated pin.

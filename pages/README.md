@@ -16,3 +16,5 @@ java -m jdk.httpserver -b 127.0.0.1 -p 8000 -d "$(pwd)/pages/target"
 The root opens the latest release, and <http://127.0.0.1:8000/doc-factory/versions.html> lists the included versions. Previewing builds and serves files locally; it does **not** publish Pages. This is not an in-guide version switcher.
 
 The [Pages workflow](../.github/workflows/doc-factory-pages.yml) uploads the complete site for review and includes the development snapshot by default. Publishing still requires an explicit `publish=true` dispatch from `master`. A deployment replaces the whole site, so retain all supported releases when updating version pins. Keep existing Marketplace/Maven hosting until consumers are migrated.
+
+After the `Publish Release Drafter` workflow succeeds, the Pages version updater checks the latest published release and creates or updates a PR when its release line is configured in `pages/pom.xml` and the pin changes. Add new release lines to the Pages configuration separately before they can be pinned automatically.
