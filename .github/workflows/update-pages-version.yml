@@ -64,5 +64,4 @@ jobs:
           title: 'build: update Doc Factory Pages ${{ inputs.release_line }} to ${{ inputs.artifact_version }}'
           body: |
             Update the Doc Factory Pages documentation artifact pinned for release line `${{ inputs.release_line }}` to `${{ inputs.artifact_version }}`.
-
             The Pages site build completed successfully with the updated pin.
