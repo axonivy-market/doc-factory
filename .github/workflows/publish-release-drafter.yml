@@ -7,13 +7,41 @@ on:
       - completed
 
 permissions:
+  actions: write
   contents: write
   pull-requests: write
 
 jobs:
+  release_tag:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.release.outputs.tag }}
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: release-tag
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: ${{ github.event.workflow_run.id }}
+          path: release
+
+      - name: Read and validate release tag
+        id: release
+        run: |
+          tag="$(< release/release-tag.txt)"
+          if [[ ! "$tag" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::Invalid release tag: $tag"
+            exit 1
+          fi
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+
   publish_release_drafter:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    needs: release_tag
     uses: axonivy-market/github-workflows/.github/workflows/publish-release-drafter.yml@v14
+    with:
+      tag: ${{ needs.release_tag.outputs.tag }}
     # The following input parameters are available:
     #
     # - tag: (optional) Specifies the release tag (e.g., 'v10.0.0').
@@ -33,8 +61,24 @@ jobs:
     # Note: Both 'tag' and 'commitish' are configured to run with sensible defaults,
     #       so manual input is not required unless custom values are needed.
     #
-    # Uncomment and modify the inputs as needed:
-    # with:
-    #   tag: v10.0.0
-    #   commitish: release/10.0
-    #   publish: false
+
+  update_pages_pin:
+    needs:
+      - release_tag
+      - publish_release_drafter
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dispatch Pages pin update for this release
+        uses: actions/github-script@v7
+        env:
+          RELEASE_TAG: ${{ needs.release_tag.outputs.tag }}
+        with:
+          github-token: ${{ github.token }}
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'update-pages-version.yml',
+              ref: 'master',
+              inputs: { release_tag: process.env.RELEASE_TAG }
+            });
