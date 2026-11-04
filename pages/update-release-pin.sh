@@ -1,20 +1,24 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-release_tag="${1:?Usage: update-release-pin.sh <release-tag> [pom-file]}"
-pom_file="${2:-pages/pom.xml}"
+release_line="${1:?Usage: update-release-pin.sh <release-line> <artifact-version> [pom-file]}"
+release_version="${2:?Artifact version is required}"
+pom_file="${3:-pages/pom.xml}"
 
 if [[ ! -f "$pom_file" ]]; then
   echo "::error::Pages POM not found: $pom_file"
   exit 1
 fi
 
-if [[ "$release_tag" =~ ^v?([0-9]+)\.([0-9]+)\.[0-9]+$ ]]; then
-  release_version="${release_tag#v}"
-  release_line="${BASH_REMATCH[1]}.${BASH_REMATCH[2]}"
+if [[ "$release_line" =~ ^([0-9]+)\.[0-9]+$ ]]; then
   property="docfactory${BASH_REMATCH[1]}.version"
 else
-  echo "::error::Unsupported release tag format: $release_tag"
+  echo "::error::Unsupported release line: $release_line"
+  exit 1
+fi
+
+if [[ ! "$release_version" =~ ^[0-9]+\.[0-9]+\.[0-9]+(\.[0-9]+)*$ || "$release_version" != "$release_line".* ]]; then
+  echo "::error::Artifact version $release_version must be an official version in release line $release_line."
   exit 1
 fi
 

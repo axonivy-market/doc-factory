@@ -1,10 +1,19 @@
 name: Update Doc Factory Pages version
+run-name: Update Doc Factory Pages ${{ inputs.release_line }} to ${{ inputs.artifact_version }}
 
 on:
   workflow_dispatch:
     inputs:
-      release_tag:
-        description: 'Published release tag to pin, for example v12.0.9'
+      release_line:
+        description: 'Documentation release line to update'
+        required: true
+        type: choice
+        options:
+          - '10.0'
+          - '12.0'
+          - '13.2'
+      artifact_version:
+        description: 'Published doc-factory-doc artifact version, for example 12.0.9'
         required: true
         type: string
 
@@ -27,8 +36,9 @@ jobs:
       - name: Update a configured release pin
         id: pin
         env:
-          RELEASE_TAG: ${{ inputs.release_tag }}
-        run: bash pages/update-release-pin.sh "$RELEASE_TAG"
+          RELEASE_LINE: ${{ inputs.release_line }}
+          ARTIFACT_VERSION: ${{ inputs.artifact_version }}
+        run: bash pages/update-release-pin.sh "$RELEASE_LINE" "$ARTIFACT_VERSION"
 
       - name: Verify the Pages site build
         if: ${{ steps.pin.outputs.configured == 'true' }}
