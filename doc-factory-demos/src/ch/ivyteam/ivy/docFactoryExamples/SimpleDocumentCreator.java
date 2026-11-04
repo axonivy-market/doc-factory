@@ -28,7 +28,7 @@ public class SimpleDocumentCreator {
     String bindingName = name.trim().replace(" ", "_");
 
     ch.ivyteam.ivy.scripting.objects.File tempFileIvy = new ch.ivyteam.ivy.scripting.objects.File(
-            "Hello_" + bindingName + ".pdf", true);
+        "Hello_" + bindingName + ".pdf", true);
 
     Document doc = new Document();
     DocumentBuilder builder = new DocumentBuilder(doc);
@@ -47,9 +47,9 @@ public class SimpleDocumentCreator {
 
     // Save to ivy database
     IDocument document = Ivy.wfCase().documents()
-            .add(new Path("KindOfDocument/" + tempFileIvy.getName()))
-            .write()
-            .withContentFrom(tempFileIvy.getJavaFile());
+        .add(Path.of("KindOfDocument/" + tempFileIvy.getName()))
+        .write()
+        .withContentFrom(tempFileIvy.getJavaFile());
 
     // Get document id for the next dialog
     documentId = document.uuid();

@@ -1,0 +1,20 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0/project/data-class.json",
+  "simpleName" : "Position",
+  "namespace" : "doc.factory.demos",
+  "fields" : [ {
+    "name" : "date",
+    "type" : "Date"
+  }, {
+    "name" : "code",
+    "type" : "Number"
+  }, {
+    "name" : "description"
+  }, {
+    "name" : "unit",
+    "type" : "doc.factory.demos.Unit"
+  }, {
+    "name" : "related",
+    "type" : "doc.factory.demos.Position"
+  } ]
+}

@@ -1,0 +1,10 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0/project/data-class.json",
+  "simpleName" : "CreateSimpleDocumentData",
+  "namespace" : "doc.factory.demos.CreateSimpleDocument",
+  "fields" : [ {
+    "name" : "service",
+    "type" : "ch.ivyteam.ivy.docFactoryExamples.SimpleDocumentCreator",
+    "modifiers" : [ ]
+  } ]
+}

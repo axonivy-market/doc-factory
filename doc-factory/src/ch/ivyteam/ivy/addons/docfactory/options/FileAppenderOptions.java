@@ -7,8 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import ch.ivyteam.api.API;
 import ch.ivyteam.ivy.addons.docfactory.BaseDocFactory;
 import ch.ivyteam.ivy.addons.docfactory.DocFactoryConstants;
-import ch.ivyteam.ivy.application.IApplication;
-import ch.ivyteam.ivy.environment.Ivy;
+import ch.ivyteam.ivy.application.app.Application;
 
 /**
  * This class represents different options that may be useful for setting how
@@ -163,7 +162,7 @@ public class FileAppenderOptions {
    */
   public String getAppendedFileParentDirectoryPath() {
     if (StringUtils.isBlank(this.appendedFileParentDirectoryPath)) {
-      return IApplication.current().getSessionFileArea(Ivy.session()).getAbsolutePath();
+      return Application.current().paths().sessions().toString();
     }
     return appendedFileParentDirectoryPath;
   }

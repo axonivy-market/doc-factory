@@ -1,0 +1,26 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0/project/data-class.json",
+  "simpleName" : "UploadAndPreviewDocumentData",
+  "namespace" : "doc.factory.demos.UploadAndPreviewDocument",
+  "fields" : [ {
+    "name" : "uploadedFile",
+    "type" : "org.primefaces.model.file.UploadedFile",
+    "modifiers" : [ ]
+  }, {
+    "name" : "fileUploadEvent",
+    "type" : "org.primefaces.event.FileUploadEvent",
+    "modifiers" : [ ]
+  }, {
+    "name" : "documents",
+    "type" : "List<ch.ivyteam.ivy.workflow.document.IDocument>",
+    "modifiers" : [ ]
+  }, {
+    "name" : "currentDocument",
+    "type" : "ch.ivyteam.ivy.workflow.document.IDocument",
+    "modifiers" : [ ]
+  }, {
+    "name" : "result",
+    "type" : "org.primefaces.model.StreamedContent",
+    "modifiers" : [ ]
+  } ]
+}

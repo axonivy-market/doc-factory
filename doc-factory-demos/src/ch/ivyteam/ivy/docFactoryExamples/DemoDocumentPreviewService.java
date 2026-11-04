@@ -1,11 +1,8 @@
 package ch.ivyteam.ivy.docFactoryExamples;
 
-import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.net.URLConnection;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
 
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultStreamedContent;
@@ -33,20 +30,10 @@ public class DemoDocumentPreviewService {
   }
 
   public static StreamedContent previewDocument(IDocument document) throws IOException {
-    SubProcessCallResult callResult = 
-        SubProcessCall.withPath(PREVIEW_DOCUMENT_PROCESS_PATH)
-          .withStartName("previewDocument")
-          .withParam("file", document.read().asJavaFile())
-          .call();
-
-    return (StreamedContent) callResult.get(STREAMED_CONTENT);
-  }
-
-  public static StreamedContent previewDocumentViaStreamContent(IDocument document) throws IOException {
     SubProcessCallResult callResult =
         SubProcessCall.withPath(PREVIEW_DOCUMENT_PROCESS_PATH)
             .withStartName("previewDocumentByStream")
-            .withParam(STREAMED_CONTENT, fileToStreamedContent(document.read().asJavaFile()))
+            .withParam(STREAMED_CONTENT, documentToStreamedContent(document))
             .call();
 
     return (StreamedContent) callResult.get(STREAMED_CONTENT);
@@ -81,21 +68,15 @@ public class DemoDocumentPreviewService {
     }
   }
 
-  private static StreamedContent fileToStreamedContent(java.io.File file) throws IOException, java.io.IOException {
-    String fileName = file.getName();
-    String contentType = Files.probeContentType(file.toPath());
+  private static StreamedContent documentToStreamedContent(IDocument document) {
+    String fileName = document.getName();
+    String contentType = URLConnection.guessContentTypeFromName(fileName);
 
     return DefaultStreamedContent.builder()
         .name(fileName)
         .contentType(contentType != null ? contentType : "application/octet-stream")
-        .stream(() -> {
-          try {
-            return new FileInputStream(file);
-          } catch (FileNotFoundException e) {
-            Ivy.log().error(e.getMessage());
-          }
-          return new ByteArrayInputStream(new byte[0]);
-        }).build();
+        .stream(() -> document.read().asStream())
+        .build();
   }
   
 }

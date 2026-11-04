@@ -1,0 +1,14 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0/project/data-class.json",
+  "simpleName" : "CreateDocumentsFromTemplatesData",
+  "namespace" : "doc.factory.demos.CreateDocumentsFromTemplates",
+  "fields" : [ {
+    "name" : "service",
+    "type" : "ch.ivyteam.ivy.docFactoryExamples.DocumentCreator",
+    "modifiers" : [ ]
+  }, {
+    "name" : "uploadEvent",
+    "type" : "org.primefaces.event.FileUploadEvent",
+    "modifiers" : [ ]
+  } ]
+}

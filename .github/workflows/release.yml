@@ -22,7 +22,7 @@ jobs:
     - name: Setup Java JDK
       uses: actions/setup-java@v4
       with:
-        java-version: 21
+        java-version: 25
         distribution: temurin
         server-id: github
 
@@ -45,7 +45,7 @@ jobs:
     - name: Setup Maven
       uses: stCarolas/setup-maven@v5
       with:
-        maven-version: 3.9.8
+        maven-version: 3.10.0
 
     - name: Build with Maven
       env:

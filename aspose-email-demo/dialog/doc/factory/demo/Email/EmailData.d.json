@@ -1,0 +1,10 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0/project/data-class.json",
+  "simpleName" : "EmailData",
+  "namespace" : "doc.factory.demo.Email",
+  "fields" : [ {
+    "name" : "outlockMail",
+    "type" : "doc.factory.demos.OutlockMailData",
+    "modifiers" : [ ]
+  } ]
+}
