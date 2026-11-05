@@ -12,6 +12,7 @@ on:
           - '10.0'
           - '12.0'
           - '13.2'
+          - '14.0'
       artifact_version:
         description: 'Published doc-factory-doc artifact version, for example 12.0.9'
         required: true
@@ -39,7 +40,7 @@ jobs:
           ARTIFACT_VERSION: ${{ inputs.artifact_version }}
         run: |
           case "$RELEASE_LINE" in
-            10.0|12.0|13.2) ;;
+            10.0|12.0|13.2|14.0) ;;
             *) echo "::error::Unsupported release line: $RELEASE_LINE"; exit 1 ;;
           esac
           if [[ ! "$ARTIFACT_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(\.[0-9]+)*$ || "$ARTIFACT_VERSION" != "$RELEASE_LINE".* ]]; then
@@ -64,4 +65,4 @@ jobs:
           title: 'build: update Doc Factory Pages ${{ inputs.release_line }} to ${{ inputs.artifact_version }}'
           body: |
             Update the Doc Factory Pages documentation artifact pinned for release line `${{ inputs.release_line }}` to `${{ inputs.artifact_version }}`.
-            The Pages site build completed successfully with the updated pin.
+            The Pages site was built and verified by this manually triggered workflow. This PR does not itself trigger a Pages build or deployment.

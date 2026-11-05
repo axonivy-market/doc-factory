@@ -10,8 +10,9 @@
     <docfactory10.version>10.0.24</docfactory10.version>
     <docfactory12.version>12.0.8</docfactory12.version>
     <docfactory13.version>13.2.2</docfactory13.version>
-    <docfactory.dev.version>14.0.0-SNAPSHOT</docfactory.dev.version>
-    <latest.release>13.2</latest.release>
+    <docfactory14.version>14.0.0</docfactory14.version>
+    <docfactory.dev.version>14.0.1-SNAPSHOT</docfactory.dev.version>
+    <latest.release>14.0</latest.release>
     <dev.link></dev.link>
     <pages.directory>${project.build.directory}/doc-factory</pages.directory>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -81,6 +82,13 @@
                   <version>${docfactory13.version}</version>
                   <type>zip</type>
                   <outputDirectory>${pages.directory}/release/13.2</outputDirectory>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>com.axonivy.utils.docfactory</groupId>
+                  <artifactId>doc-factory-doc</artifactId>
+                  <version>${docfactory14.version}</version>
+                  <type>zip</type>
+                  <outputDirectory>${pages.directory}/release/14.0</outputDirectory>
                 </artifactItem>
               </artifactItems>
             </configuration>
