@@ -1,0 +1,68 @@
+name: Update Doc Factory Pages version
+run-name: Update Doc Factory Pages ${{ inputs.release_line }} to ${{ inputs.artifact_version }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_line:
+        description: 'Documentation release line to update'
+        required: true
+        type: choice
+        options:
+          - '10.0'
+          - '12.0'
+          - '13.2'
+          - '14.0'
+      artifact_version:
+        description: 'Published doc-factory-doc artifact version, for example 12.0.9'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: doc-factory-pages-version-update
+  cancel-in-progress: false
+
+jobs:
+  update-release-version:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: master
+
+      - name: Update a configured release pin
+        env:
+          RELEASE_LINE: ${{ inputs.release_line }}
+          ARTIFACT_VERSION: ${{ inputs.artifact_version }}
+        run: |
+          case "$RELEASE_LINE" in
+            10.0|12.0|13.2|14.0) ;;
+            *) echo "::error::Unsupported release line: $RELEASE_LINE"; exit 1 ;;
+          esac
+          if [[ ! "$ARTIFACT_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(\.[0-9]+)*$ || "$ARTIFACT_VERSION" != "$RELEASE_LINE".* ]]; then
+            echo "::error::Artifact version must be an official version in release line $RELEASE_LINE."
+            exit 1
+          fi
+          mvn --batch-mode -f pages/pom.xml org.codehaus.mojo:versions-maven-plugin:2.19.1:set-property \
+            -Dproperty="docfactory${RELEASE_LINE%%.*}.version" \
+            -DnewVersion="$ARTIFACT_VERSION" -DgenerateBackupPoms=false
+
+      - name: Verify the Pages site build
+        run: mvn -U --batch-mode -f pages/pom.xml clean generate-resources -DincludeDev=false
+
+      - name: Create or update the release pin PR
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ github.token }}
+          base: master
+          branch: build/doc-factory-pages-${{ inputs.release_line }}
+          add-paths: pages/pom.xml
+          commit-message: 'build: update Doc Factory Pages version pin'
+          title: 'build: update Doc Factory Pages ${{ inputs.release_line }} to ${{ inputs.artifact_version }}'
+          body: |
+            Update the Doc Factory Pages documentation artifact pinned for release line `${{ inputs.release_line }}` to `${{ inputs.artifact_version }}`.
+            The Pages site was built and verified by this manually triggered workflow. This PR does not itself trigger a Pages build or deployment.
