@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.axonivy.utils.docfactory</groupId>
   <artifactId>doc-factory-pages</artifactId>
-  <version>1.0.0</version>
+  <version>14.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <properties>
